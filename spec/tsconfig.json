@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": true,
+        "declaration": false,
+        "outDir": ".",
+        "rootDir": ".",
+        "sourceMap": false
+    },
+    "files": [
+        "typings/node/node.d.ts",
+        "../lib/main.node.d.ts",
+        "helpers/customMatchers.ts",
+        "helpers/mock.ts",
+        "helpers/skeleton.ts"
+    ]
+}

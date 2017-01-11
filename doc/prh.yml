@@ -1,0 +1,10 @@
+version: 1
+rules:
+  - expected: インターフェース
+    patterns:
+      - インタフェース
+      - インターフェイス
+      - I/F
+  - expected: のような
+    patterns:
+      - の様な

@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noLib": true,
+        "noImplicitAny": true,
+        "declaration": true,
+        "outDir": "tmp",
+        "outFile": "tmp/tmp.js",
+        "rootDir": ".",
+        "sourceMap": false
+    },
+    "files": [
+        "typings/lib.core.d.ts",
+        "typings/console.d.ts",
+        "typings/extend.d.ts",
+        "src/index.ts"
+    ]
+}
