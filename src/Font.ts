@@ -122,7 +122,7 @@ namespace g {
 		}
 
 		/**
-		 * 動作環境の最小描画フォントサイズを取得する。
+		 * 描画可能なフォントサイズの最小値を取得する。
 		 */
 		calcMinimumDrawableFontSize(): number {
 			throw ExceptionFactory.createPureVirtualError("GlyphFactory#calcMinimumDrawableFontSize");
