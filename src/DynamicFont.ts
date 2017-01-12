@@ -280,7 +280,6 @@ namespace g {
 		constructor(fontFamily: FontFamily, size: number, game: Game, hint: DynamicFontHint = {},
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
 			this.fontFamily = fontFamily;
-			this.size = size;
 			this.hint = hint;
 			this.fontColor = fontColor;
 			this.strokeWidth = strokeWidth;
@@ -290,6 +289,7 @@ namespace g {
 			this._glyphs = {};
 			this._glyphFactory =
 				this._resourceFactory.createGlyphFactory(fontFamily, size, hint.baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly);
+			this.size = this._glyphFactory.fontSize;
 			this._atlases = [];
 			this._currentAtlasIndex = 0;
 			this._destroyed = false;

@@ -28,6 +28,13 @@ namespace g {
 	 */
 	export class GlyphFactory {
 		/**
+		 * 動作環境における描画可能なフォントサイズの最小値。
+		 *
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		static environmentMinimumFontSize: number;
+
+		/**
 		 * フォントファミリ。
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
@@ -89,12 +96,18 @@ namespace g {
 		constructor(fontFamily: FontFamily, fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
 			this.fontFamily = fontFamily;
-			this.fontSize = fontSize;
+			this.fontSize = Math.max(fontSize, this.calcMinimumDrawableFontSize());
 			this.baselineHeight = baselineHeight;
 			this.fontColor = fontColor;
 			this.strokeWidth = strokeWidth;
 			this.strokeColor = strokeColor;
 			this.strokeOnly = strokeOnly;
+
+			if (fontSize !== this.fontSize) {
+				const scale = (this.fontSize / fontSize);
+				this.baselineHeight = this.baselineHeight * scale;
+				this.strokeWidth = this.strokeWidth * scale;
+			}
 		}
 
 		/**
@@ -106,6 +119,13 @@ namespace g {
 		 */
 		create(code: number): Glyph {
 			throw ExceptionFactory.createPureVirtualError("GlyphFactory#create");
+		}
+
+		/**
+		 * 動作環境の最小描画フォントサイズを取得する。
+		 */
+		calcMinimumDrawableFontSize(): number {
+			throw ExceptionFactory.createPureVirtualError("GlyphFactory#calcMinimumDrawableFontSize");
 		}
 	}
 }
