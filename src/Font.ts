@@ -10,6 +10,8 @@ namespace g {
 		 */
 		size: number;
 
+		_realSize: number;
+
 		/**
 		 * グリフの取得。
 		 *
@@ -89,12 +91,18 @@ namespace g {
 		constructor(fontFamily: FontFamily, fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
 			this.fontFamily = fontFamily;
-			this.fontSize = fontSize;
+			this.fontSize = Math.max(fontSize, this.calcMinimumDrawableFontSize());
 			this.baselineHeight = baselineHeight;
 			this.fontColor = fontColor;
 			this.strokeWidth = strokeWidth;
 			this.strokeColor = strokeColor;
 			this.strokeOnly = strokeOnly;
+
+			if (fontSize !== this.fontSize) {
+				const scale = (this.fontSize / fontSize);
+				this.baselineHeight = this.baselineHeight * scale;
+				this.strokeWidth = this.strokeWidth * scale;
+			}
 		}
 
 		/**
@@ -106,6 +114,13 @@ namespace g {
 		 */
 		create(code: number): Glyph {
 			throw ExceptionFactory.createPureVirtualError("GlyphFactory#create");
+		}
+
+		/**
+		 * 描画可能なフォントサイズの最小値を取得する。
+		 */
+		calcMinimumDrawableFontSize(): number {
+			throw ExceptionFactory.createPureVirtualError("GlyphFactory#calcMinimumDrawableFontSize");
 		}
 	}
 }

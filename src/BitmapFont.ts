@@ -130,6 +130,7 @@ namespace g {
 		map: {[key: string]: GlyphArea};
 		missingGlyph: GlyphArea;
 		size: number;
+		_realSize: number;
 
 		/**
 		 * `BitmapFont` のインスタンスを生成する。
@@ -149,6 +150,7 @@ namespace g {
 			this.defaultGlyphHeight = defaultGlyphHeight;
 			this.missingGlyph = missingGlyph;
 			this.size = defaultGlyphHeight;
+			this._realSize = defaultGlyphHeight;
 		}
 
 		/**

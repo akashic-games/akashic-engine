@@ -268,6 +268,7 @@ namespace g {
 		_destroyed: boolean;
 		_hint: DynamicFontHint;
 		_atlasSize: CommonSize;
+		_realSize: number;
 
 		/**
 		 * コンストラクタ。
@@ -290,6 +291,7 @@ namespace g {
 			this._glyphs = {};
 			this._glyphFactory =
 				this._resourceFactory.createGlyphFactory(fontFamily, size, hint.baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly);
+			this._realSize = this._glyphFactory.fontSize;
 			this._atlases = [];
 			this._currentAtlasIndex = 0;
 			this._destroyed = false;
@@ -408,15 +410,15 @@ namespace g {
 				glyphAreaMap[key] = glyphArea;
 			});
 
-			// NOTE: (defaultGlyphWidth, defaultGlyphHeight)= (0, this.size) とする
+			// NOTE: (defaultGlyphWidth, defaultGlyphHeight)= (0, this._realSize) とする
 			//
 			// それぞれの役割は第一に `GlyphArea#width`, `GlyphArea#height` が与えられないときの
 			// デフォルト値である。ここでは必ず与えているのでデフォルト値としては利用されない。
 			// しかし defaultGlyphHeight は BitmapFont#size にも用いられる。
-			// そのために this.size をコンストラクタの第４引数に与えることにする。
+			// そのために this._realSize をコンストラクタの第４引数に与えることにする。
 			let missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
 			const surface = this._atlases[0].duplicateSurface(this._resourceFactory);
-			const bitmapFont = new BitmapFont(surface, glyphAreaMap, 0, this.size, missingGlyph);
+			const bitmapFont = new BitmapFont(surface, glyphAreaMap, 0, this._realSize, missingGlyph);
 
 			return bitmapFont;
 		}

@@ -224,7 +224,7 @@ namespace g {
 			for (var i = 0; i < this.glyphs.length; ++i) {
 				var glyph = this.glyphs[i];
 
-				var glyphScale = this.fontSize / this.font.size;
+				var glyphScale = this.fontSize / this.font._realSize;
 				var glyphWidth = glyph.advanceWidth * glyphScale;
 
 				if (glyph.surface) { // 非空白文字
@@ -296,7 +296,7 @@ namespace g {
 			}
 
 			var maxHeight = 0;
-			var glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
+			var glyphScale = this.font._realSize > 0 ? this.fontSize / this.font._realSize : 0;
 			for (var i = 0; i < this.text.length; ++i) {
 				const code = g.Util.charCodeAt(this.text, i);
 				if (! code) {
