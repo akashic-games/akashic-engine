@@ -10,6 +10,8 @@ namespace g {
 		 */
 		size: number;
 
+		_realSize: number;
+
 		/**
 		 * グリフの取得。
 		 *
@@ -27,13 +29,6 @@ namespace g {
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
 	 */
 	export class GlyphFactory {
-		/**
-		 * 動作環境における描画可能なフォントサイズの最小値。
-		 *
-		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
-		 */
-		static environmentMinimumFontSize: number;
-
 		/**
 		 * フォントファミリ。
 		 *
