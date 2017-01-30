@@ -19,6 +19,7 @@ namespace g {
 		var basedir = currentModule ? currentModule._dirname : game.assetBase;
 		var targetScriptAsset: Asset;
 		var resolvedPath: string;
+		var resolvedVirtualPath: string;
 		var liveAssetPathTable = game._assetManager._liveAssetPathTable;
 
 		// 0. アセットIDらしい場合はまず当該アセットを探す
@@ -32,7 +33,16 @@ namespace g {
 
 		if (/^\.\/|^\.\.\/|^\//.test(path)) {
 			// 2. If X begins with './' or '/' or '../'
+			var virtualDirname = currentModule ? currentModule._virtualDirname : "";
 			resolvedPath = PathUtil.resolvePath(basedir, path);
+			resolvedVirtualPath = PathUtil.resolvePath(virtualDirname, path);
+
+			// liveAssetPathTable では './' や '/' が不要なため削る
+			if (resolvedVirtualPath.substring(0, 2) === "./") {
+				resolvedVirtualPath = resolvedVirtualPath.substring(2);
+			} else if (resolvedVirtualPath[0] === "/") {
+				resolvedVirtualPath = resolvedVirtualPath.substring(1);
+			}
 
 			if (game._scriptCaches.hasOwnProperty(resolvedPath)) {
 				return game._scriptCaches[resolvedPath]._cachedValue();
@@ -42,23 +52,24 @@ namespace g {
 
 			// 2.a. LOAD_AS_FILE(Y + X)
 			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetPathTable);
+				targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetPathTable);
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
 			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetPathTable);
+				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetPathTable);
 
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 			// `path` は node module の名前であると仮定して探す
 			if (! targetScriptAsset) {
-				var dirs = currentModule ? currentModule.paths : [PathUtil.resolvePath(basedir, "node_modules")];
+				var dirs = currentModule ? currentModule.paths : [];
+				dirs.push("node_modules");
 				for (var i = 0; i < dirs.length; ++i) {
 					var dir = dirs[i];
-					resolvedPath = PathUtil.resolvePath(dir, path);
-					targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetPathTable);
+					resolvedVirtualPath = PathUtil.resolvePath(dir, path);
+					targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetPathTable);
 					if (targetScriptAsset)
 						break;
-					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetPathTable);
+					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetPathTable);
 					if (targetScriptAsset)
 						break;
 				}
@@ -134,10 +145,13 @@ namespace g {
 		require: (path: string) => any;
 
 		_dirname: string;
+		_virtualDirname: string;
 		_g: ScriptAssetExecuteEnvironment;
 
 		constructor(game: Game, id: string, path: string) {
 			var dirname = PathUtil.resolveDirname(path);
+			var virtualPath = game._assetManager._liveAssetVirtualPathTable[path];
+			var virtualDirname = PathUtil.resolveDirname(virtualPath);
 
 			var _g: ScriptAssetExecuteEnvironment = Object.create(g, {
 				game: {
@@ -166,8 +180,9 @@ namespace g {
 			this.parent = null; // Node.js と互換
 			this.loaded = false;
 			this.children = [];
-			this.paths = PathUtil.makeNodeModulePaths(dirname);
+			this.paths = PathUtil.makeNodeModulePaths(virtualDirname);
 			this._dirname = dirname;
+			this._virtualDirname = virtualDirname;
 			this._g = _g;
 
 			// メソッドとしてではなく単体で呼ばれるのでメソッドにせずここで実体を代入する

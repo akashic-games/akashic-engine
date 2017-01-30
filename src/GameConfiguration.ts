@@ -45,9 +45,14 @@ namespace g {
 	 */
 	export interface AssetConfiguration extends AssetConfigurationBase {
 		/**
-		 * Assetを表すファイルへの相対パス。
+		 * Assetを表すファイルへの絶対パス。
 		 */
 		path: string;
+
+		/**
+		 * Assetを表すファイルのrequire解決用の仮想ツリーにおけるパス。
+		 */
+		virtualPath: string;
 
 		/**
 		 * グローバルアセットか否か。省略された場合、偽。

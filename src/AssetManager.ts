@@ -41,11 +41,16 @@ namespace g {
 		_assets: {[key: string]: Asset};
 
 		/**
-		 * 読み込み済みのアセットのパスからの逆引きテーブル。
+		 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
 		 * アセットIDと異なり、ファイルパスは重複しうる (同じ画像を複数の名前で参照することはできる) ので、要素数は `_assets` 以下である。
 		 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 		 */
 		_liveAssetPathTable: {[key: string]: Asset};
+
+		/**
+		 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
+		 */
+		_liveAssetVirtualPathTable: {[path: string]: string};
 
 		/**
 		 * 各アセットに対する参照の数。
@@ -70,6 +75,7 @@ namespace g {
 			this.configuration = this._normalize(conf || {});
 			this._assets = {};
 			this._liveAssetPathTable = {};
+			this._liveAssetVirtualPathTable = {};
 			this._refCounts = {};
 			this._loadings = {};
 		}
@@ -86,6 +92,7 @@ namespace g {
 			this.configuration = undefined;
 			this._assets = undefined;
 			this._liveAssetPathTable = undefined;
+			this._liveAssetVirtualPathTable = undefined;
 			this._refCounts = undefined;
 			this._loadings = undefined;
 		}
@@ -307,8 +314,11 @@ namespace g {
 			delete this._refCounts[assetId];
 			delete this._loadings[assetId];
 			delete this._assets[assetId];
-			if (path && this._liveAssetPathTable.hasOwnProperty(path))
-				delete this._liveAssetPathTable[path];
+			const virtualPath = this.configuration[asset.id].virtualPath;
+			if (virtualPath && this._liveAssetPathTable.hasOwnProperty(virtualPath))
+				delete this._liveAssetPathTable[virtualPath];
+			if (path && this._liveAssetVirtualPathTable.hasOwnProperty(path))
+				delete this._liveAssetVirtualPathTable[path];
 		}
 
 		/**
@@ -347,10 +357,17 @@ namespace g {
 
 			delete this._loadings[asset.id];
 			this._assets[asset.id] = asset;
-			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) {
-				this._liveAssetPathTable[asset.path] = asset;
+			const virtualPath = this.configuration[asset.id].virtualPath;
+			if (!this._liveAssetPathTable.hasOwnProperty(virtualPath)) {
+				this._liveAssetPathTable[virtualPath] = asset;
 			} else {
-				if (this._liveAssetPathTable[asset.path].path !== asset.path)
+				if (this._liveAssetPathTable[virtualPath].path !== asset.path)
+					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+			}
+			if (!this._liveAssetVirtualPathTable.hasOwnProperty(asset.path)) {
+				this._liveAssetVirtualPathTable[asset.path] = virtualPath;
+			} else {
+				if (this._liveAssetVirtualPathTable[asset.path] !== virtualPath)
 					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
 			}
 
