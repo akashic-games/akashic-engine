@@ -2,6 +2,20 @@ describe("test Module", function() {
 	var g = require('../lib/main.node.js');
 	var mock = require("./helpers/mock");
 
+	function convertGlobalScriptsToAssets(gameConfiguration) {
+		var globalScripts = gameConfiguration.globalScripts;
+		if (!globalScripts) return gameConfiguration;
+		for (var i = 0; i < globalScripts.length; ++i) {
+			var path = gameConfiguration.globalScripts[i];
+			gameConfiguration.assets[path] = {
+				type: /\.json$/i.test(path) ? "text" : "script",
+				path: path,
+				global: true
+			};
+		}
+		return gameConfiguration;
+	}
+
 	function resolveGameConfigurationPath(gameConfiguration, pathConverter) {
 		function objectMap(obj, f) {
 			var o = {};
@@ -24,7 +38,7 @@ describe("test Module", function() {
 		});
 	}
 
-	var gameConfiguration = {
+	var gameConfiguration = convertGlobalScriptsToAssets({
 		width: 320,
 		height: 320,
 		fps: 30,
@@ -65,7 +79,7 @@ describe("test Module", function() {
 			"/script/cache2.js",
 			"/node_modules/randomnumber/index.js",
 		],
-	};
+	});
 
 	var scriptContents = {
 		// basic

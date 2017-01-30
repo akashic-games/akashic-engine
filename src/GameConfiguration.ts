@@ -136,6 +136,8 @@ namespace g {
 		 * ここにファイル名を書いた場合、 `assets` でのアセット定義は不要であり、拡張子 js であれば `ScriptAsset` として、
 		 * 拡張子 json であれば `TextAsset` として扱われる。また常に "global": true として扱われる。
 		 * ここに記述されたファイルのアセットIDは不定である。ゲーム開発者がこのファイルを読み込むためには、相対パスによる (`require()` を用いねばならない)
+		 * 
+		 * エンジンユーザはあらかじめ　`globalScripts` を相当する `assets` に変換しておく必要がある。
 		 */
 		globalScripts?: string[];
 	}

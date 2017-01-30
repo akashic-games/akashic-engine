@@ -64,11 +64,10 @@ namespace g {
 		 *
 		 * @param game このインスタンスが属するゲーム
 		 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
-		 * @param globalScriptPaths `conf` にグローバルなスクリプトアセットとして加えるパス。game.json の `"globalScripts"` に相当。
 		 */
-		constructor(game: Game, conf?: AssetConfigurationMap, globalScriptPaths?: string[]) {
+		constructor(game: Game, conf?: AssetConfigurationMap) {
 			this.game = game;
-			this.configuration = this._normalize(conf || {}, globalScriptPaths || []);
+			this.configuration = this._normalize(conf || {});
 			this._assets = {};
 			this._liveAssetPathTable = {};
 			this._refCounts = {};
@@ -210,7 +209,7 @@ namespace g {
 			}
 		}
 
-		_normalize(configuration: any, globalScriptPaths: string[]): any {
+		_normalize(configuration: any): any {
 			var ret: {[key: string]: AssetConfiguration} = {};
 			if (!(configuration instanceof Object))
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -246,16 +245,6 @@ namespace g {
 				if (!conf.global)
 					conf.global = false;
 				ret[p] = conf;
-			}
-			for (var i = 0; i < globalScriptPaths.length; ++i) {
-				var path = globalScriptPaths[i];
-				if (ret.hasOwnProperty(path))
-					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: Asset ID already exists: " + path);
-				ret[path] = {
-					type: /\.json$/i.test(path) ? "text" : "script",
-					path: path,
-					global: true
-				};
 			}
 			return ret;
 		}
