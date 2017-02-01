@@ -33,8 +33,15 @@ namespace g {
 
 		if (/^\.\/|^\.\.\/|^\//.test(path)) {
 			// 2. If X begins with './' or '/' or '../'
-			var virtualDirname = currentModule ? currentModule._virtualDirname : "";
 			resolvedPath = PathUtil.resolvePath(basedir, path);
+
+			if (game._scriptCaches.hasOwnProperty(resolvedPath)) {
+				return game._scriptCaches[resolvedPath]._cachedValue();
+			} else if (game._scriptCaches.hasOwnProperty(resolvedPath + ".js")) {
+				return game._scriptCaches[resolvedPath + ".js"]._cachedValue();
+			}
+
+			var virtualDirname = currentModule ? currentModule._virtualDirname : "";
 			resolvedVirtualPath = PathUtil.resolvePath(virtualDirname, path);
 
 			// liveAssetPathTable では './' や '/' が不要なため削る
@@ -42,12 +49,6 @@ namespace g {
 				resolvedVirtualPath = resolvedVirtualPath.substring(2);
 			} else if (resolvedVirtualPath[0] === "/") {
 				resolvedVirtualPath = resolvedVirtualPath.substring(1);
-			}
-
-			if (game._scriptCaches.hasOwnProperty(resolvedPath)) {
-				return game._scriptCaches[resolvedPath]._cachedValue();
-			} else if (game._scriptCaches.hasOwnProperty(resolvedPath + ".js")) {
-				return game._scriptCaches[resolvedPath + ".js"]._cachedValue();
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
@@ -151,7 +152,7 @@ namespace g {
 		constructor(game: Game, id: string, path: string) {
 			var dirname = PathUtil.resolveDirname(path);
 			var virtualPath = game._assetManager._liveAssetVirtualPathTable[path];
-			var virtualDirname = PathUtil.resolveDirname(virtualPath);
+			var virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : dirname;
 
 			var _g: ScriptAssetExecuteEnvironment = Object.create(g, {
 				game: {

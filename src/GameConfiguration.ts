@@ -51,8 +51,9 @@ namespace g {
 
 		/**
 		 * Assetを表すファイルのrequire解決用の仮想ツリーにおけるパス。
+		 * スクリプト以外のアセットとDynamicAssetでは値を省略する。
 		 */
-		virtualPath: string;
+		virtualPath?: string;
 
 		/**
 		 * グローバルアセットか否か。省略された場合、偽。

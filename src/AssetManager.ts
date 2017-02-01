@@ -226,6 +226,9 @@ namespace g {
 				if (!conf.path) {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
 				}
+				if (!conf.virtualPath) {
+					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No virtualPath given for: " + p);
+				}
 				if (!conf.type) {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No type given for: " + p);
 				}
@@ -314,11 +317,14 @@ namespace g {
 			delete this._refCounts[assetId];
 			delete this._loadings[assetId];
 			delete this._assets[assetId];
-			const virtualPath = this.configuration[asset.id].virtualPath;
-			if (virtualPath && this._liveAssetPathTable.hasOwnProperty(virtualPath))
-				delete this._liveAssetPathTable[virtualPath];
-			if (path && this._liveAssetVirtualPathTable.hasOwnProperty(path))
-				delete this._liveAssetVirtualPathTable[path];
+			
+			if (this.configuration[assetId]) {
+				const virtualPath = this.configuration[assetId].virtualPath;
+				if (virtualPath && this._liveAssetPathTable.hasOwnProperty(virtualPath))
+					delete this._liveAssetPathTable[virtualPath];
+				if (path && this._liveAssetVirtualPathTable.hasOwnProperty(path))
+					delete this._liveAssetVirtualPathTable[path];
+			}
 		}
 
 		/**
@@ -357,18 +363,17 @@ namespace g {
 
 			delete this._loadings[asset.id];
 			this._assets[asset.id] = asset;
-			const virtualPath = this.configuration[asset.id].virtualPath;
-			if (!this._liveAssetPathTable.hasOwnProperty(virtualPath)) {
-				this._liveAssetPathTable[virtualPath] = asset;
-			} else {
-				if (this._liveAssetPathTable[virtualPath].path !== asset.path)
-					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
-			}
-			if (!this._liveAssetVirtualPathTable.hasOwnProperty(asset.path)) {
-				this._liveAssetVirtualPathTable[asset.path] = virtualPath;
-			} else {
-				if (this._liveAssetVirtualPathTable[asset.path] !== virtualPath)
-					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+
+			if (this.configuration[asset.id]) {
+				const virtualPath = this.configuration[asset.id].virtualPath;
+				if (!this._liveAssetPathTable.hasOwnProperty(virtualPath)) {
+					this._liveAssetPathTable[virtualPath] = asset;
+				} else {
+					if (this._liveAssetPathTable[virtualPath].path !== asset.path)
+						throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+				}
+				if (!this._liveAssetVirtualPathTable.hasOwnProperty(asset.path))
+					this._liveAssetVirtualPathTable[asset.path] = virtualPath;
 			}
 
 			var hs = loadingInfo.handlers;
