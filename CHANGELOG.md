@@ -9,8 +9,12 @@
 なし
 
 ### エンジン開発者への影響
-`game.json` の `globalScripts` を `asset` に変換する責務をエンジンユーザへ移動。
- * `globalScripts` を 通常のアッセット定義に変換したうえで `Game` オブジェクトを作成してください。
+* `GameConfiguration` の `globalScripts` を `asset` に変換する責務をエンジンユーザへ移動しました。
+  * `globalScripts` を 通常のアッセット定義に変換したうえで `Game` オブジェクトを作成してください。
+* `AssetConfiguration` に `virtualPath?: string` が追加されました。
+  * スクリプトアセットで require の解決にこれまではアセットのパスを利用していましたが、
+    本PRによりアセットのパスとは別に require 解決用のパスが追加されます。
+    `Game` オブジェクト作成前にスクリプトアセットに  `assetBase` を基準とした相対パスを追加してください。
 
 ## 1.10.1
 
