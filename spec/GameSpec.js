@@ -37,6 +37,7 @@ describe("test Game", function() {
 				foo: {
 					type: "image",
 					path: "/dummypath.png",
+					virtualPath: "dummypath.png",
 					global: true,
 					width: 1,
 					height: 1,
@@ -44,6 +45,7 @@ describe("test Game", function() {
 				bar: {
 					type: "text",
 					path: "/dummypath.txt",
+					virtualPath: "dummypath.txt"
 				}
 			}
 		});
@@ -62,6 +64,7 @@ describe("test Game", function() {
 			mainScene: {  // _loadAndStart() には mainScene が必要
 				type: "script",
 				path: "/dummy/dummy.js",  // パスはダミーであり使用されてはいない。mock.tsのScriptAssetを参照のこと
+				virtualPath: "dummy/dummy.js",
 				global: true,
 			}
 		};
@@ -86,6 +89,7 @@ describe("test Game", function() {
 			mainScene: {  // _loadAndStart() には mainScene が必要
 				type: "script",
 				path: "/script/mainScene.js",
+				virtualPath: "script/mainScene.js",
 				global: true,
 			}
 		};
@@ -120,6 +124,7 @@ describe("test Game", function() {
 			"dummy": {
 				type: "script",
 				path: "/dummy/dummy.js",  // パスはダミー
+				virtualPath: "dummy/dummy.js",
 				global: true,
 			}
 		};
@@ -142,6 +147,7 @@ describe("test Game", function() {
 			mainScene: {
 				type: "script",
 				path: "/script/mainScene.js",
+				virtualPath: "script/mainScene.js",
 				global: true,
 			}
 		};
@@ -223,6 +229,7 @@ describe("test Game", function() {
 			mainScene: {  // _loadAndStart() には mainScene が必要
 				type: "script",
 				path: "/dummy/dummy.js",  // パスはダミーであり使用されてはいない。mock.tsのScriptAssetを参照のこと
+				virtualPath: "dummy/dummy.js",
 				global: true,
 			}
 		};
@@ -253,6 +260,7 @@ describe("test Game", function() {
 				foo: {
 					type: "image",
 					path: "/path1.png",
+					virtualPath: "path1.png",
 					width: 1,
 					height: 1,
 				},
@@ -332,12 +340,14 @@ describe("test Game", function() {
 				foo: {
 					type: "image",
 					path: "/path1.png",
+					virtualPath: "path1.png",
 					width: 1,
 					height: 1,
 				},
 				zoo: {
 					type: "audio",
 					path: "/path/to/a/file",
+					virtualPath: "path/to/a/file",
 					duration: 1984,
 				},
 			}
@@ -418,8 +428,19 @@ describe("test Game", function() {
 			height: 320,
 			fps: 30,
 			assets: {
-				foo: { type: "image", path: "/path1.png", width: 1, height: 1 },
-				zoo: { type: "audio", path: "/path/to/a/file", duration: 1984 },
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				},
+				zoo: {
+					type: "audio",
+					path: "/path/to/a/file",
+					virtualPath: "path/to/a/file",
+					duration: 1984
+				},
 			}
 		});
 
@@ -474,12 +495,14 @@ describe("test Game", function() {
 				foo: {
 					type: "image",
 					path: "/path1.png",
+					virtualPath: "path1.png",
 					width: 1,
 					height: 1,
 				},
 				zoo: {
 					type: "audio",
 					path: "/path/to/a/file",
+					virtualPath: "path/to/a/file",
 					duration: 1984,
 				},
 			}
@@ -687,7 +710,8 @@ describe("test Game", function() {
 				mainScene: {
 					type: "script",
 					global: true,
-					path: "/script/mainScene.js"
+					path: "/script/mainScene.js",
+					virtualPath: "script/mainScene.js"
 				}
 			}
 		});
@@ -726,7 +750,8 @@ describe("test Game", function() {
 				mainScene: {
 					type: "script",
 					global: true,
-					path: "/script/mainScene.js"
+					path: "/script/mainScene.js",
+					virtualPath: "script/mainScene.js",
 				}
 			}
 		});

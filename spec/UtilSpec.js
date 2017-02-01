@@ -205,7 +205,8 @@ describe("test Util", function() {
 			assets: {
 				foo: {
 					type: "image",
-					path: "dummypath.png",
+					path: "/dummypath.png",
+					virtualPath: "dummypath.png",
 					global: true,
 					width: 1,
 					height: 1,
