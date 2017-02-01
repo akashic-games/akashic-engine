@@ -25,7 +25,7 @@
     "typescript": "1.7.5"
   },
   "scripts": {
-    "prepublish": "npm run doc",
+    "prepublish": "gulp minify && npm run doc",
     "build": "gulp",
     "test": "gulp test && gulp lint && npm run textlint",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
