@@ -51,6 +51,12 @@ describe("test Module", function() {
 				"path": "/cascaded/script.js",
 				"virtualPath": "script/cascaded.js"
 			},
+			"moduleid": {
+				"type": "script",
+				"global": true,
+				"path": "/path/to/the/module.js",
+				"virtualPath": "path/to/the/module.js"
+			},
 			// basic
 			"node_modules/noPackageJson/index.js": {
 				"type": "script",
@@ -226,30 +232,33 @@ describe("test Module", function() {
 	afterEach(function() {
 	});
 
-	it("初期化", function() {
-		var path = "/path/to/the/module";
+	it("初期化", function (done) {
+		var path = "/path/to/the/module.js";
 		var dirname = "/path/to/the";
 		var game = new mock.Game(gameConfiguration, "/");
-		var module = new g.Module(game, "moduleid", path);
-
-		expect(module.id).toBe("moduleid");
-		expect(module.filename).toBe(path);
-		expect(module.exports instanceof Object).toBe(true);
-		expect(module.parent).toBe(null);
-		expect(module.loaded).toBe(false);
-		expect(module.children).toEqual([]);
-		expect(module.paths).toEqual([
-			"/path/to/the/node_modules",
-			"/path/to/node_modules",
-			"/path/node_modules",
-			"/node_modules",
-		]);
-		expect(module.require instanceof Function).toBe(true);
-		expect(module._dirname).toBe(dirname);
-		expect(module._g.game).toBe(game);
-		expect(module._g.filename).toBe(path);
-		expect(module._g.dirname).toBe(dirname);
-		expect(module._g.module).toBe(module);
+		game.resourceFactory.scriptContents = scriptContents;
+		game._loaded.handle(function () {
+			var module = new g.Module(game, "moduleid", path);
+			expect(module.id).toBe("moduleid");
+			expect(module.filename).toBe(path);
+			expect(module.exports instanceof Object).toBe(true);
+			expect(module.parent).toBe(null);
+			expect(module.loaded).toBe(false);
+			expect(module.children).toEqual([]);
+			expect(module.paths).toEqual([
+				"/path/to/the/node_modules",
+				"/path/to/node_modules",
+				"/path/node_modules",
+				"/node_modules",
+			]);
+			expect(module.require instanceof Function).toBe(true);
+			expect(module._dirname).toBe(dirname);
+			expect(module._g.game).toBe(game);
+			expect(module._g.filename).toBe(path);
+			expect(module._g.dirname).toBe(dirname);
+			expect(module._g.module).toBe(module);
+		});
+		done();
 	});
 
 	it("g._require()", function (done) {
@@ -602,7 +611,7 @@ describe("test Module", function() {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.handle(function () {
-			var module = new g.Module(game, "cascaded", "/script/cascaded.js");
+			var module = new g.Module(game, "cascaded", "/cascaded/script.js");
 			var mod = module.require("./dummypath");
 			expect(mod.me).toBe("script-dummymod");
 			expect(mod.thisModule instanceof g.Module).toBe(true);

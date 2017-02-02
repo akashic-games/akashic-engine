@@ -41,15 +41,18 @@ namespace g {
 				return game._scriptCaches[resolvedPath + ".js"]._cachedValue();
 			}
 
-			var virtualDirname = currentModule ? currentModule._virtualDirname : "";
-			resolvedVirtualPath = PathUtil.resolvePath(virtualDirname, path);
-
-			// liveAssetPathTable では './' や '/' が不要なため削る
-			if (resolvedVirtualPath.substring(0, 2) === "./") {
-				resolvedVirtualPath = resolvedVirtualPath.substring(2);
-			} else if (resolvedVirtualPath[0] === "/") {
-				resolvedVirtualPath = resolvedVirtualPath.substring(1);
+			if (currentModule) {
+				if (currentModule._virtualDirname) {
+					resolvedVirtualPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
+				} else {
+					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
+				}
+			} else {
+				resolvedVirtualPath = path;
 			}
+
+			if (resolvedVirtualPath[0] === "/")
+				resolvedVirtualPath = resolvedVirtualPath.substring(1);
 
 			// 2.a. LOAD_AS_FILE(Y + X)
 			if (!targetScriptAsset)
@@ -151,8 +154,9 @@ namespace g {
 
 		constructor(game: Game, id: string, path: string) {
 			var dirname = PathUtil.resolveDirname(path);
+			// `virtualPath` と `virtualDirname` は　`DynamicAsset` の場合は `undefined` になる。
 			var virtualPath = game._assetManager._liveAssetVirtualPathTable[path];
-			var virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : dirname;
+			var virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
 
 			var _g: ScriptAssetExecuteEnvironment = Object.create(g, {
 				game: {
@@ -181,7 +185,7 @@ namespace g {
 			this.parent = null; // Node.js と互換
 			this.loaded = false;
 			this.children = [];
-			this.paths = PathUtil.makeNodeModulePaths(virtualDirname);
+			this.paths = virtualDirname ? PathUtil.makeNodeModulePaths(virtualDirname) : [];
 			this._dirname = dirname;
 			this._virtualDirname = virtualDirname;
 			this._g = _g;
