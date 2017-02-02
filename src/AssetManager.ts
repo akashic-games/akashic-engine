@@ -45,12 +45,12 @@ namespace g {
 		 * アセットIDと異なり、ファイルパスは重複しうる (同じ画像を複数の名前で参照することはできる) ので、要素数は `_assets` 以下である。
 		 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 		 */
-		_liveAssetPathTable: {[key: string]: Asset};
+		_liveAssetVirtualPathTable: {[key: string]: Asset};
 
 		/**
 		 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
 		 */
-		_liveAssetVirtualPathTable: {[path: string]: string};
+		_liveAbsolutePathTable: {[path: string]: string};
 
 		/**
 		 * 各アセットに対する参照の数。
@@ -74,8 +74,8 @@ namespace g {
 			this.game = game;
 			this.configuration = this._normalize(conf || {});
 			this._assets = {};
-			this._liveAssetPathTable = {};
 			this._liveAssetVirtualPathTable = {};
+			this._liveAbsolutePathTable = {};
 			this._refCounts = {};
 			this._loadings = {};
 		}
@@ -91,8 +91,8 @@ namespace g {
 			this.game = undefined;
 			this.configuration = undefined;
 			this._assets = undefined;
-			this._liveAssetPathTable = undefined;
 			this._liveAssetVirtualPathTable = undefined;
+			this._liveAbsolutePathTable = undefined;
 			this._refCounts = undefined;
 			this._loadings = undefined;
 		}
@@ -317,13 +317,12 @@ namespace g {
 			delete this._refCounts[assetId];
 			delete this._loadings[assetId];
 			delete this._assets[assetId];
-			
 			if (this.configuration[assetId]) {
 				const virtualPath = this.configuration[assetId].virtualPath;
-				if (virtualPath && this._liveAssetPathTable.hasOwnProperty(virtualPath))
-					delete this._liveAssetPathTable[virtualPath];
-				if (path && this._liveAssetVirtualPathTable.hasOwnProperty(path))
-					delete this._liveAssetVirtualPathTable[path];
+				if (virtualPath && this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath))
+					delete this._liveAssetVirtualPathTable[virtualPath];
+				if (path && this._liveAbsolutePathTable.hasOwnProperty(path))
+					delete this._liveAbsolutePathTable[path];
 			}
 		}
 
@@ -364,16 +363,17 @@ namespace g {
 			delete this._loadings[asset.id];
 			this._assets[asset.id] = asset;
 
+			// VirtualAsset の場合は configuration に書かれていないので以下の判定が偽になる
 			if (this.configuration[asset.id]) {
 				const virtualPath = this.configuration[asset.id].virtualPath;
-				if (!this._liveAssetPathTable.hasOwnProperty(virtualPath)) {
-					this._liveAssetPathTable[virtualPath] = asset;
+				if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
+					this._liveAssetVirtualPathTable[virtualPath] = asset;
 				} else {
-					if (this._liveAssetPathTable[virtualPath].path !== asset.path)
+					if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
 						throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
 				}
-				if (!this._liveAssetVirtualPathTable.hasOwnProperty(asset.path))
-					this._liveAssetVirtualPathTable[asset.path] = virtualPath;
+				if (!this._liveAbsolutePathTable.hasOwnProperty(asset.path))
+					this._liveAbsolutePathTable[asset.path] = virtualPath;
 			}
 
 			var hs = loadingInfo.handlers;

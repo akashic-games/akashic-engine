@@ -20,7 +20,7 @@ namespace g {
 		var targetScriptAsset: Asset;
 		var resolvedPath: string;
 		var resolvedVirtualPath: string;
-		var liveAssetPathTable = game._assetManager._liveAssetPathTable;
+		var liveAssetVirtualPathTable = game._assetManager._liveAssetVirtualPathTable;
 
 		// 0. アセットIDらしい場合はまず当該アセットを探す
 		if (path.indexOf("/") === -1) {
@@ -56,10 +56,10 @@ namespace g {
 
 			// 2.a. LOAD_AS_FILE(Y + X)
 			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetPathTable);
+				targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetVirtualPathTable);
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
 			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetPathTable);
+				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetVirtualPathTable);
 
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
@@ -70,10 +70,10 @@ namespace g {
 				for (var i = 0; i < dirs.length; ++i) {
 					var dir = dirs[i];
 					resolvedVirtualPath = PathUtil.resolvePath(dir, path);
-					targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetPathTable);
+					targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetVirtualPathTable);
 					if (targetScriptAsset)
 						break;
-					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetPathTable);
+					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetVirtualPathTable);
 					if (targetScriptAsset)
 						break;
 				}
@@ -155,7 +155,7 @@ namespace g {
 		constructor(game: Game, id: string, path: string) {
 			var dirname = PathUtil.resolveDirname(path);
 			// `virtualPath` と `virtualDirname` は　`DynamicAsset` の場合は `undefined` になる。
-			var virtualPath = game._assetManager._liveAssetVirtualPathTable[path];
+			var virtualPath = game._assetManager._liveAbsolutePathTable[path];
 			var virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
 
 			var _g: ScriptAssetExecuteEnvironment = Object.create(g, {
