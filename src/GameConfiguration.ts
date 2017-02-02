@@ -51,8 +51,10 @@ namespace g {
 
 		/**
 		 * Assetを表すファイルのrequire解決用の仮想ツリーにおけるパス。
-		 * スクリプト以外のアセットとDynamicAssetでは値を省略する。
+		 * `type` が `"script"` の場合にのみ存在する。
+		 * 省略するとエンジンにより自動的に設定される。
 		 */
+		// エンジン開発者は `Game` オブジェクト作成前に、省略された `virtualPath` を補完する必要がある。
 		virtualPath?: string;
 
 		/**
@@ -142,9 +144,9 @@ namespace g {
 		 * ここにファイル名を書いた場合、 `assets` でのアセット定義は不要であり、拡張子 js であれば `ScriptAsset` として、
 		 * 拡張子 json であれば `TextAsset` として扱われる。また常に "global": true として扱われる。
 		 * ここに記述されたファイルのアセットIDは不定である。ゲーム開発者がこのファイルを読み込むためには、相対パスによる (`require()` を用いねばならない)
-		 * 
-		 * エンジンユーザはあらかじめ　`globalScripts` を相当する `assets` に変換しておく必要がある。
 		 */
+		// akashic-engine はこのフィールドを認識しないので、エンジンユーザはあらかじめ
+		// `globalScripts` を相当する `assets` 定義に変換する必要がある。
 		globalScripts?: string[];
 	}
 }
