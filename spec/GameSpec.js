@@ -128,7 +128,7 @@ describe("test Game", function() {
 				global: true,
 			}
 		};
-		var game = new mock.Game({ width: 320, height: 320, assets: assets, main: "/dummy/dummy.js" }, "/");
+		var game = new mock.Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" }, "/");
 		var loadedFired = false;
 		game._loaded.handle(function () {
 			loadedFired = true;
