@@ -48,8 +48,12 @@ namespace g {
 					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
 				}
 			} else {
-				// モジュールが空の場合、相対パスの先頭の `"./"` を取り除くと仮想パスになる。
-				resolvedVirtualPath = path.substring(2);
+				if (path.substring(0, 2) === "./") {
+					// モジュールが空の場合、相対パスの先頭の `"./"` を取り除くと仮想パスになる。
+					resolvedVirtualPath = path.substring(2);
+				} else {
+					throw ExceptionFactory.createAssertionError("g._require: entry point must start with './'");
+				}
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
