@@ -21,7 +21,7 @@
     "textlint-rule-max-ten": "^1.2.2",
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
-    "typedoc": "^0.4.4",
+    "typedoc": "^0.5.1",
     "typescript": "~2.0.10"
   },
   "scripts": {
