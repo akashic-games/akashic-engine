@@ -22,7 +22,7 @@
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "typedoc": "^0.5.1",
-    "typescript": "~2.0.10"
+    "typescript": "~2.1.6"
   },
   "scripts": {
     "prepublish": "gulp minify && npm run doc",
