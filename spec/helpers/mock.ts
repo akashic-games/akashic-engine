@@ -404,10 +404,6 @@ export class ResourceFactory extends g.ResourceFactory {
 		this._game = game;
 	}
 
-	get game(): g.Game {
-		return this._game;
-	}
-
 	// func が呼び出されている間だけ this._necessaryRetryCount を変更する。
 	// func() とその呼び出し先で生成されたアセットは、指定回数だけロードに失敗したのち成功する。
 	// -1を指定した場合、ロードは retriable が偽に設定された AssetLoadFatalError で失敗する。
@@ -445,11 +441,11 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 
 	createTextAsset(id: string, assetPath: string): g.TextAsset {
-		return new TextAsset(this.game, this._necessaryRetryCount, id, assetPath);
+		return new TextAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
 	createScriptAsset(id: string, assetPath: string): g.ScriptAsset {
-		return new ScriptAsset(this.game, this._necessaryRetryCount, id, assetPath);
+		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
 	createSurface(width: number, height: number): g.Surface {
