@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "module": "system",
         "target": "es5",
         "noLib": true,
         "noImplicitAny": true,
