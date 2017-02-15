@@ -45,9 +45,17 @@ namespace g {
 	 */
 	export interface AssetConfiguration extends AssetConfigurationBase {
 		/**
-		 * Assetを表すファイルへの相対パス。
+		 * Assetを表すファイルへの絶対パス。
 		 */
 		path: string;
+
+		/**
+		 * Assetを表すファイルのrequire解決用の仮想ツリーにおけるパス。
+		 * `type` が `"script"` の場合にのみ存在する。
+		 * 省略するとエンジンにより自動的に設定される。
+		 */
+		// エンジン開発者は `Game` オブジェクト作成前に、省略された `virtualPath` を補完する必要がある。
+		virtualPath?: string;
 
 		/**
 		 * グローバルアセットか否か。省略された場合、偽。
@@ -137,6 +145,8 @@ namespace g {
 		 * 拡張子 json であれば `TextAsset` として扱われる。また常に "global": true として扱われる。
 		 * ここに記述されたファイルのアセットIDは不定である。ゲーム開発者がこのファイルを読み込むためには、相対パスによる (`require()` を用いねばならない)
 		 */
+		// akashic-engine はこのフィールドを認識しないので、エンジンユーザはあらかじめ
+		// `globalScripts` を相当する `assets` 定義に変換する必要がある。
 		globalScripts?: string[];
 	}
 }

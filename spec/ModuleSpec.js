@@ -14,8 +14,6 @@ describe("test Module", function() {
 				return objectMap(v, function (k, asset) {
 					return objectMap(asset, function (k, v) { return (k === "path") ? pathConverter(v) : v; });
 				});
-			case "globalScripts":
-				return v.map(function (path) { return pathConverter(path); });
 			case "main":
 				return pathConverter(v);
 			default:
@@ -25,52 +23,155 @@ describe("test Module", function() {
 	}
 
 	var gameConfiguration = {
-		width: 320,
-		height: 320,
-		fps: 30,
-		assets: {
+		"width": 320,
+		"height": 320,
+		"fps": 30,
+		"assets": {
 			"aGlobalAssetFoo": {
-				type: "script",
-				path: "/script/foo.js",
-				global: true,
+				"type": "script",
+				"global": true,
+				"path": "/script/foo.js",
+				"virtualPath": "script/foo.js"
 			},
 			"aNonGlobalAssetBar": {
-				type: "script",
-				path: "/script/bar.js",
-			}
-		},
-		globalScripts: [
+				"type": "script",
+				"path": "/script/bar.js",
+				"virtualPath": "script/bar.js"
+			},
+			// dummy modules
+			"dummymod": {
+				"type": "script",
+				"global": true,
+				"path": "/script/dummypath.js",
+				"virtualPath": "script/dummypath.js"
+			},
+			"cascaded": {
+				"type": "script",
+				"global": true,
+				"path": "/cascaded/script.js",
+				"virtualPath": "script/cascaded.js"
+			},
+			"moduleid": {
+				"type": "script",
+				"global": true,
+				"path": "/path/to/the/module.js",
+				"virtualPath": "path/to/the/module.js"
+			},
 			// basic
-			"/node_modules/noPackageJson/index.js",
-			"/node_modules/noDefaultIndex/root.js",
-			"/node_modules/noDefaultIndex/package.json",
-			"/node_modules/wrongPackageJsonMain/package.json",
-			"/node_modules/wrongPackageJsonMain/index.js",
-			"/node_modules/wrongPackageJsonMain/aJsonFile.json",
-
+			"node_modules/noPackageJson/index.js": {
+				"type": "script",
+				"path": "/node_modules/noPackageJson/index.js",
+				"virtualPath": "node_modules/noPackageJson/index.js",
+				"global": true
+			},
+			"node_modules/noDefaultIndex/root.js": {
+				"type": "script",
+				"path": "/node_modules/noDefaultIndex/root.js",
+				"virtualPath": "node_modules/noDefaultIndex/root.js",
+				"global": true
+			},
+			"node_modules/noDefaultIndex/package.json": {
+				"type": "text",
+				"path": "/node_modules/noDefaultIndex/package.json",
+				"virtualPath": "node_modules/noDefaultIndex/package.json",
+				"global": true
+			},
+			"node_modules/wrongPackageJsonMain/package.json": {
+				"type": "text",
+				"path": "/node_modules/wrongPackageJsonMain/package.json",
+				"virtualPath": "node_modules/wrongPackageJsonMain/package.json",
+				"global": true
+			},
+			"node_modules/wrongPackageJsonMain/index.js": {
+				"type": "script",
+				"path": "/node_modules/wrongPackageJsonMain/index.js",
+				"virtualPath": "node_modules/wrongPackageJsonMain/index.js",
+				"global": true
+			},
+			"node_modules/wrongPackageJsonMain/aJsonFile.json": {
+				"type": "text",
+				"path": "/node_modules/wrongPackageJsonMain/aJsonFile.json",
+				"virtualPath": "node_modules/wrongPackageJsonMain/aJsonFile.json",
+				"global": true
+			},
 			// directory structure
-			"/script/useA.js",
-			"/node_modules/moduleUsesA/index.js",
-			"/node_modules/moduleUsesA/node_modules/libraryA/index.js",
-			"/node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js",
-			"/node_modules/libraryA/index.js",
-
+			"script/useA.js": {
+				"type": "script",
+				"path": "/script/useA.js",
+				"virtualPath": "script/useA.js",
+				"global": true
+			},
+			"node_modules/moduleUsesA/index.js": {
+				"type": "script",
+				"path": "/node_modules/moduleUsesA/index.js",
+				"virtualPath": "node_modules/moduleUsesA/index.js",
+				"global": true
+			},
+			"node_modules/moduleUsesA/node_modules/libraryA/index.js": {
+				"type": "script",
+				"path": "/node_modules/moduleUsesA/node_modules/libraryA/index.js",
+				"virtualPath": "node_modules/moduleUsesA/node_modules/libraryA/index.js",
+				"global": true
+			},
+			"node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js": {
+				"type": "script",
+				"path": "/node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js",
+				"virtualPath": "node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js",
+				"global": true
+			},
+			"node_modules/libraryA/index.js": {
+				"type": "script",
+				"path": "/node_modules/libraryA/index.js",
+				"virtualPath": "node_modules/libraryA/index.js",
+				"global": true
+			},
 			// cyclic
-			"/node_modules/cyclic1/index.js",
-			"/node_modules/cyclic1/node_modules/cyclic2/index.js",
-			"/node_modules/cyclic1/node_modules/cyclic3/index.js",
-
+			"node_modules/cyclic1/index.js": {
+				"type": "script",
+				"path": "/node_modules/cyclic1/index.js",
+				"virtualPath": "node_modules/cyclic1/index.js",
+				"global": true
+			},
+			"node_modules/cyclic1/node_modules/cyclic2/index.js": {
+				"type": "script",
+				"path": "/node_modules/cyclic1/node_modules/cyclic2/index.js",
+				"virtualPath": "node_modules/cyclic1/node_modules/cyclic2/index.js",
+				"global": true
+			},
+			"node_modules/cyclic1/node_modules/cyclic3/index.js": {
+				"type": "script",
+				"path": "/node_modules/cyclic1/node_modules/cyclic3/index.js",
+				"virtualPath": "node_modules/cyclic1/node_modules/cyclic3/index.js",
+				"global": true
+			},
 			// cache
-			"/script/cache1.js",
-			"/script/cache2.js",
-			"/node_modules/randomnumber/index.js",
-		],
-	};
+			"script/cache1.js": {
+				"type": "script",
+				"path": "/script/cache1.js",
+				"virtualPath": "script/cache1.js",
+				"global": true
+			},
+			"script/cache2.js": {
+				"type": "script",
+				"path": "/script/cache2.js",
+				"virtualPath": "script/cache2.js",
+				"global": true
+			},
+			"node_modules/randomnumber/index.js": {
+				"type": "script",
+				"path": "/node_modules/randomnumber/index.js",
+				"virtualPath": "node_modules/randomnumber/index.js",
+				"global": true
+			}
+		}
+	}
 
 	var scriptContents = {
 		// basic
 		"/script/foo.js": "module.exports = { me: 'script-foo', thisModule: module }",
 		"/script/bar.js": "module.exports = { me: 'script-bar', thisModule: module }",
+		"/script/dummypath.js": "module.exports = { me: 'script-dummymod', thisModule: module }",
+		"/cascaded/script.js": "module.exports = { me: 'script-cascaded', thisModule: module }",
 		"/node_modules/noPackageJson/index.js": "module.exports = { me: 'noPackageJson-index', thisModule: module };",
 		"/node_modules/noDefaultIndex/root.js": "exports.me = 'noDefaultIndex-root'; exports.thisModule = module; ",
 		"/node_modules/noDefaultIndex/package.json": '{ "main": "root.js" }',
@@ -131,30 +232,33 @@ describe("test Module", function() {
 	afterEach(function() {
 	});
 
-	it("初期化", function() {
-		var path = "/path/to/the/module";
+	it("初期化", function (done) {
+		var path = "/path/to/the/module.js";
 		var dirname = "/path/to/the";
 		var game = new mock.Game(gameConfiguration, "/");
-		var module = new g.Module(game, "moduleid", path);
-
-		expect(module.id).toBe("moduleid");
-		expect(module.filename).toBe(path);
-		expect(module.exports instanceof Object).toBe(true);
-		expect(module.parent).toBe(null);
-		expect(module.loaded).toBe(false);
-		expect(module.children).toEqual([]);
-		expect(module.paths).toEqual([
-			"/path/to/the/node_modules",
-			"/path/to/node_modules",
-			"/path/node_modules",
-			"/node_modules",
-		]);
-		expect(module.require instanceof Function).toBe(true);
-		expect(module._dirname).toBe(dirname);
-		expect(module._g.game).toBe(game);
-		expect(module._g.filename).toBe(path);
-		expect(module._g.dirname).toBe(dirname);
-		expect(module._g.module).toBe(module);
+		game.resourceFactory.scriptContents = scriptContents;
+		game._loaded.handle(function () {
+			var module = new g.Module(game, "moduleid", path);
+			expect(module.id).toBe("moduleid");
+			expect(module.filename).toBe(path);
+			expect(module.exports instanceof Object).toBe(true);
+			expect(module.parent).toBe(null);
+			expect(module.loaded).toBe(false);
+			expect(module.children).toEqual([]);
+			expect(module.paths).toEqual([
+				"/path/to/the/node_modules",
+				"/path/to/node_modules",
+				"/path/node_modules",
+				"/node_modules",
+			]);
+			expect(module.require instanceof Function).toBe(true);
+			expect(module._dirname).toBe(dirname);
+			expect(module._g.game).toBe(game);
+			expect(module._g.filename).toBe(path);
+			expect(module._g.dirname).toBe(dirname);
+			expect(module._g.module).toBe(module);
+		});
+		done();
 	});
 
 	it("g._require()", function (done) {
@@ -175,7 +279,7 @@ describe("test Module", function() {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.handle(function () {
-			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
+			var module = new g.Module(game, "dummypath", "/script/dummypath.js");
 			var mod = module.require("./foo");
 			expect(mod.me).toBe("script-foo");
 			expect(mod.thisModule instanceof g.Module).toBe(true);
@@ -481,6 +585,40 @@ describe("test Module", function() {
 			expect(cache1.v1).toBe(cache1.v2);
 			expect(cache1.v1).toBe(cache1.cache2.v1);
 			expect(cache1.v1).toBe(cache1.cache2.v2);
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("require - to cascaded module", function (done) {
+		var game = new mock.Game(gameConfiguration, "/");
+		game.resourceFactory.scriptContents = scriptContents;
+		game._loaded.handle(function () {
+			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
+			var mod = module.require("./cascaded");
+			expect(mod.me).toBe("script-cascaded");
+			expect(mod.thisModule instanceof g.Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/cascaded/script.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("require - from cascaded module", function (done) {
+		var game = new mock.Game(gameConfiguration, "/");
+		game.resourceFactory.scriptContents = scriptContents;
+		game._loaded.handle(function () {
+			var module = new g.Module(game, "cascaded", "/cascaded/script.js");
+			var mod = module.require("./dummypath");
+			expect(mod.me).toBe("script-dummymod");
+			expect(mod.thisModule instanceof g.Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/script/dummypath.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
 			done();
 		});
 		game._startLoadingGlobalAssets();

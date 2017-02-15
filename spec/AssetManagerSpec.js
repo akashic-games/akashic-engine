@@ -10,18 +10,21 @@ describe("test AssetManager", function() {
 			foo: {
 				type: "image",
 				path: "/path1.png",
+				virtualPath: "path1.png",
 				width: 1,
 				height: 1,
 			},
 			bar: {
 				type: "image",
 				path: "/path2.png",
+				virtualPath: "path2.png",
 				width: 1,
 				height: 1,
 			},
 			zoo: {
 				type: "audio",
 				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
 				duration: 1984,
 			},
 		}
@@ -42,7 +45,8 @@ describe("test AssetManager", function() {
 		expect(manager.configuration.bar.path).toBe(gameConfiguration.assets.bar.path);
 		expect(manager.configuration.zoo.path).toBe(gameConfiguration.assets.zoo.path);
 		expect(Object.keys(manager._assets).length).toEqual(0);
-		expect(Object.keys(manager._liveAssetPathTable).length).toEqual(0);
+		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
+		expect(Object.keys(manager._liveAbsolutePathTable).length).toEqual(0);
 		expect(Object.keys(manager._refCounts).length).toEqual(0);
 		expect(Object.keys(manager._loadings).length).toEqual(0);
 		expect(manager.configuration.zoo.duration).toBe(gameConfiguration.assets.zoo.duration);
@@ -53,6 +57,7 @@ describe("test AssetManager", function() {
 		var illegalConf = {
 			foo: {
 				type: "image",
+				virtualPath: "foo.png",
 				// no path given
 			}
 		};
@@ -63,15 +68,27 @@ describe("test AssetManager", function() {
 				type: "image",
 				path: "/foo.png",
 				width: 1,
-				// no height given
+				// no virtualPath given
 			}
 		};
 		expect(function () { new mock.Game({ width: 320, height: 320, assets: illegalConf2 }); }).toThrowError("AssertionError");
+
+		var illegalConf3 = {
+			foo: {
+				type: "image",
+				path: "/foo.png",
+				virtualPath: "foo.png",
+				width: 1,
+				// no height given
+			}
+		};
+		expect(function () { new mock.Game({ width: 320, height: 320, assets: illegalConf3 }); }).toThrowError("AssertionError");
 
 		var legalConf = {
 			foo: {
 				type: "image",
 				path: "/foo.png",
+				virtualPath: "foo.png",
 				width: 1,
 				height: 1,
 			}
@@ -137,27 +154,36 @@ describe("test AssetManager", function() {
 					expect(manager._refCounts.bar).toBe(1);
 					expect(manager._assets).toHaveProperty("foo");
 					expect(manager._assets).toHaveProperty("bar");
-					expect(manager._liveAssetPathTable["/path1.png"].id).toBe("foo");
-					expect(manager._liveAssetPathTable["/path2.png"].id).toBe("bar");
-					expect(manager._liveAssetPathTable).not.toHaveProperty("/path/to/a/file");
+					expect(manager._liveAssetVirtualPathTable["path1.png"].id).toBe("foo");
+					expect(manager._liveAssetVirtualPathTable["path2.png"].id).toBe("bar");
+					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("/path/to/a/file");
+					expect(manager._liveAbsolutePathTable["/path1.png"]).toBe("path1.png");
+					expect(manager._liveAbsolutePathTable["/path2.png"]).toBe("path2.png");
+					expect(manager._liveAbsolutePathTable).not.toHaveProperty("path/to/a/file");
 
 					manager.unrefAssets(innerAssets);
 					expect(manager._refCounts.foo).toBe(1);
 					expect(manager._refCounts).not.toHaveProperty("bar");
 					expect(manager._assets.foo).not.toBe(undefined);
 					expect(manager._assets.bar).toBe(undefined);
-					expect(manager._liveAssetPathTable["/path1.png"].id).toBe("foo");
-					expect(manager._liveAssetPathTable).not.toHaveProperty("/path2.png");
-					expect(manager._liveAssetPathTable).not.toHaveProperty("/path/to/a/file");
+					expect(manager._liveAssetVirtualPathTable["path1.png"].id).toBe("foo");
+					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path2.png");
+					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path/to/a/file");
+					expect(manager._liveAbsolutePathTable["/path1.png"]).toBe("path1.png");
+					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path2.png");
+					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path/to/a/file");
 
 					manager.unrefAssets(outerAssets);
 					expect(manager._refCounts).not.toHaveProperty("foo");
 					expect(manager._refCounts).not.toHaveProperty("bar");
 					expect(manager._assets.foo).toBe(undefined);
 					expect(manager._assets.bar).toBe(undefined);
-					expect(manager._liveAssetPathTable).not.toHaveProperty("/path1.png");
-					expect(manager._liveAssetPathTable).not.toHaveProperty("/path2.png");
-					expect(manager._liveAssetPathTable).not.toHaveProperty("/path/to/a/file");
+					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path1.png");
+					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path2.png");
+					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path/to/a/file");
+					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path1.png");
+					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path2.png");
+					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path/to/a/file");
 					expect(a.destroyed()).toBe(true);
 					done();
 				}
