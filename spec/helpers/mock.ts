@@ -381,7 +381,7 @@ export class AudioPlayer extends g.AudioPlayer {
 }
 
 export class ResourceFactory extends g.ResourceFactory {
-	game: g.Game;
+	_game: g.Game;
 	scriptContents: {[key: string]: string};
 
 	// 真である限り createXXAsset() が DelayedAsset を生成する(現在は createImageAsset() のみ)。
@@ -392,13 +392,16 @@ export class ResourceFactory extends g.ResourceFactory {
 	_necessaryRetryCount: number;
 	_delayedAssets: DelayedAsset[];
 
-	constructor(game: g.Game) {
+	constructor() {
 		super();
-		this.game = game;
 		this.scriptContents = {};
 		this.createsDelayedAsset = false;
 		this._necessaryRetryCount = 0;
 		this._delayedAssets = [];
+	}
+
+	init(game: g.Game): void {
+		this._game = game;
 	}
 
 	// func が呼び出されている間だけ this._necessaryRetryCount を変更する。
@@ -438,11 +441,11 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 
 	createTextAsset(id: string, assetPath: string): g.TextAsset {
-		return new TextAsset(this.game, this._necessaryRetryCount, id, assetPath);
+		return new TextAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
 	createScriptAsset(id: string, assetPath: string): g.ScriptAsset {
-		return new ScriptAsset(this.game, this._necessaryRetryCount, id, assetPath);
+		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
 	createSurface(width: number, height: number): g.Surface {
@@ -465,7 +468,9 @@ export class Game extends g.Game {
 
 	constructor(gameConfiguration: g.GameConfiguration, assetBase?: string,
 	            selfId?: string, operationPluginViewInfo?: g.OperationPluginViewInfo) {
-		super(gameConfiguration, new ResourceFactory(this), assetBase, selfId, operationPluginViewInfo);
+		const resourceFactory = new ResourceFactory();
+		super(gameConfiguration, resourceFactory, assetBase, selfId, operationPluginViewInfo);
+		resourceFactory.init(this);
 		this.leftGame = false;
 		this.terminatedGame = false;
 		this.raisedEvents = [];
