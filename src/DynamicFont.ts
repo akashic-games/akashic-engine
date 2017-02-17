@@ -386,8 +386,8 @@ namespace g {
 				this._currentAtlasIndex = 0;
 				this._destroyed = false;
 				game.logger.debug(
-					"[deprecated] DynamicFont or Subclass of DynamicFont: This constructor is deprecated. "
-						+ "Refer to the API documentation and use each constructor(param: ParameterObject) instead."
+					"[deprecated] DynamicFont: This constructor is deprecated. "
+						+ "Refer to the API documentation and use constructor(param: DynamicFontParameterObject) instead."
 				);
 			} else {
 				var param = fontFamilyOrParam;
