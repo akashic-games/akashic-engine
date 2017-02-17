@@ -92,6 +92,7 @@ namespace g {
 		 * @param strokeWidth 輪郭幅
 		 * @param strokeColor 輪郭色
 		 * @param strokeOnly 輪郭を描画するか否か
+		 * @param fontWeight フォントウェイト
 		 */
 		constructor(fontFamily: FontFamily, fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
