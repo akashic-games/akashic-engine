@@ -2,16 +2,20 @@
 機能追加
  * `g.DynamicFont` でフォントウェイトが指定可能に
  * `g.DynamicFontParameterObject` を追加
+ * `g.BitmapFontParameterObject` を追加
  * `g.ResourceFactory#createGlyphFactory()` に引数を追加
 
 ### ゲーム開発者への影響
  * `g.DynamicFont` のコンストラクタ引数に `DynamicFontParameterObject` が渡せるように
  * `g.DynamicFont` でフォントウェイトが指定可能に
     * ゲーム開発者は `g.DynamicFontParameterObject#fontWeight` を指定することでフォントウェイトを変更することができます。
+ * `g.BitmapFont` のコンストラクタ引数に `BitmapFontParameterObject` が渡せるように
 
 ### 非推奨機能の変更
  * `g.DynamicFont` の既存のコンストラクタを非推奨に。
     * 利用中のユーザは `DynamicFontParameterObject` を渡すようにしてください。
+ * `g.BitmapFont` の既存のコンストラクタを非推奨に。
+    * 利用中のユーザは `BitmapFontParameterObject` を渡すようにしてください。
 
 ### 内部実装の変更
  * `g.ResourceFactory#createGlyphFactory()` の引数が追加
