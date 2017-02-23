@@ -6,13 +6,15 @@ describe("test Scene", function() {
 	var assetsConfiguration = {
 		foo: {
 			type: "image",
-			path: "path1.png",
+			path: "/path1.png",
+			virtualPath: "path1.png",
 			width: 1,
 			height: 1,
 		},
 		baa: {
 			type: "image",
-			path: "path2.png",
+			path: "/path2.png",
+			virtualPath: "path2.png",
 			width: 1,
 			height: 1,
 		}

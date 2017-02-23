@@ -54,9 +54,11 @@ namespace g {
 		 * @param strokeWidth ストローク(縁取り線)の幅。省略された場合、 `0` として扱われる
 		 * @param strokeColor ストロークの色。省略された場合、 `"black"` として扱われる
 		 * @param strokeOnly ストロークのみを描画するか否か。省略された場合、偽として扱われる
+		 * @param fontWeight フォントウェイト。省略された場合、 `FontWeight.Normal` として扱われる
 		 */
 		createGlyphFactory(fontFamily: FontFamily, fontSize: number, baselineHeight?: number,
-		                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean): GlyphFactory {
+		                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
+		                   fontWeight?: FontWeight): GlyphFactory {
 			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createGlphFactory");
 		}
 

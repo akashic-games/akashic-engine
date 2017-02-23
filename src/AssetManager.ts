@@ -41,11 +41,16 @@ namespace g {
 		_assets: {[key: string]: Asset};
 
 		/**
-		 * 読み込み済みのアセットのパスからの逆引きテーブル。
+		 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
 		 * アセットIDと異なり、ファイルパスは重複しうる (同じ画像を複数の名前で参照することはできる) ので、要素数は `_assets` 以下である。
 		 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 		 */
-		_liveAssetPathTable: {[key: string]: Asset};
+		_liveAssetVirtualPathTable: {[key: string]: Asset};
+
+		/**
+		 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
+		 */
+		_liveAbsolutePathTable: {[path: string]: string};
 
 		/**
 		 * 各アセットに対する参照の数。
@@ -64,13 +69,13 @@ namespace g {
 		 *
 		 * @param game このインスタンスが属するゲーム
 		 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
-		 * @param globalScriptPaths `conf` にグローバルなスクリプトアセットとして加えるパス。game.json の `"globalScripts"` に相当。
 		 */
-		constructor(game: Game, conf?: AssetConfigurationMap, globalScriptPaths?: string[]) {
+		constructor(game: Game, conf?: AssetConfigurationMap) {
 			this.game = game;
-			this.configuration = this._normalize(conf || {}, globalScriptPaths || []);
+			this.configuration = this._normalize(conf || {});
 			this._assets = {};
-			this._liveAssetPathTable = {};
+			this._liveAssetVirtualPathTable = {};
+			this._liveAbsolutePathTable = {};
 			this._refCounts = {};
 			this._loadings = {};
 		}
@@ -86,7 +91,8 @@ namespace g {
 			this.game = undefined;
 			this.configuration = undefined;
 			this._assets = undefined;
-			this._liveAssetPathTable = undefined;
+			this._liveAssetVirtualPathTable = undefined;
+			this._liveAbsolutePathTable = undefined;
 			this._refCounts = undefined;
 			this._loadings = undefined;
 		}
@@ -210,7 +216,7 @@ namespace g {
 			}
 		}
 
-		_normalize(configuration: any, globalScriptPaths: string[]): any {
+		_normalize(configuration: any): any {
 			var ret: {[key: string]: AssetConfiguration} = {};
 			if (!(configuration instanceof Object))
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -219,6 +225,9 @@ namespace g {
 				var conf = <AssetConfiguration>Object.create(configuration[p]);
 				if (!conf.path) {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
+				}
+				if (!conf.virtualPath) {
+					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No virtualPath given for: " + p);
 				}
 				if (!conf.type) {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No type given for: " + p);
@@ -246,16 +255,6 @@ namespace g {
 				if (!conf.global)
 					conf.global = false;
 				ret[p] = conf;
-			}
-			for (var i = 0; i < globalScriptPaths.length; ++i) {
-				var path = globalScriptPaths[i];
-				if (ret.hasOwnProperty(path))
-					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: Asset ID already exists: " + path);
-				ret[path] = {
-					type: /\.json$/i.test(path) ? "text" : "script",
-					path: path,
-					global: true
-				};
 			}
 			return ret;
 		}
@@ -318,8 +317,13 @@ namespace g {
 			delete this._refCounts[assetId];
 			delete this._loadings[assetId];
 			delete this._assets[assetId];
-			if (path && this._liveAssetPathTable.hasOwnProperty(path))
-				delete this._liveAssetPathTable[path];
+			if (this.configuration[assetId]) {
+				const virtualPath = this.configuration[assetId].virtualPath;
+				if (virtualPath && this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath))
+					delete this._liveAssetVirtualPathTable[virtualPath];
+				if (path && this._liveAbsolutePathTable.hasOwnProperty(path))
+					delete this._liveAbsolutePathTable[path];
+			}
 		}
 
 		/**
@@ -358,11 +362,18 @@ namespace g {
 
 			delete this._loadings[asset.id];
 			this._assets[asset.id] = asset;
-			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) {
-				this._liveAssetPathTable[asset.path] = asset;
-			} else {
-				if (this._liveAssetPathTable[asset.path].path !== asset.path)
-					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+
+			// VirtualAsset の場合は configuration に書かれていないので以下の判定が偽になる
+			if (this.configuration[asset.id]) {
+				const virtualPath = this.configuration[asset.id].virtualPath;
+				if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
+					this._liveAssetVirtualPathTable[virtualPath] = asset;
+				} else {
+					if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
+						throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+				}
+				if (!this._liveAbsolutePathTable.hasOwnProperty(asset.path))
+					this._liveAbsolutePathTable[asset.path] = virtualPath;
 			}
 
 			var hs = loadingInfo.handlers;

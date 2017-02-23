@@ -1,5 +1,19 @@
 namespace g {
 	/**
+	 * 文字列描画のフォントウェイト。
+	 */
+	export enum FontWeight {
+		/**
+		 * 通常のフォントウェイト。
+		 */
+		Normal,
+		/**
+		 * 太字のフォントウェイト。
+		 */
+		Bold
+	}
+
+	/**
 	 * SurfaceAtlasの空き領域管理クラス。
 	 *
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
@@ -170,6 +184,64 @@ namespace g {
 	}
 
 	/**
+	 * `DynamicFont` のコンストラクタに渡すことができるパラメータ。
+	 * 各メンバの詳細は `DynamicFont` の同名メンバの説明を参照すること。
+	 */
+	export interface DynamicFontParameterObject {
+		/**
+		 * ゲームインスタンス。
+		 */
+		game: Game;
+
+		/**
+		 * フォントファミリ。
+		 */
+		fontFamily: FontFamily;
+
+		/**
+		 * フォントサイズ。
+		 */
+		size: number;
+
+		/**
+		 * ヒント。
+		 * 
+		 * 詳細は `DynamicFontHint` を参照。
+		 */
+		hint?: DynamicFontHint;
+
+		/**
+		 * フォント色。CSS Colorで指定する。
+		 * @default "black"
+		 */
+		fontColor?: string;
+
+		/**
+		 * フォントウェイト。
+		 * @default FontWeight.Normal
+		 */
+		fontWeight?: FontWeight;
+
+		/**
+		 * 輪郭幅。
+		 * @default 0
+		 */
+		strokeWidth?: number;
+
+		/**
+		 * 輪郭色。
+		 * @default 0
+		 */
+		strokeColor?: string;
+
+		/**
+		 * 文字の輪郭のみを描画するか否か。
+		 * @default false
+		 */
+		strokeOnly?: boolean;
+	}
+
+	/**
 	 * DynamicFontが効率よく動作するためのヒント。
 	 *
 	 * ゲーム開発者はDynamicFontが効率よく動作するための各種初期値・最大値などを
@@ -240,6 +312,12 @@ namespace g {
 		fontColor: string;
 
 		/**
+		 * フォントウェイト。
+		 * @default FontWeight.Normal
+		 */
+		fontWeight: FontWeight;
+
+		/**
 		 * 輪郭幅。
 		 * 0 以上の数値でなければならない。 0 を指定した場合、輪郭は描画されない。
 		 * @default 0
@@ -270,29 +348,66 @@ namespace g {
 		_atlasSize: CommonSize;
 
 		/**
-		 * コンストラクタ。
-		 *
+		 * `DynamicFont` のインスタンスを生成する。
+		 * @deprecated このコンストラクタは非推奨機能である。代わりに `DynamicFontParameterObject` を使うコンストラクタを用いるべきである。
 		 * @param fontFamily フォントファミリ
 		 * @param size フォントサイズ
 		 * @param game ゲームインスタンス
 		 * @param hint ヒント
+		 * @param fontColor フォント色
+		 * @param strokeWidth 輪郭幅
+		 * @param strokeColor 輪郭色
+		 * @param strokeOnly 文字の輪郭のみを描画するか否か
 		 */
-		constructor(fontFamily: FontFamily, size: number, game: Game, hint: DynamicFontHint = {},
+		constructor(fontFamily: FontFamily, size: number, game: Game, hint?: DynamicFontHint,
+		            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean);
+		/**
+		 * 各種パラメータを指定して `DynamicFont` のインスタンスを生成する。
+		 * @param param `DynamicFont` に設定するパラメータ
+		 */
+		constructor(param: DynamicFontParameterObject);
+
+		constructor(fontFamilyOrParam: FontFamily|DynamicFontParameterObject, size?: number, game?: Game, hint: DynamicFontHint = {},
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
-			this.fontFamily = fontFamily;
-			this.size = size;
-			this.hint = hint;
-			this.fontColor = fontColor;
-			this.strokeWidth = strokeWidth;
-			this.strokeColor = strokeColor;
-			this.strokeOnly = strokeOnly;
-			this._resourceFactory = game.resourceFactory;
-			this._glyphs = {};
-			this._glyphFactory =
-				this._resourceFactory.createGlyphFactory(fontFamily, size, hint.baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly);
-			this._atlases = [];
-			this._currentAtlasIndex = 0;
-			this._destroyed = false;
+			if (typeof fontFamilyOrParam === "number") {
+				this.fontFamily = fontFamilyOrParam;
+				this.size = size;
+				this.hint = hint;
+				this.fontColor = fontColor;
+				this.strokeWidth = strokeWidth;
+				this.strokeColor = strokeColor;
+				this.strokeOnly = strokeOnly;
+				this._resourceFactory = game.resourceFactory;
+				this._glyphs = {};
+				this._glyphFactory =
+					this._resourceFactory.createGlyphFactory(fontFamilyOrParam, size, hint.baselineHeight, fontColor,
+						strokeWidth, strokeColor, strokeOnly);
+				this._atlases = [];
+				this._currentAtlasIndex = 0;
+				this._destroyed = false;
+				game.logger.debug(
+					"[deprecated] DynamicFont: This constructor is deprecated. "
+						+ "Refer to the API documentation and use constructor(param: DynamicFontParameterObject) instead."
+				);
+			} else {
+				var param = fontFamilyOrParam;
+				this.fontFamily = param.fontFamily;
+				this.size = param.size;
+				this.hint = ("hint" in param) ? param.hint : {};
+				this.fontColor = ("fontColor" in param) ? param.fontColor : "black";
+				this.fontWeight = ("fontWeight" in param) ? param.fontWeight : FontWeight.Normal;
+				this.strokeWidth = ("strokeWidth" in param) ? param.strokeWidth : 0;
+				this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
+				this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
+				this._resourceFactory = param.game.resourceFactory;
+				this._glyphs = {};
+				this._glyphFactory =
+					this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
+						this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
+				this._atlases = [];
+				this._currentAtlasIndex = 0;
+				this._destroyed = false;
+			}
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする

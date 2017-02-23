@@ -6,7 +6,8 @@
         "declaration": false,
         "outDir": ".",
         "rootDir": ".",
-        "sourceMap": false
+        "sourceMap": false,
+        "types": []
     },
     "files": [
         "typings/node/node.d.ts",
