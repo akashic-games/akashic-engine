@@ -8,7 +8,7 @@ var tslint = require("gulp-tslint");
 var pkg = require("./package.json");
 var rename = require("gulp-rename");
 var fs = require('fs');
-var exec = require('child_process').exec;
+var execSync = require('child_process').execSync;
 
 
 // test packages
@@ -108,17 +108,21 @@ gulp.task("typedoc", function() {
 		}
 
 		var command = "typedoc --out ../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts";
-		exec(command, {cwd: "lib/"}, function (commandError, stdout, stderr) {
-				fs.rename("node_modules/@types.bak", "node_modules/@types", function (err) {
-					if (commandError) {
-						throw commandError;
-					}
-					if (err && err.code !== "ENOENT") {
-						throw err;
-					}
-				});
+		var commandException;
+		try {
+			execSync(command, {cwd: "lib/"});
+		} catch (e) {
+			commandException = e;
+		}
+
+		fs.rename("node_modules/@types.bak", "node_modules/@types", function (err) {
+			if (commandException) {
+				throw commandException;
 			}
-		);
+			if (err && err.code !== "ENOENT") {
+				throw err;
+			}
+		});
 	});
 });
 
