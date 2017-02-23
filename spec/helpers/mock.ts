@@ -380,6 +380,13 @@ export class AudioPlayer extends g.AudioPlayer {
 	}
 }
 
+export class GlyphFactory extends g.GlyphFactory {
+	constructor(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
+	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
+		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+	}
+}
+
 export class ResourceFactory extends g.ResourceFactory {
 	_game: g.Game;
 	scriptContents: {[key: string]: string};
@@ -454,6 +461,12 @@ export class ResourceFactory extends g.ResourceFactory {
 
 	createAudioPlayer(system: g.AudioSystem, loop?: boolean): g.AudioPlayer {
 		return new AudioPlayer(system, loop);
+	}
+
+	createGlyphFactory(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
+	                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
+	                   fontWeight?: g.FontWeight): g.GlyphFactory {
+		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
 }
 

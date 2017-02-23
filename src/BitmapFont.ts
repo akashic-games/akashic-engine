@@ -121,6 +121,38 @@ namespace g {
 	}
 
 	/**
+	 * `BitmapFont` のコンストラクタに渡すことができるパラメータ。
+	 * 各メンバの詳細は `BitmapFont` の同名メンバの説明を参照すること。
+	 */
+	export interface BitmapFontParameterObject {
+		/**
+		 * 文字データとして利用する画像を表す `Surface` または `Asset`。文字を敷き詰めたもの。
+		 */
+		src: Surface|Asset;
+
+		/**
+		 * 各文字から画像上の位置・サイズなどを特定する情報。コードポイントから `GlyphArea` への写像。
+		 */
+		map: {[key: string]: GlyphArea};
+
+		/**
+		 * `map` で指定を省略した文字に使われる、デフォルトの文字の幅。
+		 */
+		defaultGlyphWidth: number;
+
+		/**
+		 * `map` で指定を省略した文字に使われる、デフォルトの文字の高さ
+		 */
+		defaultGlyphHeight: number;
+
+		/**
+		 * `map` に存在しないコードポイントの代わりに表示するべき文字の `GlyphArea` 。
+		 * @default undefined
+		 */
+		missingGlyph?: GlyphArea;
+	}
+
+	/**
 	 * ラスタ画像によるフォント。
 	 */
 	export class BitmapFont implements Font {
@@ -133,6 +165,7 @@ namespace g {
 
 		/**
 		 * `BitmapFont` のインスタンスを生成する。
+		 * @deprecated このコンストラクタは非推奨機能である。代わりに `BitmapFontParameterObject` を使うコンストラクタを用いるべきである。
 		 * @param src 文字データとして利用する画像を表す `Surface` または `Asset`。文字を敷き詰めたもの
 		 * @param map 各文字から画像上の位置・サイズなどを特定する情報。コードポイントから `GlyphArea` への写像
 		 * @param defaultGlyphWidth `map` で指定を省略した文字に使われる、デフォルトの文字の幅
@@ -142,13 +175,31 @@ namespace g {
 		// mapは{ codepoint: { x: x, y: y, width: w, height: h, ... }のフォーマットでwidthとheightを省略可能。
 		// 省略した場合はdefaulyGlyph{Width, Height}で指定した値が使用される。
 		constructor(src: Surface|Asset, map: {[key: string]: GlyphArea}, defaultGlyphWidth: number,
-					defaultGlyphHeight: number, missingGlyph?: GlyphArea) {
-			this.surface = Util.asSurface(src);
-			this.map = map;
-			this.defaultGlyphWidth = defaultGlyphWidth;
-			this.defaultGlyphHeight = defaultGlyphHeight;
-			this.missingGlyph = missingGlyph;
-			this.size = defaultGlyphHeight;
+		            defaultGlyphHeight: number, missingGlyph?: GlyphArea);
+		/**
+		 * 各種パラメータを指定して `BitmapFont` のインスタンスを生成する。
+		 * @param param `BitmapFont` に設定するパラメータ
+		 */
+		constructor(param: BitmapFontParameterObject);
+
+		constructor(srcOrParam: Surface|Asset|BitmapFontParameterObject, map?: {[key: string]: GlyphArea}, defaultGlyphWidth?: number,
+		            defaultGlyphHeight?: number, missingGlyph?: GlyphArea) {
+			if (srcOrParam instanceof Surface || srcOrParam instanceof Asset) {
+				this.surface = Util.asSurface(srcOrParam);
+				this.map = map;
+				this.defaultGlyphWidth = defaultGlyphWidth;
+				this.defaultGlyphHeight = defaultGlyphHeight;
+				this.missingGlyph = missingGlyph;
+				this.size = defaultGlyphHeight;
+			} else {
+				var param = <BitmapFontParameterObject>srcOrParam;
+				this.surface = Util.asSurface(param.src);
+				this.map = param.map;
+				this.defaultGlyphWidth = param.defaultGlyphWidth;
+				this.defaultGlyphHeight = param.defaultGlyphHeight;
+				this.missingGlyph = param.missingGlyph;
+				this.size = param.defaultGlyphHeight;
+			}
 		}
 
 		/**

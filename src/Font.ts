@@ -56,6 +56,13 @@ namespace g {
 		fontColor: string;
 
 		/**
+		 * フォントウェイト。
+		 *
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		fontWeight: g.FontWeight;
+
+		/**
 		 * 輪郭幅。
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
@@ -70,7 +77,7 @@ namespace g {
 		strokeColor: string;
 
 		/**
-		 * 文字の描画スタイル。
+		 * 輪郭を描画しているか否か。
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 		 */
@@ -84,12 +91,15 @@ namespace g {
 		 * @param baselineHeight ベースラインの高さ
 		 * @param strokeWidth 輪郭幅
 		 * @param strokeColor 輪郭色
-		 * @param strokeOnly 輪郭の描画スタイル
+		 * @param strokeOnly 輪郭を描画するか否か
+		 * @param fontWeight フォントウェイト
 		 */
 		constructor(fontFamily: FontFamily, fontSize: number, baselineHeight: number = fontSize,
-		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
+		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
+		            fontWeight: FontWeight = FontWeight.Normal) {
 			this.fontFamily = fontFamily;
 			this.fontSize = fontSize;
+			this.fontWeight = fontWeight;
 			this.baselineHeight = baselineHeight;
 			this.fontColor = fontColor;
 			this.strokeWidth = strokeWidth;

@@ -10,13 +10,20 @@ describe("test Label", function() {
 		// deprecatedなコンストラクタの動作確認を行う
 		var runtime = skeletonRuntime();
 		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
 		var height = 64;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
 
-		var bmpfont = new g.BitmapFont(null, map, width, height, missingGlyph);
-		expect(bmpfont.surface).toEqual(null);
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
+		expect(bmpfont.surface).not.toBeNull();
 		expect(bmpfont.defaultGlyphWidth).toEqual(width);
 		expect(bmpfont.defaultGlyphHeight).toEqual(height);
 		expect(bmpfont.map).toEqual(map);
@@ -32,11 +39,18 @@ describe("test Label", function() {
 	});
 	it("初期化 - ParameterObject", function() {
 		var runtime = skeletonRuntime();
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
 		var height = 64;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		var bmpfont = new g.BitmapFont(null, map, width, height, missingGlyph);
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
 
 		var label = new g.Label({
 			scene: runtime.scene,
@@ -63,13 +77,20 @@ describe("test Label", function() {
 	});
 	it("初期化 - missMissingGlyph", function() {
 		var runtime = skeletonRuntime();
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
 		var height = 64;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = null;
 
-		var bmpfont = new g.BitmapFont(null, map, width, height, missingGlyph);
-		expect(bmpfont.surface).toEqual(null);
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
+		expect(bmpfont.surface).not.toBeNull();
 		expect(bmpfont.defaultGlyphWidth).toEqual(width);
 		expect(bmpfont.defaultGlyphHeight).toEqual(height);
 		expect(bmpfont.map).toEqual(map);
@@ -77,12 +98,19 @@ describe("test Label", function() {
 	});
 	it("初期化 - fontSize = 0", function() {
 		var runtime = skeletonRuntime();
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
 		var height = 64;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		var bmpfont = new g.BitmapFont(null, map, width, height, missingGlyph);
 
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
@@ -98,23 +126,37 @@ describe("test Label", function() {
 	});
 	it("glyphForCharacter", function() {
 		var runtime = skeletonRuntime();
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
 		var height = 64;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = null;
 
-		var bmpfont = new g.BitmapFont(null, map, width, height, missingGlyph);
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
 		expect(bmpfont.glyphForCharacter(37564).code).toBe(37564);
 		expect(bmpfont.glyphForCharacter(-1)).toBeNull();
 	});
 	it("aligning", function() {
 		var runtime = skeletonRuntime();
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
 		var height = 64;
 		var map = {97: {"x": 0, "y": 1}}; // "a".charCodeAt(0) === 97
 		var missingGlyph = null;
-		var bmpfont = new g.BitmapFont(null, map, width, height, missingGlyph);
 
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
@@ -138,7 +180,13 @@ describe("test Label", function() {
 		var height = 350;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		var bmpfont = new g.BitmapFont(runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height), map, 35, 50, missingGlyph);
+		var bmpfont = new g.BitmapFont({
+			src: runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height),
+			map: map,
+			defaultGlyphWidth: 35,
+			defaultGlyphHeight: 50,
+			missingGlyph: missingGlyph
+		});
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
@@ -152,7 +200,13 @@ describe("test Label", function() {
 		label.invalidate();
 		label.render(r);
 		var count = label._renderer.methodCallHistory.filter(function(elem) {return elem === "drawImage";}).length;
-		var bmpfont2 = new g.BitmapFont(runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height), map, 0, 0, missingGlyph);
+		var bmpfont2 = new g.BitmapFont({
+			src: runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height),
+			map: map,
+			defaultGlyphWidth: 0,
+			defaultGlyphHeight: 0,
+			missingGlyph: missingGlyph
+		});
 		var label2 = new g.Label({
 			scene: runtime.scene,
 			text: "b",
@@ -186,7 +240,13 @@ describe("test Label", function() {
 		var height = 350;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		var bmpfont = new g.BitmapFont(runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height), map, 35, 50, missingGlyph);
+		var bmpfont = new g.BitmapFont({
+			src: runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height),
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
 		var label = new g.Label({scene: runtime.scene, text: "a", bitmapFont: bmpfont, fontSize: 10, textColor: "blue"});
 		label.render(r);
 
