@@ -153,11 +153,13 @@ namespace g {
 	export class AudioAsset extends Asset {
 		data: any;
 		duration: number;
+		loop: boolean;
 		_system: AudioSystem;
 
-		constructor(id: string, assetPath: string, duration: number, system: AudioSystem) {
+		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean) {
 			super(id, assetPath);
 			this.duration = duration;
+			this.loop = loop;
 			this._system = system;
 			this.data = undefined;
 		}

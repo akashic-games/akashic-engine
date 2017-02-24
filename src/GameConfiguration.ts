@@ -29,7 +29,7 @@ namespace g {
 		duration?: number;
 
 		/**
-		 * ループ。 `type` が `"video"` の場合にのみ存在。
+		 * ループ。 `type` が `"audio"` または `"video"` の場合にのみ存在。
 		 */
 		loop?: boolean;
 

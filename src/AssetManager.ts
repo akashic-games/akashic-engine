@@ -242,6 +242,17 @@ namespace g {
 					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
 					if (conf.duration === undefined)
 						conf.duration = 0;
+					// ループするか否かをsystemIdの指定から独立させるためにloopを追加
+					if (conf.loop === undefined) {
+						conf.loop = false;
+					}
+					// 互換性のためにsystemIdが"music", "sound"のときはloopフラグを上書きする。
+					// その他のsystemIdはユーザ定義となるので扱わない。
+					if (conf.systemId === "music") {
+						conf.loop = true;
+					} else if (conf.systemId === "sound") {
+						conf.loop = false;
+					}
 				}
 				if (conf.type === "video") {
 					if (! conf.useRealSize) {
@@ -281,7 +292,7 @@ namespace g {
 				return resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 			case "audio":
 				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system);
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":
