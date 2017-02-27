@@ -284,8 +284,8 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 class AudioAsset extends g.AudioAsset {
 	_failureController: LoadFailureController;
 
-	constructor(necessaryRetryCount: number, id: string, assetPath: string, duration: number, system: g.AudioSystem) {
-		super(id, assetPath, duration, system);
+	constructor(necessaryRetryCount: number, id: string, assetPath: string, duration: number, system: g.AudioSystem, loop: boolean) {
+		super(id, assetPath, duration, system, loop);
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
@@ -365,8 +365,8 @@ export class AudioPlayer extends g.AudioPlayer {
 	supportsPlaybackRateValue: boolean;
 	canHandleStoppedValue: boolean;
 
-	constructor(system: g.AudioSystem, loop?: boolean) {
-		super(system, loop);
+	constructor(system: g.AudioSystem) {
+		super(system);
 		this.supportsPlaybackRateValue = true;
 		this.canHandleStoppedValue = true;
 	}
@@ -443,8 +443,8 @@ export class ResourceFactory extends g.ResourceFactory {
 		}
 	}
 
-	createAudioAsset(id: string, assetPath: string, duration: number, system: g.AudioSystem): g.AudioAsset {
-		return new AudioAsset(this._necessaryRetryCount, id, assetPath, duration, system);
+	createAudioAsset(id: string, assetPath: string, duration: number, system: g.AudioSystem, loop: boolean): g.AudioAsset {
+		return new AudioAsset(this._necessaryRetryCount, id, assetPath, duration, system, loop);
 	}
 
 	createTextAsset(id: string, assetPath: string): g.TextAsset {
@@ -459,8 +459,8 @@ export class ResourceFactory extends g.ResourceFactory {
 		return new Surface(width, height);
 	}
 
-	createAudioPlayer(system: g.AudioSystem, loop?: boolean): g.AudioPlayer {
-		return new AudioPlayer(system, loop);
+	createAudioPlayer(system: g.AudioSystem): g.AudioPlayer {
+		return new AudioPlayer(system);
 	}
 
 	createGlyphFactory(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
