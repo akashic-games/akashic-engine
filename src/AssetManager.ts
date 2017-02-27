@@ -115,8 +115,12 @@ namespace g {
 				throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: invalid argument.");
 
 			var loadingInfo = this._loadings[asset.id];
-			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT)
+			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT) {
+				if (!this.configuration[asset.id]) {
+					return; // DynamicAsset なら return
+				}
 				throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: too many retrying.");
+			}
 
 			if (!loadingInfo.loading) {
 				loadingInfo.loading = true;
@@ -343,9 +347,9 @@ namespace g {
 			loadingInfo.loading = false;
 			++loadingInfo.errorCount;
 
-			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT && error.retriable) {
+			// this.configuration[asset.id] は DynamicAsset では偽になる。
+			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT && error.retriable && this.configuration[asset.id])
 				error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, AssetLoadErrorType.RetryLimitExceeded, error);
-			}
 			if (!error.retriable)
 				delete this._loadings[asset.id];
 			for (var i = 0; i < hs.length; ++i)
@@ -363,7 +367,7 @@ namespace g {
 			delete this._loadings[asset.id];
 			this._assets[asset.id] = asset;
 
-			// VirtualAsset の場合は configuration に書かれていないので以下の判定が偽になる
+			// DynamicAsset の場合は configuration に書かれていないので以下の判定が偽になる
 			if (this.configuration[asset.id]) {
 				const virtualPath = this.configuration[asset.id].virtualPath;
 				if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
