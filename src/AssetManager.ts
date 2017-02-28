@@ -242,10 +242,8 @@ namespace g {
 					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
 					if (conf.duration === undefined)
 						conf.duration = 0;
-					// ループするか否かをsystemIdの指定から独立させるためにloopを追加
-					if (conf.loop === undefined) {
+					if (conf.loop === undefined)
 						conf.loop = false;
-					}
 					// 互換性のためにsystemIdが"music", "sound"のときはloopフラグを上書きする。
 					// その他のsystemIdはユーザ定義となるので扱わない。
 					if (conf.systemId === "music") {
