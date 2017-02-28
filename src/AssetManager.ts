@@ -116,9 +116,8 @@ namespace g {
 
 			var loadingInfo = this._loadings[asset.id];
 			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT) {
-				if (!this.configuration[asset.id]) {
-					return; // DynamicAsset なら return
-				}
+				// DynamicAsset はエラーが規定回数超えた場合は例外にせず諦める。
+				if (!this.configuration[asset.id]) return;
 				throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: too many retrying.");
 			}
 
@@ -347,9 +346,9 @@ namespace g {
 			loadingInfo.loading = false;
 			++loadingInfo.errorCount;
 
-			// this.configuration[asset.id] は DynamicAsset では偽になる。
-			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT && error.retriable && this.configuration[asset.id])
+			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT && error.retriable) {
 				error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, AssetLoadErrorType.RetryLimitExceeded, error);
+			}
 			if (!error.retriable)
 				delete this._loadings[asset.id];
 			for (var i = 0; i < hs.length; ++i)
