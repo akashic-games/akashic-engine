@@ -444,7 +444,7 @@ namespace g {
 			this.logger = new Logger(this);
 			this._main = gameConfiguration.main;
 			this._mainParameter = undefined;
-			this._assetManager = new AssetManager(this, gameConfiguration.assets);
+			this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio);
 
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 			this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);

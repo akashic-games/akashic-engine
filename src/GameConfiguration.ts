@@ -94,6 +94,11 @@ namespace g {
 	}
 
 	/**
+	 * オーディオシステム宣言
+	 */
+	export type AudioSystemConfigurationMap = {[key: string]: AudioSystemConfiguration};
+
+	/**
 	 * ゲームの設定を表すインターフェース。
 	 * game.jsonによって定義される。
 	 */
@@ -125,7 +130,7 @@ namespace g {
 		/**
 		 * AudioSystemの追加定義。キーにsystem名を書く。不要(デフォルトの "sound" と "music" しか使わない)なら省略してよい。
 		 */
-		audio?: {[key: string]: AudioSystemConfiguration};
+		audio?: AudioSystemConfigurationMap;
 
 		/**
 		 * アセット宣言。ユニットテスト記述の都合上省略を許すが、通常非undefinedでしか使わない。

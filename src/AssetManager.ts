@@ -70,9 +70,9 @@ namespace g {
 		 * @param game このインスタンスが属するゲーム
 		 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 		 */
-		constructor(game: Game, conf?: AssetConfigurationMap) {
+		constructor(game: Game, conf?: AssetConfigurationMap, audioSystemConfMap?: AudioSystemConfigurationMap) {
 			this.game = game;
-			this.configuration = this._normalize(conf || {});
+			this.configuration = this._normalize(conf || {}, conf ? (audioSystemConfMap || {}) : {});
 			this._assets = {};
 			this._liveAssetVirtualPathTable = {};
 			this._liveAbsolutePathTable = {};
@@ -216,7 +216,7 @@ namespace g {
 			}
 		}
 
-		_normalize(configuration: any): any {
+		_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 			var ret: {[key: string]: AssetConfiguration} = {};
 			if (!(configuration instanceof Object))
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -245,8 +245,15 @@ namespace g {
 					if (conf.loop === undefined) {
 						if (conf.systemId === "music") {
 							conf.loop = true;
-						} else {
+						} else if (conf.systemId === "sound") {
 							conf.loop = false;
+						} else {
+							const audioSystemConf = audioSystemConfMap[conf.systemId];
+							if (audioSystemConf) {
+								conf.loop = !!audioSystemConf.music;
+							} else {
+								conf.loop = false;
+							}
 						}
 					}
 				}
