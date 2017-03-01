@@ -115,8 +115,11 @@ namespace g {
 				throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: invalid argument.");
 
 			var loadingInfo = this._loadings[asset.id];
-			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT)
+			if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT) {
+				// DynamicAsset はエラーが規定回数超えた場合は例外にせず諦める。
+				if (!this.configuration[asset.id]) return;
 				throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: too many retrying.");
+			}
 
 			if (!loadingInfo.loading) {
 				loadingInfo.loading = true;
@@ -363,7 +366,7 @@ namespace g {
 			delete this._loadings[asset.id];
 			this._assets[asset.id] = asset;
 
-			// VirtualAsset の場合は configuration に書かれていないので以下の判定が偽になる
+			// DynamicAsset の場合は configuration に書かれていないので以下の判定が偽になる
 			if (this.configuration[asset.id]) {
 				const virtualPath = this.configuration[asset.id].virtualPath;
 				if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {

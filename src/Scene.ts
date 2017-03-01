@@ -114,7 +114,9 @@ namespace g {
 			if (error.retriable && !failureInfo.cancelRetry) {
 				this._assetManager.retryLoad(asset);
 			} else {
-				this._scene.game.terminateGame();
+				// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
+				if (this._assetManager.configuration[asset.id])
+					this._scene.game.terminateGame();
 			}
 			this._scene.assetLoadCompleted.fire(asset);
 		}
