@@ -154,12 +154,14 @@ namespace g {
 		data: any;
 		duration: number;
 		loop: boolean;
+		hint: any;
 		_system: AudioSystem;
 
-		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean) {
+		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: any) {
 			super(id, assetPath);
 			this.duration = duration;
 			this.loop = loop;
+			this.hint = hint;
 			this._system = system;
 			this.data = undefined;
 		}

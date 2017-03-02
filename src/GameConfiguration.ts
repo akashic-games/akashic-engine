@@ -1,4 +1,5 @@
 namespace g {
+
 	/**
 	 * Assetの設定の共通部分。
 	 */
@@ -37,6 +38,11 @@ namespace g {
 		 * width,heightではなく実サイズを用いる指定。 `type` が `"video"` の場合にのみ存在。
 		 */
 		useRealSize?: boolean;
+
+		/**
+		 * ヒント。PDI実装が最適なパフォーマンスを発揮するための情報。`type` が `"audio"` の場合にのみ存在。
+		 */
+		hint?: any;
 	}
 
 	/**

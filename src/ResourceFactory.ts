@@ -16,7 +16,7 @@ namespace g {
 			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createVideoAsset");
 		}
 
-		createAudioAsset(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean): AudioAsset {
+		createAudioAsset(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: any): AudioAsset {
 			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createAudioAsset");
 		}
 

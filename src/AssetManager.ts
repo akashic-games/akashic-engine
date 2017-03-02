@@ -256,6 +256,12 @@ namespace g {
 							}
 						}
 					}
+					if (conf.hint === undefined) {
+						conf.hint = {};
+					}
+					if (conf.systemId === "music") {
+						conf.hint.streaming = true;
+					}
 				}
 				if (conf.type === "video") {
 					if (! conf.useRealSize) {
@@ -295,7 +301,7 @@ namespace g {
 				return resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 			case "audio":
 				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop);
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":
