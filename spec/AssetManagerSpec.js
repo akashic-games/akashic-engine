@@ -25,7 +25,23 @@ describe("test AssetManager", function() {
 				type: "audio",
 				path: "/path/to/a/file",
 				virtualPath: "path/to/a/file",
+				systemId: "music",
 				duration: 1984,
+			},
+			baz: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "music",
+				duration: 42,
+				hint: { anotherHint: "mono" },
+			},
+			qux: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "sound",
+				duration: 667408,
 			},
 		}
 	};
@@ -40,16 +56,32 @@ describe("test AssetManager", function() {
 	it("初期化", function() {
 		var game = new mock.Game(gameConfiguration, "/");
 		var manager = game._assetManager;
+
 		expect(manager.game).toBe(game);
+
 		expect(manager.configuration.foo.path).toBe(gameConfiguration.assets.foo.path);
 		expect(manager.configuration.bar.path).toBe(gameConfiguration.assets.bar.path);
 		expect(manager.configuration.zoo.path).toBe(gameConfiguration.assets.zoo.path);
+		expect(manager.configuration.baz.path).toBe(gameConfiguration.assets.baz.path);
+		expect(manager.configuration.qux.path).toBe(gameConfiguration.assets.qux.path);
+
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
 		expect(Object.keys(manager._liveAbsolutePathTable).length).toEqual(0);
 		expect(Object.keys(manager._refCounts).length).toEqual(0);
 		expect(Object.keys(manager._loadings).length).toEqual(0);
-		expect(manager.configuration.zoo.duration).toBe(gameConfiguration.assets.zoo.duration);
+
+		expect(manager.configuration.zoo.systemId).toEqual("music");
+		expect(manager.configuration.zoo.duration).toEqual(gameConfiguration.assets.zoo.duration);
+		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
+
+		expect(manager.configuration.baz.systemId).toEqual("music");
+		expect(manager.configuration.baz.duration).toEqual(gameConfiguration.assets.baz.duration);
+		expect(manager.configuration.baz.hint).toEqual({ streaming: true, anotherHint: "mono" });
+
+		expect(manager.configuration.qux.systemId).toEqual("sound");
+		expect(manager.configuration.qux.duration).toEqual(gameConfiguration.assets.qux.duration);
+		expect(manager.configuration.qux.hint).toEqual({});
 	});
 
 	it("rejects illegal configuration", function () {
