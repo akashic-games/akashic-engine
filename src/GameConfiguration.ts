@@ -97,7 +97,13 @@ namespace g {
 	 */
 	export interface AudioSystemConfiguration {
 		loop?: boolean;
+		hint?: AudioAssetHint;
 	}
+
+	/**
+	 * オーディオシステム宣言
+	 */
+	export type AudioSystemConfigurationMap = {[key: string]: AudioSystemConfiguration};
 
 	/**
 	 * AudioSystemの設定を表すインターフェース。
@@ -105,11 +111,6 @@ namespace g {
 	export interface AudioAssetHint {
 		streaming?: boolean;
 	}
-
-	/**
-	 * オーディオシステム宣言
-	 */
-	export type AudioSystemConfigurationMap = {[key: string]: AudioSystemConfiguration};
 
 	/**
 	 * ゲームの設定を表すインターフェース。

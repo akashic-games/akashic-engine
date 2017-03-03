@@ -13,6 +13,29 @@ namespace g {
 		}
 	}
 
+	function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): AudioSystemConfigurationMap {
+		confMap = confMap || {};
+
+		const systemDefaults: AudioSystemConfigurationMap = {
+			music: {
+				loop: true,
+				hint: { streaming: true }
+			},
+			sound: {
+				loop: false,
+				hint: { streaming: false }
+			}
+		};
+
+		for (let key in systemDefaults) {
+			if (! (key in confMap)) {
+				confMap[key] = systemDefaults[key];
+			}
+		}
+
+		return confMap;
+	}
+
 	/**
 	 * `Asset` を管理するクラス。
 	 *
@@ -72,7 +95,7 @@ namespace g {
 		 */
 		constructor(game: Game, conf?: AssetConfigurationMap, audioSystemConfMap?: AudioSystemConfigurationMap) {
 			this.game = game;
-			this.configuration = this._normalize(conf || {}, conf ? (audioSystemConfMap || {}) : {});
+			this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 			this._assets = {};
 			this._liveAssetVirtualPathTable = {};
 			this._liveAbsolutePathTable = {};
@@ -242,21 +265,12 @@ namespace g {
 					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
 					if (conf.duration === undefined)
 						conf.duration = 0;
+					const audioSystemConf = audioSystemConfMap[conf.systemId];
 					if (conf.loop === undefined) {
-						if (conf.systemId === "music") {
-							conf.loop = true;
-						} else if (conf.systemId === "sound") {
-							conf.loop = false;
-						} else {
-							const audioSystemConf = audioSystemConfMap[conf.systemId];
-							conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
-						}
+						conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
 					}
 					if (conf.hint === undefined) {
-						conf.hint = {};
-					}
-					if (conf.systemId === "music") {
-						conf.hint.streaming = true;
+						conf.hint = audioSystemConf ? audioSystemConf.hint : {};
 					}
 				}
 				if (conf.type === "video") {
