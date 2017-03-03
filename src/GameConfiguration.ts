@@ -42,7 +42,7 @@ namespace g {
 		/**
 		 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。`type` が `"audio"` の場合にのみ存在。
 		 */
-		hint?: any;
+		hint?: AudioAssetHint;
 	}
 
 	/**
@@ -97,6 +97,13 @@ namespace g {
 	 */
 	export interface AudioSystemConfiguration {
 		music?: boolean;
+	}
+
+	/**
+	 * AudioSystemの設定を表すインターフェース。
+	 */
+	export interface AudioAssetHint {
+		streaming?: boolean;
 	}
 
 	/**

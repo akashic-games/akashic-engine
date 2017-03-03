@@ -287,7 +287,7 @@ class AudioAsset extends g.AudioAsset {
 	constructor(
 	            necessaryRetryCount: number, id: string, assetPath: string,
 	            duration: number, system: g.AudioSystem,
-	            loop: boolean, hint: any) {
+	            loop: boolean, hint: g.AudioAssetHint) {
 		super(id, assetPath, duration, system, loop, hint);
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
@@ -447,7 +447,7 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 
 	createAudioAsset(
-	id: string, assetPath: string, duration: number, system: g.AudioSystem, loop: boolean, hint: any): g.AudioAsset {
+	id: string, assetPath: string, duration: number, system: g.AudioSystem, loop: boolean, hint: g.AudioAssetHint): g.AudioAsset {
 		return new AudioAsset(this._necessaryRetryCount, id, assetPath, duration, system, loop, hint);
 	}
 

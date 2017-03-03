@@ -154,10 +154,10 @@ namespace g {
 		data: any;
 		duration: number;
 		loop: boolean;
-		hint: any;
+		hint: AudioAssetHint;
 		_system: AudioSystem;
 
-		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: any) {
+		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: AudioAssetHint) {
 			super(id, assetPath);
 			this.duration = duration;
 			this.loop = loop;

@@ -34,7 +34,7 @@ describe("test AssetManager", function() {
 				virtualPath: "path/to/a/file",
 				systemId: "music",
 				duration: 42,
-				hint: { anotherHint: "mono" },
+				hint: { streaming: false },
 			},
 			qux: {
 				type: "audio",
@@ -77,7 +77,7 @@ describe("test AssetManager", function() {
 
 		expect(manager.configuration.baz.systemId).toEqual("music");
 		expect(manager.configuration.baz.duration).toEqual(gameConfiguration.assets.baz.duration);
-		expect(manager.configuration.baz.hint).toEqual({ streaming: true, anotherHint: "mono" });
+		expect(manager.configuration.baz.hint).toEqual({ streaming: true });
 
 		expect(manager.configuration.qux.systemId).toEqual("sound");
 		expect(manager.configuration.qux.duration).toEqual(gameConfiguration.assets.qux.duration);
