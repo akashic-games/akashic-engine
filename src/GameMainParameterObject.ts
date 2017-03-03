@@ -16,5 +16,10 @@ namespace g {
 		 * `snapshot` が指定される場合は常に指定されない。
 		 */
 		args?: any;
+
+		/**
+		 * ローカル起動引数。
+		 */
+		localArgs?: any;
 	}
 }
