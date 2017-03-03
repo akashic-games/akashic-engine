@@ -148,6 +148,11 @@ namespace g {
 		height: number;
 
 		/**
+		 * 初期ローディングシーンについての指定。
+		 */
+		initialLoadingScene: string;
+
+		/**
 		 * グローバルアセットのマップ。this._initialScene.assets のエイリアス。
 		 */
 		assets: {[key: string]: Asset};
@@ -401,6 +406,7 @@ namespace g {
 			this.fps = gameConfiguration.fps;
 			this.width = gameConfiguration.width;
 			this.height = gameConfiguration.height;
+			this.initialLoadingScene = gameConfiguration.initialLoadingScene;
 			this.renderers = [];
 			this.scenes = [];
 			this.random = [];
@@ -854,7 +860,14 @@ namespace g {
 			this._isTerminated = false;
 			this.vars = {};
 
-			this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
+			switch (this.initialLoadingScene) {
+			case "none": 
+				this._defaultLoadingScene = new LoadingScene({ game: this });
+				break;
+			default:
+				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
+				break;
+			}
 		}
 
 		/**
