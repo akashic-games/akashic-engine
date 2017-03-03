@@ -249,11 +249,7 @@ namespace g {
 							conf.loop = false;
 						} else {
 							const audioSystemConf = audioSystemConfMap[conf.systemId];
-							if (audioSystemConf) {
-								conf.loop = !!audioSystemConf.music;
-							} else {
-								conf.loop = false;
-							}
+							conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
 						}
 					}
 					if (conf.hint === undefined) {

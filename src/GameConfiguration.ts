@@ -96,7 +96,7 @@ namespace g {
 	 * AudioSystemの設定を表すインターフェース。
 	 */
 	export interface AudioSystemConfiguration {
-		music?: boolean;
+		loop?: boolean;
 	}
 
 	/**
