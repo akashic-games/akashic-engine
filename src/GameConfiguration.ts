@@ -40,7 +40,7 @@ namespace g {
 		useRealSize?: boolean;
 
 		/**
-		 * ヒント。PDI実装が最適なパフォーマンスを発揮するための情報。`type` が `"audio"` の場合にのみ存在。
+		 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。`type` が `"audio"` の場合にのみ存在。
 		 */
 		hint?: any;
 	}
