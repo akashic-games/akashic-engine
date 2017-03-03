@@ -150,10 +150,10 @@ namespace g {
 		globalScripts?: string[];
 
 		/**
-		 * 初期ローディングシーンについての指定。
-		 * 初期ローディングシーンを非表示にしたい場合は "none" を指定する。
-		 * 省略時は `DefaultLoadingScene` を表示する。
+		 * デフォルトローディングシーンについての指定。
+		 * 省略時または "default" を指定すると `DefaultLoadingScene` を表示する。
+		 * デフォルトローディングシーンを非表示にしたい場合は "none" を指定する。
 		 */
-		initialLoadingScene?: string;
+		defaultLoadingScene?: "default" | "none";
 	}
 }

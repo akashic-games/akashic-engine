@@ -148,11 +148,6 @@ namespace g {
 		height: number;
 
 		/**
-		 * 初期ローディングシーンについての指定。
-		 */
-		initialLoadingScene: string;
-
-		/**
 		 * グローバルアセットのマップ。this._initialScene.assets のエイリアス。
 		 */
 		assets: {[key: string]: Asset};
@@ -368,6 +363,12 @@ namespace g {
 		_focusingCamera: Camera;
 
 		/**
+		 * このゲームの設定。
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		_configuration: GameConfiguration;
+
+		/**
 		 * 実行待ちのシーン遷移要求。
 		 */
 		private _sceneChangeRequests: SceneChangeRequest[];
@@ -406,7 +407,6 @@ namespace g {
 			this.fps = gameConfiguration.fps;
 			this.width = gameConfiguration.width;
 			this.height = gameConfiguration.height;
-			this.initialLoadingScene = gameConfiguration.initialLoadingScene;
 			this.renderers = [];
 			this.scenes = [];
 			this.random = [];
@@ -450,6 +450,7 @@ namespace g {
 			this.logger = new Logger(this);
 			this._main = gameConfiguration.main;
 			this._mainParameter = undefined;
+			this._configuration = gameConfiguration;
 			this._assetManager = new AssetManager(this, gameConfiguration.assets);
 
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
@@ -860,8 +861,9 @@ namespace g {
 			this._isTerminated = false;
 			this.vars = {};
 
-			switch (this.initialLoadingScene) {
-			case "none": 
+			switch (this._configuration.defaultLoadingScene) {
+			case "none":
+				// Note: 何も描画しない実装として利用している
 				this._defaultLoadingScene = new LoadingScene({ game: this });
 				break;
 			default:
