@@ -34,6 +34,7 @@ describe("test AssetManager", function() {
 				virtualPath: "path/to/a/file",
 				systemId: "music",
 				duration: 42,
+				loop: false,
 				hint: { streaming: false },
 			},
 			qux: {
@@ -47,8 +48,17 @@ describe("test AssetManager", function() {
 				type: "audio",
 				path: "/path/to/a/file",
 				virtualPath: "path/to/a/file",
+				systemId: "sound",
+				duration: 5972,
+				loop: true,
+				hint: { streaming: true },
+			},
+			corge: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
 				systemId: "user",
-				duration: 667408,
+				duration: 91,
 			},
 		}
 	};
@@ -72,6 +82,7 @@ describe("test AssetManager", function() {
 		expect(manager.configuration.baz.path).toBe(gameConfiguration.assets.baz.path);
 		expect(manager.configuration.qux.path).toBe(gameConfiguration.assets.qux.path);
 		expect(manager.configuration.quux.path).toBe(gameConfiguration.assets.quux.path);
+		expect(manager.configuration.corge.path).toBe(gameConfiguration.assets.corge.path);
 
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
@@ -81,19 +92,28 @@ describe("test AssetManager", function() {
 
 		expect(manager.configuration.zoo.systemId).toEqual("music");
 		expect(manager.configuration.zoo.duration).toEqual(gameConfiguration.assets.zoo.duration);
+		expect(manager.configuration.zoo.loop).toEqual(true);
 		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
 
 		expect(manager.configuration.baz.systemId).toEqual("music");
 		expect(manager.configuration.baz.duration).toEqual(gameConfiguration.assets.baz.duration);
+		expect(manager.configuration.baz.loop).toEqual(false);
 		expect(manager.configuration.baz.hint).toEqual({ streaming: false });
 
 		expect(manager.configuration.qux.systemId).toEqual("sound");
 		expect(manager.configuration.qux.duration).toEqual(gameConfiguration.assets.qux.duration);
+		expect(manager.configuration.qux.loop).toEqual(false);
 		expect(manager.configuration.qux.hint).toEqual({ streaming: false });
 
-		expect(manager.configuration.quux.systemId).toEqual("user");
+		expect(manager.configuration.quux.systemId).toEqual("sound");
 		expect(manager.configuration.quux.duration).toEqual(gameConfiguration.assets.quux.duration);
-		expect(manager.configuration.quux.hint).toEqual({});
+		expect(manager.configuration.quux.loop).toEqual(true);
+		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
+
+		expect(manager.configuration.corge.systemId).toEqual("user");
+		expect(manager.configuration.corge.duration).toEqual(gameConfiguration.assets.corge.duration);
+		expect(manager.configuration.corge.loop).toEqual(false);
+		expect(manager.configuration.corge.hint).toEqual({});
 	});
 
 	it("rejects illegal configuration", function () {
