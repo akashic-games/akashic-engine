@@ -13,6 +13,29 @@ namespace g {
 		}
 	}
 
+	function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): AudioSystemConfigurationMap {
+		confMap = confMap || {};
+
+		const systemDefaults: AudioSystemConfigurationMap = {
+			music: {
+				loop: true,
+				hint: { streaming: true }
+			},
+			sound: {
+				loop: false,
+				hint: { streaming: false }
+			}
+		};
+
+		for (let key in systemDefaults) {
+			if (! (key in confMap)) {
+				confMap[key] = systemDefaults[key];
+			}
+		}
+
+		return confMap;
+	}
+
 	/**
 	 * `Asset` を管理するクラス。
 	 *
@@ -70,9 +93,9 @@ namespace g {
 		 * @param game このインスタンスが属するゲーム
 		 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 		 */
-		constructor(game: Game, conf?: AssetConfigurationMap) {
+		constructor(game: Game, conf?: AssetConfigurationMap, audioSystemConfMap?: AudioSystemConfigurationMap) {
 			this.game = game;
-			this.configuration = this._normalize(conf || {});
+			this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 			this._assets = {};
 			this._liveAssetVirtualPathTable = {};
 			this._liveAbsolutePathTable = {};
@@ -219,7 +242,7 @@ namespace g {
 			}
 		}
 
-		_normalize(configuration: any): any {
+		_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 			var ret: {[key: string]: AssetConfiguration} = {};
 			if (!(configuration instanceof Object))
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -245,6 +268,13 @@ namespace g {
 					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
 					if (conf.duration === undefined)
 						conf.duration = 0;
+					const audioSystemConf = audioSystemConfMap[conf.systemId];
+					if (conf.loop === undefined) {
+						conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
+					}
+					if (conf.hint === undefined) {
+						conf.hint = audioSystemConf ? audioSystemConf.hint : {};
+					}
 				}
 				if (conf.type === "video") {
 					if (! conf.useRealSize) {
@@ -284,7 +314,7 @@ namespace g {
 				return resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 			case "audio":
 				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system);
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":

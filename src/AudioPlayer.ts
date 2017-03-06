@@ -48,14 +48,11 @@ namespace g {
 		_playbackRate: number;
 
 		_system: AudioSystem;
-		_loop: boolean;
 
 		/**
 		 * `AudioPlayer` のインスタンスを生成する。
 		 */
-		constructor(system: AudioSystem, loop?: boolean) {
-			this._loop = !!loop;
-
+		constructor(system: AudioSystem) {
 			this.played = new Trigger<AudioPlayerEvent>();
 			this.stopped = new Trigger<AudioPlayerEvent>();
 			this.currentAudio = undefined;
