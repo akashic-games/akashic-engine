@@ -6,6 +6,12 @@ describe("test AssetManager", function() {
 		width: 320,
 		height: 320,
 		fps: 30,
+		audio: {
+			"user2": {
+				loop: true,
+				hint: { streaming: true }
+			}
+		},
 		assets: {
 			foo: {
 				type: "image",
@@ -25,7 +31,56 @@ describe("test AssetManager", function() {
 				type: "audio",
 				path: "/path/to/a/file",
 				virtualPath: "path/to/a/file",
+				systemId: "music",
 				duration: 1984,
+			},
+			baz: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "music",
+				duration: 42,
+				loop: false,
+				hint: { streaming: false },
+			},
+			qux: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "sound",
+				duration: 667408,
+			},
+			quux: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "sound",
+				duration: 5972,
+				loop: true,
+				hint: { streaming: true },
+			},
+			corge: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "user",
+				duration: 91,
+			},
+			grault: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "user2",
+				duration: 12742,
+			},
+			garply: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "user2",
+				duration: 3474,
+				loop: false,
+				hint: { streaming: false },
 			},
 		}
 	};
@@ -40,16 +95,59 @@ describe("test AssetManager", function() {
 	it("初期化", function() {
 		var game = new mock.Game(gameConfiguration, "/");
 		var manager = game._assetManager;
+
 		expect(manager.game).toBe(game);
+
 		expect(manager.configuration.foo.path).toBe(gameConfiguration.assets.foo.path);
 		expect(manager.configuration.bar.path).toBe(gameConfiguration.assets.bar.path);
 		expect(manager.configuration.zoo.path).toBe(gameConfiguration.assets.zoo.path);
+		expect(manager.configuration.baz.path).toBe(gameConfiguration.assets.baz.path);
+		expect(manager.configuration.qux.path).toBe(gameConfiguration.assets.qux.path);
+		expect(manager.configuration.quux.path).toBe(gameConfiguration.assets.quux.path);
+		expect(manager.configuration.corge.path).toBe(gameConfiguration.assets.corge.path);
+		expect(manager.configuration.grault.path).toBe(gameConfiguration.assets.grault.path);
+		expect(manager.configuration.garply.path).toBe(gameConfiguration.assets.grault.path);
+
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
 		expect(Object.keys(manager._liveAbsolutePathTable).length).toEqual(0);
 		expect(Object.keys(manager._refCounts).length).toEqual(0);
 		expect(Object.keys(manager._loadings).length).toEqual(0);
-		expect(manager.configuration.zoo.duration).toBe(gameConfiguration.assets.zoo.duration);
+
+		expect(manager.configuration.zoo.systemId).toEqual("music");
+		expect(manager.configuration.zoo.duration).toEqual(gameConfiguration.assets.zoo.duration);
+		expect(manager.configuration.zoo.loop).toEqual(true);
+		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
+
+		expect(manager.configuration.baz.systemId).toEqual("music");
+		expect(manager.configuration.baz.duration).toEqual(gameConfiguration.assets.baz.duration);
+		expect(manager.configuration.baz.loop).toEqual(false);
+		expect(manager.configuration.baz.hint).toEqual({ streaming: false });
+
+		expect(manager.configuration.qux.systemId).toEqual("sound");
+		expect(manager.configuration.qux.duration).toEqual(gameConfiguration.assets.qux.duration);
+		expect(manager.configuration.qux.loop).toEqual(false);
+		expect(manager.configuration.qux.hint).toEqual({ streaming: false });
+
+		expect(manager.configuration.quux.systemId).toEqual("sound");
+		expect(manager.configuration.quux.duration).toEqual(gameConfiguration.assets.quux.duration);
+		expect(manager.configuration.quux.loop).toEqual(true);
+		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
+
+		expect(manager.configuration.corge.systemId).toEqual("user");
+		expect(manager.configuration.corge.duration).toEqual(gameConfiguration.assets.corge.duration);
+		expect(manager.configuration.corge.loop).toEqual(false);
+		expect(manager.configuration.corge.hint).toEqual({});
+
+		expect(manager.configuration.grault.systemId).toEqual("user2");
+		expect(manager.configuration.grault.duration).toEqual(gameConfiguration.assets.grault.duration);
+		expect(manager.configuration.grault.loop).toEqual(true);
+		expect(manager.configuration.grault.hint).toEqual({ streaming: true });
+
+		expect(manager.configuration.garply.systemId).toEqual("user2");
+		expect(manager.configuration.garply.duration).toEqual(gameConfiguration.assets.garply.duration);
+		expect(manager.configuration.garply.loop).toEqual(false);
+		expect(manager.configuration.garply.hint).toEqual({ streaming: false });
 	});
 
 	it("rejects illegal configuration", function () {
