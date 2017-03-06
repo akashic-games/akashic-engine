@@ -6,6 +6,12 @@ describe("test AssetManager", function() {
 		width: 320,
 		height: 320,
 		fps: 30,
+		audio: {
+			"user2": {
+				loop: true,
+				hint: { streaming: true }
+			}
+		},
 		assets: {
 			foo: {
 				type: "image",
@@ -60,6 +66,22 @@ describe("test AssetManager", function() {
 				systemId: "user",
 				duration: 91,
 			},
+			grault: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "user2",
+				duration: 12742,
+			},
+			garply: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "user2",
+				duration: 3474,
+				loop: false,
+				hint: { streaming: false },
+			},
 		}
 	};
 
@@ -83,6 +105,8 @@ describe("test AssetManager", function() {
 		expect(manager.configuration.qux.path).toBe(gameConfiguration.assets.qux.path);
 		expect(manager.configuration.quux.path).toBe(gameConfiguration.assets.quux.path);
 		expect(manager.configuration.corge.path).toBe(gameConfiguration.assets.corge.path);
+		expect(manager.configuration.grault.path).toBe(gameConfiguration.assets.grault.path);
+		expect(manager.configuration.garply.path).toBe(gameConfiguration.assets.grault.path);
 
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
@@ -114,6 +138,17 @@ describe("test AssetManager", function() {
 		expect(manager.configuration.corge.duration).toEqual(gameConfiguration.assets.corge.duration);
 		expect(manager.configuration.corge.loop).toEqual(false);
 		expect(manager.configuration.corge.hint).toEqual({});
+
+		expect(manager.configuration.grault.systemId).toEqual("user2");
+		expect(manager.configuration.grault.duration).toEqual(gameConfiguration.assets.grault.duration);
+		expect(manager.configuration.grault.loop).toEqual(true);
+		expect(manager.configuration.grault.hint).toEqual({ streaming: true });
+
+
+		expect(manager.configuration.garply.systemId).toEqual("user2");
+		expect(manager.configuration.garply.duration).toEqual(gameConfiguration.assets.garply.duration);
+		expect(manager.configuration.garply.loop).toEqual(false);
+		expect(manager.configuration.garply.hint).toEqual({ streaming: false });
 	});
 
 	it("rejects illegal configuration", function () {
