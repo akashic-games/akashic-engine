@@ -13,7 +13,6 @@ describe("test AudioPlayer", function() {
 		var game = new mock.Game({ width: 320, height: 320 });
 		var system = new g.MusicAudioSystem("music", game);
 		var player = new g.AudioPlayer(system, true);
-		expect(player._loop).toBe(true);
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(g.Trigger);
 		expect(player.stopped.constructor).toBe(g.Trigger);
@@ -25,7 +24,6 @@ describe("test AudioPlayer", function() {
 		var system = new g.SoundAudioSystem("voice", game);
 		system.volume = 0.5;
 		var player = new g.AudioPlayer(system);
-		expect(player._loop).toBe(false);
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(g.Trigger);
 		expect(player.stopped.constructor).toBe(g.Trigger);

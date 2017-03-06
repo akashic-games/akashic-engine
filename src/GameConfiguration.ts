@@ -1,4 +1,5 @@
 namespace g {
+
 	/**
 	 * Assetの設定の共通部分。
 	 */
@@ -29,7 +30,7 @@ namespace g {
 		duration?: number;
 
 		/**
-		 * ループ。 `type` が `"video"` の場合にのみ存在。
+		 * ループ。 `type` が `"audio"` または `"video"` の場合にのみ存在。
 		 */
 		loop?: boolean;
 
@@ -37,6 +38,11 @@ namespace g {
 		 * width,heightではなく実サイズを用いる指定。 `type` が `"video"` の場合にのみ存在。
 		 */
 		useRealSize?: boolean;
+
+		/**
+		 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。`type` が `"audio"` の場合にのみ存在。
+		 */
+		hint?: AudioAssetHint;
 	}
 
 	/**
@@ -90,7 +96,20 @@ namespace g {
 	 * AudioSystemの設定を表すインターフェース。
 	 */
 	export interface AudioSystemConfiguration {
-		music?: boolean;
+		loop?: boolean;
+		hint?: AudioAssetHint;
+	}
+
+	/**
+	 * オーディオシステム宣言
+	 */
+	export type AudioSystemConfigurationMap = {[key: string]: AudioSystemConfiguration};
+
+	/**
+	 * AudioSystemの設定を表すインターフェース。
+	 */
+	export interface AudioAssetHint {
+		streaming?: boolean;
 	}
 
 	/**
@@ -125,7 +144,7 @@ namespace g {
 		/**
 		 * AudioSystemの追加定義。キーにsystem名を書く。不要(デフォルトの "sound" と "music" しか使わない)なら省略してよい。
 		 */
-		audio?: {[key: string]: AudioSystemConfiguration};
+		audio?: AudioSystemConfigurationMap;
 
 		/**
 		 * アセット宣言。ユニットテスト記述の都合上省略を許すが、通常非undefinedでしか使わない。

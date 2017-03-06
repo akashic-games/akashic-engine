@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 1.11.1
+
+機能追加
+ * `GameMainParameterObject` に `localArgs` プロパティを追加。
+
+不具合修正
+ * DynamicAsset のダウンロードに失敗した場合にゲームを続行できるように修正。
+
+### エンジン開発者への影響
+ * `GameMainParameterObject` に `localArgs` プロパティを追加。
+    * ゲームを再現可能にするために `args` の永続化が必要な場合があります。
+
 ## 1.11.0
 
 機能追加

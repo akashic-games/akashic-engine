@@ -94,7 +94,7 @@ namespace g {
 		// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 		get player(): AudioPlayer {
 			if (! this._player) {
-				this._player = this.game.resourceFactory.createAudioPlayer(this, true);
+				this._player = this.game.resourceFactory.createAudioPlayer(this);
 				this._player.played.handle(this, this._onPlayerPlayed);
 				this._player.stopped.handle(this, this._onPlayerStopped);
 			}
