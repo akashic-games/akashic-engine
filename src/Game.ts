@@ -363,8 +363,7 @@ namespace g {
 		_focusingCamera: Camera;
 
 		/**
-		 * このゲームの設定。
-		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 * このゲームの設定(game.json の内容)。
 		 */
 		_configuration: GameConfiguration;
 
