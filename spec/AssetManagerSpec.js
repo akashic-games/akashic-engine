@@ -144,7 +144,6 @@ describe("test AssetManager", function() {
 		expect(manager.configuration.grault.loop).toEqual(true);
 		expect(manager.configuration.grault.hint).toEqual({ streaming: true });
 
-
 		expect(manager.configuration.garply.systemId).toEqual("user2");
 		expect(manager.configuration.garply.duration).toEqual(gameConfiguration.assets.garply.duration);
 		expect(manager.configuration.garply.loop).toEqual(false);
