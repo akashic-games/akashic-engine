@@ -12,7 +12,7 @@
     "gulp-order": "~1.1.1",
     "gulp-rename": "^1.2.0",
     "gulp-shell": "0.5.2",
-    "gulp-tslint": "~3.2.0",
+    "gulp-tslint": "~4.3.0",
     "gulp-uglify": "~1.0.1",
     "jasmine": "~2.1.1",
     "jasmine-reporters": "~2.0.4",
@@ -21,6 +21,7 @@
     "textlint-rule-max-ten": "^1.2.2",
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
+    "tslint": "~3.7.4",
     "typedoc": "^0.5.1",
     "typescript": "~2.1.6"
   },
