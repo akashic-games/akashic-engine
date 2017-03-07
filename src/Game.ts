@@ -755,8 +755,9 @@ namespace g {
 		 * ただしその頻度は推奨タイミングの発火頻度と同程度に抑えられるべきである。
 		 *
 		 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
+		 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 		 */
-		saveSnapshot(snapshot: any): void {
+		saveSnapshot(snapshot: any, timestamp?: number): void {
 			throw ExceptionFactory.createPureVirtualError("Game#saveSnapshot");
 		}
 

@@ -529,7 +529,7 @@ export class Game extends g.Game {
 		return false;
 	}
 
-	saveSnapshot(snapshot: any): void {
+	saveSnapshot(snapshot: any, timestamp?: number): void {
 		// do nothing.
 	}
 }
