@@ -12,14 +12,14 @@ namespace g {
 		snapshot?: any;
 
 		/**
-		 * 起動時引数。
-		 * `snapshot` が指定される場合は常に指定されない。
+		 * ローカル起動時引数。
 		 */
 		args?: any;
 
 		/**
-		 * ローカル起動引数。
+		 * グローバル起動引数。
+		 * `snapshot` が指定される場合は常に指定されない。
 		 */
-		localArgs?: any;
+		globalArgs?: any;
 	}
 }
