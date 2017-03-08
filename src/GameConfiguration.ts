@@ -167,5 +167,12 @@ namespace g {
 		// akashic-engine はこのフィールドを認識しないので、エンジンユーザはあらかじめ
 		// `globalScripts` を相当する `assets` 定義に変換する必要がある。
 		globalScripts?: string[];
+
+		/**
+		 * デフォルトローディングシーンについての指定。
+		 * 省略時または "default" を指定すると `DefaultLoadingScene` を表示する。
+		 * デフォルトローディングシーンを非表示にしたい場合は "none" を指定する。
+		 */
+		defaultLoadingScene?: "default" | "none";
 	}
 }

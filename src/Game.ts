@@ -363,6 +363,11 @@ namespace g {
 		_focusingCamera: Camera;
 
 		/**
+		 * このゲームの設定(game.json の内容)。
+		 */
+		_configuration: GameConfiguration;
+
+		/**
 		 * 実行待ちのシーン遷移要求。
 		 */
 		private _sceneChangeRequests: SceneChangeRequest[];
@@ -444,7 +449,8 @@ namespace g {
 			this.logger = new Logger(this);
 			this._main = gameConfiguration.main;
 			this._mainParameter = undefined;
-			this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio);
+			this._configuration = gameConfiguration;
+			this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio)
 
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 			this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
@@ -854,7 +860,15 @@ namespace g {
 			this._isTerminated = false;
 			this.vars = {};
 
-			this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
+			switch (this._configuration.defaultLoadingScene) {
+			case "none":
+				// Note: 何も描画しない実装として利用している
+				this._defaultLoadingScene = new LoadingScene({ game: this });
+				break;
+			default:
+				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
+				break;
+			}
 		}
 
 		/**
