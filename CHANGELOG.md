@@ -1,5 +1,46 @@
 # ChangeLog
 
+## 1.12.0
+
+機能追加
+ * `GameMainParameterObject` に `globalArgs` を追加。
+ * game.json でオーディオアセットに対しヒントを設定可能に
+ * game.json でデフォルトのローディングシーンのについて設定可能に
+
+不具合修正
+ * Version 1.11.1 で導入した `GameMainParameterObject` の `localArgs` を削除。
+
+文書
+ * なし
+
+その他変更
+ * オーディオ再生のループフラグを `AudioPlayer` から `AudioAsset` に移動
+
+### ゲーム開発者への影響
+
+ * game.json でオーディオアセットに対しヒントを設定可能に
+    * ゲーム開発者はオーディオ機能に対してヒント（パフォーマンスを最適化するための手がかり）を設定できるようになりました。 Akashic Engine は可能であればこの情報に基いてパフォーマンスを最適化します。
+ * オーディオ再生のループフラグを `AudioPlayer` から `AudioAsset` に移動
+    * `AudioPlayer#_loop` を参照しているコードはコンパイルエラーになります。
+
+### 非推奨機能の変更
+
+ * なし
+
+### エンジン開発者への影響
+
+ * Version 1.11.1 で導入した `GameMainParameterObject` の `localArgs` を削除。
+     * Version 1.11.1 で行った追従対応の巻き戻しが必要です。
+     * 同等の機能を `args` で行い、`args` の役割を `globalArgs` が担うようになります。
+ * game.json でオーディオアセットに対しヒントを記述可能に
+    * `AudioAsset` のコンストラクタと `ResourceFactory#createAudioAsset()` の引数に `hint: any` が追加されました。派生クラスはこれを追従する必要があります。
+ * オーディオ再生のループフラグを `AudioPlayer` から `AudioAsset` に移動
+    * `AudioAsset` のコンストラクタと `ResourceFactory#createAudioAsset()` の引数に `loop: boolean` が追加されました。派生クラスはこれを追従する必要があります。
+    * `AudioPlayer` のコンストラクタと `ResourceFactory#createAudioPlayer()` から `loop: boolean` が除かれました。派生クラスはこれを追従する必要があります。
+ * game.json でデフォルトのローディングシーンのについて設定可能に
+    * game.json の `defaultLoadingScene` に "none" を指定すると、グローバルアセット読み込み中のローディングシーンを含むデフォルトのローディングシーンを非表示にできます。
+    * 省略した場合や "default" を指定した場合は今までの挙動と同一となります。
+
 ## 1.11.1
 
 機能追加
