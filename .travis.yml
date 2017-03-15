@@ -1,0 +1,8 @@
+script:
+- npm install
+- npm test
+language: node_js
+node_js:
+- 4.8
+- 6.10
+- 7.7
