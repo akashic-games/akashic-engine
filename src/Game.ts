@@ -450,7 +450,7 @@ namespace g {
 			this._main = gameConfiguration.main;
 			this._mainParameter = undefined;
 			this._configuration = gameConfiguration;
-			this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio)
+			this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio);
 
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 			this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
