@@ -306,10 +306,11 @@ namespace g {
 				var glyph = this.font.glyphForCharacter(code);
 				if (! glyph) {
 					const str = (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
-					throw ExceptionFactory.createAssertionError(
+					this.game().logger.warn(
 						"Label#_invalidateSelf(): failed to get a glyph for '" + str + "' " +
 						"(BitmapFont might not have the glyph or DynamicFont might create a glyph larger than its atlas)."
 					);
+					continue;
 				}
 
 				if (glyph.width < 0 || glyph.height < 0) {
