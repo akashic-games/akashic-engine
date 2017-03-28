@@ -142,6 +142,36 @@ describe("test Label", function() {
 		expect(bmpfont.glyphForCharacter(37564).code).toBe(37564);
 		expect(bmpfont.glyphForCharacter(-1)).toBeNull();
 	});
+	it("glyphForCharacter - handle unmapped glyph", function() {
+		var runtime = skeletonRuntime();
+		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
+		var width = 32;
+		var height = 64;
+		var map = {"37564": {"x": 0, "y": 1}};
+		var missingGlyph = {"x": 2, "y": 3};
+
+		var bmpfont = new g.BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height
+		});
+		var label = new g.Label({
+			scene: runtime.scene,
+			text: "a",
+			bitmapFont: bmpfont,
+			fontSize: 10,
+			textAlign: g.TextAlign.Center,
+			maxWidth: 100,
+			widthAutoAdjust: false,
+			width: 50,
+			height: 20,
+			textColor: "white"
+		});
+		bmpfont.glyphForCharacter = function() {}; // g.Font からグリフ情報を得られない状態を模倣する
+		label.text = "咫";
+		expect(function() { label.invalidate() }).not.toThrow();
+	});
 	it("aligning", function() {
 		var runtime = skeletonRuntime();
 		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
