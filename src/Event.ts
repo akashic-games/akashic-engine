@@ -17,6 +17,10 @@ namespace g {
 		 */
 		Leave,
 		/**
+		 * タイムスタンプを表すイベント。
+		 */
+		Timestamp,
+		/**
 		 * 乱数生成器の生成を表すイベント。
 		 * この値は利用されていない。
 		 */
@@ -232,6 +236,22 @@ namespace g {
 		constructor(player: Player, priority?: number) {
 			this.priority = priority;
 			this.player = player;
+		}
+	}
+
+	/**
+	 * タイムスタンプを表すイベント。
+	 */
+	export class TimestampEvent implements Event {
+		type: EventType = EventType.Timestamp;
+		priority: number;
+		player: Player;
+		timestamp: number;
+
+		constructor(timestamp: number, player: Player, priority?: number) {
+			this.priority = priority;
+			this.player = player;
+			this.timestamp = timestamp;
 		}
 	}
 

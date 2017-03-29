@@ -76,6 +76,14 @@ describe("test Event", function() {
 		expect(leaveEvent.priority).toBe(1);
 	});
 
+	it("初期化 - Timestamp", function() {
+		var player = {id: 3, name: "p"};
+		var timestampEvent = new g.TimestampEvent(42, player, 1);
+		expect(timestampEvent.type).toBe(g.EventType.Timestamp);
+		expect(timestampEvent.priority).toBe(1);
+		expect(timestampEvent.timestamp).toBe(42);
+	});
+
 	it("初期化 - Seed", function() {
 		var generator = new g.RandomGenerator(42);
 		var seedEvent = new g.SeedEvent(generator, 1);
