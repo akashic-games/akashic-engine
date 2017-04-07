@@ -382,7 +382,7 @@ export class AudioPlayer extends g.AudioPlayer {
 	}
 }
 
-const mockFontName = "Mock角ゴPro";
+export const defaultFontName = "Mock角ゴ Pro";
 
 function fontFamily2FontFamilyName(fontFamily: g.FontFamily): string {
 	switch (fontFamily) {
@@ -393,18 +393,18 @@ function fontFamily2FontFamilyName(fontFamily: g.FontFamily): string {
 	case g.FontFamily.SansSerif:
 		return "sans-serif";
 	default:
-		return mockFontName;
+		return defaultFontName;
 	}
 }
 
 function findAvailableFont(fontNames: string[]): string {
-	const availables = ["monospace", "serif", "sans-serif"];
+	const availables = ["monospace", "serif", "sans-serif", "Mock明朝"];
 	for (let i = 0; i < fontNames.length; i++) {
 		if (availables.indexOf(fontNames[i]) >= 0) {
 			return fontNames[i];
 		}
 	}
-	return mockFontName;
+	return defaultFontName;
 }
 
 export class GlyphFactory extends g.GlyphFactory {

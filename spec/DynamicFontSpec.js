@@ -51,4 +51,52 @@ describe("test DynamicFont", function() {
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
 	});
+	it("初期化 - ParameterObject, 文字列配列によるフォントファミリ指定, フォールバック", function() {
+		var runtime = skeletonRuntime();
+
+		var font = new g.DynamicFont({
+			game: runtime.game,
+			fontFamily: ["no-such-font", "Mock明朝"],
+			size: 20
+		});
+		expect(font.fontFamily).toBe(g.FontFamily.Other);
+		expect(font.fontName).toBe("Mock明朝");
+		expect(font.size).toBe(20);
+	});
+	it("初期化 - ParameterObject, 文字列配列によるフォントファミリ指定, フォールバックでデフォルトフォント", function() {
+		var runtime = skeletonRuntime();
+
+		var font = new g.DynamicFont({
+			game: runtime.game,
+			fontFamily: ["no-such-font", "ありえないフォント"],
+			size: 20
+		});
+		expect(font.fontFamily).toBe(g.FontFamily.Other);
+		expect(font.fontName).toBe(mock.defaultFontName);
+		expect(font.size).toBe(20);
+	});
+	it("初期化 - ParameterObject, 文字列によるフォントファミリ指定", function() {
+		var runtime = skeletonRuntime();
+
+		var font = new g.DynamicFont({
+			game: runtime.game,
+			fontFamily: "Mock明朝",
+			size: 20
+		});
+		expect(font.fontFamily).toBe(g.FontFamily.Other);
+		expect(font.fontName).toBe("Mock明朝");
+		expect(font.size).toBe(20);
+	});
+	it("初期化 - ParameterObject, 文字列によるフォントファミリ指定, フォールバックでデフォルトフォント", function() {
+		var runtime = skeletonRuntime();
+
+		var font = new g.DynamicFont({
+			game: runtime.game,
+			fontFamily: "no-such-font",
+			size: 20
+		});
+		expect(font.fontFamily).toBe(g.FontFamily.Other);
+		expect(font.fontName).toBe(mock.defaultFontName);
+		expect(font.size).toBe(20);
+	});
 });

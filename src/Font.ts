@@ -104,10 +104,10 @@ namespace g {
 		constructor(fontFamilyOrName: FontFamily|string|string[], fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
 		            fontWeight: FontWeight = FontWeight.Normal) {
-			if (typeof fontFamilyOrName === "string" || typeof fontFamilyOrName === "string[]") {
-				this.fontFamily = FontFamily.Other;
-			} else {
+			if (typeof fontFamilyOrName === "number") {
 				this.fontFamily = fontFamilyOrName;
+			} else {
+				this.fontFamily = FontFamily.Other;
 			}
 			this.fontSize = fontSize;
 			this.fontWeight = fontWeight;
