@@ -344,7 +344,6 @@ namespace g {
 		_atlases: SurfaceAtlas[];
 		_currentAtlasIndex: number;
 		_destroyed: boolean;
-		_hint: DynamicFontHint;
 		_atlasSize: CommonSize;
 
 		/**
@@ -411,14 +410,13 @@ namespace g {
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする
-			hint.initialAtlasWidth = hint.initialAtlasWidth ? hint.initialAtlasWidth : 2048;
-			hint.initialAtlasHeight = hint.initialAtlasHeight ? hint.initialAtlasHeight : 2048;
-			hint.maxAtlasWidth = hint.maxAtlasWidth ? hint.maxAtlasWidth : 2048;
-			hint.maxAtlasHeight = hint.maxAtlasHeight ? hint.maxAtlasHeight : 2048;
-			hint.maxAtlasNum = hint.maxAtlasNum ? hint.maxAtlasNum : 1;
-			this._hint = hint;
+			this.hint.initialAtlasWidth = this.hint.initialAtlasWidth ? this.hint.initialAtlasWidth : 2048;
+			this.hint.initialAtlasHeight = this.hint.initialAtlasHeight ? this.hint.initialAtlasHeight : 2048;
+			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 2048;
+			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 2048;
+			this.hint.maxAtlasNum = this.hint.maxAtlasNum ? this.hint.maxAtlasNum : 1;
 
-			this._atlasSize = calcAtlasSize(this._hint);
+			this._atlasSize = calcAtlasSize(this.hint);
 			this._atlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 
 			if (hint.presetChars) {

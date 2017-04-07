@@ -15,7 +15,13 @@ describe("test DynamicFont", function() {
 			g.FontFamily.SansSerif,
 			20,
 			runtime.game,
-			{},
+			{
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+			},
 			"white",
 			1,
 			"red",
@@ -27,6 +33,13 @@ describe("test DynamicFont", function() {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
+		expect(font.hint).toEqual({
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+		});
 		runtime.game.suppressedLogLevel = undefined;
 	});
 	it("初期化 - ParameterObject", function() {
@@ -50,5 +63,47 @@ describe("test DynamicFont", function() {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
+		expect(font.hint).toEqual({
+				initialAtlasWidth: 2048,
+				initialAtlasHeight: 2048,
+				maxAtlasWidth: 2048,
+				maxAtlasHeight: 2048,
+				maxAtlasNum: 1
+		});
+	});
+	it("初期化 - Given hint", function() {
+		var runtime = skeletonRuntime();
+
+		var font = new g.DynamicFont({
+			game: runtime.game,
+			fontFamily: g.FontFamily.SansSerif,
+			size: 20,
+			hint: {
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+			},
+			fontColor: "white",
+			fontWeight: g.FontWeight.Bold,
+			strokeWidth: 1,
+			strokeColor: "red",
+			strokeOnly: true
+		});
+		expect(font.fontFamily).toBe(g.FontFamily.SansSerif);
+		expect(font.size).toBe(20);
+		expect(font.fontColor).toBe("white");
+		expect(font.fontWeight).toBe(g.FontWeight.Bold);
+		expect(font.strokeWidth).toBe(1);
+		expect(font.strokeColor).toBe("red");
+		expect(font.strokeOnly).toBe(true);
+		expect(font.hint).toEqual({
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+		});
 	});
 });
