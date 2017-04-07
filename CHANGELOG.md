@@ -1,6 +1,12 @@
 # ChangeLog
 
+## 1.12.3
+
+機能追加
+ * `g.SceneState.BeforeDestroyed` を追加
+
 ## 1.12.2
+
 不具合修正
  * `DynamicFont` 生成時に `hint` が正しく指定できていなかった問題を修正
 

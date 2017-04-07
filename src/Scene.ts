@@ -222,12 +222,14 @@ namespace g {
 	 * - Standby: 初期化された状態のシーンで、シーンスタックへ追加されることを待っている状態を表す
 	 * - Active: シーンスタックの一番上にいるシーンで、ゲームのカレントシーンとして活性化されている状態を表す
 	 * - Deactive: シーンスタックにいるが一番上ではないシーンで、裏側で非活性状態になっていることを表す
+	 * - BeforeDestroyed: これから破棄されるシーンで、再利用が不可能になっている状態を表す
 	 */
 	export enum SceneState {
 		Destroyed,
 		Standby,
 		Active,
-		Deactive
+		Deactive,
+		BeforeDestroyed
 	}
 
 	export enum SceneLoadState {
@@ -541,7 +543,8 @@ namespace g {
 		/**
 		 * このシーンを破棄する。
 		 *
-		 * このシーンの `stateChanged` が引数 `Destroyed` でfireされる。
+		 * 破棄処理の開始時に、このシーンの `stateChanged` が引数 `BeforeDestroyed` でfireされる。
+		 * 破棄処理の終了時に、このシーンの `stateChanged` が引数 `Destroyed` でfireされる。
 		 * このシーンに紐づいている全ての `E` と全てのTimerは破棄される。
 		 * `Scene#setInterval()`, `Scene#setTimeout()` に渡された関数は呼び出されなくなる。
 		 *
@@ -549,6 +552,9 @@ namespace g {
 		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 */
 		destroy(): void {
+			this.state = SceneState.BeforeDestroyed;
+			this.stateChanged.fire(this.state);
+
 			// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
 			var gameDb = this.game.db;
 			for (var p in gameDb) {
