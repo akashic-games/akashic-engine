@@ -382,10 +382,48 @@ export class AudioPlayer extends g.AudioPlayer {
 	}
 }
 
+const mockFontName = "Mock角ゴPro";
+
+function fontFamily2FontFamilyName(fontFamily: g.FontFamily): string {
+	switch (fontFamily) {
+	case g.FontFamily.Monospace:
+		return "monospace";
+	case g.FontFamily.Serif:
+		return "serif";
+	case g.FontFamily.SansSerif:
+		return "sans-serif";
+	default:
+		return mockFontName;
+	}
+}
+
+function findAvailableFont(fontNames: string[]): string {
+	const availables = ["monospace", "serif", "sans-serif"];
+	for (let i = 0; i < fontNames.length; i++) {
+		if (availables.indexOf(fontNames[i]) >= 0) {
+			return fontNames[i];
+		}
+	}
+	return mockFontName;
+}
+
 export class GlyphFactory extends g.GlyphFactory {
-	constructor(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
+	_fontName: string;
+
+	get fontName(): string {
+		return this._fontName;
+	}
+
+	constructor(fontFamilyOrName: g.FontFamily|string|string[], fontSize: number, baselineHeight?: number,
 	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
-		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+		super(fontFamilyOrName, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+
+		if (typeof fontFamilyOrName === "number") {
+			this._fontName = fontFamily2FontFamilyName(fontFamilyOrName);
+		} else {
+			const fontNames = (typeof fontFamilyOrName === "string") ? [fontFamilyOrName] : fontFamilyOrName;
+			this._fontName = findAvailableFont(fontNames);
+		}
 	}
 }
 
