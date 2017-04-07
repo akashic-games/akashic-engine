@@ -15,7 +15,13 @@ describe("test DynamicFont", function() {
 			g.FontFamily.SansSerif,
 			20,
 			runtime.game,
-			{},
+			{
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+			},
 			"white",
 			1,
 			"red",
@@ -27,6 +33,13 @@ describe("test DynamicFont", function() {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
+		expect(font.hint).toEqual({
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+		});
 		runtime.game.suppressedLogLevel = undefined;
 	});
 	it("初期化 - ParameterObject", function() {
@@ -36,7 +49,13 @@ describe("test DynamicFont", function() {
 			game: runtime.game,
 			fontFamily: g.FontFamily.SansSerif,
 			size: 20,
-			hint: {},
+			hint: {
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+			},
 			fontColor: "white",
 			fontWeight: g.FontWeight.Bold,
 			strokeWidth: 1,
@@ -50,5 +69,12 @@ describe("test DynamicFont", function() {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
+		expect(font.hint).toEqual({
+				initialAtlasWidth: 1000,
+				initialAtlasHeight: 2000,
+				maxAtlasWidth: 3000,
+				maxAtlasHeight: 4000,
+				maxAtlasNum: 5
+		});
 	});
 });
