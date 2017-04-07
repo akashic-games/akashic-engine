@@ -195,8 +195,10 @@ namespace g {
 
 		/**
 		 * フォントファミリ。
+		 *
+		 * g.FontFamilyの定義する定数、フォント名、またはフォント名の配列で指定する。
 		 */
-		fontFamily: FontFamily;
+		fontFamily: FontFamily|string|string[];
 
 		/**
 		 * フォントサイズ。
@@ -205,7 +207,7 @@ namespace g {
 
 		/**
 		 * ヒント。
-		 * 
+		 *
 		 * 詳細は `DynamicFontHint` を参照。
 		 */
 		hint?: DynamicFontHint;
@@ -296,6 +298,13 @@ namespace g {
 		fontFamily: FontFamily;
 
 		/**
+		 * フォント名。
+		 *
+		 * このプロパティは読み出し専用である。
+		 */
+		fontName: string;
+
+		/**
 		 * フォントサイズ。
 		 */
 		size: number;
@@ -370,7 +379,6 @@ namespace g {
 		constructor(fontFamilyOrParam: FontFamily|DynamicFontParameterObject, size?: number, game?: Game, hint: DynamicFontHint = {},
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
 			if (typeof fontFamilyOrParam === "number") {
-				this.fontFamily = fontFamilyOrParam;
 				this.size = size;
 				this.hint = hint;
 				this.fontColor = fontColor;
@@ -378,20 +386,15 @@ namespace g {
 				this.strokeColor = strokeColor;
 				this.strokeOnly = strokeOnly;
 				this._resourceFactory = game.resourceFactory;
-				this._glyphs = {};
 				this._glyphFactory =
 					this._resourceFactory.createGlyphFactory(fontFamilyOrParam, size, hint.baselineHeight, fontColor,
 						strokeWidth, strokeColor, strokeOnly);
-				this._atlases = [];
-				this._currentAtlasIndex = 0;
-				this._destroyed = false;
 				game.logger.debug(
 					"[deprecated] DynamicFont: This constructor is deprecated. "
 						+ "Refer to the API documentation and use constructor(param: DynamicFontParameterObject) instead."
 				);
 			} else {
 				var param = fontFamilyOrParam;
-				this.fontFamily = param.fontFamily;
 				this.size = param.size;
 				this.hint = ("hint" in param) ? param.hint : {};
 				this.fontColor = ("fontColor" in param) ? param.fontColor : "black";
@@ -400,14 +403,16 @@ namespace g {
 				this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
 				this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
 				this._resourceFactory = param.game.resourceFactory;
-				this._glyphs = {};
 				this._glyphFactory =
-					this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
+					this._resourceFactory.createGlyphFactory(param.fontFamily, this.size, this.hint.baselineHeight,
 						this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
-				this._atlases = [];
-				this._currentAtlasIndex = 0;
-				this._destroyed = false;
 			}
+			this._glyphs = {};
+			this._atlases = [];
+			this._currentAtlasIndex = 0;
+			this._destroyed = false;
+			this.fontFamily = this._glyphFactory.fontFamily;
+			this.fontName = this._glyphFactory.fontName;
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする

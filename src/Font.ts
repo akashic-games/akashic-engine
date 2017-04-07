@@ -26,13 +26,20 @@ namespace g {
 	 *
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
 	 */
-	export class GlyphFactory {
+	export abstract class GlyphFactory {
 		/**
 		 * フォントファミリ。
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 		 */
 		fontFamily: FontFamily;
+
+		/**
+		 * フォント名。
+		 *
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		abstract get fontName(): string;
 
 		/**
 		 * フォントサイズ。
@@ -86,7 +93,7 @@ namespace g {
 		/**
 		 * `GlyphFactory` を生成する。
 		 *
-		 * @param fontFamily フォントファミリ
+		 * @param fontFamilyOrName フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはフォント名の配列
 		 * @param fontSize フォントサイズ
 		 * @param baselineHeight ベースラインの高さ
 		 * @param strokeWidth 輪郭幅
@@ -94,10 +101,14 @@ namespace g {
 		 * @param strokeOnly 輪郭を描画するか否か
 		 * @param fontWeight フォントウェイト
 		 */
-		constructor(fontFamily: FontFamily, fontSize: number, baselineHeight: number = fontSize,
+		constructor(fontFamilyOrName: FontFamily|string|string[], fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
 		            fontWeight: FontWeight = FontWeight.Normal) {
-			this.fontFamily = fontFamily;
+			if (typeof fontFamilyOrName === "string" || typeof fontFamilyOrName === "string[]") {
+				this.fontFamily = FontFamily.Other;
+			} else {
+				this.fontFamily = fontFamilyOrName;
+			}
 			this.fontSize = fontSize;
 			this.fontWeight = fontWeight;
 			this.baselineHeight = baselineHeight;
