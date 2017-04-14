@@ -295,14 +295,7 @@ namespace g {
 		 *
 		 * このプロパティは読み出し専用である。
 		 */
-		fontFamily: FontFamily;
-
-		/**
-		 * フォント名。
-		 *
-		 * このプロパティは読み出し専用である。
-		 */
-		fontName: string;
+		fontFamily: FontFamily|string|string[];
 
 		/**
 		 * フォントサイズ。
@@ -379,6 +372,7 @@ namespace g {
 		constructor(fontFamilyOrParam: FontFamily|DynamicFontParameterObject, size?: number, game?: Game, hint: DynamicFontHint = {},
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
 			if (typeof fontFamilyOrParam === "number") {
+				this.fontFamily = fontFamilyOrParam;
 				this.size = size;
 				this.hint = hint;
 				this.fontColor = fontColor;
@@ -395,6 +389,7 @@ namespace g {
 				);
 			} else {
 				var param = fontFamilyOrParam;
+				this.fontFamily = param.fontFamily;
 				this.size = param.size;
 				this.hint = ("hint" in param) ? param.hint : {};
 				this.fontColor = ("fontColor" in param) ? param.fontColor : "black";
@@ -411,8 +406,6 @@ namespace g {
 			this._atlases = [];
 			this._currentAtlasIndex = 0;
 			this._destroyed = false;
-			this.fontFamily = this._glyphFactory.fontFamily;
-			this.fontName = this._glyphFactory.fontName;
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする
