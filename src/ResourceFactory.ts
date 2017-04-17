@@ -46,7 +46,7 @@ namespace g {
 		/**
 		 * GlyphFactory を作成する。
 		 *
-		 * @param fontFamily フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはフォント名の配列
+		 * @param fontFamily フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはそれらの配列で指定する。
 		 * @param fontSize フォントサイズ
 		 * @param baselineHeight 描画原点からベースラインまでの距離。生成する `g.Glyph` は
 		 *                       描画原点からこの値分下がったところにベースラインがあるかのように描かれる。省略された場合、 `fontSize` と同じ値として扱われる
@@ -56,7 +56,7 @@ namespace g {
 		 * @param strokeOnly ストロークのみを描画するか否か。省略された場合、偽として扱われる
 		 * @param fontWeight フォントウェイト。省略された場合、 `FontWeight.Normal` として扱われる
 		 */
-		createGlyphFactory(fontFamily: FontFamily|string|string[], fontSize: number, baselineHeight?: number,
+		createGlyphFactory(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight?: number,
 		                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
 		                   fontWeight?: FontWeight): GlyphFactory {
 			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createGlphFactory");

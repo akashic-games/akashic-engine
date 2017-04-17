@@ -196,9 +196,9 @@ namespace g {
 		/**
 		 * フォントファミリ。
 		 *
-		 * g.FontFamilyの定義する定数、フォント名、またはフォント名の配列で指定する。
+		 * g.FontFamilyの定義する定数、フォント名、またはそれらの配列で指定する。
 		 */
-		fontFamily: FontFamily|string|string[];
+		fontFamily: FontFamily|string|(g.FontFamily|string)[];
 
 		/**
 		 * フォントサイズ。
@@ -295,7 +295,7 @@ namespace g {
 		 *
 		 * このプロパティは読み出し専用である。
 		 */
-		fontFamily: FontFamily|string|string[];
+		fontFamily: FontFamily|string|(g.FontFamily|string)[];
 
 		/**
 		 * フォントサイズ。
