@@ -399,7 +399,7 @@ namespace g {
 				this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
 				this._resourceFactory = param.game.resourceFactory;
 				this._glyphFactory =
-					this._resourceFactory.createGlyphFactory(param.fontFamily, this.size, this.hint.baselineHeight,
+					this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
 						this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			}
 			this._glyphs = {};
