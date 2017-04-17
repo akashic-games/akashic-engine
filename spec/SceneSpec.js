@@ -810,14 +810,18 @@ describe("test Scene", function() {
 	it("state - change order and count", function(done) {
 		var expected = [
 			[ "S1", "Active" ],
+			[ "S1", "BeforeDestroyed" ],
 			[ "S1", "Destroyed" ],
 			[ "S2", "Active" ],
 			[ "S2", "Deactive" ],
 			[ "S3", "Active" ],
+			[ "S3", "BeforeDestroyed" ],
 			[ "S3", "Destroyed" ],
 			[ "S4", "Active" ],
+			[ "S4", "BeforeDestroyed" ],
 			[ "S4", "Destroyed" ],
 			[ "S2", "Active" ],
+			[ "S2", "BeforeDestroyed" ],
 			[ "S2", "Destroyed" ]
 		];
 		var actual = [];
