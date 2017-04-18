@@ -195,8 +195,10 @@ namespace g {
 
 		/**
 		 * フォントファミリ。
+		 *
+		 * g.FontFamilyの定義する定数、フォント名、またはそれらの配列で指定する。
 		 */
-		fontFamily: FontFamily;
+		fontFamily: FontFamily|string|(g.FontFamily|string)[];
 
 		/**
 		 * フォントサイズ。
@@ -205,7 +207,7 @@ namespace g {
 
 		/**
 		 * ヒント。
-		 * 
+		 *
 		 * 詳細は `DynamicFontHint` を参照。
 		 */
 		hint?: DynamicFontHint;
@@ -293,7 +295,7 @@ namespace g {
 		 *
 		 * このプロパティは読み出し専用である。
 		 */
-		fontFamily: FontFamily;
+		fontFamily: FontFamily|string|(g.FontFamily|string)[];
 
 		/**
 		 * フォントサイズ。
@@ -377,13 +379,9 @@ namespace g {
 				this.strokeColor = strokeColor;
 				this.strokeOnly = strokeOnly;
 				this._resourceFactory = game.resourceFactory;
-				this._glyphs = {};
 				this._glyphFactory =
 					this._resourceFactory.createGlyphFactory(fontFamilyOrParam, size, hint.baselineHeight, fontColor,
 						strokeWidth, strokeColor, strokeOnly);
-				this._atlases = [];
-				this._currentAtlasIndex = 0;
-				this._destroyed = false;
 				game.logger.debug(
 					"[deprecated] DynamicFont: This constructor is deprecated. "
 						+ "Refer to the API documentation and use constructor(param: DynamicFontParameterObject) instead."
@@ -399,14 +397,14 @@ namespace g {
 				this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
 				this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
 				this._resourceFactory = param.game.resourceFactory;
-				this._glyphs = {};
 				this._glyphFactory =
 					this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
 						this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
-				this._atlases = [];
-				this._currentAtlasIndex = 0;
-				this._destroyed = false;
 			}
+			this._glyphs = {};
+			this._atlases = [];
+			this._currentAtlasIndex = 0;
+			this._destroyed = false;
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする

@@ -32,7 +32,7 @@ namespace g {
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 		 */
-		fontFamily: FontFamily;
+		fontFamily: FontFamily|string|(g.FontFamily|string)[];
 
 		/**
 		 * フォントサイズ。
@@ -86,7 +86,7 @@ namespace g {
 		/**
 		 * `GlyphFactory` を生成する。
 		 *
-		 * @param fontFamily フォントファミリ
+		 * @param fontFamily フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはそれらの配列
 		 * @param fontSize フォントサイズ
 		 * @param baselineHeight ベースラインの高さ
 		 * @param strokeWidth 輪郭幅
@@ -94,7 +94,7 @@ namespace g {
 		 * @param strokeOnly 輪郭を描画するか否か
 		 * @param fontWeight フォントウェイト
 		 */
-		constructor(fontFamily: FontFamily, fontSize: number, baselineHeight: number = fontSize,
+		constructor(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
 		            fontWeight: FontWeight = FontWeight.Normal) {
 			this.fontFamily = fontFamily;

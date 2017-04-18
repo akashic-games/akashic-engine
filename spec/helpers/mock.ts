@@ -383,7 +383,7 @@ export class AudioPlayer extends g.AudioPlayer {
 }
 
 export class GlyphFactory extends g.GlyphFactory {
-	constructor(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
+	constructor(fontFamily: g.FontFamily|string|string[], fontSize: number, baselineHeight?: number,
 	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}

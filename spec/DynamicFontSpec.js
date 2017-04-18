@@ -106,4 +106,28 @@ describe("test DynamicFont", function() {
 				maxAtlasNum: 5
 		});
 	});
+	it("初期化 - ParameterObject, 文字列配列によるフォントファミリ指定", function() {
+		const runtime = skeletonRuntime();
+
+		const param = {
+			game: runtime.game,
+			fontFamily: ["no-such-font", "Mock明朝"],
+			size: 20
+		};
+		const font = new g.DynamicFont(param);
+		expect(font.fontFamily).toBe(param.fontFamily);
+		expect(font.size).toBe(font.size);
+	});
+	it("初期化 - ParameterObject, 文字列によるフォントファミリ指定", function() {
+		const runtime = skeletonRuntime();
+
+		const param = {
+			game: runtime.game,
+			fontFamily: "Mock明朝",
+			size: 20
+		};
+		const font = new g.DynamicFont(param);
+		expect(font.fontFamily).toBe(param.fontFamily);
+		expect(font.size).toBe(font.size);
+	});
 });
