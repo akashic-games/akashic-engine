@@ -22,7 +22,8 @@
     "typescript": "~2.1.6"
   },
   "scripts": {
-    "prepublish": "npm run minify && npm run doc",
+    "prepublish": "npm run deploy && npm run doc",
+	"postinstall": "npm run prepublish",
     "build": "npm run clean && npm run compile && npm run compile:cp && npm run concat:define && npm run concat:node",
     "clean": "rimraf tmp && rimraf lib",
     "compile": "tsc -p ./",
