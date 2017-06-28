@@ -16,12 +16,13 @@
     "interface-name": false,
     "jsdoc-format": true,
     "label-position": true,
-    "label-undefined": true,
     "max-line-length": [true, 140],
-    "member-ordering": [true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
+    "member-ordering": [true, {
+		"order": [
+          "public-before-private",
+          "static-before-instance",
+          "variables-before-functions"
+	  ]}
     ],
     "no-arg": true,
     "no-bitwise": false,
@@ -33,9 +34,7 @@
       "trace"
     ],
     "no-construct": true,
-    "no-constructor-vars": true,
     "no-debugger": true,
-    "no-duplicate-key": true,
     "no-duplicate-variable": false,
     "no-empty": true,
     "no-eval": true,
@@ -45,7 +44,6 @@
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
     "no-unused-variable": true,
-    "no-unreachable": true,
     "no-use-before-declare": true,
     "no-var-requires": true,
     "one-line": [true,
