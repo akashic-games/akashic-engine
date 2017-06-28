@@ -18,11 +18,11 @@
     "label-position": true,
     "max-line-length": [true, 140],
     "member-ordering": [true, {
-		"order": [
+        "order": [
           "public-before-private",
           "static-before-instance",
           "variables-before-functions"
-	  ]}
+      ]}
     ],
     "no-arg": true,
     "no-bitwise": false,

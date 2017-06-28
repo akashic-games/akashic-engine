@@ -18,12 +18,12 @@
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "tslint": "^5.4.3",
-    "typedoc": "^0.5.1",
+    "typedoc": "0.5.1",
     "typescript": "~2.1.6"
   },
   "scripts": {
     "prepublish": "npm run deploy && npm run doc",
-	"postinstall": "npm run prepublish",
+    "postinstall": "npm run prepublish",
     "build": "npm run clean && npm run compile && npm run compile:cp && npm run concat:define && npm run concat:node",
     "clean": "rimraf tmp && rimraf lib",
     "compile": "tsc -p ./",
@@ -35,12 +35,16 @@
     "test:jusmine": "istanbul cover --report text --report html  --colors -i ./lib/main.node.js  ./test.js",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
     "doc": "npm run typedoc",
-	"deploy": "npm run minify",
+    "deploy": "npm run minify",
     "minify": "npm run build && npm run minify:node && npm run minify:browser",
     "minify:node": "uglifyjs -o ./lib/main.node.min.js --compress --mangle -- lib/main.node.js",
     "minify:browser": "uglifyjs  lib/main.js -o ./lib/main.min.js",
     "lint": "tslint  -c tslint.json  src/**/*.ts spec/*.ts spec/helpers/**/*.ts",
-    "typedoc": "cd lib && typedoc --out ../../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts && cd ../"
+    "typedoc": "npm run typedoc:rename && npm run typedoc:build && npm run typedoc:restorename",
+    "typedoc:rename": "renamer --find @types --replace @types.bak ./node_modules/*",
+    "typedoc:build": "cd lib && typedoc --out ../../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts && cd ../",
+    "typedoc:restorename": "renamer --find @types.bak --replace @types ./node_modules/*"
+
   },
   "files": [
     "lib",
