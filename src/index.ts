@@ -50,7 +50,6 @@
 /// <reference path="BitmapFont.ts" />
 /// <reference path="FilledRect.ts" />
 /// <reference path="Pane.ts" />
-/// <reference path="TextInputMethod.ts" />
 /// <reference path="SurfaceEffector.ts" />
 /// <reference path="OperationPluginOperation.ts" />
 /// <reference path="OperationPlugin.ts" />
