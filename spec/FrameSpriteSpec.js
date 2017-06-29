@@ -8,17 +8,6 @@ describe("test FrameSprite", function() {
 	afterEach(function() {
 	});
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
-		var runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-		var surface = new g.Surface(480, 480);
-		var frameSprite = new g.FrameSprite(runtime.scene, surface, 32, 48);
-		expect(frameSprite.frameNumber).toBe(0);
-		expect(frameSprite.frames).toEqual([0]);
-		expect(frameSprite.interval).toBe(undefined);
-		runtime.game.suppressedLogLevel = undefined;
-	});
-	it("初期化 - ParameterObject", function() {
 		var runtime = skeletonRuntime();
 		var surface = new g.Surface(480, 480);
 		var frameSprite = new g.FrameSprite({

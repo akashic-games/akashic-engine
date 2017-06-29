@@ -7,37 +7,6 @@ describe("test Label", function() {
 	afterEach(function() {
 	});
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
-		var runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
-		var width = 32;
-		var height = 64;
-		var map = {"37564": {"x": 0, "y": 1}};
-		var missingGlyph = {"x": 2, "y": 3};
-
-		var bmpfont = new g.BitmapFont({
-			src: imageAsset,
-			map: map,
-			defaultGlyphWidth: width,
-			defaultGlyphHeight: height,
-			missingGlyph: missingGlyph
-		});
-		expect(bmpfont.surface).not.toBeNull();
-		expect(bmpfont.defaultGlyphWidth).toEqual(width);
-		expect(bmpfont.defaultGlyphHeight).toEqual(height);
-		expect(bmpfont.map).toEqual(map);
-		expect(bmpfont.missingGlyph).toEqual(missingGlyph);
-
-		var label = new g.Label(runtime.scene, "a", bmpfont, 10);
-		expect(label.scene).toBe(runtime.scene);
-		expect(label.text).toEqual("a");
-		expect(label.bitmapFont).toBe(bmpfont);
-		expect(label.fontSize).toBe(10);
-		expect(label.textColor).toBeUndefined();
-		runtime.game.suppressedLogLevel = undefined;
-	});
-	it("初期化 - ParameterObject", function() {
 		var runtime = skeletonRuntime();
 		var imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		var width = 32;
@@ -55,7 +24,7 @@ describe("test Label", function() {
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
-			bitmapFont: bmpfont,
+			font: bmpfont,
 			fontSize: 10,
 			textAlign: g.TextAlign.Center,
 			maxWidth: 100,
@@ -66,7 +35,7 @@ describe("test Label", function() {
 		});
 		expect(label.scene).toBe(runtime.scene);
 		expect(label.text).toEqual("a");
-		expect(label.bitmapFont).toBe(bmpfont);
+		expect(label.font).toBe(bmpfont);
 		expect(label.fontSize).toBe(10);
 		expect(label.textAlign).toBe(g.TextAlign.Center);
 		expect(label.maxWidth).toBe(100);
@@ -159,7 +128,7 @@ describe("test Label", function() {
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
-			bitmapFont: bmpfont,
+			font: bmpfont,
 			fontSize: 10,
 			textAlign: g.TextAlign.Center,
 			maxWidth: 100,
@@ -190,7 +159,7 @@ describe("test Label", function() {
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
-			bitmapFont: bmpfont,
+			font: bmpfont,
 			fontSize: 10,
 			textAlign: g.TextAlign.Center,
 			maxWidth: 100,
@@ -220,7 +189,7 @@ describe("test Label", function() {
 		var label = new g.Label({
 			scene: runtime.scene,
 			text: "a",
-			bitmapFont: bmpfont,
+			font: bmpfont,
 			fontSize: 10,
 		});
 		label.render(r);
@@ -240,7 +209,7 @@ describe("test Label", function() {
 		var label2 = new g.Label({
 			scene: runtime.scene,
 			text: "b",
-			bitmapFont: bmpfont2,
+			font: bmpfont2,
 			fontSize: 10,
 		});
 		label2.render(r);
@@ -251,7 +220,7 @@ describe("test Label", function() {
 		var label3 = new g.Label({
 			scene: runtime.scene,
 			text: "c",
-			bitmapFont: bmpfont,
+			font: bmpfont,
 			fontSize: 10,
 		});
 		label3.render(r);
@@ -277,7 +246,7 @@ describe("test Label", function() {
 			defaultGlyphHeight: height,
 			missingGlyph: missingGlyph
 		});
-		var label = new g.Label({scene: runtime.scene, text: "a", bitmapFont: bmpfont, fontSize: 10, textColor: "blue"});
+		var label = new g.Label({scene: runtime.scene, text: "a", font: bmpfont, fontSize: 10, textColor: "blue"});
 		label.render(r);
 
 		var cr = label._cache.createdRenderer;

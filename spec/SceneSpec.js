@@ -32,25 +32,6 @@ describe("test Scene", function() {
 	afterEach(function() {
 	});
 
-	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
-		game.suppressedLogLevel = g.LogLevel.Debug;
-		var scene = new g.Scene(game);
-		expect(scene.game).toBe(game);
-		expect(scene.assetLoaded._handlers.length).toEqual(0);
-		expect(scene.assetLoadFailed._handlers.length).toEqual(0);
-		expect(scene.assetLoadCompleted._handlers.length).toEqual(0);
-		expect(scene.loaded._handlers.length).toEqual(0);
-		expect(scene.children).not.toBeFalsy();
-		expect(scene.children.length).toBe(0);
-		expect(scene._sceneAssetHolder._assetIds).toEqual([]);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-		expect(scene.local).toBe(g.LocalTickMode.NonLocal);
-		expect(scene.tickGenerationMode).toBe(g.TickGenerationMode.ByClock);
-		expect(scene.name).toEqual(undefined);
-		game.suppressedLogLevel = undefined;
-	});
-
 	it("初期化 - SceneParameterObject", function () {
 		var scene = new g.Scene({
 			game: game,

@@ -11,10 +11,9 @@ describe("test Camera", function() {
 	});
 
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
 		var game = new mock.Game({ width: 320, height: 320 });
 		game.suppressedLogLevel = g.LogLevel.Debug;
-		var cam = new g.Camera2D(game);
+		var cam = new g.Camera2D({ game: game });
 		expect(cam.game).toBe(game);
 		expect(cam.id).toBe(0);
 		expect(cam.local).toBe(false);

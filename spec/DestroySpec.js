@@ -12,7 +12,7 @@ describe("test Destroy", function() {
 			new g.Sprite({scene: scene, src: new g.Surface(480, 480), width: 32, height: 48, srcWidth: 32, srcHeight: 48}),
 			new g.FrameSprite({scene: scene, src: new g.Surface(480, 480), width: 32, height: 48, srcWidth: 32, srcHeight: 48}),
 			new g.Tile({scene: scene, src: new g.Surface(480, 480), tileWidth: 32, tileHeight: 32, tileData: [[0]]}),
-			new g.Label({scene: scene, text: " ", bitmapFont: bmpfont, fontSize: 13}),
+			new g.Label({scene: scene, text: " ", font: bmpfont, fontSize: 13}),
 			new g.MultiLineLabel({scene: scene, text: " \n \n \n  ", bitmapFont: bmpfont, fontSize: 13, width: 64}),
 			new g.Pane({scene: scene, width: 480, height: 48, backgroundImage: imageAsset, backgroundEffector: new g.NinePatchSurfaceEffector(runtime.game)}),
 			new g.FilledRect({scene: scene, cssColor: "red", width: 32, height: 32}),
@@ -28,7 +28,13 @@ describe("test Destroy", function() {
 		runtime = skeletonRuntime();
 		var map = {"32": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		bmpfont = new g.BitmapFont(new g.Surface(480, 480), map, 12, 12, missingGlyph);
+		bmpfont = new g.BitmapFont({
+			src: new g.Surface(480, 480),
+			map: map,
+			defaultGlyphWidth: 12,
+			defaultGlyphHeight: 12,
+			missingGlyph: missingGlyph
+		});
 		imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
 	});
 
