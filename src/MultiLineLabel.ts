@@ -124,47 +124,20 @@ namespace g {
 		private _lines: LineInfo[];
 
 		/**
-		 * `MultiLineLabel` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `MultiLineLabelParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティの属する `Scene`
-		 * @param text 描画する文字列。
-		 * @param font テキストの描画に利用するフォント
-		 * @param fontSize フォントサイズ
-		 * @param width このエンティティの幅
-		 * @param lineBreak 自動改行をおこなうかどうか指定する（省略された場合、 `true`）
-		 */
-		constructor(scene: Scene, text: string, font: BitmapFont, fontSize: number, width: number, lineBreak?: boolean);
-		/**
 		 * 各種パラメータを指定して `MultiLineLabel` のインスタンスを生成する。
 		 * @param param このエンティティに対するパラメータ
 		 */
-		constructor(param: MultiLineLabelParameterObject);
+		constructor(param: MultiLineLabelParameterObject) {
 
-		constructor(sceneOrParam: Scene|MultiLineLabelParameterObject, text?: string,
-		            font?: BitmapFont, fontSize?: number, width?: number, lineBreak: boolean = true) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene);
-				this.text = text;
-				this.bitmapFont = font;
-				this.fontSize = fontSize;
-				this.width = width;
-				this.lineBreak = lineBreak;
-				this.lineGap = 0;
-				this.textAlign = TextAlign.Left;
-				this.textColor = undefined;
-			} else {
-				var param = <MultiLineLabelParameterObject>sceneOrParam;
-				super(param);
-				this.text = param.text;
-				this.bitmapFont = param.bitmapFont;
-				this.fontSize = param.fontSize;
-				this.width = param.width;
-				this.lineBreak = "lineBreak" in param ? param.lineBreak : true;
-				this.lineGap = param.lineGap || 0;
-				this.textAlign = "textAlign" in param ? param.textAlign : TextAlign.Left;
-				this.textColor = param.textColor;
-			}
+			super(param);
+			this.text = param.text;
+			this.bitmapFont = param.bitmapFont;
+			this.fontSize = param.fontSize;
+			this.width = param.width;
+			this.lineBreak = "lineBreak" in param ? param.lineBreak : true;
+			this.lineGap = param.lineGap || 0;
+			this.textAlign = "textAlign" in param ? param.textAlign : TextAlign.Left;
+			this.textColor = param.textColor;
 			this._lines = [];
 			this._beforeText = undefined;
 			this._beforeLineBreak = undefined;

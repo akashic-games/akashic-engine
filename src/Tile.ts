@@ -59,46 +59,19 @@ namespace g {
 		_beforeTileChips: Surface;
 
 		/**
-		 * `Tile` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `TileParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param src タイリングに使うマップチップ画像。幅 `tileWidth`、 高さ `tilieHeight` の画像を敷き詰めたもの
-		 * @param tileWidth マップチップ一つの幅
-		 * @param tileHeight マップチップ一つの高さ
-		 * @param tileData このタイルのデータ
-		 */
-		constructor(scene: Scene, src: Surface|Asset, tileWidth: number, tileHeight: number, tileData: number[][]);
-		/**
 		 * 各種パラメータを指定して `Tile` のインスタンスを生成する。
 		 *
 		 * @param param このエンティティに指定するパラメータ
 		 */
-		constructor(param: TileParameterObject);
+		constructor(param: TileParameterObject) {
+			super(param);
+			this.tileWidth = param.tileWidth;
+			this.tileHeight = param.tileHeight;
+			this.tileData = param.tileData;
+			this.tileChips = Util.asSurface(param.src);
 
-		constructor(sceneOrParam: Scene|TileParameterObject, src?: Surface|Asset,
-		            tileWidth?: number, tileHeight?: number, tileData?: number[][]) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene);
-				this.tileWidth = tileWidth;
-				this.tileHeight = tileHeight;
-				this.tileData = tileData;
-				this.tileChips = Util.asSurface(src);
-
-				this.height = this.tileHeight * this.tileData.length;
-				this.width = this.tileWidth * this.tileData[0].length;
-
-				this._tilesInRow = Math.floor(this.tileChips.width / this.tileWidth);
-			} else {
-				var param = <TileParameterObject>sceneOrParam;
-				super(param);
-				this.tileWidth = param.tileWidth;
-				this.tileHeight = param.tileHeight;
-				this.tileData = param.tileData;
-				this.tileChips = Util.asSurface(param.src);
-
-				this.height = this.tileHeight * this.tileData.length;
-				this.width = this.tileWidth * this.tileData[0].length;
-			}
+			this.height = this.tileHeight * this.tileData.length;
+			this.width = this.tileWidth * this.tileData[0].length;
 
 			this._beforeTileChips = this.tileChips;
 			Util.setupAnimatingHandler(this, this.tileChips);

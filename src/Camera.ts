@@ -107,44 +107,20 @@ namespace g {
 		}
 
 		/**
-		 * `Camera2D` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `Camera2DParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param Game このカメラの属するGame
-		 */
-		constructor(game: Game);
-
-		/**
 		 * 指定されたパラメータで `Camera2D` のインスタンスを生成する。
 		 * @param param 初期化に用いるパラメータのオブジェクト
 		 */
-		constructor(param: Camera2DParameterObject);
+		constructor(param: Camera2DParameterObject) {
 
-		constructor(gameOrParam: Game|Camera2DParameterObject) {
-			if (gameOrParam instanceof Game) {
-				var game = gameOrParam;
-				super();
-				this.game = game;
-				this.local = false;
-				this.name = undefined;
-				this._modifiedCount = 0;
-				this.width = game.width;
-				this.height = game.height;
-				game.logger.debug(
-					"[deprecated] Camera2D:This constructor is deprecated. "
-						+ "Refer to the API documentation and use Camera2D(param: Camera2DParameterObject) instead."
-				);
-			} else {
-				var param = <Camera2DParameterObject>gameOrParam;
-				super(param);
-				this.game = param.game;
-				this.local = !!param.local;
-				this.name = param.name;
-				this._modifiedCount = 0;
+			super(param);
+			this.game = param.game;
+			this.local = !!param.local;
+			this.name = param.name;
+			this._modifiedCount = 0;
 
-				// param の width と height は無視する
-				this.width = param.game.width;
-				this.height = param.game.height;
-			}
+			// param の width と height は無視する
+			this.width = param.game.width;
+			this.height = param.game.height;
 
 			this.id = this.local ? undefined : this.game._cameraIdx++;
 		}

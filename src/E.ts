@@ -236,82 +236,46 @@ namespace g {
 		}
 
 		/**
-		 * 属するシーンを指定して `E` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `EParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティが属する `Scene`
-		 */
-		constructor(scene: Scene);
-		/**
 		 * 各種パラメータを指定して `E` のインスタンスを生成する。
 		 * @param param 初期化に用いるパラメータのオブジェクト
 		 */
-		constructor(param: EParameterObject);
+		constructor(param: EParameterObject) {
 
-		/**
-		 * `E` のインスタンスを生成する。
-		 * @param scene このエンティティが属する `Scene`
-		 */
-		constructor(sceneOrParam: Scene|EParameterObject);
-		constructor(sceneOrParam: Scene|EParameterObject) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super();
-				this.children = undefined;
-				this.parent = undefined;
-				this._touchable = false;
-				this.state = EntityStateFlags.None;
-				this._hasTouchableChildren = false;
-				this._update = undefined;
-				this._message = undefined;
-				this._pointDown = undefined;
-				this._pointMove = undefined;
-				this._pointUp = undefined;
-				this._targetCameras = undefined;
-				this.local = scene.local !== LocalTickMode.NonLocal;
-				// set id, scene
-				scene.register(this);
-				scene.game.logger.debug(
-					"[deprecated] E or Subclass of E: This constructor is deprecated. "
-						+ "Refer to the API documentation and use each constructor(param: ParameterObject) instead."
-				);
-			} else {
-				var param = <EParameterObject>sceneOrParam;
-				super(param);
-				this.children = undefined;
-				this.parent = undefined;
-				this._touchable = false;
-				this.state = EntityStateFlags.None;
-				this._hasTouchableChildren = false;
-				this._update = undefined;
-				this._message = undefined;
-				this._pointDown = undefined;
-				this._pointMove = undefined;
-				this._pointUp = undefined;
-				this._targetCameras = undefined;
-				this.tag = param.tag;
+			super(param);
+			this.children = undefined;
+			this.parent = undefined;
+			this._touchable = false;
+			this.state = EntityStateFlags.None;
+			this._hasTouchableChildren = false;
+			this._update = undefined;
+			this._message = undefined;
+			this._pointDown = undefined;
+			this._pointMove = undefined;
+			this._pointUp = undefined;
+			this._targetCameras = undefined;
+			this.tag = param.tag;
 
-				// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
-				// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
-				this.local = (param.scene.local !== LocalTickMode.NonLocal) || !!param.local;
+			// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
+			// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
+			this.local = (param.scene.local !== LocalTickMode.NonLocal) || !!param.local;
 
-				if (param.children) {
-					for (var i = 0; i < param.children.length; ++i)
-						this.append(param.children[i]);
-				}
-				if (param.parent) {
-					param.parent.append(this);
-				}
-				if (param.targetCameras)
-					this.targetCameras = param.targetCameras;
-				if ("touchable" in param)
-					this.touchable = param.touchable;
-				if (!!param.hidden)
-					this.hide();
-
-				// set id, scene
-				this.id = param.id;
-				param.scene.register(this);
+			if (param.children) {
+				for (var i = 0; i < param.children.length; ++i)
+					this.append(param.children[i]);
 			}
+			if (param.parent) {
+				param.parent.append(this);
+			}
+			if (param.targetCameras)
+				this.targetCameras = param.targetCameras;
+			if ("touchable" in param)
+				this.touchable = param.touchable;
+			if (!!param.hidden)
+				this.hide();
+
+			// set id, scene
+			this.id = param.id;
+			param.scene.register(this);
 		}
 
 		/**

@@ -11,22 +11,14 @@ namespace g {
 
 		/**
 		 * 描画に利用されるフォント。
-		 *
-		 * @deprecated このプロパティは非推奨であり、後方互換性のために存在する。代わりに`font`プロパティを用いるべきである。
 		 */
-		bitmapFont?: BitmapFont;
-
-		/**
-		 * 描画に利用されるフォント。
-		 * この値または`bitmapFont`が指定されなければならない。
-		 */
-		font?: Font;
+		font: Font;
 
 		/**
 		 * フォントサイズ。
 		 * 0 以上の数値でなければならない。そうでない場合、動作は不定である。
 		 *
-		 * これは `LabelParameterObject#font` または `LabelParameterObject#bitmapFont` で
+		 * これは `LabelParameterObject#font` で
 		 * 与えられたフォントを `fontSize` フォントサイズ相当で描画するよう指示する値である。
 		 * 歴史的経緯によりフォントサイズと説明されているが、実際には拡大縮小率を求めるため
 		 * に用いられている。
@@ -77,15 +69,6 @@ namespace g {
 		/**
 		 * 描画に利用されるフォント。
 		 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
-		 * このプロパティと`font`を同時に変更した時の動作は保証しない。
-		 * @deprecated このプロパティは非推奨であり、後方互換性のために存在する。代わりに`font`プロパティを用いるべきである。
-		 */
-		bitmapFont: BitmapFont;
-
-		/**
-		 * 描画に利用されるフォント。
-		 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
-		 * このプロパティと`bitmapFont`を同時に変更した時の動作は保証しない。
 		 */
 		font: Font;
 
@@ -137,55 +120,23 @@ namespace g {
 		_game: Game;
 
 		/**
-		 * `Label` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `LabelParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティの属する `Scene`
-		 * @param text 描画するテキスト。
-		 * @param font テキストの描画に利用するフォント
-		 * @param fontSize フォントサイズ
-		 */
-		constructor(scene: Scene, text: string, font: BitmapFont, fontSize: number);
-		/**
 		 * 各種パラメータを指定して `Label` のインスタンスを生成する。
 		 * @param param このエンティティに指定するパラメータ
 		 */
-		constructor(param: LabelParameterObject);
+		constructor(param: LabelParameterObject) {
 
-		constructor(sceneOrParam: Scene|LabelParameterObject, text?: string, font?: BitmapFont, fontSize?: number) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene);
-				this.text = text;
-				this.bitmapFont = font;
-				this.font = font;
-				this.textAlign = TextAlign.Left;
-				this.glyphs = new Array(text.length);
-				this.fontSize = fontSize;
-				this.maxWidth = undefined;
-				this.widthAutoAdjust = true;
-				this.textColor = undefined;
-				this._textWidth = 0;
-				this._game = undefined;
-				this._invalidateSelf();
-			} else {
-				var param = <LabelParameterObject>sceneOrParam;
-				if (!param.font && !param.bitmapFont) {
-					throw g.ExceptionFactory.createAssertionError("Label#constructor: 'font' or 'bitmapFont' must be given to LabelParameterObject");
-				}
-				super(param);
-				this.text = param.text;
-				this.bitmapFont = param.bitmapFont;
-				this.font = param.font ? param.font : param.bitmapFont;
-				this.textAlign = ("textAlign" in param) ? param.textAlign : TextAlign.Left;
-				this.glyphs = new Array(param.text.length);
-				this.fontSize = param.fontSize;
-				this.maxWidth = param.maxWidth;
-				this.widthAutoAdjust = ("widthAutoAdjust" in param) ? param.widthAutoAdjust : true;
-				this.textColor = param.textColor;
-				this._textWidth = 0;
-				this._game = undefined;
-				this._invalidateSelf();
-			}
+			super(param);
+			this.text = param.text;
+			this.font = param.font;
+			this.textAlign = ("textAlign" in param) ? param.textAlign : TextAlign.Left;
+			this.glyphs = new Array(param.text.length);
+			this.fontSize = param.fontSize;
+			this.maxWidth = param.maxWidth;
+			this.widthAutoAdjust = ("widthAutoAdjust" in param) ? param.widthAutoAdjust : true;
+			this.textColor = param.textColor;
+			this._textWidth = 0;
+			this._game = undefined;
+			this._invalidateSelf();
 		}
 
 		/**
@@ -283,10 +234,6 @@ namespace g {
 		}
 
 		private _invalidateSelf(): void {
-			if (this.bitmapFont !== undefined) {
-				this.font = this.bitmapFont;
-			}
-
 			this.glyphs.length = 0;
 			this._textWidth = 0;
 

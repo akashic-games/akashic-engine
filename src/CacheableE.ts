@@ -28,19 +28,11 @@ namespace g {
 		_renderedCamera: Camera;
 
 		/**
-		 * `CacheableE` のインスタンスを生成する。
-		 * @param scene このエンティティが属する `Scene`
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `CacheableEParameterObject` を使うコンストラクタを用いるべきである。
-		 */
-		constructor(scene: Scene);
-		/**
 		 * 各種パラメータを指定して `CacheableE` のインスタンスを生成する。
 		 * @param param このエンティティに対するパラメータ
 		 */
-		constructor(param: CacheableEParameterObject);
-
-		constructor(sceneOrParam: Scene|CacheableEParameterObject) {
-			super(sceneOrParam);
+		constructor(param: CacheableEParameterObject) {
+			super(param);
 			this._shouldRenderChildren = true;
 			this._cache = undefined;
 			this._renderer = undefined;

@@ -128,7 +128,6 @@ namespace g {
 		}
 
 		_fireTriggerOnTargetAssetLoad(asset: Asset): void {
-			this._onTargetAssetLoad(asset);
 			this.targetAssetLoaded.fire(asset);
 		}
 
@@ -137,19 +136,6 @@ namespace g {
 			if (!this._explicitEnd) {
 				this.end();
 			}
-		}
-
-		/**
-		 * 読み込み待ち対象シーンのアセットが一つ読み込まれる度に呼ばれるコールバック。
-		 * 派生クラスが上書きすることができる。このメソッドは後方互換性のために存在する。
-		 * (内部メソッド(_で始まる)ではあるが、ローディングシーンをカスタマイズする方法が
-		 * なかった当時(akashic-engine@1.1.1以前)、文書上で存在に言及してしまっている)
-		 *
-		 * 現在はこれの代わりに `targetAssetLoaded` をhandleすること。
-		 * @deprecated
-		 */
-		_onTargetAssetLoad(asset: Asset): boolean {
-			return true;
 		}
 	}
 }
