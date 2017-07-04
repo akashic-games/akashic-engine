@@ -106,7 +106,6 @@ namespace g {
 			return frameSprite;
 		}
 
-
 		/**
 		 * 各種パラメータを指定して `FrameSprite` のインスタンスを生成する。
 		 * @param param `FrameSprite` に設定するパラメータ
