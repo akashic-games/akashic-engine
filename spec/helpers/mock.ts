@@ -152,6 +152,13 @@ export class Renderer extends g.Renderer {
 			}
 		});
 	}
+	setTransform(matrix: number[]): void {
+		// do nothing.
+	};
+
+	setOpacity(opacity: number): void {
+		// do nothing.
+	};
 }
 
 export class Surface extends g.Surface {
@@ -387,6 +394,7 @@ export class GlyphFactory extends g.GlyphFactory {
 	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
+	create(code: number): g.Glyph { return <g.Glyph>undefined; };
 }
 
 export class ResourceFactory extends g.ResourceFactory {
@@ -471,6 +479,10 @@ export class ResourceFactory extends g.ResourceFactory {
 	                   fontWeight?: g.FontWeight): g.GlyphFactory {
 		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
+	createVideoAsset(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem,
+	                 loop: boolean, useRealSize: boolean): g.VideoAsset {
+		return <g.VideoAsset>undefined;
+						 }
 }
 
 export class Game extends g.Game {
@@ -530,6 +542,12 @@ export class Game extends g.Game {
 	}
 
 	saveSnapshot(snapshot: any, timestamp?: number): void {
+		// do nothing.
+	}
+	addEventFilter(filter: g.EventFilter): void {
+		// do nothing.
+	}
+	removeEventFilter(filter: g.EventFilter): void {
 		// do nothing.
 	}
 }

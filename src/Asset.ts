@@ -5,7 +5,7 @@ namespace g {
 	 * game.jsonによって定義された内容をもとに暗黙的に生成されたインスタンスを、
 	 * Scene#assets、またはGame#assetsによって取得して利用する。
 	 */
-	export class Asset implements Destroyable {
+	export abstract class Asset implements Destroyable {
 		id: string;
 		path: string;
 		originalPath: string;
@@ -51,9 +51,7 @@ namespace g {
 		 *
 		 * @param loader 読み込み結果の通知を受け取るハンドラ
 		 */
-		_load(loader: AssetLoadHandler): void {
-			throw ExceptionFactory.createPureVirtualError("Asset#_load");
-		}
+		abstract _load(loader: AssetLoadHandler): void;
 
 		_assetPathFilter(path: string): string {
 			// 拡張子の補完・読み替えが必要なassetはこれをオーバーライドすればよい。(対応形式が限定されるaudioなどの場合)
@@ -70,7 +68,7 @@ namespace g {
 	 * width, heightでメタデータとして画像の大きさをとることは出来るが、
 	 * ゲーム開発者はそれ以外の情報を本クラスから直接は取得せず、Sprite等に本リソースを指定して利用する。
 	 */
-	export class ImageAsset extends Asset {
+	export abstract class ImageAsset extends Asset {
 		width: number;
 		height: number;
 
@@ -80,9 +78,7 @@ namespace g {
 			this.height = height;
 		}
 
-		asSurface(): Surface {
-			throw ExceptionFactory.createPureVirtualError("ImageAsset#asSurface");
-		}
+		abstract asSurface(): Surface;
 	}
 
 	/**
@@ -91,7 +87,7 @@ namespace g {
 	 * game.jsonによって定義された内容をもとに暗黙的に生成されたインスタンスを、
 	 * Scene#assets、またはGame#assetsによって取得して利用する。
 	 */
-	export class VideoAsset extends ImageAsset {
+	export abstract class VideoAsset extends ImageAsset {
 		/**
 		 * 動画の本来の幅。
 		 *
@@ -119,9 +115,7 @@ namespace g {
 			this._useRealSize = useRealSize;
 		}
 
-		asSurface(): Surface {
-			throw ExceptionFactory.createPureVirtualError("VideoAsset#asSurface");
-		}
+		abstract asSurface(): Surface;
 
 		play(loop?: boolean): VideoPlayer {
 			this.getPlayer().play(this);
@@ -132,9 +126,7 @@ namespace g {
 			this.getPlayer().stop();
 		}
 
-		getPlayer(): VideoPlayer {
-			throw ExceptionFactory.createPureVirtualError("VideoAsset#getPlayer");
-		}
+		abstract getPlayer(): VideoPlayer;
 
 		destroy(): void {
 			this._system = undefined;
@@ -150,7 +142,7 @@ namespace g {
 	 *
 	 * AudioAsset#playを呼び出す事で、その音を再生することが出来る。
 	 */
-	export class AudioAsset extends Asset {
+	export abstract class AudioAsset extends Asset {
 		data: any;
 		duration: number;
 		loop: boolean;
@@ -200,7 +192,7 @@ namespace g {
 	 *
 	 * TextAsset#dataによって、本リソースが保持する文字列を取得することが出来る。
 	 */
-	export class TextAsset extends Asset {
+	export abstract class TextAsset extends Asset {
 		data: string;
 
 		constructor(id: string, assetPath: string) {
@@ -223,12 +215,10 @@ namespace g {
 	 * ScriptAsset#executeによって、本リソースが表すスクリプトを実行し、その結果を受け取る事が出来る。
 	 * requireによる参照とは異なり、executeはキャッシュされないため、何度でも呼び出し違う結果を受け取ることが出来る。
 	 */
-	export class ScriptAsset extends Asset {
+	export abstract class ScriptAsset extends Asset {
 		script: string;
 
-		execute(execEnv: ScriptAssetExecuteEnvironment): any {
-			throw ExceptionFactory.createPureVirtualError("ScriptAsset#execute");
-		}
+		abstract execute(execEnv: ScriptAssetExecuteEnvironment): any;
 
 		destroy(): void {
 			this.script = undefined;

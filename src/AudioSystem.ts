@@ -1,5 +1,5 @@
 namespace g {
-	export class AudioSystem {
+	export abstract class AudioSystem {
 		id: string;
 		game: Game;
 		_volume: number;
@@ -31,17 +31,11 @@ namespace g {
 			this._playbackRate = audioSystemManager._playbackRate;
 		}
 
-		stopAll(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#stopAll");
-		}
+		abstract stopAll(): void;
 
-		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#findPlayers");
-		}
+		abstract findPlayers(asset: AudioAsset): AudioPlayer[];
 
-		createPlayer(): AudioPlayer {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#createPlayer");
-		}
+		abstract createPlayer(): AudioPlayer;
 
 		requestDestroy(asset: Asset): void {
 			this._destroyRequestedAssets[asset.id] = asset;
@@ -66,17 +60,11 @@ namespace g {
 			}
 		}
 
-		_onVolumeChanged(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#_onVolumeChanged");
-		}
+		abstract _onVolumeChanged(): void;
 
-		_onMutedChanged(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#_onMutedChanged");
-		}
+		abstract _onMutedChanged(): void;
 
-		_onPlaybackRateChanged(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#_onPlaybackRateChanged");
-		}
+		abstract _onPlaybackRateChanged(): void;
 	}
 
 	export class MusicAudioSystem extends AudioSystem {

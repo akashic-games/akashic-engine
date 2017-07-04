@@ -9,7 +9,7 @@ namespace g {
 	/**
 	 * 内部描画キャッシュを持つ `E` 。
 	 */
-	export class CacheableE extends E {
+	export abstract class CacheableE extends E {
 		/**
 		 * エンジンが子孫を描画すべきであれば`true`、でなければ`false`を本クラスを継承したクラスがセットする。
 		 * デフォルト値は`true`となる。
@@ -87,9 +87,7 @@ namespace g {
 		 * 本クラスを継承したエンティティはこのメソッド内で`renderer`に対してキャッシュの内容を描画しなければならない。
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
-		renderCache(renderer: Renderer, camera?: Camera): void {
-			throw ExceptionFactory.createPureVirtualError("CacheableE#renderCache");
-		}
+		abstract renderCache(renderer: Renderer, camera?: Camera): void;
 
 		/**
 		 * 利用している `Surface` を破棄した上で、このエンティティを破棄する。

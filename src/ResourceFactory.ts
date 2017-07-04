@@ -6,31 +6,20 @@ namespace g {
 	 * またこのクラスの各種アセット生成メソッドは、エンジンによって暗黙に呼び出されるものである。
 	 * 通常ゲーム開発者が呼び出す必要はない。
 	 */
-	export class ResourceFactory {
-		createImageAsset(id: string, assetPath: string, width: number, height: number): ImageAsset {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createImageAsset");
-		}
+	export abstract class ResourceFactory {
+		abstract createImageAsset(id: string, assetPath: string, width: number, height: number): ImageAsset;
 
-		createVideoAsset(id: string, assetPath: string, width: number, height: number, system: VideoSystem,
-		                 loop: boolean, useRealSize: boolean): VideoAsset {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createVideoAsset");
-		}
+		abstract createVideoAsset(id: string, assetPath: string, width: number, height: number, system: VideoSystem,
+		                          loop: boolean, useRealSize: boolean): VideoAsset;
 
-		createAudioAsset(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: AudioAssetHint): AudioAsset {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createAudioAsset");
-		}
+		abstract createAudioAsset(id: string, assetPath: string, duration: number, system: AudioSystem,
+		                          loop: boolean, hint: AudioAssetHint): AudioAsset;
 
-		createTextAsset(id: string, assetPath: string): TextAsset {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createTextAsset");
-		}
+		abstract createTextAsset(id: string, assetPath: string): TextAsset;
 
-		createAudioPlayer(system: AudioSystem): AudioPlayer {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createAudioPlayer");
-		}
+		abstract createAudioPlayer(system: AudioSystem): AudioPlayer
 
-		createScriptAsset(id: string, assetPath: string): ScriptAsset {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createScriptAsset");
-		}
+		abstract createScriptAsset(id: string, assetPath: string): ScriptAsset;
 
 		/**
 		 * Surface を作成する。
@@ -39,9 +28,7 @@ namespace g {
 		 * @param width 幅(ピクセル、整数値)
 		 * @param height 高さ(ピクセル、整数値)
 		 */
-		createSurface(width: number, height: number): Surface {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createSurface");
-		}
+		abstract createSurface(width: number, height: number): Surface;
 
 		/**
 		 * GlyphFactory を作成する。
@@ -56,11 +43,9 @@ namespace g {
 		 * @param strokeOnly ストロークのみを描画するか否か。省略された場合、偽として扱われる
 		 * @param fontWeight フォントウェイト。省略された場合、 `FontWeight.Normal` として扱われる
 		 */
-		createGlyphFactory(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight?: number,
-		                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-		                   fontWeight?: FontWeight): GlyphFactory {
-			throw ExceptionFactory.createPureVirtualError("ResourceFactory#createGlphFactory");
-		}
+		abstract createGlyphFactory(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight?: number,
+		                            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
+		                            fontWeight?: FontWeight): GlyphFactory;
 
 		createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
 			return new SurfaceAtlas(this.createSurface(width, height));

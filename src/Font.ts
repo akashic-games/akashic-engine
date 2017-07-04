@@ -26,7 +26,7 @@ namespace g {
 	 *
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
 	 */
-	export class GlyphFactory {
+	export abstract class GlyphFactory {
 		/**
 		 * フォントファミリ。
 		 *
@@ -114,8 +114,6 @@ namespace g {
 		 *
 		 * @param code 文字コード
 		 */
-		create(code: number): Glyph {
-			throw ExceptionFactory.createPureVirtualError("GlyphFactory#create");
-		}
+		abstract create(code: number): Glyph;
 	}
 }
