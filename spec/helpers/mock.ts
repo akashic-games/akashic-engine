@@ -482,7 +482,7 @@ export class ResourceFactory extends g.ResourceFactory {
 	createVideoAsset(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem,
 	                 loop: boolean, useRealSize: boolean): g.VideoAsset {
 		return <g.VideoAsset>undefined;
-						 }
+	}
 }
 
 export class Game extends g.Game {

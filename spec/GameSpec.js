@@ -167,7 +167,7 @@ describe("test Game", function() {
 			});
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
-			expect(function(){game._startLoadingGlobalAssets()}).toThrowError("Game#_startLoadingGlobalAssets: already loaded."); // already loaded
+			expect(function(){game._startLoadingGlobalAssets()}).toThrowError("AssertionError");
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -222,7 +222,7 @@ describe("test Game", function() {
 		});
 		game._startLoadingGlobalAssets();
 	});
-/*
+
 	it("tick", function(done) {
 		var assets = {
 			mainScene: {  // _loadAndStart() には mainScene が必要
@@ -714,7 +714,7 @@ describe("test Game", function() {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene(g.game)}";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})}";
 		expect(game.age).toBe(0);
 		expect(game.random[0]).toBe(undefined);
 
@@ -754,16 +754,13 @@ describe("test Game", function() {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene(g.game)};";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})};";
 		expect(game.age).toBe(0);
 		expect(game.random[0]).toBe(undefined);
 
 		var testDone = false;
-			console.log("done", game.fps);
 		game._loaded.handle(function () {
 			expect(testDone).toBe(true);
-			console.log("done");
-			
 			done();
 		});
 
@@ -872,5 +869,5 @@ describe("test Game", function() {
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
 	});
-*/
+	*/
 });
