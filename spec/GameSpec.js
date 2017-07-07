@@ -869,5 +869,4 @@ describe("test Game", function() {
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
 	});
-	*/
 });
