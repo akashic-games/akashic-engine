@@ -240,7 +240,6 @@ namespace g {
 		 * @param param 初期化に用いるパラメータのオブジェクト
 		 */
 		constructor(param: EParameterObject) {
-
 			super(param);
 			this.children = undefined;
 			this.parent = undefined;

@@ -128,7 +128,6 @@ namespace g {
 		 * @param param このエンティティに対するパラメータ
 		 */
 		constructor(param: MultiLineLabelParameterObject) {
-
 			super(param);
 			this.text = param.text;
 			this.bitmapFont = param.bitmapFont;

@@ -124,7 +124,6 @@ namespace g {
 		 * @param param このエンティティに指定するパラメータ
 		 */
 		constructor(param: LabelParameterObject) {
-
 			super(param);
 			this.text = param.text;
 			this.font = param.font;

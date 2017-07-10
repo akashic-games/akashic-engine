@@ -111,7 +111,6 @@ namespace g {
 		 * @param param `FrameSprite` に設定するパラメータ
 		 */
 		constructor(param: FrameSpriteParameterObject) {
-
 			super(param);
 			this._lastUsedIndex = 0;
 			this.frameNumber = param.frameNumber || 0;

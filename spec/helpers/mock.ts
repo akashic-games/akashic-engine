@@ -153,11 +153,11 @@ export class Renderer extends g.Renderer {
 		});
 	}
 	setTransform(matrix: number[]): void {
-		// do nothing.
+		throw new Error("not implemented");
 	};
 
 	setOpacity(opacity: number): void {
-		// do nothing.
+		throw new Error("not implemented");
 	};
 }
 
@@ -542,13 +542,13 @@ export class Game extends g.Game {
 	}
 
 	saveSnapshot(snapshot: any, timestamp?: number): void {
-		// do nothing.
+		throw new Error("not implemented");
 	}
 	addEventFilter(filter: g.EventFilter): void {
-		// do nothing.
+		throw new Error("not implemented");
 	}
 	removeEventFilter(filter: g.EventFilter): void {
-		// do nothing.
+		throw new Error("not implemented");
 	}
 }
 

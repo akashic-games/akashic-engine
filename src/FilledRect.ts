@@ -35,7 +35,6 @@ namespace g {
 		 * @param param このエンティティに対するパラメータ
 		 */
 		constructor(param: FilledRectParameterObject) {
-
 			super(param);
 			if (typeof param.cssColor !== "string")
 				throw ExceptionFactory.createTypeMismatchError("ColorBox#constructor(cssColor)", "string", param.cssColor);

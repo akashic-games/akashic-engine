@@ -111,7 +111,6 @@ namespace g {
 		 * @param param 初期化に用いるパラメータのオブジェクト
 		 */
 		constructor(param: Camera2DParameterObject) {
-
 			super(param);
 			this.game = param.game;
 			this.local = !!param.local;
