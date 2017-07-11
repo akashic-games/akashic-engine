@@ -251,6 +251,11 @@ namespace g {
 		operationPlugins: {[key: number]: OperationPlugin};
 
 		/**
+		 * 画面サイズの変更時にfireされるTrigger。
+		 */
+		resized: Trigger<CommonSize>;
+
+		/**
 		 * イベントとTriggerのマップ。
 		 */
 		_eventTriggerMap: {[key: number]: Trigger<Event>};
@@ -439,6 +444,7 @@ namespace g {
 			this._eventTriggerMap[EventType.PointUp] = undefined;
 			this._eventTriggerMap[EventType.Operation] = undefined;
 
+			this.resized = new Trigger<CommonSize>();
 			this._loaded = new Trigger<Game>();
 			this._started = new Trigger<void>();
 			this.isLoaded = false;
@@ -844,6 +850,7 @@ namespace g {
 			this.join._reset();
 			this.leave._reset();
 			this.seed._reset();
+			this.resized._reset();
 
 			this._idx = 0;
 			this._localIdx = 0;
