@@ -39,7 +39,7 @@
     "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts",
     "doc": "npm run doc:rename && npm run doc:build && npm run doc:restorename",
     "doc:rename": "renamer --find @types --replace @types.bak ./node_modules/*",
-    "doc:build": "cd lib && typedoc --out ../../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts && cd ../",
+    "doc:build": "cd lib && typedoc --out ../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts && cd ../",
     "doc:restorename": "renamer --find @types.bak --replace @types ./node_modules/*"
   },
   "files": [
