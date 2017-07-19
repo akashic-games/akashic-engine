@@ -1,11 +1,4 @@
 namespace g {
-	/**
-	 * 純粋仮想エラー。
-	 * サブクラスにおいて実装されていなければならない、純粋仮想メソッドが呼び出された際にthrowされる。
-	 */
-	export interface PureVirtualError extends Error {
-		cause?: any;
-	}
 
 	/**
 	 * アサーションエラー。
@@ -67,12 +60,6 @@ namespace g {
 	 * エンジン内部での例外生成に利用するもので、ゲーム開発者は通常本モジュールを利用する必要はない。
 	 */
 	export module ExceptionFactory {
-		export function createPureVirtualError(methodName: string, cause?: any): PureVirtualError {
-			var e: PureVirtualError = <PureVirtualError>new Error(methodName + " has no implementation.");
-			e.name = "PureVirtualError";
-			e.cause = cause;
-			return e;
-		}
 
 		export function createAssertionError(message: string, cause?: any): AssertionError {
 			var e: AssertionError = <AssertionError>new Error(message);
