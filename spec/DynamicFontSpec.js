@@ -7,42 +7,6 @@ describe("test DynamicFont", function() {
 	afterEach(function() {
 	});
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
-		var runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-
-		var font = new g.DynamicFont(
-			g.FontFamily.SansSerif,
-			20,
-			runtime.game,
-			{
-				initialAtlasWidth: 1000,
-				initialAtlasHeight: 2000,
-				maxAtlasWidth: 3000,
-				maxAtlasHeight: 4000,
-				maxAtlasNum: 5
-			},
-			"white",
-			1,
-			"red",
-			true
-		);
-		expect(font.fontFamily).toBe(g.FontFamily.SansSerif);
-		expect(font.size).toBe(20);
-		expect(font.fontColor).toBe("white");
-		expect(font.strokeWidth).toBe(1);
-		expect(font.strokeColor).toBe("red");
-		expect(font.strokeOnly).toBe(true);
-		expect(font.hint).toEqual({
-				initialAtlasWidth: 1000,
-				initialAtlasHeight: 2000,
-				maxAtlasWidth: 3000,
-				maxAtlasHeight: 4000,
-				maxAtlasNum: 5
-		});
-		runtime.game.suppressedLogLevel = undefined;
-	});
-	it("初期化 - ParameterObject", function() {
 		var runtime = skeletonRuntime();
 
 		var font = new g.DynamicFont({

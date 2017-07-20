@@ -56,9 +56,4 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 	});
-
-	it("renderer", function() {
-		var surface = new g.Surface(1, 1);
-		expect(function(){surface.renderer()}).toThrowError("PureVirtualError");
-	});
 });

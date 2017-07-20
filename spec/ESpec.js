@@ -17,21 +17,7 @@ describe("test E", function () {
 	});
 	afterEach(function () {
 	});
-
 	it("初期化", function () {
-		// deprecatedなコンストラクタの動作確認を行う
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-		var e = new g.E(runtime.scene);
-		expect(e).toHaveUndefinedValue("children", "parent");
-		expect(e.touchable).toEqual(false);
-		expect(e.scene).toBe(runtime.scene);
-		expect(e.state).toEqual(mock.EntityStateFlags.None);
-		expect(e._targetCameras).toBeUndefined();
-		expect(e._hasTouchableChildren).toBe(false);
-		runtime.game.suppressedLogLevel = undefined;
-	});
-
-	it("初期化 - EParameterObject", function () {
 		var e = new g.E({ scene: runtime.scene });
 		expect(e).toHaveUndefinedValue("children", "parent");
 		expect(e.touchable).toEqual(false);

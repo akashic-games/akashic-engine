@@ -12,23 +12,6 @@ describe("test Pane", function () {
 	afterEach(function () {
 	});
 
-	it("初期化", function () {
-		// deprecatedなコンストラクタの動作確認を行う
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-		var pane = new g.Pane(runtime.scene, 10, 20, undefined, 3);
-		expect(pane.width).toBe(10);
-		expect(pane.height).toBe(20);
-		expect(pane._oldWidth).toBe(10);
-		expect(pane._oldHeight).toBe(20);
-		expect(pane).toHaveUndefinedValue("backgroundImage", "backgroundEffector");
-		expect(pane._padding).toBe(3);
-		expect(pane._childrenSurface instanceof g.Surface).toBe(true);
-		expect(pane._childrenRenderer instanceof g.Renderer).toBe(true);
-		expect(pane._paddingChanged).toBe(false);
-		expect(pane).toHaveUndefinedValue("_bgSurface", "_bgRenderer");
-		runtime.game.suppressedLogLevel = undefined;
-	});
-
 	it("初期化 - ParameterObject", function () {
 		var pane = new g.Pane({
 			scene: runtime.scene,

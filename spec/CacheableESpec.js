@@ -10,20 +10,7 @@ describe("test CacheableE", function () {
 	});
 	afterEach(function () {
 	});
-
 	it("初期化", function () {
-		// deprecatedなコンストラクタの動作確認を行う
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-		var ce = new g.CacheableE(runtime.scene);
-		expect(ce._shouldRenderChildren).toBe(true);
-		expect(ce._targetCameras).toBeUndefined();
-		expect(ce._cache).toBeUndefined();
-		expect(ce._renderer).toBeUndefined();
-		expect(ce._renderedCamera).toBeUndefined();
-		runtime.game.suppressedLogLevel = undefined;
-	});
-
-	it("初期化 - CacheableEParameterObject", function () {
 		var ce = new g.CacheableE({ scene: runtime.scene });
 		expect(ce._shouldRenderChildren).toBe(true);
 		expect(ce._targetCameras).toBeUndefined();

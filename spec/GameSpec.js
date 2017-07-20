@@ -167,8 +167,7 @@ describe("test Game", function() {
 			});
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
-
-			expect(function(){game._startLoadingGlobalAssets()}).toThrowError("AssertionError"); // already loaded
+			expect(function(){game._startLoadingGlobalAssets()}).toThrowError("AssertionError");
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -715,15 +714,15 @@ describe("test Game", function() {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene(g.game)}";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})}";
 		expect(game.age).toBe(0);
 		expect(game.random[0]).toBe(undefined);
 
 		game._loaded.handle(function () {
 			expect(game.isLoaded).toBe(true);
 
-			var scene = new g.Scene(game);;
-			var scene2 = new g.Scene(game);
+			var scene = new g.Scene({game: game});
+			var scene2 = new g.Scene({game: game});
 			game.pushScene(scene);
 			game.pushScene(scene2);
 			game._flushSceneChangeRequests();
@@ -755,7 +754,7 @@ describe("test Game", function() {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene(g.game)};";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})};";
 		expect(game.age).toBe(0);
 		expect(game.random[0]).toBe(undefined);
 
@@ -869,6 +868,5 @@ describe("test Game", function() {
 		game.modified = false;
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
-
 	});
 });

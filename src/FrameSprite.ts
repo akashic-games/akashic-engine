@@ -107,39 +107,17 @@ namespace g {
 		}
 
 		/**
-		 * `FrameSprite` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `FrameSpriteParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティの属する `Scene`
-		 * @param src 画像として使う `Surface` または `ImageAsset`
-		 * @param width このエンティティの幅
-		 * @param height このエンティティの高さ
-		 */
-		constructor(scene: Scene, src: Surface|ImageAsset, width: number, height: number);
-		/**
 		 * 各種パラメータを指定して `FrameSprite` のインスタンスを生成する。
 		 * @param param `FrameSprite` に設定するパラメータ
 		 */
-		constructor(param: FrameSpriteParameterObject);
-
-		constructor(sceneOrParam: Scene|FrameSpriteParameterObject, src?: Surface|ImageAsset, width?: number, height?: number) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene, src, width, height);
-				this._lastUsedIndex = 0;
-				this.frameNumber = 0;
-				this.frames = [0];
-				this.interval = undefined;
-				this._timer = undefined;
-			} else {
-				var param = <FrameSpriteParameterObject>sceneOrParam;
-				super(param);
-				this._lastUsedIndex = 0;
-				this.frameNumber = param.frameNumber || 0;
-				this.frames = "frames" in param ? param.frames : [0];
-				this.interval = param.interval;
-				this._timer = undefined;
-				this._modifiedSelf();
-			}
+		constructor(param: FrameSpriteParameterObject) {
+			super(param);
+			this._lastUsedIndex = 0;
+			this.frameNumber = param.frameNumber || 0;
+			this.frames = "frames" in param ? param.frames : [0];
+			this.interval = param.interval;
+			this._timer = undefined;
+			this._modifiedSelf();
 		}
 
 		/**

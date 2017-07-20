@@ -83,51 +83,24 @@ namespace g {
 		_beforeSurface: Surface;
 
 		/**
-		 * 画像と幅・高さを指定して `Sprite` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `SpriteParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティが属する `Scene`
-		 * @param src 描画する画像を表す `Surface` または `Asset`
-		 * @param width このエンティティの幅
-		 * @param height このエンティティの高さ
-		 */
-		constructor(scene: Scene, src: Surface|Asset, width?: number, height?: number);
-		/**
 		 * 各種パラメータを指定して `Sprite` のインスタンスを生成する。
 		 * @param param `Sprite` に設定するパラメータ
 		 */
-		constructor(param: SpriteParameterObject);
-
-		constructor(sceneOrParam: Scene|SpriteParameterObject, src?: Surface|Asset, width?: number, height?: number) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene);
-				this.surface = Util.asSurface(src);
-				this.width = (width !== undefined) ? width : this.surface.width;
-				this.height = (height !== undefined) ? height : this.surface.height;
-				this.srcWidth = this.width;
-				this.srcHeight = this.height;
-				this.srcX = 0;
-				this.srcY = 0;
-				this._stretchMatrix = undefined;
-				this._beforeSurface = this.surface;
-				Util.setupAnimatingHandler(this, this.surface);
-			} else {
-				var param = <SpriteParameterObject>sceneOrParam;
-				super(param);
-				this.surface = Util.asSurface(param.src);
-				if (!("width" in param))
-					this.width = this.surface.width;
-				if (!("height" in param))
-					this.height = this.surface.height;
-				this.srcWidth = "srcWidth" in param ? param.srcWidth : this.width;
-				this.srcHeight = "srcHeight" in param ? param.srcHeight : this.height;
-				this.srcX = param.srcX || 0;
-				this.srcY = param.srcY || 0;
-				this._stretchMatrix = undefined;
-				this._beforeSurface = this.surface;
-				Util.setupAnimatingHandler(this, this.surface);
-				this._invalidateSelf();
-			}
+		constructor(param: SpriteParameterObject) {
+			super(param);
+			this.surface = Util.asSurface(param.src);
+			if (!("width" in param))
+				this.width = this.surface.width;
+			if (!("height" in param))
+				this.height = this.surface.height;
+			this.srcWidth = "srcWidth" in param ? param.srcWidth : this.width;
+			this.srcHeight = "srcHeight" in param ? param.srcHeight : this.height;
+			this.srcX = param.srcX || 0;
+			this.srcY = param.srcY || 0;
+			this._stretchMatrix = undefined;
+			this._beforeSurface = this.surface;
+			Util.setupAnimatingHandler(this, this.surface);
+			this._invalidateSelf();
 		}
 
 		_onUpdate(): void {

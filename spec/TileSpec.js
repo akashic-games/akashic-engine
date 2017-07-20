@@ -22,12 +22,17 @@ describe("test Tile", function() {
 	});
 
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
 		var runtime = skeletonRuntime();
 		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
 		var surface = new g.Surface(480, 480);
 		var tileData = [[0]];
-		var tile = new g.Tile(runtime.scene, surface, 32, 48, tileData);
+		var tile = new g.Tile({
+			scene: runtime.scene,
+			src: surface,
+			tileWidth: 32,
+			tileHeight: 48,
+			tileData: tileData
+		});
 		expect(tile.tileChips).toEqual(surface);
 		expect(tile.tileWidth).toEqual(32);
 		expect(tile.tileHeight).toEqual(48);
@@ -36,13 +41,17 @@ describe("test Tile", function() {
 	});
 
 	it("初期化 - 動画サーフェス", function() {
-		// deprecatedなコンストラクタの動作確認を行う
 		var runtime = skeletonRuntime();
 		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
 		var surface = new mock.Surface(480, 480, {}, true);
 		var tileData = [[0]];
-		var tile = new g.Tile(runtime.scene, surface, 32, 48, tileData);
-
+		var tile = new g.Tile({
+			scene: runtime.scene,
+			src: surface,
+			tileWidth: 32,
+			tileHeight: 48,
+			tileData: tileData
+		});
 		expect(tile.tileChips).toEqual(surface);
 		expect(tile.tileWidth).toEqual(32);
 		expect(tile.tileHeight).toEqual(48);
@@ -63,13 +72,17 @@ describe("test Tile", function() {
 	});
 
 	it("初期化 - 動画サーフェス(再生中)", function() {
-		// deprecatedなコンストラクタの動作確認を行う
 		var runtime = skeletonRuntime();
 		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
 		var surface = new mock.Surface(480, 480, {isPlaying: true}, true);
 		var tileData = [[0]];
-		var tile = new g.Tile(runtime.scene, surface, 32, 48, tileData);
-
+		var tile = new g.Tile({
+			scene: runtime.scene,
+			src: surface,
+			tileWidth: 32,
+			tileHeight: 48,
+			tileData: tileData
+		});
 		expect(tile.tileChips).toEqual(surface);
 		expect(tile.tileWidth).toEqual(32);
 		expect(tile.tileHeight).toEqual(48);

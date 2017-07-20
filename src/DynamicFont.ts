@@ -349,58 +349,22 @@ namespace g {
 		_atlasSize: CommonSize;
 
 		/**
-		 * `DynamicFont` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `DynamicFontParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param fontFamily フォントファミリ
-		 * @param size フォントサイズ
-		 * @param game ゲームインスタンス
-		 * @param hint ヒント
-		 * @param fontColor フォント色
-		 * @param strokeWidth 輪郭幅
-		 * @param strokeColor 輪郭色
-		 * @param strokeOnly 文字の輪郭のみを描画するか否か
-		 */
-		constructor(fontFamily: FontFamily, size: number, game: Game, hint?: DynamicFontHint,
-		            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean);
-		/**
 		 * 各種パラメータを指定して `DynamicFont` のインスタンスを生成する。
 		 * @param param `DynamicFont` に設定するパラメータ
 		 */
-		constructor(param: DynamicFontParameterObject);
-
-		constructor(fontFamilyOrParam: FontFamily|DynamicFontParameterObject, size?: number, game?: Game, hint: DynamicFontHint = {},
-		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false) {
-			if (typeof fontFamilyOrParam === "number") {
-				this.fontFamily = fontFamilyOrParam;
-				this.size = size;
-				this.hint = hint;
-				this.fontColor = fontColor;
-				this.strokeWidth = strokeWidth;
-				this.strokeColor = strokeColor;
-				this.strokeOnly = strokeOnly;
-				this._resourceFactory = game.resourceFactory;
-				this._glyphFactory =
-					this._resourceFactory.createGlyphFactory(fontFamilyOrParam, size, hint.baselineHeight, fontColor,
-						strokeWidth, strokeColor, strokeOnly);
-				game.logger.debug(
-					"[deprecated] DynamicFont: This constructor is deprecated. "
-						+ "Refer to the API documentation and use constructor(param: DynamicFontParameterObject) instead."
-				);
-			} else {
-				var param = fontFamilyOrParam;
-				this.fontFamily = param.fontFamily;
-				this.size = param.size;
-				this.hint = ("hint" in param) ? param.hint : {};
-				this.fontColor = ("fontColor" in param) ? param.fontColor : "black";
-				this.fontWeight = ("fontWeight" in param) ? param.fontWeight : FontWeight.Normal;
-				this.strokeWidth = ("strokeWidth" in param) ? param.strokeWidth : 0;
-				this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
-				this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
-				this._resourceFactory = param.game.resourceFactory;
-				this._glyphFactory =
-					this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
-						this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
-			}
+		constructor(param: DynamicFontParameterObject) {
+			this.fontFamily = param.fontFamily;
+			this.size = param.size;
+			this.hint = ("hint" in param) ? param.hint : {};
+			this.fontColor = ("fontColor" in param) ? param.fontColor : "black";
+			this.fontWeight = ("fontWeight" in param) ? param.fontWeight : FontWeight.Normal;
+			this.strokeWidth = ("strokeWidth" in param) ? param.strokeWidth : 0;
+			this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
+			this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
+			this._resourceFactory = param.game.resourceFactory;
+			this._glyphFactory =
+				this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
+					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			this._glyphs = {};
 			this._atlases = [];
 			this._currentAtlasIndex = 0;
@@ -417,9 +381,9 @@ namespace g {
 			this._atlasSize = calcAtlasSize(this.hint);
 			this._atlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 
-			if (hint.presetChars) {
-				for (let i = 0, len = hint.presetChars.length; i < len; i++) {
-					let code = g.Util.charCodeAt(hint.presetChars, i);
+			if (this.hint.presetChars) {
+				for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
+					let code = g.Util.charCodeAt(this.hint.presetChars, i);
 					if (! code) {
 						continue;
 					}
@@ -527,8 +491,13 @@ namespace g {
 			// そのために this.size をコンストラクタの第４引数に与えることにする。
 			let missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
 			const surface = this._atlases[0].duplicateSurface(this._resourceFactory);
-			const bitmapFont = new BitmapFont(surface, glyphAreaMap, 0, this.size, missingGlyph);
-
+			const bitmapFont = new BitmapFont({
+				src: surface,
+				map: glyphAreaMap,
+				defaultGlyphWidth: 0,
+				defaultGlyphHeight: this.size,
+				missingGlyph: missingGlyph
+			});
 			return bitmapFont;
 		}
 

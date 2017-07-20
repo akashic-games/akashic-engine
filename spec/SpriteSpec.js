@@ -21,11 +21,15 @@ describe("test Sprite", function() {
 	});
 
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
 		var runtime = skeletonRuntime();
 		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
 		var surface = new g.Surface(480, 480);
-		var sprite = new g.Sprite(runtime.scene, surface, 32, 48);
+		var sprite = new g.Sprite({
+			scene: runtime.scene,
+			src: surface,
+			width: 32,
+			height: 48
+		});
 		expect(sprite.width).toEqual(32);
 		expect(sprite.height).toEqual(48);
 		expect(sprite.srcWidth).toEqual(32);
@@ -47,7 +51,10 @@ describe("test Sprite", function() {
 		expect(sprite.srcHeight).toEqual(10);
 
 		var surface2 = new g.Surface(16, 32);
-		var sprite2 = new g.Sprite(runtime.scene, surface2);
+		var sprite2 = new g.Sprite({
+			scene: runtime.scene,
+			src: surface2
+		});
 		expect(sprite2.width).toEqual(16);
 		expect(sprite2.height).toEqual(32);
 		expect(sprite2.srcWidth).toEqual(16);
@@ -66,7 +73,10 @@ describe("test Sprite", function() {
 		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
 
 		var surface = new mock.Surface(16, 32, {}, true);
-		var sprite = new g.Sprite(runtime.scene, surface);
+		var sprite = new g.Sprite({
+			scene: runtime.scene,
+			src: surface
+		});
 
 		expect(sprite.width).toEqual(16);
 		expect(sprite.height).toEqual(32);
@@ -97,7 +107,10 @@ describe("test Sprite", function() {
 		var surface = new mock.Surface(16, 32, {isPlaying: true}, true);
 		expect(surface.isPlaying()).toBe(true);
 		expect(surface.isDynamic).toBe(true);
-		var sprite = new g.Sprite(runtime.scene, surface);
+		var sprite = new g.Sprite({
+			scene: runtime.scene,
+			src: surface
+		});
 
 		expect(sprite.width).toEqual(16);
 		expect(sprite.height).toEqual(32);
@@ -282,7 +295,10 @@ describe("test Sprite", function() {
 
 		var surface1 = new mock.Surface(16, 32, {isPlaying: false}, true);
 		var surface2 = new mock.Surface(16, 32, {isPlaying: false}, true);
-		var sprite = new g.Sprite(runtime.scene, surface1);
+		var sprite = new g.Sprite({
+			scene: runtime.scene,
+			src: surface1
+		});
 
 		surface1.animatingStarted.fire();
 		sprite.update.fire();
@@ -309,7 +325,10 @@ describe("test Sprite", function() {
 
 		var surface1 = new mock.Surface(16, 32, {isPlaying: false}, true);
 		var surface2 = new mock.Surface(16, 32, {isPlaying: true}, true);
-		var sprite = new g.Sprite(runtime.scene, surface1);
+		var sprite = new g.Sprite({
+			scene: runtime.scene,
+			src: surface1
+		});
 
 		surface1.animatingStarted.fire();
 		sprite.update.fire();

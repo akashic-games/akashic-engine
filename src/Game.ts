@@ -92,7 +92,7 @@ namespace g {
 	 * 10.AudioSystemを直接制御するため、Game#audioにアクセスする
 	 * 11.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
 	 */
-	export class Game implements Registrable<E> {
+	export abstract class Game implements Registrable<E> {
 		/**
 		 * このコンテンツに関連付けられるエンティティ。(ローカルなエンティティを除く)
 		 */
@@ -687,9 +687,7 @@ namespace g {
 		 *
 		 * @param e 発生させるイベント
 		 */
-		raiseEvent(e: Event): void {
-			throw ExceptionFactory.createPureVirtualError("Game#raiseEvent");
-		}
+		abstract raiseEvent(e: Event): void;
 
 		/**
 		 * ティックを発生させる。
@@ -699,9 +697,7 @@ namespace g {
 		 *
 		 * @param events そのティックで追加で発生させるイベント
 		 */
-		raiseTick(events?: Event[]): void {
-			throw ExceptionFactory.createPureVirtualError("Game#raiseTick");
-		}
+		abstract raiseTick(events?: Event[]): void;
 
 		/**
 		 * イベントフィルタを追加する。
@@ -715,18 +711,14 @@ namespace g {
 		 *
 		 * @param filter 追加するイベントフィルタ
 		 */
-		addEventFilter(filter: EventFilter): void {
-			throw ExceptionFactory.createPureVirtualError("Game#addEventFilter");
-		}
+		abstract addEventFilter(filter: EventFilter): void;
 
 		/**
 		 * イベントフィルタを削除する。
 		 *
 		 * @param filter 削除するイベントフィルタ
 		 */
-		removeEventFilter(filter: EventFilter): void {
-			throw ExceptionFactory.createPureVirtualError("Game#removeEventFilter");
-		}
+		abstract removeEventFilter(filter: EventFilter): void;
 
 		/**
 		 * このインスタンスにおいてスナップショットの保存を行うべきかを返す。
@@ -740,9 +732,7 @@ namespace g {
 		 * スナップショット保存に対応するゲームは、このメソッドが真を返す時にのみ `Game#saveSnapshot()` を呼び出すべきである。
 		 * 戻り値は、スナップショットの保存を行うべきであれば真、でなければ偽である。
 		 */
-		shouldSaveSnapshot(): boolean {
-			throw ExceptionFactory.createPureVirtualError("Game#shouldSaveSnapshot");
-		}
+		abstract shouldSaveSnapshot(): boolean;
 
 		/**
 		 * スナップショットを保存する。
@@ -763,9 +753,7 @@ namespace g {
 		 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 		 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 		 */
-		saveSnapshot(snapshot: any, timestamp?: number): void {
-			throw ExceptionFactory.createPureVirtualError("Game#saveSnapshot");
-		}
+		abstract saveSnapshot(snapshot: any, timestamp?: number): void;
 
 		_fireSceneReady(scene: Scene): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.FireReady, scene: scene });
@@ -927,9 +915,7 @@ namespace g {
 			this._loaded.fire();
 		}
 
-		_leaveGame(): void {
-			throw ExceptionFactory.createPureVirtualError("Game#_leaveGame");
-		}
+		abstract _leaveGame(): void;
 
 		_terminateGame(): void {
 			// do nothing.

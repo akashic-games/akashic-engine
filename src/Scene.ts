@@ -437,54 +437,31 @@ namespace g {
 		_assetHolders: SceneAssetHolder[];
 
 		/**
-		 * `Scene` のインスタンスを作成する。
-		 *
-		 * 引数 `assetIds` は、アセットIDを表す文字列の配列である。
-		 * アセットIDは、 game.json(`game` のコンストラクタに渡された `GameConfiguration` の値)のassetsオブジェクト
-		 * に含まれるキーの文字列である。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `SceneParameterObject` を使うコンストラクタを用いるべきである。
-		 *
-		 * @param game このシーンが属するGame
-		 * @param assetIds このシーンで利用するアセットIDの配列。省略された場合、空配列
-		 */
-		constructor(game: Game, assetIds?: (string | DynamicAssetConfiguration)[]);
-
-		/**
 		 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
 		 * @param param 初期化に用いるパラメータのオブジェクト
 		 */
-		constructor(param: SceneParameterObject);
-
-		constructor(gameOrParam: Game|SceneParameterObject, assetIds?: (string | DynamicAssetConfiguration)[]) {
+		constructor(param: SceneParameterObject) {
 			var game: Game;
 			var local: LocalTickMode;
 			var tickGenerationMode: TickGenerationMode;
-			if (gameOrParam instanceof Game) {
-				game = gameOrParam;
-				local = LocalTickMode.NonLocal;
-				tickGenerationMode = TickGenerationMode.ByClock;
-				game.logger.debug(
-					"[deprecated] Scene:This constructor is deprecated. Refer to the API documentation and use Scene(param: SceneParameterObject) instead."
-				);
-			} else {
-				var param = <SceneParameterObject>gameOrParam;
-				game = param.game;
-				assetIds = param.assetIds;
-				if (!param.storageKeys) {
-					this._storageLoader = undefined;
-					this.storageValues = undefined;
-				} else {
-					this._storageLoader = game.storage._createLoader(param.storageKeys, param.storageValuesSerialization);
-					this.storageValues = this._storageLoader._valueStore;
-				}
+			var assetIds: (string | DynamicAssetConfiguration)[];
 
-				local = (param.local === undefined) ? LocalTickMode.NonLocal
-				          : (param.local === false) ? LocalTickMode.NonLocal
-				           : (param.local === true) ? LocalTickMode.FullLocal
-				                                    : <LocalTickMode>param.local;
-				tickGenerationMode = (param.tickGenerationMode !== undefined) ? param.tickGenerationMode : TickGenerationMode.ByClock;
-				this.name = param.name;
+			game = param.game;
+			assetIds = param.assetIds;
+			if (!param.storageKeys) {
+				this._storageLoader = undefined;
+				this.storageValues = undefined;
+			} else {
+				this._storageLoader = game.storage._createLoader(param.storageKeys, param.storageValuesSerialization);
+				this.storageValues = this._storageLoader._valueStore;
 			}
+
+			local = (param.local === undefined) ? LocalTickMode.NonLocal
+			          : (param.local === false) ? LocalTickMode.NonLocal
+			           : (param.local === true) ? LocalTickMode.FullLocal
+			                                    : <LocalTickMode>param.local;
+			tickGenerationMode = (param.tickGenerationMode !== undefined) ? param.tickGenerationMode : TickGenerationMode.ByClock;
+			this.name = param.name;
 
 			if (!assetIds)
 				assetIds = [];

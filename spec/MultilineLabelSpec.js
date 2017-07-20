@@ -12,28 +12,19 @@ describe("test MultiLineLabel", function() {
 		var height = 350;
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		bmpfont = new g.BitmapFont(new mock.ResourceFactory().createImageAsset("testId", "testAssetPath", width, height), map, 50, 50, missingGlyph);
+		bmpfont = new g.BitmapFont({
+			src: new mock.ResourceFactory().createImageAsset("testId", "testAssetPath", width, height),
+			map: map,
+			defaultGlyphWidth: 50,
+			defaultGlyphHeight: 50,
+			missingGlyph: missingGlyph
+		});
 	});
 
 	afterEach(function() {
 	});
 
 	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
-		runtime.game.suppressedLogLevel = g.LogLevel.Debug;
-		var mlabel = new g.MultiLineLabel(runtime.scene, "foo", bmpfont, 10, 200);
-		expect(mlabel.text).toBe("foo");
-		expect(mlabel.bitmapFont).toBe(bmpfont);
-		expect(mlabel.width).toBe(200);
-		expect(mlabel.textAlign).toBe(g.TextAlign.Left);
-		expect(mlabel.fontSize).toBe(10);
-		expect(mlabel.lineGap).toBe(0);
-		expect(mlabel.lineBreak).toBe(true);
-		expect(mlabel.textColor).toBeUndefined();
-		runtime.game.suppressedLogLevel = undefined;
-	});
-
-	it("初期化 - ParameterObject", function() {
 		var mlabel = new g.MultiLineLabel({
 			scene: runtime.scene,
 			text: "foo",
