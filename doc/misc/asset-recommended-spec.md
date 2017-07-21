@@ -47,6 +47,5 @@ Akashic のゲームでは、複数の画像を一つの画像ファイルにま
 
 キャラクタの右側に滲んだ不透明色が確認できます。
 
-ビットマップフォント(`g.BitmapFont`)として使う画像や、タイル(`@akashic-extension/akashic-tile`)に与えるマップチップ画像(`g.TileParameterObject#src`)などにも同様の注意が必要です。
+この現象は、ビットマップフォント(`g.BitmapFont`)として使う画像や、Akashic向けの拡張機能として提供されている [@akashic-extension/akashic-tile](https://github.com/akashic-games/akashic-tile) でも同様です。
 特にタイルは、その性質上間隔を空けずに使うことが多いと考えられます。従ってタイルの拡大縮小は推奨されません。
-
