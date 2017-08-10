@@ -112,13 +112,6 @@ namespace g {
 		}
 
 		/**
-		 * 音量の変更を通知する。
-		 */
-		onVolumeChanged(): void {
-			// nothing to do
-		}
-
-		/**
 		 * ミュート状態を変更する。
 		 *
 		 * エンジンユーザが `AudioPlayer` の派生クラスを実装する場合は、
@@ -160,6 +153,13 @@ namespace g {
 		 */
 		_supportsPlaybackRate(): boolean {
 			return false;
+		}
+
+		/**
+		 * 音量の変更を通知する。
+		 */
+		_onVolumeChanged(): void {
+			// nothing to do
 		}
 	}
 }
