@@ -9,17 +9,22 @@ namespace g {
 		id: string;
 		path: string;
 		originalPath: string;
+		onDestroyed: Trigger<g.Asset>;
 
 		constructor(id: string, path: string) {
 			this.id = id;
 			this.originalPath = path;
 			this.path = this._assetPathFilter(path);
+			this.onDestroyed = new Trigger<g.Asset>();
 		}
 
 		destroy(): void {
+			this.onDestroyed.fire(this);
 			this.id = undefined;
 			this.originalPath = undefined;
 			this.path = undefined;
+			this.onDestroyed.destroy();
+			this.onDestroyed = undefined;
 		}
 
 		destroyed(): boolean {
