@@ -9,17 +9,22 @@ namespace g {
 		id: string;
 		path: string;
 		originalPath: string;
+		onDestroyed: Trigger<g.Asset>;
 
 		constructor(id: string, path: string) {
 			this.id = id;
 			this.originalPath = path;
 			this.path = this._assetPathFilter(path);
+			this.onDestroyed = new Trigger<g.Asset>();
 		}
 
 		destroy(): void {
+			this.onDestroyed.fire(this);
 			this.id = undefined;
 			this.originalPath = undefined;
 			this.path = undefined;
+			this.onDestroyed.destroy();
+			this.onDestroyed = undefined;
 		}
 
 		destroyed(): boolean {
@@ -156,6 +161,7 @@ namespace g {
 		loop: boolean;
 		hint: AudioAssetHint;
 		_system: AudioSystem;
+		_lastPlayedPlayer: AudioPlayer;
 
 		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: AudioAssetHint) {
 			super(id, assetPath);
@@ -169,6 +175,7 @@ namespace g {
 		play(): AudioPlayer {
 			var player = this._system.createPlayer();
 			player.play(this);
+			this._lastPlayedPlayer = player;
 			return player;
 		}
 
@@ -188,6 +195,7 @@ namespace g {
 
 			this.data = undefined;
 			this._system = undefined;
+			this._lastPlayedPlayer = undefined;
 			super.destroy();
 		}
 	}

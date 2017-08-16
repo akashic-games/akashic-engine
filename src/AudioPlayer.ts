@@ -154,5 +154,12 @@ namespace g {
 		_supportsPlaybackRate(): boolean {
 			return false;
 		}
+
+		/**
+		 * 音量の変更を通知する。
+		 */
+		_onVolumeChanged(): void {
+			// nothing to do
+		}
 	}
 }
