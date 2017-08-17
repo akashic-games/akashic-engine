@@ -157,6 +157,7 @@ namespace g {
 
 		/**
 		 * 音量の変更を通知する。
+		 * @deprecated このメソッドは実験的に導入されたが、利用されていない。将来的に削除される。
 		 */
 		_onVolumeChanged(): void {
 			// nothing to do
