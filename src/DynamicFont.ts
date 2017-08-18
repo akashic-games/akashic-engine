@@ -61,9 +61,24 @@ namespace g {
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
 	 */
 	export class SurfaceAtlas implements Destroyable {
+		/**
+		 * @private
+		 */
 		_surface: Surface;
+
+		/**
+		 * @private
+		 */
 		_emptySurfaceAtlasSlotHead: SurfaceAtlasSlot;
+
+		/**
+		 * @private
+		 */
 		_accessScore: number;
+
+		/**
+		 * @private
+		 */
 		_usedRectangleAreaSize: CommonSize;
 
 		constructor(surface: Surface) {
@@ -73,6 +88,9 @@ namespace g {
 			this._usedRectangleAreaSize = { width: 0, height: 0 };
 		}
 
+		/**
+		 * @private
+		 */
 		_acquireSurfaceAtlasSlot(width: number, height: number): SurfaceAtlasSlot {
 			// Renderer#drawImage()でサーフェス上の一部を描画するとき、
 			// 指定した部分に隣接する画素がにじみ出る現象が確認されている。
@@ -119,6 +137,9 @@ namespace g {
 			return acquiredSlot;
 		}
 
+		/**
+		 * @private
+		 */
 		_updateUsedRectangleAreaSize(slot: SurfaceAtlasSlot): void {
 			const slotRight = slot.x + slot.width;
 			const slotBottom = slot.y + slot.height;
@@ -340,12 +361,39 @@ namespace g {
 		 */
 		strokeOnly: boolean;
 
+		/**
+		 * @private
+		 */
 		_resourceFactory: ResourceFactory;
+
+		/**
+		 * @private
+		 */
 		_glyphs: {[key: number]: Glyph};
+
+		/**
+		 * @private
+		 */
 		_glyphFactory: GlyphFactory;
+
+		/**
+		 * @private
+		 */
 		_atlases: SurfaceAtlas[];
+
+		/**
+		 * @private
+		 */
 		_currentAtlasIndex: number;
+
+		/**
+		 * @private
+		 */
 		_destroyed: boolean;
+
+		/**
+		 * @private
+		 */
 		_atlasSize: CommonSize;
 
 		/**
@@ -532,6 +580,9 @@ namespace g {
 			return bitmapFont;
 		}
 
+		/**
+		 * @private
+		 */
 		_removeLowUseAtlas(): SurfaceAtlas {
 			var minScore = Number.MAX_VALUE;
 			var lowScoreAtlasIndex = -1;
@@ -547,6 +598,9 @@ namespace g {
 			return removedAtlas;
 		}
 
+		/**
+		 * @private
+		 */
 		_reallocateAtlas(): void {
 			if (this._atlases.length >= this.hint.maxAtlasNum) {
 				let atlas = this._removeLowUseAtlas();
@@ -569,6 +623,9 @@ namespace g {
 			this._currentAtlasIndex = this._atlases.length - 1;
 		}
 
+		/**
+		 * @private
+		 */
 		_addToAtlas(glyph: Glyph): SurfaceAtlas {
 			let atlas: SurfaceAtlas = null;
 			let slot: SurfaceAtlasSlot = null;

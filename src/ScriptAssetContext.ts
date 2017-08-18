@@ -7,9 +7,24 @@ namespace g {
 	 * スクリプトアセットを実行する場合は、暗黙にこのクラスを利用する `require()` を用いること。
 	 */
 	export class ScriptAssetContext implements RequireCacheable {
+		/**
+		 * @private
+		 */
 		_asset: ScriptAsset;
+
+		/**
+		 * @private
+		 */
 		_game: Game;
+
+		/**
+		 * @private
+		 */
 		_module: Module;
+
+		/**
+		 * @private
+		 */
 		_started: boolean;
 		private _g: ScriptAssetExecuteEnvironment;
 
@@ -21,12 +36,18 @@ namespace g {
 			this._started = false;
 		}
 
+		/**
+		 * @private
+		 */
 		_cachedValue(): any {
 			if (!this._started)
 				throw ExceptionFactory.createAssertionError("ScriptAssetContext#_cachedValue: not executed yet.");
 			return this._module.exports;
 		}
 
+		/**
+		 * @private
+		 */
 		_executeScript(currentModule?: Module): any {
 			if (this._started)
 				return this._module.exports;

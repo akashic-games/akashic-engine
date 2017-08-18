@@ -39,14 +39,19 @@ namespace g {
 
 		/**
 		 * ミュート中か否か。
+		 * @private
 		 */
 		_muted: boolean;
 
 		/**
 		 * 再生速度の倍率。
+		 * @private
 		 */
 		_playbackRate: number;
 
+		/**
+		 * @private
+		 */
 		_system: AudioSystem;
 
 		/**
@@ -119,6 +124,7 @@ namespace g {
 		 * オーバーライド先のメソッドはこのメソッドを呼びださなければならない。
 		 *
 		 * @param muted ミュート状態にするか否か
+		 * @private
 		 */
 		_changeMuted(muted: boolean): void {
 			this._muted = muted;
@@ -133,6 +139,7 @@ namespace g {
 		 * オーバーライド先のメソッドはこのメソッドを呼びださなければならない。
 		 *
 		 * @param rate 再生速度の倍率。0以上でなければならない。1.0で等倍である。
+		 * @private
 		 */
 		_changePlaybackRate(rate: number): void {
 			this._playbackRate = rate;
@@ -150,6 +157,7 @@ namespace g {
 		 * しかしそれ以外の再生速度が指定された場合、実装はまるで音量がゼロであるかのように振舞ってもよい。
 		 *
 		 * このメソッドが偽を返す場合、エンジンは音声の非等倍速度再生に対するデフォルトの処理を実行する。
+		 * @private
 		 */
 		_supportsPlaybackRate(): boolean {
 			return false;

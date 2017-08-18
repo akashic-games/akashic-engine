@@ -39,11 +39,13 @@ namespace g {
 		/**
 		 * 描画可能な実体。
 		 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
+		 * @private
 		 */
 		_drawable: any;
 
 		/**
 		 * 本Surfaceが破棄済であるかを示す値。
+		 * @private
 		 */
 		_destroyed: boolean;
 

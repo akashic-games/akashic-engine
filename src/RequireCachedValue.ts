@@ -6,6 +6,9 @@ namespace g {
 			this._value = value;
 		}
 
+		/**
+		 * @private
+		 */
 		_cachedValue(): any {
 			return this._value;
 		}

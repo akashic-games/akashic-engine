@@ -107,7 +107,7 @@ gulp.task("typedoc", function() {
 			throw err;
 		}
 
-		var command = "typedoc --out ../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts";
+		var command = "typedoc --excludePrivate --out ../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts";
 		var commandException;
 		try {
 			execSync(command, {cwd: "lib/"});

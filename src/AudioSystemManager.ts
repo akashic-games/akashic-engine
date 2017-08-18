@@ -6,8 +6,19 @@ namespace g {
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
 	 */
 	export class AudioSystemManager {
+		/**
+		 * @private
+		 */
 		_game: Game;
+
+		/**
+		 * @private
+		 */
 		_muted: boolean;
+
+		/**
+		 * @private
+		 */
 		_playbackRate: number;
 
 		constructor(game: Game) {
@@ -16,6 +27,9 @@ namespace g {
 			this._playbackRate = 1.0;
 		}
 
+		/**
+		 * @private
+		 */
 		_setMuted(muted: boolean): void {
 			if (this._muted === muted)
 				return;
@@ -28,6 +42,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_setPlaybackRate(rate: number): void {
 			if (this._playbackRate === rate)
 				return;

@@ -50,11 +50,15 @@ namespace g {
 		 * (このメソッドではなく) `AssetLoadFailureInfo#cancelRetry` に真を代入する必要がある。
 		 *
 		 * @param loader 読み込み結果の通知を受け取るハンドラ
+		 * @private
 		 */
 		_load(loader: AssetLoadHandler): void {
 			throw ExceptionFactory.createPureVirtualError("Asset#_load");
 		}
 
+		/**
+		 * @private
+		 */
 		_assetPathFilter(path: string): string {
 			// 拡張子の補完・読み替えが必要なassetはこれをオーバーライドすればよい。(対応形式が限定されるaudioなどの場合)
 			return path;
@@ -106,8 +110,19 @@ namespace g {
 		 */
 		realHeight: number;
 
+		/**
+		 * @private
+		 */
 		_system: VideoSystem;
+
+		/**
+		 * @private
+		 */
 		_loop: boolean;
+
+		/**
+		 * @private
+		 */
 		_useRealSize: boolean;
 
 		constructor(id: string, assetPath: string, width: number, height: number, system: VideoSystem, loop: boolean, useRealSize: boolean) {
@@ -155,6 +170,10 @@ namespace g {
 		duration: number;
 		loop: boolean;
 		hint: AudioAssetHint;
+
+		/**
+		 * @private
+		 */
 		_system: AudioSystem;
 
 		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: AudioAssetHint) {

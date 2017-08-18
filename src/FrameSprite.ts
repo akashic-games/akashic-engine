@@ -85,7 +85,14 @@ namespace g {
 		 */
 		interval: number;
 
+		/**
+		 * @private
+		 */
 		_timer: Timer;
+
+		/**
+		 * @private
+		 */
 		_lastUsedIndex: number;
 
 		/**
@@ -182,6 +189,9 @@ namespace g {
 			super.modified(isBubbling);
 		}
 
+		/**
+		 * @private
+		 */
 		_onElapsed(): void {
 			if (++this.frameNumber >= this.frames.length)
 				this.frameNumber = 0;
@@ -189,6 +199,9 @@ namespace g {
 			this.modified();
 		}
 
+		/**
+		 * @private
+		 */
 		_free(): void {
 			if (! this._timer)
 				return;
@@ -200,6 +213,9 @@ namespace g {
 			this._timer = undefined;
 		}
 
+		/**
+		 * @private
+		 */
 		_changeFrame(): void {
 			var frame = this.frames[this.frameNumber];
 			var sep = Math.floor(this.surface.width / this.srcWidth);

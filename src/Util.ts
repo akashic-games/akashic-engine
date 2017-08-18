@@ -228,7 +228,15 @@ namespace g {
 		}
 
 		export type AnimatingHandler = {
+
+			/**
+			 * @private
+			 */
 			_onAnimatingStarted: () => void,
+
+			/**
+			 * @private
+			 */
 			_onAnimatingStopped: () => void
 		};
 
