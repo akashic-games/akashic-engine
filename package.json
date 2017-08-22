@@ -23,7 +23,7 @@
   },
   "scripts": {
     "prepublish": "npm run minify && npm run doc",
-    "postinstall": "npm run prepublish",
+    "prepare": "npm run prepublish",
     "build": "npm run clean && tsc -p ./ && npm run compile:cp && npm run concat:define && npm run concat:node",
     "clean": "rimraf tmp && rimraf lib",
     "compile:cp": "cpx tmp/tmp.d.ts lib && cpx tmp/tmp.js lib && renamer --find tmp --replace main ./lib/*",

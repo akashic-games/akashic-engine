@@ -67,7 +67,7 @@ namespace g {
 		age?: number;
 
 		/**
-		 * `Game#random[0]` に設定する値。
+		 * `Game#random` に設定する値。
 		 * 省略された場合、元の値が維持される。
 		 */
 		randGen?: RandomGenerator;
@@ -108,7 +108,7 @@ namespace g {
 		/**
 		 * このGameで利用可能な乱数生成機群。
 		 */
-		random: RandomGenerator[];
+		random: RandomGenerator;
 		/**
 		 * 処理待ちのイベント。
 		 */
@@ -408,7 +408,7 @@ namespace g {
 			this.height = gameConfiguration.height;
 			this.renderers = [];
 			this.scenes = [];
-			this.random = [];
+			this.random = null;
 			this.age = 0;
 			this.assetBase = assetBase || "";
 			this.resourceFactory = resourceFactory;
@@ -825,7 +825,7 @@ namespace g {
 				if (param.age !== undefined)
 					this.age = param.age;
 				if (param.randGen !== undefined)
-					this.random[0] = param.randGen;
+					this.random = param.randGen;
 			}
 
 			this._loaded.removeAllByHandler(this._start);

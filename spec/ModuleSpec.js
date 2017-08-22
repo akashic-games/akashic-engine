@@ -222,7 +222,7 @@ describe("test Module", function() {
 		// cache
 		"/script/cache1.js": "module.exports = { v1: require('randomnumber'), v2: require('randomnumber'), cache2: require('./cache2.js') };",
 		"/script/cache2.js": "module.exports = { v1: require('randomnumber'), v2: require('randomnumber') };",
-		"/node_modules/randomnumber/index.js": "module.exports = g.game.random[0].get(0, 1000000);",
+		"/node_modules/randomnumber/index.js": "module.exports = g.game.random.get(0, 1000000);",
 	};
 
 	beforeEach(function() {
@@ -578,7 +578,7 @@ describe("test Module", function() {
 	it("require - cache", function (done) {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game.random.push(new g.XorshiftRandomGenerator(1));
+		game.random = new g.XorshiftRandomGenerator(1);
 		game._loaded.handle(function () {
 			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
 			var cache1 = module.require("./cache1");
