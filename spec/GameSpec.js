@@ -15,7 +15,7 @@ describe("test Game", function() {
 		expect(game.db).toEqual({});
 		expect(game.renderers.length).toBe(0);
 		expect(game.scenes.length).toBe(0);
-		expect(game.random.length).toBe(0);
+		expect(game.random).toBe(null);
 		expect(game.events.length).toBe(0);
 		expect(game.modified).toBe(true);
 		expect(game.external).toEqual({});
@@ -716,7 +716,7 @@ describe("test Game", function() {
 		});
 		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})}";
 		expect(game.age).toBe(0);
-		expect(game.random[0]).toBe(undefined);
+		expect(game.random).toBe(null);
 
 		game._loaded.handle(function () {
 			expect(game.isLoaded).toBe(true);
@@ -735,7 +735,7 @@ describe("test Game", function() {
 
 			expect(game.scene()).toBe(game._initialScene);
 			expect(game.age).toBe(3);
-			expect(game.random[0]).toBe(randGen);
+			expect(game.random).toBe(randGen);
 			done();
 		});
 		game._loadAndStart();
@@ -756,7 +756,7 @@ describe("test Game", function() {
 		});
 		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})};";
 		expect(game.age).toBe(0);
-		expect(game.random[0]).toBe(undefined);
+		expect(game.random).toBe(null);
 
 		var testDone = false;
 		game._loaded.handle(function () {
