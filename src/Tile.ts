@@ -54,8 +54,14 @@ namespace g {
 		 */
 		tileData: number[][];
 
+		/**
+		 * @private
+		 */
 		_tilesInRow: number;
 
+		/**
+		 * @private
+		 */
 		_beforeTileChips: Surface;
 
 		/**
@@ -105,16 +111,25 @@ namespace g {
 			this._invalidateSelf();
 		}
 
+		/**
+		 * @private
+		 */
 		_onUpdate(): void {
 			this.invalidate();
 		}
 
+		/**
+		 * @private
+		 */
 		_onAnimatingStarted(): void {
 			if (!this.update.isHandled(this, this._onUpdate)) {
 				this.update.handle(this, this._onUpdate);
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onAnimatingStopped(): void {
 			if (! this.destroyed()) {
 				this.update.remove(this, this._onUpdate);

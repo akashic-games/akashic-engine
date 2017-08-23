@@ -12,6 +12,7 @@ namespace g {
 
 		/**
 		 * 登録されたハンドラの配列。
+		 * @private
 		 */
 		_handlers: TriggerHandler<(e: T) => boolean|void>[];
 
@@ -214,11 +215,17 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_reset(): void {
 			this._handlers = [];
 			this._deactivateChain();
 		}
 
+		/**
+		 * @private
+		 */
 		_activateChain(): void {
 			if (! this.chain)
 				return;
@@ -229,6 +236,9 @@ namespace g {
 			this.chain.handle(this, this._onChainFire);
 		}
 
+		/**
+		 * @private
+		 */
 		_deactivateChain(): void {
 			if (! this.chain)
 				return;
@@ -239,6 +249,9 @@ namespace g {
 			this.chain.remove(this, this._onChainFire);
 		}
 
+		/**
+		 * @private
+		 */
 		_remove(handler: TriggerHandler<(e: T) => boolean|void>): void {
 			var index = this._handlers.indexOf(handler);
 			if (index === -1)
@@ -248,6 +261,9 @@ namespace g {
 				this._deactivateChain();
 		}
 
+		/**
+		 * @private
+		 */
 		_onChainFire(e: T): void {
 			this.fire(e);
 		}
@@ -275,6 +291,9 @@ namespace g {
 			this.filter = filter;
 		}
 
+		/**
+		 * @private
+		 */
 		_onChainFire(e: T): void {
 			if (this.filter && !this.filter.call(this.filterOwner, e))
 				return;

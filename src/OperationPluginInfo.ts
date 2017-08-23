@@ -37,6 +37,9 @@ namespace g {
 	 * 本インターフェースをゲーム開発者が利用する必要はない。
 	 */
 	export interface InternalOperationPluginInfo extends OperationPluginInfo {
+		/**
+		 * @private
+		 */
 		_plugin: OperationPlugin;
 	}
 }

@@ -13,17 +13,25 @@ namespace g {
 		/**
 		 * エンジンが子孫を描画すべきであれば`true`、でなければ`false`を本クラスを継承したクラスがセットする。
 		 * デフォルト値は`true`となる。
+		 * @private
 		 */
 		_shouldRenderChildren: boolean;
 
 		/**
 		 * このエンティティの内部キャッシュ。
+		 * @private
 		 */
 		_cache: Surface;
+
+		/**
+		 * @private
+		 */
 		_renderer: Renderer;
 
 		/**
 		 * このエンティティを最後に描画した時の`Camrera`。
+		 *
+		 * @private
 		 */
 		_renderedCamera: Camera;
 

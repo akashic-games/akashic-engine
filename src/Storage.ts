@@ -160,10 +160,12 @@ namespace g {
 	export interface StorageLoaderHandler {
 		/**
 		 * 読み込失敗の通知を受ける関数。
+		 * @private
 		 */
 		_onStorageLoadError(error: StorageLoadError): void;
 		/**
 		 * 読み込完了の通知を受ける関数。
+		 * @private
 		 */
 		_onStorageLoaded(): void;
 	}
@@ -173,7 +175,14 @@ namespace g {
 	 * ゲーム開発者がこのクラスのインスタンスを直接生成することはない。
 	 */
 	export class StorageValueStore {
+		/**
+		 * @private
+		 */
 		_keys: StorageKey[];
+
+		/**
+		 * @private
+		 */
 		_values: StorageValue[][];
 
 		constructor(keys: StorageKey[], values?: StorageValue[][]) {
@@ -233,10 +242,29 @@ namespace g {
 	 * 本クラスの機能を利用することもない。
 	 */
 	export class StorageLoader {
+		/**
+		 * @private
+		 */
 		_loaded: boolean;
+
+		/**
+		 * @private
+		 */
 		_storage: Storage;
+
+		/**
+		 * @private
+		 */
 		_valueStore: StorageValueStore;
+
+		/**
+		 * @private
+		 */
 		_handler: StorageLoaderHandler;
+
+		/**
+		 * @private
+		 */
 		_valueStoreSerialization: StorageValueStoreSerialization;
 
 		constructor(storage: Storage, keys: StorageReadKey[], serialization?: StorageValueStoreSerialization) {
@@ -247,6 +275,9 @@ namespace g {
 			this._valueStoreSerialization = serialization;
 		}
 
+		/**
+		 * @private
+		 */
 		_load(handler: StorageLoaderHandler): void {
 			this._handler = handler;
 			if (this._storage._load) {
@@ -254,6 +285,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		// 値の取得が完了したタイミングで呼び出される。
 		// `values` は `this._valueStore._keys` に対応する値を表す `StorageValue` の配列。
 		// 順番は `this._valueStore._keys` と同じでなければならない。
@@ -266,6 +300,9 @@ namespace g {
 				this._handler._onStorageLoaded();
 		}
 
+		/**
+		 * @private
+		 */
 		_onError(error: StorageLoadError): void {
 			if (this._handler)
 				this._handler._onStorageLoadError(error);
@@ -277,9 +314,24 @@ namespace g {
 	 * ゲーム開発者がこのクラスのインスタンスを直接生成することはない。
 	 */
 	export class Storage {
+		/**
+		 * @private
+		 */
 		_game: Game;
+
+		/**
+		 * @private
+		 */
 		_write: (key: StorageKey, value: StorageValue, option: StorageWriteOption) => void;
+
+		/**
+		 * @private
+		 */
 		_load: (keys: StorageReadKey[], load: StorageLoader, serialization?: StorageValueStoreSerialization) => void;
+
+		/**
+		 * @private
+		 */
 		_requestedKeysForJoinPlayer: StorageReadKey[];
 
 		constructor(game: Game) {
@@ -307,16 +359,25 @@ namespace g {
 			this._requestedKeysForJoinPlayer = keys;
 		}
 
+		/**
+		 * @private
+		 */
 		_createLoader(keys: StorageReadKey[], serialization?: StorageValueStoreSerialization): StorageLoader {
 			return new StorageLoader(this, keys, serialization);
 		}
 
+		/**
+		 * @private
+		 */
 		// ストレージに値の書き込むを行う関数を登録する。
 		// 登録した関数内の `this` は `Storage` を指す。
 		_registerWrite(write: (key: StorageKey, value: StorageValue, option: StorageWriteOption) => void): void {
 			this._write = write;
 		}
 
+		/**
+		 * @private
+		 */
 		// ストレージから値の読み込みを行う関数を登録する。
 		// 登録した関数内の `this` は `Storage` を指す。
 		// 読み込み完了した場合は、登録した関数内で `loader._onLoaded(values)` を呼ばなければならない。

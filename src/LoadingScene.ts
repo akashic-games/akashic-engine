@@ -41,7 +41,14 @@ namespace g {
 		 */
 		targetAssetLoaded: Trigger<Asset>;
 
+		/**
+		 * @private
+		 */
 		_explicitEnd: boolean;
+
+		/**
+		 * @private
+		 */
 		_targetScene: Scene;
 
 		/**
@@ -107,6 +114,9 @@ namespace g {
 			this._clearTargetScene();
 		}
 
+		/**
+		 * @private
+		 */
 		_clearTargetScene(): void {
 			if (!this._targetScene)
 				return;
@@ -115,6 +125,9 @@ namespace g {
 			this._targetScene = undefined;
 		}
 
+		/**
+		 * @private
+		 */
 		_doReset(): boolean {
 			this.targetReset.fire(this._targetScene);
 			if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
@@ -127,11 +140,17 @@ namespace g {
 			return true;
 		}
 
+		/**
+		 * @private
+		 */
 		_fireTriggerOnTargetAssetLoad(asset: Asset): void {
 			this._onTargetAssetLoad(asset);
 			this.targetAssetLoaded.fire(asset);
 		}
 
+		/**
+		 * @private
+		 */
 		_fireTriggerOnTargetReady(scene: Scene): void {
 			this.targetReady.fire(scene);
 			if (!this._explicitEnd) {
@@ -147,6 +166,7 @@ namespace g {
 		 *
 		 * 現在はこれの代わりに `targetAssetLoaded` をhandleすること。
 		 * @deprecated
+		 * @private
 		 */
 		_onTargetAssetLoad(asset: Asset): boolean {
 			return true;

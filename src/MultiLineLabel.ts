@@ -114,11 +114,34 @@ namespace g {
 		 */
 		textColor: string;
 
+		/**
+		 * @private
+		 */
 		_beforeText: string;
+
+		/**
+		 * @private
+		 */
 		_beforeBitmapFont: BitmapFont;
+
+		/**
+		 * @private
+		 */
 		_beforeLineBreak: boolean;
+
+		/**
+		 * @private
+		 */
 		_beforeFontSize: number;
+
+		/**
+		 * @private
+		 */
 		_beforeTextAlign: TextAlign;
+
+		/**
+		 * @private
+		 */
 		_beforeWidth: number;
 
 		private _lines: LineInfo[];
@@ -216,6 +239,9 @@ namespace g {
 			super.destroy();
 		}
 
+		/**
+		 * @private
+		 */
 		_offsetX(width: number): number {
 			switch (this.textAlign) {
 				case TextAlign.Left:
@@ -229,6 +255,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_lineBrokenText(): string[] {
 			var splited = this.text.split(/\r\n|\r|\n/);
 			if (this.lineBreak) {

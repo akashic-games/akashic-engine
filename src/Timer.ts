@@ -17,11 +17,18 @@ namespace g {
 		 */
 		elapsed: Trigger<void>;
 
+		/**
+		 * @private
+		 */
 		// NOTE: 経過時間（ミリ秒）の計算はtick()の呼び出し時に1000 / fpsを計算する必要があるが、
 		// 計算結果が浮動小数となる可能性があり、計算誤差が発生してしまう。
 		// これを避けるために、経過時間をfps倍し、整数としたものthis._scaledElapsedとして管理する。
 		// さらに比較対象となるintervalもfps倍し、this._scaledIntervalとして管理する。
 		_scaledInterval: number;
+
+		/**
+		 * @private
+		 */
 		_scaledElapsed: number;
 
 		constructor(interval: number, fps: number) {

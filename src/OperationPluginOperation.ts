@@ -27,6 +27,9 @@ namespace g {
 	 * 本インターフェースをゲーム開発者が利用する必要はない。
 	 */
 	export interface InternalOperationPluginOperation extends OperationPluginOperation {
+		/**
+		 * @private
+		 */
 		_code: number;
 	}
 }

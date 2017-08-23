@@ -8,6 +8,7 @@ namespace g {
 		 * 変更フラグ。
 		 * 本フラグが立っていても特に何も処理はされない。
 		 * 本フラグの操作、本フラグを参照して値を再計算することは、いずれも利用する側で適切に処理をする必要がある。
+		 * @private
 		 */
 		_modified: boolean;
 
@@ -21,6 +22,7 @@ namespace g {
 		 * ```
 		 * 配列の添え字では、 a(m11): 0, b(m12): 1, c(m21): 2, d(m22): 3, e(dx): 4, f(dy): 5 となる。
 		 * 参考: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
+		 * @private
 		 */
 		// TODO: (GAMEDEV-844) Matrix#_matrix と二重名称になっているのでRendererと合わせて再検討
 		_matrix: [number, number, number, number, number, number];
@@ -107,7 +109,15 @@ namespace g {
 	 * 各フィールド、メソッドの詳細は `Matrix` インターフェースの説明を参照。
 	 */
 	export class PlainMatrix {
+
+		/**
+		 * @private
+		 */
 		_modified: boolean;
+
+		/**
+		 * @private
+		 */
 		_matrix: [number, number, number, number, number, number];
 
 		/**
