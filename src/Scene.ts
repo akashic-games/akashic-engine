@@ -664,7 +664,7 @@ namespace g {
 		 * @param interval 実行間隔(ミリ秒)
 		 * @param owner handlerの所有者。省略された場合、null
 		 * @param handler 処理
-		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
 		 */
 		setInterval(interval: number, owner: any, handler: () => void): TimerIdentifier;
 		/**
@@ -672,7 +672,7 @@ namespace g {
 		 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
 		 * @param interval 実行間隔(ミリ秒)
 		 * @param handler 処理
-		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
 		 */
 		setInterval(interval: number, handler: () => void): TimerIdentifier;
 
@@ -698,7 +698,6 @@ namespace g {
 		 * 一定時間後に一度だけ実行される処理を作成する。
 		 *
 		 * `milliseconds` ミリ秒後(以降)に、一度だけ `owner` を `this` として `handler` を呼び出す。
-		 * 引数 `owner` は省略できるが、 `handler` は省略できない。
 		 * 戻り値は `Scene#clearTimeout` の引数に指定して処理を削除するために使える値である。
 		 *
 		 * このタイマーはフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
@@ -718,7 +717,7 @@ namespace g {
 		 * @param handler 処理
 		 * @param milliseconds 時間(ミリ秒)
 		 * @param owner handlerの所有者。省略された場合、null
-		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
 		 */
 		setTimeout(milliseconds: number, owner: any, handler: () => void): TimerIdentifier;
 		/**
@@ -727,7 +726,7 @@ namespace g {
 		 * `milliseconds` ミリ秒後(以降)に、一度だけ `handler` を呼び出す。
 		 * @param handler 処理
 		 * @param milliseconds 時間(ミリ秒)
-		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
 		 */
 		setTimeout(milliseconds: number, handler: () => void): TimerIdentifier;
 
