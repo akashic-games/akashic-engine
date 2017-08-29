@@ -228,7 +228,6 @@ namespace g {
 		}
 
 		export type AnimatingHandler = {
-
 			/**
 			 * @private
 			 */

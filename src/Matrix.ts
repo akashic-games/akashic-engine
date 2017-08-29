@@ -103,7 +103,6 @@ namespace g {
 	 * 各フィールド、メソッドの詳細は `Matrix` インターフェースの説明を参照。
 	 */
 	export class PlainMatrix {
-
 		/**
 		 * @private
 		 */

@@ -69,7 +69,6 @@ namespace g {
 		 */
 		_normalizedPadding: CommonRect;
 
-
 		/**
 		 * @private
 		 */

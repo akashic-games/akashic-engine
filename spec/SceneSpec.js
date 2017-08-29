@@ -947,7 +947,7 @@ describe("test Scene", function() {
 		expect(scene2._timer._timers.length).toBe(0);
 	});
 
-	it("setTimeout", function() {
+	it("setTimeout - deprecated", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
 		var game = runtime.game;
 		var scene1 = game.scene();
@@ -975,6 +975,32 @@ describe("test Scene", function() {
 		game.tick(1);
 		game.tick(1);
 		expect(scene1._timer._timers.length).toBe(0);
+	});
+
+	it("setTimeout", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		var game = runtime.game;
+		var scene = game.scene();
+		var owner = {};
+		var callCount = 0;
+		var timerId = scene.setTimeout(function () {
+			expect(this).toBe(owner);
+			callCount++;
+		}, 100, owner);
+
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(0);
+		game.tick(1);
+		expect(callCount).toBe(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(1);
 	});
 
 	it("clearTimeout", function() {
@@ -1037,6 +1063,35 @@ describe("test Scene", function() {
 		game.replaceScene(scene3);
 		game._flushSceneChangeRequests();
 		expect(scene1._timer._timers).toBeUndefined();
+	});
+
+	it("setInterval", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		var game = runtime.game;
+		var scene = game.scene();
+		var owner = {};
+		var callCount = 0;
+		var timerId = scene.setInterval(function () {
+			expect(this).toBe(owner);
+			callCount++;
+		}, 100, owner);
+
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);  // 3/32*1000 = 93.75ms
+		expect(callCount).toBe(0);
+		game.tick(1);  // 4/32*1000 = 125ms
+		expect(callCount).toBe(1);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(1);
+		game.tick(1);  // 7/32*1000 = 218.75ms
+		expect(callCount).toBe(2);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(2);
+		game.tick(1);  // 10/32*1000 = 312.5ms
+		expect(callCount).toBe(3);
 	});
 
 	it("isCurrentScene/gotoScene/end", function(done){
