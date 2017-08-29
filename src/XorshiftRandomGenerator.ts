@@ -40,7 +40,14 @@ namespace g {
 	 */
 
 	export interface XorshiftRandomGeneratorSerialization {
+		/**
+		 * @private
+		 */
 		_seed: number;
+
+		/**
+		 * @private
+		 */
 		_xorshift: XorshiftSerialization;
 	}
 }

@@ -54,19 +54,57 @@ namespace g {
 		 */
 		backgroundEffector: SurfaceEffector;
 
+		/**
+		 * @private
+		 */
 		_padding: CommonRect|number;
+
+		/**
+		 * @private
+		 */
 		_paddingChanged: boolean;
+
+		/**
+		 * @private
+		 */
 		_normalizedPadding: CommonRect;
 
+
+		/**
+		 * @private
+		 */
 		// Effect済み背景画像の描画サーフェス
 		_bgSurface: Surface;
+
+		/**
+		 * @private
+		 */
 		_bgRenderer: Renderer;
 
+		/**
+		 * @private
+		 */
 		_oldWidth: number;
+
+		/**
+		 * @private
+		 */
 		_oldHeight: number;
 
+
+		/**
+		 * @private
+		 */
 		_childrenArea: CommonArea;
+
+		/**
+		 * @private
+		 */
 		_childrenSurface: Surface;
+
+		/**
+		 * @private
+		 */
 		_childrenRenderer: Renderer;
 
 		/**
@@ -165,6 +203,9 @@ namespace g {
 			super.destroy();
 		 }
 
+		/**
+		 * @private
+		 */
 		_renderBackground(): void {
 			if (this._bgSurface && !this._bgSurface.destroyed()) {
 				this._bgSurface.destroy();
@@ -176,6 +217,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_renderChildren(camera?: Camera): void {
 			var isNew = this._oldWidth !== this.width || this._oldHeight !== this.height || this._paddingChanged;
 			if (isNew) {
@@ -199,6 +243,9 @@ namespace g {
 			this._childrenRenderer.end();
 		}
 
+		/**
+		 * @private
+		 */
 		_initialize(): void {
 			var p = this._padding === undefined ? 0 : this._padding;
 			var r: CommonRect;
@@ -225,6 +272,7 @@ namespace g {
 		/**
 		 * このPaneの包含矩形を計算する。
 		 * Eを継承する他のクラスと異なり、Paneは子要素の位置を包括矩形に含まない。
+		 * @private
 		 */
 		_calculateBoundingRect(m?: Matrix, c?: Camera): CommonRect {
 			var matrix = this.getMatrix();

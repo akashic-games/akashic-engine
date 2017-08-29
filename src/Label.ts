@@ -116,7 +116,14 @@ namespace g {
 		 */
 		textColor: string;
 
+		/**
+		 * @private
+		 */
 		_textWidth: number;
+
+		/**
+		 * @private
+		 */
 		_game: Game;
 
 		/**

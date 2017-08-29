@@ -20,7 +20,14 @@ namespace g {
 		 */
 		local: boolean;
 
+		/**
+		 * @private
+		 */
 		_modifiedCount: number;
+
+		/**
+		 * @private
+		 */
 		_applyTransformToRenderer: (renderer: Renderer) => void;
 
 		serialize: () => any;
@@ -90,6 +97,9 @@ namespace g {
 		 */
 		name: string;
 
+		/**
+		 * @private
+		 */
 		_modifiedCount: number;
 
 		/**
@@ -167,6 +177,9 @@ namespace g {
 			return ser;
 		}
 
+		/**
+		 * @private
+		 */
 		_applyTransformToRenderer(renderer: Renderer): void {
 			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
 				// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
@@ -178,6 +191,9 @@ namespace g {
 				renderer.opacity(this.opacity);
 		}
 
+		/**
+		 * @private
+		 */
 		_updateMatrix(): void {
 			// カメラの angle, x, y はエンティティと逆方向に作用することに注意。
 			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {

@@ -2,9 +2,25 @@ namespace g {
 	export abstract class AudioSystem {
 		id: string;
 		game: Game;
+
+		/**
+		 * @private
+		 */
 		_volume: number;
+
+		/**
+		 * @private
+		 */
 		_muted: boolean;
+
+		/**
+		 * @private
+		 */
 		_destroyRequestedAssets:  {[key: string]: Asset};
+
+		/**
+		 * @private
+		 */
 		_playbackRate: number;
 
 		// volumeの変更時には通知が必要なのでアクセサを使う。
@@ -41,6 +57,9 @@ namespace g {
 			this._destroyRequestedAssets[asset.id] = asset;
 		}
 
+		/**
+		 * @private
+		 */
 		_setMuted(value: boolean): void {
 			var before = this._muted;
 			this._muted = !!value;
@@ -49,6 +68,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_setPlaybackRate(value: number): void {
 			if (value < 0 || isNaN(value) || typeof value !== "number")
 				throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
@@ -60,14 +82,26 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		abstract _onVolumeChanged(): void;
 
+		/**
+		 * @private
+		 */
 		abstract _onMutedChanged(): void;
 
+		/**
+		 * @private
+		 */
 		abstract _onPlaybackRateChanged(): void;
 	}
 
 	export class MusicAudioSystem extends AudioSystem {
+		/**
+		 * @private
+		 */
 		_player: AudioPlayer;
 
 		/**
@@ -76,6 +110,7 @@ namespace g {
 		 * 再生速度に非対応の `AudioPlayer` の場合に、等倍速でない速度で再生を試みたアセット。
 		 * 再生速度が戻された場合に改めて再生されなおす。
 		 * この値は、 `this._player._supportsPlaybackRate()` が偽ある場合にのみ利用される。
+		 * @private
 		 */
 		_suppressingAudio: AudioAsset;
 
@@ -113,14 +148,23 @@ namespace g {
 			this._player.stop();
 		}
 
+		/**
+		 * @private
+		 */
 		_onVolumeChanged(): void {
 			this.player.changeVolume(this._volume);
 		}
 
+		/**
+		 * @private
+		 */
 		_onMutedChanged(): void {
 			this.player._changeMuted(this._muted);
 		}
 
+		/**
+		 * @private
+		 */
 		_onPlaybackRateChanged(): void {
 			var player = this.player;
 			player._changePlaybackRate(this._playbackRate);
@@ -129,6 +173,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onUnsupportedPlaybackRateChanged(): void {
 			// 再生速度非対応の場合のフォールバック: 鳴らそうとして止めていた音があれば鳴らし直す
 			if (this._playbackRate === 1.0) {
@@ -142,6 +189,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onPlayerPlayed(e: AudioPlayerEvent): void {
 			if (e.player !== this._player)
 				throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
@@ -156,6 +206,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
 			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
@@ -199,6 +252,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onMutedChanged(): void {
 			var players = this.players;
 			for (var i = 0; i < players.length; ++i) {
@@ -206,6 +262,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onPlaybackRateChanged(): void {
 			var players = this.players;
 			for (var i = 0; i < players.length; ++i) {
@@ -213,6 +272,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onPlayerPlayed(e: AudioPlayerEvent): void {
 			if (e.player._supportsPlaybackRate())
 				return;
@@ -223,6 +285,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
 			var index = this.players.indexOf(e.player);
 			if (index < 0)
@@ -238,6 +303,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onVolumeChanged(): void {
 			for (var i = 0; i < this.players.length; ++i) {
 				this.players[i].changeVolume(this._volume);

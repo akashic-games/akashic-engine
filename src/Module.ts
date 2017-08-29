@@ -150,8 +150,19 @@ namespace g {
 		 */
 		require: (path: string) => any;
 
+		/**
+		 * @private
+		 */
 		_dirname: string;
+
+		/**
+		 * @private
+		 */
 		_virtualDirname: string;
+
+		/**
+		 * @private
+		 */
 		_g: ScriptAssetExecuteEnvironment;
 
 		constructor(game: Game, id: string, path: string) {

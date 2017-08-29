@@ -5,10 +5,29 @@ namespace g {
 	 * 本クラスの機能を直接利用することはない。
 	 */
 	export class TimerIdentifier implements Destroyable {
+		/**
+		 * @private
+		 */
 		_timer: Timer;
+
+		/**
+		 * @private
+		 */
 		_handler: () => void;
+
+		/**
+		 * @private
+		 */
 		_handlerOwner: any;
+
+		/**
+		 * @private
+		 */
 		_fired: (c: TimerIdentifier) => void;
+
+		/**
+		 * @private
+		 */
 		_firedOwner: any;
 
 		constructor(timer: Timer, handler: () => void, handlerOwner: any, fired?: (c: TimerIdentifier) => void, firedOwner?: any) {
@@ -33,6 +52,9 @@ namespace g {
 			return this._timer === undefined;
 		}
 
+		/**
+		 * @private
+		 */
 		_fire(): void {
 			this._handler.call(this._handlerOwner);
 			if (this._fired) {
@@ -170,6 +192,7 @@ namespace g {
 
 		/**
 		 * すべてのTimerを時間経過させる。
+		 * @private
 		 */
 		_tick(): void {
 			var timers = this._timers.concat();
@@ -177,6 +200,9 @@ namespace g {
 				timers[i].tick();
 		}
 
+		/**
+		 * @private
+		 */
 		_onTimeoutFired(identifier: TimerIdentifier): void {
 			var index = this._identifiers.indexOf(identifier);
 			if (index < 0)
@@ -189,6 +215,9 @@ namespace g {
 			this.deleteTimer(timer);
 		}
 
+		/**
+		 * @private
+		 */
 		_clear(identifier: TimerIdentifier): void {
 			var index = this._identifiers.indexOf(identifier);
 			if (index < 0)

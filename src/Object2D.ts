@@ -138,6 +138,7 @@ namespace g {
 		 * エンジンに組み込まれているSprite等のエンティティ群は、
 		 * すでに本処理を組み込んでいるため通常ゲーム開発者はこの値を意識する必要はない。
 		 * `Object2D` を継承したクラスを新たに作る場合には、本フィールドを適切に操作しなければならない。
+		 * @private
 		 */
 		_matrix: Matrix;
 
@@ -285,6 +286,7 @@ namespace g {
 
 		/**
 		 * 公開のプロパティから内部の変換行列キャッシュを更新する。
+		 * @private
 		 */
 		_updateMatrix(): void {
 			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {

@@ -120,11 +120,13 @@ namespace g {
 		 * このEが「映り込む」カメラの集合。
 		 * 空でない配列が指定されている場合、配列内に存在しないCameraでの描画時にはこのEがスキップされる。
 		 * 初期値はundefinedである。targetCamerasがこの値を暗黙に生成するので、ゲーム開発者はそちらを使うべきである。
+		 * @private
 		 */
 		_targetCameras: Camera[];
 
 		/**
 		 * 子にtouchableなものが含まれているかどうかを表す。
+		 * @private
 		 */
 		_hasTouchableChildren: boolean;
 
@@ -199,7 +201,7 @@ namespace g {
 		 * このエンティティを表示できるカメラの配列。
 		 *
 		 * 初期値は空配列である。
-		 * この値が `undfinede` または空配列である場合、このエンティティとその子孫はカメラによらず描画される。
+		 * この値が `undefined` または空配列である場合、このエンティティとその子孫はカメラによらず描画される。
 		 * 空でない配列である場合、このエンティティとその子孫は、配列内に含まれるカメラでの描画の際にのみ表示される。
 		 *
 		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
@@ -618,6 +620,9 @@ namespace g {
 			return this._calculateBoundingRect(undefined, c);
 		}
 
+		/**
+		 * @private
+		 */
 		_calculateBoundingRect(m?: Matrix, c?: Camera): CommonRect {
 			var matrix = this.getMatrix();
 			if (m) {
@@ -669,6 +674,9 @@ namespace g {
 			return result;
 		}
 
+		/**
+		 * @private
+		 */
 		_enableTouchPropagation(): void {
 			var p: E = <E>this.parent;
 			while (p instanceof E && !p._hasTouchableChildren) {
@@ -677,6 +685,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_disableTouchPropagation(): void {
 			var p: E = <E>this.parent;
 			while (p instanceof E && p._hasTouchableChildren) {
@@ -687,6 +698,9 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_isTargetOperation(e: PointEvent): boolean {
 			if (this.state & EntityStateFlags.Hidden)
 				return false;

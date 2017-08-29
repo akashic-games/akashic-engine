@@ -15,6 +15,9 @@ namespace g {
 	 * LoadingSceneのインジケータがカメラの影響を受けないようにするための内部エンティティ。
 	 */
 	class CameraCancellingE extends E {
+		/**
+		 * @private
+		 */
 		_canceller: Object2D;
 
 		constructor(param: EParameterObject) {
@@ -85,6 +88,9 @@ namespace g {
 			this.targetAssetLoaded.handle(this, this._onTargetAssetLoaded);
 		}
 
+		/**
+		 * @private
+		 */
 		_onLoaded(): boolean {
 			var gauge: FilledRect;
 			this.append(new CameraCancellingE({
@@ -121,6 +127,9 @@ namespace g {
 			return true; // Trigger 登録を解除する
 		}
 
+		/**
+		 * @private
+		 */
 		_onUpdateGuage(): void {
 			var BLINK_RANGE = 50;
 			var BLINK_PER_SEC = 2 / 3;
@@ -133,6 +142,9 @@ namespace g {
 			this._gauge.modified();
 		}
 
+		/**
+		 * @private
+		 */
 		_onTargetReset(targetScene: Scene): void {
 			if (this._gauge) {
 				this._gauge.width = 0;
@@ -141,7 +153,9 @@ namespace g {
 			this._totalWaitingAssetCount = targetScene._sceneAssetHolder.waitingAssetsCount;
 		}
 
-		// 歴史的経緯により存在する `LoadingScene#_onTargetAssetLoad` をオーバーライドしては *いない* 点に注意。
+		/**
+		 * @private
+		 */
 		_onTargetAssetLoaded(asset: Asset): void {
 			var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
 			this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
