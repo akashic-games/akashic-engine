@@ -172,6 +172,10 @@ namespace g {
 		 * @private
 		 */
 		_system: AudioSystem;
+
+		/**
+		 * @private
+		 */
 		_lastPlayedPlayer: AudioPlayer;
 
 		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: AudioAssetHint) {
