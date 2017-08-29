@@ -159,13 +159,8 @@ namespace g {
 			}
 		}
 
-		setTimeout(milliseconds: number, owner: any, handler?: () => void): TimerIdentifier {
-			if (handler === undefined) {
-				handler = owner;
-				owner = null;
-			}
+		setTimeout(handler: () => void, milliseconds: number, owner?: any): TimerIdentifier {
 			var timer = this.createTimer(milliseconds);
-
 			var identifier = new TimerIdentifier(timer, handler, owner, this._onTimeoutFired, this);
 			this._identifiers.push(identifier);
 			return identifier;
@@ -175,11 +170,7 @@ namespace g {
 			this._clear(identifier);
 		}
 
-		setInterval(interval: number, owner: any, handler?: () => void): TimerIdentifier {
-			if (handler === undefined) {
-				handler = owner;
-				owner = null;
-			}
+		setInterval(handler: () => void, interval: number, owner?: any): TimerIdentifier {
 			var timer = this.createTimer(interval);
 			var identifier = new TimerIdentifier(timer, handler, owner);
 			this._identifiers.push(identifier);

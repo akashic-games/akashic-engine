@@ -631,7 +631,7 @@ namespace g {
 		 *
 		 * 戻り値は作成されたTimerである。
 		 * 通常は `Scene#setInterval` を利用すればよく、ゲーム開発者がこのメソッドを呼び出す必要はない。
-		 * 本メソッドが作成するTimerはフレーム経過によって動作する疑似タイマーであるため、実時間の影響は受けない。
+		 * `Timer` はフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
 		 * @param interval Timerの実行間隔（ミリ秒）
 		 */
 		createTimer(interval: number): Timer {
@@ -650,16 +650,40 @@ namespace g {
 		 * 一定間隔で定期的に実行される処理を作成する。
 		 *
 		 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
-		 * 引数 `owner` は省略できるが、 `handler` は省略できない。
 		 * 戻り値は `Scene#clearInterval` の引数に指定して定期実行を解除するために使える値である。
-		 *
-		 * 本定期処理はフレーム経過によって動作する疑似タイマーであるため、実時間の影響は受けない。
+		 * このタイマーはフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
+		 * 関数は指定時間の経過直後ではなく、経過後最初のフレームで呼び出される。
+		 * @param handler 処理
+		 * @param interval 実行間隔(ミリ秒)
+		 * @param owner handlerの所有者。省略された場合、null
+		 */
+		setInterval(handler: () => void, interval: number, owner?: any): TimerIdentifier;
+		/**
+		 * 一定間隔で定期的に実行される処理を作成する。
+		 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
 		 * @param interval 実行間隔(ミリ秒)
 		 * @param owner handlerの所有者。省略された場合、null
 		 * @param handler 処理
+		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
 		 */
-		setInterval(interval: number, owner: any, handler?: () => void): TimerIdentifier {
-			return this._timer.setInterval(interval, owner, handler);
+		setInterval(interval: number, owner: any, handler: () => void): TimerIdentifier;
+		/**
+		 * 一定間隔で定期的に実行される処理を作成する。
+		 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
+		 * @param interval 実行間隔(ミリ秒)
+		 * @param handler 処理
+		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 */
+		setInterval(interval: number, handler: () => void): TimerIdentifier;
+
+		setInterval(handler: (() => void) | number, interval: any, owner?: any): TimerIdentifier {
+			const t = this._timer;
+			if (typeof handler === "number") {
+				this.game.logger.warn("[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first.");
+				return (owner != null) ? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
+				                       : t.setInterval(interval /* 1 */, handler /* 0 */, null);
+			}
+			return t.setInterval(handler, interval, owner);
 		}
 
 		/**
@@ -677,14 +701,44 @@ namespace g {
 		 * 引数 `owner` は省略できるが、 `handler` は省略できない。
 		 * 戻り値は `Scene#clearTimeout` の引数に指定して処理を削除するために使える値である。
 		 *
-		 * 本処理で計算される時間はフレーム経過によって動作する疑似タイマーであるため、実時間の影響は受けない。
-		 * 時間の精度はそれほど高くないので、精度の高い処理であればupdateイベントで作成する必要がある。
+		 * このタイマーはフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
+		 * 関数は指定時間の経過直後ではなく、経過後最初のフレームで呼び出される。
+		 * (理想的なケースでは、30FPSなら50msのコールバックは66.6ms時点で呼び出される)
+		 * 時間経過に対して厳密な処理を行う必要があれば、自力で `Scene#update` 通知を処理すること。
+		 *
+		 * @param handler 処理
 		 * @param milliseconds 時間(ミリ秒)
 		 * @param owner handlerの所有者。省略された場合、null
-		 * @param handler 処理
 		 */
-		setTimeout(milliseconds: number, owner: any, handler?: () => void): TimerIdentifier {
-			return this._timer.setTimeout(milliseconds, owner, handler);
+		setTimeout(handler: () => void, milliseconds: number, owner?: any): TimerIdentifier;
+		/**
+		 * 一定時間後に一度だけ実行される処理を作成する。
+		 *
+		 * `milliseconds` ミリ秒後(以降)に、一度だけ `owner` を `this` として `handler` を呼び出す。
+		 * @param handler 処理
+		 * @param milliseconds 時間(ミリ秒)
+		 * @param owner handlerの所有者。省略された場合、null
+		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 */
+		setTimeout(milliseconds: number, owner: any, handler: () => void): TimerIdentifier;
+		/**
+		 * 一定時間後に一度だけ実行される処理を作成する。
+		 *
+		 * `milliseconds` ミリ秒後(以降)に、一度だけ `handler` を呼び出す。
+		 * @param handler 処理
+		 * @param milliseconds 時間(ミリ秒)
+		 * @deprecated この引数順は非推奨である。関数を先に指定するDOM互換のものを利用すべきである。
+		 */
+		setTimeout(milliseconds: number, handler: () => void): TimerIdentifier;
+
+		setTimeout(handler: (() => void) | number, milliseconds: any, owner?: any): TimerIdentifier {
+			const t = this._timer;
+			if (typeof handler === "number") {
+				this.game.logger.warn("[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first.");
+				return (owner != null) ? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
+				                       : t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
+			}
+			return t.setTimeout(handler, milliseconds, owner);
 		}
 
 		/**
