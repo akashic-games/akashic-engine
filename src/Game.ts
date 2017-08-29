@@ -784,7 +784,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_fireSceneReady(scene: Scene): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.FireReady, scene: scene });
 		}
@@ -792,7 +791,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_fireSceneLoaded(scene: Scene): void {
 			if (scene._loadingState < SceneLoadState.LoadedFired) {
 				this._sceneChangeRequests.push({ type: SceneChangeType.FireLoaded, scene: scene });
@@ -802,7 +800,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_callSceneAssetHolderHandler(assetHolder: SceneAssetHolder): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.CallAssetHolderHandler, assetHolder: assetHolder });
 		}
@@ -810,7 +807,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
 			if (!gameConfiguration)
 				throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
@@ -832,7 +828,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_setAudioPlaybackRate(playbackRate: number): void {
 			this._audioSystemManager._setPlaybackRate(playbackRate);
 		}
@@ -840,7 +835,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_setMuted(muted: boolean): void {
 			this._audioSystemManager._setMuted(muted);
 		}
@@ -947,7 +941,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_updateEventTriggers(scene: Scene): void {
 			this.modified = true;
 			if (! scene) {
@@ -970,7 +963,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_onInitialSceneLoaded(): void {
 			this._initialScene.loaded.remove(this, this._onInitialSceneLoaded);
 			this.assets = this._initialScene.assets;
