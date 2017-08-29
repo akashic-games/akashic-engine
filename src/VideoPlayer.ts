@@ -35,6 +35,9 @@ namespace g {
 		 */
 		volume: number;
 
+		/**
+		 * @private
+		 */
 		_loop: boolean;
 
 		/**

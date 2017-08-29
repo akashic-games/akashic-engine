@@ -60,6 +60,7 @@ namespace g {
 		/**
 		 * 読み込み済みのアセット。
 		 * requestAssets() で読み込みをリクエストしたゲーム開発者はコールバックでアセットを受け取るので、この変数を参照する必要は通常ない
+		 * @private
 		 */
 		_assets: {[key: string]: Asset};
 
@@ -67,11 +68,13 @@ namespace g {
 		 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
 		 * アセットIDと異なり、ファイルパスは重複しうる (同じ画像を複数の名前で参照することはできる) ので、要素数は `_assets` 以下である。
 		 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
+		 * @private
 		 */
 		_liveAssetVirtualPathTable: {[key: string]: Asset};
 
 		/**
 		 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
+		 * @private
 		 */
 		_liveAbsolutePathTable: {[path: string]: string};
 
@@ -79,6 +82,7 @@ namespace g {
 		 * 各アセットに対する参照の数。
 		 * 参照は requestAssets() で増え、unrefAssets() で減る。
 		 * なおロード中であっても参照に数える。つまり (this._refCounts[id] > 1) であるなら !!(this._assets[id] || this._loadings[id])
+		 * @private
 		 */
 		_refCounts: {[key: string]: number};
 
@@ -235,6 +239,7 @@ namespace g {
 		 * 引数の各要素で `unrefAsset()` を呼び出す。
 		 *
 		 * @param assetOrIds 参照カウントを減らすアセットまたはアセットID
+		 * @private
 		 */
 		unrefAssets(assetOrIds: (string | Asset)[]): void {
 			for (var i = 0, len = assetOrIds.length; i < len; ++i) {
@@ -292,6 +297,9 @@ namespace g {
 			return ret;
 		}
 
+		/**
+		 * @private
+		 */
 		_createAssetFor(idOrConf: string | DynamicAssetConfiguration): Asset {
 			var id: string;
 			var uri: string;
@@ -361,11 +369,15 @@ namespace g {
 
 		/**
 		 * 現在ロード中のアセットの数。(デバッグ用; 直接の用途はない)
+		 * @private
 		 */
 		_countLoadingAsset(): number {
 			return Object.keys(this._loadings).length;
 		}
 
+		/**
+		 * @private
+		 */
 		_onAssetError(asset: Asset, error: AssetLoadError): void {
 			// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 			if (this.destroyed() || asset.destroyed())
@@ -385,6 +397,9 @@ namespace g {
 				hs[i]._onAssetError(asset, error, this);
 		}
 
+		/**
+		 * @private
+		 */
 		_onAssetLoad(asset: Asset): void {
 			// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 			if (this.destroyed() || asset.destroyed())

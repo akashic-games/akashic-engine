@@ -52,13 +52,44 @@ namespace g {
 		 */
 		waitingAssetsCount: number;
 
+		/**
+		 * @private
+		 */
 		_scene: Scene;
+
+		/**
+		 * @private
+		 */
 		_assetManager: AssetManager;
+
+		/**
+		 * @private
+		 */
 		_handler: () => void;
+
+		/**
+		 * @private
+		 */
 		_handlerOwner: any;
+
+		/**
+		 * @private
+		 */
 		_direct: boolean;
+
+		/**
+		 * @private
+		 */
 		_assetIds: (string | DynamicAssetConfiguration)[];
+
+		/**
+		 * @private
+		 */
 		_assets: Asset[];
+
+		/**
+		 * @private
+		 */
 		_requested: boolean;
 
 		constructor(param: SceneAssetHolderParameterObject) {
@@ -102,6 +133,9 @@ namespace g {
 			this._handler.call(this._handlerOwner);
 		}
 
+		/**
+		 * @private
+		 */
 		_onAssetError(asset: Asset, error: AssetLoadError, assetManager: AssetManager): void {
 			if (this.destroyed() || this._scene.destroyed())
 				return;
@@ -121,6 +155,9 @@ namespace g {
 			this._scene.assetLoadCompleted.fire(asset);
 		}
 
+		/**
+		 * @private
+		 */
 		_onAssetLoad(asset: Asset): void {
 			if (this.destroyed() || this._scene.destroyed())
 				return;
@@ -384,10 +421,15 @@ namespace g {
 		 * シーン内で利用可能なストレージの値を保持する `StorageValueStore`。
 		 */
 		storageValues: StorageValueStore;
+
+		/**
+		 * @private
+		 */
 		_storageLoader: StorageLoader;
 
 		/**
 		 * アセットとストレージの読み込みが終わったことを通知するTrigger。
+		 * @private
 		 */
 		_ready: Trigger<Scene>;
 
@@ -406,33 +448,39 @@ namespace g {
 		 * * `_loadingState` が `SceneLoadState.ReadyFired` になる
 		 * * `loaded` がfireされる
 		 * * `_loadingState` が `SceneLoadState.LoadedFired` になる
+		 * @private
 		 */
 		_loaded: boolean;
 
 		/**
 		 * 先読みが要求されたか否か。
 		 * すなわち、 `prefetch()` が呼び出された後か否か。
+		 * @private
 		 */
 		_prefetchRequested: boolean;
 
 		/**
 		 * アセットとストレージの読み込みが終わった後か否か。
 		 * 「 `loaded` がfireされた後」ではない点に注意。
+		 * @private
 		 */
 		_loadingState: SceneLoadState;
 
 		/**
 		 * タイマー。通常は本変数直接ではなく、createTimer/deleteTimer/setInterval/clearInterval等の機構を利用する。
+		 * @private
 		 */
 		_timer: TimerManager;
 
 		/**
 		 * シーンのアセットの保持者。
+		 * @private
 		 */
 		_sceneAssetHolder: SceneAssetHolder;
 
 		/**
 		 * `Scene#requestAssets()` で動的に要求されたアセットの保持者。
+		 * @private
 		 */
 		_assetHolders: SceneAssetHolder[];
 
@@ -835,20 +883,32 @@ namespace g {
 			holder.request();
 		}
 
+		/**
+		 * @private
+		 */
 		_activate(): void {
 			this.state = SceneState.Active;
 			this.stateChanged.fire(this.state);
 		}
 
+		/**
+		 * @private
+		 */
 		_deactivate(): void {
 			this.state = SceneState.Deactive;
 			this.stateChanged.fire(this.state);
 		}
 
+		/**
+		 * @private
+		 */
 		_needsLoading(): boolean {
 			return this._sceneAssetHolder.waitingAssetsCount > 0 || (this._storageLoader && !this._storageLoader._loaded);
 		}
 
+		/**
+		 * @private
+		 */
 		_load(): void {
 			if (this._loaded)
 				return;
@@ -863,6 +923,9 @@ namespace g {
 				this._notifySceneReady();
 		}
 
+		/**
+		 * @private
+		 */
 		_onSceneAssetsLoad(): void {
 			if (!this._loaded) {
 				// prefetch() で開始されたアセット読み込みを完了したが、_load() がまだ呼ばれていない。
@@ -877,26 +940,41 @@ namespace g {
 			this._notifySceneReady();
 		}
 
+		/**
+		 * @private
+		 */
 		_onStorageLoadError(error: StorageLoadError): void {
 			this.game.terminateGame();
 		}
 
+		/**
+		 * @private
+		 */
 		_onStorageLoaded(): void {
 			if (this._sceneAssetHolder.waitingAssetsCount === 0)
 				this._notifySceneReady();
 		}
 
+		/**
+		 * @private
+		 */
 		_notifySceneReady(): void {
 			// 即座に `_ready` をfireすることはしない。tick()のタイミングで行うため、リクエストをgameに投げておく。
 			this._loadingState = SceneLoadState.Ready;
 			this.game._fireSceneReady(this);
 		}
 
+		/**
+		 * @private
+		 */
 		_fireReady(): void {
 			this._ready.fire(this);
 			this._loadingState = SceneLoadState.ReadyFired;
 		}
 
+		/**
+		 * @private
+		 */
 		_fireLoaded(): void {
 			this.loaded.fire(this);
 			this._loadingState = SceneLoadState.LoadedFired;

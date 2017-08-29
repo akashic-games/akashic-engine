@@ -78,8 +78,14 @@ namespace g {
 		 */
 		srcY: number;
 
+		/**
+		 * @private
+		 */
 		_stretchMatrix: Matrix;
 
+		/**
+		 * @private
+		 */
 		_beforeSurface: Surface;
 
 		/**
@@ -103,16 +109,25 @@ namespace g {
 			this._invalidateSelf();
 		}
 
+		/**
+		 * @private
+		 */
 		_onUpdate(): void {
 			this.modified();
 		}
 
+		/**
+		 * @private
+		 */
 		_onAnimatingStarted(): void {
 			if (! this.update.isHandled(this, this._onUpdate)) {
 				this.update.handle(this, this._onUpdate);
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		_onAnimatingStopped(): void {
 			if (! this.destroyed()) {
 				this.update.remove(this, this._onUpdate);

@@ -251,12 +251,19 @@ namespace g {
 		operationPlugins: {[key: number]: OperationPlugin};
 
 		/**
+		 * 画面サイズの変更時にfireされるTrigger。
+		 */
+		resized: Trigger<CommonSize>;
+
+		/**
 		 * イベントとTriggerのマップ。
+		 * @private
 		 */
 		_eventTriggerMap: {[key: number]: Trigger<Event>};
 
 		/**
 		 * グローバルアセットを読み込むための初期シーン。必ずシーンスタックの一番下に存在する。これをpopScene()することはできない。
+		 * @private
 		 */
 		_initialScene: Scene;
 
@@ -268,23 +275,27 @@ namespace g {
 		 *
 		 * ここに代入される `LoadingScene` はアセットを用いてはならない。
 		 * 初期値は `new g.DefaultLoadingScene(this)` である。
+		 * @private
 		 */
 		_defaultLoadingScene: LoadingScene;
 
 		/**
 		 * `this.scenes` の変化時にfireされるTrigger。
 		 * このTriggerはアセットロード(Scene#loadedのfire)を待たず、変化した時点で即fireされることに注意。
+		 * @private
 		 */
 		_sceneChanged: Trigger<Scene>;
 
 		/**
 		 * ScriptAssetの実行結果キャッシュ。
 		 * g.require経由の場合ここに格納される。
+		 * @private
 		 */
 		_scriptCaches: {[key: string]: RequireCacheable};
 
 		/**
 		 * グローバルアセットの読み込み待ちハンドラ。
+		 * @private
 		 */
 		_loaded: Trigger<Game>;
 
@@ -292,47 +303,56 @@ namespace g {
 		 * _start() 呼び出しから戻る直前を通知するTrigger。
 		 * エントリポイント実行後のシーン遷移直後にfireされる。
 		 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
+		 * @private
 		 */
 		_started: Trigger<void>;
 
 		/**
 		 * エントリポイント(mainスクリプト)のパス。
+		 * @private
 		 */
 		_main: string;
 
 		/**
 		 * _loadAndStart() に渡された、エントリポイント(mainスクリプト)に渡す引数。
+		 * @private
 		 */
 		_mainParameter: GameMainParameterObject;
 
 		/**
 		 * アセットの管理者。
+		 * @private
 		 */
 		_assetManager: AssetManager;
 
 		/**
 		 * Game#audioの管理者。
+		 * @private
 		 */
 		_audioSystemManager: AudioSystemManager;
 
 		/**
 		 * 操作プラグインの管理者。
+		 * @private
 		 */
 		_operationPluginManager: OperationPluginManager;
 
 		/**
 		 * 操作プラグインによる操作を通知するTrigger。
+		 * @private
 		 */
 		_operationPluginOperated: Trigger<InternalOperationPluginOperation>;
 
 		/**
 		 * `this.db` のlastInsertId。
 		 * `this.db` が空の場合、0が代入されており、以後インクリメントして利用される。
+		 * @private
 		 */
 		_idx: number;
 
 		/**
 		 * このゲームに紐づくローカルなエンティティ (`E#local` が真のもの)
+		 * @private
 		 */
 		// ローカルエンティティは他のゲームインスタンス(他参加者・視聴者など)とは独立に生成される可能性がある。
 		// そのため `db` (`_idx`) 基準で `id` を与えてしまうと `id` の値がずれることがありうる。
@@ -340,18 +360,21 @@ namespace g {
 		_localDb: { [id: number]: E };
 		/**
 		 * ローカルエンティティ用の `this._idx` 。
+		 * @private
 		 */
 		_localIdx: number;
 
 		/**
 		 * 次に生成されるカメラのID。
 		 * 初期値は 0 であり、以後カメラ生成のたびにインクリメントして利用される。
+		 * @private
 		 */
 		_cameraIdx: number;
 
 		/**
 		 * `this.terminateGame()` が呼び出された後か否か。
 		 * これが真の場合、 `this.tick()` は何も行わない。
+		 * @private
 		 */
 		_isTerminated: boolean;
 
@@ -359,11 +382,13 @@ namespace g {
 		 * 使用中のカメラの実体。
 		 *
 		 * focusingcameraがこの値を暗黙的に生成するので、通常ゲーム開発者はこの値を直接指定する必要はない。
+		 * @private
 		 */
 		_focusingCamera: Camera;
 
 		/**
 		 * このゲームの設定(game.json の内容)。
+		 * @private
 		 */
 		_configuration: GameConfiguration;
 
@@ -439,6 +464,7 @@ namespace g {
 			this._eventTriggerMap[EventType.PointUp] = undefined;
 			this._eventTriggerMap[EventType.Operation] = undefined;
 
+			this.resized = new Trigger<CommonSize>();
 			this._loaded = new Trigger<Game>();
 			this._started = new Trigger<void>();
 			this.isLoaded = false;
@@ -755,9 +781,17 @@ namespace g {
 		 */
 		abstract saveSnapshot(snapshot: any, timestamp?: number): void;
 
+		/**
+		 * @private
+		 */
+
 		_fireSceneReady(scene: Scene): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.FireReady, scene: scene });
 		}
+
+		/**
+		 * @private
+		 */
 
 		_fireSceneLoaded(scene: Scene): void {
 			if (scene._loadingState < SceneLoadState.LoadedFired) {
@@ -765,9 +799,17 @@ namespace g {
 			}
 		}
 
+		/**
+		 * @private
+		 */
+
 		_callSceneAssetHolderHandler(assetHolder: SceneAssetHolder): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.CallAssetHolderHandler, assetHolder: assetHolder });
 		}
+
+		/**
+		 * @private
+		 */
 
 		_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
 			if (!gameConfiguration)
@@ -787,9 +829,17 @@ namespace g {
 			return gameConfiguration;
 		}
 
+		/**
+		 * @private
+		 */
+
 		_setAudioPlaybackRate(playbackRate: number): void {
 			this._audioSystemManager._setPlaybackRate(playbackRate);
 		}
+
+		/**
+		 * @private
+		 */
 
 		_setMuted(muted: boolean): void {
 			this._audioSystemManager._setMuted(muted);
@@ -797,6 +847,7 @@ namespace g {
 
 		/**
 		 * g.OperationEventのデータをデコードする。
+		 * @private
 		 */
 		_decodeOperationPluginOperation(code: number, op: (number | string)[]): any {
 			var plugins = this._operationPluginManager.plugins;
@@ -807,6 +858,7 @@ namespace g {
 
 		/**
 		 * ゲーム状態のリセット。
+		 * @private
 		 */
 		_reset(param?: GameResetParameterObject): void {
 			this._operationPluginManager.stopAll();
@@ -832,6 +884,7 @@ namespace g {
 			this.join._reset();
 			this.leave._reset();
 			this.seed._reset();
+			this.resized._reset();
 
 			this._idx = 0;
 			this._localIdx = 0;
@@ -866,6 +919,7 @@ namespace g {
 		 * 存在するシーンをすべて(_initialScene以外; あるなら)破棄し、グローバルアセットを読み込み、完了後ゲーム開発者の実装コードの実行を開始する。
 		 * このメソッドの二度目以降の呼び出しの前には、 `this._reset()` を呼び出す必要がある。
 		 * @param param ゲームのエントリポイントに渡す値
+		 * @private
 		 */
 		_loadAndStart(param?: GameMainParameterObject): void {
 			this._mainParameter = param || {};
@@ -881,6 +935,7 @@ namespace g {
 		/**
 		 * グローバルアセットの読み込みを開始する。
 		 * 単体テスト用 (mainSceneなど特定アセットの存在を前提にする_loadAndStart()はテストに使いにくい) なので、通常ゲーム開発者が利用することはない
+		 * @private
 		 */
 		_startLoadingGlobalAssets(): void {
 			if (this.isLoaded)
@@ -888,6 +943,10 @@ namespace g {
 			this.pushScene(this._initialScene);
 			this._flushSceneChangeRequests();
 		}
+
+		/**
+		 * @private
+		 */
 
 		_updateEventTriggers(scene: Scene): void {
 			this.modified = true;
@@ -908,6 +967,10 @@ namespace g {
 			scene._activate();
 		}
 
+		/**
+		 * @private
+		 */
+
 		_onInitialSceneLoaded(): void {
 			this._initialScene.loaded.remove(this, this._onInitialSceneLoaded);
 			this.assets = this._initialScene.assets;
@@ -915,8 +978,14 @@ namespace g {
 			this._loaded.fire();
 		}
 
+		/**
+		 * @private
+		 */
 		abstract _leaveGame(): void;
 
+		/**
+		 * @private
+		 */
 		_terminateGame(): void {
 			// do nothing.
 		}
@@ -928,6 +997,7 @@ namespace g {
 		 * 通常このメソッドは、毎フレーム一度、フレームの最後に呼び出されることを期待する (`Game#tick()` がこの呼び出しを行う)。
 		 * ただしゲーム開始時 (グローバルアセット読み込み・スナップショットローダ起動後またはmainScene実行開始時) に関しては、
 		 * シーン追加がゲーム開発者の記述によらない (`tick()` の外側である) ため、それぞれの箇所で明示的にこのメソッドを呼び出す。
+		 * @private
 		 */
 		_flushSceneChangeRequests(): void {
 			do {

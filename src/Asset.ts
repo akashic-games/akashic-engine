@@ -9,17 +9,22 @@ namespace g {
 		id: string;
 		path: string;
 		originalPath: string;
+		onDestroyed: Trigger<g.Asset>;
 
 		constructor(id: string, path: string) {
 			this.id = id;
 			this.originalPath = path;
 			this.path = this._assetPathFilter(path);
+			this.onDestroyed = new Trigger<g.Asset>();
 		}
 
 		destroy(): void {
+			this.onDestroyed.fire(this);
 			this.id = undefined;
 			this.originalPath = undefined;
 			this.path = undefined;
+			this.onDestroyed.destroy();
+			this.onDestroyed = undefined;
 		}
 
 		destroyed(): boolean {
@@ -50,9 +55,13 @@ namespace g {
 		 * (このメソッドではなく) `AssetLoadFailureInfo#cancelRetry` に真を代入する必要がある。
 		 *
 		 * @param loader 読み込み結果の通知を受け取るハンドラ
+		 * @private
 		 */
 		abstract _load(loader: AssetLoadHandler): void;
 
+		/**
+		 * @private
+		 */
 		_assetPathFilter(path: string): string {
 			// 拡張子の補完・読み替えが必要なassetはこれをオーバーライドすればよい。(対応形式が限定されるaudioなどの場合)
 			return path;
@@ -102,8 +111,19 @@ namespace g {
 		 */
 		realHeight: number;
 
+		/**
+		 * @private
+		 */
 		_system: VideoSystem;
+
+		/**
+		 * @private
+		 */
 		_loop: boolean;
+
+		/**
+		 * @private
+		 */
 		_useRealSize: boolean;
 
 		constructor(id: string, assetPath: string, width: number, height: number, system: VideoSystem, loop: boolean, useRealSize: boolean) {
@@ -147,7 +167,12 @@ namespace g {
 		duration: number;
 		loop: boolean;
 		hint: AudioAssetHint;
+
+		/**
+		 * @private
+		 */
 		_system: AudioSystem;
+		_lastPlayedPlayer: AudioPlayer;
 
 		constructor(id: string, assetPath: string, duration: number, system: AudioSystem, loop: boolean, hint: AudioAssetHint) {
 			super(id, assetPath);
@@ -161,6 +186,7 @@ namespace g {
 		play(): AudioPlayer {
 			var player = this._system.createPlayer();
 			player.play(this);
+			this._lastPlayedPlayer = player;
 			return player;
 		}
 
@@ -180,6 +206,7 @@ namespace g {
 
 			this.data = undefined;
 			this._system = undefined;
+			this._lastPlayedPlayer = undefined;
 			super.destroy();
 		}
 	}
