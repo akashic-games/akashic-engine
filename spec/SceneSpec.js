@@ -884,7 +884,7 @@ describe("test Scene", function() {
 		expect(success).toBe(true);
 
 		expect(timer.canDelete()).toBe(false);
-		timer.elapsed.destroy();
+		timer.elapsed.removeAll();
 		expect(timer.canDelete()).toBe(true);
 
 		scene.deleteTimer(timer);

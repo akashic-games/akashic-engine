@@ -99,6 +99,10 @@ namespace g {
 		 */
 		length: number;
 
+		/**
+		 * 登録されたすべてのハンドラ。
+		 * @private
+		 */
 		_handlers: TriggerHandler<T>[];
 
 		constructor() {
@@ -218,7 +222,7 @@ namespace g {
 				}
 			}
 
-			if (this._handlers)
+			if (this._handlers)  // TODO 条件文は暫定対応
 				this.length = this._handlers.length;
 		}
 
@@ -238,60 +242,41 @@ namespace g {
 		 */
 		contains(params: TriggerSearchConditions<T>): boolean;
 		contains(paramsOrFunc: any, owner?: any): boolean {
-			const compareObject: TriggerSearchConditions<T> = typeof paramsOrFunc === "function" ? {} : paramsOrFunc;
-
-			if (typeof paramsOrFunc === "function") {
-				compareObject.func = paramsOrFunc as HandlerFunction<T>;
-				compareObject.owner = owner;
-			}
+			const condition = typeof paramsOrFunc === "function" ? { func: paramsOrFunc, owner } : paramsOrFunc;
 
 			for (let i = 0; i < this._handlers.length; i++) {
-				if (this._comparePartial(compareObject, this._handlers[i])) {
+				if (this._comparePartial(condition, this._handlers[i])) {
 					return true;
 				}
 			}
-
 			return false;
 		}
 
 		/**
-		 * 指定した条件に一致するハンドラを削除する。
-		 *
 		 * 関数が `func` であり、かつオーナーが `owner` であるハンドラを削除する。
+		 * 同じ組み合わせで複数登録されている場合、一つだけ削除する。
 		 *
 		 * @param func 削除条件として用いるハンドラの関数
 		 * @param owner 削除条件として用いるハンドラのオーナー。省略した場合、 `undefined`
 		 */
 		remove(func: HandlerFunction<T>, owner?: any): void;
 		/**
-		 * 指定した条件に一致するハンドラを削除する。
-		 *
-		 * 本メソッドは引数に与えた条件と完全に一致したハンドラのみを削除する。
-		 * 引数の条件を一部省略した場合、登録時に同様の条件を省略したハンドラのみが削除される。
-		 * 省略した条件について、その値の内容に関わらずハンドラを削除したい場合は `this.removeAll()` を用いる。
+		 * 指定した条件に完全一致するハンドラを削除する。
+		 * 同じ組み合わせで複数登録されている場合、一つだけ削除する。
 		 *
 		 * @param params 削除するハンドラの条件
 		 */
 		remove(params: TriggerRemoveConditions<T>): void;
 		remove(paramsOrFunc: any, owner?: any): void {
-			const compareObject: TriggerSearchConditions<T> = typeof paramsOrFunc === "function" ? {} : paramsOrFunc;
-
-			if (typeof paramsOrFunc === "function") {
-				compareObject.func = paramsOrFunc as HandlerFunction<T>;
-				compareObject.owner = owner;
-			}
-
-			const handlers: TriggerHandler<T>[] = [];
-
+			const condition = typeof paramsOrFunc === "function" ? { func: paramsOrFunc, owner } : paramsOrFunc;
 			for (let i = 0; i < this._handlers.length; i++) {
 				const handler = this._handlers[i];
-				if (compareObject.func !== handler.func || compareObject.owner !== handler.owner || compareObject.name !== handler.name) {
-					handlers.push(handler);
+				if (condition.func === handler.func && condition.owner === handler.owner && condition.name === handler.name) {
+					this._handlers.splice(i, 1);
+					--this.length;
+					return;
 				}
 			}
-
-			this._handlers = handlers;
-			this.length = this._handlers.length;
 		}
 
 		/**
@@ -324,17 +309,20 @@ namespace g {
 		 * このTriggerを破棄する。
 		 */
 		destroy(): void {
-			this._handlers = undefined;
-			this.length = 0;
+			this._handlers = null;
+			this.length = null;
 		}
 
 		/**
 		 * このTriggerが破棄されているかを返す。
 		 */
 		destroyed(): boolean {
-			return this._handlers === undefined;
+			return this._handlers === null;
 		}
 
+		/**
+		 * @private
+		 */
 		_comparePartial(target: TriggerSearchConditions<T>, compare: TriggerSearchConditions<T>): boolean {
 			if (target.func !== undefined && target.func !== compare.func)
 				return false;
@@ -347,10 +335,11 @@ namespace g {
 		}
 	}
 
+
 	/**
 	 * 他のTriggerに反応して発火するイベント通知機構。
 	 */
-	export class ChainTrigger<T> extends Trigger<T>  {
+	export class ChainTrigger<T> extends Trigger<T> {
 		/**
 		 * fireするきっかけとなる `Trigger` 。
 		 * この値は参照のためにのみ公開されている。外部から変更してはならない。
@@ -380,7 +369,7 @@ namespace g {
 		 *
 		 * このインスタンスは、 `chain` がfireされたときに `filter` を実行し、真を返した場合に自身をfireする。
 		 * @param chain このインスタンスがfireするきっかけとなる Trigger
-		 * @param filter `chain` がfireされたときに実行される関数。本関数の戻り値が真の場合、このインスタンスをfireする。
+		 * @param filter `chain` がfireされたときに実行される関数。省略された場合、または本関数の戻り値が真の場合、このインスタンスをfireする。
 		 * @param filterOwner `filter` 呼び出し時に使われる `this` の値。
 		 */
 		constructor(chain: Trigger<T>, filter?: (args?: T) => boolean, filterOwner?: any) {
