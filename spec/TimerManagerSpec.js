@@ -29,7 +29,7 @@ describe("test TimerManager", function () {
 		expect(m._identifiers.length).toEqual(0);
 		expect(m._fps).toBe(30);
 		expect(m._registered).toBe(false);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(false);
+		expect(m._trigger.contains(m._tick, m)).toBe(false);
 	});
 
 	it("createTimer", function() {
@@ -39,7 +39,7 @@ describe("test TimerManager", function () {
 		expect(m._timers.length).toBe(1);
 		expect(m._timers[0]).toBe(timer);
 		expect(m._registered).toBe(true);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(true);
+		expect(m._trigger.contains(m._tick, m)).toBe(true);
 		expect(m._identifiers.length).toEqual(0);
 	});
 
@@ -88,7 +88,7 @@ describe("test TimerManager", function () {
 		expect(m._timers.length).toBe(0);
 		expect(m._registered).toBe(false);
 		expect(timer.destroyed()).toBe(true);
-		expect(trigger.isHandled(m, m._tick)).toBe(false);
+		expect(trigger.contains(m._tick, m)).toBe(false);
 	});
 
 	it("deleteTimer - handler remains", function() {
@@ -99,11 +99,11 @@ describe("test TimerManager", function () {
 		m.deleteTimer(timer1);
 		expect(timer1.destroyed()).toBe(true);
 		expect(m._registered).toBe(true);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(true);
+		expect(m._trigger.contains(m._tick, m)).toBe(true);
 		m.deleteTimer(timer2);
 		expect(timer2.destroyed()).toBe(true);
 		expect(m._registered).toBe(false);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(false);
+		expect(m._trigger.contains(m._tick, m)).toBe(false);
 	});
 
 	it("deleteTimer - error (invalid context)", function() {

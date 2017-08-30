@@ -19,7 +19,7 @@ describe("Logger", function() {
 			expectedMessage = message;
 			expectedCause = cause;
 		}
-		runtime.game.logger.logging.handle(function(log) {
+		runtime.game.logger.logging.add(function(log) {
 			expect(log.level).toBe(expectedLevel);
 			expect(log.message).toBe(expectedMessage);
 			expect(log.cause).toBe(expectedCause);

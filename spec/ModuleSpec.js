@@ -237,7 +237,7 @@ describe("test Module", function() {
 		var dirname = "/path/to/the";
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "moduleid", path);
 			expect(module.id).toBe("moduleid");
 			expect(module.filename).toBe(path);
@@ -265,7 +265,7 @@ describe("test Module", function() {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var mod = g._require(game, "noPackageJson");
 			expect(mod.me).toBe("noPackageJson-index");
 			expect(mod.thisModule instanceof g.Module).toBe(true);
@@ -278,7 +278,7 @@ describe("test Module", function() {
 	it("require - basic", function (done) {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummypath", "/script/dummypath.js");
 			var mod = module.require("./foo");
 			expect(mod.me).toBe("script-foo");
@@ -322,7 +322,7 @@ describe("test Module", function() {
 
 			expect(function () { module.require("aNonGlobalAssetBar") }).toThrowError("AssertionError");
 			var scene = new g.Scene({game: game, assetIds: ["aNonGlobalAssetBar"]});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				var mod = module.require("aNonGlobalAssetBar");
 				expect(mod.me).toBe("script-bar");
 				expect(mod.thisModule instanceof g.Module).toBe(true);
@@ -354,7 +354,7 @@ describe("test Module", function() {
 
 		var game = new mock.Game(conf, assetBase + "/");
 		game.resourceFactory.scriptContents = scripts;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", assetBase + "/script/dummypath.js");
 
 			var mod = module.require("./foo");
@@ -379,7 +379,7 @@ describe("test Module", function() {
 
 			expect(function () { module.require("aNonGlobalAssetBar") }).toThrowError("AssertionError");
 			var scene = new g.Scene({game: game, assetIds: ["aNonGlobalAssetBar"]});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				var mod = module.require("aNonGlobalAssetBar");
 				expect(mod.me).toBe("script-bar");
 				expect(mod.thisModule.filename).toBe(assetBase + "/script/bar.js");
@@ -407,7 +407,7 @@ describe("test Module", function() {
 
 		var game = new mock.Game(conf, assetBase + "/");
 		game.resourceFactory.scriptContents = scripts;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", assetBase + "/script/dummypath.js");
 
 			var mod = module.require("./foo");
@@ -432,7 +432,7 @@ describe("test Module", function() {
 
 			expect(function () { module.require("aNonGlobalAssetBar") }).toThrowError("AssertionError");
 			var scene = new g.Scene({game:game, assetIds: ["aNonGlobalAssetBar"]});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				var mod = module.require("aNonGlobalAssetBar");
 				expect(mod.me).toBe("script-bar");
 				expect(mod.thisModule.filename).toBe(assetBase + "/script/bar.js");
@@ -454,7 +454,7 @@ describe("test Module", function() {
 	it("require - directory structure", function (done) {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
 
 			var useA = module.require("./useA.js");
@@ -511,7 +511,7 @@ describe("test Module", function() {
 
 		var game = new mock.Game(conf, assetBase + "/");
 		game.resourceFactory.scriptContents = scripts;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", assetBase + "/script/dummypath.js");
 
 			var useA = module.require("./useA.js");
@@ -545,7 +545,7 @@ describe("test Module", function() {
 	it("require - cyclic", function (done) {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
 
 			var c1 = module.require("cyclic1");
@@ -579,7 +579,7 @@ describe("test Module", function() {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
 		game.random = new g.XorshiftRandomGenerator(1);
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
 			var cache1 = module.require("./cache1");
 			expect(cache1.v1).toBe(cache1.v2);
@@ -593,7 +593,7 @@ describe("test Module", function() {
 	it("require - to cascaded module", function (done) {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "dummymod", "/script/dummypath.js");
 			var mod = module.require("./cascaded");
 			expect(mod.me).toBe("script-cascaded");
@@ -610,7 +610,7 @@ describe("test Module", function() {
 	it("require - from cascaded module", function (done) {
 		var game = new mock.Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var module = new g.Module(game, "cascaded", "/cascaded/script.js");
 			var mod = module.require("./dummypath");
 			expect(mod.me).toBe("script-dummymod");

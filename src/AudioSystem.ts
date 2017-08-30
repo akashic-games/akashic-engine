@@ -293,7 +293,7 @@ namespace g {
 			if (index < 0)
 				return;
 
-			e.player.stopped.remove(this, this._onPlayerStopped);
+			e.player.stopped.remove({ owner: this, func: this._onPlayerStopped });
 
 			this.players.splice(index, 1);
 

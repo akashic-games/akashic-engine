@@ -20,7 +20,6 @@
 /// <reference path="Matrix.ts" />
 /// <reference path="Util.ts" />
 /// <reference path="Collision.ts" />
-/// <reference path="TriggerHandler.ts" />
 /// <reference path="Trigger.ts" />
 /// <reference path="Timer.ts" />
 /// <reference path="TimerManager.ts" />
