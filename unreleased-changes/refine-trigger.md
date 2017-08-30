@@ -4,8 +4,8 @@
 
 ### ゲーム開発者への影響
 
- * `g.Trigger` のAPIを見直し
-    * 抜本的にAPIを見直しています。変更が大きいため、詳細は以下別項にまとめます。
+ * `g.Trigger` を見直し
+    * 抜本的にAPIを見直し、主な操作を `add()`, `remove()`, `removeAll()` に集約しました。変更が大きいため、詳細は以下別項にまとめます。
     * v1 から移行するゲームでは複数の追従作業が必要です。後述の新旧仕様の対応表もご参考ください。
  * `g.ConditionalChainTrigger` を廃止
     * `g.Trigger` から `chain` 機能そのものを分離したため、 `ConditionalChainTrigger` は `g.ChainTrigger` に一般化されました。
@@ -49,7 +49,7 @@
 これらの「該当するハンドラをすべて登録解除するメソッド」を `removeAll()` に一本化します。
 このメソッドは、解除の条件としてオブジェクト引数を一つとり、引数がない場合は全ハンドラを解除します。
 
-#### `g.Trigger#isHandled()` 廃止、 `contains()` 追加。
+##### `g.Trigger#isHandled()` 廃止、 `contains()` 追加。
 
 `handle` に代えて `add()` を導入した影響で名前を `contains()` に変更します。
 引数順も `owner` が後になる(普通の省略引数になる)よう改めます。
