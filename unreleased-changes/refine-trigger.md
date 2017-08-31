@@ -18,7 +18,7 @@
 |関数 `func` を登録|`trigger.handle(func)`|`trigger.add(func)`|
 |関数 `func` を登録(`owner` を `this` に利用)|`trigger.handle(owner, func)`|`trigger.add(func, owner)`|
 |関数 `f` を `name` という名で登録|`trigger.handle(f, name)`|`trigger.add({ func: f, name })`|
-|一度呼び出したら解除される関数 `f` を登録|N/A|`trigger.add({ func: f, once: true })`|
+|一度呼び出したら解除される関数 `f` を登録|N/A|`trigger.addOnce(f)`|
 |`func` と `owner` の組み合わせが登録済みか確認|`trigger.isHandled(owner, func)`|`trigger.contains(func, owner)`|
 |`func` と `owner` の組み合わせの登録を一つ解除|N/A|`trigger.remove(f, owner)`|
 |全ハンドラを登録解除|N/A|`trigger.removeAll()`|
@@ -49,19 +49,19 @@
 これらの「該当するハンドラをすべて登録解除するメソッド」を `removeAll()` に一本化します。
 このメソッドは、解除の条件としてオブジェクト引数を一つとり、引数がない場合は全ハンドラを解除します。
 
-##### `g.Trigger#isHandled()` 廃止、 `contains()` 追加。
+##### `g.Trigger#isHandled()` 廃止、 `contains()` 追加
 
 `handle` に代えて `add()` を導入した影響で名前を `contains()` に変更します。
 引数順も `owner` が後になる(普通の省略引数になる)よう改めます。
 
-##### ハンドラ登録時に `once` オプションを追加
+##### `addOnce()` を追加
 
 従来、一回だけ実行されるハンドラを明示的に登録することはできませんでした。
 ハンドラ関数は自力で登録を解除するか、または `true` を戻り値として返す必要がありました。
 
-`add()` のオブジェクト引数に `once: boolean` を与えられるようにし、一度だけ実行されるハンドラを登録できるようにします。
+`add()` と同じシグネチャの `addOnce()` を追加し、一度だけ実行されるハンドラを登録できるようにします。
 これに伴い、ハンドラ関数が `true` を返した場合にハンドラを解除する動作は廃止します。
-常に `true` を返す関数であれば `once` オプションを、でなければ `return true` の代わりに登録解除処理を記述してください。
+常に `true` を返す関数であれば `addOnce()` を、でなければ `return true` の代わりに登録解除処理を記述してください。
 
 ### 非推奨機能の変更
 
