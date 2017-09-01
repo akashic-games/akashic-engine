@@ -214,7 +214,7 @@ describe("test Util", function() {
 			}
 		});
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			expect(g.Util.asSurface(game.assets.foo)).toEqual(game.assets.foo.asSurface());
 			done();
 		});

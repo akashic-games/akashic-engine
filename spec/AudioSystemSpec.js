@@ -74,10 +74,10 @@ describe("test AudioPlayer", function() {
 			stoppedCalled = 0;
 		}
 
-		player1.played.handle(function () {
+		player1.played.add(function () {
 			++playedCalled;
 		});
-		player1.stopped.handle(function () {
+		player1.stopped.add(function () {
 			++stoppedCalled;
 		});
 
@@ -144,10 +144,10 @@ describe("test AudioPlayer", function() {
 			stoppedCalled = 0;
 		}
 
-		player1.played.handle(function () {
+		player1.played.add(function () {
 			++playedCalled;
 		});
-		player1.stopped.handle(function () {
+		player1.stopped.add(function () {
 			++stoppedCalled;
 		});
 

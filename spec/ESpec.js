@@ -285,10 +285,10 @@ describe("test E", function () {
 	});
 
 	it("destroy - has handles", function () {
-		e.message.handle(function(){});
-		e.pointDown.handle(function(){});
-		e.pointMove.handle(function(){});
-		e.pointUp.handle(function(){});
+		e.message.add(function(){});
+		e.pointDown.add(function(){});
+		e.pointMove.add(function(){});
+		e.pointUp.add(function(){});
 		expect(e._message).toBeDefined();
 		expect(e._pointDown).toBeDefined();
 		expect(e._pointMove).toBeDefined();
@@ -336,25 +336,25 @@ describe("test E", function () {
 
 	it("update", function () {
 		expect(e._update).toBeUndefined();
-		expect(runtime.scene.update.hasHandler()).toBe(false);
+		expect(runtime.scene.update.length > 0).toBe(false);
 		runtime.game.tick(1);
 
 		// auto chain
 		expect(e.update).not.toBeUndefined();
 		expect(e._update).not.toBeUndefined();
 		expect(e._update.chain).not.toBeUndefined();
-		expect(runtime.scene.update.hasHandler()).toBe(false);
+		expect(runtime.scene.update.length > 0).toBe(false);
 
 		runtime.game.tick(1);
 
 		var estate = false;
 		var esuccess = false;
-		e.update.handle(function() {
+		e.update.add(function() {
 			if (!estate)
 				fail("efail");
 			esuccess = true;
 		});
-		expect(runtime.scene.update.hasHandler()).toBe(true);
+		expect(runtime.scene.update.length > 0).toBe(true);
 
 		estate = true;
 		runtime.game.tick(1);
@@ -380,18 +380,18 @@ describe("test E", function () {
 		runtime.game._flushSceneChangeRequests();
 		estate = false;
 
-		expect(scene3.update.hasHandler()).toBe(false);
+		expect(scene3.update.length > 0).toBe(false);
 		expect(runtime.scene.update.destroyed()).toBe(true);
 		runtime.game.tick(1);
 	});
 
 	it("operate", function () {
 		expect(e._pointDown).toBeUndefined();
-		expect(runtime.scene.pointDownCapture.hasHandler()).toBe(false);
+		expect(runtime.scene.pointDownCapture.length > 0).toBe(false);
 		expect(e.pointDown).not.toBeUndefined();
 		expect(e._pointDown).not.toBeUndefined();
 		expect(e._pointDown.chain).not.toBeUndefined();
-		expect(runtime.scene.pointDownCapture.hasHandler()).toBe(false);
+		expect(runtime.scene.pointDownCapture.length > 0).toBe(false);
 
 		var operationTick = function() {
 			runtime.game.events.push(new g.PointDownEvent(1, e, {x: 0, y: 0}, {id: 1}));
@@ -399,7 +399,7 @@ describe("test E", function () {
 		}
 		var estate = false;
 		var esuccess = false;
-		e.pointDown.handle(function() {
+		e.pointDown.add(function() {
 			if (!estate)
 				fail("efail");
 			esuccess = true;
@@ -683,7 +683,7 @@ describe("test E", function () {
 		expect(e.update).toBe(u);
 
 		var firedFlg = false;
-		u.handle(function() {
+		u.add(function() {
 			firedFlg = true;
 		});
 
@@ -705,7 +705,7 @@ describe("test E", function () {
 		expect(e.message).toBe(m);
 
 		var firedFlg = false;
-		m.handle(function() {
+		m.add(function() {
 			firedFlg = true;
 		});
 
@@ -727,7 +727,7 @@ describe("test E", function () {
 		expect(e.pointDown).toBe(p);
 
 		var firedFlg = false;
-		p.handle(function() {
+		p.add(function() {
 			firedFlg = true;
 		});
 
@@ -749,7 +749,7 @@ describe("test E", function () {
 		expect(e.pointUp).toBe(p);
 
 		var firedFlg = false;
-		p.handle(function() {
+		p.add(function() {
 			firedFlg = true;
 		});
 
@@ -771,7 +771,7 @@ describe("test E", function () {
 		expect(e.pointMove).toBe(p);
 
 		var firedFlg = false;
-		p.handle(function() {
+		p.add(function() {
 			firedFlg = true;
 		});
 

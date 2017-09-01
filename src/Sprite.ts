@@ -120,8 +120,8 @@ namespace g {
 		 * @private
 		 */
 		_onAnimatingStarted(): void {
-			if (! this.update.isHandled(this, this._onUpdate)) {
-				this.update.handle(this, this._onUpdate);
+			if (! this.update.contains(this._onUpdate, this)) {
+				this.update.add(this._onUpdate, this);
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace g {
 		 */
 		_onAnimatingStopped(): void {
 			if (! this.destroyed()) {
-				this.update.remove(this, this._onUpdate);
+				this.update.remove(this._onUpdate, this);
 			}
 		}
 
@@ -182,8 +182,8 @@ namespace g {
 				if (destroySurface) {
 					this.surface.destroy();
 				} else if (this.surface.isDynamic) {
-					this.surface.animatingStarted.remove(this, this._onAnimatingStarted);
-					this.surface.animatingStopped.remove(this, this._onAnimatingStopped);
+					this.surface.animatingStarted.remove(this._onAnimatingStarted, this);
+					this.surface.animatingStopped.remove(this._onAnimatingStopped, this);
 				}
 			}
 			this.surface = undefined;

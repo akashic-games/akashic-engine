@@ -138,7 +138,7 @@ namespace g {
 				this._free();
 
 			this._timer = this.scene.createTimer(this.interval);
-			this._timer.elapsed.handle(this, this._onElapsed);
+			this._timer.elapsed.add(this._onElapsed, this);
 		}
 
 		/**
@@ -184,7 +184,7 @@ namespace g {
 			if (! this._timer)
 				return;
 
-			this._timer.elapsed.remove(this, this._onElapsed);
+			this._timer.elapsed.remove(this._onElapsed, this);
 			if (this._timer.canDelete())
 				this.scene.deleteTimer(this._timer);
 

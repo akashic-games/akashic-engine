@@ -53,7 +53,7 @@ namespace g {
 		}
 
 		canDelete(): boolean {
-			return !this.elapsed.hasHandler();
+			return !this.elapsed || this.elapsed.length === 0;
 		}
 
 		destroy(): void {

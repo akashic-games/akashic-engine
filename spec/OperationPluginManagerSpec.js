@@ -58,7 +58,7 @@ describe("test OperationPluginManager", function() {
 	});
 
 	it("初期化", function(done) {
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			expect(game._operationPluginManager).not.toBeFalsy();
 			expect(game._operationPluginManager.operated instanceof g.Trigger).toBe(true);
 			expect(game._operationPluginManager.plugins).toEqual({});
@@ -68,7 +68,7 @@ describe("test OperationPluginManager", function() {
 	});
 
 	it("initialize()", function(done) {
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var self = game._operationPluginManager;
 			expect(self._initialized).toBe(false);
 			self.initialize();
@@ -86,12 +86,12 @@ describe("test OperationPluginManager", function() {
 	});
 
 	it("operated", function(done) {
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var self = game._operationPluginManager;
 			self.initialize();
 
 			var ops = [];
-			self.operated.handle(function (op) { ops.push(op); });
+			self.operated.add(function (op) { ops.push(op); });
 			self.plugins[42].debugFire(["foo", 1]);
 			self.plugins[42].debugFire([4]);
 			expect(ops).toEqual([
@@ -106,7 +106,7 @@ describe("test OperationPluginManager", function() {
 	});
 
 	it("destroy", function(done) {
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var self = game._operationPluginManager;
 			self.initialize();
 			self.destroy();

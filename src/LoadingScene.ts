@@ -27,7 +27,7 @@ namespace g {
 	export class LoadingScene extends Scene {
 		/**
 		 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
-		 * ゲーム開発者は、このTriggerをhandleしてローディングシーンの内容を初期化することができる。
+		 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
 		 */
 		targetReset: Trigger<Scene>;
 		/**
@@ -83,7 +83,7 @@ namespace g {
 			this._clearTargetScene();
 			this._targetScene = targetScene;
 			if (this._loadingState < SceneLoadState.LoadedFired) {
-				this.loaded.handle(this, this._doReset);
+				this.loaded.addOnce(this._doReset, this);
 			} else {
 				this._doReset();
 			}
@@ -120,24 +120,23 @@ namespace g {
 		_clearTargetScene(): void {
 			if (!this._targetScene)
 				return;
-			this._targetScene._ready.removeAll(this);
-			this._targetScene.assetLoaded.removeAll(this);
+			this._targetScene._ready.removeAll({ owner: this });
+			this._targetScene.assetLoaded.removeAll({ owner: this });
 			this._targetScene = undefined;
 		}
 
 		/**
 		 * @private
 		 */
-		_doReset(): boolean {
+		_doReset(): void {
 			this.targetReset.fire(this._targetScene);
 			if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
-				this._targetScene._ready.handle(this, this._fireTriggerOnTargetReady);
-				this._targetScene.assetLoaded.handle(this, this._fireTriggerOnTargetAssetLoad);
+				this._targetScene._ready.add(this._fireTriggerOnTargetReady, this);
+				this._targetScene.assetLoaded.add(this._fireTriggerOnTargetAssetLoad, this);
 				this._targetScene._load();
 			} else {
 				this._fireTriggerOnTargetReady(this._targetScene);
 			}
-			return true;
 		}
 
 		/**

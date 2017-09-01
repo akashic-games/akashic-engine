@@ -36,11 +36,11 @@ namespace g {
 			this._handlerOwner = handlerOwner;
 			this._fired = fired;
 			this._firedOwner = firedOwner;
-			this._timer.elapsed.handle(this, this._fire);
+			this._timer.elapsed.add(this._fire, this);
 		}
 
 		destroy(): void {
-			this._timer.elapsed.remove(this, this._fire);
+			this._timer.elapsed.remove(this._fire, this);
 			this._timer = undefined;
 			this._handler = undefined;
 			this._handlerOwner = undefined;
@@ -109,7 +109,7 @@ namespace g {
 		 */
 		createTimer(interval: number): Timer {
 			if (! this._registered) {
-				this._trigger.handle(this, this._tick);
+				this._trigger.add(this._tick, this);
 				this._registered = true;
 			}
 
@@ -154,7 +154,7 @@ namespace g {
 			if (! this._timers.length) {
 				if (! this._registered)
 					throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: handler is not handled");
-				this._trigger.remove(this, this._tick);
+				this._trigger.remove(this._tick, this);
 				this._registered = false;
 			}
 		}

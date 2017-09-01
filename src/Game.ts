@@ -42,7 +42,7 @@ namespace g {
 
 		/**
 		 * 遷移先になるシーン。
-		 * `type` が `Push`, `Replace` または `FireLoaded` の時のみ存在。
+		 * `type` が `Push`, `Replace`, `FireReady` または `FireLoaded` の時のみ存在。
 		 */
 		scene?: Scene;
 
@@ -481,10 +481,10 @@ namespace g {
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 			this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
 			this._operationPluginOperated = new Trigger<InternalOperationPluginOperation>();
-			this._operationPluginManager.operated.handle(this._operationPluginOperated, this._operationPluginOperated.fire);
+			this._operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
 
 			this._sceneChanged = new Trigger<Scene>();
-			this._sceneChanged.handle(this, this._updateEventTriggers);
+			this._sceneChanged.add(this._updateEventTriggers, this);
 
 			this._initialScene = new Scene({
 				game: this,
@@ -492,7 +492,7 @@ namespace g {
 				local: true,
 				name: "akashic:initial-scene"
 			});
-			this._initialScene.loaded.handle(this, this._onInitialSceneLoaded);
+			this._initialScene.loaded.add(this._onInitialSceneLoaded, this);
 
 			this._reset({ age: 0 });
 		}
@@ -874,11 +874,11 @@ namespace g {
 					this.random = param.randGen;
 			}
 
-			this._loaded.removeAllByHandler(this._start);
-			this.join._reset();
-			this.leave._reset();
-			this.seed._reset();
-			this.resized._reset();
+			this._loaded.removeAll({ func: this._start, owner: this });
+			this.join.removeAll();
+			this.leave.removeAll();
+			this.seed.removeAll();
+			this.resized.removeAll();
 
 			this._idx = 0;
 			this._localIdx = 0;
@@ -890,7 +890,7 @@ namespace g {
 			this.loadingScene = undefined;
 			this._focusingCamera = undefined;
 			this._scriptCaches = {};
-			this.snapshotRequest._reset();
+			this.snapshotRequest.removeAll();
 			this._sceneChangeRequests = [];
 
 			this._isTerminated = false;
@@ -918,7 +918,7 @@ namespace g {
 		_loadAndStart(param?: GameMainParameterObject): void {
 			this._mainParameter = param || {};
 			if (!this.isLoaded) {
-				this._loaded.handle(this, this._start);
+				this._loaded.add(this._start, this);
 				this.pushScene(this._initialScene);
 				this._flushSceneChangeRequests();
 			} else {
@@ -964,7 +964,7 @@ namespace g {
 		 * @private
 		 */
 		_onInitialSceneLoaded(): void {
-			this._initialScene.loaded.remove(this, this._onInitialSceneLoaded);
+			this._initialScene.loaded.remove(this._onInitialSceneLoaded, this);
 			this.assets = this._initialScene.assets;
 			this.isLoaded = true;
 			this._loaded.fire();
@@ -1014,10 +1014,12 @@ namespace g {
 						this._doPopScene(req.preserveCurrent, true);
 						break;
 					case SceneChangeType.FireReady:
-						req.scene._fireReady();
+						if (!req.scene.destroyed())
+							req.scene._fireReady();
 						break;
 					case SceneChangeType.FireLoaded:
-						req.scene._fireLoaded();
+						if (!req.scene.destroyed())
+							req.scene._fireLoaded();
 						break;
 					case SceneChangeType.CallAssetHolderHandler:
 						req.assetHolder.callHandler();

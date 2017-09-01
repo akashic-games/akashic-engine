@@ -143,8 +143,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get update(): Trigger<void> {
 			if (! this._update)
-				this._update = new Trigger<void>(this.scene.update);
-
+				this._update = new ChainTrigger<void>(this.scene.update);
 			return this._update;
 		}
 		// updateは代入する必要がないのでsetterを定義しない
@@ -155,8 +154,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get message(): Trigger<MessageEvent> {
 			if (! this._message)
-				this._message = new Trigger<MessageEvent>(this.scene.message);
-
+				this._message = new ChainTrigger<MessageEvent>(this.scene.message);
 			return this._message;
 		}
 		// messageは代入する必要がないのでsetterを定義しない
@@ -167,8 +165,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get pointDown(): Trigger<PointDownEvent> {
 			if (! this._pointDown)
-				this._pointDown = new ConditionalChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this, this._isTargetOperation);
-
+				this._pointDown = new ChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this._isTargetOperation, this);
 			return this._pointDown;
 		}
 		// pointDownは代入する必要がないのでsetterを定義しない
@@ -179,8 +176,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get pointUp(): Trigger<PointUpEvent> {
 			if (! this._pointUp)
-				this._pointUp = new ConditionalChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this, this._isTargetOperation);
-
+				this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
 			return this._pointUp;
 		}
 		// pointUpは代入する必要がないのでsetterを定義しない
@@ -191,8 +187,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get pointMove(): Trigger<PointMoveEvent> {
 			if (! this._pointMove)
-				this._pointMove = new ConditionalChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this, this._isTargetOperation);
-
+				this._pointMove = new ChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this._isTargetOperation, this);
 			return this._pointMove;
 		}
 		// pointMoveは代入する必要がないのでsetterを定義しない
