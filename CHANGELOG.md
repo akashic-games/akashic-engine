@@ -1,5 +1,129 @@
 # ChangeLog
 
+## 2.0.0-beta.0
+
+その他変更
+ * v1.12.3での非推奨機能を削除
+ * `g.Game#random` を配列でないように変更
+ * `g.Scene#setTimeout()`, `setInterval()` の引数順を変更。旧仕様を非推奨に
+ * `g.Trigger` のAPIを抜本的に見直し
+ * 一部ライブラリ分離済みクラスを削除
+ * ビルドツールからgulpを削除
+
+### ゲーム開発者への影響
+
+ * v1.12.3において非推奨だった機能を削除
+   * `g.Label#bitmapFont`, `g.LabelParameterObject#bmpFont` を削除
+     * 利用している場合、 `g.Label#font` を使うよう変更する必要があります
+   * `g.Matrix#multplyPoint`, `g.PlainMatrix#multplyPoint` を削除
+     * 利用している場合、 `g.Matrix#multiplyPoint`, `g.PlainMatrix#multiplyPoint` を使うよう変更する必要があります
+   * `g.LoadingScene#_onTargetAssetLoad` を削除
+     * 利用している場合、 `g.LoadingScene#targetAssetLoaded` を使うよう変更する必要があります
+   * 一部クラスのコンストラクタのうち、引数がオブジェクト一つ (`g.〜ParameterObject`) でないものを削除
+     * 対象クラス：
+        * `g.BitmapFont`
+        * `g.CacheableE`
+        * `g.Camera2D`
+        * `g.DynamicFont`
+        * `g.E`
+        * `g.FilledRect`
+        * `g.FrameSprite`
+        * `g.Label`
+        * `g.MultiLineLabel`
+        * `g.Pane`
+        * `g.Scene`
+        * `g.Sprite`
+        * `g.Tile`
+     * 利用している場合、引数がオブジェクト一つのコンストラクタを使うよう変更する必要があります
+   * `PureVirtualError` と `ExceptionFactory#createPureVirtualError` を削除
+     * `PureVirtualError` を返していた箇所はビルドエラーで検知されるようになります
+ * `g.Game#random` を配列でないように変更
+   * 型を `g.RandomGenerator[]` から `g.RandomGenerator` に変更しました。
+   * 従来 `g.game.random[0]` で参照できた乱数生成器は、 `g.game.random` に置かれるようになりました。
+     (`random` は歴史的経緯から配列として定義されていましたが、第0要素以外は利用されていませんでした。)
+   * `g.game[0]` を非推奨機能にしました。
+ * `g.Scene#setTimeout()`, `g.Scene#setInterval()` の引数順を変更。
+   * DOM Level 0(Webブラウザの `window.setTimeout()` など)により近くなるよう、
+     引数を `(handler: () => void, milliseconds: number, owner?: any)` の順で与えるよう変更しました。
+   * なおDOMとの完全な互換性は意図していません。次の点で異なります。
+     * 第三引数以降に引数を与えることはできません(代わりに `this` が指定可能)
+     * 関数の代わりに文字列を与えることはできません
+   * 従来は `(milliseconds, handler)` または `(millicseconds, owner, handler)` の順でした。これらは非推奨にしました。
+ * `g.Trigger` を見直し
+   * `g.Scene#update` や `g.E#pointDown` などで利用している `g.Trigger` のAPIを抜本的に見直し、主な操作を `add()`, `remove()`, `removeAll()` に集約しました。
+   * 変更が大きいため、詳細は以下別項にまとめます。
+   * v1 から移行するゲームでは複数の追従作業が必要です。後述の新旧仕様の対応表もご参考ください。
+ * `g.ConditionalChainTrigger` を廃止
+   * `g.Trigger` から `chain` 機能そのものを分離したため、 `ConditionalChainTrigger` は `g.ChainTrigger` に一般化されました。
+   * 利用している場合、 `g.ChainTrigger` に変更してください。コンストラクタの引数順が変わっている (`this` が後になった) 点以外に違いはありません。
+ * 外部ライブラリに切り出されたクラスを削除
+   * `g.MultiLineLbel` と `g.Tile` を削除
+     * 利用している場合、 [@akashic-extension/akashic-label](https://github.com/akashic-games/akashic-label)
+       または [@akashic-extension/akashic-tile](https://github.com/akashic-games/akashic-tile) を利用してください。
+
+`g.Trigger` の新旧記述の対応は概ね次のとおりです:
+
+||旧仕様での記述|新仕様での記述|
+|----|----|----|
+|関数 `func` を登録|`trigger.handle(func)`|`trigger.add(func)`|
+|関数 `func` を登録(`owner` を `this` に利用)|`trigger.handle(owner, func)`|`trigger.add(func, owner)`|
+|関数 `f` を名前 `n` で登録|`trigger.handle(f, n)`|`trigger.add({ func: f, name: n })`|
+|一度呼び出したら解除される関数 `f` を登録|N/A|`trigger.addOnce(f)`|
+|`func` と `owner` の組み合わせが登録済みか確認|`trigger.isHandled(owner, func)`|`trigger.contains(func, owner)`|
+|`func` と `owner` の組み合わせの登録を一つ解除|N/A|`trigger.remove(f, owner)`|
+|全ハンドラを登録解除|N/A|`trigger.removeAll()`|
+|`this` として `o` を使う全ハンドラを解除|`trigger.removeAll(o)`|`trigger.removeAll({ owner: o })`|
+|関数 `f` を使う全ハンドラを解除|`trigger.removeAllByHandler(f)`|`trigger.removeAll({ func: f })`|
+|ハンドラの有無を確認|`triger.hasHandler()`|`trigger.length > 0`|
+
+#### `Trigger` の仕様変更詳細
+
+##### `add()` を追加
+
+従来の `Trigger#handle()` は、 `owner` (`this` として関数に渡される値) の有無によって引数順が変化する紛らわしい仕様になっていました。
+引数順を変更して、常に関数を第一引数に取る `add()` を加えます。
+`add()` はオブジェクト引数もとれるようにし、引数順に左右されない記述を可能にします。
+
+##### `remove()` を「登録を一つ解除するメソッド」に変更
+
+従来の `Trigger` には、 `handle()` と対になる「登録を一つ解除するメソッド」が存在しませんでした。
+`remove()` は重複して登録されているハンドラを全部解除してしまうもので、 `handle()` と対称ではありませんでした。
+"add" と "remove" で名前上対称になったことを鑑み、 `remove()` を「該当する登録を一つ解除する」メソッドに変更します。
+
+##### 「登録を複数解除するメソッド」を `removeAll()` に統一
+
+従来の `Trigger` には、 `removeAllByHandler()`, `removeByName()`, `removeAll()`, `remove()` が存在し、それぞれ登録解除の条件以外はほぼ同じ処理でした。
+また「全ハンドラの登録を解除するメソッド」が存在しませんでした。
+特に `removeAll()` は「特定のオーナーに紐づくハンドラすべて」が解除対象であり、名前と処理が一致していませんでした。
+
+これらの「該当するハンドラをすべて登録解除するメソッド」を `removeAll()` に一本化します。
+このメソッドは、解除の条件としてオブジェクト引数を一つとり、引数がない場合は全ハンドラを解除します。
+
+##### `g.Trigger#isHandled()` 廃止、 `contains()` 追加
+
+`handle` に代えて `add()` を導入した影響で名前を `contains()` に変更します。
+引数順も `owner` が後になる(普通の省略引数になる)よう改めます。
+
+##### `addOnce()` を追加
+
+従来、一回だけ実行されるハンドラを明示的に登録することはできませんでした。
+ハンドラ関数は自力で登録を解除するか、または `true` を戻り値として返す必要がありました。
+`add()` と同じシグネチャの `addOnce()` を追加し、一度だけ実行されるハンドラを登録できるようにします。
+
+### 非推奨機能の変更
+
+ * `g.game.random[0]` を非推奨に
+    * 利用している場合、 `g.game.random` を使うよう変更してください。
+ * `g.Trigger#handle()` を非推奨に
+    * 利用中のユーザは `add()` を使うようにしてください。
+ * `g.Scene#setTimeout()`, `g.Scene#setInterval()` のうち、第一引数が `milliseconds: number` であるものを非推奨に。
+    * 利用中のユーザは第一引数に関数を指定するものに移行してください。
+
+### エンジン開発者への影響
+
+ * `g.Trigger` のAPI見直し
+    * ゲーム開発者同様に追従が必要です。
+
 ## 1.12.5
 
 機能追加
