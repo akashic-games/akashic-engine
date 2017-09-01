@@ -17,12 +17,12 @@
 |----|----|----|
 |関数 `func` を登録|`trigger.handle(func)`|`trigger.add(func)`|
 |関数 `func` を登録(`owner` を `this` に利用)|`trigger.handle(owner, func)`|`trigger.add(func, owner)`|
-|関数 `f` を `name` という名で登録|`trigger.handle(f, name)`|`trigger.add({ func: f, name: name })`|
+|関数 `f` を名前 `n` で登録|`trigger.handle(f, name)`|`trigger.add({ func: f, name: n })`|
 |一度呼び出したら解除される関数 `f` を登録|N/A|`trigger.addOnce(f)`|
 |`func` と `owner` の組み合わせが登録済みか確認|`trigger.isHandled(owner, func)`|`trigger.contains(func, owner)`|
 |`func` と `owner` の組み合わせの登録を一つ解除|N/A|`trigger.remove(f, owner)`|
 |全ハンドラを登録解除|N/A|`trigger.removeAll()`|
-|`owner` を `this` として使う全ハンドラを解除|`trigger.removeAll(owner)`|`trigger.removeAll({ owner: owner })`|
+|`this` として `o` を使う全ハンドラを解除|`trigger.removeAll(owner)`|`trigger.removeAll({ owner: o })`|
 |関数 `f` を使う全ハンドラを解除|`trigger.removeAllByHandler(f)`|`trigger.removeAll({ func: f })`|
 |ハンドラの有無を確認|`triger.hasHandler()`|`trigger.length > 0`|
 
