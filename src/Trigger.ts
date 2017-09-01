@@ -1,8 +1,10 @@
 namespace g {
 	/**
 	 * ハンドラの関数の型。
+	 *
+	 * この関数がtruthyな値を返した場合、ハンドラ登録は解除される。
 	 */
-	export type HandlerFunction<T> = (args: T) => void;
+	export type HandlerFunction<T> = (arg: T) => void | boolean;
 
 	/**
 	 * Triggerのハンドラ。
@@ -89,6 +91,7 @@ namespace g {
 		owner?: any;
 		name?: string;
 	}
+
 
 	/**
 	 * イベント通知機構クラス。
@@ -198,24 +201,29 @@ namespace g {
 		 * このTriggerにハンドラを追加する。
 		 * @deprecated 互換性のために残されている。代わりに `add()` を利用すべきである。実装の変化のため、 `func` が `boolean` を返した時の動作はサポートされていない。
 		 */
-		handle(owner: any, func?: (e: T) => void, name?: string): void {
+		handle(owner: any, func?: HandlerFunction<T>, name?: string): void {
 			this.add(func ? { owner, func, name } : { func: owner });
 		}
 
 		/**
 		 * このTriggerを発火する。
 		 *
-		 * @param イベントハンドラに与えられる引数
+		 * 登録された全ハンドラの関数を、引数 `arg` を与えて呼び出す。
+		 * 呼び出し後、次のいずれかの条件を満たす全ハンドラの登録は解除される。
+		 * * ハンドラが `addOnce()` で登録されていた場合
+		 * * ハンドラが `add()` で登録される際に `once: true` オプションが与えられていた場合
+		 * * 関数がtruthyな値を返した場合
+		 *
+		 * @param arg ハンドラに与えられる引数
 		 */
-		fire(args?: T): void {
+		fire(arg?: T): void {
 			if (! this._handlers.length)
 				return;
 
 			const handlers = this._handlers.concat();
 			for (let i = 0; i < handlers.length; i++) {
 				const handler = handlers[i];
-				handler.func.call(handler.owner, args);
-				if (handler.once) {
+				if (handler.func.call(handler.owner, arg) || handler.once) {
 					const index = this._handlers.indexOf(handler);
 					if (index !== -1)
 						this._handlers.splice(index, 1);
@@ -334,7 +342,6 @@ namespace g {
 			return true;
 		}
 	}
-
 
 	/**
 	 * 他のTriggerに反応して発火するイベント通知機構。
