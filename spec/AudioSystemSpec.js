@@ -22,14 +22,10 @@ describe("test AudioPlayer", function() {
 		expect(function() { system.volume = 1 + 0.001}).toThrowError("AssertionError");
 	});
 
-	it("AudioSystem#PureVirtualError", function() {
+	it("AudioSystem#_destroyRequestedAssets", function() {
 		var game = new mock.Game({ width: 320, height: 320 });
 		var system = new g.AudioSystem("music", game);
 		var audio = new mock.ResourceFactory().createAudioAsset("testId", "testAssetPath");
-		expect(function() { system.stopAll() }).toThrowError("PureVirtualError");
-		expect(function() { system.findPlayers(audio) }).toThrowError("PureVirtualError");
-		expect(function() { system.createPlayer() }).toThrowError("PureVirtualError");
-		expect(function() { system._onVolumeChanged() }).toThrowError("PureVirtualError");
 		system.requestDestroy(audio);
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
 	});
@@ -78,10 +74,10 @@ describe("test AudioPlayer", function() {
 			stoppedCalled = 0;
 		}
 
-		player1.played.handle(function () {
+		player1.played.add(function () {
 			++playedCalled;
 		});
-		player1.stopped.handle(function () {
+		player1.stopped.add(function () {
 			++stoppedCalled;
 		});
 
@@ -148,10 +144,10 @@ describe("test AudioPlayer", function() {
 			stoppedCalled = 0;
 		}
 
-		player1.played.handle(function () {
+		player1.played.add(function () {
 			++playedCalled;
 		});
-		player1.stopped.handle(function () {
+		player1.stopped.add(function () {
 			++stoppedCalled;
 		});
 

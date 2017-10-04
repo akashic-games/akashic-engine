@@ -1,5 +1,5 @@
 namespace g {
-	export class AudioSystem {
+	export abstract class AudioSystem {
 		id: string;
 		game: Game;
 
@@ -47,17 +47,11 @@ namespace g {
 			this._playbackRate = audioSystemManager._playbackRate;
 		}
 
-		stopAll(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#stopAll");
-		}
+		abstract stopAll(): void;
 
-		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#findPlayers");
-		}
+		abstract findPlayers(asset: AudioAsset): AudioPlayer[];
 
-		createPlayer(): AudioPlayer {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#createPlayer");
-		}
+		abstract createPlayer(): AudioPlayer;
 
 		requestDestroy(asset: Asset): void {
 			this._destroyRequestedAssets[asset.id] = asset;
@@ -91,23 +85,17 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_onVolumeChanged(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#_onVolumeChanged");
-		}
+		abstract _onVolumeChanged(): void;
 
 		/**
 		 * @private
 		 */
-		_onMutedChanged(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#_onMutedChanged");
-		}
+		abstract _onMutedChanged(): void;
 
 		/**
 		 * @private
 		 */
-		_onPlaybackRateChanged(): void {
-			throw ExceptionFactory.createPureVirtualError("AudioSystem#_onPlaybackRateChanged");
-		}
+		abstract _onPlaybackRateChanged(): void;
 	}
 
 	export class MusicAudioSystem extends AudioSystem {
@@ -305,7 +293,7 @@ namespace g {
 			if (index < 0)
 				return;
 
-			e.player.stopped.remove(this, this._onPlayerStopped);
+			e.player.stopped.remove({ owner: this, func: this._onPlayerStopped });
 
 			this.players.splice(index, 1);
 

@@ -9,7 +9,7 @@ namespace g {
 	/**
 	 * 内部描画キャッシュを持つ `E` 。
 	 */
-	export class CacheableE extends E {
+	export abstract class CacheableE extends E {
 		/**
 		 * エンジンが子孫を描画すべきであれば`true`、でなければ`false`を本クラスを継承したクラスがセットする。
 		 * デフォルト値は`true`となる。
@@ -36,19 +36,11 @@ namespace g {
 		_renderedCamera: Camera;
 
 		/**
-		 * `CacheableE` のインスタンスを生成する。
-		 * @param scene このエンティティが属する `Scene`
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `CacheableEParameterObject` を使うコンストラクタを用いるべきである。
-		 */
-		constructor(scene: Scene);
-		/**
 		 * 各種パラメータを指定して `CacheableE` のインスタンスを生成する。
 		 * @param param このエンティティに対するパラメータ
 		 */
-		constructor(param: CacheableEParameterObject);
-
-		constructor(sceneOrParam: Scene|CacheableEParameterObject) {
-			super(sceneOrParam);
+		constructor(param: CacheableEParameterObject) {
+			super(param);
 			this._shouldRenderChildren = true;
 			this._cache = undefined;
 			this._renderer = undefined;
@@ -103,9 +95,7 @@ namespace g {
 		 * 本クラスを継承したエンティティはこのメソッド内で`renderer`に対してキャッシュの内容を描画しなければならない。
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
-		renderCache(renderer: Renderer, camera?: Camera): void {
-			throw ExceptionFactory.createPureVirtualError("CacheableE#renderCache");
-		}
+		abstract renderCache(renderer: Renderer, camera?: Camera): void;
 
 		/**
 		 * 利用している `Surface` を破棄した上で、このエンティティを破棄する。

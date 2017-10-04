@@ -42,7 +42,7 @@ namespace g {
 
 		/**
 		 * 遷移先になるシーン。
-		 * `type` が `Push`, `Replace` または `FireLoaded` の時のみ存在。
+		 * `type` が `Push`, `Replace`, `FireReady` または `FireLoaded` の時のみ存在。
 		 */
 		scene?: Scene;
 
@@ -67,7 +67,7 @@ namespace g {
 		age?: number;
 
 		/**
-		 * `Game#random[0]` に設定する値。
+		 * `Game#random` に設定する値。
 		 * 省略された場合、元の値が維持される。
 		 */
 		randGen?: RandomGenerator;
@@ -92,7 +92,7 @@ namespace g {
 	 * 10.AudioSystemを直接制御するため、Game#audioにアクセスする
 	 * 11.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
 	 */
-	export class Game implements Registrable<E> {
+	export abstract class Game implements Registrable<E> {
 		/**
 		 * このコンテンツに関連付けられるエンティティ。(ローカルなエンティティを除く)
 		 */
@@ -108,7 +108,7 @@ namespace g {
 		/**
 		 * このGameで利用可能な乱数生成機群。
 		 */
-		random: RandomGenerator[];
+		random: RandomGenerator;
 		/**
 		 * 処理待ちのイベント。
 		 */
@@ -433,7 +433,7 @@ namespace g {
 			this.height = gameConfiguration.height;
 			this.renderers = [];
 			this.scenes = [];
-			this.random = [];
+			this.random = null;
 			this.age = 0;
 			this.assetBase = assetBase || "";
 			this.resourceFactory = resourceFactory;
@@ -481,10 +481,10 @@ namespace g {
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 			this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
 			this._operationPluginOperated = new Trigger<InternalOperationPluginOperation>();
-			this._operationPluginManager.operated.handle(this._operationPluginOperated, this._operationPluginOperated.fire);
+			this._operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
 
 			this._sceneChanged = new Trigger<Scene>();
-			this._sceneChanged.handle(this, this._updateEventTriggers);
+			this._sceneChanged.add(this._updateEventTriggers, this);
 
 			this._initialScene = new Scene({
 				game: this,
@@ -492,7 +492,7 @@ namespace g {
 				local: true,
 				name: "akashic:initial-scene"
 			});
-			this._initialScene.loaded.handle(this, this._onInitialSceneLoaded);
+			this._initialScene.loaded.add(this._onInitialSceneLoaded, this);
 
 			this._reset({ age: 0 });
 		}
@@ -713,9 +713,7 @@ namespace g {
 		 *
 		 * @param e 発生させるイベント
 		 */
-		raiseEvent(e: Event): void {
-			throw ExceptionFactory.createPureVirtualError("Game#raiseEvent");
-		}
+		abstract raiseEvent(e: Event): void;
 
 		/**
 		 * ティックを発生させる。
@@ -725,9 +723,7 @@ namespace g {
 		 *
 		 * @param events そのティックで追加で発生させるイベント
 		 */
-		raiseTick(events?: Event[]): void {
-			throw ExceptionFactory.createPureVirtualError("Game#raiseTick");
-		}
+		abstract raiseTick(events?: Event[]): void;
 
 		/**
 		 * イベントフィルタを追加する。
@@ -741,18 +737,14 @@ namespace g {
 		 *
 		 * @param filter 追加するイベントフィルタ
 		 */
-		addEventFilter(filter: EventFilter): void {
-			throw ExceptionFactory.createPureVirtualError("Game#addEventFilter");
-		}
+		abstract addEventFilter(filter: EventFilter): void;
 
 		/**
 		 * イベントフィルタを削除する。
 		 *
 		 * @param filter 削除するイベントフィルタ
 		 */
-		removeEventFilter(filter: EventFilter): void {
-			throw ExceptionFactory.createPureVirtualError("Game#removeEventFilter");
-		}
+		abstract removeEventFilter(filter: EventFilter): void;
 
 		/**
 		 * このインスタンスにおいてスナップショットの保存を行うべきかを返す。
@@ -766,9 +758,7 @@ namespace g {
 		 * スナップショット保存に対応するゲームは、このメソッドが真を返す時にのみ `Game#saveSnapshot()` を呼び出すべきである。
 		 * 戻り値は、スナップショットの保存を行うべきであれば真、でなければ偽である。
 		 */
-		shouldSaveSnapshot(): boolean {
-			throw ExceptionFactory.createPureVirtualError("Game#shouldSaveSnapshot");
-		}
+		abstract shouldSaveSnapshot(): boolean;
 
 		/**
 		 * スナップショットを保存する。
@@ -789,14 +779,11 @@ namespace g {
 		 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 		 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 		 */
-		saveSnapshot(snapshot: any, timestamp?: number): void {
-			throw ExceptionFactory.createPureVirtualError("Game#saveSnapshot");
-		}
+		abstract saveSnapshot(snapshot: any, timestamp?: number): void;
 
 		/**
 		 * @private
 		 */
-
 		_fireSceneReady(scene: Scene): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.FireReady, scene: scene });
 		}
@@ -804,7 +791,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_fireSceneLoaded(scene: Scene): void {
 			if (scene._loadingState < SceneLoadState.LoadedFired) {
 				this._sceneChangeRequests.push({ type: SceneChangeType.FireLoaded, scene: scene });
@@ -814,7 +800,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_callSceneAssetHolderHandler(assetHolder: SceneAssetHolder): void {
 			this._sceneChangeRequests.push({ type: SceneChangeType.CallAssetHolderHandler, assetHolder: assetHolder });
 		}
@@ -822,7 +807,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
 			if (!gameConfiguration)
 				throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
@@ -844,7 +828,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_setAudioPlaybackRate(playbackRate: number): void {
 			this._audioSystemManager._setPlaybackRate(playbackRate);
 		}
@@ -852,7 +835,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_setMuted(muted: boolean): void {
 			this._audioSystemManager._setMuted(muted);
 		}
@@ -889,14 +871,14 @@ namespace g {
 				if (param.age !== undefined)
 					this.age = param.age;
 				if (param.randGen !== undefined)
-					this.random[0] = param.randGen;
+					this.random = param.randGen;
 			}
 
-			this._loaded.removeAllByHandler(this._start);
-			this.join._reset();
-			this.leave._reset();
-			this.seed._reset();
-			this.resized._reset();
+			this._loaded.removeAll({ func: this._start, owner: this });
+			this.join.removeAll();
+			this.leave.removeAll();
+			this.seed.removeAll();
+			this.resized.removeAll();
 
 			this._idx = 0;
 			this._localIdx = 0;
@@ -908,7 +890,7 @@ namespace g {
 			this.loadingScene = undefined;
 			this._focusingCamera = undefined;
 			this._scriptCaches = {};
-			this.snapshotRequest._reset();
+			this.snapshotRequest.removeAll();
 			this._sceneChangeRequests = [];
 
 			this._isTerminated = false;
@@ -936,7 +918,7 @@ namespace g {
 		_loadAndStart(param?: GameMainParameterObject): void {
 			this._mainParameter = param || {};
 			if (!this.isLoaded) {
-				this._loaded.handle(this, this._start);
+				this._loaded.add(this._start, this);
 				this.pushScene(this._initialScene);
 				this._flushSceneChangeRequests();
 			} else {
@@ -959,7 +941,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_updateEventTriggers(scene: Scene): void {
 			this.modified = true;
 			if (! scene) {
@@ -982,9 +963,8 @@ namespace g {
 		/**
 		 * @private
 		 */
-
 		_onInitialSceneLoaded(): void {
-			this._initialScene.loaded.remove(this, this._onInitialSceneLoaded);
+			this._initialScene.loaded.remove(this._onInitialSceneLoaded, this);
 			this.assets = this._initialScene.assets;
 			this.isLoaded = true;
 			this._loaded.fire();
@@ -993,10 +973,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-
-		_leaveGame(): void {
-			throw ExceptionFactory.createPureVirtualError("Game#_leaveGame");
-		}
+		abstract _leaveGame(): void;
 
 		/**
 		 * @private
@@ -1037,10 +1014,12 @@ namespace g {
 						this._doPopScene(req.preserveCurrent, true);
 						break;
 					case SceneChangeType.FireReady:
-						req.scene._fireReady();
+						if (!req.scene.destroyed())
+							req.scene._fireReady();
 						break;
 					case SceneChangeType.FireLoaded:
-						req.scene._fireLoaded();
+						if (!req.scene.destroyed())
+							req.scene._fireLoaded();
 						break;
 					case SceneChangeType.CallAssetHolderHandler:
 						req.assetHolder.callHandler();

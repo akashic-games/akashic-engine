@@ -153,7 +153,6 @@ namespace g {
 			this._totalWaitingAssetCount = targetScene._sceneAssetHolder.waitingAssetsCount;
 		}
 
-		// 歴史的経緯により存在する `LoadingScene#_onTargetAssetLoad` をオーバーライドしては *いない* 点に注意。
 		/**
 		 * @private
 		 */

@@ -89,51 +89,24 @@ namespace g {
 		_beforeSurface: Surface;
 
 		/**
-		 * 画像と幅・高さを指定して `Sprite` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `SpriteParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティが属する `Scene`
-		 * @param src 描画する画像を表す `Surface` または `Asset`
-		 * @param width このエンティティの幅
-		 * @param height このエンティティの高さ
-		 */
-		constructor(scene: Scene, src: Surface|Asset, width?: number, height?: number);
-		/**
 		 * 各種パラメータを指定して `Sprite` のインスタンスを生成する。
 		 * @param param `Sprite` に設定するパラメータ
 		 */
-		constructor(param: SpriteParameterObject);
-
-		constructor(sceneOrParam: Scene|SpriteParameterObject, src?: Surface|Asset, width?: number, height?: number) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene);
-				this.surface = Util.asSurface(src);
-				this.width = (width !== undefined) ? width : this.surface.width;
-				this.height = (height !== undefined) ? height : this.surface.height;
-				this.srcWidth = this.width;
-				this.srcHeight = this.height;
-				this.srcX = 0;
-				this.srcY = 0;
-				this._stretchMatrix = undefined;
-				this._beforeSurface = this.surface;
-				Util.setupAnimatingHandler(this, this.surface);
-			} else {
-				var param = <SpriteParameterObject>sceneOrParam;
-				super(param);
-				this.surface = Util.asSurface(param.src);
-				if (!("width" in param))
-					this.width = this.surface.width;
-				if (!("height" in param))
-					this.height = this.surface.height;
-				this.srcWidth = "srcWidth" in param ? param.srcWidth : this.width;
-				this.srcHeight = "srcHeight" in param ? param.srcHeight : this.height;
-				this.srcX = param.srcX || 0;
-				this.srcY = param.srcY || 0;
-				this._stretchMatrix = undefined;
-				this._beforeSurface = this.surface;
-				Util.setupAnimatingHandler(this, this.surface);
-				this._invalidateSelf();
-			}
+		constructor(param: SpriteParameterObject) {
+			super(param);
+			this.surface = Util.asSurface(param.src);
+			if (!("width" in param))
+				this.width = this.surface.width;
+			if (!("height" in param))
+				this.height = this.surface.height;
+			this.srcWidth = "srcWidth" in param ? param.srcWidth : this.width;
+			this.srcHeight = "srcHeight" in param ? param.srcHeight : this.height;
+			this.srcX = param.srcX || 0;
+			this.srcY = param.srcY || 0;
+			this._stretchMatrix = undefined;
+			this._beforeSurface = this.surface;
+			Util.setupAnimatingHandler(this, this.surface);
+			this._invalidateSelf();
 		}
 
 		/**
@@ -147,8 +120,8 @@ namespace g {
 		 * @private
 		 */
 		_onAnimatingStarted(): void {
-			if (! this.update.isHandled(this, this._onUpdate)) {
-				this.update.handle(this, this._onUpdate);
+			if (! this.update.contains(this._onUpdate, this)) {
+				this.update.add(this._onUpdate, this);
 			}
 		}
 
@@ -157,7 +130,7 @@ namespace g {
 		 */
 		_onAnimatingStopped(): void {
 			if (! this.destroyed()) {
-				this.update.remove(this, this._onUpdate);
+				this.update.remove(this._onUpdate, this);
 			}
 		}
 
@@ -209,8 +182,8 @@ namespace g {
 				if (destroySurface) {
 					this.surface.destroy();
 				} else if (this.surface.isDynamic) {
-					this.surface.animatingStarted.remove(this, this._onAnimatingStarted);
-					this.surface.animatingStopped.remove(this, this._onAnimatingStopped);
+					this.surface.animatingStarted.remove(this._onAnimatingStarted, this);
+					this.surface.animatingStopped.remove(this._onAnimatingStopped, this);
 				}
 			}
 			this.surface = undefined;

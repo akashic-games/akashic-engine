@@ -29,7 +29,7 @@ describe("test TimerManager", function () {
 		expect(m._identifiers.length).toEqual(0);
 		expect(m._fps).toBe(30);
 		expect(m._registered).toBe(false);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(false);
+		expect(m._trigger.contains(m._tick, m)).toBe(false);
 	});
 
 	it("createTimer", function() {
@@ -39,7 +39,7 @@ describe("test TimerManager", function () {
 		expect(m._timers.length).toBe(1);
 		expect(m._timers[0]).toBe(timer);
 		expect(m._registered).toBe(true);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(true);
+		expect(m._trigger.contains(m._tick, m)).toBe(true);
 		expect(m._identifiers.length).toEqual(0);
 	});
 
@@ -88,7 +88,7 @@ describe("test TimerManager", function () {
 		expect(m._timers.length).toBe(0);
 		expect(m._registered).toBe(false);
 		expect(timer.destroyed()).toBe(true);
-		expect(trigger.isHandled(m, m._tick)).toBe(false);
+		expect(trigger.contains(m._tick, m)).toBe(false);
 	});
 
 	it("deleteTimer - handler remains", function() {
@@ -99,11 +99,11 @@ describe("test TimerManager", function () {
 		m.deleteTimer(timer1);
 		expect(timer1.destroyed()).toBe(true);
 		expect(m._registered).toBe(true);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(true);
+		expect(m._trigger.contains(m._tick, m)).toBe(true);
 		m.deleteTimer(timer2);
 		expect(timer2.destroyed()).toBe(true);
 		expect(m._registered).toBe(false);
-		expect(m._trigger.isHandled(m, m._tick)).toBe(false);
+		expect(m._trigger.contains(m._tick, m)).toBe(false);
 	});
 
 	it("deleteTimer - error (invalid context)", function() {
@@ -127,10 +127,10 @@ describe("test TimerManager", function () {
 		var parent = new Object();
 		var passedOwner = null;
 		var count = 0;
-		var timeout = m.setTimeout(1000, parent, function() {
+		var timeout = m.setTimeout(function() {
 			count++;
 			passedOwner = this;
-		});
+		}, 1000, parent);
 		expect(m._identifiers.length).toEqual(1);
 		loopFire(29); // 966.666ms
 		expect(count).toBe(0);
@@ -147,9 +147,9 @@ describe("test TimerManager", function () {
 
 		var parent = new Object();
 		var count = 0;
-		var timeout = m.setInterval(2000, parent, function() {
+		var timeout = m.setInterval(function() {
 			count++;
-		});
+		}, 2000, parent);
 		loopFire(60);
 		expect(count).toBe(1);
 	});
@@ -160,9 +160,9 @@ describe("test TimerManager", function () {
 
 		var parent = new Object();
 		var count = 0;
-		var timeout = m.setTimeout(1000, parent, function() {
+		var timeout = m.setTimeout(function() {
 			count++;
-		});
+		}, 1000, parent);
 		expect(m._identifiers.length).toEqual(1);
 		m._identifiers.length = 0;
 		expect(function() { loopFire(30); }).toThrowError("AssertionError");
@@ -173,17 +173,17 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var timeout1 = m.setTimeout(1000, function() {
+		var timeout1 = m.setTimeout(function() {
 			count1++;
-		});
+		}, 1000);
 		expect(m._identifiers.length).toEqual(1);
 		loopFire(30); // 1000ms
 		expect(m._identifiers.length).toEqual(0);
 		expect(count1).toBe(1);
 
-		var timeout2 = m.setTimeout(1000, function() {
+		var timeout2 = m.setTimeout(function() {
 			count2++;
-		});
+		}, 1000);
 		expect(m._identifiers.length).toEqual(1);
 		loopFire(29); // 1966.666ms
 		expect(count2).toBe(0);
@@ -200,12 +200,12 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var timeout1 = m.setTimeout(1000, function() {
+		var timeout1 = m.setTimeout(function() {
 			count1++;
-		});
-		var timeout2 = m.setTimeout(1000, function() {
+		}, 1000);
+		var timeout2 = m.setTimeout(function() {
 			count2++;
-		});
+		}, 1000);
 		expect(m._identifiers.length).toEqual(2);
 		loopFire(29); // 966.666ms
 		expect(count1).toBe(0);
@@ -224,15 +224,15 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var timeout1 = m.setTimeout(500, function() {
+		var timeout1 = m.setTimeout(function() {
 			count1++;
-		});
+		}, 500);
 		loopFire(5); // 500ms
 		expect(count1).toBe(1);
 
-		var timeout2 = m.setTimeout(1000, function() {
+		var timeout2 = m.setTimeout(function() {
 			count2++;
-		});
+		}, 1000);
 		loopFire(10); // 1500ms
 		expect(count2).toBe(1);
 		loopFire(15); // 3000ms
@@ -246,12 +246,12 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var timeout1 = m.setTimeout(500, function() {
+		var timeout1 = m.setTimeout(function() {
 			count1++;
-		});
-		var timeout2 = m.setTimeout(1000, function() {
+		}, 500);
+		var timeout2 = m.setTimeout(function() {
 			count2++;
-		});
+		}, 1000);
 		loopFire(5); // 500ms
 		expect(count1).toBe(1);
 		expect(count2).toBe(0);
@@ -265,9 +265,9 @@ describe("test TimerManager", function () {
 		var m = new g.TimerManager(trigger, 10);
 
 		var count = 0;
-		var timeout = m.setTimeout(0, function() {
+		var timeout = m.setTimeout(function() {
 			count++;
-		});
+		}, 0);
 
 		loopFire(1); // 100ms
 		expect(count).toBe(1);
@@ -279,9 +279,9 @@ describe("test TimerManager", function () {
 		var m = new g.TimerManager(trigger, 10);
 
 		var count = 0;
-		var timeout = m.setTimeout(500, function() {
+		var timeout = m.setTimeout(function() {
 			count++;
-		});
+		}, 500);
 		expect(m._identifiers.length).toEqual(1);
 		loopFire(3); // 300ms
 		m.clearTimeout(timeout);
@@ -295,7 +295,7 @@ describe("test TimerManager", function () {
 	it("clearTimeout - error(not found)", function() {
 		var m = new g.TimerManager(trigger, 10);
 
-		var timeout = m.setTimeout(500, function() {});
+		var timeout = m.setTimeout(function() {}, 500);
 		loopFire(3);
 		m.clearTimeout(timeout);
 		expect(function() { m.clearTimeout(timeout); }).toThrowError("AssertionError");
@@ -304,7 +304,7 @@ describe("test TimerManager", function () {
 	it("clearTimeout - error(invalid identifier)", function() {
 		var m = new g.TimerManager(trigger, 10);
 
-		var timeout = m.setTimeout(500, function() {});
+		var timeout = m.setTimeout(function() {}, 500);
 		loopFire(3);
 		timeout.destroy();
 		expect(function() { m.clearTimeout(timeout); }).toThrowError("AssertionError");
@@ -315,12 +315,12 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var timeout1 = m.setTimeout(500, function() {
+		var timeout1 = m.setTimeout(function() {
 			count1++;
-		});
-		var timeout2 = m.setTimeout(500, function() {
+		}, 500);
+		var timeout2 = m.setTimeout(function() {
 			count2++;
-		});
+		}, 500);
 		loopFire(3); // 300ms
 		m.clearTimeout(timeout1);
 		loopFire(2); // 500ms
@@ -332,9 +332,9 @@ describe("test TimerManager", function () {
 		var m = new g.TimerManager(trigger, 10);
 
 		var count = 0;
-		var timeout = m.setTimeout(0, function() {
+		var timeout = m.setTimeout(function() {
 			count++;
-		});
+		}, 0);
 		m.clearTimeout(timeout);
 		loopFire(10); // 1000ms
 		expect(count).toBe(0);
@@ -346,10 +346,10 @@ describe("test TimerManager", function () {
 		var parent = new Object();
 		var passedOwner = null;
 		var count = 0;
-		var interval = m.setInterval(500, parent, function() {
+		var interval = m.setInterval(function() {
 			count++;
 			passedOwner = this;
-		});
+		}, 500, parent);
 		loopFire(4); // 400ms
 		expect(count).toBe(0);
 		trigger.fire(); // 500ms
@@ -369,12 +369,12 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var interval1 = m.setInterval(500, function() {
+		var interval1 = m.setInterval(function() {
 			count1++;
-		});
-		var interval2 = m.setInterval(500, function() {
+		}, 500);
+		var interval2 = m.setInterval(function() {
 			count2++;
-		});
+		}, 500);
 		loopFire(4); // 400ms
 		expect(count1).toBe(0);
 		expect(count2).toBe(0);
@@ -398,12 +398,12 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var timeout1 = m.setInterval(500, function() {
+		var timeout1 = m.setInterval(function() {
 			count1++;
-		});
-		var timeout2 = m.setInterval(1000, function() {
+		}, 500);
+		var timeout2 = m.setInterval(function() {
 			count2++;
-		});
+		}, 1000);
 		loopFire(5); // 500ms
 		expect(count1).toBe(1);
 		expect(count2).toBe(0);
@@ -424,9 +424,9 @@ describe("test TimerManager", function () {
 		var m = new g.TimerManager(trigger, 10);
 
 		var count = 0;
-		var interval = m.setInterval(0, function() {
+		var interval = m.setInterval(function() {
 			count++;
-		});
+		}, 0);
 		loopFire(10); // 1000ms
 		expect(count).toBe(1000);
 	});
@@ -435,9 +435,9 @@ describe("test TimerManager", function () {
 		var m = new g.TimerManager(trigger, 10);
 
 		var count = 0;
-		var interval = m.setInterval(500, function() {
+		var interval = m.setInterval(function() {
 			count++;
-		});
+		}, 500);
 		loopFire(20); // 2000ms
 		expect(count).toBe(4);
 		m.clearInterval(interval);
@@ -449,7 +449,7 @@ describe("test TimerManager", function () {
 	it("clearInterval - error(not found)", function() {
 		var m = new g.TimerManager(trigger, 10);
 
-		var interval = m.setInterval(500, function() {});
+		var interval = m.setInterval(function() {}, 500);
 		loopFire(3);
 		m.clearInterval(interval);
 		expect(function() { m.clearInterval(interval); }).toThrowError("AssertionError");
@@ -458,7 +458,7 @@ describe("test TimerManager", function () {
 	it("clearInterval - error(invalid identifier)", function() {
 		var m = new g.TimerManager(trigger, 10);
 
-		var interval = m.setInterval(500, function() {});
+		var interval = m.setInterval(function() {}, 500);
 		loopFire(3);
 		interval.destroy();
 		expect(function() { m.clearInterval(interval); }).toThrowError("AssertionError");
@@ -469,12 +469,12 @@ describe("test TimerManager", function () {
 
 		var count1 = 0;
 		var count2 = 0;
-		var interval1 = m.setInterval(500, function() {
+		var interval1 = m.setInterval(function() {
 			count1++;
-		});
-		var interval2 = m.setInterval(500, function() {
+		}, 500);
+		var interval2 = m.setInterval(function() {
 			count2++;
-		});
+		}, 500);
 		expect(m._identifiers.length).toEqual(2);
 		loopFire(20); // 2000ms
 		m.clearInterval(interval1);
@@ -491,9 +491,9 @@ describe("test TimerManager", function () {
 	it("destroy", function () {
 		var m = new g.TimerManager(trigger, 10);
 
-		var timeout1 = m.setTimeout(100, function() {});
-		var timeout2 = m.setTimeout(200, function() {});
-		var timeout3 = m.setTimeout(300, function() {});
+		var timeout1 = m.setTimeout(function() {}, 100);
+		var timeout2 = m.setTimeout(function() {}, 200);
+		var timeout3 = m.setTimeout(function() {}, 300);
 		var timer1 = timeout1._timer;
 		var timer2 = timeout1._timer;
 		var timer3 = timeout1._timer;

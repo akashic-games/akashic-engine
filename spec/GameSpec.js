@@ -15,7 +15,7 @@ describe("test Game", function() {
 		expect(game.db).toEqual({});
 		expect(game.renderers.length).toBe(0);
 		expect(game.scenes.length).toBe(0);
-		expect(game.random.length).toBe(0);
+		expect(game.random).toBe(null);
 		expect(game.events.length).toBe(0);
 		expect(game.modified).toBe(true);
 		expect(game.external).toEqual({});
@@ -50,7 +50,7 @@ describe("test Game", function() {
 			}
 		});
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			expect(game.assets.foo).not.toBe(undefined);
 			expect(game.assets.foo instanceof g.ImageAsset).toBe(true);
 			expect(game.assets).not.toHaveProperty("bar");
@@ -71,10 +71,10 @@ describe("test Game", function() {
 		var game = new mock.Game({ width: 320, height: 320, assets: assets });
 
 		var loadedFired = false;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			loadedFired = true;
 		});
-		game._started.handle(function () {
+		game._started.add(function () {
 			expect(loadedFired).toBe(true);
 			expect(game.assets.mainScene).not.toBe(undefined);
 			expect(game.assets.mainScene instanceof g.ScriptAsset).toBe(true);
@@ -109,7 +109,7 @@ describe("test Game", function() {
 		game.__test__ = function () {
 			var scene = new g.Scene({game: game});
 			expect(game.age).toBe(0);
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				expect(game.age).toBe(0);
 				testPass = true;
 			});
@@ -130,10 +130,10 @@ describe("test Game", function() {
 		};
 		var game = new mock.Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" }, "/");
 		var loadedFired = false;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			loadedFired = true;
 		});
-		game._started.handle(function () {
+		game._started.add(function () {
 			expect(loadedFired).toBe(true);
 			expect(game.assets.dummy).not.toBe(undefined);
 			expect(game.assets.dummy instanceof g.ScriptAsset).toBe(true);
@@ -160,15 +160,14 @@ describe("test Game", function() {
 			return new g.Scene({game: game});
 		};
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var scene = new g.Scene({game: game});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				game._loadAndStart();
 			});
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
-
-			expect(function(){game._startLoadingGlobalAssets()}).toThrowError("AssertionError"); // already loaded
+			expect(function(){game._startLoadingGlobalAssets()}).toThrowError("AssertionError");
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -176,7 +175,7 @@ describe("test Game", function() {
 	it("pushScene", function(done) {
 		var game = new mock.Game({ width: 320, height: 320 });
 
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
 			var scene = new g.Scene({game: game});
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
@@ -193,9 +192,9 @@ describe("test Game", function() {
 	it("popScene", function(done) {
 		var game = new mock.Game({ width: 320, height: 320 });
 
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
-			var scene = new g.Scene({game: game});
-			var scene2 = new g.Scene({game: game});
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
+			var scene = new g.Scene({game: game, name: "SCENE1"});
+			var scene2 = new g.Scene({game: game, name: "SCENE2"});
 			game.pushScene(scene);
 			game.pushScene(scene2);
 			game.popScene();
@@ -212,7 +211,7 @@ describe("test Game", function() {
 	it("replaceScene", function(done) {
 		var game = new mock.Game({ width: 320, height: 320 });
 
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
 			var scene = new g.Scene({game: game});
 			var scene2 = new g.Scene({game: game});
 			game.pushScene(scene);
@@ -234,7 +233,7 @@ describe("test Game", function() {
 			}
 		};
 		var game = new mock.Game({ width: 320, height: 320, assets: assets });
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var scene = new g.Scene({game: game});
 			game.pushScene(scene);
 			expect(game.age).toBe(0);
@@ -270,17 +269,17 @@ describe("test Game", function() {
 
 		function TestLoadingScene(param) {
 			g.LoadingScene.call(this, param);
-			this.loaded.handle(function () {
+			this.loaded.add(function () {
 				logs.push("LoadingSceneLoaded");
 			});
-			this.targetReady.handle(this, function () {
+			this.targetReady.add(function () {
 				logs.push("TargetLoaded");
-			});
+			}, this);
 		}
 		TestLoadingScene.prototype = Object.create(g.LoadingScene.prototype);
 		var loadingScene = new TestLoadingScene({ game: game, name: "testLoadingScene" });
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			game.loadingScene = loadingScene;
 			var scene = new g.Scene({game: game, assetIds: ["foo"], name: "scene1" });
 			var oload = scene._load;
@@ -288,10 +287,10 @@ describe("test Game", function() {
 				logs.push("SceneLoad");
 				return oload.apply(this, arguments);
 			};
-			scene.assetLoaded.handle(function (a) {
+			scene.assetLoaded.add(function (a) {
 				logs.push("SceneAssetLoaded");
 			});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				expect(logs).toEqual([
 					"LoadingSceneLoaded",  // これ(LoagingSceneの読み込み完了)の後に
 					"SceneLoad",           // 遷移先シーンの読み込みが開始されることが重要
@@ -307,10 +306,10 @@ describe("test Game", function() {
 					logs.push("Scene2Load");
 					return oload.apply(this, arguments);
 				};
-				scene2.assetLoaded.handle(function (a) {
+				scene2.assetLoaded.add(function (a) {
 					logs.push("Scene2AssetLoaded");
 				});
-				scene2.loaded.handle(function () {
+				scene2.loaded.add(function () {
 					expect(logs).toEqual([
 						"Scene2Load",
 						"Scene2AssetLoaded",
@@ -318,7 +317,7 @@ describe("test Game", function() {
 					]);
 
 					setTimeout(function () {
-						expect(game.loadingScene.loaded._handlers.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.loaded.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -356,20 +355,20 @@ describe("test Game", function() {
 
 		function TestLoadingScene(param) {
 			g.LoadingScene.call(this, param);
-			this.assetLoaded.handle(function (a) {
+			this.assetLoaded.add(function (a) {
 				logs.push("LoadingSceneAssetLoaded");
 			});
-			this.loaded.handle(function () {
+			this.loaded.add(function () {
 				logs.push("LoadingSceneLoaded");
 			});
-			this.targetReady.handle(this, function () {
+			this.targetReady.add(function () {
 				logs.push("TargetLoaded");
-			});
+			}, this);
 		}
 		TestLoadingScene.prototype = Object.create(g.LoadingScene.prototype);
 		var loadingScene = new TestLoadingScene({ game: game, assetIds: ["foo", "zoo"] });
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			game.loadingScene = loadingScene;
 			var scene = new g.Scene({game: game, assetIds: ["zoo"] });
 			var oload = scene._load;
@@ -377,10 +376,10 @@ describe("test Game", function() {
 				logs.push("SceneLoad");
 				return oload.apply(this, arguments);
 			};
-			scene.assetLoaded.handle(function (a) {
+			scene.assetLoaded.add(function (a) {
 				logs.push("SceneAssetLoaded");
 			});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				expect(logs).toEqual([
 					"LoadingSceneAssetLoaded",
 					"LoadingSceneAssetLoaded",
@@ -398,10 +397,10 @@ describe("test Game", function() {
 					logs.push("Scene2Load");
 					return oload.apply(this, arguments);
 				};
-				scene2.assetLoaded.handle(function (a) {
+				scene2.assetLoaded.add(function (a) {
 					logs.push("Scene2AssetLoaded");
 				});
-				scene2.loaded.handle(function () {
+				scene2.loaded.add(function () {
 					expect(logs).toEqual([
 						"Scene2Load",
 						"Scene2AssetLoaded",
@@ -409,7 +408,7 @@ describe("test Game", function() {
 					]);
 
 					setTimeout(function () {
-						expect(game.loadingScene.loaded._handlers.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.loaded.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -453,28 +452,28 @@ describe("test Game", function() {
 			assetIds: ["foo", "zoo"],
 			explicitEnd: true
 		});
-		loadingScene.targetReset.handle(loadingScene, function () {
+		loadingScene.targetReset.add(function () {
 			resetCount++;
 			expect(this.getTargetWaitingAssetsCount()).toBe(1); // 下記 var scene の assetIds: ["zoo"] しかこないので
-		});
-		loadingScene.targetAssetLoaded.handle(loadingScene, function () {
+		}, loadingScene);
+		loadingScene.targetAssetLoaded.add(function () {
 			var self = this;
 			invalidEndTrialCount++;
 			expect(function () { self.end(); }).toThrow();
-		});
-		loadingScene.targetReady.handle(loadingScene, function () {
+		}, loadingScene);
+		loadingScene.targetReady.add(function () {
 			var self = this;
 			setTimeout(function () {
 				asyncEndCalled = true;
 				self.end();
 			}, 10);
-		});
+		}, loadingScene);
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			game.loadingScene = loadingScene;
 			var scene = new g.Scene({game: game, assetIds: ["zoo"] });
 			var oload = scene._load;
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				expect(asyncEndCalled).toBe(true);
 				expect(invalidEndTrialCount).toBe(1);
 				expect(resetCount).toBe(1);
@@ -511,28 +510,28 @@ describe("test Game", function() {
 
 		var topIsLocal = undefined;
 		var sceneChangedCount = 0;
-		game._sceneChanged.handle(function (scene) {
+		game._sceneChanged.add(function (scene) {
 			sceneChangedCount++;
 			topIsLocal = scene.local;
 		});
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
 			var scene = new g.Scene({game: game});
 			var scene2 = new g.Scene({game: game, assetIds: ["foo"] });
 			var scene3 = new g.Scene({game: game, assetIds: ["foo", "zoo"], local: true });
 
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				expect(sceneChangedCount).toBe(2);  // _initialScene と scene (いずれも loadingSceneなし) で 2
 				expect(topIsLocal).toBe(g.LocalTickMode.NonLocal);
 				expect(game.scenes).toEqual([game._initialScene, scene]);
 				expect(game._eventTriggerMap[g.EventType.PointDown]).toBe(scene.pointDownCapture);
 
-				scene2.loaded.handle(function () {
+				scene2.loaded.add(function () {
 					expect(sceneChangedCount).toBe(4); // loadingScene が pop されて 1 増えたので 4
 					expect(topIsLocal).toBe(g.LocalTickMode.NonLocal);
 					expect(game.scenes).toEqual([game._initialScene, scene2]);
 					expect(game._eventTriggerMap[g.EventType.PointDown]).toBe(scene2.pointDownCapture);
 
-					scene3.loaded.handle(function () {
+					scene3.loaded.add(function () {
 						expect(sceneChangedCount).toBe(6);
 						expect(topIsLocal).toBe(g.LocalTickMode.FullLocal);
 						expect(game.scenes).toEqual([game._initialScene, scene2, scene3]);
@@ -634,7 +633,7 @@ describe("test Game", function() {
 		var scene = new g.Scene({game: game});
 
 		var count = 0;
-		scene.update.handle(function () {
+		scene.update.add(function () {
 			++count;
 		});
 		game.pushScene(scene);
@@ -656,12 +655,12 @@ describe("test Game", function() {
 	it("no crash on Scene#destroy()", function (done) {
 		var game = new mock.Game({ width: 320, height: 320 });
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var scene = new g.Scene({game: game});
 			var timerFired = false;
 
-			scene.loaded.handle(function () {
-				scene.update.handle(function () {
+			scene.loaded.add(function () {
+				scene.update.add(function () {
 					game.popScene();
 				});
 				scene.setInterval(1, function () {
@@ -669,7 +668,7 @@ describe("test Game", function() {
 					timerFired = true;
 				});
 
-				game._initialScene.stateChanged.handle(function (state) {
+				game._initialScene.stateChanged.add(function (state) {
 					if (state === g.SceneState.Active) {
 						// ↑のpopScene()後、例外を投げずにシーン遷移してここに来れたらOK
 						expect(timerFired).toBe(true);
@@ -715,15 +714,15 @@ describe("test Game", function() {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene(g.game)}";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})}";
 		expect(game.age).toBe(0);
-		expect(game.random[0]).toBe(undefined);
+		expect(game.random).toBe(null);
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			expect(game.isLoaded).toBe(true);
 
-			var scene = new g.Scene(game);;
-			var scene2 = new g.Scene(game);
+			var scene = new g.Scene({game: game});
+			var scene2 = new g.Scene({game: game});
 			game.pushScene(scene);
 			game.pushScene(scene2);
 			game._flushSceneChangeRequests();
@@ -736,7 +735,7 @@ describe("test Game", function() {
 
 			expect(game.scene()).toBe(game._initialScene);
 			expect(game.age).toBe(3);
-			expect(game.random[0]).toBe(randGen);
+			expect(game.random).toBe(randGen);
 			done();
 		});
 		game._loadAndStart();
@@ -755,23 +754,23 @@ describe("test Game", function() {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene(g.game)};";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = function () {return new g.Scene({game: g.game})};";
 		expect(game.age).toBe(0);
-		expect(game.random[0]).toBe(undefined);
+		expect(game.random).toBe(null);
 
 		var testDone = false;
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			expect(testDone).toBe(true);
 			done();
 		});
 
 		var loadScene = game._defaultLoadingScene;
-		expect(game._initialScene.loaded.isHandled(game, game._onInitialSceneLoaded)).toBe(true);
-		expect(loadScene.loaded.isHandled(loadScene, loadScene._doReset)).toBe(false);
+		expect(game._initialScene.loaded.contains(game._onInitialSceneLoaded, game)).toBe(true);
+		expect(loadScene.loaded.contains(loadScene._doReset, loadScene)).toBe(false);
 
 		game._loadAndStart();
 		expect(game.isLoaded).toBe(false);  // _loadAndStartしたがまだ読み込みは終わっていない
-		expect(game._initialScene.loaded.isHandled(game, game._onInitialSceneLoaded)).toBe(true);
+		expect(game._initialScene.loaded.contains(game._onInitialSceneLoaded, game)).toBe(true);
 		expect(game.scenes.length).toBe(2);
 		expect(game.scenes[0]).toBe(game._initialScene);
 		expect(game.scenes[1]).toBe(loadScene);
@@ -781,8 +780,8 @@ describe("test Game", function() {
 		expect(loadScene2).not.toBe(loadScene);
 		expect(loadScene.destroyed()).toBe(true);
 		expect(game.isLoaded).toBe(false);
-		expect(game._initialScene.loaded.isHandled(game, game._onInitialSceneLoaded)).toBe(true);
-		expect(loadScene2.loaded.isHandled(loadScene2, loadScene2._doReset)).toBe(false);
+		expect(game._initialScene.loaded.contains(game._onInitialSceneLoaded, game)).toBe(true);
+		expect(loadScene2.loaded.contains(loadScene2._doReset, loadScene2)).toBe(false);
 		expect(game.scenes.length).toBe(0);
 
 		game._loadAndStart();
@@ -869,6 +868,5 @@ describe("test Game", function() {
 		game.modified = false;
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
-
 	});
 });

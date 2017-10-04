@@ -4,7 +4,7 @@ namespace g {
 	 *
 	 * 描画は各エンティティによって行われる。通常、ゲーム開発者が本クラスを利用する必要はない。
 	 */
-	export class Renderer {
+	export abstract class Renderer {
 		draw(game: Game, camera?: Camera): void {
 			var scene = game.scene();
 			if (!scene) return;
@@ -31,9 +31,7 @@ namespace g {
 			// nothing to do
 		}
 
-		clear(): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#clear");
-		}
+		abstract clear(): void;
 
 		/**
 		 * 指定されたSurfaceの描画を行う。
@@ -46,20 +44,15 @@ namespace g {
 		 * @param destOffsetX 描画先のX座標。0以上の数値でなければならない
 		 * @param destOffsetY 描画先のY座標。0以上の数値でなければならない
 		 */
-		drawImage(surface: Surface, offsetX: number, offsetY: number, width: number, height: number,
-		          destOffsetX: number, destOffsetY: number): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#drawImage");
-		}
+		abstract drawImage(surface: Surface, offsetX: number, offsetY: number, width: number, height: number,
+		                   destOffsetX: number, destOffsetY: number): void;
 
-		drawSprites(
+		abstract drawSprites(
 		    surface: g.Surface,
 		    offsetX: number[], offsetY: number[],
 		    width: number[], height: number[],
 		    canvasOffsetX: number[], canvasOffsetY: number[],
-		    count: number): void {
-
-			throw ExceptionFactory.createPureVirtualError("Renderer#drawSprites");
-		}
+		    count: number): void;
 
 		/**
 		 * 指定されたSystemLabelの描画を行う。
@@ -77,50 +70,29 @@ namespace g {
 		 * @param strokeColor 描画する輪郭色。CSS Colorでなければならない
 		 * @param strokeOnly 文字色の描画フラグ
 		 */
-		drawSystemText(text: string, x: number, y: number, maxWidth: number, fontSize: number,
-		               textAlign: TextAlign, textBaseline: TextBaseline, textColor: string, fontFamily: FontFamily,
-		               strokeWidth: number, strokeColor: string, strokeOnly: boolean): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#drawSystemText");
-		}
+		abstract drawSystemText(text: string, x: number, y: number, maxWidth: number, fontSize: number,
+		                        textAlign: TextAlign, textBaseline: TextBaseline, textColor: string, fontFamily: FontFamily,
+		                        strokeWidth: number, strokeColor: string, strokeOnly: boolean): void;
 
-		translate(x: number, y: number): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#translate");
-		}
+		abstract translate(x: number, y: number): void;
 
 		// TODO: (GAMEDEV-844) tupleに変更
 		// transform(matrix: [number, number, number, number, number, number]): void {
-		transform(matrix: number[]): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#transform");
-		}
+		abstract transform(matrix: number[]): void;
 
-		opacity(opacity: number): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#opacity");
-		}
+		abstract opacity(opacity: number): void;
 
-		save(): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#save");
-		}
+		abstract save(): void;
 
-		restore(): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#restore");
-		}
+		abstract restore(): void;
 
-		fillRect(x: number, y: number, width: number, height: number, cssColor: string): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#fillRect");
-		}
+		abstract fillRect(x: number, y: number, width: number, height: number, cssColor: string): void;
 
-		setCompositeOperation(operation: CompositeOperation): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#setCompositeOperation");
-		}
+		abstract setCompositeOperation(operation: CompositeOperation): void;
 
-		setTransform(matrix: number[]): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#setTransform");
-		}
+		abstract setTransform(matrix: number[]): void;
 
-		setOpacity(opacity: number): void {
-			throw ExceptionFactory.createPureVirtualError("Renderer#setOpacity");
-		}
-
+		abstract setOpacity(opacity: number): void;
 		end(): void {
 			// nothing to do
 		}

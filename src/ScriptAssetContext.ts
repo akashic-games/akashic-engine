@@ -53,7 +53,7 @@ namespace g {
 				return this._module.exports;
 
 			if (currentModule) {
-				// Node.js 互換挙動: Module#parent は一番最初に require() した module になる 
+				// Node.js 互換挙動: Module#parent は一番最初に require() した module になる
 				this._module.parent = currentModule;
 				// Node.js 互換挙動: 親 module の children には自身が実行中の段階で既に追加されている
 				currentModule.children.push(this._module);

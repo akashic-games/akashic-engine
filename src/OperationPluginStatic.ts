@@ -10,7 +10,6 @@ namespace g {
 		 * @param option game.jsonに指定されたこのプラグイン向けのオプション
 		 */
 		new (game: Game, viewInfo: OperationPluginViewInfo, option?: any): OperationPlugin;
-
 		/**
 		 * 実行環境がこのpluginをサポートしているか返す。
 		 */

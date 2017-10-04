@@ -42,7 +42,13 @@ describe("test BitmapFont", function() {
 		var surface = new g.Surface(480, 480);
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		var bmpFont = new g.BitmapFont(surface, map, 20, 30, missingGlyph);
+		var bmpFont = new g.BitmapFont({
+			src: surface,
+			map: map,
+			defaultGlyphWidth: 20,
+			defaultGlyphHeight: 30,
+			missingGlyph: missingGlyph
+		});
 		expect(bmpFont.surface).toEqual(surface);
 		expect(bmpFont.map).toEqual(map);
 		expect(bmpFont.missingGlyph).toEqual(missingGlyph);
@@ -56,7 +62,13 @@ describe("test BitmapFont", function() {
 		var asset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", 480, 480);
 		var map = {"37564": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		var bmpFont = new g.BitmapFont(asset, map, 20, 30, missingGlyph);
+		var bmpFont = new g.BitmapFont({
+			src: asset,
+			map: map,
+			defaultGlyphWidth: 20,
+			defaultGlyphHeight: 30,
+			missingGlyph: missingGlyph
+		});
 		var assetToSurface = g.Util.asSurface(asset);
 		expect(bmpFont.surface).toEqual(assetToSurface);
 		expect(bmpFont.map).toEqual(map);

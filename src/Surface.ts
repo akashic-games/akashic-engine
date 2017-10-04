@@ -5,7 +5,7 @@ namespace g {
 	 * このクラスのインスタンスは、エンジンによって暗黙に生成される。
 	 * ゲーム開発者はこのクラスのインスタンスを明示的に生成する必要はなく、またできない。
 	 */
-	export class Surface implements CommonSize, Destroyable {
+	export abstract class Surface implements CommonSize, Destroyable {
 		/**
 		 * 描画領域の幅。
 		 * この値を直接書き換えてはならない。
@@ -79,16 +79,12 @@ namespace g {
 		/**
 		 * このSurfaceへの描画手段を提供するRendererを生成して返す。
 		 */
-		renderer(): Renderer {
-			throw ExceptionFactory.createPureVirtualError("Surface#renderer");
-		}
+		abstract renderer(): Renderer;
 
 		/**
 		 * このSurfaceが動画を再生中であるかどうかを判定する。
 		 */
-		isPlaying(): boolean {
-			throw ExceptionFactory.createPureVirtualError("Surface#isPlaying()");
-		}
+		abstract isPlaying(): boolean;
 
 		/**
 		 * このSurfaceの破棄を行う。

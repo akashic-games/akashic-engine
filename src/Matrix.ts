@@ -95,12 +95,6 @@ namespace g {
 		 */
 		multiplyPoint(point: CommonOffset): CommonOffset;
 
-		/**
-		 * この変換行列と引数の座標系が表す行列の積を返す。
-		 * @deprecated このメソッドは非推奨機能である。代わりに `multiplyPoint` を用いるべきである。
-		 * @param point この変換行列との積を求める座標
-		 */
-		multplyPoint(point: CommonOffset): CommonOffset;
 	}
 
 	/**
@@ -109,7 +103,6 @@ namespace g {
 	 * 各フィールド、メソッドの詳細は `Matrix` インターフェースの説明を参照。
 	 */
 	export class PlainMatrix {
-
 		/**
 		 * @private
 		 */
@@ -282,10 +275,6 @@ namespace g {
 			var x = m[0] * point.x + m[2] * point.y + m[4];
 			var y = m[1] * point.x + m[3] * point.y + m[5];
 			return {x: x, y: y};
-		}
-
-		multplyPoint(point: CommonOffset): CommonOffset {
-			return this.multiplyPoint(point);
 		}
 
 	}

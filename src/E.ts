@@ -143,8 +143,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get update(): Trigger<void> {
 			if (! this._update)
-				this._update = new Trigger<void>(this.scene.update);
-
+				this._update = new ChainTrigger<void>(this.scene.update);
 			return this._update;
 		}
 		// updateは代入する必要がないのでsetterを定義しない
@@ -155,8 +154,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get message(): Trigger<MessageEvent> {
 			if (! this._message)
-				this._message = new Trigger<MessageEvent>(this.scene.message);
-
+				this._message = new ChainTrigger<MessageEvent>(this.scene.message);
 			return this._message;
 		}
 		// messageは代入する必要がないのでsetterを定義しない
@@ -167,8 +165,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get pointDown(): Trigger<PointDownEvent> {
 			if (! this._pointDown)
-				this._pointDown = new ConditionalChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this, this._isTargetOperation);
-
+				this._pointDown = new ChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this._isTargetOperation, this);
 			return this._pointDown;
 		}
 		// pointDownは代入する必要がないのでsetterを定義しない
@@ -179,8 +176,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get pointUp(): Trigger<PointUpEvent> {
 			if (! this._pointUp)
-				this._pointUp = new ConditionalChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this, this._isTargetOperation);
-
+				this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
 			return this._pointUp;
 		}
 		// pointUpは代入する必要がないのでsetterを定義しない
@@ -191,8 +187,7 @@ namespace g {
 		// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 		get pointMove(): Trigger<PointMoveEvent> {
 			if (! this._pointMove)
-				this._pointMove = new ConditionalChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this, this._isTargetOperation);
-
+				this._pointMove = new ChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this._isTargetOperation, this);
 			return this._pointMove;
 		}
 		// pointMoveは代入する必要がないのでsetterを定義しない
@@ -238,82 +233,45 @@ namespace g {
 		}
 
 		/**
-		 * 属するシーンを指定して `E` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `EParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティが属する `Scene`
-		 */
-		constructor(scene: Scene);
-		/**
 		 * 各種パラメータを指定して `E` のインスタンスを生成する。
 		 * @param param 初期化に用いるパラメータのオブジェクト
 		 */
-		constructor(param: EParameterObject);
+		constructor(param: EParameterObject) {
+			super(param);
+			this.children = undefined;
+			this.parent = undefined;
+			this._touchable = false;
+			this.state = EntityStateFlags.None;
+			this._hasTouchableChildren = false;
+			this._update = undefined;
+			this._message = undefined;
+			this._pointDown = undefined;
+			this._pointMove = undefined;
+			this._pointUp = undefined;
+			this._targetCameras = undefined;
+			this.tag = param.tag;
 
-		/**
-		 * `E` のインスタンスを生成する。
-		 * @param scene このエンティティが属する `Scene`
-		 */
-		constructor(sceneOrParam: Scene|EParameterObject);
-		constructor(sceneOrParam: Scene|EParameterObject) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super();
-				this.children = undefined;
-				this.parent = undefined;
-				this._touchable = false;
-				this.state = EntityStateFlags.None;
-				this._hasTouchableChildren = false;
-				this._update = undefined;
-				this._message = undefined;
-				this._pointDown = undefined;
-				this._pointMove = undefined;
-				this._pointUp = undefined;
-				this._targetCameras = undefined;
-				this.local = scene.local !== LocalTickMode.NonLocal;
-				// set id, scene
-				scene.register(this);
-				scene.game.logger.debug(
-					"[deprecated] E or Subclass of E: This constructor is deprecated. "
-						+ "Refer to the API documentation and use each constructor(param: ParameterObject) instead."
-				);
-			} else {
-				var param = <EParameterObject>sceneOrParam;
-				super(param);
-				this.children = undefined;
-				this.parent = undefined;
-				this._touchable = false;
-				this.state = EntityStateFlags.None;
-				this._hasTouchableChildren = false;
-				this._update = undefined;
-				this._message = undefined;
-				this._pointDown = undefined;
-				this._pointMove = undefined;
-				this._pointUp = undefined;
-				this._targetCameras = undefined;
-				this.tag = param.tag;
+			// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
+			// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
+			this.local = (param.scene.local !== LocalTickMode.NonLocal) || !!param.local;
 
-				// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
-				// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
-				this.local = (param.scene.local !== LocalTickMode.NonLocal) || !!param.local;
-
-				if (param.children) {
-					for (var i = 0; i < param.children.length; ++i)
-						this.append(param.children[i]);
-				}
-				if (param.parent) {
-					param.parent.append(this);
-				}
-				if (param.targetCameras)
-					this.targetCameras = param.targetCameras;
-				if ("touchable" in param)
-					this.touchable = param.touchable;
-				if (!!param.hidden)
-					this.hide();
-
-				// set id, scene
-				this.id = param.id;
-				param.scene.register(this);
+			if (param.children) {
+				for (var i = 0; i < param.children.length; ++i)
+					this.append(param.children[i]);
 			}
+			if (param.parent) {
+				param.parent.append(this);
+			}
+			if (param.targetCameras)
+				this.targetCameras = param.targetCameras;
+			if ("touchable" in param)
+				this.touchable = param.touchable;
+			if (!!param.hidden)
+				this.hide();
+
+			// set id, scene
+			this.id = param.id;
+			param.scene.register(this);
 		}
 
 		/**

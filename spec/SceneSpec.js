@@ -32,25 +32,6 @@ describe("test Scene", function() {
 	afterEach(function() {
 	});
 
-	it("初期化", function() {
-		// deprecatedなコンストラクタの動作確認を行う
-		game.suppressedLogLevel = g.LogLevel.Debug;
-		var scene = new g.Scene(game);
-		expect(scene.game).toBe(game);
-		expect(scene.assetLoaded._handlers.length).toEqual(0);
-		expect(scene.assetLoadFailed._handlers.length).toEqual(0);
-		expect(scene.assetLoadCompleted._handlers.length).toEqual(0);
-		expect(scene.loaded._handlers.length).toEqual(0);
-		expect(scene.children).not.toBeFalsy();
-		expect(scene.children.length).toBe(0);
-		expect(scene._sceneAssetHolder._assetIds).toEqual([]);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-		expect(scene.local).toBe(g.LocalTickMode.NonLocal);
-		expect(scene.tickGenerationMode).toBe(g.TickGenerationMode.ByClock);
-		expect(scene.name).toEqual(undefined);
-		game.suppressedLogLevel = undefined;
-	});
-
 	it("初期化 - SceneParameterObject", function () {
 		var scene = new g.Scene({
 			game: game,
@@ -60,10 +41,10 @@ describe("test Scene", function() {
 			name: "myScene"
 		});
 		expect(scene.game).toBe(game);
-		expect(scene.assetLoaded._handlers.length).toEqual(0);
-		expect(scene.assetLoadFailed._handlers.length).toEqual(0);
-		expect(scene.assetLoadCompleted._handlers.length).toEqual(0);
-		expect(scene.loaded._handlers.length).toEqual(0);
+		expect(scene.assetLoaded.length).toEqual(0);
+		expect(scene.assetLoadFailed.length).toEqual(0);
+		expect(scene.assetLoadCompleted.length).toEqual(0);
+		expect(scene.loaded.length).toEqual(0);
 		expect(scene.children).not.toBeFalsy();
 		expect(scene.children.length).toBe(0);
 		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
@@ -147,7 +128,7 @@ describe("test Scene", function() {
 			name: "SceneToLoadAsset"
 		});
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(scene.assets["foo"]).not.toBe(undefined);
 			expect(scene.assets["bar"]).toBe(undefined);
 			expect(scene.assets["baa"]).not.toBe(undefined);
@@ -168,7 +149,7 @@ describe("test Scene", function() {
 		game.storage._registerLoad(function(keys, loader) {
 			loader._onLoaded(values);
 		});
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			loadedCalled = true;
 			expect(scene._storageLoader._loaded).toBe(true);
 			expect(scene.storageValues.get(0)).toBe(values[0]);
@@ -186,7 +167,7 @@ describe("test Scene", function() {
 		game.storage._registerLoad(function(keys, loader) {
 			loader._onLoaded(values);
 		});
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(scene._storageLoader._loaded).toBe(true);
 			expect(scene.serializeStorageValues()).toBe(undefined);
 			done();
@@ -210,7 +191,7 @@ describe("test Scene", function() {
 				loader._onLoaded(serializedValues);
 			}
 		});
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(scene._storageLoader._loaded).toBe(true);
 			expect(scene.serializeStorageValues()).toBe("myserialization1");
 			expect(scene.storageValues.get(0)).toBe(serializedValues[0]);
@@ -228,7 +209,7 @@ describe("test Scene", function() {
 			l._onLoaded(values);
 		});
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(scene._storageLoader).toBeDefined();
 			expect(scene.storageValues.get(0)).toBe(values[0]);
 			expect(scene.assets["foo"]).toBeDefined();
@@ -246,7 +227,7 @@ describe("test Scene", function() {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(scene._loaded).toBe(true);
 			expect(scene._prefetchRequested).toBe(false);
 			done();
@@ -272,7 +253,7 @@ describe("test Scene", function() {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.handle(done);
+		scene._ready.add(done);
 		scene.prefetch();
 		scene.prefetch();
 		game.resourceFactory.flushDelayedAssets();
@@ -286,7 +267,7 @@ describe("test Scene", function() {
 		var scene = new g.Scene({game: game});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.handle(done);
+		scene._ready.add(done);
 		scene.prefetch();
 		game.resourceFactory.flushDelayedAssets();
 		setTimeout(function () {
@@ -332,7 +313,7 @@ describe("test Scene", function() {
 		game.resourceFactory.createsDelayedAsset = true;
 		var ready = false;
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -362,7 +343,7 @@ describe("test Scene", function() {
 		game.resourceFactory.createsDelayedAsset = true;
 		var ready = false;
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -399,7 +380,7 @@ describe("test Scene", function() {
 		});
 		var ready = false;
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -438,7 +419,7 @@ describe("test Scene", function() {
 		});
 		var ready = false;
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -479,7 +460,7 @@ describe("test Scene", function() {
 		});
 		var ready = false;
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -504,7 +485,7 @@ describe("test Scene", function() {
 	it("loads assets dynamically", function (done) {
 		var game = new mock.Game({ width: 320, height: 320, assets: assetsConfiguration });
 
-		game._loaded.handle(function () {
+		game._loaded.add(function () {
 			var scene = new g.Scene({
 				game: game,
 				assetIds: [
@@ -518,7 +499,7 @@ describe("test Scene", function() {
 					}
 				]
 			});
-			scene.loaded.handle(function () {
+			scene.loaded.add(function () {
 				var foo = scene.assets["foo"];
 				var dynamicImage = scene.assets["dynamicImage"];
 				expect(foo instanceof g.ImageAsset).toBe(true);
@@ -598,13 +579,13 @@ describe("test Scene", function() {
 
 		var failureCount = 0;
 		var loadedCount = 0;
-		scene.assetLoaded.handle(function (asset) {
+		scene.assetLoaded.add(function (asset) {
 			expect(asset instanceof g.Asset).toBe(true);
 			expect(asset.id).toBe("foo");
 			expect(failureCount).toBe(2);
 			++loadedCount;
 		});
-		scene.assetLoadFailed.handle(function (failureInfo) {
+		scene.assetLoadFailed.add(function (failureInfo) {
 			expect(failureInfo.asset instanceof g.Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -613,7 +594,7 @@ describe("test Scene", function() {
 			expect(failureInfo.cancelRetry).toBe(false);
 			++failureCount;
 		});
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(failureCount).toBe(2);
 			expect(loadedCount).toBe(1);
 			expect(scene.assets["foo"]).not.toBe(undefined);
@@ -632,7 +613,7 @@ describe("test Scene", function() {
 			assetIds: ["foo"]
 		});
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			expect(scene.assets["foo"]).not.toBe(undefined);
 			done();
 		});
@@ -650,10 +631,10 @@ describe("test Scene", function() {
 		});
 
 		var failureCount = 0;
-		scene.assetLoaded.handle(function (asset) {
+		scene.assetLoaded.add(function (asset) {
 			fail("should not be loaded");
 		});
-		scene.assetLoadFailed.handle(function (failureInfo) {
+		scene.assetLoadFailed.add(function (failureInfo) {
 			expect(failureInfo.asset instanceof g.Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -666,7 +647,7 @@ describe("test Scene", function() {
 				done();
 			}
 		});
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			fail("should not fire loaded");
 		});
 
@@ -683,10 +664,10 @@ describe("test Scene", function() {
 		});
 
 		var failureCount = 0;
-		scene.assetLoaded.handle(function (asset) {
+		scene.assetLoaded.add(function (asset) {
 			fail("should not be loaded");
 		});
-		scene.assetLoadFailed.handle(function (failureInfo) {
+		scene.assetLoadFailed.add(function (failureInfo) {
 			expect(failureInfo.asset instanceof g.Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -701,7 +682,7 @@ describe("test Scene", function() {
 				done();
 			}, 0);
 		});
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			fail("should not fire loaded");
 		});
 
@@ -716,13 +697,13 @@ describe("test Scene", function() {
 			assetIds: ["foo"]
 		});
 
-		scene._ready.handle(function () {
+		scene._ready.add(function () {
 			var child = new g.Scene({
 				game: game,
 				assetIds: ["foo", "baa"]
 			});
 
-			child._ready.handle(function () {
+			child._ready.add(function () {
 				expect(scene.assets["foo"]).not.toBe(undefined);
 				expect(scene.assets["baa"]).toBe(undefined);
 				expect(scene.assets["zoo"]).toBe(undefined);
@@ -749,7 +730,7 @@ describe("test Scene", function() {
 		var stateChangeHandler = function() {
 			raisedEvent = true;
 		}
-		scene.stateChanged.handle(stateChangeHandler);
+		scene.stateChanged.add(stateChangeHandler);
 
 		var sceneLoaded = function() {
 			expect(scene.state).toBe(g.SceneState.Active);
@@ -767,12 +748,12 @@ describe("test Scene", function() {
 		}
 		var steps = [
 			function() {
-				scene.loaded.handle(sceneLoaded);
+				scene.loaded.add(sceneLoaded);
 				game.pushScene(scene);
 			},
 			function() {
 				var scene2 = new g.Scene({game: game});
-				scene2.loaded.handle(scene2Loaded);
+				scene2.loaded.add(scene2Loaded);
 				game.pushScene(scene2);
 			},
 			function() {
@@ -831,29 +812,29 @@ describe("test Scene", function() {
 		function makeScene(name) {
 			var scene = new g.Scene({game: game});
 			scene._testName = name;
-			scene.stateChanged.handle(scene, stateChangeHandler);
+			scene.stateChanged.add(stateChangeHandler, scene);
 			return scene;
 		}
 
 		var steps = [
 			function () {
 				var scene1 = makeScene("S1");
-				scene1.loaded.handle(nextStep);
+				scene1.loaded.add(nextStep);
 				game.pushScene(scene1);
 			},
 			function () {
 				var scene2 = makeScene("S2");
-				scene2.loaded.handle(nextStep);
+				scene2.loaded.add(nextStep);
 				game.replaceScene(scene2);
 			},
 			function () {
 				var scene3 = makeScene("S3");
-				scene3.loaded.handle(nextStep);
+				scene3.loaded.add(nextStep);
 				game.pushScene(scene3);
 			},
 			function () {
 				var scene4 = makeScene("S4");
-				scene4.loaded.handle(nextStep);
+				scene4.loaded.add(nextStep);
 				game.replaceScene(scene4);
 			},
 			function () {
@@ -887,23 +868,23 @@ describe("test Scene", function() {
 		var timer = scene.createTimer(100);
 		expect(scene._timer._timers.length).toBe(1);
 		expect(scene._timer._timers[0]).toBe(timer);
-		timer.elapsed.handle(undefined, function() {
+		timer.elapsed.add(function() {
 			fail("invalid call");
-		});
+		}, undefined);
 		game.tick(1);
 		game.tick(1);
 		game.tick(1);
-		timer.elapsed.removeAll(undefined);
+		timer.elapsed.removeAll({ owner: undefined });
 		expect(scene._timer._timers.length).toBe(1);
 		var success = false;
-		timer.elapsed.handle(function() {
+		timer.elapsed.add(function() {
 			success = true;
 		});
 		game.tick(1);
 		expect(success).toBe(true);
 
 		expect(timer.canDelete()).toBe(false);
-		timer.elapsed.destroy();
+		timer.elapsed.removeAll();
 		expect(timer.canDelete()).toBe(true);
 
 		scene.deleteTimer(timer);
@@ -966,7 +947,7 @@ describe("test Scene", function() {
 		expect(scene2._timer._timers.length).toBe(0);
 	});
 
-	it("setTimeout", function() {
+	it("setTimeout - deprecated", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
 		var game = runtime.game;
 		var scene1 = game.scene();
@@ -994,6 +975,32 @@ describe("test Scene", function() {
 		game.tick(1);
 		game.tick(1);
 		expect(scene1._timer._timers.length).toBe(0);
+	});
+
+	it("setTimeout", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		var game = runtime.game;
+		var scene = game.scene();
+		var owner = {};
+		var callCount = 0;
+		var timerId = scene.setTimeout(function () {
+			expect(this).toBe(owner);
+			callCount++;
+		}, 100, owner);
+
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(0);
+		game.tick(1);
+		expect(callCount).toBe(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(1);
 	});
 
 	it("clearTimeout", function() {
@@ -1058,10 +1065,39 @@ describe("test Scene", function() {
 		expect(scene1._timer._timers).toBeUndefined();
 	});
 
+	it("setInterval", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		var game = runtime.game;
+		var scene = game.scene();
+		var owner = {};
+		var callCount = 0;
+		var timerId = scene.setInterval(function () {
+			expect(this).toBe(owner);
+			callCount++;
+		}, 100, owner);
+
+		game.tick(1);
+		game.tick(1);
+		game.tick(1);  // 3/32*1000 = 93.75ms
+		expect(callCount).toBe(0);
+		game.tick(1);  // 4/32*1000 = 125ms
+		expect(callCount).toBe(1);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(1);
+		game.tick(1);  // 7/32*1000 = 218.75ms
+		expect(callCount).toBe(2);
+		game.tick(1);
+		game.tick(1);
+		expect(callCount).toBe(2);
+		game.tick(1);  // 10/32*1000 = 312.5ms
+		expect(callCount).toBe(3);
+	});
+
 	it("isCurrentScene/gotoScene/end", function(done){
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		var game = new mock.Game({ width: 320, height: 320 });
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
 			var scene1 = new g.Scene({game: game});
 			var scene2 = new g.Scene({game: game});
 			var scene3 = new g.Scene({game: game});
@@ -1094,7 +1130,7 @@ describe("test Scene", function() {
 	it("gotoScene - AssertionError", function(done){
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		var game = new mock.Game({ width: 320, height: 320 });
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
 			var scene1 = new g.Scene({game: game});
 			var scene2 = new g.Scene({game: game});
 			expect(function(){ scene1.gotoScene(scene2); }).toThrowError("AssertionError");
@@ -1106,7 +1142,7 @@ describe("test Scene", function() {
 	it("end - AssertionError", function(done){
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		var game = new mock.Game({ width: 320, height: 320 });
-		game._loaded.handle(function () { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
 			var scene1 = new g.Scene({game: game});
 			expect(function(){ scene1.end(); }).toThrowError("AssertionError");
 			done();

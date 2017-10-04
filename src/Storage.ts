@@ -53,7 +53,7 @@ namespace g {
 		/**
 		 * 「より小さい」を表す（<）。
 		 */
-		LessThan = 3,
+		LessThan = 3
 	}
 
 	/**

@@ -62,7 +62,7 @@ describe("test Timer", function() {
 
         expect(timer.canDelete()).toBe(true);
 
-        timer.elapsed.handle(undefined, function() {});
+        timer.elapsed.add(function() {});
 
         expect(timer.canDelete()).toBe(false);
     });

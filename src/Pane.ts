@@ -69,7 +69,6 @@ namespace g {
 		 */
 		_normalizedPadding: CommonRect;
 
-
 		/**
 		 * @private
 		 */
@@ -108,52 +107,21 @@ namespace g {
 		_childrenRenderer: Renderer;
 
 		/**
-		 * `Pane` のインスタンスを生成する。
-		 * @deprecated このコンストラクタは非推奨機能である。代わりに `PaneParameterObject` を使うコンストラクタを用いるべきである。
-		 * @param scene このエンティティが属する `Scene`
-		 * @param width このエンティティの幅
-		 * @param height このエンティティの高さ
-		 * @param backgroundImage 背景画像の `ImageAsset` または `Surface`。省略された場合、背景には何も描かれない
-		 * @param padding 子孫エンティティの描画位置・クリッピングサイズを決めるパディング。省略された場合、 `0`
-		 * @param backgroundEffector 背景画像の描画方法を指定する `SurfaceEffector`
-		 */
-		constructor(scene: Scene, width: number, height: number, backgroundImage?: ImageAsset | Surface,
-		            padding?: CommonRect|number, backgroundEffector?: SurfaceEffector);
-		/**
 		 * 各種パラメータを指定して `Pane` のインスタンスを生成する。
 		 * @param param このエンティティに指定するパラメータ
 		 */
-		constructor(param: PaneParameterObject);
-
-		constructor(sceneOrParam: Scene|PaneParameterObject, width?: number, height?: number, backgroundImage?: ImageAsset | Surface,
-		            padding?: CommonRect|number, backgroundEffector?: SurfaceEffector) {
-			if (sceneOrParam instanceof Scene) {
-				var scene = sceneOrParam;
-				super(scene);
-				this.width = this._oldWidth = width;
-				this.height = this._oldHeight = height;
-				this.backgroundImage = g.Util.asSurface(backgroundImage);
-				this.backgroundEffector = backgroundEffector;
-				this._shouldRenderChildren = false;
-				this._padding = padding;
-				this._initialize();
-				this._paddingChanged = false;
-				this._bgSurface = undefined;
-				this._bgRenderer = undefined;
-			} else {
-				var param = <PaneParameterObject>sceneOrParam;
-				super(param);
-				this._oldWidth = param.width;
-				this._oldHeight = param.height;
-				this.backgroundImage = g.Util.asSurface(param.backgroundImage);
-				this.backgroundEffector = param.backgroundEffector;
-				this._shouldRenderChildren = false;
-				this._padding = param.padding;
-				this._initialize();
-				this._paddingChanged = false;
-				this._bgSurface = undefined;
-				this._bgRenderer = undefined;
-			}
+		constructor(param: PaneParameterObject) {
+			super(param);
+			this._oldWidth = param.width;
+			this._oldHeight = param.height;
+			this.backgroundImage = g.Util.asSurface(param.backgroundImage);
+			this.backgroundEffector = param.backgroundEffector;
+			this._shouldRenderChildren = false;
+			this._padding = param.padding;
+			this._initialize();
+			this._paddingChanged = false;
+			this._bgSurface = undefined;
+			this._bgRenderer = undefined;
 		}
 
 		/**

@@ -27,7 +27,7 @@ namespace g {
 	export class LoadingScene extends Scene {
 		/**
 		 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
-		 * ゲーム開発者は、このTriggerをhandleしてローディングシーンの内容を初期化することができる。
+		 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
 		 */
 		targetReset: Trigger<Scene>;
 		/**
@@ -83,7 +83,7 @@ namespace g {
 			this._clearTargetScene();
 			this._targetScene = targetScene;
 			if (this._loadingState < SceneLoadState.LoadedFired) {
-				this.loaded.handle(this, this._doReset);
+				this.loaded.addOnce(this._doReset, this);
 			} else {
 				this._doReset();
 			}
@@ -120,31 +120,29 @@ namespace g {
 		_clearTargetScene(): void {
 			if (!this._targetScene)
 				return;
-			this._targetScene._ready.removeAll(this);
-			this._targetScene.assetLoaded.removeAll(this);
+			this._targetScene._ready.removeAll({ owner: this });
+			this._targetScene.assetLoaded.removeAll({ owner: this });
 			this._targetScene = undefined;
 		}
 
 		/**
 		 * @private
 		 */
-		_doReset(): boolean {
+		_doReset(): void {
 			this.targetReset.fire(this._targetScene);
 			if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
-				this._targetScene._ready.handle(this, this._fireTriggerOnTargetReady);
-				this._targetScene.assetLoaded.handle(this, this._fireTriggerOnTargetAssetLoad);
+				this._targetScene._ready.add(this._fireTriggerOnTargetReady, this);
+				this._targetScene.assetLoaded.add(this._fireTriggerOnTargetAssetLoad, this);
 				this._targetScene._load();
 			} else {
 				this._fireTriggerOnTargetReady(this._targetScene);
 			}
-			return true;
 		}
 
 		/**
 		 * @private
 		 */
 		_fireTriggerOnTargetAssetLoad(asset: Asset): void {
-			this._onTargetAssetLoad(asset);
 			this.targetAssetLoaded.fire(asset);
 		}
 
@@ -156,20 +154,6 @@ namespace g {
 			if (!this._explicitEnd) {
 				this.end();
 			}
-		}
-
-		/**
-		 * 読み込み待ち対象シーンのアセットが一つ読み込まれる度に呼ばれるコールバック。
-		 * 派生クラスが上書きすることができる。このメソッドは後方互換性のために存在する。
-		 * (内部メソッド(_で始まる)ではあるが、ローディングシーンをカスタマイズする方法が
-		 * なかった当時(akashic-engine@1.1.1以前)、文書上で存在に言及してしまっている)
-		 *
-		 * 現在はこれの代わりに `targetAssetLoaded` をhandleすること。
-		 * @deprecated
-		 * @private
-		 */
-		_onTargetAssetLoad(asset: Asset): boolean {
-			return true;
 		}
 	}
 }

@@ -11,9 +11,7 @@ describe("test Destroy", function() {
 			new g.E({scene: scene, width: 16, heigth: 16}),
 			new g.Sprite({scene: scene, src: new g.Surface(480, 480), width: 32, height: 48, srcWidth: 32, srcHeight: 48}),
 			new g.FrameSprite({scene: scene, src: new g.Surface(480, 480), width: 32, height: 48, srcWidth: 32, srcHeight: 48}),
-			new g.Tile({scene: scene, src: new g.Surface(480, 480), tileWidth: 32, tileHeight: 32, tileData: [[0]]}),
-			new g.Label({scene: scene, text: " ", bitmapFont: bmpfont, fontSize: 13}),
-			new g.MultiLineLabel({scene: scene, text: " \n \n \n  ", bitmapFont: bmpfont, fontSize: 13, width: 64}),
+			new g.Label({scene: scene, text: " ", font: bmpfont, fontSize: 13}),
 			new g.Pane({scene: scene, width: 480, height: 48, backgroundImage: imageAsset, backgroundEffector: new g.NinePatchSurfaceEffector(runtime.game)}),
 			new g.FilledRect({scene: scene, cssColor: "red", width: 32, height: 32}),
 			new g.SystemLabel({scene: scene, fontSize: 13, text: " ", textColor: "red"})
@@ -28,7 +26,13 @@ describe("test Destroy", function() {
 		runtime = skeletonRuntime();
 		var map = {"32": {"x": 0, "y": 1}};
 		var missingGlyph = {"x": 2, "y": 3};
-		bmpfont = new g.BitmapFont(new g.Surface(480, 480), map, 12, 12, missingGlyph);
+		bmpfont = new g.BitmapFont({
+			src: new g.Surface(480, 480),
+			map: map,
+			defaultGlyphWidth: 12,
+			defaultGlyphHeight: 12,
+			missingGlyph: missingGlyph
+		});
 		imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
 	});
 
@@ -55,17 +59,12 @@ describe("test Destroy", function() {
 		entities[1].__surface = entities[1].surface;
 		// FrameSprite
 		entities[2].__surface = entities[2].surface;
-		// Tile
-		entities[3].__tileChips = entities[3].tileChips;
 		// Label
-		entities[4].__cache = entities[4]._cache;
-		// MultiLineLabel
-		entities[5].__cache = entities[5]._cache;
-		entities[5].__lines = entities[5]._lines;
+		entities[3].__cache = entities[3]._cache;
 		// Pane
-		entities[6].__cache = entities[6]._cache;
-		entities[6].__bgSurface = entities[6]._bgSurface;
-		entities[6].__childrenSurface = entities[6]._childrenSurface;
+		entities[4].__cache = entities[4]._cache;
+		entities[4].__bgSurface = entities[4]._bgSurface;
+		entities[4].__childrenSurface = entities[4]._childrenSurface;
 
 		scene.destroy();
 		entities.forEach(function(e) {
@@ -81,28 +80,16 @@ describe("test Destroy", function() {
 		expect(entities[2].__surface.destroyed()).toBe(false);
 		entities[2].__surface.destroy();
 		expect(entities[2].__surface.destroyed()).toBe(true);
-		// Tile
-		expect(entities[3].tileChips).toBeUndefined();
-		expect(entities[3].__tileChips.destroyed()).toBe(false);
-		entities[3].__tileChips.destroy();
-		expect(entities[3].__tileChips.destroyed()).toBe(true);
 		// Label
+		expect(entities[3]._cache).toBeUndefined();
+		expect(entities[3].__cache.destroyed()).toBe(true);
+		// Pane
 		expect(entities[4]._cache).toBeUndefined();
 		expect(entities[4].__cache.destroyed()).toBe(true);
-		// MultiLineLabel
-		expect(entities[5]._cache).toBeUndefined();
-		expect(entities[5].__cache.destroyed()).toBe(true);
-		expect(entities[5]._lines).toBeUndefined();
-		entities[5].__lines.forEach(function(l) {
-			expect(l.surface.destroyed()).toBe(true);
-		});
-		// Pane
-		expect(entities[6]._cache).toBeUndefined();
-		expect(entities[6].__cache.destroyed()).toBe(true);
-		expect(entities[6]._bgSurface).toBeUndefined();
-		expect(entities[6].__bgSurface.destroyed()).toBe(true);
-		expect(entities[6]._childrenSurface).toBeUndefined();
-		expect(entities[6].__childrenSurface.destroyed()).toBe(true);
+		expect(entities[4]._bgSurface).toBeUndefined();
+		expect(entities[4].__bgSurface.destroyed()).toBe(true);
+		expect(entities[4]._childrenSurface).toBeUndefined();
+		expect(entities[4].__childrenSurface.destroyed()).toBe(true);
 		// BitmapFontは自動破棄されない
 		expect(bmpfont.destroyed()).toBe(false);
 		bmpfont.destroy();
@@ -135,7 +122,6 @@ describe("test Destroy", function() {
 		}
 		destroyAndCheckProp(entities[1], "surface");	// Sprite
 		destroyAndCheckProp(entities[2], "surface");	// FrameSprite
-		destroyAndCheckProp(entities[3], "tileChips");	// Tile
 	});
 
 	it("Sprite1つの破棄で複数Spriteが破壊される", function() {
