@@ -93,6 +93,11 @@ namespace g {
 	export type AssetConfigurationMap = {[key: string]: AssetConfiguration};
 
 	/**
+	 * require()解決用のエントリポイント
+	 */
+	export type ModuleMainScriptsMap = {[path: string]: string};
+
+	/**
 	 * AudioSystemの設定を表すインターフェース。
 	 */
 	export interface AudioSystemConfiguration {
@@ -167,6 +172,13 @@ namespace g {
 		// akashic-engine はこのフィールドを認識しないので、エンジンユーザはあらかじめ
 		// `globalScripts` を相当する `assets` 定義に変換する必要がある。
 		globalScripts?: string[];
+
+		/**
+		 * require()解決用ののエントリポイントを格納したテーブル。
+		 *
+		 * require()の第一引数をキーとした値が本テーブルに存在した場合、require()時にその値をパスとしたスクリプトアセットを評価する。
+		 */
+		moduleMainScripts?: ModuleMainScriptsMap;
 
 		/**
 		 * デフォルトローディングシーンについての指定。

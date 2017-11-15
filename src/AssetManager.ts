@@ -79,6 +79,12 @@ namespace g {
 		_liveAbsolutePathTable: {[path: string]: string};
 
 		/**
+		 * requireの第一引数から対応する仮想パスを引くためのテーブル。
+		 * @private
+		 */
+		_moduleMainScripts: ModuleMainScriptsMap;
+
+		/**
 		 * 各アセットに対する参照の数。
 		 * 参照は requestAssets() で増え、unrefAssets() で減る。
 		 * なおロード中であっても参照に数える。つまり (this._refCounts[id] > 1) であるなら !!(this._assets[id] || this._loadings[id])
@@ -97,12 +103,14 @@ namespace g {
 		 * @param game このインスタンスが属するゲーム
 		 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 		 */
-		constructor(game: Game, conf?: AssetConfigurationMap, audioSystemConfMap?: AudioSystemConfigurationMap) {
+		constructor(game: Game, conf?: AssetConfigurationMap, audioSystemConfMap?: AudioSystemConfigurationMap,
+		            moduleMainScripts?: ModuleMainScriptsMap) {
 			this.game = game;
 			this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 			this._assets = {};
 			this._liveAssetVirtualPathTable = {};
 			this._liveAbsolutePathTable = {};
+			this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
 			this._refCounts = {};
 			this._loadings = {};
 		}
