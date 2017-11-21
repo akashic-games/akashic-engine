@@ -740,8 +740,9 @@ namespace g {
 		 * 複数のイベントフィルタが存在する場合、そのすべてが適用される。適用順は登録の順である。
 		 *
 		 * @param filter 追加するイベントフィルタ
+		 * @param handleEmpty イベントが存在しない場合でも定期的にフィルタを呼び出すか否か。省略された場合、偽。
 		 */
-		addEventFilter(filter: EventFilter): void {
+		addEventFilter(filter: EventFilter, handleEmpty?: boolean): void {
 			throw ExceptionFactory.createPureVirtualError("Game#addEventFilter");
 		}
 
