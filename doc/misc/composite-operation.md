@@ -150,7 +150,7 @@ red.compositeOperation = g.CompositeOperation.ExperimentalDestinationIn;
 
 描画する領域を透明にします。
 
-以下の例では、赤色の `FilledRect` に `DestinationOut` を指定し、描画する領域を透明にする例です。
+以下の例では、赤色の `FilledRect` に `DestinationOut` を指定し、描画する領域を透明にする例です。
 
 ![DestinationOut](images/destination-out.png)
 
