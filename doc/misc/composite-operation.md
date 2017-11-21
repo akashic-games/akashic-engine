@@ -15,6 +15,13 @@
 - `CompositeOpration.SourceAtop`
 - `CompositeOpration.Lighter`
 - `CompositeOpration.Copy`
+- `CompositeOpration.ExperimentalSourceIn`
+- `CompositeOpration.ExperimentalSourceOut`
+- `CompositeOpration.ExperimentalDestinationAtop`
+- `CompositeOpration.ExperimentalDestinationIn`
+- `CompositeOpration.DestinationOut`
+- `CompositeOpration.DestinationOver`
+- `CompositeOpration.Xor`
 - 未指定（`undefined`）
 
 ## <a name="SourceOver"></a> SouceOver
@@ -77,6 +84,106 @@ blue.compositeOperation = g.CompositeOperation.Lighter;
 blue.compositeOperation = g.CompositeOperation.SourceOver;
 character.compositeOperation = g.CompositeOperation.Copy;
 ```
+
+
+## <a name="ExperimentalSourceIn"></a> ExperimentalSourceIn
+
+ 先に描画された領域と重なった部分に描画を行い、それ以外の部分を透明にします。
+
+ 以下の例では、赤色の `FilledRect` に `ExperimentalSourceIn` を指定し、描画先となる青色の `FilledRect` と重なった部分だけ描画する例です。
+
+ 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
+
+![ExperimentalSourceIn](images/experimental-source-in.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.ExperimentalSourceIn;
+```
+
+
+## <a name="ExperimentalSourceOut"></a> ExperimentalSourceOut
+
+先に描画された領域と重なっていない部分に描画を行い、それ以外の部分を透明にします。
+
+以下の例では、赤色の `FilledRect` に `ExperimentalSourceOut` を指定し、描画先となる青色の `FilledRect` と重なっていない部分を描画する例です。
+
+環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
+
+![ExperimentalSourceOut](images/experimental-source-out.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.ExperimentalSourceOut;
+```
+
+
+## <a name="ExperimentalDestinationAtop"></a> ExperimentalDestinationAtop
+
+描画する領域だけを表示し、先に描画された領域と重なった部分は描画先を表示します。
+
+以下の例では、赤色の `FilledRect` に `ExperimentalDestinationAtop` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示する例です。
+
+環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
+
+![ExperimentalDestinationAtop](images/experimental-destination-atop.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.ExperimentalDestinationAtop;
+```
+
+
+## <a name="ExperimentalDestinationIn"></a> ExperimentalDestinationIn
+
+先に描画された領域と重なった部分に描画を行い、それ以外の部分を透明にします。
+
+以下の例では、赤色の `FilledRect` に `ExperimentalDestinationIn` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示し、それ以外の部分を透明にする例です。
+
+環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
+
+![ExperimentalDestinationIn](images/experimental-destination-in.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.ExperimentalDestinationIn;
+```
+
+
+## <a name="DestinationOut"></a> DestinationOut
+
+描画する領域を透明にします。
+
+以下の例では、赤色の `FilledRect` に `DestinationOut` を指定し、描画する領域を透明にする例です。
+
+![DestinationOut](images/destination-out.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.DestinationOut;
+```
+
+
+## <a name="DestinationOver"></a> DestinationOver
+
+先に描画された領域の下に描画します。
+
+以下の例では、赤色の `FilledRect` に `DestinationOver` を指定し、描画先となる青色の `FilledRect` の下に描画する例です。
+
+![DestinationOver](images/destination-over.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.DestinationOver;
+```
+
+
+## <a name="Xor"></a> Xor
+
+先に描画された領域と重なった部分のみ透明にします。
+
+以下の例では、赤色の `FilledRect` に `Xor` を指定し、描画先となる青色の `FilledRect` と重なった部分のみ透明にする例です。
+
+![Xor](images/xor.png)
+
+```javascript
+red.compositeOperation = g.CompositeOperation.Xor;
+```
+
 
 ## <a name="未指定（undefined）"></a> 未指定（undefined）
 
