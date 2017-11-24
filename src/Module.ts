@@ -21,6 +21,7 @@ namespace g {
 		var resolvedPath: string;
 		var resolvedVirtualPath: string;
 		var liveAssetVirtualPathTable = game._assetManager._liveAssetVirtualPathTable;
+		var moduleMainScripts = game._assetManager._moduleMainScripts;
 
 		// 0. アセットIDらしい場合はまず当該アセットを探す
 		if (path.indexOf("/") === -1) {
@@ -29,7 +30,7 @@ namespace g {
 		}
 
 		// 1. If X is a core module,
-		// (何もしない。コアモジュールには対応していない。ゲーム開発者は自でコアモジュールへの依存を解決する必要がある)
+		// (何もしない。コアモジュールには対応していない。ゲーム開発者は自分でコアモジュールへの依存を解決する必要がある)
 
 		if (/^\.\/|^\.\.\/|^\//.test(path)) {
 			// 2. If X begins with './' or '/' or '../'
@@ -66,6 +67,12 @@ namespace g {
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 			// `path` は node module の名前であると仮定して探す
+
+			// akashic-engine独自拡張: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
+			if (moduleMainScripts[path]) {
+				targetScriptAsset = game._assetManager._assets[moduleMainScripts[path]];
+			}
+
 			if (! targetScriptAsset) {
 				var dirs = currentModule ? currentModule.paths : [];
 				dirs.push("node_modules");
