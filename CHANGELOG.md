@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 1.12.7
+
+機能追加
+ * game.json に `moduleMainScripts` フィールドが存在した場合、そのキーと対応するパスのスクリプトアセットを `require()` 時に評価するように
+    * `moduleMainScripts` フィールドが存在しない場合は既存の動作を行います。
+
 ## 1.12.6
 
 機能追加
