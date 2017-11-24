@@ -162,7 +162,22 @@ describe("test Module", function() {
 				"path": "/node_modules/randomnumber/index.js",
 				"virtualPath": "node_modules/randomnumber/index.js",
 				"global": true
+			},
+			"node_modules/noPackageJsonModule/hoge.js": {
+				"type": "script",
+				"path": "/node_modules/noPackageJsonModule/hoge.js",
+				"virtualPath": "node_modules/noPackageJsonModule/hoge.js",
+				"global": true
+			},
+			"node_modules/noPackageJsonModule/fuga.js": {
+				"type": "script",
+				"path": "/node_modules/noPackageJsonModule/fuga.js",
+				"virtualPath": "node_modules/noPackageJsonModule/fuga.js",
+				"global": true
 			}
+		},
+		moduleMainScripts: {
+			"noPackageJsonModule": "node_modules/noPackageJsonModule/hoge.js"
 		}
 	}
 
@@ -178,6 +193,8 @@ describe("test Module", function() {
 		"/node_modules/wrongPackageJsonMain/package.json": '{ "main": "__not_exists__.js" }',
 		"/node_modules/wrongPackageJsonMain/index.js": "module.exports = { me: 'wrongPackageJsonMain-index', thisModule: module };",
 		"/node_modules/wrongPackageJsonMain/aJsonFile.json": '{ "aJsonFile": "aValue" }',
+		"/node_modules/noPackageJsonModule/hoge.js": "module.exports = { me: 'noPackageJsonModule', thisModule: module }",
+		"/node_modules/noPackageJsonModule/fuga.js": "module.exports = { me: 'dummy'}",
 
 		// directory structure
 		"/script/useA.js": [
@@ -316,6 +333,14 @@ describe("test Module", function() {
 			expect(mod.me).toBe("script-foo");
 			expect(mod.thisModule instanceof g.Module).toBe(true);
 			expect(mod.thisModule.filename).toBe("/script/foo.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			var mod = module.require("noPackageJsonModule");
+			expect(mod.me).toBe("noPackageJsonModule");
+			expect(mod.thisModule instanceof g.Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/node_modules/noPackageJsonModule/hoge.js");
 			expect(mod.thisModule.parent).toBe(module);
 			expect(mod.thisModule.children).toEqual([]);
 			expect(mod.thisModule.loaded).toBe(true);
