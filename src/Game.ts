@@ -736,8 +736,9 @@ namespace g {
 		 * 複数のイベントフィルタが存在する場合、そのすべてが適用される。適用順は登録の順である。
 		 *
 		 * @param filter 追加するイベントフィルタ
+		 * @param handleEmpty イベントが存在しない場合でも定期的にフィルタを呼び出すか否か。省略された場合、偽。
 		 */
-		abstract addEventFilter(filter: EventFilter): void;
+		abstract addEventFilter(filter: EventFilter, handleEmpty?: boolean): void;
 
 		/**
 		 * イベントフィルタを削除する。
