@@ -174,12 +174,10 @@ export class Surface extends g.Surface {
 		super(width, height, drawable, isDynamic);
 	}
 	createdRenderer: g.Renderer;
-	pixel: Uint8ClampedArray;
 
 	renderer(): g.Renderer {
 		var r = new Renderer();
 		this.createdRenderer = r;
-		this.pixel = new Uint8ClampedArray(this.width * this.height * 4);
 		return r;
 	}
 
