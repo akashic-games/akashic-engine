@@ -159,6 +159,14 @@ export class Renderer extends g.Renderer {
 	setOpacity(opacity: number): void {
 		throw new Error("not implemented");
 	};
+
+	getImageData(): ImageData {
+		return null;
+	}
+
+	putImageData(imageData: ImageData): void {
+		// do noting.
+	}
 }
 
 export class Surface extends g.Surface {
@@ -178,14 +186,6 @@ export class Surface extends g.Surface {
 	isPlaying(): boolean {
 		// mock.Surfaceに与えるdrawableの再生状態はdrawable.isPlayingプロパティで与える
 		return !!(this.isDynamic && this._drawable && this._drawable.isPlaying);
-	}
-
-	getPixel(): Uint8ClampedArray {
-		return this.pixel;
-	}
-
-	invalidatePixel(): void {
-		// do nothing.
 	}
 }
 
