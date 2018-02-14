@@ -87,6 +87,19 @@ namespace g {
 		abstract isPlaying(): boolean;
 
 		/**
+		 * このSurfaceの描画領域のピクセル情報を、RGBAの各色成分を1byteとした一次配列 (Non-Premultiplied Alpha) として返す。
+		 * 各ピクセル値は任意のタイミングで取得でき、また変更されることを許容する。
+		 * 各ピクセル値を変更した場合、 `this.invalidatePixel()` を呼び出す必要がある。
+		 */
+		abstract getPixel(): Uint8ClampedArray;
+
+		/**
+		 * このSurfaceの描画領域のピクセル情報の無効化を通知する。
+		 * このメソッドを呼び出し後、描画領域のピクセル情報の再構築が行われ、このSurfaceの描画内容の変更が反映される。
+		 */
+		abstract invalidatePixel(): void;
+
+		/**
 		 * このSurfaceの破棄を行う。
 		 * 以後、このSurfaceを利用することは出来なくなる。
 		 */

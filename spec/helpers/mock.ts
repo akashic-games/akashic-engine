@@ -166,16 +166,26 @@ export class Surface extends g.Surface {
 		super(width, height, drawable, isDynamic);
 	}
 	createdRenderer: g.Renderer;
+	pixel: Uint8ClampedArray;
 
 	renderer(): g.Renderer {
 		var r = new Renderer();
 		this.createdRenderer = r;
+		this.pixel = new Uint8ClampedArray(this.width * this.height * 4);
 		return r;
 	}
 
 	isPlaying(): boolean {
 		// mock.Surfaceに与えるdrawableの再生状態はdrawable.isPlayingプロパティで与える
 		return !!(this.isDynamic && this._drawable && this._drawable.isPlaying);
+	}
+
+	getPixel(): Uint8ClampedArray {
+		return this.pixel;
+	}
+
+	invalidatePixel(): void {
+		// do nothing.
 	}
 }
 
