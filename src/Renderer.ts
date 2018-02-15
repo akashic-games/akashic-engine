@@ -102,7 +102,7 @@ namespace g {
 		/**
 		 * 本Rendererの描画内容を上書きする。
 		 */
-		abstract putSuraceImageData(imageData: ImageData): void;
+		abstract putSurfaceImageData(imageData: ImageData): void;
 
 		end(): void {
 			// nothing to do
