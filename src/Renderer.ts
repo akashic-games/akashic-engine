@@ -97,12 +97,12 @@ namespace g {
 		/**
 		 * 本Rendererの描画内容を表すImageDataを取得する。
 		 */
-		abstract getImageData(): ImageData;
+		abstract getSurfaceImageData(): ImageData;
 
 		/**
 		 * 本Rendererの描画内容を上書きする。
 		 */
-		abstract putImageData(imageData: ImageData): void;
+		abstract putSuraceImageData(imageData: ImageData): void;
 
 		end(): void {
 			// nothing to do
