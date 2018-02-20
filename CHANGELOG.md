@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 2.0.4
+## 2.1.0
 
 機能追加
  * `g.Renderer#getSurfaceImageData()` , `g.Renderer#putSurfaceImageData()` を追加
