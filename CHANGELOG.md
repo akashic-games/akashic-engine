@@ -3,11 +3,11 @@
 ## 2.1.0
 
 機能追加
- * `g.Renderer#getSurfaceImageData()` , `g.Renderer#putSurfaceImageData()` を追加
+ * `g.Renderer#_getImageData()` , `g.Renderer#_putImageData()` を追加
 
 ### エンジン開発者への影響
 
- * `g.Renderer#getSurfaceImageData()` , `g.Renderer#putSurfaceImageData()` を追加
+ * `g.Renderer#_getImageData()` , `g.Renderer#_putImageData()` を追加
     * 追加された各メソッドに対する処理を実装する必要があります。
 
 ## 2.0.3
