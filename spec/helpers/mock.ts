@@ -160,11 +160,11 @@ export class Renderer extends g.Renderer {
 		throw new Error("not implemented");
 	};
 
-	getSurfaceImageData(): ImageData {
+	_getImageData(): ImageData {
 		return null;
 	}
 
-	putSurfaceImageData(imageData: ImageData): void {
+	_putImageData(imageData: ImageData): void {
 		// do noting.
 	}
 }
