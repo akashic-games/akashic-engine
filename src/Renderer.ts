@@ -104,7 +104,6 @@ namespace g {
 		/**
 		 * 本Rendererの描画内容を上書きする。
 		 * 引数は CanvasRenderingContext2D#putImageData() と同様である。
-		 * NOTE: 実行環境によっては描画内容が適用されない可能性があることに注意。
 		 */
 		abstract _putImageData(imageData: ImageData, dx: number, dy: number, dirtyX?: number, dirtyY?: number,
 		                       dirtyWidth?: number, dirtyHeight?: number): void;
