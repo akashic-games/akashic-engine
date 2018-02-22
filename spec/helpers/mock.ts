@@ -159,6 +159,14 @@ export class Renderer extends g.Renderer {
 	setOpacity(opacity: number): void {
 		throw new Error("not implemented");
 	};
+
+	_getImageData(): ImageData {
+		return null;
+	}
+
+	_putImageData(imageData: ImageData): void {
+		// do noting.
+	}
 }
 
 export class Surface extends g.Surface {

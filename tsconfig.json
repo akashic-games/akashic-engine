@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "system",
         "target": "es5",
-        "noLib": true,
+        "lib": ["es5"],
         "noImplicitAny": true,
         "declaration": true,
         "outDir": "tmp",
@@ -12,9 +12,7 @@
         "types": []
     },
     "files": [
-        "typings/lib.core.d.ts",
         "typings/console.d.ts",
-        "typings/extend.d.ts",
         "src/index.ts"
     ]
 }

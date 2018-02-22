@@ -42,6 +42,7 @@
 /// <reference path="GameConfiguration.ts" />
 /// <reference path="Game.ts" />
 /// <reference path="Camera.ts" />
+/// <reference path="ImageData.ts" />
 /// <reference path="Renderer.ts" />
 /// <reference path="Surface.ts" />
 /// <reference path="Label.ts" />

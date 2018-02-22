@@ -93,6 +93,21 @@ namespace g {
 		abstract setTransform(matrix: number[]): void;
 
 		abstract setOpacity(opacity: number): void;
+
+		/**
+		 * 本Rendererの描画内容を表すImageDataを取得する。
+		 * 引数は CanvasRenderingContext2D#getImageData() と同様である。
+		 * NOTE: 実行環境によっては戻り値が `null` または `undefined` となりえることに注意。
+		 */
+		abstract _getImageData(sx: number, sy: number, sw: number, sh: number): ImageData;
+
+		/**
+		 * 本Rendererの描画内容を上書きする。
+		 * 引数は CanvasRenderingContext2D#putImageData() と同様である。
+		 */
+		abstract _putImageData(imageData: ImageData, dx: number, dy: number, dirtyX?: number, dirtyY?: number,
+		                       dirtyWidth?: number, dirtyHeight?: number): void;
+
 		end(): void {
 			// nothing to do
 		}

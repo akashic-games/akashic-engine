@@ -357,7 +357,7 @@ namespace g {
 						// TODO: 再生中の動画を破棄するタイミングをどのように扱うか検討し実装
 						asset.destroy();
 					} else {
-						throw ExceptionFactory.createAssertionError("AssetManager#unrefAssets: Unsupported in-use " + asset.constructor.name);
+						throw ExceptionFactory.createAssertionError("AssetManager#unrefAssets: Unsupported in-use " + asset.id);
 					}
 				} else {
 					asset.destroy();
