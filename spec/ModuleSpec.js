@@ -165,13 +165,13 @@ describe("test Module", function() {
 			},
 			"node_modules/noPackageJsonModule/hoge.js": {
 				"type": "script",
-				"path": "/node_modules/noPackageJsonModule/hoge.js",
+				"path": "/node_modules/noPackageJsonModule/real_hoge.js",
 				"virtualPath": "node_modules/noPackageJsonModule/hoge.js",
 				"global": true
 			},
 			"node_modules/noPackageJsonModule/fuga.js": {
 				"type": "script",
-				"path": "/node_modules/noPackageJsonModule/fuga.js",
+				"path": "/node_modules/noPackageJsonModule/real_fuga.js",
 				"virtualPath": "node_modules/noPackageJsonModule/fuga.js",
 				"global": true
 			}
@@ -193,8 +193,8 @@ describe("test Module", function() {
 		"/node_modules/wrongPackageJsonMain/package.json": '{ "main": "__not_exists__.js" }',
 		"/node_modules/wrongPackageJsonMain/index.js": "module.exports = { me: 'wrongPackageJsonMain-index', thisModule: module };",
 		"/node_modules/wrongPackageJsonMain/aJsonFile.json": '{ "aJsonFile": "aValue" }',
-		"/node_modules/noPackageJsonModule/hoge.js": "module.exports = { me: 'noPackageJsonModule', thisModule: module }",
-		"/node_modules/noPackageJsonModule/fuga.js": "module.exports = { me: 'dummy'}",
+		"/node_modules/noPackageJsonModule/real_hoge.js": "module.exports = { me: 'noPackageJsonModule', thisModule: module }",
+		"/node_modules/noPackageJsonModule/real_fuga.js": "module.exports = { me: 'dummy'}",
 
 		// directory structure
 		"/script/useA.js": [
@@ -340,7 +340,7 @@ describe("test Module", function() {
 			var mod = module.require("noPackageJsonModule");
 			expect(mod.me).toBe("noPackageJsonModule");
 			expect(mod.thisModule instanceof g.Module).toBe(true);
-			expect(mod.thisModule.filename).toBe("/node_modules/noPackageJsonModule/hoge.js");
+			expect(mod.thisModule.filename).toBe("/node_modules/noPackageJsonModule/real_hoge.js");
 			expect(mod.thisModule.parent).toBe(module);
 			expect(mod.thisModule.children).toEqual([]);
 			expect(mod.thisModule.loaded).toBe(true);
