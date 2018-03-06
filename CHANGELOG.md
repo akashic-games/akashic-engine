@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.1.1
+不具合修正
+ * `moduleMainScripts` のファイルパスを `AssetManager#_liveAssetVirtualPathTable` から参照するように修正
+
 ## 2.1.0
 
 機能追加
