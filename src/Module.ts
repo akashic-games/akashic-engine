@@ -70,7 +70,7 @@ namespace g {
 
 			// akashic-engine独自拡張: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
 			if (moduleMainScripts[path]) {
-				targetScriptAsset = game._assetManager._assets[moduleMainScripts[path]];
+				targetScriptAsset = game._assetManager._liveAssetVirtualPathTable[moduleMainScripts[path]];
 			}
 
 			if (! targetScriptAsset) {
