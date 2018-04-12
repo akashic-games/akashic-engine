@@ -1,5 +1,14 @@
 namespace g {
 
+	export interface ShaderParameterObject {
+		vertexShader?: string;
+		fragmentShader?: string;
+
+		uniforms?: {
+			[key: string]: g.ShaderUniform
+		};
+	}
+
 	export class Shader {
 		/**
 		 * vertex shader の文字列。
@@ -17,10 +26,10 @@ namespace g {
 		 */
 		uniforms: {[name: string]: g.ShaderUniform};
 
-		constructor(vertexShader: string, fragmentShader: string, uniforms?: {[name: string]: g.ShaderUniform}) {
-			this.VERTEX_SHADER = vertexShader;
-			this.FRAGMENT_SHADER = fragmentShader;
-			this.uniforms = uniforms;
+		constructor(params: ShaderParameterObject) {
+			this.VERTEX_SHADER = params.vertexShader;
+			this.FRAGMENT_SHADER = params.fragmentShader;
+			this.uniforms = params.uniforms;
 		}
 	}
 
