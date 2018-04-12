@@ -94,9 +94,7 @@ namespace g {
 
 		abstract setOpacity(opacity: number): void;
 
-		abstract setShader(shader: Shader): void;
-
-		abstract unsetShader(): void;
+		abstract setShader(shader?: Shader): void;
 
 		/**
 		 * 本Rendererの描画内容を表すImageDataを取得する。
