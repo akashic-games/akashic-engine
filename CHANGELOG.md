@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Unreleased changes
+機能追加
+ * `g.Surface` でscale変更ができる設定を追加
+ * `g.Surface` の省略可能なboolean型引数 `isDynamic` を booleanもしくはnumber型の `optionalFlag` に変更
+
 ## 2.1.1
 不具合修正
  * `moduleMainScripts` のファイルパスを `AssetManager#_liveAssetVirtualPathTable` から参照するように修正

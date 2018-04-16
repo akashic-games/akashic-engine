@@ -18,6 +18,10 @@ describe("test Surface", function() {
 		expect(surface.isDynamic).toBe(false);
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
+		expect(surface.hasVariableResolution).toBe(false);
+		expect(surface.xScale).toEqual(1);
+		expect(surface.yScale).toEqual(1);
+		expect(surface.contentReset).toBeUndefined();
 	});
 
 	it("初期化 - enable drawable", function() {
@@ -31,6 +35,10 @@ describe("test Surface", function() {
 		expect(surface.isDynamic).toBe(false);
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
+		expect(surface.hasVariableResolution).toBe(false);
+		expect(surface.xScale).toEqual(1);
+		expect(surface.yScale).toEqual(1);
+		expect(surface.contentReset).toBeUndefined();
 	});
 
 	it("初期化 - invalid params", function() {
@@ -46,14 +54,56 @@ describe("test Surface", function() {
 		var width = 1;
 		var height = 2;
 
-		var isDynamic = true;
+		var optionalFlag = 1;
 		var drawable = {};
-		var surface = new g.Surface(width, height, drawable, isDynamic);
+		var surface = new g.Surface(width, height, drawable, optionalFlag);
 		expect(surface.width).toEqual(width);
 		expect(surface.height).toEqual(height);
 		expect(surface._drawable).toEqual(drawable);
-		expect(surface.isDynamic).toBe(isDynamic);
+		expect(surface.isDynamic).toBe(true);
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
+		expect(surface.hasVariableResolution).toBe(false);
+		expect(surface.xScale).toEqual(1);
+		expect(surface.yScale).toEqual(1);
+		expect(surface.contentReset).toBeUndefined();
+	});
+
+	it("初期化 - able to redraw", function() {
+		var width = 1;
+		var height = 2;
+
+		var optionalFlag = 2;
+		var drawable = {};
+		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		expect(surface.width).toBe(width);
+		expect(surface.height).toBe(height);
+		expect(surface._drawable).toBe(drawable);
+		expect(surface.isDynamic).toBe(false);
+		expect(surface.animatingStarted).toBeUndefined();
+		expect(surface.animatingStopped).toBeUndefined();
+		expect(surface.hasVariableResolution).toBe(true);
+		expect(surface.xScale).toBe(1);
+		expect(surface.yScale).toBe(1);
+		expect(surface.contentReset.constructor).toBe(g.Trigger);
+	});
+
+	it("初期化 - dynamic contents and able to redraw", function() {
+		var width = 1;
+		var height = 2;
+
+		var optionalFlag = 3;
+		var drawable = {};
+		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		expect(surface.width).toBe(width);
+		expect(surface.height).toBe(height);
+		expect(surface._drawable).toBe(drawable);
+		expect(surface.isDynamic).toBe(true);
+		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
+		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
+		expect(surface.hasVariableResolution).toBe(true);
+		expect(surface.xScale).toBe(1);
+		expect(surface.yScale).toBe(1);
+		expect(surface.contentReset.constructor).toBe(g.Trigger);
 	});
 });
