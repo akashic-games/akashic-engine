@@ -78,3 +78,4 @@
 /// <reference path="Xorshift.ts" />
 /// <reference path="XorshiftRandomGenerator.ts" />
 /// <reference path="Shader.ts" />
+/// <reference path="Mesh.ts" />

@@ -47,6 +47,15 @@ namespace g {
 		abstract drawImage(surface: Surface, offsetX: number, offsetY: number, width: number, height: number,
 		                   destOffsetX: number, destOffsetY: number): void;
 
+		/**
+		 * @param surface 描画する surface
+		 * @param mode Mesh の描画モード
+		 * @param offset 描画元の座標の配列
+		 * @param destOffset 描画先の座標の配列
+		 * @param indices 頂点の順番
+		 */
+		abstract drawMesh(surface: Surface, mode: MeshDrawMode, offset: CommonOffset[], destOffset: CommonOffset[], indices: number[]): void;
+
 		abstract drawSprites(
 		    surface: g.Surface,
 		    offsetX: number[], offsetY: number[],
