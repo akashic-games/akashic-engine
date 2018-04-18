@@ -173,7 +173,11 @@ namespace g {
 			if (!this.fontSize || this.height <= 0 || this._textWidth <= 0) {
 				return;
 			}
-			var textSurface =  this.scene.game.resourceFactory.createSurface(Math.ceil(this._textWidth), Math.ceil(this.height));
+			var textSurface =  this.scene.game.resourceFactory.createSurface(
+				Math.ceil(this._textWidth),
+				Math.ceil(this.height),
+				g.SurfaceStatusOption.hasVariableResolution
+			);
 			var textRenderer = textSurface.renderer();
 
 			textRenderer.begin();
@@ -237,6 +241,10 @@ namespace g {
 		 */
 		destroy(): void {
 			super.destroy();
+		}
+
+		_createCache(width: number, height: number, isResizable: boolean = false): Surface {
+			return super._createCache(width, height, true);
 		}
 
 		private _invalidateSelf(): void {

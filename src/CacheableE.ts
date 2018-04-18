@@ -71,7 +71,7 @@ namespace g {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();
 					}
-					this._cache = this.scene.game.resourceFactory.createSurface(Math.ceil(this.width), Math.ceil(this.height));
+					this._cache = this._createCache(this.width, this.height);
 					this._renderer = this._cache.renderer();
 				}
 				this._renderer.begin();
@@ -107,6 +107,17 @@ namespace g {
 			this._cache = undefined;
 
 			super.destroy();
+		}
+
+		_createCache(width: number, height: number, isResizable: boolean = false): Surface {
+			const optionalFlag = isResizable ? g.SurfaceStatusOption.hasVariableResolution : g.SurfaceStatusOption.None;
+			const surface = this.scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height), optionalFlag);
+			surface.scaleChanged.add((scales: number[]) => {
+				this.width *= scales[0];
+				this.height *= scales[1];
+				this.invalidate();
+			});
+			return surface;
 		}
 	}
 }

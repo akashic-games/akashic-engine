@@ -399,8 +399,9 @@ export class AudioPlayer extends g.AudioPlayer {
 
 export class GlyphFactory extends g.GlyphFactory {
 	constructor(fontFamily: g.FontFamily|string|string[], fontSize: number, baselineHeight?: number,
-	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
-		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight,
+	            hasVariableResolution?: boolean) {
+		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight, hasVariableResolution);
 	}
 	create(code: number): g.Glyph { return <g.Glyph>undefined; }
 }
@@ -484,8 +485,18 @@ export class ResourceFactory extends g.ResourceFactory {
 
 	createGlyphFactory(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
 	                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-	                   fontWeight?: g.FontWeight): g.GlyphFactory {
-		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+	                   fontWeight?: g.FontWeight, hasVariableResolution?: boolean): g.GlyphFactory {
+		return new GlyphFactory(
+			fontFamily,
+			fontSize,
+			baselineHeight,
+			fontColor,
+			strokeWidth,
+			strokeColor,
+			strokeOnly,
+			fontWeight,
+			hasVariableResolution
+		);
 	}
 	createVideoAsset(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem,
 	                 loop: boolean, useRealSize: boolean): g.VideoAsset {

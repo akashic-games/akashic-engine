@@ -193,7 +193,11 @@ namespace g {
 		 */
 		duplicateSurface(resourceFactory: ResourceFactory): Surface {
 			const src = this._surface;
-			const dst = resourceFactory.createSurface(this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height);
+			const dst = resourceFactory.createSurface(
+				this._usedRectangleAreaSize.width,
+				this._usedRectangleAreaSize.height,
+				g.SurfaceStatusOption.hasVariableResolution
+			);
 
 			const renderer = dst.renderer();
 			renderer.begin();
@@ -412,7 +416,7 @@ namespace g {
 			this._resourceFactory = param.game.resourceFactory;
 			this._glyphFactory =
 				this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
-					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
+					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight, true);
 			this._glyphs = {};
 			this._atlases = [];
 			this._currentAtlasIndex = 0;
