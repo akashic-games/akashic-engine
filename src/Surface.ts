@@ -77,7 +77,7 @@ namespace g {
 		 * @param height 描画領域の高さ（整数値でなければならない）
 		 * @param drawable 描画可能な実体。省略された場合、 `undefined`
 		 * @param optionalFlag 本surfaceに関するフラグをまとめたもの。詳細は以下の通り。
-		 * 1ビット目：drawableが動画であることを示す値、2ビット目：本Surfaceの画像がスケール変更可能かを示す値
+		 * 1ビット目：本surfaceが動画であることを示す値、2ビット目：本surfaceの画像がスケール変更可能かを示す値
 		 * また、互換性を保つためbooleanも許可している。
 		 */
 		constructor(width: number, height: number, drawable?: any, optionalFlag: number|boolean = false) {
@@ -91,9 +91,9 @@ namespace g {
 			this.yScale = 1;
 			if (drawable)
 				this._drawable = drawable;
-			const normalizedOptionalFlag = Number(optionalFlag) & parseInt("11", 2);
-			this.isDynamic = Boolean(normalizedOptionalFlag & parseInt("1", 2));
-			this.hasVariableResolution = Boolean(normalizedOptionalFlag & parseInt("10", 2));
+			const normalizedOptionalFlag = Number(optionalFlag) & SurfaceOptionalFlag.All;
+			this.isDynamic = Boolean(normalizedOptionalFlag & SurfaceOptionalFlag.isDynamic);
+			this.hasVariableResolution = Boolean(normalizedOptionalFlag & SurfaceOptionalFlag.hasVariableResolution);
 			if (this.hasVariableResolution) {
 				this.contentReset = new Trigger<void>();
 			} else {
