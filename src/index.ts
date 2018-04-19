@@ -77,4 +77,4 @@
 /// <reference path="TickGenerationMode.ts" />
 /// <reference path="Xorshift.ts" />
 /// <reference path="XorshiftRandomGenerator.ts" />
-/// <reference path="SurfaceOptionalFlag.ts" />
+/// <reference path="SurfaceStatusOption.ts" />

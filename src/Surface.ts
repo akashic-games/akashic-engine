@@ -91,9 +91,9 @@ namespace g {
 			this.yScale = 1;
 			if (drawable)
 				this._drawable = drawable;
-			const normalizedOptionalFlag = Number(optionalFlag) & SurfaceOptionalFlag.All;
-			this.isDynamic = Boolean(normalizedOptionalFlag & SurfaceOptionalFlag.isDynamic);
-			this.hasVariableResolution = Boolean(normalizedOptionalFlag & SurfaceOptionalFlag.hasVariableResolution);
+			const normalizedOptionalFlag = Number(optionalFlag) & SurfaceStatusOption.All;
+			this.isDynamic = Boolean(normalizedOptionalFlag & SurfaceStatusOption.isDynamic);
+			this.hasVariableResolution = Boolean(normalizedOptionalFlag & SurfaceStatusOption.hasVariableResolution);
 			if (this.hasVariableResolution) {
 				this.contentReset = new Trigger<void>();
 			} else {
@@ -129,6 +129,9 @@ namespace g {
 			}
 			if (this.animatingStopped) {
 				this.animatingStopped.destroy();
+			}
+			if (this.contentReset) {
+				this.contentReset.destroy();
 			}
 			this._destroyed = true;
 		}

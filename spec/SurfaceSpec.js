@@ -106,4 +106,21 @@ describe("test Surface", function() {
 		expect(surface.yScale).toBe(1);
 		expect(surface.contentReset.constructor).toBe(g.Trigger);
 	});
+
+	it("destroy surface, and destroy triggers", function() {
+		var width = 1;
+		var height = 2;
+		var optionalFlag = 3;
+		var drawable = {};
+		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
+		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
+		expect(surface.contentReset.constructor).toBe(g.Trigger);
+		expect(surface.destroyed()).toBe(false);
+		surface.destroy();
+		expect(surface.animatingStarted._handlers).toBe(null);
+		expect(surface.animatingStopped._handlers).toBe(null);
+		expect(surface.contentReset._handlers).toBe(null);
+		expect(surface.destroyed()).toBe(true);
+	});
 });
