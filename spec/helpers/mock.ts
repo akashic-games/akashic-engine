@@ -154,11 +154,15 @@ export class Renderer extends g.Renderer {
 	}
 	setTransform(matrix: number[]): void {
 		throw new Error("not implemented");
-	};
+	}
 
 	setOpacity(opacity: number): void {
 		throw new Error("not implemented");
-	};
+	}
+
+	setShaderProgram(shaderProgram: g.ShaderProgram): void {
+		// do nothing
+	}
 
 	_getImageData(): ImageData {
 		return null;
@@ -402,7 +406,7 @@ export class GlyphFactory extends g.GlyphFactory {
 	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
-	create(code: number): g.Glyph { return <g.Glyph>undefined; };
+	create(code: number): g.Glyph { return <g.Glyph>undefined; }
 }
 
 export class ResourceFactory extends g.ResourceFactory {
