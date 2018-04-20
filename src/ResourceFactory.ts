@@ -27,9 +27,9 @@ namespace g {
 		 * 作成された直後のSurfaceは `Renderer#clear` 後の状態と同様であることが保証される。
 		 * @param width 幅(ピクセル、整数値)
 		 * @param height 高さ(ピクセル、整数値)
-		 * @param optionalFlag surfaceの状態に関する各種フラグをビット値として管理
+		 * @param statusOption surfaceの状態に関する各種フラグをビット値として管理
 		 */
-		abstract createSurface(width: number, height: number, optionalFlag?: number): Surface;
+		abstract createSurface(width: number, height: number, statusOption?: number): Surface;
 
 		/**
 		 * GlyphFactory を作成する。

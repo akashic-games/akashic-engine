@@ -33,18 +33,12 @@ namespace g {
 		/**
 		 * 本Surfaceのx方向のスケール値
 		 */
-		xScale: number;
+		scaleX: number;
 
 		/**
 		 * 本Surfaceのy方向のスケール値
 		 */
-		yScale: number;
-
-		/**
-		 * 本Surfaceの再描画イベント
-		 * hasVariableResolutionが偽の時undefined
-		 */
-		contentReset: Trigger<void>;
+		scaleY: number;
 
 		/**
 		 * アニメーション再生開始イベント。
@@ -59,6 +53,13 @@ namespace g {
 		animatingStopped: Trigger<void>;
 
 		/**
+		 * 本Surfaceの再描画イベント
+		 * hasVariableResolutionが偽の時undefined
+		 * @private
+		 */
+		_scaleChanged: Trigger<[number, number]>;
+
+		/**
 		 * 描画可能な実体。
 		 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
 		 * @private
@@ -71,34 +72,38 @@ namespace g {
 		 */
 		_destroyed: boolean;
 
+		// Surfaceの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
+		get scaleChanged(): Trigger<[number, number]> {
+			if (! this._scaleChanged) {
+				this._scaleChanged = new Trigger<[number, number]>();
+			}
+			return this._scaleChanged;
+		}
+
 		/**
 		 * `Surface` のインスタンスを生成する。
 		 * @param width 描画領域の幅（整数値でなければならない）
 		 * @param height 描画領域の高さ（整数値でなければならない）
 		 * @param drawable 描画可能な実体。省略された場合、 `undefined`
-		 * @param optionalFlag 本surfaceに関するフラグをまとめたもの。詳細は以下の通り。
+		 * @param statusOption 本surfaceに関するフラグをまとめたもの。詳細は以下の通り。
 		 * 1ビット目：本surfaceが動画であることを示す値、2ビット目：本surfaceの画像がスケール変更可能かを示す値
 		 * また、互換性を保つためbooleanも許可している。
 		 */
-		constructor(width: number, height: number, drawable?: any, optionalFlag: number|boolean = false) {
+		constructor(width: number, height: number, drawable?: any, statusOption: number|boolean = false) {
 			if (width % 1 !== 0 || height % 1 !== 0) {
 				throw ExceptionFactory.createAssertionError("Surface#constructor: width and height must be integers");
 			}
 
 			this.width = width;
 			this.height = height;
-			this.xScale = 1;
-			this.yScale = 1;
+			this.scaleX = 1;
+			this.scaleY = 1;
 			if (drawable)
 				this._drawable = drawable;
-			const normalizedOptionalFlag = Number(optionalFlag) & SurfaceStatusOption.All;
-			this.isDynamic = Boolean(normalizedOptionalFlag & SurfaceStatusOption.isDynamic);
-			this.hasVariableResolution = Boolean(normalizedOptionalFlag & SurfaceStatusOption.hasVariableResolution);
-			if (this.hasVariableResolution) {
-				this.contentReset = new Trigger<void>();
-			} else {
-				this.contentReset = undefined;
-			}
+			const normalizedStatusOption =
+				Number(statusOption) & (SurfaceStatusOption.isDynamic | SurfaceStatusOption.hasVariableResolution);
+			this.isDynamic = Boolean(normalizedStatusOption & SurfaceStatusOption.isDynamic);
+			this.hasVariableResolution = Boolean(normalizedStatusOption & SurfaceStatusOption.hasVariableResolution);
 			if (this.isDynamic) {
 				this.animatingStarted = new Trigger<void>();
 				this.animatingStopped = new Trigger<void>();
@@ -130,8 +135,8 @@ namespace g {
 			if (this.animatingStopped) {
 				this.animatingStopped.destroy();
 			}
-			if (this.contentReset) {
-				this.contentReset.destroy();
+			if (this.scaleChanged) {
+				this.scaleChanged.destroy();
 			}
 			this._destroyed = true;
 		}

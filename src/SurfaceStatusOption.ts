@@ -14,11 +14,6 @@ namespace g {
 		hasVariableResolution = 1 << 1,
 
 		/**
-		 * 上記全ての状態を持っていることを示す
-		 */
-		All = 0x03,
-
-		/**
 		 * 上記全ての状態を持っていないことを示す
 		 */
 		None = 0

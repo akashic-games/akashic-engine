@@ -19,9 +19,8 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
 		expect(surface.hasVariableResolution).toBe(false);
-		expect(surface.xScale).toEqual(1);
-		expect(surface.yScale).toEqual(1);
-		expect(surface.contentReset).toBeUndefined();
+		expect(surface.scaleX).toEqual(1);
+		expect(surface.scaleY).toEqual(1);
 	});
 
 	it("初期化 - enable drawable", function() {
@@ -36,9 +35,8 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
 		expect(surface.hasVariableResolution).toBe(false);
-		expect(surface.xScale).toEqual(1);
-		expect(surface.yScale).toEqual(1);
-		expect(surface.contentReset).toBeUndefined();
+		expect(surface.scaleX).toEqual(1);
+		expect(surface.scaleY).toEqual(1);
 	});
 
 	it("初期化 - invalid params", function() {
@@ -54,9 +52,9 @@ describe("test Surface", function() {
 		var width = 1;
 		var height = 2;
 
-		var optionalFlag = 1;
+		var statusOption = 1;
 		var drawable = {};
-		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.width).toEqual(width);
 		expect(surface.height).toEqual(height);
 		expect(surface._drawable).toEqual(drawable);
@@ -64,18 +62,17 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 		expect(surface.hasVariableResolution).toBe(false);
-		expect(surface.xScale).toEqual(1);
-		expect(surface.yScale).toEqual(1);
-		expect(surface.contentReset).toBeUndefined();
+		expect(surface.scaleX).toEqual(1);
+		expect(surface.scaleY).toEqual(1);
 	});
 
 	it("初期化 - able to redraw", function() {
 		var width = 1;
 		var height = 2;
 
-		var optionalFlag = 2;
+		var statusOption = 2;
 		var drawable = {};
-		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.width).toBe(width);
 		expect(surface.height).toBe(height);
 		expect(surface._drawable).toBe(drawable);
@@ -83,18 +80,17 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
 		expect(surface.hasVariableResolution).toBe(true);
-		expect(surface.xScale).toBe(1);
-		expect(surface.yScale).toBe(1);
-		expect(surface.contentReset.constructor).toBe(g.Trigger);
+		expect(surface.scaleX).toBe(1);
+		expect(surface.scaleY).toBe(1);
 	});
 
 	it("初期化 - dynamic contents and able to redraw", function() {
 		var width = 1;
 		var height = 2;
 
-		var optionalFlag = 3;
+		var statusOption = 3;
 		var drawable = {};
-		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.width).toBe(width);
 		expect(surface.height).toBe(height);
 		expect(surface._drawable).toBe(drawable);
@@ -102,25 +98,35 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 		expect(surface.hasVariableResolution).toBe(true);
-		expect(surface.xScale).toBe(1);
-		expect(surface.yScale).toBe(1);
-		expect(surface.contentReset.constructor).toBe(g.Trigger);
+		expect(surface.scaleX).toBe(1);
+		expect(surface.scaleY).toBe(1);
+	});
+
+	it("create scaleChanged-trigger when call scaleChanged first", function() {
+		var width = 1;
+		var height = 2;
+		var statusOption = 3;
+		var drawable = {};
+		var surface = new g.Surface(width, height, drawable, statusOption);
+		expect(surface._scaleChanged).toBeUndefined();
+		expect(surface.scaleChanged.constructor).toBe(g.Trigger);
+		expect(surface._scaleChanged.constructor).toBe(g.Trigger);
+
 	});
 
 	it("destroy surface, and destroy triggers", function() {
 		var width = 1;
 		var height = 2;
-		var optionalFlag = 3;
+		var statusOption = 3;
 		var drawable = {};
-		var surface = new g.Surface(width, height, drawable, optionalFlag);
+		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
-		expect(surface.contentReset.constructor).toBe(g.Trigger);
 		expect(surface.destroyed()).toBe(false);
 		surface.destroy();
 		expect(surface.animatingStarted._handlers).toBe(null);
 		expect(surface.animatingStopped._handlers).toBe(null);
-		expect(surface.contentReset._handlers).toBe(null);
+		expect(surface.scaleChanged._handlers).toBe(null);
 		expect(surface.destroyed()).toBe(true);
 	});
 });
