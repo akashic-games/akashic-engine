@@ -10,12 +10,13 @@ namespace g {
 		 *
 		 * フラグメントシェーダは GLSL 1.0 に準拠した記述でなければならない。
 		 * またフラグメントシェーダには以下の varying, uniform 値がエンジンによって与えられる。
-		 * * varying vec4 vColor
-		 *   * `E#opacity` などの値を考慮した最終出力色
-		 * * varying vec2 vTexCoord
-		 *   * 描画元テクスチャの座標
+		 * * uniform float uAlpha
+		 *   * 描画時の透過度
 		 * * uniform sampler2D uSampler
 		 *   * 描画元テクスチャ番号
+		 * * varying vec2 vTexCoord
+		 *   * 描画元テクスチャの座標
+		 *   * gl_FragColor = texture2D(uSampler, vTexCoord); のような形で描画元テクスチャのピクセルを参照できる
 		 *
 		 * @default undefined
 		 */
@@ -38,12 +39,13 @@ namespace g {
 		 *
 		 * フラグメントシェーダは GLSL 1.0 に準拠した記述でなければならない。
 		 * またフラグメントシェーダには以下の varying, uniform 値がエンジンによって与えられる。
-		 * * varying vec4 vColor
-		 *   * `E#opacity` などの値を考慮した最終出力色
-		 * * varying vec2 vTexCoord
-		 *   * 描画元テクスチャの座標
+		 * * uniform float uAlpha
+		 *   * 描画時の透過度
 		 * * uniform sampler2D uSampler
 		 *   * 描画元テクスチャ番号
+		 * * varying vec2 vTexCoord
+		 *   * 描画元テクスチャの座標
+		 *   * gl_FragColor = texture2D(uSampler, vTexCoord); のような形で描画元テクスチャのピクセルを参照できる
 		 *
 		 * この値は本クラスの生成時にのみ指定可能であり、直接書き換えてはならない。
 		 */
