@@ -41,6 +41,11 @@ namespace g {
 		scaleY: number;
 
 		/**
+		 * 本surface破棄時のイベント
+		 */
+		onDestroyed: Trigger<g.Surface>;
+
+		/**
 		 * アニメーション再生開始イベント。
 		 * isDynamicが偽の時undefined。
 		 */
@@ -85,9 +90,7 @@ namespace g {
 		 * @param width 描画領域の幅（整数値でなければならない）
 		 * @param height 描画領域の高さ（整数値でなければならない）
 		 * @param drawable 描画可能な実体。省略された場合、 `undefined`
-		 * @param statusOption 本surfaceに関するフラグをまとめたもの。詳細は以下の通り。
-		 * 1ビット目：本surfaceが動画であることを示す値、2ビット目：本surfaceの画像がスケール変更可能かを示す値
-		 * また、互換性を保つためbooleanも許可している。
+		 * @param statusOption 本surfaceの生成時のオプション、詳細はSurfaceStatusOptionを参照。また、互換性を保つためbooleanも許可している。
 		 */
 		constructor(width: number, height: number, drawable?: any, statusOption: number|boolean = false) {
 			if (width % 1 !== 0 || height % 1 !== 0) {
@@ -104,6 +107,7 @@ namespace g {
 				Number(statusOption) & (SurfaceStatusOption.isDynamic | SurfaceStatusOption.hasVariableResolution);
 			this.isDynamic = Boolean(normalizedStatusOption & SurfaceStatusOption.isDynamic);
 			this.hasVariableResolution = Boolean(normalizedStatusOption & SurfaceStatusOption.hasVariableResolution);
+			this.onDestroyed = new Trigger<g.Surface>();
 			if (this.isDynamic) {
 				this.animatingStarted = new Trigger<void>();
 				this.animatingStopped = new Trigger<void>();
@@ -129,16 +133,18 @@ namespace g {
 		 * 以後、このSurfaceを利用することは出来なくなる。
 		 */
 		destroy(): void {
+			this.onDestroyed.fire(this);
 			if (this.animatingStarted) {
 				this.animatingStarted.destroy();
 			}
 			if (this.animatingStopped) {
 				this.animatingStopped.destroy();
 			}
-			if (this.scaleChanged) {
+			if (this._scaleChanged) {
 				this.scaleChanged.destroy();
 			}
 			this._destroyed = true;
+			this.onDestroyed.destroy();
 		}
 
 		/**

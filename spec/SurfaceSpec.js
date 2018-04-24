@@ -52,7 +52,7 @@ describe("test Surface", function() {
 		var width = 1;
 		var height = 2;
 
-		var statusOption = 1;
+		var statusOption = 1; // surfaceが動画である状態
 		var drawable = {};
 		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.width).toEqual(width);
@@ -70,7 +70,7 @@ describe("test Surface", function() {
 		var width = 1;
 		var height = 2;
 
-		var statusOption = 2;
+		var statusOption = 2; // surfaceがスケール変更可能である状態
 		var drawable = {};
 		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.width).toBe(width);
@@ -88,7 +88,7 @@ describe("test Surface", function() {
 		var width = 1;
 		var height = 2;
 
-		var statusOption = 3;
+		var statusOption = 3; // surfaceが動画で且つスケール変更可能である状態
 		var drawable = {};
 		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface.width).toBe(width);
@@ -105,7 +105,7 @@ describe("test Surface", function() {
 	it("create scaleChanged-trigger when call scaleChanged first", function() {
 		var width = 1;
 		var height = 2;
-		var statusOption = 3;
+		var statusOption = 3;　// surfaceが動画で且つスケール変更可能である状態
 		var drawable = {};
 		var surface = new g.Surface(width, height, drawable, statusOption);
 		expect(surface._scaleChanged).toBeUndefined();
@@ -117,9 +117,10 @@ describe("test Surface", function() {
 	it("destroy surface, and destroy triggers", function() {
 		var width = 1;
 		var height = 2;
-		var statusOption = 3;
+		var statusOption = 3;　// surfaceが動画で且つスケール変更可能である状態
 		var drawable = {};
 		var surface = new g.Surface(width, height, drawable, statusOption);
+		surface.scaleChanged.add(function() {}); // destroy時にscaleChangedをdestroyするために、scaleChangedを定義するためにイベントを登録しておく必要がある
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 		expect(surface.destroyed()).toBe(false);
@@ -127,6 +128,24 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted._handlers).toBe(null);
 		expect(surface.animatingStopped._handlers).toBe(null);
 		expect(surface.scaleChanged._handlers).toBe(null);
+		expect(surface.destroyed()).toBe(true);
+	});
+
+	it("destroy surface, and fire onDestroyed", function() {
+		var width = 1;
+		var height = 2;
+		var surface = new g.Surface(width, height);
+		var isFired = false;
+		surface.onDestroyed.add(function() {
+			isFired = true;
+		});
+
+		expect(isFired).toBe(false);
+		expect(surface.onDestroyed.constructor).toBe(g.Trigger);
+		expect(surface.destroyed()).toBe(false);
+		surface.destroy();
+		expect(isFired).toBe(true);
+		expect(surface.onDestroyed._handlers).toBe(null);
 		expect(surface.destroyed()).toBe(true);
 	});
 });
