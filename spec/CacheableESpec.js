@@ -22,7 +22,11 @@ describe("test CacheableE", function () {
 	it("invalidate", function () {
 		var ce = new g.CacheableE({ scene: runtime.scene });
 		var renderer = new mock.Renderer();
-		ce.renderCache = function () {};  // CacheableE は抽象クラスなのでテストできるようにダミーの実装を代入しておく
+		// CacheableE は抽象クラスなのでテストできるようにダミーの実装を代入しておく
+		ce.renderCache = function () {};
+		ce._createCache = function (width, height) {
+			return ce._createSurface(width, height, false);
+		};
 
 		expect(ce.state & mock.EntityStateFlags.Cached).toBe(0);
 		ce.renderSelf(renderer);
@@ -36,7 +40,11 @@ describe("test CacheableE", function () {
 	it("renderSelf", function () {
 		var ce = new g.CacheableE({ scene: runtime.scene });
 		var renderer = new mock.Renderer();
-		ce.renderCache = function () {};  // CacheableE は抽象クラスなのでテストできるようにダミーの実装を代入しておく
+		// CacheableE は抽象クラスなのでテストできるようにダミーの実装を代入しておく
+		ce.renderCache = function () {};
+		ce._createCache = function (width, height) {
+			return ce._createSurface(width, height, false);
+		};
 
 		// 戻り値
 		expect(ce.renderSelf(renderer)).toBe(true);
@@ -55,6 +63,9 @@ describe("test CacheableE", function () {
 		var called = false;
 		ce.renderCache = function(r, c) {
 			called = true;
+		};
+		ce._createCache = function (width, height) {
+			return ce._createSurface(width, height, false);
 		};
 
 		// 呼ばれる (初期状態ではキャッシュされていない)
@@ -86,6 +97,9 @@ describe("test CacheableE", function () {
 		ce.width = 100;
 		ce.height = 200;
 		ce.renderCache = function(r, c) {
+		};
+		ce._createCache = function (width, height) {
+			return ce._createSurface(width, height, false);
 		};
 
 		// 最初の呼び出し時にキャッシュを生成する
@@ -123,6 +137,9 @@ describe("test CacheableE", function () {
 		ce.width = 100;
 		ce.height = 200;
 		ce.renderCache = function(r, c) {
+		};
+		ce._createCache = function (width, height) {
+			return ce._createSurface(width, height, false);
 		};
 		ce.invalidate();
 		ce.renderSelf(r);

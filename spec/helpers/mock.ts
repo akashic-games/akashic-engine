@@ -474,8 +474,8 @@ export class ResourceFactory extends g.ResourceFactory {
 		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
-	createSurface(width: number, height: number): g.Surface {
-		return new Surface(width, height);
+	createSurface(width: number, height: number, state?: number): g.Surface {
+		return new Surface(width, height, {}, state);
 	}
 
 	createAudioPlayer(system: g.AudioSystem): g.AudioPlayer {
@@ -485,7 +485,16 @@ export class ResourceFactory extends g.ResourceFactory {
 	createGlyphFactory(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
 	                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
 	                   fontWeight?: g.FontWeight): g.GlyphFactory {
-		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+		return new GlyphFactory(
+			fontFamily,
+			fontSize,
+			baselineHeight,
+			fontColor,
+			strokeWidth,
+			strokeColor,
+			strokeOnly,
+			fontWeight
+		);
 	}
 	createVideoAsset(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem,
 	                 loop: boolean, useRealSize: boolean): g.VideoAsset {

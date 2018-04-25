@@ -83,9 +83,21 @@ namespace g {
 
 		constructor(surface: Surface) {
 			this._surface = surface;
+			this._surface.contentReset.add(this._onContentReset, this);
 			this._emptySurfaceAtlasSlotHead = new SurfaceAtlasSlot(0, 0, this._surface.width, this._surface.height);
 			this._accessScore = 0;
 			this._usedRectangleAreaSize = { width: 0, height: 0 };
+		}
+
+		/**
+		 * @private
+		 */
+		_onContentReset(): void {
+			const renderer = this._surface.renderer();
+			renderer.begin();
+			renderer.clear();
+			renderer.drawImage(this._surface, 0, 0, this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height, 0, 0);
+			renderer.end();
 		}
 
 		/**
@@ -193,7 +205,11 @@ namespace g {
 		 */
 		duplicateSurface(resourceFactory: ResourceFactory): Surface {
 			const src = this._surface;
-			const dst = resourceFactory.createSurface(this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height);
+			const dst = resourceFactory.createSurface(
+				this._usedRectangleAreaSize.width,
+				this._usedRectangleAreaSize.height,
+				g.SurfaceStateFlags.hasVariableResolution
+			);
 
 			const renderer = dst.renderer();
 			renderer.begin();

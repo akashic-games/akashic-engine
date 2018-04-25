@@ -49,7 +49,7 @@ namespace g {
 		                            fontWeight?: FontWeight): GlyphFactory;
 
 		createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
-			return new SurfaceAtlas(this.createSurface(width, height));
+			return new SurfaceAtlas(this.createSurface(width, height, SurfaceStateFlags.hasVariableResolution));
 		}
 	}
 }
