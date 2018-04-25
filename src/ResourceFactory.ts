@@ -17,7 +17,7 @@ namespace g {
 
 		abstract createTextAsset(id: string, assetPath: string): TextAsset;
 
-		abstract createAudioPlayer(system: AudioSystem): AudioPlayer
+		abstract createAudioPlayer(system: AudioSystem): AudioPlayer;
 
 		abstract createScriptAsset(id: string, assetPath: string): ScriptAsset;
 
@@ -27,8 +27,9 @@ namespace g {
 		 * 作成された直後のSurfaceは `Renderer#clear` 後の状態と同様であることが保証される。
 		 * @param width 幅(ピクセル、整数値)
 		 * @param height 高さ(ピクセル、整数値)
+		 * @param state surfaceの状態に関する各種フラグをビット値として管理
 		 */
-		abstract createSurface(width: number, height: number): Surface;
+		abstract createSurface(width: number, height: number, state?: number): Surface;
 
 		/**
 		 * GlyphFactory を作成する。

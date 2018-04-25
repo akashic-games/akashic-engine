@@ -154,11 +154,11 @@ export class Renderer extends g.Renderer {
 	}
 	setTransform(matrix: number[]): void {
 		throw new Error("not implemented");
-	};
+	}
 
 	setOpacity(opacity: number): void {
 		throw new Error("not implemented");
-	};
+	}
 
 	_getImageData(): ImageData {
 		return null;
@@ -170,8 +170,8 @@ export class Renderer extends g.Renderer {
 }
 
 export class Surface extends g.Surface {
-	constructor(width: number, height: number, drawable?: any, isDynamic: boolean = false) {
-		super(width, height, drawable, isDynamic);
+	constructor(width: number, height: number, drawable?: any, state: number|boolean = false) {
+		super(width, height, drawable, state);
 	}
 	createdRenderer: g.Renderer;
 
@@ -402,7 +402,7 @@ export class GlyphFactory extends g.GlyphFactory {
 	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
-	create(code: number): g.Glyph { return <g.Glyph>undefined; };
+	create(code: number): g.Glyph { return <g.Glyph>undefined; }
 }
 
 export class ResourceFactory extends g.ResourceFactory {
