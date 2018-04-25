@@ -170,8 +170,8 @@ export class Renderer extends g.Renderer {
 }
 
 export class Surface extends g.Surface {
-	constructor(width: number, height: number, drawable?: any, statusOption: number|boolean = false) {
-		super(width, height, drawable, statusOption);
+	constructor(width: number, height: number, drawable?: any, state: number|boolean = false) {
+		super(width, height, drawable, state);
 	}
 	createdRenderer: g.Renderer;
 

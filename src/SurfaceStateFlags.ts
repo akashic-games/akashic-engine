@@ -2,7 +2,7 @@ namespace g {
 	/**
 	 * surfaceの状態に関するオプション
 	 */
-	export const enum SurfaceStatusOption {
+	export enum SurfaceStateFlags {
 		/**
 		 * 動画であることを示す
 		 */

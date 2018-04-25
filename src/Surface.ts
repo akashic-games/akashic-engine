@@ -62,7 +62,7 @@ namespace g {
 		 * hasVariableResolutionが偽の時undefined
 		 * @private
 		 */
-		_scaleChanged: Trigger<[number, number]>;
+		contentReset: Trigger<void>;
 
 		/**
 		 * 描画可能な実体。
@@ -77,22 +77,14 @@ namespace g {
 		 */
 		_destroyed: boolean;
 
-		// Surfaceの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-		get scaleChanged(): Trigger<[number, number]> {
-			if (! this._scaleChanged) {
-				this._scaleChanged = new Trigger<[number, number]>();
-			}
-			return this._scaleChanged;
-		}
-
 		/**
 		 * `Surface` のインスタンスを生成する。
 		 * @param width 描画領域の幅（整数値でなければならない）
 		 * @param height 描画領域の高さ（整数値でなければならない）
 		 * @param drawable 描画可能な実体。省略された場合、 `undefined`
-		 * @param statusOption 本surfaceの生成時のオプション、詳細はSurfaceStatusOptionを参照。また、互換性を保つためbooleanも許可している。
+		 * @param state 本surfaceの状態に関する各種フラグをビット値として表現、詳細はSurfaceStateFlagsを参照。また、互換性を保つためbooleanも許可している。
 		 */
-		constructor(width: number, height: number, drawable?: any, statusOption: number|boolean = false) {
+		constructor(width: number, height: number, drawable?: any, state: number|boolean = false) {
 			if (width % 1 !== 0 || height % 1 !== 0) {
 				throw ExceptionFactory.createAssertionError("Surface#constructor: width and height must be integers");
 			}
@@ -103,11 +95,19 @@ namespace g {
 			this.scaleY = 1;
 			if (drawable)
 				this._drawable = drawable;
-			const normalizedStatusOption =
-				Number(statusOption) & (SurfaceStatusOption.isDynamic | SurfaceStatusOption.hasVariableResolution);
-			this.isDynamic = Boolean(normalizedStatusOption & SurfaceStatusOption.isDynamic);
-			this.hasVariableResolution = Boolean(normalizedStatusOption & SurfaceStatusOption.hasVariableResolution);
+			if (typeof state === "boolean") {
+				this.isDynamic = state;
+				this.hasVariableResolution = false;
+			} else {
+				this.isDynamic = !!(state & SurfaceStateFlags.isDynamic);
+				this.hasVariableResolution = Boolean(state & SurfaceStateFlags.hasVariableResolution);
+			}
 			this.onDestroyed = new Trigger<g.Surface>();
+			if (this.hasVariableResolution) {
+				this.contentReset = new Trigger<void>();
+			} else {
+				this.contentReset = undefined;
+			}
 			if (this.isDynamic) {
 				this.animatingStarted = new Trigger<void>();
 				this.animatingStopped = new Trigger<void>();
@@ -115,7 +115,7 @@ namespace g {
 				this.animatingStarted = undefined;
 				this.animatingStopped = undefined;
 			}
-			// this._destroyedは破棄時に一度だけ代入する特殊なフィールドなため、コンストラクタで初期値を代入しない
+			this._destroyed = undefined;
 		}
 
 		/**
@@ -140,8 +140,8 @@ namespace g {
 			if (this.animatingStopped) {
 				this.animatingStopped.destroy();
 			}
-			if (this._scaleChanged) {
-				this.scaleChanged.destroy();
+			if (this.contentReset) {
+				this.contentReset.destroy();
 			}
 			this._destroyed = true;
 			this.onDestroyed.destroy();

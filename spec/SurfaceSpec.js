@@ -19,6 +19,7 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
 		expect(surface.hasVariableResolution).toBe(false);
+		expect(surface.contentReset).toBeUndefined();
 		expect(surface.scaleX).toEqual(1);
 		expect(surface.scaleY).toEqual(1);
 	});
@@ -35,6 +36,7 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
 		expect(surface.hasVariableResolution).toBe(false);
+		expect(surface.contentReset).toBeUndefined();
 		expect(surface.scaleX).toEqual(1);
 		expect(surface.scaleY).toEqual(1);
 	});
@@ -62,6 +64,7 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 		expect(surface.hasVariableResolution).toBe(false);
+		expect(surface.contentReset).toBeUndefined();
 		expect(surface.scaleX).toEqual(1);
 		expect(surface.scaleY).toEqual(1);
 	});
@@ -80,6 +83,7 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted).toBeUndefined();
 		expect(surface.animatingStopped).toBeUndefined();
 		expect(surface.hasVariableResolution).toBe(true);
+		expect(surface.contentReset.constructor).toBe(g.Trigger);
 		expect(surface.scaleX).toBe(1);
 		expect(surface.scaleY).toBe(1);
 	});
@@ -98,20 +102,9 @@ describe("test Surface", function() {
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 		expect(surface.hasVariableResolution).toBe(true);
+		expect(surface.contentReset.constructor).toBe(g.Trigger);
 		expect(surface.scaleX).toBe(1);
 		expect(surface.scaleY).toBe(1);
-	});
-
-	it("create scaleChanged-trigger when call scaleChanged first", function() {
-		var width = 1;
-		var height = 2;
-		var statusOption = 3;　// surfaceが動画で且つスケール変更可能である状態
-		var drawable = {};
-		var surface = new g.Surface(width, height, drawable, statusOption);
-		expect(surface._scaleChanged).toBeUndefined();
-		expect(surface.scaleChanged.constructor).toBe(g.Trigger);
-		expect(surface._scaleChanged.constructor).toBe(g.Trigger);
-
 	});
 
 	it("destroy surface, and destroy triggers", function() {
@@ -120,14 +113,13 @@ describe("test Surface", function() {
 		var statusOption = 3;　// surfaceが動画で且つスケール変更可能である状態
 		var drawable = {};
 		var surface = new g.Surface(width, height, drawable, statusOption);
-		surface.scaleChanged.add(function() {}); // destroy時にscaleChangedをdestroyするために、scaleChangedを定義するためにイベントを登録しておく必要がある
 		expect(surface.animatingStarted.constructor).toBe(g.Trigger);
 		expect(surface.animatingStopped.constructor).toBe(g.Trigger);
 		expect(surface.destroyed()).toBe(false);
 		surface.destroy();
 		expect(surface.animatingStarted._handlers).toBe(null);
 		expect(surface.animatingStopped._handlers).toBe(null);
-		expect(surface.scaleChanged._handlers).toBe(null);
+		expect(surface.contentReset._handlers).toBe(null);
 		expect(surface.destroyed()).toBe(true);
 	});
 
