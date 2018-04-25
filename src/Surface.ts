@@ -100,7 +100,7 @@ namespace g {
 				this.hasVariableResolution = false;
 			} else {
 				this.isDynamic = !!(state & SurfaceStateFlags.isDynamic);
-				this.hasVariableResolution = Boolean(state & SurfaceStateFlags.hasVariableResolution);
+				this.hasVariableResolution = !!(state & SurfaceStateFlags.hasVariableResolution);
 			}
 			this.onDestroyed = new Trigger<g.Surface>();
 			if (this.hasVariableResolution) {
