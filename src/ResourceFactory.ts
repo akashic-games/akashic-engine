@@ -43,14 +43,13 @@ namespace g {
 		 * @param strokeColor ストロークの色。省略された場合、 `"black"` として扱われる
 		 * @param strokeOnly ストロークのみを描画するか否か。省略された場合、偽として扱われる
 		 * @param fontWeight フォントウェイト。省略された場合、 `FontWeight.Normal` として扱われる
-		 * @param hasVariableResolution surfaceのscaleが変更可能か否か。省略された場合、偽として扱われる
 		 */
 		abstract createGlyphFactory(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight?: number,
 		                            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-		                            fontWeight?: FontWeight, hasVariableResolution?: boolean): GlyphFactory;
+		                            fontWeight?: FontWeight): GlyphFactory;
 
 		createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
-			return new SurfaceAtlas(this.createSurface(width, height, g.SurfaceStatusOption.hasVariableResolution));
+			return new SurfaceAtlas(this.createSurface(width, height, SurfaceStateFlags.hasVariableResolution));
 		}
 	}
 }

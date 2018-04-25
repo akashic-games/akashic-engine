@@ -176,7 +176,7 @@ namespace g {
 			var textSurface =  this.scene.game.resourceFactory.createSurface(
 				Math.ceil(this._textWidth),
 				Math.ceil(this.height),
-				g.SurfaceStatusOption.hasVariableResolution
+				g.SurfaceStateFlags.hasVariableResolution
 			);
 			var textRenderer = textSurface.renderer();
 
@@ -243,8 +243,8 @@ namespace g {
 			super.destroy();
 		}
 
-		_createCache(width: number, height: number, isResizable: boolean = false): Surface {
-			return super._createCache(width, height, true);
+		_createCache(width: number, height: number): Surface {
+			return this._createSurface(width, height, true);
 		}
 
 		private _invalidateSelf(): void {

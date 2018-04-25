@@ -64,13 +64,6 @@ namespace g {
 		strokeOnly: boolean;
 
 		/**
-		 * surfaceのscaleは変更可能かどうか
-		 *
-		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
-		 */
-		hasVariableResolution: boolean;
-
-		/**
 		 * `GlyphFactory` を生成する。
 		 *
 		 * @param fontFamily フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはそれらの配列
@@ -80,11 +73,10 @@ namespace g {
 		 * @param strokeColor 輪郭色
 		 * @param strokeOnly 輪郭を描画するか否か
 		 * @param fontWeight フォントウェイト
-		 * @param hasVariableResolution surfaceのscaleが変更可能かどうか
 		 */
 		constructor(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
-		            fontWeight: FontWeight = FontWeight.Normal, hasVariableResolution: boolean = false) {
+		            fontWeight: FontWeight = FontWeight.Normal) {
 			this.fontFamily = fontFamily;
 			this.fontSize = fontSize;
 			this.fontWeight = fontWeight;
@@ -93,7 +85,6 @@ namespace g {
 			this.strokeWidth = strokeWidth;
 			this.strokeColor = strokeColor;
 			this.strokeOnly = strokeOnly;
-			this.hasVariableResolution = hasVariableResolution;
 		}
 
 		/**

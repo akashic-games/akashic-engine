@@ -399,9 +399,8 @@ export class AudioPlayer extends g.AudioPlayer {
 
 export class GlyphFactory extends g.GlyphFactory {
 	constructor(fontFamily: g.FontFamily|string|string[], fontSize: number, baselineHeight?: number,
-	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight,
-	            hasVariableResolution?: boolean) {
-		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight, hasVariableResolution);
+	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
+		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
 	create(code: number): g.Glyph { return <g.Glyph>undefined; }
 }
@@ -475,8 +474,8 @@ export class ResourceFactory extends g.ResourceFactory {
 		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
-	createSurface(width: number, height: number): g.Surface {
-		return new Surface(width, height);
+	createSurface(width: number, height: number, state?: number): g.Surface {
+		return new Surface(width, height, {}, state);
 	}
 
 	createAudioPlayer(system: g.AudioSystem): g.AudioPlayer {
@@ -485,7 +484,7 @@ export class ResourceFactory extends g.ResourceFactory {
 
 	createGlyphFactory(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
 	                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-	                   fontWeight?: g.FontWeight, hasVariableResolution?: boolean): g.GlyphFactory {
+	                   fontWeight?: g.FontWeight): g.GlyphFactory {
 		return new GlyphFactory(
 			fontFamily,
 			fontSize,
@@ -494,8 +493,7 @@ export class ResourceFactory extends g.ResourceFactory {
 			strokeWidth,
 			strokeColor,
 			strokeOnly,
-			fontWeight,
-			hasVariableResolution
+			fontWeight
 		);
 	}
 	createVideoAsset(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem,

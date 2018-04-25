@@ -83,9 +83,21 @@ namespace g {
 
 		constructor(surface: Surface) {
 			this._surface = surface;
+			this._surface.contentReset.add(this._onContentReset, this);
 			this._emptySurfaceAtlasSlotHead = new SurfaceAtlasSlot(0, 0, this._surface.width, this._surface.height);
 			this._accessScore = 0;
 			this._usedRectangleAreaSize = { width: 0, height: 0 };
+		}
+
+		/**
+		 * @private
+		 */
+		_onContentReset(): void {
+			const renderer = this._surface.renderer();
+			renderer.begin();
+			renderer.clear();
+			renderer.drawImage(this._surface, 0, 0, this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height, 0, 0);
+			renderer.end();
 		}
 
 		/**
@@ -196,7 +208,7 @@ namespace g {
 			const dst = resourceFactory.createSurface(
 				this._usedRectangleAreaSize.width,
 				this._usedRectangleAreaSize.height,
-				g.SurfaceStatusOption.hasVariableResolution
+				g.SurfaceStateFlags.hasVariableResolution
 			);
 
 			const renderer = dst.renderer();
@@ -416,7 +428,7 @@ namespace g {
 			this._resourceFactory = param.game.resourceFactory;
 			this._glyphFactory =
 				this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
-					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight, true);
+					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			this._glyphs = {};
 			this._atlases = [];
 			this._currentAtlasIndex = 0;

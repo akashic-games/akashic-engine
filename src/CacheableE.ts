@@ -109,14 +109,14 @@ namespace g {
 			super.destroy();
 		}
 
-		_createCache(width: number, height: number, isResizable: boolean = false): Surface {
-			const optionalFlag = isResizable ? g.SurfaceStatusOption.hasVariableResolution : g.SurfaceStatusOption.None;
-			const surface = this.scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height), optionalFlag);
-			surface.scaleChanged.add((scales: number[]) => {
-				this.width *= scales[0];
-				this.height *= scales[1];
-				this.invalidate();
-			});
+		abstract _createCache(width: number, height: number): Surface;
+
+		_createSurface(width: number, height: number, hasVariableResolution: boolean): Surface {
+			const surfaceStateFlag = hasVariableResolution ? g.SurfaceStateFlags.hasVariableResolution : g.SurfaceStateFlags.None;
+			const surface = this.scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height), surfaceStateFlag);
+			if (surface.hasVariableResolution) {
+				surface.contentReset.add(this.invalidate, this);
+			}
 			return surface;
 		}
 	}
