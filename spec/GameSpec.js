@@ -29,6 +29,20 @@ describe("test Game", function() {
 		expect(game).toHaveProperty("_initialScene");
 	});
 
+	it("_destroy()", function() {
+		var game = new mock.Game({ width: 320, height: 270 }, undefined, "foo");
+		game._destroy();
+		expect(game.db).toBe(undefined);
+		expect(game.renderers).toBe(undefined);
+		expect(game.scenes).toBe(undefined);
+		expect(game.random).toBe(undefined);
+		expect(game.events).toBe(undefined);
+		expect(game.modified).toBe(false);
+		expect(game.external).toEqual({});  // external は触らない
+		expect(game.vars).toEqual({});  // vars も触らない
+		expect(game.playId).toBe(undefined);
+	});
+
 	it("global assets", function (done) {
 		var game = new mock.Game({
 			width: 320,
