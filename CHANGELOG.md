@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 1.12.9
+ * `g.Game#_destroy()` を追加
+
+### エンジン開発者への影響
+
+ * `g.Game#_destroy()` を追加
+    * エンジン開発者はこのメソッドを呼び出すことで、ゲームを破棄することができます。
+
 ## 1.12.8
 不具合修正
  * `moduleMainScripts` のファイルパスを `AssetManager#_liveAssetVirtualPathTable` から参照するように修正
