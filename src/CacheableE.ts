@@ -61,17 +61,18 @@ namespace g {
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
 		renderSelf(renderer: Renderer, camera?: Camera): boolean {
+			const cacheSize = this.calcCacheSize();
 			if (this._renderedCamera !== camera) {
 				this.state &= ~EntityStateFlags.Cached;
 				this._renderedCamera = camera;
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
-				var isNew = !this._cache || this._cache.width < Math.ceil(this.width) || this._cache.height < Math.ceil(this.height);
+				var isNew = !this._cache || this._cache.width < Math.ceil(cacheSize.width) || this._cache.height < Math.ceil(cacheSize.height);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();
 					}
-					this._cache = this.scene.game.resourceFactory.createSurface(Math.ceil(this.width), Math.ceil(this.height));
+					this._cache = this.scene.game.resourceFactory.createSurface(Math.ceil(cacheSize.width), Math.ceil(cacheSize.height));
 					this._renderer = this._cache.renderer();
 				}
 				this._renderer.begin();
@@ -84,8 +85,8 @@ namespace g {
 				this.state |= EntityStateFlags.Cached;
 				this._renderer.end();
 			}
-			if (this._cache && this.width > 0 && this.height > 0) {
-				renderer.drawImage(this._cache, 0, 0, this.width, this.height, 0, 0);
+			if (this._cache && cacheSize.width > 0 && this.height > 0) {
+				renderer.drawImage(this._cache, 0, 0, cacheSize.width, this.height, 0, 0);
 			}
 			return this._shouldRenderChildren;
 		}
@@ -107,6 +108,17 @@ namespace g {
 			this._cache = undefined;
 
 			super.destroy();
+		}
+
+		/**
+		 * キャッシュのサイズを取得する。
+		 * 本クラスを継承したクラスでエンティティのサイズと異なるサイズを利用する場合、このメソッドをオーバーライドする。
+		 */
+		calcCacheSize(): CommonSize {
+			return {
+				width: this.width,
+				height: this.height
+			};
 		}
 	}
 }
