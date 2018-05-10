@@ -74,14 +74,13 @@ namespace g {
 				this._renderedCamera = camera;
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
-				const cacheSize = this.calculateCacheSize();
-				this._cacheSize = cacheSize;
-				var isNew = !this._cache || this._cache.width < Math.ceil(cacheSize.width) || this._cache.height < Math.ceil(cacheSize.height);
+				this._cacheSize = this.calculateCacheSize();
+				var isNew = !this._cache || this._cache.width < Math.ceil(this._cacheSize.width) || this._cache.height < Math.ceil(this._cacheSize.height);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();
 					}
-					this._cache = this.scene.game.resourceFactory.createSurface(Math.ceil(cacheSize.width), Math.ceil(cacheSize.height));
+					this._cache = this.scene.game.resourceFactory.createSurface(Math.ceil(this._cacheSize.width), Math.ceil(this._cacheSize.height));
 					this._renderer = this._cache.renderer();
 				}
 				this._renderer.begin();
