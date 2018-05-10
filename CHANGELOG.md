@@ -1,6 +1,12 @@
 # ChangeLog
 
+## 2.1.2
+
+機能追加
+* `g.CacheableE#calculateCacheSize()` を追加
+
 ## 2.1.1
+
 不具合修正
  * `moduleMainScripts` のファイルパスを `AssetManager#_liveAssetVirtualPathTable` から参照するように修正
 
