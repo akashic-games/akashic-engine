@@ -61,12 +61,12 @@ namespace g {
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
 		renderSelf(renderer: Renderer, camera?: Camera): boolean {
-			const cacheSize = this.calcCacheSize();
 			if (this._renderedCamera !== camera) {
 				this.state &= ~EntityStateFlags.Cached;
 				this._renderedCamera = camera;
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
+				const cacheSize = this.calculateCacheSize();
 				var isNew = !this._cache || this._cache.width < Math.ceil(cacheSize.width) || this._cache.height < Math.ceil(cacheSize.height);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
@@ -85,8 +85,8 @@ namespace g {
 				this.state |= EntityStateFlags.Cached;
 				this._renderer.end();
 			}
-			if (this._cache && cacheSize.width > 0 && this.height > 0) {
-				renderer.drawImage(this._cache, 0, 0, cacheSize.width, this.height, 0, 0);
+			if (this._cache && this.width > 0 && this.height > 0) {
+				renderer.drawImage(this._cache, 0, 0, this._cache.width, this._cache.height, 0, 0);
 			}
 			return this._shouldRenderChildren;
 		}
@@ -113,8 +113,10 @@ namespace g {
 		/**
 		 * キャッシュのサイズを取得する。
 		 * 本クラスを継承したクラスでエンティティのサイズと異なるサイズを利用する場合、このメソッドをオーバーライドする。
+		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
+		 * このメソッドから得られる値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 		 */
-		calcCacheSize(): CommonSize {
+		calculateCacheSize(): CommonSize {
 			return {
 				width: this.width,
 				height: this.height
