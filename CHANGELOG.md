@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.12.10
+
+機能追加
+ * `g.cacheableE#calculateCacheSize()` を追加
+
 ## 1.12.9
  * `g.Game#_destroy()` を追加
 
@@ -21,7 +26,7 @@
 ## 1.12.6
 
 機能追加
- * `g.Game#addEventFilter() に省略可能な引数 `handleEmpty` を追加
+ * `g.Game#addEventFilter()` に省略可能な引数 `handleEmpty` を追加
 
 ### エンジン開発者への影響
 
