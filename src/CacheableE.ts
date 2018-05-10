@@ -36,6 +36,14 @@ namespace g {
 		_renderedCamera: Camera;
 
 		/**
+		 * 描画されるキャッシュサイズ。
+		 * このサイズは _cache のサイズよりも小さくなる場合がある。
+		 *
+		 * @private
+		 */
+		_cacheSize: CommonSize;
+
+		/**
 		 * 各種パラメータを指定して `CacheableE` のインスタンスを生成する。
 		 * @param param このエンティティに対するパラメータ
 		 */
@@ -67,6 +75,7 @@ namespace g {
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
 				const cacheSize = this.calculateCacheSize();
+				this._cacheSize = cacheSize;
 				var isNew = !this._cache || this._cache.width < Math.ceil(cacheSize.width) || this._cache.height < Math.ceil(cacheSize.height);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
@@ -85,8 +94,8 @@ namespace g {
 				this.state |= EntityStateFlags.Cached;
 				this._renderer.end();
 			}
-			if (this._cache && this.width > 0 && this.height > 0) {
-				renderer.drawImage(this._cache, 0, 0, this._cache.width, this._cache.height, 0, 0);
+			if (this._cache && this._cacheSize.width > 0 && this._cacheSize.height > 0) {
+				renderer.drawImage(this._cache, 0, 0, this._cacheSize.width, this._cacheSize.height, 0, 0);
 			}
 			return this._shouldRenderChildren;
 		}
