@@ -276,11 +276,9 @@ namespace g {
 			if (this._childrenSurface && !this._childrenSurface.destroyed()) {
 				this._childrenSurface.destroy();
 			}
-			const surfaceStateFlag = this._hasVariableResolution ? g.SurfaceStateFlags.hasVariableResolution : g.SurfaceStateFlags.None;
 			this._childrenSurface = resourceFactory.createSurface(
 				Math.ceil(this._childrenArea.width),
-				Math.ceil(this._childrenArea.height),
-				surfaceStateFlag
+				Math.ceil(this._childrenArea.height)
 			);
 			this._childrenRenderer = this._childrenSurface.renderer();
 			this._normalizedPadding = r;

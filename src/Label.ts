@@ -175,8 +175,7 @@ namespace g {
 			}
 			var textSurface =  this.scene.game.resourceFactory.createSurface(
 				Math.ceil(this._textWidth),
-				Math.ceil(this.height),
-				g.SurfaceStateFlags.hasVariableResolution
+				Math.ceil(this.height)
 			);
 			var textRenderer = textSurface.renderer();
 

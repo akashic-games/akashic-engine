@@ -95,5 +95,7 @@ namespace g {
 		 * @param code 文字コード
 		 */
 		abstract create(code: number): Glyph;
+
+		abstract changeScale(scale: number): void;
 	}
 }

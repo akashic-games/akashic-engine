@@ -403,6 +403,9 @@ export class GlyphFactory extends g.GlyphFactory {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
 	create(code: number): g.Glyph { return <g.Glyph>undefined; }
+	changeScale(scale: number): void {
+		return;
+	}
 }
 
 export class ResourceFactory extends g.ResourceFactory {

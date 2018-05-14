@@ -83,7 +83,7 @@ namespace g {
 
 		constructor(surface: Surface) {
 			this._surface = surface;
-			this._surface.contentReset.add(this._onContentReset, this);
+			// this._surface.contentReset.add(this._onContentReset, this);
 			this._emptySurfaceAtlasSlotHead = new SurfaceAtlasSlot(0, 0, this._surface.width, this._surface.height);
 			this._accessScore = 0;
 			this._usedRectangleAreaSize = { width: 0, height: 0 };
@@ -443,7 +443,14 @@ namespace g {
 			this.hint.maxAtlasNum = this.hint.maxAtlasNum ? this.hint.maxAtlasNum : 1;
 
 			this._atlasSize = calcAtlasSize(this.hint);
-			this._atlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+			const surfaceAtlas = this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height);
+			surfaceAtlas._surface.contentReset.add(() => {
+				this._glyphFactory.changeScale(Math.min(surfaceAtlas._surface.scaleX, surfaceAtlas._surface.scaleY));
+				Object.keys(this._glyphs).forEach((key: string) => {
+					this._glyphs[Number(key)].isSurfaceValid = false;
+				});
+			});
+			this._atlases.push(surfaceAtlas);
 
 			if (this.hint.presetChars) {
 				for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
@@ -615,10 +622,10 @@ namespace g {
 			let atlas: SurfaceAtlas = null;
 			let slot: SurfaceAtlasSlot = null;
 			let area = {
-				x: glyph.x,
-				y: glyph.y,
-				width: glyph.width,
-				height: glyph.height
+				x: Math.floor(glyph.x * glyph.surface.scaleX),
+				y: Math.floor(glyph.y * glyph.surface.scaleY),
+				width: Math.ceil(glyph.width * glyph.surface.scaleX),
+				height: Math.ceil(glyph.height * glyph.surface.scaleY)
 			};
 			for (let i = 0; i < this._atlases.length; i++) {
 				let index = (this._currentAtlasIndex + i) % this._atlases.length;
