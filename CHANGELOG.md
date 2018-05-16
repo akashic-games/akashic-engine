@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 2.2.0
+
+機能追加
+* シェーダ機能を追加
+* `g.Renderer#setShaderProgram()` を追加
+
+### エンジン開発者への影響
+
+* `g.Renderer#setShaderProgram()` を追加
+  * 追加されたメソッドに対する処理を実装する必要があります。
+
 ## 2.1.2
 
 機能追加
