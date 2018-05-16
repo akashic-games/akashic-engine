@@ -17,7 +17,7 @@ namespace g {
 
 		abstract createTextAsset(id: string, assetPath: string): TextAsset;
 
-		abstract createAudioPlayer(system: AudioSystem): AudioPlayer
+		abstract createAudioPlayer(system: AudioSystem): AudioPlayer;
 
 		abstract createScriptAsset(id: string, assetPath: string): ScriptAsset;
 
