@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Unreleased changes
+
+機能追加
+* g.FrameSpriteで画像の切り出し範囲を指定するパラメーターの追加
+
 ## 2.2.0
 
 機能追加
