@@ -188,5 +188,86 @@ describe("test FrameSprite", function() {
 		expect(frame.srcWidth).toBe(32);
 		expect(frame.srcHeight).toBe(48);
 	});
+
+	it("cutout", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		var surface = new g.Surface(480, 480);
+		var sprite = new g.FrameSprite({
+			scene: runtime.scene,
+			src: surface,
+			width: 32,
+			height: 48,
+			cutoutX: 160,
+			cutoutY: 144,
+			cutoutWidth: 165,
+			frames: [0, 1, 4, 5, 6]
+		});
+		expect(sprite.frameNumber).toBe(0);
+		expect(sprite.srcX).toBe(160);
+		expect(sprite.srcY).toBe(144);
+		expect(sprite._lastUsedIndex).toBe(0);
+
+		sprite.start();
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(1);
+		expect(sprite.srcX).toBe(192);
+		expect(sprite.srcY).toBe(144);
+		expect(sprite._lastUsedIndex).toBe(1);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(2);
+		expect(sprite.srcX).toBe(288);
+		expect(sprite.srcY).toBe(144);
+		expect(sprite._lastUsedIndex).toBe(4);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(3);
+		expect(sprite.srcX).toBe(160);
+		expect(sprite.srcY).toBe(192);
+		expect(sprite._lastUsedIndex).toBe(5);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(4);
+		expect(sprite.srcX).toBe(192);
+		expect(sprite.srcY).toBe(192);
+		expect(sprite._lastUsedIndex).toBe(6);
+	});
+
+	it("reflect change of cutout offset", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		var surface = new g.Surface(480, 480);
+		var sprite = new g.FrameSprite({
+			scene: runtime.scene,
+			src: surface,
+			width: 32,
+			height: 48,
+			cutoutX: 160,
+			cutoutY: 144,
+			cutoutWidth: 160,
+			frames: [0, 5],
+			frameNumber: 1
+		});
+		expect(sprite.frameNumber).toBe(1);
+		expect(sprite.srcX).toBe(160);
+		expect(sprite.srcY).toBe(192);
+		expect(sprite._lastUsedIndex).toBe(5);
+
+		sprite.cutoutX = 320;
+		sprite.cutoutY = 240;
+		sprite.cutoutWidth = 64;
+		sprite.frameNumber = 0;
+		sprite.modified();
+		expect(sprite.frameNumber).toBe(0);
+		expect(sprite.srcX).toBe(320);
+		expect(sprite.srcY).toBe(240);
+		expect(sprite._lastUsedIndex).toBe(0);
+
+		sprite.start();
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(1);
+		expect(sprite.srcX).toBe(352);
+		expect(sprite.srcY).toBe(336);
+		expect(sprite._lastUsedIndex).toBe(5);
+	});
 });
 

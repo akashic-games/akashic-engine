@@ -75,7 +75,9 @@ namespace g {
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
 				this._cacheSize = this.calculateCacheSize();
-				var isNew = !this._cache || this._cache.width < Math.ceil(this._cacheSize.width) || this._cache.height < Math.ceil(this._cacheSize.height);
+				var isNew = !this._cache
+					|| this._cache.width < Math.ceil(this._cacheSize.width)
+					|| this._cache.height < Math.ceil(this._cacheSize.height);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();

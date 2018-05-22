@@ -42,6 +42,29 @@ namespace g {
 		 * @default (1000 / game.fps)
 		 */
 		interval?: number;
+
+		/**
+		 * 切り出し範囲の左上端のx座標。
+		 * @default 0
+		 */
+		cutoutX?: number;
+
+		/**
+		 * 切り出し範囲の左上端のy座標。
+		 * @default 0
+		 */
+		cutoutY?: number;
+
+		/**
+		 * 切り出し範囲の横幅。
+		 */
+		cutoutWidth?: number;
+
+		/**
+		 * 切り出し範囲の縦幅。
+		 * ただし、この値は現在は使用していない。
+		 */
+		cutoutHeight?: number;
 	}
 
 	/**
@@ -86,6 +109,30 @@ namespace g {
 		interval: number;
 
 		/**
+		 * 対象画像の切り出し範囲の左上端のx座標。
+		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
+		 */
+		cutoutX: number;
+
+		/**
+		 * 対象画像の切り出し範囲の左上端のy座標。
+		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
+		 */
+		cutoutY: number;
+
+		/**
+		 * 対象画像の切り出し範囲の横幅。
+		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
+		 */
+		cutoutWidth: number;
+
+		/**
+		 * 対象画像の切り出し範囲の縦幅。
+		 * ただし、この値は現在は使用していない。
+		 */
+		cutoutHeight: number;
+
+		/**
 		 * @private
 		 */
 		_timer: Timer;
@@ -96,6 +143,7 @@ namespace g {
 		_lastUsedIndex: number;
 
 		/**
+		 * @deprecated
 		 * `Sprite` から `FrameSprite` を作成する。
 		 * @param sprite 画像として使う`Sprite`
 		 * @param width 作成されるエンティティの高さ。省略された場合、 `sprite.width`
@@ -124,6 +172,10 @@ namespace g {
 			this.frames = "frames" in param ? param.frames : [0];
 			this.interval = param.interval;
 			this._timer = undefined;
+			this.cutoutX = param.cutoutX ? param.cutoutX : 0;
+			this.cutoutY = param.cutoutY ? param.cutoutY : 0;
+			this.cutoutWidth = param.cutoutWidth ? param.cutoutWidth : this.surface.width;
+			this.cutoutHeight = param.cutoutHeight ? param.cutoutHeight : this.surface.height;
 			this._modifiedSelf();
 		}
 
@@ -194,17 +246,29 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_changeFrame(): void {
-			var frame = this.frames[this.frameNumber];
-			var sep = Math.floor(this.surface.width / this.srcWidth);
-			this.srcX = (frame % sep) * this.srcWidth;
-			this.srcY = Math.floor(frame / sep) * this.srcHeight;
-			this._lastUsedIndex = frame;
+		_changeFrame(offset: CommonOffset = this._getCurrentOffset()): void {
+			this.srcX = offset.x;
+			this.srcY = offset.y;
+			this._lastUsedIndex = this.frames[this.frameNumber];
 		}
 
 		private _modifiedSelf(isBubbling?: boolean): void {
-			if (this._lastUsedIndex !== this.frames[this.frameNumber])
-				this._changeFrame();
+			const currentOffset = this._getCurrentOffset();
+			if (this._lastUsedIndex !== this.frames[this.frameNumber]
+				|| this.srcX !== currentOffset.x
+				|| this.srcY !== currentOffset.y
+			) {
+				this._changeFrame(currentOffset);
+			}
+		}
+
+		private _getCurrentOffset(): CommonOffset {
+			const frame = this.frames[this.frameNumber];
+			const sep = Math.floor(this.cutoutWidth / this.srcWidth);
+			return {
+				x: (frame % sep) * this.srcWidth + this.cutoutX,
+				y: Math.floor(frame / sep) * this.srcHeight + this.cutoutY
+			};
 		}
 	}
 }
