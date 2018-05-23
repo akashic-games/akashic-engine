@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased changes
+
+機能追加
+* `g.Util.sliceSurface()` を追加
+  * 指定Surfaceを指定した範囲で切り出すことができます。
+
 ## 2.2.0
 
 機能追加

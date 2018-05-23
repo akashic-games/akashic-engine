@@ -283,5 +283,18 @@ namespace g {
 				}
 			}
 		}
+
+		/**
+		 * 指定Surfaceから指定範囲を抽出したSurfaceを返す。
+		 * ※この処理はSurfaceを新たに生成する重い処理のため、頻繁に利用することは推奨致しません。
+		 */
+		export function sliceSurface(game: Game, targetSurface: Surface, sliceArea: CommonArea): Surface {
+			const surface = game.resourceFactory.createSurface(sliceArea.width, sliceArea.height);
+			const renderer = surface.renderer();
+			renderer.begin();
+			renderer.drawImage(targetSurface, sliceArea.x, sliceArea.y, sliceArea.width, sliceArea.height, 0, 0);
+			renderer.end();
+			return surface;
+		}
 	}
 }
