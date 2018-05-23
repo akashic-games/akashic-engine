@@ -188,5 +188,77 @@ describe("test FrameSprite", function() {
 		expect(frame.srcWidth).toBe(32);
 		expect(frame.srcHeight).toBe(48);
 	});
+
+	it("loop", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		var surface = new g.Surface(480, 480);
+		var sprite = new g.FrameSprite({
+			scene: runtime.scene,
+			src: surface,
+			width: 32,
+			height: 48,
+			frames: [10, 11, 12],
+			loop: true
+		});
+		var isFired = false;
+		sprite.finished.add(function() {
+			isFired = true;
+		});
+		sprite.start();
+		expect(sprite.frameNumber).toBe(0);
+		expect(sprite._lastUsedIndex).toBe(10);
+		expect(isFired).toBe(false);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(1);
+		expect(sprite._lastUsedIndex).toBe(11);
+		expect(isFired).toBe(false);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(2);
+		expect(sprite._lastUsedIndex).toBe(12);
+		expect(isFired).toBe(false);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(0);
+		expect(sprite._lastUsedIndex).toBe(10);
+		expect(isFired).toBe(false);
+	});
+
+	it("not loop", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		var surface = new g.Surface(480, 480);
+		var sprite = new g.FrameSprite({
+			scene: runtime.scene,
+			src: surface,
+			width: 32,
+			height: 48,
+			frames: [10, 11, 12],
+			loop: false
+		});
+		var isFired = false;
+		sprite.finished.add(function() {
+			isFired = true;
+		});
+		sprite.start();
+		expect(sprite.frameNumber).toBe(0);
+		expect(sprite._lastUsedIndex).toBe(10);
+		expect(isFired).toBe(false);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(1);
+		expect(sprite._lastUsedIndex).toBe(11);
+		expect(isFired).toBe(false);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(2);
+		expect(sprite._lastUsedIndex).toBe(12);
+		expect(isFired).toBe(false);
+
+		runtime.game.tick();
+		expect(sprite.frameNumber).toBe(2);
+		expect(sprite._lastUsedIndex).toBe(12);
+		expect(isFired).toBe(true);
+	});
 });
 

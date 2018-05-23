@@ -42,6 +42,12 @@ namespace g {
 		 * @default (1000 / game.fps)
 		 */
 		interval?: number;
+
+		/**
+		 * アニメーションをループ再生させるかどうか
+		 * @default true
+		 */
+		loop?: boolean;
 	}
 
 	/**
@@ -86,6 +92,17 @@ namespace g {
 		interval: number;
 
 		/**
+		 * アニメーションをループ再生させるかどうか
+		 * 初期値は true となっている
+		 */
+		loop: boolean;
+
+		/**
+		 * アニメーション終了時にfireされる (ループ再生をOFFにしている時のみ)
+		 */
+		finished: Trigger<void>;
+
+		/**
 		 * @private
 		 */
 		_timer: Timer;
@@ -124,6 +141,8 @@ namespace g {
 			this.frames = "frames" in param ? param.frames : [0];
 			this.interval = param.interval;
 			this._timer = undefined;
+			this.loop = param.loop != null ? param.loop : true;
+			this.finished = new Trigger<void>();
 			this._modifiedSelf();
 		}
 
@@ -171,8 +190,16 @@ namespace g {
 		 * @private
 		 */
 		_onElapsed(): void {
-			if (++this.frameNumber >= this.frames.length)
-				this.frameNumber = 0;
+			if (this.frameNumber === this.frames.length - 1) {
+				if (this.loop) {
+					this.frameNumber = 0;
+				} else {
+					this.stop();
+					this.finished.fire();
+				}
+			} else {
+				this.frameNumber++;
+			}
 
 			this.modified();
 		}

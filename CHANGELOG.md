@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Unreleased changes
+
+機能追加
+* g.FrameSpriteにアニメーションをループ再生するかどうか指定するパラメーターの追加
+
 ## 2.2.0
 
 機能追加
