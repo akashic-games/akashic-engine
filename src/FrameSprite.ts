@@ -44,7 +44,7 @@ namespace g {
 		interval?: number;
 
 		/**
-		 * アニメーションをループ再生させるかどうか
+		 * アニメーションをループ再生させるか否か。
 		 * @default true
 		 */
 		loop?: boolean;
@@ -92,8 +92,8 @@ namespace g {
 		interval: number;
 
 		/**
-		 * アニメーションをループ再生させるかどうか
-		 * 初期値は true となっている
+		 * アニメーションをループ再生させるか否か。
+		 * 初期値は `true` である。
 		 */
 		loop: boolean;
 
