@@ -1,6 +1,7 @@
 describe("test FrameSprite", function() {
 	var g = require('../lib/main.node.js');
 	var skeletonRuntime = require("./helpers/skeleton");
+	var mock = require("./helpers/mock");
 
 	beforeEach(function() {
 	});
@@ -9,7 +10,7 @@ describe("test FrameSprite", function() {
 	});
 	it("初期化", function() {
 		var runtime = skeletonRuntime();
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var frameSprite = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -30,7 +31,7 @@ describe("test FrameSprite", function() {
 
 	it("start", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sp = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -57,7 +58,7 @@ describe("test FrameSprite", function() {
 
 	it("stop", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sp = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -75,7 +76,7 @@ describe("test FrameSprite", function() {
 
 	it("destroy", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sp = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -93,7 +94,7 @@ describe("test FrameSprite", function() {
 
 	it("frame/frameNumber", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sp = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -159,7 +160,7 @@ describe("test FrameSprite", function() {
 
 	it("_free", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sp = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -176,7 +177,7 @@ describe("test FrameSprite", function() {
 
 	it("createBySprite", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sprite = new g.Sprite({
 			scene: runtime.scene,
 			src: surface,
@@ -191,7 +192,7 @@ describe("test FrameSprite", function() {
 
 	it("loop", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sprite = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -227,7 +228,7 @@ describe("test FrameSprite", function() {
 
 	it("not loop", function() {
 		var runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
-		var surface = new g.Surface(480, 480);
+		var surface = new mock.Surface(480, 480);
 		var sprite = new g.FrameSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -261,4 +262,3 @@ describe("test FrameSprite", function() {
 		expect(isFired).toBe(true);
 	});
 });
-

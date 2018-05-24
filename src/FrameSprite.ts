@@ -98,7 +98,8 @@ namespace g {
 		loop: boolean;
 
 		/**
-		 * アニメーション終了時にfireされる (ループ再生をOFFにしている時のみ)
+		 * アニメーション終了時にfireされるTrigger。
+		 * 本Triggerは loop: true の場合にのみfireされる。
 		 */
 		finished: Trigger<void>;
 
