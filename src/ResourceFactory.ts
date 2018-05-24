@@ -50,5 +50,19 @@ namespace g {
 		createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
 			return new SurfaceAtlas(this.createSurface(width, height));
 		}
+
+		/**
+		 * 指定Surfaceから指定範囲を抽出したSurfaceを返す。
+		 * 範囲を指定しない場合は、指定SurfaceをコピーしたSurfaceを返す。
+		 */
+		createTrimmedSurface(targetSurface: Surface, targetArea?: CommonArea): Surface {
+			const area = targetArea || {x: 0, y: 0, width: targetSurface.width, height: targetSurface.height};
+			const surface = this.createSurface(area.width, area.height);
+			const renderer = surface.renderer();
+			renderer.begin();
+			renderer.drawImage(targetSurface, area.x, area.y, area.width, area.height, 0, 0);
+			renderer.end();
+			return surface;
+		}
 	}
 }

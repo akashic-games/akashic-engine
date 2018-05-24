@@ -193,7 +193,7 @@ describe("test Util", function() {
 	it("asSurface", function(done) {
 		var runtime = skeletonRuntime();
 		var scene = runtime.scene;
-		var surface = new g.Surface(1, 1);
+		var surface = new mock.Surface(1, 1);
 		expect(g.Util.asSurface(surface)).toBe(surface);
 
 		var undefinedScene = false;
@@ -222,24 +222,5 @@ describe("test Util", function() {
 
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		expect(function () { g.Util.asSurface(scene); }).toThrowError("TypeMismatchError");
-	});
-
-	it("sliceSurface", function() {
-		var runtime = skeletonRuntime();
-		var surface = new g.Surface(100, 100);
-		var game = new mock.Game({
-			width: 320,
-			height: 320
-		});
-		var sliceArea = {
-			x: 35,
-			y: 40,
-			width: 30,
-			height: 20
-		};
-		var slicedSurface = g.Util.sliceSurface(game, surface, sliceArea);
-		expect(slicedSurface).toBeDefined();
-		expect(slicedSurface.width).toBe(30);
-		expect(slicedSurface.height).toBe(20);
 	});
 });

@@ -3,7 +3,7 @@
 ## Unreleased changes
 
 機能追加
-* `g.Util.sliceSurface()` を追加
+* `g.Util.createTrimmedSurface()` を追加
   * 指定Surfaceを指定した範囲で切り出すことができます。
 
 ## 2.2.0
