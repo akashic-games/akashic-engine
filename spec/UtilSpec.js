@@ -193,7 +193,7 @@ describe("test Util", function() {
 	it("asSurface", function(done) {
 		var runtime = skeletonRuntime();
 		var scene = runtime.scene;
-		var surface = new g.Surface(1, 1);
+		var surface = new mock.Surface(1, 1);
 		expect(g.Util.asSurface(surface)).toBe(surface);
 
 		var undefinedScene = false;

@@ -1,8 +1,10 @@
 # ChangeLog
 
-## Unreleased changes
+## 2.2.1
 
 機能追加
+* `g.ResourceFactory.createTrimmedSurface()` を追加
+  * 指定Surfaceを指定した範囲で切り出すことができます。
 * g.FrameSpriteにアニメーションをループ再生するかどうか指定するパラメーターの追加
 
 ## 2.2.0
