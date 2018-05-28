@@ -4,7 +4,7 @@ var mock = require("./helpers/mock");
 describe("ResourceFactory", function() {
 	var resourceFactory = new mock.ResourceFactory();
 	describe("createTrimmedSurface", function() {
-		it("able to trim specified area", function() {
+		it("can trim a surface in specified area", function() {
 			var surface = new mock.Surface(100, 100);
 			var trimmedArea = {
 				x: 35,
@@ -17,7 +17,7 @@ describe("ResourceFactory", function() {
 			expect(trimmedSurface.width).toBe(30);
 			expect(trimmedSurface.height).toBe(20);
 		});
-		it("able to create clone of specified surface", function() {
+		it("can create clone of specified surface", function() {
 			var surface = new mock.Surface(100, 100);
 			var trimmedSurface = resourceFactory.createTrimmedSurface(surface);
 			expect(trimmedSurface).toBeDefined();

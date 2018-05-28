@@ -52,7 +52,7 @@ namespace g {
 		}
 
 		/**
-		 * 指定Surfaceから指定範囲を抽出したSurfaceを返す。
+		 * 指定Surfaceから指定範囲を切り取ったSurfaceを返す。
 		 * 範囲を指定しない場合は、指定SurfaceをコピーしたSurfaceを返す。
 		 */
 		createTrimmedSurface(targetSurface: Surface, targetArea?: CommonArea): Surface {
