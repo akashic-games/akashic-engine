@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 2.2.1
 
 機能追加
 * `g.Util.createTrimmedSurface()` を追加
