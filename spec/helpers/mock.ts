@@ -403,11 +403,12 @@ export class AudioPlayer extends g.AudioPlayer {
 
 export class GlyphFactory extends g.GlyphFactory {
 	constructor(fontFamily: g.FontFamily|string|string[], fontSize: number, baselineHeight?: number,
-	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight) {
-		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
+	            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean, fontWeight?: g.FontWeight,
+	            scaleX?: number, scaleY?: number) {
+		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight, scaleX, scaleY);
 	}
 	create(code: number): g.Glyph { return <g.Glyph>undefined; }
-	changeScale(scale: number): void {
+	changeScale(scaleX: number, scaleY: number): void {
 		return;
 	}
 }
@@ -491,7 +492,7 @@ export class ResourceFactory extends g.ResourceFactory {
 
 	createGlyphFactory(fontFamily: g.FontFamily, fontSize: number, baselineHeight?: number,
 	                   fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-	                   fontWeight?: g.FontWeight): g.GlyphFactory {
+	                   fontWeight?: g.FontWeight, scaleX?: number, scaleY?: number): g.GlyphFactory {
 		return new GlyphFactory(
 			fontFamily,
 			fontSize,
@@ -500,7 +501,9 @@ export class ResourceFactory extends g.ResourceFactory {
 			strokeWidth,
 			strokeColor,
 			strokeOnly,
-			fontWeight
+			fontWeight,
+			scaleX,
+			scaleY
 		);
 	}
 	createVideoAsset(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem,

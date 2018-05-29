@@ -1,11 +1,12 @@
 # ChangeLog
 
 ## Unreleased changes
+
 機能追加
  * `g.Surface` でscale変更ができる設定を追加
  * `g.Surface` の省略可能なboolean型引数 `isDynamic` を booleanもしくはnumber型の `statusOption` に変更
- * `g.Pane`, `g.Label`の内部surfaceに関してscale変更するかどうかの設定を可能にした
- * `g.DynamicFont`の内部surfaceをscale変更可能にした
+ * `g.Pane` の内部surfaceに関してscale変更するかどうかの設定を可能にした
+ * `g.DynamicFont` と `g.Label` の内部surfaceをscale変更可能にした
 
 ## 2.2.1
 
