@@ -95,6 +95,12 @@ namespace g {
 		abstract setOpacity(opacity: number): void;
 
 		/**
+		 * 本Rendererにシェーダを設定する。
+		 * 引数に `null` が指定された場合、本Rendererに設定されているシェーダの設定を解除する。
+		 */
+		abstract setShaderProgram(shaderProgram: ShaderProgram | null): void;
+
+		/**
 		 * 本Rendererの描画内容を表すImageDataを取得する。
 		 * 引数は CanvasRenderingContext2D#getImageData() と同様である。
 		 * 本メソッドの呼び出しは `Renderer#end()` から `Renderer#begin()` の間でなければならない。

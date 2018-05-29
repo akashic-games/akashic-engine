@@ -160,6 +160,10 @@ export class Renderer extends g.Renderer {
 		throw new Error("not implemented");
 	}
 
+	setShaderProgram(shaderProgram: g.ShaderProgram): void {
+		// do nothing
+	}
+
 	_getImageData(): ImageData {
 		return null;
 	}

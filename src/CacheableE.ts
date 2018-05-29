@@ -36,6 +36,14 @@ namespace g {
 		_renderedCamera: Camera;
 
 		/**
+		 * 描画されるキャッシュサイズ。
+		 * このサイズは _cache のサイズよりも小さくなる場合がある。
+		 *
+		 * @private
+		 */
+		_cacheSize: CommonSize;
+
+		/**
 		 * 各種パラメータを指定して `CacheableE` のインスタンスを生成する。
 		 * @param param このエンティティに対するパラメータ
 		 */
@@ -66,7 +74,10 @@ namespace g {
 				this._renderedCamera = camera;
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
-				var isNew = !this._cache || this._cache.width < Math.ceil(this.width) || this._cache.height < Math.ceil(this.height);
+				this._cacheSize = this.calculateCacheSize();
+				var isNew = !this._cache
+					|| this._cache.width < Math.ceil(this._cacheSize.width)
+					|| this._cache.height < Math.ceil(this._cacheSize.height);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();
@@ -84,8 +95,8 @@ namespace g {
 				this.state |= EntityStateFlags.Cached;
 				this._renderer.end();
 			}
-			if (this._cache && this.width > 0 && this.height > 0) {
-				renderer.drawImage(this._cache, 0, 0, this.width, this.height, 0, 0);
+			if (this._cache && this._cacheSize.width > 0 && this._cacheSize.height > 0) {
+				renderer.drawImage(this._cache, 0, 0, this._cacheSize.width, this._cacheSize.height, 0, 0);
 			}
 			return this._shouldRenderChildren;
 		}
@@ -118,6 +129,19 @@ namespace g {
 				surface.contentReset.add(this.invalidate, this);
 			}
 			return surface;
+		}
+
+		/**
+		 * キャッシュのサイズを取得する。
+		 * 本クラスを継承したクラスでエンティティのサイズと異なるサイズを利用する場合、このメソッドをオーバーライドする。
+		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
+		 * このメソッドから得られる値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
+		 */
+		calculateCacheSize(): CommonSize {
+			return {
+				width: this.width,
+				height: this.height
+			};
 		}
 	}
 }

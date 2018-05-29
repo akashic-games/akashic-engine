@@ -7,7 +7,31 @@
  * `g.Pane`, `g.Label`の内部surfaceに関してscale変更するかどうかの設定を可能にした
  * `g.DynamicFont`の内部surfaceをscale変更可能にした
 
+## 2.2.1
+
+機能追加
+* `g.ResourceFactory.createTrimmedSurface()` を追加
+  * 指定Surfaceを指定した範囲で切り出すことができます。
+* g.FrameSpriteにアニメーションをループ再生するかどうか指定するパラメーターの追加
+
+## 2.2.0
+
+機能追加
+* シェーダ機能を追加
+* `g.Renderer#setShaderProgram()` を追加
+
+### エンジン開発者への影響
+
+* `g.Renderer#setShaderProgram()` を追加
+  * 追加されたメソッドに対する処理を実装する必要があります。
+
+## 2.1.2
+
+機能追加
+* `g.CacheableE#calculateCacheSize()` を追加
+
 ## 2.1.1
+
 不具合修正
  * `moduleMainScripts` のファイルパスを `AssetManager#_liveAssetVirtualPathTable` から参照するように修正
 
