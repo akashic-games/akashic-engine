@@ -61,6 +61,9 @@ namespace g {
 	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
 	 */
 	export class SurfaceAtlas implements Destroyable {
+
+		contentReset: Trigger<void>;
+
 		/**
 		 * @private
 		 */
@@ -83,21 +86,10 @@ namespace g {
 
 		constructor(surface: Surface) {
 			this._surface = surface;
-			// this._surface.contentReset.add(this._onContentReset, this);
 			this._emptySurfaceAtlasSlotHead = new SurfaceAtlasSlot(0, 0, this._surface.width, this._surface.height);
 			this._accessScore = 0;
 			this._usedRectangleAreaSize = { width: 0, height: 0 };
-		}
-
-		/**
-		 * @private
-		 */
-		_onContentReset(): void {
-			const renderer = this._surface.renderer();
-			renderer.begin();
-			renderer.clear();
-			renderer.drawImage(this._surface, 0, 0, this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height, 0, 0);
-			renderer.end();
+			this.contentReset = this._surface.contentReset;
 		}
 
 		/**
@@ -170,7 +162,7 @@ namespace g {
 		 * @param rect サーフェス上の領域を表す矩形。この領域内の画像がサーフェスアトラス上に複製・配置される。
 		 */
 		addSurface(surface: Surface, rect: CommonArea): SurfaceAtlasSlot {
-			var slot = this._acquireSurfaceAtlasSlot(rect.width, rect.height);
+			var slot = this._acquireSurfaceAtlasSlot(Math.ceil(rect.width * surface.scaleX), Math.ceil(rect.height * surface.scaleY));
 			if (! slot) {
 				return null;
 			}
@@ -444,8 +436,7 @@ namespace g {
 
 			this._atlasSize = calcAtlasSize(this.hint);
 			const surfaceAtlas = this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height);
-			surfaceAtlas._surface.contentReset.add(() => {
-				this._glyphFactory.changeScale(Math.min(surfaceAtlas._surface.scaleX, surfaceAtlas._surface.scaleY));
+			surfaceAtlas.contentReset.add(() => {
 				Object.keys(this._glyphs).forEach((key: string) => {
 					this._glyphs[Number(key)].isSurfaceValid = false;
 				});
@@ -622,10 +613,10 @@ namespace g {
 			let atlas: SurfaceAtlas = null;
 			let slot: SurfaceAtlasSlot = null;
 			let area = {
-				x: Math.floor(glyph.x * glyph.surface.scaleX),
-				y: Math.floor(glyph.y * glyph.surface.scaleY),
-				width: Math.ceil(glyph.width * glyph.surface.scaleX),
-				height: Math.ceil(glyph.height * glyph.surface.scaleY)
+				x: glyph.x,
+				y: glyph.y,
+				width: glyph.width,
+				height: glyph.height
 			};
 			for (let i = 0; i < this._atlases.length; i++) {
 				let index = (this._currentAtlasIndex + i) % this._atlases.length;

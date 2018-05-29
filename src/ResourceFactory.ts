@@ -46,7 +46,7 @@ namespace g {
 		 */
 		abstract createGlyphFactory(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight?: number,
 		                            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-		                            fontWeight?: FontWeight): GlyphFactory;
+		                            fontWeight?: FontWeight, scaleX?: number, scaleY?: number): GlyphFactory;
 
 		createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
 			return new SurfaceAtlas(this.createSurface(width, height, SurfaceStateFlags.hasVariableResolution));

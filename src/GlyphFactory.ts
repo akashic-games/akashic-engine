@@ -64,6 +64,16 @@ namespace g {
 		strokeOnly: boolean;
 
 		/**
+		 * 生成されるGlyphのx方向のスケール値
+		 */
+		scaleX: number;
+
+		/**
+		 * 生成されるGlyphのy方向のスケール値
+		 */
+		scaleY: number;
+
+		/**
 		 * `GlyphFactory` を生成する。
 		 *
 		 * @param fontFamily フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはそれらの配列
@@ -76,7 +86,7 @@ namespace g {
 		 */
 		constructor(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight: number = fontSize,
 		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
-		            fontWeight: FontWeight = FontWeight.Normal) {
+		            fontWeight: FontWeight = FontWeight.Normal, scaleX: number = 1, scaleY: number = 1) {
 			this.fontFamily = fontFamily;
 			this.fontSize = fontSize;
 			this.fontWeight = fontWeight;
@@ -85,6 +95,8 @@ namespace g {
 			this.strokeWidth = strokeWidth;
 			this.strokeColor = strokeColor;
 			this.strokeOnly = strokeOnly;
+			this.scaleX = scaleX;
+			this.scaleY = scaleY;
 		}
 
 		/**
@@ -96,6 +108,9 @@ namespace g {
 		 */
 		abstract create(code: number): Glyph;
 
-		abstract changeScale(scale: number): void;
+		/**
+		 * 生成するグリフのスケール変更
+		 */
+		abstract changeScale(scaleX: number, scaleY: number): void;
 	}
 }
