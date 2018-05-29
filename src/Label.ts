@@ -173,32 +173,6 @@ namespace g {
 			if (!this.fontSize || this.height <= 0 || this._textWidth <= 0) {
 				return;
 			}
-			var textSurface =  this.scene.game.resourceFactory.createSurface(
-				Math.ceil(this._textWidth),
-				Math.ceil(this.height),
-				g.SurfaceStateFlags.hasVariableResolution
-			);
-			var textRenderer = textSurface.renderer();
-
-			textRenderer.begin();
-			textRenderer.save();
-			for (var i = 0; i < this.glyphs.length; ++i) {
-				var glyph = this.glyphs[i];
-
-				var glyphScale = this.fontSize / this.font.size;
-				var glyphWidth = glyph.advanceWidth * glyphScale;
-
-				if (glyph.surface) { // 非空白文字
-					textRenderer.save();
-					textRenderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-					textRenderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
-					textRenderer.restore();
-				}
-
-				textRenderer.translate(glyphWidth, 0);
-			}
-			textRenderer.restore();
-			textRenderer.end();
 
 			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
 			var offsetX: number;
@@ -218,16 +192,18 @@ namespace g {
 			if (scale !== 1) {
 				renderer.transform([scale, 0, 0, 1, 0, 0]);
 			}
-			renderer.drawImage(
-				textSurface,
-				0,
-				0,
-				this._textWidth,
-				this.height,
-				0,
-				0
-			);
-			textSurface.destroy();
+
+			const glyphScale = this.fontSize / this.font.size;
+			for (let i = 0; i < this.glyphs.length; ++i) {
+				const glyph = this.glyphs[i];
+				const glyphWidth = glyph.advanceWidth * glyphScale;
+
+				if (glyph.surface) { // 非空白文字
+					renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
+					renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
+				}
+				renderer.translate(glyphWidth, 0);
+			}
 			if (this.textColor) {
 				renderer.setCompositeOperation(CompositeOperation.SourceAtop);
 				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
