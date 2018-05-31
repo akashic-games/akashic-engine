@@ -1,6 +1,6 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "devDependencies": {
@@ -51,7 +51,7 @@
     "url": "akashic-games/akashic-engine.git"
   },
   "publishConfig": {
-    "@akashic:registry": "http://registry.npmjs.org/"
+    "@akashic:registry": "https://registry.npmjs.org/"
   },
   "typings": "lib/main.node.d.ts",
   "author": "DWANGO Co., Ltd.",
