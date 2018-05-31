@@ -95,6 +95,11 @@ namespace g {
 		abstract setOpacity(opacity: number): void;
 
 		/**
+		 * 本Rendererがシェーダ機能をサポートしているかを返す。
+		 */
+		abstract isSupportedShaderProgram(): boolean;
+
+		/**
 		 * 本Rendererにシェーダを設定する。
 		 * 引数に `null` が指定された場合、本Rendererに設定されているシェーダの設定を解除する。
 		 */
