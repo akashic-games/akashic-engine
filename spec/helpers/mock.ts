@@ -164,6 +164,10 @@ export class Renderer extends g.Renderer {
 		// do nothing
 	}
 
+	isSupportedShaderProgram(): boolean {
+		return false;
+	}
+
 	_getImageData(): ImageData {
 		return null;
 	}

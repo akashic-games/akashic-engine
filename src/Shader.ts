@@ -81,6 +81,7 @@ namespace g {
 
 		/**
 		 * uniform値。
+		 * この値の型は `ShaderProgram` の生成時にのみ指定可能であり、変更してはならない。
 		 */
 		value: number | Int32Array | Float32Array;
 	}
