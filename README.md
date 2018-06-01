@@ -4,7 +4,7 @@
 
 # Akashic Engine
 
-JavaScriptゲームエンジンAkashic Engineのコアライブラリです。
+JavaScriptゲームエンジン[Akashic Engine](https://akashic-games.github.io/)のコアライブラリです。
 ゲーム開発者向けの環境非依存なクラス群を提供します。
 
 ## 利用方法
@@ -12,6 +12,7 @@ JavaScriptゲームエンジンAkashic Engineのコアライブラリです。
 このリポジトリは、環境非依存なコードのみを含むライブラリです。そのため単体で利用することはできません。
 ゲーム開発には [Akashic Sandbox](http://github.com/akashic-games/akashic-sandbox) と
 [Akashic CLI](http://github.com/akashic-games/akashic-cli) をご利用ください。
+Akashic Engineの詳細な利用方法については、 [公式ページ](https://akashic-games.github.io/) を参照してください。
 
 ### TypeScript での型定義の利用
 
