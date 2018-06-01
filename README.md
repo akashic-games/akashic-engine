@@ -4,7 +4,7 @@
 
 # Akashic Engine
 
-JavaScriptゲームエンジン[Akashic Engine](https://akashic-games.github.io/)のコアライブラリです。
+JavaScriptゲームエンジン [Akashic Engine](https://akashic-games.github.io/) のコアライブラリです。
 ゲーム開発者向けの環境非依存なクラス群を提供します。
 
 ## 利用方法
