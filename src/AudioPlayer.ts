@@ -38,6 +38,13 @@ namespace g {
 		volume: number;
 
 		/**
+		 * mute直前のvolmeの値を保存する。
+		 *
+		 * この値は `_ changeMuted()` でのみ私用することを想定している。ゲーム開発者はこの値を変更してはならない。
+		 */
+		_volumeBeforeMuted: number;
+
+		/**
 		 * ミュート中か否か。
 		 * @private
 		 */
@@ -62,6 +69,7 @@ namespace g {
 			this.stopped = new Trigger<AudioPlayerEvent>();
 			this.currentAudio = undefined;
 			this.volume = system.volume;
+			this._volumeBeforeMuted = system.volume;
 			this._muted = system._muted;
 			this._playbackRate = system._playbackRate;
 			this._system = system;
@@ -114,6 +122,7 @@ namespace g {
 		// オーバーライド先のメソッドはこのメソッドを呼びださなければならない。
 		changeVolume(volume: number): void {
 			this.volume = volume;
+			this._volumeBeforeMuted = volume;
 		}
 
 		/**
@@ -128,6 +137,12 @@ namespace g {
 		 */
 		_changeMuted(muted: boolean): void {
 			this._muted = muted;
+			if (muted) {
+				this._volumeBeforeMuted = this.volume;
+				this.volume = 0;
+			} else {
+				this.volume = this._volumeBeforeMuted;
+			}
 		}
 
 		/**

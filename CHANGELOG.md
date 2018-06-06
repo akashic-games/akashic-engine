@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Unreleased changes
+
+不具合修正
+ * `AudioPlayer#_changeMuted()` で、BGM・SEをミュート状態にできるように修正
+
 ## 2.3.0
 
 機能追加
