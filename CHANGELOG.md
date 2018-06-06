@@ -1,6 +1,6 @@
 # ChangeLog
 
-## (unreleased)
+## v2.1.2-hotfix.1
 
  * `g.Game#_destroy()` を追加
 
