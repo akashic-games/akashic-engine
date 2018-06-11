@@ -162,7 +162,7 @@ namespace g {
 		 * @param rect サーフェス上の領域を表す矩形。この領域内の画像がサーフェスアトラス上に複製・配置される。
 		 */
 		addSurface(surface: Surface, rect: CommonArea): SurfaceAtlasSlot {
-			var slot = this._acquireSurfaceAtlasSlot(Math.ceil(rect.width * surface.scaleX), Math.ceil(rect.height * surface.scaleY));
+			var slot = this._acquireSurfaceAtlasSlot(rect.width, rect.height);
 			if (! slot) {
 				return null;
 			}

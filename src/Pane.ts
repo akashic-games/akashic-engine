@@ -33,13 +33,6 @@ namespace g {
 		 * @default undefined
 		 */
 		backgroundEffector?: SurfaceEffector;
-
-		/**
-		 * この`Pane`をスケール変更に対応させるか指定する
-		 * falseもしくはundefinedの場合、スケール変更に対応させない
-		 * @default undefined
-		 */
-		hasVariableResolution?: boolean;
 	}
 	/**
 	 * 枠を表すエンティティ。
@@ -114,11 +107,6 @@ namespace g {
 		_childrenRenderer: Renderer;
 
 		/**
-		 * @private
-		 */
-		_hasVariableResolution: boolean;
-
-		/**
 		 * 各種パラメータを指定して `Pane` のインスタンスを生成する。
 		 * @param param このエンティティに指定するパラメータ
 		 */
@@ -130,7 +118,6 @@ namespace g {
 			this.backgroundEffector = param.backgroundEffector;
 			this._shouldRenderChildren = false;
 			this._padding = param.padding;
-			this._hasVariableResolution = param.hasVariableResolution !== undefined ? param.hasVariableResolution : false;
 			this._initialize();
 			this._paddingChanged = false;
 			this._bgSurface = undefined;
@@ -278,7 +265,8 @@ namespace g {
 			}
 			this._childrenSurface = resourceFactory.createSurface(
 				Math.ceil(this._childrenArea.width),
-				Math.ceil(this._childrenArea.height)
+				Math.ceil(this._childrenArea.height),
+				g.SurfaceStateFlags.hasVariableResolution
 			);
 			this._childrenRenderer = this._childrenSurface.renderer();
 			this._normalizedPadding = r;
@@ -325,7 +313,7 @@ namespace g {
 		}
 
 		_createCache(width: number, height: number): Surface {
-			return this._createSurface(width, height, this._hasVariableResolution);
+			return this._createSurface(width, height, true);
 		}
 	}
 }
