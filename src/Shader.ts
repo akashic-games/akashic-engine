@@ -58,6 +58,12 @@ namespace g {
 		uniforms: {[name: string]: ShaderUniform};
 
 		/**
+		 * シェーダプログラムの実体。
+		 * @private
+		 */
+		_program: any;
+
+		/**
 		 * 各種パラメータを指定して `ShaderProgram` のインスタンスを生成する。
 		 * @param param `ShaderProgram` に設定するパラメータ
 		 */
