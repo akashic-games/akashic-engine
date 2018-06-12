@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.3.1
+その他変更
+* `g.ShaderProgram#_program` を追加
+
 ## 2.3.0
 
 機能追加
