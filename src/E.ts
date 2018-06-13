@@ -337,14 +337,14 @@ namespace g {
 			if (this.compositeOperation !== undefined)
 				renderer.setCompositeOperation(this.compositeOperation);
 
-			if (this.shaderProgram != null) {
+			if (renderer.isSupportedShaderProgram() && this.shaderProgram != null) {
 				renderer.save();
 				renderer.setShaderProgram(this.shaderProgram);
 			}
 
 			var goDown = this.renderSelf(renderer, camera);
 
-			if (this.shaderProgram != null)
+			if (renderer.isSupportedShaderProgram() && this.shaderProgram != null)
 				renderer.restore();
 
 			if (goDown && this.children) {
