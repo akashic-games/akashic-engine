@@ -66,6 +66,14 @@ namespace g {
 		 * @default undefined
 		 */
 		tag?: any;
+
+		/**
+		 * このエンティティの描画時に利用されるシェーダプログラム。
+		 * この値は、描画対象を保持するクラス(`Sprite`, `Pane`など)が自身を描画する際(`E#renderSelf()`)にのみ適用される。
+		 * 子エンティティに対しては影響を与えないことに注意。
+		 * @default undefined
+		 */
+		shaderProgram?: ShaderProgram;
 	}
 
 	/**
@@ -115,6 +123,15 @@ namespace g {
 		 * この値はゲームエンジンのロジックからは使用されず、ゲーム開発者は任意の目的に使用してよい。
 		 */
 		tag: any;
+
+		/**
+		 * このエンティティの描画時に利用されるシェーダプログラム。
+		 * この値は、描画対象を保持するクラス(`Sprite`, `Pane`など)が自身を描画する際(`E#renderSelf()`)にのみ適用される。
+		 * 子エンティティに対しては影響を与えないことに注意。
+		 *
+		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
+		 */
+		shaderProgram: ShaderProgram;
 
 		/**
 		 * このEが「映り込む」カメラの集合。
@@ -250,6 +267,7 @@ namespace g {
 			this._pointUp = undefined;
 			this._targetCameras = undefined;
 			this.tag = param.tag;
+			this.shaderProgram = param.shaderProgram;
 
 			// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
 			// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
@@ -319,7 +337,16 @@ namespace g {
 			if (this.compositeOperation !== undefined)
 				renderer.setCompositeOperation(this.compositeOperation);
 
+			if (this.shaderProgram != null) {
+				renderer.save();
+				renderer.setShaderProgram(this.shaderProgram);
+			}
+
 			var goDown = this.renderSelf(renderer, camera);
+
+			if (this.shaderProgram != null)
+				renderer.restore();
+
 			if (goDown && this.children) {
 				// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
 				var children = this.children;
@@ -488,7 +515,8 @@ namespace g {
 			if (this._matrix)
 				this._matrix._modified = true;
 
-			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.opacity !== 1 || this.compositeOperation !== undefined) {
+			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.opacity !== 1 || this.compositeOperation !== undefined ||
+				this.shaderProgram != null) {
 				this.state &= ~EntityStateFlags.ContextLess;
 			} else {
 				this.state |= EntityStateFlags.ContextLess;
