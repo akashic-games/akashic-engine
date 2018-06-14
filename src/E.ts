@@ -69,8 +69,12 @@ namespace g {
 
 		/**
 		 * このエンティティの描画時に利用されるシェーダプログラム。
-		 * この値は、描画対象を保持するクラス( `Sprite` , `Pane` など)が自身を描画する際( `E#renderSelf()` )にのみ適用される。
-		 * 子エンティティに対しては影響を与えないことに注意。
+		 * この値は描画対象を保持するクラス(`Sprite`, `Pane` など)が自身またはその子エンティティを描画する際に適用される。
+		 * ただし `g.FilledRect` やその親エンティティに本値を指定した場合、対象の `g.FilledRect` の描画結果は不定となる。
+		 *
+		 * この値に `undefined` を指定した場合、親エンティティのシェーダプログラムを利用する。
+		 * この値に `null` を指定した場合、明示的にデフォルトのシェーダプログラムを利用する。
+		 *
 		 * @default undefined
 		 */
 		shaderProgram?: ShaderProgram;
@@ -126,8 +130,11 @@ namespace g {
 
 		/**
 		 * このエンティティの描画時に利用されるシェーダプログラム。
-		 * この値は、描画対象を保持するクラス( `Sprite` , `Pane` など)が自身を描画する際( `E#renderSelf()` )にのみ適用される。
-		 * 子エンティティに対しては影響を与えないことに注意。
+		 * この値は描画対象を保持するクラス(`Sprite`, `Pane` など)が自身またはその子エンティティを描画する際に適用される。
+		 * ただし `g.FilledRect` やその親エンティティに本値を指定した場合、対象の `g.FilledRect` の描画結果は不定となる。
+		 *
+		 * この値に `undefined` を指定した場合、親エンティティのシェーダプログラムを利用する。
+		 * この値に `null` を指定した場合、明示的にデフォルトのシェーダプログラムを利用する。
 		 *
 		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
 		 */
@@ -337,15 +344,10 @@ namespace g {
 			if (this.compositeOperation !== undefined)
 				renderer.setCompositeOperation(this.compositeOperation);
 
-			if (this.shaderProgram != null && renderer.isSupportedShaderProgram()) {
-				renderer.save();
+			if (this.shaderProgram !== undefined && renderer.isSupportedShaderProgram())
 				renderer.setShaderProgram(this.shaderProgram);
-			}
 
 			var goDown = this.renderSelf(renderer, camera);
-
-			if (this.shaderProgram != null && renderer.isSupportedShaderProgram())
-				renderer.restore();
 
 			if (goDown && this.children) {
 				// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
@@ -516,7 +518,7 @@ namespace g {
 				this._matrix._modified = true;
 
 			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.opacity !== 1 || this.compositeOperation !== undefined ||
-				this.shaderProgram != null) {
+				this.shaderProgram !== undefined) {
 				this.state &= ~EntityStateFlags.ContextLess;
 			} else {
 				this.state |= EntityStateFlags.ContextLess;
