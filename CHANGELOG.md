@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.3.2
+機能追加
+* `g.E#shaderProgram` ,  `g.EParameterObject#shaderProgram` を追加
+
 ## 2.3.1
 その他変更
 * `g.ShaderProgram#_program` を追加
