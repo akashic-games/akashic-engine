@@ -133,14 +133,13 @@ namespace g {
 
 		/**
 		 * このエンティティの描画時に利用されるシェーダプログラム。
-		 * このエンティティの `renderer#isSupportedShaderProgram()` が偽を返した場合、
-		 * `renderer#setShaderProgram()` は呼ばれないことに注意。
+		 * `isSupportedShaderProgram()` が偽を返す `g.Rendere` で描画される時、 `g.Renderer#setShaderProgram()` は呼ばれないことに注意。
 		 *
 		 * また `g.FilledRect` やその親エンティティに本値を指定した場合、対象の `g.FilledRect` の描画結果は不定である。
 		 * これは実装上の制限に基づく現バージョンの仕様である。
 		 *
-		 * この値に `undefined` を指定した場合、親のシェーダプログラムを利用する。
-		 * この値に `null` を指定した場合、明示的にデフォルトのシェーダプログラムを利用する。
+		 * この値が `undefined` である場合、親のシェーダプログラムが利用される。
+		 * この値が `null` である場合、明示的にデフォルトのシェーダプログラムが利用される。
 		 *
 		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
 		 */
