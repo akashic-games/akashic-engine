@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2.3.3
+その他変更
+* `g.Renderer#draw()` で `save()` `restore()` するように
+  * これは座標計算に誤差が蓄積しないようにするための変更です。
+
+
 ## 2.3.2
 機能追加
 * `g.E#shaderProgram` ,  `g.EParameterObject#shaderProgram` を追加
