@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Unreleased changes
+
+* ドキュメント生成方法の変更
+
 ## 2.3.2
 機能追加
 * `g.E#shaderProgram` ,  `g.EParameterObject#shaderProgram` を追加

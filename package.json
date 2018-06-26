@@ -17,7 +17,7 @@
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "tslint": "^5.4.3",
-    "typedoc": "^0.8.0",
+    "typedoc": "^0.11.1",
     "typescript": "~2.1.6",
     "uglify-js": "^2.6.0"
   },
@@ -37,10 +37,7 @@
     "minify:node": "uglifyjs -o ./lib/main.node.min.js --compress --mangle -- lib/main.node.js",
     "minify:browser": "uglifyjs lib/main.js -o ./lib/main.min.js",
     "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts",
-    "doc": "npm run doc:rename && npm run doc:build && npm run doc:restorename",
-    "doc:rename": "renamer --find @types --replace @types.bak ./node_modules/*",
-    "doc:build": "cd lib && typedoc --out ../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts && cd ../",
-    "doc:restorename": "renamer --find @types.bak --replace @types ./node_modules/*"
+    "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts"
   },
   "files": [
     "lib",
