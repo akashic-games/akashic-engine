@@ -909,6 +909,96 @@ namespace g {
 		}
 
 		/**
+		 * ゲームを破棄する。
+		 * エンジンユーザとコンテンツに開放された一部プロパティ(external, vars)は維持する点に注意。
+		 * @private
+		 */
+		_destroy(): void {
+			// ユーザコードを扱う操作プラグインを真っ先に破棄
+			this._operationPluginManager.destroy();
+
+			// 到達できるシーンを全て破棄
+			if (this.scene()) {
+				while (this.scene() !== this._initialScene) {
+					this.popScene();
+					this._flushSceneChangeRequests();
+				}
+			}
+			this._initialScene.destroy();
+			if (this.loadingScene && !this.loadingScene.destroyed()) {
+				this.loadingScene.destroy();
+			}
+			if (!this._defaultLoadingScene.destroyed()) {
+				this._defaultLoadingScene.destroy();
+			}
+
+			// NOTE: fps, width, height, external, vars はそのまま保持しておく
+			this.db = undefined;
+			this.renderers = undefined;
+			this.scenes = undefined;
+			this.random = undefined;
+			this.events = undefined;
+			this.join.destroy();
+			this.join = undefined;
+			this.leave.destroy();
+			this.leave = undefined;
+			this.seed.destroy();
+			this.seed = undefined;
+			this.modified = false;
+			this.age = 0;
+			this.assets = undefined; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
+			this.isLoaded = false;
+			this.loadingScene = undefined;
+			this.assetBase = "";
+			this.selfId = undefined;
+			var audioSystemIds = Object.keys(this.audio);
+			for (var i = 0; i < audioSystemIds.length; ++i)
+				this.audio[audioSystemIds[i]].stopAll();
+			this.audio = undefined;
+			this.defaultAudioSystemId = undefined;
+			this.logger.destroy();
+			this.logger = undefined;
+			this.snapshotRequest.destroy();
+			this.snapshotRequest = undefined;
+
+			// TODO より能動的にdestroy処理を入れるべきかもしれない
+			this.resourceFactory = undefined;
+			this.storage = undefined;
+
+			this.playId = undefined;
+			this.operationPlugins = undefined; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
+			this.resized.destroy();
+			this.resized = undefined;
+			this._eventTriggerMap = undefined;
+			this._initialScene = undefined;
+			this._defaultLoadingScene = undefined;
+			this._sceneChanged.destroy();
+			this._sceneChanged = undefined;
+			this._scriptCaches = undefined;
+			this._loaded.destroy();
+			this._loaded = undefined;
+			this._started.destroy();
+			this._started = undefined;
+			this._main = undefined;
+			this._mainParameter = undefined;
+			this._assetManager.destroy();
+			this._assetManager = undefined;
+			this._audioSystemManager._game = undefined;
+			this._audioSystemManager = undefined;
+			this._operationPluginManager = undefined;
+			this._operationPluginOperated.destroy();
+			this._operationPluginOperated = undefined;
+			this._idx = 0;
+			this._localDb = {};
+			this._localIdx = 0;
+			this._cameraIdx = 0;
+			this._isTerminated = true;
+			this._focusingCamera = undefined;
+			this._configuration = undefined;
+			this._sceneChangeRequests = [];
+		}
+
+		/**
 		 * ゲームを開始する。
 		 *
 		 * 存在するシーンをすべて(_initialScene以外; あるなら)破棄し、グローバルアセットを読み込み、完了後ゲーム開発者の実装コードの実行を開始する。
