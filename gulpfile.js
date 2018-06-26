@@ -7,8 +7,6 @@ var del = require("del");
 var tslint = require("gulp-tslint");
 var pkg = require("./package.json");
 var rename = require("gulp-rename");
-var fs = require('fs');
-var execSync = require('child_process').execSync;
 
 
 // test packages
@@ -99,31 +97,6 @@ gulp.task("test", ["testCompile"], function(cb) {
 				.pipe(istanbul.writeReports({ reporters: ["text", "cobertura", "lcov"] }))
 				.on("end", cb);
 		});
-});
-
-gulp.task("typedoc", function() {
-	fs.rename("node_modules/@types", "node_modules/@types.bak", function (err) {
-		if (err && err.code !== "ENOENT") {
-			throw err;
-		}
-
-		var command = "typedoc --excludePrivate --out ../doc/html/ --includeDeclarations ../lib/main.d.ts ../typings/console.d.ts ../typings/lib.core.d.ts";
-		var commandException;
-		try {
-			execSync(command, {cwd: "lib/"});
-		} catch (e) {
-			commandException = e;
-		}
-
-		fs.rename("node_modules/@types.bak", "node_modules/@types", function (err) {
-			if (commandException) {
-				throw commandException;
-			}
-			if (err && err.code !== "ENOENT") {
-				throw err;
-			}
-		});
-	});
 });
 
 gulp.task("default", ["compileAll"]);
