@@ -55,4 +55,13 @@ describe("Logger", function() {
 		runtime.game.logger.debug("debug-no-cause");
 		expect(loggedCount).toBe(8);
 	});
+
+	it("destroy()", function() {
+		var runtime = skeletonRuntime({ width: 320, height: 320 });
+		var self = runtime.game.logger;
+		expect(self.destroyed()).toBe(false);
+		runtime.game.logger.destroy();
+		expect(self.destroyed()).toBe(true);
+		expect(self.logging).toBe(undefined);
+	});
 });
