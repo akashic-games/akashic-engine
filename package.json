@@ -22,7 +22,7 @@
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "tslint": "~3.7.4",
-    "typedoc": "^0.8.0",
+    "typedoc": "^0.11.1",
     "typescript": "~2.1.6"
   },
   "scripts": {
@@ -30,7 +30,7 @@
     "build": "gulp",
     "test": "gulp test && gulp lint && npm run textlint",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "doc": "npm run build && gulp typedoc",
+    "doc": "npm run build && typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --excludePrivate --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts typings/lib.core.d.ts",
     "jasmine": "jasmine"
   },
   "files": [

@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Unreleased changes
+
+* ドキュメント生成方法の変更
+
 ## 1.12.10
 
 機能追加
