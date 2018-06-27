@@ -4,11 +4,23 @@
 
 * ドキュメント生成方法の変更
 
+## 2.3.3
+
+* `g.Game#_destroy()` を追加
+
+### エンジン開発者への影響
+
+* `g.Game#_destroy()` を追加
+  * エンジン開発者はこのメソッドを呼び出すことで、ゲームを破棄することができます。
+  * この追加は v1.12.9 の変更を v2 系に取り込んだものです。
+
 ## 2.3.2
+
 機能追加
 * `g.E#shaderProgram` ,  `g.EParameterObject#shaderProgram` を追加
 
 ## 2.3.1
+
 その他変更
 * `g.ShaderProgram#_program` を追加
 
