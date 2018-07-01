@@ -9,8 +9,8 @@ namespace g {
 			var scene = game.scene();
 			if (!scene) return;
 
-			this.save();
 			this.begin();
+			this.save();
 			this.clear();
 			if (camera) {
 				this.save();
@@ -25,8 +25,8 @@ namespace g {
 				this.restore();
 			}
 
-			this.end();
 			this.restore();
+			this.end();
 		}
 
 		begin(): void {
