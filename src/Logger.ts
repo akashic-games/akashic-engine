@@ -39,7 +39,7 @@ namespace g {
 	/**
 	 * デバッグ/エラー用のログ出力機構。
 	 */
-	export class Logger {
+	export class Logger implements Destroyable {
 		/**
 		 * この `Logger` に紐づく `Game` 。
 		 */
@@ -57,6 +57,16 @@ namespace g {
 		constructor(game: Game) {
 			this.game = game;
 			this.logging = new Trigger<Log>();
+		}
+
+		destroy(): void {
+			this.game = undefined;
+			this.logging.destroy();
+			this.logging = undefined;
+		}
+
+		destroyed(): boolean {
+			return !this.game;
 		}
 
 		/**
