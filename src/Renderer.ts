@@ -10,6 +10,7 @@ namespace g {
 			if (!scene) return;
 
 			this.begin();
+			this.save();
 			this.clear();
 			if (camera) {
 				this.save();
@@ -24,6 +25,7 @@ namespace g {
 				this.restore();
 			}
 
+			this.restore();
 			this.end();
 		}
 

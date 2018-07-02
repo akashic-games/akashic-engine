@@ -1,5 +1,13 @@
 # ChangeLog
 
+## 2.3.4
+不具合修正
+* `g.Renderer#draw()` で `save()` `restore()` するように
+
+### ゲーム開発者への影響
+* `g.Renderer#draw()` で `save()` `restore()` するように
+  * 長時間ゲームを続行した時に描画位置がずれることがある問題を修正します。
+
 ## 2.3.3
 
 * `g.Game#_destroy()` を追加
