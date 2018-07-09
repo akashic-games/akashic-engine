@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 2.3.5
 
 * ドキュメント生成方法の変更
 
