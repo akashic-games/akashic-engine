@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 1.12.12
 
 * ドキュメント生成方法の変更
 * ビルドツールからgulpを削除
