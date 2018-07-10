@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.3.5
+
+* ドキュメント生成方法の変更
+
 ## 2.3.4
 不具合修正
 * `g.Renderer#draw()` で `save()` `restore()` するように
