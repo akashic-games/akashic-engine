@@ -13,4 +13,4 @@ function skeletonRuntime(gameConfiguration?: g.GameConfiguration): any {
 	};
 }
 
-export = skeletonRuntime
+export = skeletonRuntime;
