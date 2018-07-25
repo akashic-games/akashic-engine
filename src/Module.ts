@@ -16,17 +16,17 @@ namespace g {
 	export function _require(game: Game, path: string, currentModule?: Module): any {
 		// Node.js の require の挙動については http://nodejs.jp/nodejs.org_ja/api/modules.html も参照。
 
-		var basedir = currentModule ? currentModule._dirname : game.assetBase;
 		var targetScriptAsset: Asset;
 		var resolvedPath: string;
-		var resolvedVirtualPath: string;
 		var liveAssetVirtualPathTable = game._assetManager._liveAssetVirtualPathTable;
 		var moduleMainScripts = game._assetManager._moduleMainScripts;
 
 		// 0. アセットIDらしい場合はまず当該アセットを探す
 		if (path.indexOf("/") === -1) {
-			if (game._assetManager._assets.hasOwnProperty(path))
+			if (game._assetManager._assets.hasOwnProperty(path)) {
 				targetScriptAsset = game._assetManager._assets[path];
+				resolvedPath = game._assetManager._liveAbsolutePathTable[targetScriptAsset.path];
+			}
 		}
 
 		// 1. If X is a core module,
@@ -34,7 +34,16 @@ namespace g {
 
 		if (/^\.\/|^\.\.\/|^\//.test(path)) {
 			// 2. If X begins with './' or '/' or '../'
-			resolvedPath = PathUtil.resolvePath(basedir, path);
+
+			if (currentModule) {
+				if (!currentModule._dirname)
+					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
+				resolvedPath = PathUtil.resolvePath(currentModule._dirname, path);
+			} else {
+				if (!(/^\.\//.test(path)))
+					throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
+				resolvedPath = path.substring(2);
+			}
 
 			if (game._scriptCaches.hasOwnProperty(resolvedPath)) {
 				return game._scriptCaches[resolvedPath]._cachedValue();
@@ -42,35 +51,21 @@ namespace g {
 				return game._scriptCaches[resolvedPath + ".js"]._cachedValue();
 			}
 
-			if (currentModule) {
-				if (currentModule._virtualDirname) {
-					resolvedVirtualPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
-				} else {
-					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
-				}
-			} else {
-				if (path.substring(0, 2) === "./") {
-					// モジュールが空の場合、相対パスの先頭の `"./"` を取り除くと仮想パスになる。
-					resolvedVirtualPath = path.substring(2);
-				} else {
-					throw ExceptionFactory.createAssertionError("g._require: entry point must start with './'");
-				}
-			}
-
 			// 2.a. LOAD_AS_FILE(Y + X)
 			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetVirtualPathTable);
+				targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
 			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetVirtualPathTable);
+				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 			// `path` は node module の名前であると仮定して探す
 
-			// akashic-engine独自拡張: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
+			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
 			if (moduleMainScripts[path]) {
-				targetScriptAsset = game._assetManager._liveAssetVirtualPathTable[moduleMainScripts[path]];
+				resolvedPath = moduleMainScripts[path];
+				targetScriptAsset = game._assetManager._liveAssetVirtualPathTable[resolvedPath];
 			}
 
 			if (! targetScriptAsset) {
@@ -78,11 +73,11 @@ namespace g {
 				dirs.push("node_modules");
 				for (var i = 0; i < dirs.length; ++i) {
 					var dir = dirs[i];
-					resolvedVirtualPath = PathUtil.resolvePath(dir, path);
-					targetScriptAsset = Util.findAssetByPathAsFile(resolvedVirtualPath, liveAssetVirtualPathTable);
+					resolvedPath = PathUtil.resolvePath(dir, path);
+					targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 					if (targetScriptAsset)
 						break;
-					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedVirtualPath, liveAssetVirtualPathTable);
+					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 					if (targetScriptAsset)
 						break;
 				}
@@ -90,19 +85,19 @@ namespace g {
 		}
 
 		if (targetScriptAsset) {
-			if (game._scriptCaches.hasOwnProperty(targetScriptAsset.path))
-				return game._scriptCaches[targetScriptAsset.path]._cachedValue();
+			if (game._scriptCaches.hasOwnProperty(resolvedPath))
+				return game._scriptCaches[resolvedPath]._cachedValue();
 
 			if (targetScriptAsset instanceof ScriptAsset) {
 				var context = new ScriptAssetContext(game, targetScriptAsset);
-				game._scriptCaches[targetScriptAsset.path] = context;
+				game._scriptCaches[resolvedPath] = context;
 				return context._executeScript(currentModule);
 
 			} else if (targetScriptAsset instanceof TextAsset) {
 				// JSONの場合の特殊挙動をトレースするためのコード。node.jsの仕様に準ずる
 				if (targetScriptAsset && PathUtil.resolveExtname(path) === ".json") {
 					// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
-					var cache = game._scriptCaches[targetScriptAsset.path] = new RequireCachedValue(JSON.parse(targetScriptAsset.data));
+					var cache = game._scriptCaches[resolvedPath] = new RequireCachedValue(JSON.parse(targetScriptAsset.data));
 					return cache._cachedValue();
 				}
 			}
@@ -165,18 +160,12 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_virtualDirname: string;
-
-		/**
-		 * @private
-		 */
 		_g: ScriptAssetExecuteEnvironment;
 
 		constructor(game: Game, id: string, path: string) {
-			var dirname = PathUtil.resolveDirname(path);
-			// `virtualPath` と `virtualDirname` は　`DynamicAsset` の場合は `undefined` になる。
+			// `DynamicAsset` の場合は `virtualPath` がない(require()させない)
 			var virtualPath = game._assetManager._liveAbsolutePathTable[path];
-			var virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
+			var dirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
 
 			var _g: ScriptAssetExecuteEnvironment = Object.create(g, {
 				game: {
@@ -205,9 +194,8 @@ namespace g {
 			this.parent = null; // Node.js と互換
 			this.loaded = false;
 			this.children = [];
-			this.paths = virtualDirname ? PathUtil.makeNodeModulePaths(virtualDirname) : [];
+			this.paths = dirname ? PathUtil.makeNodeModulePaths(dirname) : [];
 			this._dirname = dirname;
-			this._virtualDirname = virtualDirname;
 			this._g = _g;
 
 			// メソッドとしてではなく単体で呼ばれるのでメソッドにせずここで実体を代入する
