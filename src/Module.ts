@@ -36,9 +36,9 @@ namespace g {
 			// 2. If X begins with './' or '/' or '../'
 
 			if (currentModule) {
-				if (!currentModule._dirname)
+				if (!currentModule._virtualDirname)
 					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
-				resolvedPath = PathUtil.resolvePath(currentModule._dirname, path);
+				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
 				if (!(/^\.\//.test(path)))
 					throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
@@ -160,12 +160,18 @@ namespace g {
 		/**
 		 * @private
 		 */
+		_virtualDirname: string;
+
+		/**
+		 * @private
+		 */
 		_g: ScriptAssetExecuteEnvironment;
 
 		constructor(game: Game, id: string, path: string) {
-			// `DynamicAsset` の場合は `virtualPath` がない(require()させない)
+			var dirname = PathUtil.resolveDirname(path);
+			// `virtualPath` と `virtualDirname` は　`DynamicAsset` の場合は `undefined` になる。
 			var virtualPath = game._assetManager._liveAbsolutePathTable[path];
-			var dirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
+			var virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
 
 			var _g: ScriptAssetExecuteEnvironment = Object.create(g, {
 				game: {
@@ -194,8 +200,9 @@ namespace g {
 			this.parent = null; // Node.js と互換
 			this.loaded = false;
 			this.children = [];
-			this.paths = dirname ? PathUtil.makeNodeModulePaths(dirname) : [];
+			this.paths = virtualDirname ? PathUtil.makeNodeModulePaths(virtualDirname) : [];
 			this._dirname = dirname;
+			this._virtualDirname = virtualDirname;
 			this._g = _g;
 
 			// メソッドとしてではなく単体で呼ばれるのでメソッドにせずここで実体を代入する
