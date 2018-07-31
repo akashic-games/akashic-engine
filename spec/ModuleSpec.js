@@ -144,6 +144,13 @@ describe("test Module", function() {
 				"virtualPath": "node_modules/cyclic1/node_modules/cyclic3/index.js",
 				"global": true
 			},
+			// virtual path altering directory
+			"script/realpath.js": {
+				"type": "script",
+				"path": "/script/realpath.js",
+				"virtualPath": "script/some/deep/vpath.js",
+				"global": true
+			},
 			// cache
 			"script/cache1.js": {
 				"type": "script",
@@ -235,6 +242,9 @@ describe("test Module", function() {
 			"var c1 = require('cyclic1');",
 			"module.exports = { me: 'cyclic3', thisModule: module, c1: c1 };"
 		].join("\n"),
+
+		// virtual path altering directory
+		"script/some/deep/realpath.js": "module.exports = { me: 'realpath', thisModule: module}",
 
 		// cache
 		"/script/cache1.js": "module.exports = { v1: require('randomnumber'), v2: require('randomnumber'), cache2: require('./cache2.js') };",
@@ -595,6 +605,23 @@ describe("test Module", function() {
 			expect(c3.thisModule.parent).toBe(c2.thisModule);
 			expect(c3.thisModule.children.length).toBe(0);
 			expect(c3.c1).toBe("notyet");
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("require - virtual path altering directory", function (done) {
+		var game = new mock.Game(gameConfiguration, "/");
+		game.resourceFactory.scriptContents = scriptContents;
+		game._loaded.handle(function () {
+			var module = new g.Module(game, "dummypath", "/script/realpath.js");
+			var mod = module.require("../../foo"); // virtualPath: /script/some/deep/vpath.js からのrequire()
+			expect(mod.me).toBe("script-foo");
+			expect(mod.thisModule instanceof g.Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/script/foo.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
 			done();
 		});
 		game._startLoadingGlobalAssets();
