@@ -875,6 +875,7 @@ namespace g {
 					this.random = param.randGen;
 			}
 
+			this._audioSystemManager._reset();
 			this._loaded.removeAll({ func: this._start, owner: this });
 			this.join.removeAll();
 			this.leave.removeAll();
