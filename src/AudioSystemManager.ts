@@ -30,6 +30,19 @@ namespace g {
 		/**
 		 * @private
 		 */
+		_reset(): void {
+			this._muted = false;
+			this._playbackRate = 1.0;
+			var systems = this._game.audio;
+			for (var id in systems) {
+				if (!systems.hasOwnProperty(id)) continue;
+				systems[id]._reset();
+			}
+		}
+
+		/**
+		 * @private
+		 */
 		_setMuted(muted: boolean): void {
 			if (this._muted === muted)
 				return;

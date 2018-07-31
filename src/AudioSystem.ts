@@ -60,6 +60,17 @@ namespace g {
 		/**
 		 * @private
 		 */
+		_reset(): void {
+			this.stopAll();
+			this._volume = 1;
+			this._destroyRequestedAssets = {};
+			this._muted = this.game._audioSystemManager._muted;
+			this._playbackRate = this.game._audioSystemManager._playbackRate;
+		}
+
+		/**
+		 * @private
+		 */
 		_setMuted(value: boolean): void {
 			var before = this._muted;
 			this._muted = !!value;
