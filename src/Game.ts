@@ -887,6 +887,7 @@ namespace g {
 					this.random[0] = param.randGen;
 			}
 
+			this._audioSystemManager._reset();
 			this._loaded.removeAllByHandler(this._start);
 			this.join._reset();
 			this.leave._reset();
