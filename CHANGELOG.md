@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2.3.6
+
+不具合修正
+ * game.json に `virtualPath` を記述している場合に、 `require()` が失敗することがある問題を修正
+ * `g.AudioAsset` の再生中にエンジンが `g.Game#_reset()` を行った場合、 `g.AudioAsset` がその後誤って破棄される問題を修正
+
 ## 2.3.5
 
 * ドキュメント生成方法の変更
