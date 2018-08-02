@@ -162,6 +162,19 @@ namespace g {
 		/**
 		 * @private
 		 */
+		_reset(): void {
+			super._reset();
+			if (this._player) {
+				this._player.played.remove({ owner: this, func: this._onPlayerPlayed });
+				this._player.stopped.remove({ owner: this, func: this._onPlayerStopped });
+			}
+			this._player = undefined;
+			this._suppressingAudio = undefined;
+		}
+
+		/**
+		 * @private
+		 */
 		_onVolumeChanged(): void {
 			this.player.changeVolume(this._volume);
 		}
@@ -221,7 +234,7 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
-			if (this._destroyRequestedAssets[e.audio.id]) {
+			if (e.audio && this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
 			}
@@ -266,6 +279,19 @@ namespace g {
 		/**
 		 * @private
 		 */
+		_reset(): void {
+			super._reset();
+			for (var i = 0; i < this.players.length; ++i) {
+				var player = this.players[i];
+				player.played.remove({ owner: this, func: this._onPlayerPlayed });
+				player.stopped.remove({ owner: this, func: this._onPlayerStopped });
+			}
+			this.players = [];
+		}
+
+		/**
+		 * @private
+		 */
 		_onMutedChanged(): void {
 			var players = this.players;
 			for (var i = 0; i < players.length; ++i) {
@@ -300,14 +326,14 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
+			if (!e.audio)
+				return;
 			var index = this.players.indexOf(e.player);
 			if (index < 0)
 				return;
 
 			e.player.stopped.remove({ owner: this, func: this._onPlayerStopped });
-
 			this.players.splice(index, 1);
-
 			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
