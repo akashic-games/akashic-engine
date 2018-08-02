@@ -30,7 +30,6 @@ describe("test AudioPlayer", function() {
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
 	});
 
-
 	it("AudioSystem#_setPlaybackRate", function () {
 		var game = new mock.Game({ width: 320, height: 320 });
 		var system = game.audio["sound"];
@@ -96,7 +95,6 @@ describe("test AudioPlayer", function() {
 		expect(system._playbackRate).toBe(1);
 		expect(system._destroyRequestedAssets).toEqual({});
 	});
-
 
 	it("MusicAudioSystem#_setPlaybackRate", function () {
 		var game = new mock.Game({ width: 320, height: 320 });
