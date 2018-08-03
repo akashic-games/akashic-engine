@@ -4,6 +4,7 @@
 
 不具合修正
  * 明示的に `g.AudioSystem#createPlayer()` を利用し、音声が再生されていない状態でエンジンが `g.Game#_reset()` を行なった場合、環境によって例外が起きる問題を修正
+ * 音声を再生せずに呼び出された `g.AudioAsset#stop()` が、環境によって `stopped` をfireする問題を修正
 
 ## 2.3.6
 

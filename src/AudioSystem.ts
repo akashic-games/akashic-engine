@@ -234,7 +234,7 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
-			if (e.audio && this._destroyRequestedAssets[e.audio.id]) {
+			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
 			}
@@ -326,8 +326,6 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
-			if (!e.audio)
-				return;
 			var index = this.players.indexOf(e.player);
 			if (index < 0)
 				return;

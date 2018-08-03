@@ -84,11 +84,13 @@ namespace g {
 		/**
 		 * 再生を停止する。
 		 *
-		 * 再生中でない場合、何もしない。
 		 * 停止後、 `this.stopped` がfireされる。
+		 * 再生中でない場合、何もしない(`stopped` もfireされない)。
 		 */
 		stop(): void {
 			var audio = this.currentAudio;
+			if (!audio)
+				return;
 			this.currentAudio = undefined;
 			this.stopped.fire({
 				player: this,
