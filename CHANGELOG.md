@@ -1,6 +1,6 @@
 # ChangeLog
 
-## (unreleased)
+## 2.3.7
 
 不具合修正
  * 明示的に `g.AudioSystem#createPlayer()` を利用し、音声が再生されていない状態でエンジンが `g.Game#_reset()` を行なった場合、環境によって例外が起きる問題を修正
