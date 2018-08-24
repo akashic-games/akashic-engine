@@ -256,6 +256,18 @@ namespace g {
 		resized: Trigger<CommonSize>;
 
 		/**
+		 * スキップ状態の変化時にfireされるTrigger。
+		 *
+		 * スキップ状態に遷移する時に真、非スキップ状態に遷移する時に偽が与えられる。
+		 * この通知は、ゲーム開発者が「スキップ中の演出省略」などの最適化を行うために提供されている。
+		 *
+		 * この通知のfire頻度は、ゲームの実行状態などに依存して異なりうることに注意。
+		 * 例えば多人数プレイされている時、それぞれの環境でfireされ方が異なりうる。
+		 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
+		 */
+		skippingChanged: g.Trigger<boolean>;
+
+		/**
 		 * イベントとTriggerのマップ。
 		 * @private
 		 */
@@ -465,6 +477,7 @@ namespace g {
 			this._eventTriggerMap[EventType.Operation] = undefined;
 
 			this.resized = new Trigger<CommonSize>();
+			this.skippingChanged = new Trigger<boolean>();
 			this._loaded = new Trigger<Game>();
 			this._started = new Trigger<void>();
 			this.isLoaded = false;
@@ -881,6 +894,7 @@ namespace g {
 			this.leave.removeAll();
 			this.seed.removeAll();
 			this.resized.removeAll();
+			this.skippingChanged.removeAll();
 
 			this._idx = 0;
 			this._localIdx = 0;
@@ -970,6 +984,8 @@ namespace g {
 			this.operationPlugins = undefined; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
 			this.resized.destroy();
 			this.resized = undefined;
+			this.skippingChanged.destroy();
+			this.skippingChanged = undefined;
 			this._eventTriggerMap = undefined;
 			this._initialScene = undefined;
 			this._defaultLoadingScene = undefined;
