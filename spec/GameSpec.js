@@ -25,6 +25,7 @@ describe("test Game", function() {
 		expect(game.height).toBe(270);
 		expect(game.selfId).toBe("foo");
 		expect(game.playId).toBe(undefined);
+		expect(game.skippingChanged).not.toBe(undefined);
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
 	});
@@ -41,6 +42,7 @@ describe("test Game", function() {
 		expect(game.external).toEqual({});  // external は触らない
 		expect(game.vars).toEqual({});  // vars も触らない
 		expect(game.playId).toBe(undefined);
+		expect(game.skippingChanged).toBe(undefined);
 	});
 
 	it("global assets", function (done) {
