@@ -34,22 +34,6 @@ describe("test AudioPlayer", function() {
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
 	});
 
-
-	it("AudioSystem#_reset", function () {
-		var game = new mock.Game({ width: 320, height: 320 });
-		var system = game.audio["sound"];
-		var asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
-
-		system._setPlaybackRate(0.3);
-		system.requestDestroy(asset);
-		expect(system._playbackRate).toBe(0.3);
-		expect(system._destroyRequestedAssets["dummy"]).toBe(asset);
-
-		system._reset();
-		expect(system._playbackRate).toBe(1);
-		expect(system._destroyRequestedAssets).toEqual({});
-	});
-
 	it("AudioSystem#_setPlaybackRate", function () {
 		var game = new mock.Game({ width: 320, height: 320 });
 		var system = game.audio["sound"];
@@ -80,6 +64,40 @@ describe("test AudioPlayer", function() {
 		player1.play(asset);
 		player1.stop();
 		expect(player1._muted).toBe(true);
+	});
+
+	it("SoundAudioSystem#_reset", function () {
+		var game = new mock.Game({ width: 320, height: 320 });
+		var system = game.audio["sound"];
+		var asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
+		var player = system.createPlayer();
+
+		system._setPlaybackRate(0.3);
+		system.requestDestroy(asset);
+		expect(player._playbackRate).toBe(0.3);
+		expect(system._playbackRate).toBe(0.3);
+		expect(system._destroyRequestedAssets["dummy"]).toBe(asset);
+
+		system._reset();
+		expect(system._playbackRate).toBe(1);
+		expect(system._destroyRequestedAssets).toEqual({});
+	});
+
+	it("MusicAudioSystem#_reset", function () {
+		var game = new mock.Game({ width: 320, height: 320 });
+		var system = game.audio["music"];
+		var asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
+		var player = system.createPlayer();
+
+		system._setPlaybackRate(0.3);
+		system.requestDestroy(asset);
+		expect(player._playbackRate).toBe(0.3);
+		expect(system._playbackRate).toBe(0.3);
+		expect(system._destroyRequestedAssets["dummy"]).toBe(asset);
+
+		system._reset();
+		expect(system._playbackRate).toBe(1);
+		expect(system._destroyRequestedAssets).toEqual({});
 	});
 
 	it("MusicAudioSystem#_setPlaybackRate", function () {
