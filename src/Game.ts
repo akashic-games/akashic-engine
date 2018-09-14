@@ -795,19 +795,6 @@ namespace g {
 		}
 
 		/**
-		 * 現在時刻を取得する。
-		 *
-		 * 値は1970-01-01T00:00:00Zからのミリ秒での経過時刻である。
-		 * `Date.now()` と異なり、この値は消化されたティックの数から算出される擬似的な時刻である。
-		 *
-		 * この関数は試験的なものである。
-		 * 現在の実装では、戻り値は小数点以下の値を含む。ゲーム開発者はそのことに依存すべきではない。
-		 */
-		getCurrentTime(): number {
-			throw ExceptionFactory.createPureVirtualError("Game#getCurrentTime");
-		}
-
-		/**
 		 * @private
 		 */
 		_fireSceneReady(scene: Scene): void {

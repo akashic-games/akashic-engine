@@ -530,18 +530,7 @@ export class Game extends g.Game {
 	}
 
 	saveSnapshot(snapshot: any, timestamp?: number): void {
-		throw new Error("not implemented");
-	}
-
-	getCurrentTime(): number {
-		return 0;
-	}
-
-	addEventFilter(filter: g.EventFilter): void {
-		throw new Error("not implemented");
-	}
-	removeEventFilter(filter: g.EventFilter): void {
-		throw new Error("not implemented");
+		// do nothing.
 	}
 }
 
