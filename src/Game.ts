@@ -59,6 +59,20 @@ namespace g {
 		assetHolder?: SceneAssetHolder;
 	}
 
+	export interface TickProperty {
+		/**
+		 * 直前の `update` 以降に、(タイムスタンプ待ちを省略する動作などの影響でエンジンが)省いたローカルティックの数。
+		 * ローカルティック補完シーンでない場合、常に `0` であることに注意。
+		 */
+		omittedTickCount: number;
+
+		/**
+		 * ローカルティックであるか否か。
+		 * ローカルシーンおよびローカルティック補完シーンでない場合、つねに偽。
+		 */
+		isLocal: boolean;
+	}
+
 	export interface GameResetParameterObject {
 		/**
 		 * `Game#age` に設定する値。
@@ -266,6 +280,13 @@ namespace g {
 		 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
 		 */
 		skippingChanged: g.Trigger<boolean>;
+
+		/**
+		 * 最後に消化されたティックの性質。
+		 *
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		lastTickProperty: TickProperty;
 
 		/**
 		 * イベントとTriggerのマップ。
@@ -573,12 +594,15 @@ namespace g {
 		 *
 		 * 戻り値は呼び出し前後でシーンが変わった(別のシーンに遷移した)場合、真。でなければ偽。
 		 * @param advanceAge 偽を与えた場合、`this.age` を進めない。省略された場合、ローカルシーン以外ならageを進める。
+		 * @param omittedTickCount タイムスタンプ待ちを省略する動作などにより、(前回の呼び出し以降に)省かれたローカルティックの数。省略された場合、 `0` 。
 		 */
-		tick(advanceAge?: boolean): boolean {
+		tick(advanceAge?: boolean, omittedTickCount: number = 0): boolean {
 			var scene: Scene = undefined;
 
 			if (this._isTerminated)
 				return false;
+
+			this.lastTickProperty = { isLocal: !advanceAge, omittedTickCount };
 
 			if (this.scenes.length) {
 				scene = this.scenes[this.scenes.length - 1];
