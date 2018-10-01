@@ -11,7 +11,7 @@ namespace g {
 		game: Game;
 		borderWidth: CommonRect;
 		surface: Surface;
-		beforeSurface: Surface;
+		beforeSrcSurface: Surface;
 
 		/**
 		 * `NinePatchSurfaceEffector` のインスタンスを生成する。
@@ -31,19 +31,13 @@ namespace g {
 		 * 指定の大きさに拡大・縮小した描画結果の `Surface` を生成して返す。詳細は `SurfaceEffector#render` の項を参照。
 		 */
 		render(srcSurface: Surface, width: number, height: number): Surface {
-			if (this.surface && this.surface.width === width && this.surface.height === height && this.beforeSurface === srcSurface) {
-				return this.surface;
-			}
-
-			if (this.surface) {
-				this.surface.width = Math.ceil(width);
-				this.surface.height = Math.ceil(height);
-			} else {
+			if (! this.surface || this.surface.width !== width || this.surface.height !== height || this.beforeSrcSurface !== srcSurface) {
 				this.surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 			}
 
-			this.beforeSurface = srcSurface;
+			this.beforeSrcSurface = srcSurface;
 			var renderer = this.surface.renderer();
+			renderer.clear();
 			renderer.begin();
 
 			//    x0  x1                          x2
