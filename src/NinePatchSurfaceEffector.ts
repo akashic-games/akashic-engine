@@ -31,15 +31,18 @@ namespace g {
 		 * 指定の大きさに拡大・縮小した描画結果の `Surface` を生成して返す。詳細は `SurfaceEffector#render` の項を参照。
 		 */
 		render(srcSurface: Surface, width: number, height: number): Surface {
+			var isCreateSurface = true;
 			if (! this.surface || this.surface.width !== width || this.surface.height !== height || this.beforeSrcSurface !== srcSurface) {
 				this.surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
+				this.beforeSrcSurface = srcSurface;
+			} else {
+				isCreateSurface = false;
 			}
 
-			this.beforeSrcSurface = srcSurface;
 			var renderer = this.surface.renderer();
-			renderer.clear();
 			renderer.begin();
-
+			if (!isCreateSurface)
+				renderer.clear();
 			//    x0  x1                          x2
 			// y0 +-----------------------------------+
 			//    | 1 |             5             | 2 |
