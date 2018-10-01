@@ -59,20 +59,6 @@ namespace g {
 		assetHolder?: SceneAssetHolder;
 	}
 
-	export interface TickProperty {
-		/**
-		 * 直前の `update` 以降に、(タイムスタンプ待ちを省略する動作などの影響でエンジンが)省いたローカルティックの数。
-		 * ローカルティック補完シーンでない場合、常に `0` であることに注意。
-		 */
-		omittedTickCount: number;
-
-		/**
-		 * ローカルティックであるか否か。
-		 * ローカルシーンおよびローカルティック補完シーンでない場合、つねに偽。
-		 */
-		isLocal: boolean;
-	}
-
 	export interface GameResetParameterObject {
 		/**
 		 * `Game#age` に設定する値。
@@ -282,11 +268,23 @@ namespace g {
 		skippingChanged: g.Trigger<boolean>;
 
 		/**
-		 * 最後に消化されたティックの性質。
+		 * 直近の `update` の通知が、ローカルティックによるものか否か。
+		 *
+		 * ただし一度も `update` 通知が起きていない間は真である。
+		 * ローカルシーンおよびローカルティック補完シーン以外のシーンにおいては、常に偽。
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		isLastTickLocal: boolean;
+
+		/**
+		 * 直近の `update` の通知時(の直前)に(タイムスタンプ待ちを省略する動作などの影響でエンジンが)省いたローカルティックの数。
+		 *
+		 * 一度も `update` 通知が起きていない間は `0` である。
+		 * ローカルティック補完シーンでない場合、常に `0` であることに注意。
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 		 */
-		lastTickProperty: TickProperty;
+		lastOmittedLocalTickCount: number;
 
 		/**
 		 * イベントとTriggerのマップ。
@@ -499,6 +497,10 @@ namespace g {
 
 			this.resized = new Trigger<CommonSize>();
 			this.skippingChanged = new Trigger<boolean>();
+
+			this.isLastTickLocal = true;
+			this.lastOmittedLocalTickCount = 0;
+
 			this._loaded = new Trigger<Game>();
 			this._started = new Trigger<void>();
 			this.isLoaded = false;
@@ -596,14 +598,14 @@ namespace g {
 		 * @param advanceAge 偽を与えた場合、`this.age` を進めない。省略された場合、ローカルシーン以外ならageを進める。
 		 * @param omittedTickCount タイムスタンプ待ちを省略する動作などにより、(前回の呼び出し以降に)省かれたローカルティックの数。省略された場合、 `0` 。
 		 */
-		tick(advanceAge?: boolean, omittedTickCount: number = 0): boolean {
+		tick(advanceAge?: boolean, omittedTickCount?: number): boolean {
 			var scene: Scene = undefined;
 
 			if (this._isTerminated)
 				return false;
 
-			this.lastTickProperty = { isLocal: !advanceAge, omittedTickCount };
-
+			this.isLastTickLocal = !advanceAge;
+			this.lastOmittedLocalTickCount = omittedTickCount || 0;
 			if (this.scenes.length) {
 				scene = this.scenes[this.scenes.length - 1];
 				if (this.events.length) {

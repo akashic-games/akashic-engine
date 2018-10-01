@@ -259,12 +259,12 @@ describe("test Game", function() {
 			expect(game.age).toBe(1);
 			expect(game.tick(false, 3)).toBe(false);
 			expect(game.age).toBe(1);
-			expect(game.lastTickProperty.isLocal).toBe(true);
-			expect(game.lastTickProperty.omittedTickCount).toBe(3);
+			expect(game.isLastTickLocal).toBe(true);
+			expect(game.lastOmittedLocalTickCount).toBe(3);
 			expect(game.tick(true)).toBe(false);
 			expect(game.age).toBe(2);
-			expect(game.lastTickProperty.isLocal).toBe(false);
-			expect(game.lastTickProperty.omittedTickCount).toBe(0);
+			expect(game.isLastTickLocal).toBe(false);
+			expect(game.lastOmittedLocalTickCount).toBe(0);
 			done();
 		});
 		game._loadAndStart();
