@@ -10,6 +10,15 @@ namespace g {
 	export class NinePatchSurfaceEffector implements SurfaceEffector {
 		game: Game;
 		borderWidth: CommonRect;
+		/**
+		 * @private
+		 */
+		_surface: Surface;
+
+		/**
+		 * @private
+		 */
+		_beforeSrcSurface: Surface;
 
 		/**
 		 * `NinePatchSurfaceEffector` のインスタンスを生成する。
@@ -28,12 +37,19 @@ namespace g {
 		/**
 		 * 指定の大きさに拡大・縮小した描画結果の `Surface` を生成して返す。詳細は `SurfaceEffector#render` の項を参照。
 		 */
-		// TODO: (GAMEDEV-1654) GAMEDEV-1404が満たしていない改修を行う
 		render(srcSurface: Surface, width: number, height: number): Surface {
-			var surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
-			var renderer = surface.renderer();
-			renderer.begin();
+			var isCreateSurface = true;
+			if (!this._surface || this._surface.width !== width || this._surface.height !== height || this._beforeSrcSurface !== srcSurface) {
+				this._surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
+				this._beforeSrcSurface = srcSurface;
+			} else {
+				isCreateSurface = false;
+			}
 
+			var renderer = this._surface.renderer();
+			renderer.begin();
+			if (!isCreateSurface)
+				renderer.clear();
 			//    x0  x1                          x2
 			// y0 +-----------------------------------+
 			//    | 1 |             5             | 2 |
@@ -138,7 +154,7 @@ namespace g {
 			renderer.restore();
 
 			renderer.end();
-			return surface;
+			return this._surface;
 		}
 	}
 }
