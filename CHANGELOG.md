@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.4.1
+その他変更
+ * g.SurfaceEffector#render() で 毎回 g.Surface の生成を行わず、g.Surfaceを持ち回るよう変更
+
 ## 2.4.0
 
 機能追加
