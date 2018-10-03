@@ -268,6 +268,25 @@ namespace g {
 		skippingChanged: g.Trigger<boolean>;
 
 		/**
+		 * 直近の `update` の通知が、ローカルティックによるものか否か。
+		 *
+		 * ただし一度も `update` 通知が起きていない間は真である。
+		 * ローカルシーンおよびローカルティック補間シーン以外のシーンにおいては、常に偽。
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		isLastTickLocal: boolean;
+
+		/**
+		 * 直近の `update` の通知時(の直前)に(タイムスタンプ待ちを省略する動作などの影響でエンジンが)省いたローカルティックの数。
+		 *
+		 * 一度も `update` 通知が起きていない間は `0` である。
+		 * ローカルティック補間シーンでない場合、常に `0` であることに注意。
+		 *
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		lastOmittedLocalTickCount: number;
+
+		/**
 		 * イベントとTriggerのマップ。
 		 * @private
 		 */
@@ -478,6 +497,10 @@ namespace g {
 
 			this.resized = new Trigger<CommonSize>();
 			this.skippingChanged = new Trigger<boolean>();
+
+			this.isLastTickLocal = true;
+			this.lastOmittedLocalTickCount = 0;
+
 			this._loaded = new Trigger<Game>();
 			this._started = new Trigger<void>();
 			this.isLoaded = false;
@@ -572,14 +595,17 @@ namespace g {
 		 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
 		 *
 		 * 戻り値は呼び出し前後でシーンが変わった(別のシーンに遷移した)場合、真。でなければ偽。
-		 * @param advanceAge 偽を与えた場合、`this.age` を進めない。省略された場合、ローカルシーン以外ならageを進める。
+		 * @param advanceAge 偽を与えた場合、`this.age` を進めない。
+		 * @param omittedTickCount タイムスタンプ待ちを省略する動作などにより、(前回の呼び出し以降に)省かれたローカルティックの数。省略された場合、 `0` 。
 		 */
-		tick(advanceAge?: boolean): boolean {
+		tick(advanceAge: boolean, omittedTickCount?: number): boolean {
 			var scene: Scene = undefined;
 
 			if (this._isTerminated)
 				return false;
 
+			this.isLastTickLocal = !advanceAge;
+			this.lastOmittedLocalTickCount = omittedTickCount || 0;
 			if (this.scenes.length) {
 				scene = this.scenes[this.scenes.length - 1];
 				if (this.events.length) {
@@ -593,9 +619,8 @@ namespace g {
 				}
 
 				scene.update.fire();
-				if (advanceAge === true || (advanceAge === undefined && scene.local !== g.LocalTickMode.FullLocal)) {
+				if (advanceAge)
 					++this.age;
-				}
 			}
 
 			if (this._sceneChangeRequests.length) {
@@ -745,7 +770,7 @@ namespace g {
 		 * エンジンは、イベントフィルタが戻り値として返したイベントを、まるでそのイベントが発生したかのように処理する。
 		 *
 		 * イベントフィルタはローカルイベントに対しても適用される。
-		 * イベントフィルタはローカルティック補完シーンやローカルシーンの間であっても適用される。
+		 * イベントフィルタはローカルティック補間シーンやローカルシーンの間であっても適用される。
 		 * 複数のイベントフィルタが存在する場合、そのすべてが適用される。適用順は登録の順である。
 		 *
 		 * @param filter 追加するイベントフィルタ

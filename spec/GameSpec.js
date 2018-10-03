@@ -115,7 +115,7 @@ describe("test Game", function() {
 		var testPass = false;
 		function requestTick() {
 			if (!testPass) {
-				game.tick();
+				game.classicTick();
 				setTimeout(requestTick, 1);
 				return;
 			}
@@ -253,14 +253,18 @@ describe("test Game", function() {
 			var scene = new g.Scene({game: game});
 			game.pushScene(scene);
 			expect(game.age).toBe(0);
-			expect(game.tick()).toBe(true);
+			expect(game.classicTick()).toBe(true);
 			expect(game.scene().local).toBe(g.LocalTickMode.NonLocal);
-			expect(game.tick()).toBe(false);
+			expect(game.classicTick()).toBe(false);
 			expect(game.age).toBe(1);
-			expect(game.tick(false)).toBe(false);
+			expect(game.tick(false, 3)).toBe(false);
 			expect(game.age).toBe(1);
+			expect(game.isLastTickLocal).toBe(true);
+			expect(game.lastOmittedLocalTickCount).toBe(3);
 			expect(game.tick(true)).toBe(false);
 			expect(game.age).toBe(2);
+			expect(game.isLastTickLocal).toBe(false);
+			expect(game.lastOmittedLocalTickCount).toBe(0);
 			done();
 		});
 		game._loadAndStart();
@@ -655,16 +659,16 @@ describe("test Game", function() {
 		game.pushScene(scene);
 		game._flushSceneChangeRequests();
 
-		game.tick();
+		game.classicTick();
 		expect(count).toBe(1);
-		game.tick();
+		game.classicTick();
 		expect(count).toBe(2);
 
 		game.terminateGame();
 		expect(game.terminatedGame).toBe(true);
-		game.tick();
+		game.classicTick();
 		expect(count).toBe(2);
-		game.tick();
+		game.classicTick();
 		expect(count).toBe(2);
 	});
 
@@ -694,7 +698,7 @@ describe("test Game", function() {
 			});
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
-			game.tick();
+			game.classicTick();
 		});
 		game._startLoadingGlobalAssets();
 	});
