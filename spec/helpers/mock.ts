@@ -523,12 +523,18 @@ export class Game extends g.Game {
 		this.autoTickForInternalEvents = true;
 	}
 
+	// 引数がなかった当時の tick の挙動を再現するメソッド。
+	classicTick(): boolean {
+		const advance = this.scene() && this.scene().local !== g.LocalTickMode.FullLocal;
+		return this.tick(advance);
+	}
+
 	_fireSceneReady(scene: g.Scene): void {
 		super._fireSceneReady(scene);
 		if (this.autoTickForInternalEvents) {
 			setTimeout(() => {
 				if (scene.destroyed()) return;  // 同期的にsceneを破棄してしまうテストのためにチェック
-				this.tick();
+				this.classicTick();
 			}, 0);
 		}
 	}
@@ -538,7 +544,7 @@ export class Game extends g.Game {
 		if (this.autoTickForInternalEvents) {
 			setTimeout(() => {
 				if (scene.destroyed()) return;  // 同期的にsceneを破棄してしまうテストのためにチェック
-				this.tick();
+				this.classicTick();
 			}, 0);
 		}
 	}
