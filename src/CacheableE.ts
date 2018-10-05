@@ -11,6 +11,13 @@ namespace g {
 	 */
 	export class CacheableE extends E {
 		/**
+		 * _cache のパディングサイズ。
+		 *
+		 * @private
+		 */
+		static PADDING: number = 1;
+
+		/**
 		 * エンジンが子孫を描画すべきであれば`true`、でなければ`false`を本クラスを継承したクラスがセットする。
 		 * デフォルト値は`true`となる。
 		 * @private
@@ -77,33 +84,42 @@ namespace g {
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
 		renderSelf(renderer: Renderer, camera?: Camera): boolean {
+			var padding = CacheableE.PADDING;
 			if (this._renderedCamera !== camera) {
 				this.state &= ~EntityStateFlags.Cached;
 				this._renderedCamera = camera;
 			}
 			if (!(this.state & EntityStateFlags.Cached)) {
 				this._cacheSize = this.calculateCacheSize();
-				var isNew =
-					!this._cache || this._cache.width < Math.ceil(this._cacheSize.width) || this._cache.height < Math.ceil(this._cacheSize.height);
+				var w = Math.ceil(this._cacheSize.width) + padding * 2;
+				var h = Math.ceil(this._cacheSize.height) + padding * 2;
+				var isNew = !this._cache || (this._cache.width < w) || (this._cache.height < h);
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();
 					}
-					this._cache = this.scene.game.resourceFactory.createSurface(Math.ceil(this._cacheSize.width), Math.ceil(this._cacheSize.height));
+					this._cache = this.scene.game.resourceFactory.createSurface(w, h);
 					this._renderer = this._cache.renderer();
 				}
-				this._renderer.begin();
+
+				var cacheRenderer = this._renderer;
+				cacheRenderer.begin();
 				if (! isNew) {
-					this._renderer.clear();
+					cacheRenderer.clear();
 				}
 
-				this.renderCache(this._renderer, camera);
+				cacheRenderer.save();
+				cacheRenderer.translate(padding, padding);
+				this.renderCache(cacheRenderer, camera);
+				cacheRenderer.restore();
 
 				this.state |= EntityStateFlags.Cached;
-				this._renderer.end();
+				cacheRenderer.end();
 			}
 			if (this._cache && this._cacheSize.width > 0 && this._cacheSize.height > 0) {
-				renderer.drawImage(this._cache, 0, 0, this._cacheSize.width, this._cacheSize.height, 0, 0);
+				renderer.translate(-padding, -padding);
+				renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + padding, this._cacheSize.height + padding, 0, 0);
+				renderer.translate(padding, padding);
 			}
 			return this._shouldRenderChildren;
 		}
