@@ -419,11 +419,11 @@ namespace g {
 			this._destroyed = false;
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
-			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする
-			this.hint.initialAtlasWidth = this.hint.initialAtlasWidth ? this.hint.initialAtlasWidth : 2048;
-			this.hint.initialAtlasHeight = this.hint.initialAtlasHeight ? this.hint.initialAtlasHeight : 2048;
-			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 2048;
-			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 2048;
+			// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
+			this.hint.initialAtlasWidth = this.hint.initialAtlasWidth ? this.hint.initialAtlasWidth : 512;
+			this.hint.initialAtlasHeight = this.hint.initialAtlasHeight ? this.hint.initialAtlasHeight : 512;
+			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 512;
+			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 512;
 			this.hint.maxAtlasNum = this.hint.maxAtlasNum ? this.hint.maxAtlasNum : 1;
 
 			this._atlasSize = calcAtlasSize(this.hint);
