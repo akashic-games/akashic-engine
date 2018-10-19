@@ -28,12 +28,12 @@ describe("test DynamicFont", function() {
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
 		expect(font.hint).toEqual({
-				initialAtlasWidth: 2048,
-				initialAtlasHeight: 2048,
-				maxAtlasWidth: 2048,
-				maxAtlasHeight: 2048,
-				maxAtlasNum: 1
+				initialAtlasWidth: 512,
+				initialAtlasHeight: 512,
+				maxAtlasWidth: 512,
+				maxAtlasHeight: 512
 		});
+		expect(font._atlasSet.maxAtlasSize).toEqual(g.SurfaceAtlasSet.INITIAL_SURFACEATLAS_SIZE);
 	});
 	it("初期化 - Given hint", function() {
 		var runtime = skeletonRuntime();
@@ -69,6 +69,7 @@ describe("test DynamicFont", function() {
 				maxAtlasHeight: 4000,
 				maxAtlasNum: 5
 		});
+		expect(font._atlasSet.maxAtlasSize).toEqual(5);
 	});
 	it("初期化 - ParameterObject, 文字列配列によるフォントファミリ指定", function() {
 		const runtime = skeletonRuntime();

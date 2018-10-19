@@ -287,6 +287,11 @@ namespace g {
 		lastOmittedLocalTickCount: number;
 
 		/**
+		 * サーフェスアトラスを管理する。
+		 */
+		surfaceAtlasSet: SurfaceAtlasSet;
+
+		/**
 		 * イベントとTriggerのマップ。
 		 * @private
 		 */
@@ -479,6 +484,7 @@ namespace g {
 			this.defaultAudioSystemId = "sound";
 			this.storage = new Storage(this);
 			this.assets = {};
+			this.surfaceAtlasSet = new SurfaceAtlasSet(this);
 
 			// TODO: (GAMEDEV-666) この三つのイベントはGame自身がデフォルトのイベントハンドラを持って処理する必要があるかも
 			this.join = new Trigger<JoinEvent>();

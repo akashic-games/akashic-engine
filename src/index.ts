@@ -59,6 +59,7 @@
 /// <reference path="OperationPluginManager.ts" />
 /// <reference path="executeEnvironmentVariables.ts" />
 /// <reference path="DynamicFont.ts" />
+/// <reference path="SurfaceAtlasSet.ts" />
 
 // non-ordered files
 /// <reference path="AudioSystemManager.ts" />
