@@ -22,6 +22,12 @@ namespace g {
 		code: number;
 
 		/**
+		 * 文字のgrapheme、もしくはgrapheme cluser。
+		 * この値が `undefined` ではない時、 `this.code` はnullである。
+		 */
+		graphemes: string;
+
+		/**
 		 * サーフェス上の文字のX座標。
 		 *
 		 * `this.surface` が `undefined` である時、この値は不定である。
@@ -91,10 +97,16 @@ namespace g {
 		/**
 		 * `Glyph` のインスタンスを生成する。
 		 */
-		constructor(code: number, x: number, y: number, width: number, height: number,
+		constructor(codeOrGraphemes: number | string, x: number, y: number, width: number, height: number,
 		            offsetX: number = 0, offsetY: number = 0, advanceWidth: number = width,
 		            surface?: Surface, isSurfaceValid: boolean = !!surface) {
-			this.code = code;
+			if (typeof codeOrGraphemes === "number") {
+				this.code = codeOrGraphemes;
+				this.graphemes = null;
+			} else {
+				this.code = null;
+				this.graphemes = codeOrGraphemes;
+			}
 			this.x = x;
 			this.y = y;
 			this.width = width;

@@ -369,7 +369,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_glyphs: {[key: number]: Glyph};
+		_glyphs: {[key: string]: Glyph};
 
 		/**
 		 * @private
@@ -449,13 +449,13 @@ namespace g {
 		 * - DynamicFont生成時に指定する文字サイズを小さくする
 		 * - アトラスの初期サイズ・最大サイズを大きくする
 		 *
-		 * @param code 文字コード
+		 * @param codeOrGraphemes 文字コード、もしくはgrapheme cluster
 		 */
-		glyphForCharacter(code: number): Glyph {
-			var glyph = this._glyphs[code];
+		glyphForCharacter(codeOrGraphemes: number | string): Glyph {
+			var glyph = this._glyphs[codeOrGraphemes];
 
 			if (! (glyph && glyph.isSurfaceValid)) {
-				glyph = this._glyphFactory.create(code);
+				glyph = this._glyphFactory.create(codeOrGraphemes);
 
 				if (glyph.surface) { // 空白文字でなければアトラス化する
 
@@ -479,7 +479,7 @@ namespace g {
 					glyph._atlas = atlas;
 				}
 
-				this._glyphs[code] = glyph;
+				this._glyphs[codeOrGraphemes] = glyph;
 			}
 
 			// スコア更新

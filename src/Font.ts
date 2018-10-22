@@ -15,8 +15,8 @@ namespace g {
 		 *
 		 * 取得に失敗するとnullが返る。
 		 *
-		 * @param code 文字コード
+		 * @param codeOrGraphemes 文字コード、もしくはgrapheme cluster
 		 */
-		glyphForCharacter(code: number): Glyph;
+		glyphForCharacter(codeOrGraphemes: number | string): Glyph;
 	}
 }

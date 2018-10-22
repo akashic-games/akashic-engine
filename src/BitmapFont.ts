@@ -56,11 +56,11 @@ namespace g {
 		}
 
 		/**
-		 * コードポイントに対応するグリフを返す。
-		 * @param code コードポイント
+		 * 文字コードに対応するグリフを返す。
+		 * @param codeOrGraphemes 文字コード、もしくはgrapheme cluster
 		 */
-		glyphForCharacter(code: number): Glyph {
-			var g = this.map[code] || this.missingGlyph;
+		glyphForCharacter(codeOrGraphemes: number | string): Glyph {
+			var g = this.map[codeOrGraphemes] || this.missingGlyph;
 
 			if (! g) {
 				return null;
@@ -73,7 +73,7 @@ namespace g {
 			var advanceWidth = g.advanceWidth === undefined ? w : g.advanceWidth;
 			var surface = (w === 0 || h === 0) ? undefined : this.surface;
 
-			return new Glyph(code, g.x, g.y, w, h, offsetX, offsetY, advanceWidth, surface, true);
+			return new Glyph(codeOrGraphemes, g.x, g.y, w, h, offsetX, offsetY, advanceWidth, surface, true);
 		}
 
 		/**
