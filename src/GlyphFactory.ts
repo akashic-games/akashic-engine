@@ -92,7 +92,7 @@ namespace g {
 		 *
 		 * `DynamicFont` はこれを用いてグリフを生成する。
 		 *
-		 * @param code 文字コード
+		 * @param codeOrGraphemes 文字コード、もしくはgrapheme cluster
 		 */
 		abstract create(code: number | string): Glyph;
 	}
