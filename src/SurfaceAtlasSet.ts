@@ -22,6 +22,18 @@ namespace g {
 		}
 	}
 
+	function getSurfaceAtlasSlot(slot: SurfaceAtlasSlot, width: number, height: number): SurfaceAtlasSlot {
+		while (slot) {
+			if (slot.width >= width && slot.height >= height) {
+				return slot;
+			}
+			slot = slot.next;
+		}
+
+		return null;
+	}
+
+
 	/**
 	 * サーフェスアトラス。
 	 *
@@ -67,7 +79,7 @@ namespace g {
 			width += 1;
 			height += 1;
 
-			var slot = this._getSurfaceAtlasSlot(this._emptySurfaceAtlasSlotHead, width, height);
+			var slot = getSurfaceAtlasSlot(this._emptySurfaceAtlasSlotHead, width, height);
 
 			if (!slot) {
 				return null;
@@ -118,20 +130,6 @@ namespace g {
 			if (slotBottom > this._usedRectangleAreaSize.height) {
 				this._usedRectangleAreaSize.height = slotBottom;
 			}
-		}
-
-		/**
-		 * @private
-		 */
-		_getSurfaceAtlasSlot(slot: SurfaceAtlasSlot, width: number, height: number): SurfaceAtlasSlot {
-			while (slot) {
-				if (slot.width >= width && slot.height >= height) {
-					return slot;
-				}
-				slot = slot.next;
-			}
-
-			return null;
 		}
 
 		/**
