@@ -287,7 +287,7 @@ namespace g {
 		lastOmittedLocalTickCount: number;
 
 		/**
-		 * サーフェスアトラスを管理する。
+		 * ゲーム全体で共有するサーフェスアトラス。
 		 */
 		surfaceAtlasSet: SurfaceAtlasSet;
 

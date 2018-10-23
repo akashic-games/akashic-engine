@@ -153,9 +153,9 @@ namespace g {
 		}
 
 		/**
-			* このSurfaceAtlasの破棄を行う。
-			* 以後、このSurfaceを利用することは出来なくなる。
-			*/
+		 * このSurfaceAtlasの破棄を行う。
+		 * 以後、このSurfaceを利用することは出来なくなる。
+		 */
 		destroy(): void {
 			this._surface.destroy();
 		}
@@ -192,7 +192,7 @@ namespace g {
 		/**
 		 * SurfaceAtlas最大保持数初期値
 		 */
-		static INITIAL_SURFACEATLAS_MAX_SIZE: number = 10;
+		static INITIAL_MAX_SURFACEATLAS_NUM: number = 10;
 
 		/**
 		 * @private
@@ -211,7 +211,7 @@ namespace g {
 
 		constructor(game: Game) {
 			this._surfaceAtlases = [];
-			this.maxAtlasNum = SurfaceAtlasSet.INITIAL_SURFACEATLAS_MAX_SIZE;
+			this.maxAtlasNum = SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
 			this._resourceFactory = game.resourceFactory;
 		}
 
@@ -232,7 +232,7 @@ namespace g {
 		/**
 		 * サーフェスアトラスの保持数を取得する。
 		 */
-		get atlasNum(): number {
+		getAtlasNum(): number {
 			return this._surfaceAtlases.length;
 		}
 		/**
@@ -243,26 +243,43 @@ namespace g {
 		}
 		/**
 		 * 最大アトラス保持数設定する。
+		 *
+		 * 設定された値が、現在保持している_surfaceAtlasesの数より大きい場合、
+		 * removeLeastFrequentlyUsedAtlas()で設定値まで減らします。
+		 * 引数の値が、1未満の場合は1を設定し、小数点は切り捨てます。
+		 * @param value 設定値
 		 */
 		set maxAtlasNum(value: number) {
-			this._maxAtlasNum = value;
+			if (0 >= value ) value = 1;
+
+			this._maxAtlasNum = Math.floor(value);
+			if (this._surfaceAtlases.length > this._maxAtlasNum) {
+				const diff = this._surfaceAtlases.length - this._maxAtlasNum;
+				const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
+				removedAtlases.forEach((atlas: SurfaceAtlas) => atlas.destroy() );
+			}
 		}
 
 		/**
 		 * 使用度の低いサーフェスアトラスを配列から削除する。
 		 */
-		removeLeastFrequentlyUsedAtlas(): SurfaceAtlas {
-			var minScore = Number.MAX_VALUE;
-			var lowScoreAtlasIndex = -1;
-			for (var i = 0; i < this._surfaceAtlases.length; i++) {
-				if (this._surfaceAtlases[i]._accessScore <= minScore) {
-					minScore = this._surfaceAtlases[i]._accessScore;
-					lowScoreAtlasIndex = i;
-				}
-			}
-			let removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
+		removeLeastFrequentlyUsedAtlas(removedNum: number = 1): SurfaceAtlas[] {
+			const removedAtlases = [];
 
-			return removedAtlas;
+			for (var n = 0; n < removedNum; n++) {
+				var minScore = Number.MAX_VALUE;
+				var lowScoreAtlasIndex = -1;
+				for (var i = 0; i < this._surfaceAtlases.length; i++) {
+					if (this._surfaceAtlases[i]._accessScore <= minScore) {
+						minScore = this._surfaceAtlases[i]._accessScore;
+						lowScoreAtlasIndex = i;
+					}
+				}
+				let removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
+				removedAtlases.push(removedAtlas);
+			}
+
+			return removedAtlases;
 		}
 
 		/**
@@ -303,7 +320,7 @@ namespace g {
 		 */
 		reallocateAtlas(_glyphs: { [key: number]: Glyph }, atlasSize: CommonSize): void {
 			if (this._surfaceAtlases.length >= this.maxAtlasNum) {
-				let atlas = this.removeLeastFrequentlyUsedAtlas();
+				let atlas = this.removeLeastFrequentlyUsedAtlas(1)[0];
 				let glyphs = _glyphs;
 
 				for (let key in glyphs) {

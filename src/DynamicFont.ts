@@ -22,6 +22,8 @@ namespace g {
 	/**
 	 * `DynamicFont` のコンストラクタに渡すことができるパラメータ。
 	 * 各メンバの詳細は `DynamicFont` の同名メンバの説明を参照すること。
+	 * DynamicFontHintが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用する。
+	 * DynamicFontHintが存在しない場合、gameが持つ共通のSurfaceAtlasSetを使用する。
 	 */
 	export interface DynamicFontParameterObject {
 		/**
@@ -140,8 +142,6 @@ namespace g {
 
 		/**
 		 * ヒント。
-		 * ヒントが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用する。
-		 * ヒントが存在しない場合、gameが持つ共通のSurfaceAtlasSetを使用する。
 		 */
 		hint: DynamicFontHint;
 
@@ -246,7 +246,7 @@ namespace g {
 			}
 
 			this._atlasSize = calcAtlasSize(this.hint);
-			if (this._atlasSet.atlasNum === 0 ) {
+			if (this._atlasSet.getAtlasNum() === 0 ) {
 				this._atlasSet.addAtlas(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 			}
 
@@ -306,7 +306,7 @@ namespace g {
 			// スコア更新
 			// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 			// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
-			for (var i = 0; i < this._atlasSet.atlasNum; i++) {
+			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
 				var atlas = this._atlasSet.getAtlasByIndex(i);
 				if (atlas === glyph._atlas) {
 					atlas._accessScore += 1;
@@ -326,7 +326,7 @@ namespace g {
 		 * @param missingGlyph `BitmapFont#map` に存在しないコードポイントの代わりに表示するべき文字。最初の一文字が用いられる。
 		 */
 		asBitmapFont(missingGlyphChar?: string): BitmapFont {
-			if (this._atlasSet.atlasNum !== 1) {
+			if (this._atlasSet.getAtlasNum() !== 1) {
 				return null;
 			}
 
@@ -372,7 +372,7 @@ namespace g {
 		}
 
 		destroy(): void {
-			for (var i = 0; i < this._atlasSet.atlasNum; i++) {
+			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
 				this._atlasSet.getAtlasByIndex(i).destroy();
 			}
 			this._glyphs = null;

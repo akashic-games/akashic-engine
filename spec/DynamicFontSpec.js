@@ -33,7 +33,7 @@ describe("test DynamicFont", function() {
 				maxAtlasWidth: 512,
 				maxAtlasHeight: 512
 		});
-		expect(font._atlasSet.maxAtlasNum).toEqual(g.SurfaceAtlasSet.INITIAL_SURFACEATLAS_MAX_SIZE);
+		expect(font._atlasSet.maxAtlasNum).toEqual(g.SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
 	});
 	it("初期化 - Given hint", function() {
 		var runtime = skeletonRuntime();
