@@ -22,7 +22,7 @@ namespace g {
 		code: number;
 
 		/**
-		 * 文字のgrapheme、もしくはgrapheme cluser。
+		 * 一文字以上のgrapheme cluser。
 		 * この値がgrapheme cluserである時、 `this.code` は `null` である。
 		 */
 		graphemes: string;
