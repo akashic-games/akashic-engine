@@ -23,7 +23,7 @@ namespace g {
 
 		/**
 		 * 文字のgrapheme、もしくはgrapheme cluser。
-		 * この値が `undefined` ではない時、 `this.code` はnullである。
+		 * この値がgrapheme cluserである時、 `this.code` は `null` である。
 		 */
 		graphemes: string;
 
@@ -102,7 +102,7 @@ namespace g {
 		            surface?: Surface, isSurfaceValid: boolean = !!surface) {
 			if (typeof codeOrGraphemes === "number") {
 				this.code = codeOrGraphemes;
-				this.graphemes = null;
+				this.graphemes = Util.codeToStr(codeOrGraphemes);
 			} else {
 				this.code = null;
 				this.graphemes = codeOrGraphemes;

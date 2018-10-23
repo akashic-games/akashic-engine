@@ -283,5 +283,14 @@ namespace g {
 				}
 			}
 		}
+
+		/**
+		 * 文字コードを文字列に変換する。
+		 * 
+		 * @param code 文字コード
+		 */
+		export function codeToStr(code: number): string {
+			return (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
+		}
 	}
 }

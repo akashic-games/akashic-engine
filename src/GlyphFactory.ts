@@ -94,6 +94,6 @@ namespace g {
 		 *
 		 * @param codeOrGraphemes 文字コード、もしくはgrapheme cluster
 		 */
-		abstract create(code: number | string): Glyph;
+		abstract create(codeOrGraphemes: number | string): Glyph;
 	}
 }
