@@ -10,10 +10,10 @@ describe("test SurfaceAtlasSet", function() {
 		var runtime = skeletonRuntime();
 		surfaceAtlasSet = new g.SurfaceAtlasSet({ game: runtime.game});
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
-		expect(surfaceAtlasSet.maxAtlasSize).toEqual(g.SurfaceAtlasSet.INITIAL_SURFACEATLAS_SIZE);
+		expect(surfaceAtlasSet.maxAtlasNum).toEqual(g.SurfaceAtlasSet.INITIAL_SURFACEATLAS_MAX_SIZE);
 	});
 
-	describe("removeLowUseAtlas", function () {
+	describe("removeLeastFrequentlyUsedAtlas", function () {
 		it("_accessScoreが低いSurfaceAtlasが保持配列から削除される", function() {
 			for(var i = 0; i < 10; i++) {
 				var atlas = new g.SurfaceAtlas(new g.Surface(1,1));
@@ -21,13 +21,13 @@ describe("test SurfaceAtlasSet", function() {
 				surfaceAtlasSet.addAtlas(atlas);
 			}
 
-			var removedAtlas = surfaceAtlasSet.removeLowUseAtlas();
+			var removedAtlas = surfaceAtlasSet.removeLeastFrequentlyUsedAtlas();
 			var ret = surfaceAtlasSet._surfaceAtlases.find(atlas => {
 				return atlas._accessScore === 0;
 			})
 			expect(ret).toEqual(undefined);
 			expect(removedAtlas._accessScore).toEqual(0);
-			expect(surfaceAtlasSet.atlasLength).toEqual(9);
+			expect(surfaceAtlasSet.atlasNum).toEqual(9);
 		});
 	});
 
@@ -52,22 +52,22 @@ describe("test SurfaceAtlasSet", function() {
 
 	describe("reallocateAtlas", function () {
 		it("SurfaceAtlasの保持数が最大値未満の場合、SurfaceAtlasが追加される", function () {
-			surfaceAtlasSet.maxAtlasSize = surfaceAtlasSet.atlasLength + 1;
-			var currentLength = surfaceAtlasSet.atlasLength;
+			surfaceAtlasSet.maxAtlasNum = surfaceAtlasSet.atlasNum + 1;
+			var currentLength = surfaceAtlasSet.atlasNum;
 
 			surfaceAtlasSet._resourceFactory = {
 				createSurfaceAtlas: function (width, height) {
 					return new g.SurfaceAtlas(new g.Surface(10, 10))}
 			}
 			surfaceAtlasSet.reallocateAtlas({}, {width: 10, height: 10});
-			expect(surfaceAtlasSet.atlasLength).toEqual(currentLength + 1);
+			expect(surfaceAtlasSet.atlasNum).toEqual(currentLength + 1);
 		});
 		it("SurfaceAtlasの保持数が最大値の場合、SurfaceAtlasを1つ削除後に追加される", function () {
-			spyOn(surfaceAtlasSet, "removeLowUseAtlas").and.callThrough();
+			spyOn(surfaceAtlasSet, "removeLeastFrequentlyUsedAtlas").and.callThrough();
 			surfaceAtlasSet.reallocateAtlas({}, { width: 10, height: 10 });
 
-			expect(surfaceAtlasSet.removeLowUseAtlas).toHaveBeenCalled();
-			expect(surfaceAtlasSet.atlasLength).toEqual(surfaceAtlasSet.maxAtlasSize);
+			expect(surfaceAtlasSet.removeLeastFrequentlyUsedAtlas).toHaveBeenCalled();
+			expect(surfaceAtlasSet.atlasNum).toEqual(surfaceAtlasSet.maxAtlasNum);
 		});
 	});
 });

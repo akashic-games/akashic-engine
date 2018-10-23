@@ -13,6 +13,12 @@ namespace g {
 		Bold
 	}
 
+	function calcAtlasSize(hint: DynamicFontHint): CommonSize {
+		var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
+		var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));
+		return { width: width, height: height };
+	}
+
 	/**
 	 * `DynamicFont` のコンストラクタに渡すことができるパラメータ。
 	 * 各メンバの詳細は `DynamicFont` の同名メンバの説明を参照すること。
@@ -134,6 +140,8 @@ namespace g {
 
 		/**
 		 * ヒント。
+		 * ヒントが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用する。
+		 * ヒントが存在しない場合、gameが持つ共通のSurfaceAtlasSetを使用する。
 		 */
 		hint: DynamicFontHint;
 
@@ -203,7 +211,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_isGameOfAtrasSet: boolean;
+		_useCommonAtlasSet: boolean;
 
 		/**
 		 * 各種パラメータを指定して `DynamicFont` のインスタンスを生成する。
@@ -225,9 +233,8 @@ namespace g {
 			this._glyphs = {};
 			this._destroyed = false;
 
-			// prams.hintのプロパティが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用し、hintが存在しなければgameが持つ共通のSurfaceAtlasSetを使用する
-			this._isGameOfAtrasSet = Object.keys(this.hint).length === 0;
-			this._atlasSet = this._isGameOfAtrasSet ? param.game.surfaceAtlasSet : new SurfaceAtlasSet(param.game);
+			this._useCommonAtlasSet = Object.keys(this.hint).length === 0;
+			this._atlasSet = this._useCommonAtlasSet ? param.game.surfaceAtlasSet : new SurfaceAtlasSet(param.game);
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
 			this.hint.initialAtlasWidth = this.hint.initialAtlasWidth ? this.hint.initialAtlasWidth : 512;
@@ -235,11 +242,11 @@ namespace g {
 			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 512;
 			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 512;
 			if (this.hint.maxAtlasNum) {
-				this._atlasSet.maxAtlasSize = this.hint.maxAtlasNum;
+				this._atlasSet.maxAtlasNum = this.hint.maxAtlasNum;
 			}
 
-			this._atlasSize = this._calcAtlasSize(this.hint);
-			if (this._atlasSet.atlasLength === 0 ) {
+			this._atlasSize = calcAtlasSize(this.hint);
+			if (this._atlasSet.atlasNum === 0 ) {
 				this._atlasSet.addAtlas(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 			}
 
@@ -252,15 +259,6 @@ namespace g {
 					this.glyphForCharacter(code);
 				}
 			}
-		}
-
-		/**
-		 * @private
-		 */
-		_calcAtlasSize(hint: DynamicFontHint): CommonSize {
-			var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
-			var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));
-			return { width: width, height: height };
 		}
 
 		/**
@@ -308,8 +306,8 @@ namespace g {
 			// スコア更新
 			// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 			// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
-			for (var i = 0; i < this._atlasSet.atlasLength; i++) {
-				var atlas = this._atlasSet.getAtlasFromIndex(i);
+			for (var i = 0; i < this._atlasSet.atlasNum; i++) {
+				var atlas = this._atlasSet.getAtlasByIndex(i);
 				if (atlas === glyph._atlas) {
 					atlas._accessScore += 1;
 				}
@@ -328,7 +326,7 @@ namespace g {
 		 * @param missingGlyph `BitmapFont#map` に存在しないコードポイントの代わりに表示するべき文字。最初の一文字が用いられる。
 		 */
 		asBitmapFont(missingGlyphChar?: string): BitmapFont {
-			if (this._atlasSet.atlasLength !== 1) {
+			if (this._atlasSet.atlasNum !== 1) {
 				return null;
 			}
 
@@ -361,7 +359,7 @@ namespace g {
 			// しかし defaultGlyphHeight は BitmapFont#size にも用いられる。
 			// そのために this.size をコンストラクタの第４引数に与えることにする。
 			let missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
-			const surface = this._atlasSet.getAtlasFromIndex(0).duplicateSurface(this._resourceFactory);
+			const surface = this._atlasSet.getAtlasByIndex(0).duplicateSurface(this._resourceFactory);
 
 			const bitmapFont = new BitmapFont({
 				src: surface,
@@ -374,8 +372,8 @@ namespace g {
 		}
 
 		destroy(): void {
-			for (var i = 0; i < this._atlasSet.atlasLength; i++) {
-				this._atlasSet.getAtlasFromIndex(i).destroy();
+			for (var i = 0; i < this._atlasSet.atlasNum; i++) {
+				this._atlasSet.getAtlasByIndex(i).destroy();
 			}
 			this._glyphs = null;
 			this._glyphFactory = null;

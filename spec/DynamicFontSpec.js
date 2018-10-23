@@ -33,7 +33,7 @@ describe("test DynamicFont", function() {
 				maxAtlasWidth: 512,
 				maxAtlasHeight: 512
 		});
-		expect(font._atlasSet.maxAtlasSize).toEqual(g.SurfaceAtlasSet.INITIAL_SURFACEATLAS_SIZE);
+		expect(font._atlasSet.maxAtlasNum).toEqual(g.SurfaceAtlasSet.INITIAL_SURFACEATLAS_MAX_SIZE);
 	});
 	it("初期化 - Given hint", function() {
 		var runtime = skeletonRuntime();
@@ -69,7 +69,7 @@ describe("test DynamicFont", function() {
 				maxAtlasHeight: 4000,
 				maxAtlasNum: 5
 		});
-		expect(font._atlasSet.maxAtlasSize).toEqual(5);
+		expect(font._atlasSet.maxAtlasNum).toEqual(5);
 	});
 	it("初期化 - ParameterObject, 文字列配列によるフォントファミリ指定", function() {
 		const runtime = skeletonRuntime();

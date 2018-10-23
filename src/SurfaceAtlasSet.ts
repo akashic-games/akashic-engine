@@ -192,9 +192,9 @@ namespace g {
 	 */
 	export class SurfaceAtlasSet {
 		/**
-		 * SurfaceAtlas保持数初期値
+		 * SurfaceAtlas最大保持数初期値
 		 */
-		static INITIAL_SURFACEATLAS_SIZE: number = 10;
+		static INITIAL_SURFACEATLAS_MAX_SIZE: number = 10;
 
 		/**
 		 * @private
@@ -204,7 +204,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_maxAtlasSize: number;
+		_maxAtlasNum: number;
 
 		/**
 		 * @private
@@ -213,7 +213,7 @@ namespace g {
 
 		constructor(game: Game) {
 			this._surfaceAtlases = [];
-			this.maxAtlasSize = SurfaceAtlasSet.INITIAL_SURFACEATLAS_SIZE;
+			this.maxAtlasNum = SurfaceAtlasSet.INITIAL_SURFACEATLAS_MAX_SIZE;
 			this._resourceFactory = game.resourceFactory;
 		}
 
@@ -228,32 +228,32 @@ namespace g {
 		 * 引数で指定されたindexのサーフェスアトラスを取得する。
 		 * @param index 取得対象のインデックス
 		 */
-		getAtlasFromIndex(index: number): SurfaceAtlas {
+		getAtlasByIndex(index: number): SurfaceAtlas {
 			return this._surfaceAtlases[index];
 		}
 		/**
 		 * サーフェスアトラスの保持数を取得する。
 		 */
-		get atlasLength(): number {
+		get atlasNum(): number {
 			return this._surfaceAtlases.length;
 		}
 		/**
 		 * 最大サーフェスアトラス保持数取得する。
 		 */
-		get maxAtlasSize(): number {
-			return this._maxAtlasSize;
+		get maxAtlasNum(): number {
+			return this._maxAtlasNum;
 		}
 		/**
 		 * 最大アトラス保持数設定する。
 		 */
-		set maxAtlasSize(value: number) {
-			this._maxAtlasSize = value;
+		set maxAtlasNum(value: number) {
+			this._maxAtlasNum = value;
 		}
 
 		/**
 		 * 使用度の低いサーフェスアトラスを配列から削除する。
 		 */
-		removeLowUseAtlas(): SurfaceAtlas {
+		removeLeastFrequentlyUsedAtlas(): SurfaceAtlas {
 			var minScore = Number.MAX_VALUE;
 			var lowScoreAtlasIndex = -1;
 			for (var i = 0; i < this._surfaceAtlases.length; i++) {
@@ -304,8 +304,8 @@ namespace g {
 		 * @param atlasSize サーフェスアトラスが保持していSurfaceのサイズ
 		 */
 		reallocateAtlas(_glyphs: { [key: number]: Glyph }, atlasSize: CommonSize): void {
-			if (this._surfaceAtlases.length >= this.maxAtlasSize) {
-				let atlas = this.removeLowUseAtlas();
+			if (this._surfaceAtlases.length >= this.maxAtlasNum) {
+				let atlas = this.removeLeastFrequentlyUsedAtlas();
 				let glyphs = _glyphs;
 
 				for (let key in glyphs) {
