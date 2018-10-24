@@ -246,24 +246,21 @@ namespace g {
 		 *
 		 * 設定された値が、現在保持している_surfaceAtlasesの数より大きい場合、
 		 * removeLeastFrequentlyUsedAtlas()で設定値まで減らします。
-		 * 引数の値が、1未満の場合は1を設定し、小数点は切り捨てます。
 		 * @param value 設定値
 		 */
 		set maxAtlasNum(value: number) {
-			if (0 >= value ) value = 1;
-
-			this._maxAtlasNum = Math.floor(value);
+			this._maxAtlasNum = value;
 			if (this._surfaceAtlases.length > this._maxAtlasNum) {
 				const diff = this._surfaceAtlases.length - this._maxAtlasNum;
 				const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
-				removedAtlases.forEach((atlas: SurfaceAtlas) => atlas.destroy() );
+				removedAtlases.forEach((atlas) => atlas.destroy() );
 			}
 		}
 
 		/**
 		 * 使用度の低いサーフェスアトラスを配列から削除する。
 		 */
-		removeLeastFrequentlyUsedAtlas(removedNum: number = 1): SurfaceAtlas[] {
+		removeLeastFrequentlyUsedAtlas(removedNum: number): SurfaceAtlas[] {
 			const removedAtlases = [];
 
 			for (var n = 0; n < removedNum; n++) {
