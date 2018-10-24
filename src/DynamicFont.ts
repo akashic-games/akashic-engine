@@ -16,8 +16,9 @@ namespace g {
 	/**
 	 * `DynamicFont` のコンストラクタに渡すことができるパラメータ。
 	 * 各メンバの詳細は `DynamicFont` の同名メンバの説明を参照すること。
-	 * DynamicFontHintが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用する。
-	 * DynamicFontHintが存在しない場合、gameが持つ共通のSurfaceAtlasSetを使用する。
+	 * パラメータのsurfaceAtlasSetが存在する場合は、パラメータのsurfaceAtlasSetを使用する。
+	 * surfaceAtlasSetが存在せず、DynamicFontHintが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用する。
+	 * surfaceAtlasSetが存在せず、DynamicFontHintが存在しない場合、gameが持つ共通のSurfaceAtlasSetを使用する。
 	 */
 	export interface DynamicFontParameterObject {
 		/**
@@ -78,7 +79,7 @@ namespace g {
 		 * サーフェスアトラスセット
 		 * @default undefined
 		 */
-		atlasSet?: SurfaceAtlasSet;
+		surfaceAtlasSet?: SurfaceAtlasSet;
 	}
 
 	/**
@@ -230,8 +231,8 @@ namespace g {
 
 			this._useCommonAtlasSet = Object.keys(this.hint).length === 0;
 
-			if (param.atlasSet) {
-				this._atlasSet = param.atlasSet;
+			if (param.surfaceAtlasSet) {
+				this._atlasSet = param.surfaceAtlasSet;
 			} else if (this._useCommonAtlasSet) {
 				this._atlasSet = param.game.surfaceAtlasSet;
 			} else {
