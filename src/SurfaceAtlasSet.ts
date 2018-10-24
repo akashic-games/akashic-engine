@@ -270,16 +270,20 @@ namespace g {
 		 * @private
 		 */
 		_removeAtlas(): void {
-			let diff = this._surfaceAtlases.length - this._maxAtlasNum;
-			diff = diff === 0 ? 1 : diff;
+			// addAtlas() から呼ばれる場合、最大保持数と現在の_surfaceAtlasesの保持数が同じ場合、削除後に追加となるので diff が0の場合は1とする。
+			const diff = Math.max(this._surfaceAtlases.length - this._maxAtlasNum, 1);
 			const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
 			removedAtlases.forEach((atlas) => atlas.destroy());
 		}
 
 		/**
 		 * サーフェスアトラスを追加する。
+		 *
+		 * 保持している_surfaceAtlasesの数が最大値と同じ場合、削除してから追加する。
 		 */
 		addAtlas(): void {
+			// removeLeastFrequentlyUsedAtlas()では、SurfaceAtlas#_accessScoreの一番小さい値を持つSurfaceAtlasを削除するため、
+			// SurfaceAtlas作成時は_accessScoreは0となっているため、削除判定後に作成,追加処理を行う。
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 				this._removeAtlas();
 			}
@@ -312,7 +316,7 @@ namespace g {
 		 * 最大アトラス保持数設定する。
 		 *
 		 * 設定された値が、現在保持している_surfaceAtlasesの数より大きい場合、
-		 * removeLeastFrequentlyUsedAtlas()で設定値まで減らします。
+		 * removeLeastFrequentlyUsedAtlas()で設定値まで削除する。
 		 * @param value 設定値
 		 */
 		changeMaxAtlasNum(value: number): void {
@@ -335,10 +339,10 @@ namespace g {
 		removeLeastFrequentlyUsedAtlas(removedNum: number): SurfaceAtlas[] {
 			const removedAtlases = [];
 
-			for (var n = 0; n < removedNum; n++) {
+			for (var n = 0; n < removedNum; ++n) {
 				var minScore = Number.MAX_VALUE;
 				var lowScoreAtlasIndex = -1;
-				for (var i = 0; i < this._surfaceAtlases.length; i++) {
+				for (var i = 0; i < this._surfaceAtlases.length; ++i) {
 					if (this._surfaceAtlases[i]._accessScore <= minScore) {
 						minScore = this._surfaceAtlases[i]._accessScore;
 						lowScoreAtlasIndex = i;
@@ -384,12 +388,11 @@ namespace g {
 
 		/**
 		 * サーフェスアトラスの再割り当てを行う。
-		 * @param _glyphs グリフ配列
+		 * @param glyphs グリフ配列
 		 */
-		reallocateAtlas(_glyphs: { [key: number]: Glyph }): void {
+		reallocateAtlas(glyphs: { [key: number]: Glyph }): void {
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 				let atlas = this.removeLeastFrequentlyUsedAtlas(1)[0];
-				let glyphs = _glyphs;
 
 				for (let key in glyphs) {
 					if (glyphs.hasOwnProperty(key)) {
