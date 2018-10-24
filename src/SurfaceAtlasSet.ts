@@ -270,7 +270,8 @@ namespace g {
 		 * @private
 		 */
 		_removeAtlas(): void {
-			// addAtlas() から呼ばれる場合、最大保持数と現在の_surfaceAtlasesの保持数が同じ場合、削除後に追加となるので diff が0の場合は1とする。
+			// addAtlas() から呼ばれる場合では、保持している_surfaceAtlasesの数が最大値以上の判定後に削除処理を行い
+			// その後に追加となるので diff が 0 の場合は 1 とする。
 			const diff = Math.max(this._surfaceAtlases.length - this._maxAtlasNum, 1);
 			const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
 			removedAtlases.forEach((atlas) => atlas.destroy());
@@ -279,7 +280,7 @@ namespace g {
 		/**
 		 * サーフェスアトラスを追加する。
 		 *
-		 * 保持している_surfaceAtlasesの数が最大値と同じ場合、削除してから追加する。
+		 * 保持している_surfaceAtlasesの数が最大値以上の場合、削除してから追加する。
 		 */
 		addAtlas(): void {
 			// removeLeastFrequentlyUsedAtlas()では、SurfaceAtlas#_accessScoreの一番小さい値を持つSurfaceAtlasを削除するため、
