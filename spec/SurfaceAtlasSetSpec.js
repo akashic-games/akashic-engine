@@ -11,15 +11,36 @@ describe("test SurfaceAtlasSet", function() {
 		surfaceAtlasSet = new g.SurfaceAtlasSet({ game: runtime.game});
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
 		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(g.SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
+		expect(surfaceAtlasSet.getAtlasSize()).toEqual({ width: 512, height: 512 });
 	});
+
+	it("初期化 パラメータあり", function () {
+		var runtime = skeletonRuntime();
+		const surfaceAtlasSetParams = {
+			game: runtime.game,
+			initialAtlasWidth: 1,
+			initialAtlasHeight: 1,
+			maxAtlasWidth: 2,
+			maxAtlasHeight: 3,
+			maxSurfaceAtlasNum: 111
+		};
+		surfaceAtlasSet = new g.SurfaceAtlasSet(surfaceAtlasSetParams);
+		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
+		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(111);
+		expect(surfaceAtlasSet.getAtlasSize()).toEqual({width: 1, height: 1});
+	});
+
+
 
 	describe("removeLeastFrequentlyUsedAtlas", function () {
 		it("_accessScoreが低いSurfaceAtlasが保持配列から削除される", function() {
 			for(var i = 0; i < 10; i++) {
-				var atlas = new g.SurfaceAtlas(new g.Surface(1,1));
-				atlas._accessScore = i;
-				surfaceAtlasSet.addAtlas(atlas);
+				surfaceAtlasSet.addAtlas();
 			}
+
+			surfaceAtlasSet._surfaceAtlases.forEach((atlas, index) => {
+				atlas._accessScore = index;
+			});
 
 			var removedAtlas = surfaceAtlasSet.removeLeastFrequentlyUsedAtlas(1);
 			var ret = surfaceAtlasSet._surfaceAtlases.find(atlas => {
@@ -43,7 +64,7 @@ describe("test SurfaceAtlasSet", function() {
 
 			var atlas = new g.SurfaceAtlas(new g.Surface(100, 100));
 			spyOn(atlas, "addSurface").and.callFake(() => { return { x: 1, y: 1 } });
-			surfaceAtlasSet.addAtlas(atlas);
+			surfaceAtlasSet._surfaceAtlases.push(atlas);
 
 			var ret = surfaceAtlasSet.addToAtlas(glyph);
 			expect(ret instanceof g.SurfaceAtlas).toBeTruthy();
@@ -71,7 +92,7 @@ describe("test SurfaceAtlasSet", function() {
 		});
 	});
 
-	describe("set maxAtlasNum", function () {
+	describe("changeMaxAtlasNum", function () {
 		it("現在のSurfaceAtlasの保持数より値が大きい場合、maxAtlasNumの値が設定される", function () {
 			surfaceAtlasSet.changeMaxAtlasNum(15);
 			expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(15);
@@ -80,8 +101,25 @@ describe("test SurfaceAtlasSet", function() {
 		it("現在のSurfaceAtlasの保持数より値が小さい場合、maxAtlasNumの値が設定される", function () {
 			surfaceAtlasSet.changeMaxAtlasNum(5);
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(5);
-			expect(surfaceAtlasSet.getAtlasNum()).toEqual(5);
+		});
+	});
+
+	describe("addAtlas", function () {
+		it("maxAtlasNumより現在のSurfaceAtlasの保持数が小さい場合、追加される", function () {
+			surfaceAtlasSet.changeMaxAtlasNum(6);
+			const len = surfaceAtlasSet.getAtlasNum();
+			var atlas = new g.SurfaceAtlas(new g.Surface(1, 1));
+			surfaceAtlasSet.addAtlas(atlas);
+			expect(surfaceAtlasSet.getAtlasNum()).toEqual(len + 1);
 		});
 
+		it("maxAtlasNumと現在のSurfaceAtlasの保持数が同数以上の場合、一つ削除され追加される", function () {
+			spyOn(surfaceAtlasSet, "_removeAtlas").and.callThrough();
+			const len = surfaceAtlasSet.getAtlasNum();
+			var atlas = new g.SurfaceAtlas(new g.Surface(1, 1));
+			surfaceAtlasSet.addAtlas(atlas);
+			expect(surfaceAtlasSet.getAtlasNum()).toEqual(surfaceAtlasSet.getMaxAtlasNum());
+			expect(surfaceAtlasSet._removeAtlas).toHaveBeenCalled();
+		});
 	});
 });

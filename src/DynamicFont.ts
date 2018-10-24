@@ -13,12 +13,6 @@ namespace g {
 		Bold
 	}
 
-	function calcAtlasSize(hint: DynamicFontHint): CommonSize {
-		var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
-		var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));
-		return { width: width, height: height };
-	}
-
 	/**
 	 * `DynamicFont` のコンストラクタに渡すことができるパラメータ。
 	 * 各メンバの詳細は `DynamicFont` の同名メンバの説明を参照すること。
@@ -79,6 +73,12 @@ namespace g {
 		 * @default false
 		 */
 		strokeOnly?: boolean;
+
+		/**
+		 * サーフェスアトラスセット
+		 * @default undefined
+		 */
+		atlasSet?: SurfaceAtlasSet;
 	}
 
 	/**
@@ -201,11 +201,6 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_atlasSize: CommonSize;
-
-		/**
-		 * @private
-		 */
 		_atlasSet: SurfaceAtlasSet;
 
 		/**
@@ -234,20 +229,27 @@ namespace g {
 			this._destroyed = false;
 
 			this._useCommonAtlasSet = Object.keys(this.hint).length === 0;
-			this._atlasSet = this._useCommonAtlasSet ? param.game.surfaceAtlasSet : new SurfaceAtlasSet(param.game);
-			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
-			// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
-			this.hint.initialAtlasWidth = this.hint.initialAtlasWidth ? this.hint.initialAtlasWidth : 512;
-			this.hint.initialAtlasHeight = this.hint.initialAtlasHeight ? this.hint.initialAtlasHeight : 512;
-			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 512;
-			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 512;
-			if (this.hint.maxAtlasNum) {
-				this._atlasSet.changeMaxAtlasNum(this.hint.maxAtlasNum);
+
+			if (param.atlasSet) {
+				this._atlasSet = param.atlasSet;
+			} else if (this._useCommonAtlasSet) {
+				this._atlasSet = param.game.surfaceAtlasSet;
+			} else {
+				const surfaceAtlasSetParams: SurfaceAtlasSetParameterObject = {
+					game: param.game,
+					initialAtlasWidth: this.hint.initialAtlasWidth,
+					initialAtlasHeight: this.hint.initialAtlasHeight,
+					maxAtlasWidth: this.hint.maxAtlasWidth,
+					maxAtlasHeight: this.hint.maxAtlasHeight
+				};
+				if (this.hint.maxAtlasNum) {
+					surfaceAtlasSetParams.maxSurfaceAtlasNum = this.hint.maxAtlasNum;
+				}
+				this._atlasSet = new SurfaceAtlasSet(surfaceAtlasSetParams);
 			}
 
-			this._atlasSize = calcAtlasSize(this.hint);
-			if (this._atlasSet.getAtlasNum() === 0 ) {
-				this._atlasSet.addAtlas(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+			if (this._atlasSet.getAtlasNum() === 0) {
+				this._atlasSet.addAtlas();
 			}
 
 			if (this.hint.presetChars) {
@@ -279,17 +281,17 @@ namespace g {
 				glyph = this._glyphFactory.create(code);
 
 				if (glyph.surface) { // 空白文字でなければアトラス化する
-
+					const atlasSize = this._atlasSet.getAtlasSize();
 					// グリフがアトラスより大きいとき、`_addToAtlas()`は失敗する。
 					// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 					// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
-					if (glyph.width > this._atlasSize.width || glyph.height > this._atlasSize.height) {
+					if (glyph.width > atlasSize.width || glyph.height > atlasSize.height) {
 						return null;
 					}
 
 					let atlas = this._atlasSet.addToAtlas(glyph);
 					if (! atlas) {
-						this._atlasSet.reallocateAtlas(this._glyphs, this._atlasSize);
+						this._atlasSet.reallocateAtlas(this._glyphs);
 
 						// retry
 						atlas = this._atlasSet.addToAtlas(glyph);

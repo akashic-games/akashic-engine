@@ -33,6 +33,11 @@ namespace g {
 		return null;
 	}
 
+	function calcAtlasSize(params: SurfaceAtlasSetParameterObject): CommonSize {
+		var width = Math.ceil(Math.min(params.initialAtlasWidth, params.maxAtlasWidth));
+		var height = Math.ceil(Math.min(params.initialAtlasHeight, params.maxAtlasHeight));
+		return { width: width, height: height };
+	}
 
 	/**
 	 * サーフェスアトラス。
@@ -185,6 +190,39 @@ namespace g {
 		}
 	}
 
+
+	export interface SurfaceAtlasSetParameterObject {
+		/**
+		 * ゲームインスタンス。
+		 */
+		game: Game;
+
+		/**
+		 * 初期アトラス幅。
+		 */
+		initialAtlasWidth?: number;
+
+		/**
+		 * 初期アトラス高さ。
+		 */
+		initialAtlasHeight?: number;
+
+		/**
+		 * 最大アトラス幅。
+		 */
+		maxAtlasWidth?: number;
+
+		/**
+		 * 最大アトラス高さ。
+		 */
+		maxAtlasHeight?: number;
+
+		/**
+		 * SurfaceAtlas最大保持数
+		 */
+		maxSurfaceAtlasNum?: number;
+	}
+
 	/**
 	 * DynamicFontで使用される、SurfaceAtlasを管理する。
 	 */
@@ -209,19 +247,45 @@ namespace g {
 		 */
 		_resourceFactory: ResourceFactory;
 
-		constructor(game: Game) {
+		/**
+		 * @private
+		 */
+		_atlasSize: CommonSize;
+
+		constructor(params: SurfaceAtlasSetParameterObject) {
 			this._surfaceAtlases = [];
-			this._maxAtlasNum = SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
-			this._resourceFactory = game.resourceFactory;
+			this._maxAtlasNum = params.maxSurfaceAtlasNum ? params.maxSurfaceAtlasNum : SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
+			this._resourceFactory = params.game.resourceFactory;
+
+			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
+			// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
+			params.initialAtlasWidth  = params.initialAtlasWidth ? params.initialAtlasWidth : 512;
+			params.initialAtlasHeight = params.initialAtlasHeight ? params.initialAtlasHeight : 512;
+			params.maxAtlasWidth      = params.maxAtlasWidth ? params.maxAtlasWidth : 512;
+			params.maxAtlasHeight     = params.maxAtlasHeight ? params.maxAtlasHeight : 512;
+			this._atlasSize = calcAtlasSize(params);
+		}
+
+		/**
+		 * @private
+		 */
+		_removeAtlas(): void {
+			let diff = this._surfaceAtlases.length - this._maxAtlasNum;
+			diff = diff === 0 ? 1 : diff;
+			const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
+			removedAtlases.forEach((atlas) => atlas.destroy());
 		}
 
 		/**
 		 * サーフェスアトラスを追加する。
-		 * @param surfaceAtlas SurfaceAtlas
 		 */
-		addAtlas(surfaceAtlas: SurfaceAtlas): void {
-			this._surfaceAtlases.push(surfaceAtlas);
+		addAtlas(): void {
+			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
+				this._removeAtlas();
+			}
+			this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 		}
+
 		/**
 		 * 引数で指定されたindexのサーフェスアトラスを取得する。
 		 * @param index 取得対象のインデックス
@@ -229,18 +293,21 @@ namespace g {
 		getAtlasByIndex(index: number): SurfaceAtlas {
 			return this._surfaceAtlases[index];
 		}
+
 		/**
 		 * サーフェスアトラスの保持数を取得する。
 		 */
 		getAtlasNum(): number {
 			return this._surfaceAtlases.length;
 		}
+
 		/**
 		 * 最大サーフェスアトラス保持数取得する。
 		 */
 		getMaxAtlasNum(): number {
 			return this._maxAtlasNum;
 		}
+
 		/**
 		 * 最大アトラス保持数設定する。
 		 *
@@ -251,10 +318,15 @@ namespace g {
 		changeMaxAtlasNum(value: number): void {
 			this._maxAtlasNum = value;
 			if (this._surfaceAtlases.length > this._maxAtlasNum) {
-				const diff = this._surfaceAtlases.length - this._maxAtlasNum;
-				const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
-				removedAtlases.forEach((atlas) => atlas.destroy() );
+				this._removeAtlas();
 			}
+		}
+
+		/**
+		 * サーフェスアトラスのサイズを取得する。
+		 */
+		getAtlasSize(): CommonSize {
+			return this._atlasSize;
 		}
 
 		/**
@@ -313,9 +385,8 @@ namespace g {
 		/**
 		 * サーフェスアトラスの再割り当てを行う。
 		 * @param _glyphs グリフ配列
-		 * @param atlasSize サーフェスアトラスが保持していSurfaceのサイズ
 		 */
-		reallocateAtlas(_glyphs: { [key: number]: Glyph }, atlasSize: CommonSize): void {
+		reallocateAtlas(_glyphs: { [key: number]: Glyph }): void {
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 				let atlas = this.removeLeastFrequentlyUsedAtlas(1)[0];
 				let glyphs = _glyphs;
@@ -333,7 +404,7 @@ namespace g {
 				atlas.destroy();
 			}
 
-			this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(atlasSize.width, atlasSize.height));
+			this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 		}
 	}
 }

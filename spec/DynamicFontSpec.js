@@ -27,12 +27,11 @@ describe("test DynamicFont", function() {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
-		expect(font.hint).toEqual({
-				initialAtlasWidth: 512,
-				initialAtlasHeight: 512,
-				maxAtlasWidth: 512,
-				maxAtlasHeight: 512
+		expect(font._atlasSet.getAtlasSize()).toEqual({
+				height: 512,
+				width: 512
 		});
+
 		expect(font._atlasSet.getMaxAtlasNum()).toEqual(g.SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
 	});
 	it("初期化 - Given hint", function() {
@@ -68,6 +67,10 @@ describe("test DynamicFont", function() {
 				maxAtlasWidth: 3000,
 				maxAtlasHeight: 4000,
 				maxAtlasNum: 5
+		});
+		expect(font._atlasSet.getAtlasSize()).toEqual({
+			height: 2000,
+			width: 1000
 		});
 		expect(font._atlasSet.getMaxAtlasNum()).toEqual(5);
 	});
