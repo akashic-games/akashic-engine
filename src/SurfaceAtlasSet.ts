@@ -211,7 +211,7 @@ namespace g {
 
 		constructor(game: Game) {
 			this._surfaceAtlases = [];
-			this.maxAtlasNum = SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
+			this._maxAtlasNum = SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
 			this._resourceFactory = game.resourceFactory;
 		}
 
@@ -238,7 +238,7 @@ namespace g {
 		/**
 		 * 最大サーフェスアトラス保持数取得する。
 		 */
-		get maxAtlasNum(): number {
+		getMaxAtlasNum(): number {
 			return this._maxAtlasNum;
 		}
 		/**
@@ -248,7 +248,7 @@ namespace g {
 		 * removeLeastFrequentlyUsedAtlas()で設定値まで減らします。
 		 * @param value 設定値
 		 */
-		set maxAtlasNum(value: number) {
+		changeMaxAtlasNum(value: number): void {
 			this._maxAtlasNum = value;
 			if (this._surfaceAtlases.length > this._maxAtlasNum) {
 				const diff = this._surfaceAtlases.length - this._maxAtlasNum;
@@ -316,7 +316,7 @@ namespace g {
 		 * @param atlasSize サーフェスアトラスが保持していSurfaceのサイズ
 		 */
 		reallocateAtlas(_glyphs: { [key: number]: Glyph }, atlasSize: CommonSize): void {
-			if (this._surfaceAtlases.length >= this.maxAtlasNum) {
+			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 				let atlas = this.removeLeastFrequentlyUsedAtlas(1)[0];
 				let glyphs = _glyphs;
 

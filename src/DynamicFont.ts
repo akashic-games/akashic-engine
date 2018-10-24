@@ -242,7 +242,7 @@ namespace g {
 			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 512;
 			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 512;
 			if (this.hint.maxAtlasNum) {
-				this._atlasSet.maxAtlasNum = this.hint.maxAtlasNum;
+				this._atlasSet.changeMaxAtlasNum(this.hint.maxAtlasNum);
 			}
 
 			this._atlasSize = calcAtlasSize(this.hint);

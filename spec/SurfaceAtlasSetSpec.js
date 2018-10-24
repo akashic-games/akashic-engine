@@ -10,7 +10,7 @@ describe("test SurfaceAtlasSet", function() {
 		var runtime = skeletonRuntime();
 		surfaceAtlasSet = new g.SurfaceAtlasSet({ game: runtime.game});
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
-		expect(surfaceAtlasSet.maxAtlasNum).toEqual(g.SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
+		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(g.SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
 	});
 
 	describe("removeLeastFrequentlyUsedAtlas", function () {
@@ -21,7 +21,7 @@ describe("test SurfaceAtlasSet", function() {
 				surfaceAtlasSet.addAtlas(atlas);
 			}
 
-			var removedAtlas = surfaceAtlasSet.removeLeastFrequentlyUsedAtlas();
+			var removedAtlas = surfaceAtlasSet.removeLeastFrequentlyUsedAtlas(1);
 			var ret = surfaceAtlasSet._surfaceAtlases.find(atlas => {
 				return atlas._accessScore === 0;
 			})
@@ -52,7 +52,7 @@ describe("test SurfaceAtlasSet", function() {
 
 	describe("reallocateAtlas", function () {
 		it("SurfaceAtlasの保持数が最大値未満の場合、SurfaceAtlasが追加される", function () {
-			surfaceAtlasSet.maxAtlasNum = surfaceAtlasSet.getAtlasNum() + 1;
+			surfaceAtlasSet.changeMaxAtlasNum(surfaceAtlasSet.getAtlasNum() + 1 );
 			var currentLength = surfaceAtlasSet.getAtlasNum();
 
 			surfaceAtlasSet._resourceFactory = {
@@ -67,19 +67,19 @@ describe("test SurfaceAtlasSet", function() {
 			surfaceAtlasSet.reallocateAtlas({}, { width: 10, height: 10 });
 
 			expect(surfaceAtlasSet.removeLeastFrequentlyUsedAtlas).toHaveBeenCalled();
-			expect(surfaceAtlasSet.getAtlasNum()).toEqual(surfaceAtlasSet.maxAtlasNum);
+			expect(surfaceAtlasSet.getAtlasNum()).toEqual(surfaceAtlasSet.getMaxAtlasNum());
 		});
 	});
 
 	describe("set maxAtlasNum", function () {
 		it("現在のSurfaceAtlasの保持数より値が大きい場合、maxAtlasNumの値が設定される", function () {
-			surfaceAtlasSet.maxAtlasNum = 15;
-			expect(surfaceAtlasSet.maxAtlasNum).toEqual(15);
+			surfaceAtlasSet.changeMaxAtlasNum(15);
+			expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(15);
 
 		});
 		it("現在のSurfaceAtlasの保持数より値が小さい場合、maxAtlasNumの値が設定される", function () {
-			surfaceAtlasSet.maxAtlasNum = 5;
-			expect(surfaceAtlasSet.maxAtlasNum).toEqual(5);
+			surfaceAtlasSet.changeMaxAtlasNum(5);
+			expect(surfaceAtlasSet.getAtlasNum()).toEqual(5);
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(5);
 		});
 
