@@ -235,7 +235,8 @@ namespace g {
 			this._destroyed = false;
 			this._isDestroyExecutable = false;
 
-			this._useCommonAtlasSet = Object.keys(this.hint).length === 0;
+			const hintLength = Object.keys(this.hint).length;
+			this._useCommonAtlasSet = hintLength === 0 || (hintLength === 1 && "baselineHeight" in this.hint);
 
 			if (param.surfaceAtlasSet) {
 				this._atlasSet = param.surfaceAtlasSet;
@@ -243,17 +244,14 @@ namespace g {
 				this._atlasSet = param.game.surfaceAtlasSet;
 			} else {
 				this._isDestroyExecutable = true;
-				const surfaceAtlasSetParams: SurfaceAtlasSetParameterObject = {
+				this._atlasSet = new SurfaceAtlasSet({
 					game: param.game,
 					initialAtlasWidth: this.hint.initialAtlasWidth,
 					initialAtlasHeight: this.hint.initialAtlasHeight,
 					maxAtlasWidth: this.hint.maxAtlasWidth,
-					maxAtlasHeight: this.hint.maxAtlasHeight
-				};
-				if (this.hint.maxAtlasNum) {
-					surfaceAtlasSetParams.maxSurfaceAtlasNum = this.hint.maxAtlasNum;
-				}
-				this._atlasSet = new SurfaceAtlasSet(surfaceAtlasSetParams);
+					maxAtlasHeight: this.hint.maxAtlasHeight,
+					maxSurfaceAtlasNum: this.hint.maxAtlasNum ? this.hint.maxAtlasNum : undefined
+				});
 			}
 
 			this._atlasSet.register(this);
