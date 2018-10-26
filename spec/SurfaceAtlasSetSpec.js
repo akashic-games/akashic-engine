@@ -42,7 +42,7 @@ describe("test SurfaceAtlasSet", function() {
 				atlas._accessScore = index;
 			});
 
-			var removedAtlas = surfaceAtlasSet.removeLeastFrequentlyUsedAtlas(1);
+			var removedAtlas = surfaceAtlasSet._removeLeastFrequentlyUsedAtlas(1);
 			var ret = surfaceAtlasSet._surfaceAtlases.find(atlas => {
 				return atlas._accessScore === 0;
 			})
@@ -84,10 +84,10 @@ describe("test SurfaceAtlasSet", function() {
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(currentLength + 1);
 		});
 		it("SurfaceAtlasの保持数が最大値の場合、SurfaceAtlasを1つ削除後に追加される", function () {
-			spyOn(surfaceAtlasSet, "removeLeastFrequentlyUsedAtlas").and.callThrough();
+			spyOn(surfaceAtlasSet, "_removeLeastFrequentlyUsedAtlas").and.callThrough();
 			surfaceAtlasSet.reallocateAtlas({}, { width: 10, height: 10 });
 
-			expect(surfaceAtlasSet.removeLeastFrequentlyUsedAtlas).toHaveBeenCalled();
+			expect(surfaceAtlasSet._removeLeastFrequentlyUsedAtlas).toHaveBeenCalled();
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(surfaceAtlasSet.getMaxAtlasNum());
 		});
 	});

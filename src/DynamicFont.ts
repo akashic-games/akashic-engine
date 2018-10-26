@@ -202,6 +202,11 @@ namespace g {
 		/**
 		 * @private
 		 */
+		_isDestroyExecutable: boolean;
+
+		/**
+		 * @private
+		 */
 		_atlasSet: SurfaceAtlasSet;
 
 		/**
@@ -228,6 +233,7 @@ namespace g {
 					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			this._glyphs = {};
 			this._destroyed = false;
+			this._isDestroyExecutable = false;
 
 			this._useCommonAtlasSet = Object.keys(this.hint).length === 0;
 
@@ -236,6 +242,7 @@ namespace g {
 			} else if (this._useCommonAtlasSet) {
 				this._atlasSet = param.game.surfaceAtlasSet;
 			} else {
+				this._isDestroyExecutable = true;
 				const surfaceAtlasSetParams: SurfaceAtlasSetParameterObject = {
 					game: param.game,
 					initialAtlasWidth: this.hint.initialAtlasWidth,
@@ -249,9 +256,8 @@ namespace g {
 				this._atlasSet = new SurfaceAtlasSet(surfaceAtlasSetParams);
 			}
 
-			if (this._atlasSet.getAtlasNum() === 0) {
-				this._atlasSet.addAtlas();
-			}
+			this._atlasSet.register(this);
+			this._atlasSet.addAtlas();
 
 			if (this.hint.presetChars) {
 				for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
@@ -262,6 +268,13 @@ namespace g {
 					this.glyphForCharacter(code);
 				}
 			}
+		}
+
+		/**
+		 * グリフ情報を取得する。
+		 */
+		getGlyphs(): { [key: number]: Glyph } {
+			return this._glyphs;
 		}
 
 		/**
@@ -292,7 +305,7 @@ namespace g {
 
 					let atlas = this._atlasSet.addToAtlas(glyph);
 					if (! atlas) {
-						this._atlasSet.reallocateAtlas(this._glyphs);
+						this._atlasSet.reallocateAtlas();
 
 						// retry
 						atlas = this._atlasSet.addToAtlas(glyph);
@@ -375,9 +388,12 @@ namespace g {
 		}
 
 		destroy(): void {
-			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
-				this._atlasSet.getAtlasByIndex(i).destroy();
+			if (this._isDestroyExecutable) {
+				for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
+					this._atlasSet.getAtlasByIndex(i).destroy();
+				}
 			}
+			this._atlasSet.unregister(this);
 			this._glyphs = null;
 			this._glyphFactory = null;
 			this._destroyed = true;

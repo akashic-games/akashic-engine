@@ -226,7 +226,7 @@ namespace g {
 	/**
 	 * DynamicFontで使用される、SurfaceAtlasを管理する。
 	 */
-	export class SurfaceAtlasSet {
+	export class SurfaceAtlasSet implements Registrable<DynamicFont> {
 		/**
 		 * SurfaceAtlas最大保持数初期値
 		 */
@@ -252,10 +252,22 @@ namespace g {
 		 */
 		_atlasSize: CommonSize;
 
+		/**
+		 * @private
+		 */
+		_currentAtlasIndex: number;
+
+		/**
+		 * @private
+		 */
+		_dynamicFonts: DynamicFont[];
+
 		constructor(params: SurfaceAtlasSetParameterObject) {
 			this._surfaceAtlases = [];
 			this._maxAtlasNum = params.maxSurfaceAtlasNum ? params.maxSurfaceAtlasNum : SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
 			this._resourceFactory = params.game.resourceFactory;
+			this._currentAtlasIndex = 0;
+			this._dynamicFonts = [];
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
@@ -273,8 +285,57 @@ namespace g {
 			// addAtlas() から呼ばれる場合では、保持している_surfaceAtlasesの数が最大値以上の判定後に削除処理を行い
 			// その後に追加となるので diff が 0 の場合は 1 とする。
 			const diff = Math.max(this._surfaceAtlases.length - this._maxAtlasNum, 1);
-			const removedAtlases = this.removeLeastFrequentlyUsedAtlas(diff);
+			const removedAtlases = this._removeLeastFrequentlyUsedAtlas(diff);
 			removedAtlases.forEach((atlas) => atlas.destroy());
+		}
+
+		/**
+		 * 使用度の低いサーフェスアトラスを配列から削除する。
+		 * @private
+		 */
+		_removeLeastFrequentlyUsedAtlas(removedNum: number): SurfaceAtlas[] {
+			const removedAtlases = [];
+
+			for (var n = 0; n < removedNum; ++n) {
+				var minScore = Number.MAX_VALUE;
+				var lowScoreAtlasIndex = -1;
+				for (var i = 0; i < this._surfaceAtlases.length; ++i) {
+					if (this._surfaceAtlases[i]._accessScore <= minScore) {
+						minScore = this._surfaceAtlases[i]._accessScore;
+						lowScoreAtlasIndex = i;
+					}
+				}
+				let removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
+				removedAtlases.push(removedAtlas);
+			}
+
+			return removedAtlases;
+		}
+
+		/**
+		 * このSurfaceAtlasSetに紐付くDynamicFontを登録する。
+		 * @param dynamicFont 登録するDynamicFont
+		 */
+		register(dynamicFont: DynamicFont): void {
+			this._dynamicFonts.push(dynamicFont);
+		}
+
+		/**
+		 * このSurfaceAtlasSetからDynamicFontの登録を削除する。
+		 * @param dynamicFont 削除するDynamicFont
+		 */
+		unregister(dynamicFont: DynamicFont): void {
+			var removeIndex  = -1;
+			for (var i = 0; i < this._dynamicFonts.length; ++i) {
+				const df = this._dynamicFonts[i];
+				if (df === dynamicFont) {
+					removeIndex = i;
+					break;
+				}
+			}
+			if (removeIndex >= 0) {
+				this._dynamicFonts.splice(removeIndex, 1);
+			}
 		}
 
 		/**
@@ -335,29 +396,7 @@ namespace g {
 		}
 
 		/**
-		 * 使用度の低いサーフェスアトラスを配列から削除する。
-		 */
-		removeLeastFrequentlyUsedAtlas(removedNum: number): SurfaceAtlas[] {
-			const removedAtlases = [];
-
-			for (var n = 0; n < removedNum; ++n) {
-				var minScore = Number.MAX_VALUE;
-				var lowScoreAtlasIndex = -1;
-				for (var i = 0; i < this._surfaceAtlases.length; ++i) {
-					if (this._surfaceAtlases[i]._accessScore <= minScore) {
-						minScore = this._surfaceAtlases[i]._accessScore;
-						lowScoreAtlasIndex = i;
-					}
-				}
-				let removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
-				removedAtlases.push(removedAtlas);
-			}
-
-			return removedAtlases;
-		}
-
-		/**
-		 * 最新のサーフェスアトラスにグリフを追加する。
+		 * サーフェスアトラスにグリフを追加する。
 		 * @param glyph グリフ
 		 */
 		addToAtlas(glyph: Glyph): SurfaceAtlas {
@@ -370,9 +409,14 @@ namespace g {
 				height: glyph.height
 			};
 
-			if (this._surfaceAtlases.length > 0) {
-				atlas = this._surfaceAtlases[this._surfaceAtlases.length - 1];
+			for (let i = 0; i < this._surfaceAtlases.length; ++i) {
+				let index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
+				atlas = this._surfaceAtlases[index];
 				slot = atlas.addSurface(glyph.surface, area);
+				if (slot) {
+					this._currentAtlasIndex = index;
+					break;
+				}
 			}
 
 			if (!slot) {
@@ -389,26 +433,30 @@ namespace g {
 
 		/**
 		 * サーフェスアトラスの再割り当てを行う。
-		 * @param glyphs グリフ配列
 		 */
-		reallocateAtlas(glyphs: { [key: number]: Glyph }): void {
+		reallocateAtlas(): void {
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
-				let atlas = this.removeLeastFrequentlyUsedAtlas(1)[0];
+				let atlas = this._removeLeastFrequentlyUsedAtlas(1)[0];
 
-				for (let key in glyphs) {
-					if (glyphs.hasOwnProperty(key)) {
-						var glyph = glyphs[key];
-						if (glyph.surface === atlas._surface) {
-							glyph.surface = null;
-							glyph.isSurfaceValid = false;
-							glyph._atlas = null;
+				this._dynamicFonts.forEach((df) => {
+					const glyphs = df.getGlyphs();
+
+					for (let key in glyphs) {
+						if (glyphs.hasOwnProperty(key)) {
+							var glyph = glyphs[key];
+							if (glyph.surface === atlas._surface) {
+								glyph.surface = null;
+								glyph.isSurfaceValid = false;
+								glyph._atlas = null;
+							}
 						}
 					}
-				}
+				});
 				atlas.destroy();
 			}
 
 			this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+			this._currentAtlasIndex = this._surfaceAtlases.length - 1;
 		}
 	}
 }
