@@ -311,9 +311,10 @@ namespace g {
 
 		/**
 		 * 空き領域のあるSurfaceAtlasを探索する。
+		 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
 		 * @private
 		 */
-		_findSurfaceAtlasWithFreeSpace(glyph: Glyph, area: CommonArea): {atlas: SurfaceAtlas, atlasSlot: SurfaceAtlasSlot} {
+		_moveGlyphSurface(glyph: Glyph, area: CommonArea): SurfaceAtlas {
 			let atlas: SurfaceAtlas = null;
 			let slot: SurfaceAtlasSlot = null;
 
@@ -323,10 +324,14 @@ namespace g {
 				slot = atlas.addSurface(glyph.surface, area);
 				if (slot) {
 					this._currentAtlasIndex = index;
-					break;
+					glyph.surface.destroy();
+					glyph.surface = atlas._surface;
+					glyph.x = slot.x;
+					glyph.y = slot.y;
+					return atlas;
 				}
 			}
-			return {atlas: atlas, atlasSlot: slot};
+			return null;
 		}
 
 		/**
@@ -388,9 +393,7 @@ namespace g {
 			// removeLeastFrequentlyUsedAtlas()では、SurfaceAtlas#_accessScoreの一番小さい値を持つSurfaceAtlasを削除するため、
 			// SurfaceAtlas作成時は_accessScoreは0となっているため、削除判定後に作成,追加処理を行う。
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
-				// 削除してから追加を行うので、差分が 0 の場合は 1 つ削除する。
-				const diff = Math.max(this._surfaceAtlases.length - this._maxAtlasNum, 1);
-				this._deleteAtlas(diff);
+				this._deleteAtlas(1);
 			}
 			this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 		}
@@ -399,7 +402,7 @@ namespace g {
 		 * 引数で指定されたindexのサーフェスアトラスを取得する。
 		 * @param index 取得対象のインデックス
 		 */
-		getAtlasByIndex(index: number): SurfaceAtlas {
+		getAtlas(index: number): SurfaceAtlas {
 			return this._surfaceAtlases[index];
 		}
 
@@ -451,27 +454,12 @@ namespace g {
 				height: glyph.height
 			};
 
-			let result = this._findSurfaceAtlasWithFreeSpace(glyph, area);
-			let atlas = result.atlas;
-			let slot  = result.atlasSlot;
-
-			if (!slot) {
+			let atlas = this._moveGlyphSurface(glyph, area);
+			if (!atlas) {
 				// retry
 				this._reallocateAtlas();
-
-				result = this._findSurfaceAtlasWithFreeSpace(glyph, area);
-				atlas = result.atlas;
-				slot = result.atlasSlot;
-
-				if (!slot) {
-					return null;
-				}
+				atlas = this._moveGlyphSurface(glyph, area);
 			}
-
-			glyph.surface.destroy();
-			glyph.surface = atlas._surface;
-			glyph.x = slot.x;
-			glyph.y = slot.y;
 
 			return atlas;
 		}
@@ -485,6 +473,7 @@ namespace g {
 			}
 			this._surfaceAtlases = undefined;
 			this._resourceFactory = undefined;
+			this._dynamicFonts = undefined;
 		}
 
 		/**

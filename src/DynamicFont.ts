@@ -202,7 +202,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_hasExternalSurfaceAtlasSet: boolean;
+		_isSurfaceAtlasSetOwner: boolean;
 
 		/**
 		 * @private
@@ -228,7 +228,7 @@ namespace g {
 					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			this._glyphs = {};
 			this._destroyed = false;
-			this._hasExternalSurfaceAtlasSet = false;
+			this._isSurfaceAtlasSetOwner = false;
 
 			if (param.surfaceAtlasSet) {
 				this._atlasSet = param.surfaceAtlasSet;
@@ -239,7 +239,7 @@ namespace g {
 				if (useCommonAtlasSet) {
 					this._atlasSet = param.game.surfaceAtlasSet;
 				} else {
-					this._hasExternalSurfaceAtlasSet = true;
+					this._isSurfaceAtlasSetOwner = true;
 					this._atlasSet = new SurfaceAtlasSet({
 						game: param.game,
 						initialAtlasWidth: this.hint.initialAtlasWidth,
@@ -312,7 +312,7 @@ namespace g {
 			// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 			// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
 			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
-				var atlas = this._atlasSet.getAtlasByIndex(i);
+				var atlas = this._atlasSet.getAtlas(i);
 				if (atlas === glyph._atlas) {
 					atlas._accessScore += 1;
 				}
@@ -364,7 +364,7 @@ namespace g {
 			// しかし defaultGlyphHeight は BitmapFont#size にも用いられる。
 			// そのために this.size をコンストラクタの第４引数に与えることにする。
 			let missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
-			const surface = this._atlasSet.getAtlasByIndex(0).duplicateSurface(this._resourceFactory);
+			const surface = this._atlasSet.getAtlas(0).duplicateSurface(this._resourceFactory);
 
 			const bitmapFont = new BitmapFont({
 				src: surface,
@@ -378,7 +378,7 @@ namespace g {
 
 		destroy(): void {
 			this._atlasSet.unregister(this);
-			if (this._hasExternalSurfaceAtlasSet) {
+			if (this._isSurfaceAtlasSetOwner) {
 				this._atlasSet.destroy();
 			}
 			this._glyphs = null;
