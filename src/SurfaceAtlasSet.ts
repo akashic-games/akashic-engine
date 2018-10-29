@@ -399,7 +399,7 @@ namespace g {
 		 * サーフェスアトラスにグリフを追加する。
 		 * @param glyph グリフ
 		 */
-		addToAtlas(glyph: Glyph): SurfaceAtlas {
+		addGlyph(glyph: Glyph): SurfaceAtlas {
 			let atlas: SurfaceAtlas = null;
 			let slot: SurfaceAtlasSlot = null;
 			let area = {

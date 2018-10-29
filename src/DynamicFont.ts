@@ -250,7 +250,7 @@ namespace g {
 					initialAtlasHeight: this.hint.initialAtlasHeight,
 					maxAtlasWidth: this.hint.maxAtlasWidth,
 					maxAtlasHeight: this.hint.maxAtlasHeight,
-					maxSurfaceAtlasNum: this.hint.maxAtlasNum ? this.hint.maxAtlasNum : undefined
+					maxSurfaceAtlasNum: this.hint.maxAtlasNum
 				});
 			}
 
@@ -294,19 +294,19 @@ namespace g {
 
 				if (glyph.surface) { // 空白文字でなければアトラス化する
 					const atlasSize = this._atlasSet.getAtlasSize();
-					// グリフがアトラスより大きいとき、`_addToAtlas()`は失敗する。
+					// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
 					// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 					// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
 					if (glyph.width > atlasSize.width || glyph.height > atlasSize.height) {
 						return null;
 					}
 
-					let atlas = this._atlasSet.addToAtlas(glyph);
+					let atlas = this._atlasSet.addGlyph(glyph);
 					if (! atlas) {
 						this._atlasSet.reallocateAtlas();
 
 						// retry
-						atlas = this._atlasSet.addToAtlas(glyph);
+						atlas = this._atlasSet.addGlyph(glyph);
 						if (! atlas) {
 							return null;
 						}

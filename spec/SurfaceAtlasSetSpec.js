@@ -52,10 +52,10 @@ describe("test SurfaceAtlasSet", function() {
 		});
 	});
 
-	describe("addToAtlas", function () {
+	describe("addGlyph", function () {
 		it("追加対象のSurfaceに空き領域がない場合、nullが返る", function () {
 			var glyph = new g.Glyph(300, 0, 0, 10, 10);
-			var ret = surfaceAtlasSet.addToAtlas(glyph);
+			var ret = surfaceAtlasSet.addGlyph(glyph);
 			expect(ret).toBeNull();
 		});
 		it("正常にグリフが追加された場合、追加したSurfaceAtlasが返る", function () {
@@ -66,7 +66,7 @@ describe("test SurfaceAtlasSet", function() {
 			spyOn(atlas, "addSurface").and.callFake(() => { return { x: 1, y: 1 } });
 			surfaceAtlasSet._surfaceAtlases.push(atlas);
 
-			var ret = surfaceAtlasSet.addToAtlas(glyph);
+			var ret = surfaceAtlasSet.addGlyph(glyph);
 			expect(ret instanceof g.SurfaceAtlas).toBeTruthy();
 		});
 	});
