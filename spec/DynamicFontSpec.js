@@ -98,4 +98,40 @@ describe("test DynamicFont", function() {
 		expect(font.fontFamily).toBe(param.fontFamily);
 		expect(font.size).toBe(font.size);
 	});
+
+	describe("destroy", function () {
+		it("DynamicFontがオーナーのSurfaceAtlasSetはDynamoicFontのdestroyで破棄される", function () {
+			const df = new g.DynamicFont({
+				game: skeletonRuntime().game,
+				fontFamily: "Mock明朝",
+				size: 20,
+				hint: {
+					maxAtlasNum: 2,
+					maxAtlasWidth: 100,
+					baselineHeight: 20
+				}
+			});
+			df.destroy();
+			expect(df._atlasSet.destroyed()).toBeTruthy();
+		});
+		it("DynamicFont以外がオーナーのSurfaceAtlasSetはDynamoicFontのdestroyで破棄されない", function () {
+			const df = new g.DynamicFont({
+				game: skeletonRuntime().game,
+				fontFamily: "Mock明朝",
+				size: 20,
+			});
+			df.destroy();
+			expect(df._atlasSet.destroyed()).toBeFalsy();
+
+			const sas = new g.SurfaceAtlasSet({game: skeletonRuntime().game});
+			const df2 = new g.DynamicFont({
+				game: skeletonRuntime().game,
+				fontFamily: "Mock明朝",
+				size: 20,
+				surfaceAtlasSet: sas
+			});
+			df2.destroy();
+			expect(df2._atlasSet.destroyed()).toBeFalsy();
+		});
+	});
 });

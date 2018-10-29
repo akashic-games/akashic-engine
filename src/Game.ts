@@ -1055,6 +1055,8 @@ namespace g {
 			this._focusingCamera = undefined;
 			this._configuration = undefined;
 			this._sceneChangeRequests = [];
+			this.surfaceAtlasSet.destroy();
+			this.surfaceAtlasSet = undefined;
 		}
 
 		/**

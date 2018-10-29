@@ -210,11 +210,6 @@ namespace g {
 		_atlasSet: SurfaceAtlasSet;
 
 		/**
-		 * @private
-		 */
-		_useCommonAtlasSet: boolean;
-
-		/**
 		 * 各種パラメータを指定して `DynamicFont` のインスタンスを生成する。
 		 * @param param `DynamicFont` に設定するパラメータ
 		 */
@@ -235,23 +230,25 @@ namespace g {
 			this._destroyed = false;
 			this._isDestroyExecutable = false;
 
-			const hintLength = Object.keys(this.hint).length;
-			this._useCommonAtlasSet = hintLength === 0 || (hintLength === 1 && "baselineHeight" in this.hint);
-
 			if (param.surfaceAtlasSet) {
 				this._atlasSet = param.surfaceAtlasSet;
-			} else if (this._useCommonAtlasSet) {
-				this._atlasSet = param.game.surfaceAtlasSet;
 			} else {
-				this._isDestroyExecutable = true;
-				this._atlasSet = new SurfaceAtlasSet({
-					game: param.game,
-					initialAtlasWidth: this.hint.initialAtlasWidth,
-					initialAtlasHeight: this.hint.initialAtlasHeight,
-					maxAtlasWidth: this.hint.maxAtlasWidth,
-					maxAtlasHeight: this.hint.maxAtlasHeight,
-					maxSurfaceAtlasNum: this.hint.maxAtlasNum
-				});
+				const hintLength = Object.keys(this.hint).length;
+				const useCommonAtlasSet = hintLength === 0 || (hintLength === 1 && "baselineHeight" in this.hint);
+
+				if (useCommonAtlasSet) {
+					this._atlasSet = param.game.surfaceAtlasSet;
+				} else {
+					this._isDestroyExecutable = true;
+					this._atlasSet = new SurfaceAtlasSet({
+						game: param.game,
+						initialAtlasWidth: this.hint.initialAtlasWidth,
+						initialAtlasHeight: this.hint.initialAtlasHeight,
+						maxAtlasWidth: this.hint.maxAtlasWidth,
+						maxAtlasHeight: this.hint.maxAtlasHeight,
+						maxSurfaceAtlasNum: this.hint.maxAtlasNum
+					});
+				}
 			}
 
 			this._atlasSet.register(this);
@@ -303,13 +300,7 @@ namespace g {
 
 					let atlas = this._atlasSet.addGlyph(glyph);
 					if (! atlas) {
-						this._atlasSet.reallocateAtlas();
-
-						// retry
-						atlas = this._atlasSet.addGlyph(glyph);
-						if (! atlas) {
-							return null;
-						}
+						return null;
 					}
 					glyph._atlas = atlas;
 				}
@@ -386,12 +377,10 @@ namespace g {
 		}
 
 		destroy(): void {
-			if (this._isDestroyExecutable) {
-				for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
-					this._atlasSet.getAtlasByIndex(i).destroy();
-				}
-			}
 			this._atlasSet.unregister(this);
+			if (this._isDestroyExecutable) {
+				this._atlasSet.destroy();
+			}
 			this._glyphs = null;
 			this._glyphFactory = null;
 			this._destroyed = true;

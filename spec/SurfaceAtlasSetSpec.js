@@ -80,12 +80,12 @@ describe("test SurfaceAtlasSet", function() {
 				createSurfaceAtlas: function (width, height) {
 					return new g.SurfaceAtlas(new g.Surface(10, 10))}
 			}
-			surfaceAtlasSet.reallocateAtlas({}, {width: 10, height: 10});
+			surfaceAtlasSet._reallocateAtlas({}, {width: 10, height: 10});
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(currentLength + 1);
 		});
 		it("SurfaceAtlasの保持数が最大値の場合、SurfaceAtlasを1つ削除後に追加される", function () {
 			spyOn(surfaceAtlasSet, "_removeLeastFrequentlyUsedAtlas").and.callThrough();
-			surfaceAtlasSet.reallocateAtlas({}, { width: 10, height: 10 });
+			surfaceAtlasSet._reallocateAtlas({}, { width: 10, height: 10 });
 
 			expect(surfaceAtlasSet._removeLeastFrequentlyUsedAtlas).toHaveBeenCalled();
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(surfaceAtlasSet.getMaxAtlasNum());
@@ -114,12 +114,12 @@ describe("test SurfaceAtlasSet", function() {
 		});
 
 		it("maxAtlasNumと現在のSurfaceAtlasの保持数が同数以上の場合、一つ削除され追加される", function () {
-			spyOn(surfaceAtlasSet, "_removeAtlas").and.callThrough();
+			spyOn(surfaceAtlasSet, "_deleteAtlas").and.callThrough();
 			const len = surfaceAtlasSet.getAtlasNum();
 			var atlas = new g.SurfaceAtlas(new g.Surface(1, 1));
 			surfaceAtlasSet.addAtlas(atlas);
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(surfaceAtlasSet.getMaxAtlasNum());
-			expect(surfaceAtlasSet._removeAtlas).toHaveBeenCalled();
+			expect(surfaceAtlasSet._deleteAtlas).toHaveBeenCalled();
 		});
 	});
 });
