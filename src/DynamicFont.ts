@@ -202,7 +202,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_isDestroyExecutable: boolean;
+		_hasExternalSurfaceAtlasSet: boolean;
 
 		/**
 		 * @private
@@ -228,7 +228,7 @@ namespace g {
 					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			this._glyphs = {};
 			this._destroyed = false;
-			this._isDestroyExecutable = false;
+			this._hasExternalSurfaceAtlasSet = false;
 
 			if (param.surfaceAtlasSet) {
 				this._atlasSet = param.surfaceAtlasSet;
@@ -239,7 +239,7 @@ namespace g {
 				if (useCommonAtlasSet) {
 					this._atlasSet = param.game.surfaceAtlasSet;
 				} else {
-					this._isDestroyExecutable = true;
+					this._hasExternalSurfaceAtlasSet = true;
 					this._atlasSet = new SurfaceAtlasSet({
 						game: param.game,
 						initialAtlasWidth: this.hint.initialAtlasWidth,
@@ -378,7 +378,7 @@ namespace g {
 
 		destroy(): void {
 			this._atlasSet.unregister(this);
-			if (this._isDestroyExecutable) {
+			if (this._hasExternalSurfaceAtlasSet) {
 				this._atlasSet.destroy();
 			}
 			this._glyphs = null;
