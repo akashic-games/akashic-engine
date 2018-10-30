@@ -365,6 +365,8 @@ namespace g {
 
 		/**
 		 * このSurfaceAtlasSetに紐付くDynamicFontを登録する。
+		 *
+		 * このメソッドはDynamicFontから暗黙に呼び出される。ゲーム開発者がこのメソッドを明示的に呼び出す必要はない。
 		 * @param dynamicFont 登録するDynamicFont
 		 */
 		register(dynamicFont: DynamicFont): void {
@@ -375,6 +377,8 @@ namespace g {
 
 		/**
 		 * このSurfaceAtlasSetからDynamicFontの登録を削除する。
+		 *
+		 * このメソッドはDynamicFontから暗黙に呼び出される。ゲーム開発者がこのメソッドを明示的に利用する必要はない。
 		 * @param dynamicFont 削除するDynamicFont
 		 */
 		unregister(dynamicFont: DynamicFont): void {
@@ -388,6 +392,9 @@ namespace g {
 		 * サーフェスアトラスを追加する。
 		 *
 		 * 保持している_surfaceAtlasesの数が最大値以上の場合、削除してから追加する。
+		 *
+		 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `constructor` から暗黙に呼び出される。
+		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 */
 		addAtlas(): void {
 			// removeLeastFrequentlyUsedAtlas()では、SurfaceAtlas#_accessScoreの一番小さい値を持つSurfaceAtlasを削除するため、
@@ -400,6 +407,9 @@ namespace g {
 
 		/**
 		 * 引数で指定されたindexのサーフェスアトラスを取得する。
+		 *
+		 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
+		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 * @param index 取得対象のインデックス
 		 */
 		getAtlas(index: number): SurfaceAtlas {
@@ -408,6 +418,9 @@ namespace g {
 
 		/**
 		 * サーフェスアトラスの保持数を取得する。
+		 *
+		 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
+		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 */
 		getAtlasNum(): number {
 			return this._surfaceAtlases.length;
@@ -437,6 +450,9 @@ namespace g {
 
 		/**
 		 * サーフェスアトラスのサイズを取得する。
+		 *
+		 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
+		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 */
 		getAtlasSize(): CommonSize {
 			return this._atlasSize;
@@ -444,6 +460,9 @@ namespace g {
 
 		/**
 		 * サーフェスアトラスにグリフを追加する。
+		 *
+		 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
+		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 * @param glyph グリフ
 		 */
 		addGlyph(glyph: Glyph): SurfaceAtlas {
