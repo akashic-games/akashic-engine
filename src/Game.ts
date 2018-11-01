@@ -484,7 +484,7 @@ namespace g {
 			this.defaultAudioSystemId = "sound";
 			this.storage = new Storage(this);
 			this.assets = {};
-			this.surfaceAtlasSet = new SurfaceAtlasSet({game: this});
+			this.surfaceAtlasSet = undefined;
 
 			// TODO: (GAMEDEV-666) この三つのイベントはGame自身がデフォルトのイベントハンドラを持って処理する必要があるかも
 			this.join = new Trigger<JoinEvent>();
@@ -953,6 +953,11 @@ namespace g {
 
 			this._isTerminated = false;
 			this.vars = {};
+
+			if (this.surfaceAtlasSet)
+				this.surfaceAtlasSet.destroy();
+			this.surfaceAtlasSet = new SurfaceAtlasSet({ game: this });
+
 
 			switch (this._configuration.defaultLoadingScene) {
 			case "none":

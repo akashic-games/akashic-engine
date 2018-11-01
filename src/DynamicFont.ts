@@ -88,32 +88,7 @@ namespace g {
 	 * ゲーム開発者はDynamicFontが効率よく動作するための各種初期値・最大値などを
 	 * 提示できる。DynamicFontはこれを参考にするが、そのまま採用するとは限らない。
 	 */
-	export interface DynamicFontHint {
-		/**
-		 * 初期アトラス幅。
-		 */
-		initialAtlasWidth?: number;
-
-		/**
-		 * 初期アトラス高さ。
-		 */
-		initialAtlasHeight?: number;
-
-		/**
-		 * 最大アトラス幅。
-		 */
-		maxAtlasWidth?: number;
-
-		/**
-		 * 最大アトラス高さ。
-		 */
-		maxAtlasHeight?: number;
-
-		/**
-		 * 最大アトラス数。
-		 */
-		maxAtlasNum?: number;
-
+	export interface DynamicFontHint extends SurfaceAtlasSetHint {
 		/**
 		 * あらかじめグリフを生成する文字のセット。
 		 */
@@ -230,25 +205,18 @@ namespace g {
 			this._destroyed = false;
 			this._isSurfaceAtlasSetOwner = false;
 
+			// NOTE: hint の特定プロパティ(baselineHeight)を分岐の条件にした場合、後でプロパティを追加した時に
+			// ここで追従漏れの懸念があるため、引数の hint が省略されているかで分岐させている。
 			if (param.surfaceAtlasSet) {
 				this._atlasSet = param.surfaceAtlasSet;
+			} else if (!!param.hint) {
+				this._isSurfaceAtlasSetOwner = true;
+				this._atlasSet = new SurfaceAtlasSet({
+					game: param.game,
+					hint: this.hint
+				});
 			} else {
-				const hintLength = Object.keys(this.hint).length;
-				const useCommonAtlasSet = hintLength === 0 || (hintLength === 1 && "baselineHeight" in this.hint);
-
-				if (useCommonAtlasSet) {
-					this._atlasSet = param.game.surfaceAtlasSet;
-				} else {
-					this._isSurfaceAtlasSetOwner = true;
-					this._atlasSet = new SurfaceAtlasSet({
-						game: param.game,
-						initialAtlasWidth: this.hint.initialAtlasWidth,
-						initialAtlasHeight: this.hint.initialAtlasHeight,
-						maxAtlasWidth: this.hint.maxAtlasWidth,
-						maxAtlasHeight: this.hint.maxAtlasHeight,
-						maxSurfaceAtlasNum: this.hint.maxAtlasNum
-					});
-				}
+				this._atlasSet = param.game.surfaceAtlasSet;
 			}
 
 			this._atlasSet.register(this);
@@ -290,15 +258,7 @@ namespace g {
 				glyph = this._glyphFactory.create(code);
 
 				if (glyph.surface) { // 空白文字でなければアトラス化する
-					const atlasSize = this._atlasSet.getAtlasSize();
-					// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
-					// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
-					// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
-					if (glyph.width > atlasSize.width || glyph.height > atlasSize.height) {
-						return null;
-					}
-
-					let atlas = this._atlasSet.addGlyph(glyph);
+					const atlas = this._atlasSet.addGlyph(glyph);
 					if (! atlas) {
 						return null;
 					}

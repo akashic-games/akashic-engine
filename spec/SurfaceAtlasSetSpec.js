@@ -18,11 +18,13 @@ describe("test SurfaceAtlasSet", function() {
 		var runtime = skeletonRuntime();
 		const surfaceAtlasSetParams = {
 			game: runtime.game,
-			initialAtlasWidth: 1,
-			initialAtlasHeight: 1,
-			maxAtlasWidth: 2,
-			maxAtlasHeight: 3,
-			maxSurfaceAtlasNum: 111
+			hint : {
+				initialAtlasWidth: 1,
+				initialAtlasHeight: 1,
+				maxAtlasWidth: 2,
+				maxAtlasHeight: 3,
+				maxAtlasNum: 111
+			}
 		};
 		surfaceAtlasSet = new g.SurfaceAtlasSet(surfaceAtlasSetParams);
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);

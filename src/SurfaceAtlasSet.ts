@@ -33,9 +33,9 @@ namespace g {
 		return null;
 	}
 
-	function calcAtlasSize(params: SurfaceAtlasSetParameterObject): CommonSize {
-		var width = Math.ceil(Math.min(params.initialAtlasWidth, params.maxAtlasWidth));
-		var height = Math.ceil(Math.min(params.initialAtlasHeight, params.maxAtlasHeight));
+	function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
+		var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
+		var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));
 		return { width: width, height: height };
 	}
 
@@ -140,18 +140,17 @@ namespace g {
 		/**
 		 * サーフェスの追加。
 		 *
-		 * @param surface サーフェスアトラス上に配置される画像のサーフェス。
-		 * @param rect サーフェス上の領域を表す矩形。この領域内の画像がサーフェスアトラス上に複製・配置される。
+		 * @param glyph グリフのサーフェスが持つ情報をSurfaceAtlasへ配置
 		 */
-		addSurface(surface: Surface, rect: CommonArea): SurfaceAtlasSlot {
-			var slot = this._acquireSurfaceAtlasSlot(rect.width, rect.height);
+		addSurface(glyph: g.Glyph): SurfaceAtlasSlot {
+			var slot = this._acquireSurfaceAtlasSlot(glyph.width, glyph.height);
 			if (!slot) {
 				return null;
 			}
 
 			var renderer = this._surface.renderer();
 			renderer.begin();
-			renderer.drawImage(surface, rect.x, rect.y, rect.width, rect.height, slot.x, slot.y);
+			renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, slot.x, slot.y);
 			renderer.end();
 
 			return slot;
@@ -191,12 +190,13 @@ namespace g {
 	}
 
 
-	export interface SurfaceAtlasSetParameterObject {
-		/**
-		 * ゲームインスタンス。
-		 */
-		game: Game;
-
+	/**
+	 * SurfaceAtlasが効率よく動作するためのヒント。
+	 *
+	 * ゲーム開発者はSurfaceAtlasが効率よく動作するための各種初期値・最大値などを提示できる。
+	 * SurfaceAtlasはこれを参考にするが、そのまま採用するとは限らない。
+	 */
+	export interface SurfaceAtlasSetHint {
 		/**
 		 * 初期アトラス幅。
 		 */
@@ -218,9 +218,27 @@ namespace g {
 		maxAtlasHeight?: number;
 
 		/**
-		 * SurfaceAtlas最大保持数
+		 * 最大アトラス保持数。
 		 */
-		maxSurfaceAtlasNum?: number;
+		maxAtlasNum?: number;
+
+	}
+
+	/**
+	 * SurfaceAtlasSet のコンストラクタに渡すことができるパラメータ。
+	 */
+	export interface SurfaceAtlasSetParameterObject {
+		/**
+		 * ゲームインスタンス。
+		 */
+		game: Game;
+
+		/**
+		 * ヒント。
+		 *
+		 * 詳細は `SurfaceAtlasSetHint` を参照。
+		 */
+		hint?: SurfaceAtlasSetHint;
 	}
 
 	/**
@@ -264,18 +282,20 @@ namespace g {
 
 		constructor(params: SurfaceAtlasSetParameterObject) {
 			this._surfaceAtlases = [];
-			this._maxAtlasNum = params.maxSurfaceAtlasNum ? params.maxSurfaceAtlasNum : SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
 			this._resourceFactory = params.game.resourceFactory;
 			this._currentAtlasIndex = 0;
 			this._dynamicFonts = [];
+			const hint = params.hint ? params.hint : {};
+			this._maxAtlasNum = hint.maxAtlasNum ? hint.maxAtlasNum : SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
 
 			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 			// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
-			params.initialAtlasWidth  = params.initialAtlasWidth ? params.initialAtlasWidth : 512;
-			params.initialAtlasHeight = params.initialAtlasHeight ? params.initialAtlasHeight : 512;
-			params.maxAtlasWidth      = params.maxAtlasWidth ? params.maxAtlasWidth : 512;
-			params.maxAtlasHeight     = params.maxAtlasHeight ? params.maxAtlasHeight : 512;
-			this._atlasSize = calcAtlasSize(params);
+			// 2048x2048で確保してしまうと、Edge, Chrome にて処理が非常に遅くなることがある
+			hint.initialAtlasWidth  = hint.initialAtlasWidth ? hint.initialAtlasWidth : 512;
+			hint.initialAtlasHeight = hint.initialAtlasHeight ? hint.initialAtlasHeight : 512;
+			hint.maxAtlasWidth      = hint.maxAtlasWidth ? hint.maxAtlasWidth : 512;
+			hint.maxAtlasHeight     = hint.maxAtlasHeight ? hint.maxAtlasHeight : 512;
+			this._atlasSize = calcAtlasSize(hint);
 		}
 
 		/**
@@ -283,7 +303,9 @@ namespace g {
 		 */
 		_deleteAtlas(delteNum: number): void {
 			const removedAtlases = this._removeLeastFrequentlyUsedAtlas(delteNum);
-			removedAtlases.forEach((atlas) => atlas.destroy());
+			for (let i = 0; i < removedAtlases.length; ++i) {
+				removedAtlases[i].destroy();
+			}
 		}
 
 		/**
@@ -314,14 +336,12 @@ namespace g {
 		 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
 		 * @private
 		 */
-		_moveGlyphSurface(glyph: Glyph, area: CommonArea): SurfaceAtlas {
-			let atlas: SurfaceAtlas = null;
-			let slot: SurfaceAtlasSlot = null;
-
+		_moveGlyphSurface(glyph: Glyph): SurfaceAtlas {
 			for (let i = 0; i < this._surfaceAtlases.length; ++i) {
-				let index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
-				atlas = this._surfaceAtlases[index];
-				slot = atlas.addSurface(glyph.surface, area);
+				const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
+				const atlas = this._surfaceAtlases[index];
+				const slot = atlas.addSurface(glyph);
+
 				if (slot) {
 					this._currentAtlasIndex = index;
 					glyph.surface.destroy();
@@ -342,7 +362,8 @@ namespace g {
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 				let atlas = this._removeLeastFrequentlyUsedAtlas(1)[0];
 
-				this._dynamicFonts.forEach((df) => {
+				for (let i = 0; i < this._dynamicFonts.length; ++i) {
+					const df = this._dynamicFonts[i];
 					const glyphs = df.getGlyphs();
 
 					for (let key in glyphs) {
@@ -355,7 +376,7 @@ namespace g {
 							}
 						}
 					}
-				});
+				}
 				atlas.destroy();
 			}
 
@@ -466,18 +487,18 @@ namespace g {
 		 * @param glyph グリフ
 		 */
 		addGlyph(glyph: Glyph): SurfaceAtlas {
-			let area = {
-				x: glyph.x,
-				y: glyph.y,
-				width: glyph.width,
-				height: glyph.height
-			};
+			// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
+			// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
+			// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
+			if (glyph.width > this._atlasSize.width || glyph.height > this._atlasSize.height) {
+				return null;
+			}
 
-			let atlas = this._moveGlyphSurface(glyph, area);
+			let atlas = this._moveGlyphSurface(glyph);
 			if (!atlas) {
 				// retry
 				this._reallocateAtlas();
-				atlas = this._moveGlyphSurface(glyph, area);
+				atlas = this._moveGlyphSurface(glyph);
 			}
 
 			return atlas;
