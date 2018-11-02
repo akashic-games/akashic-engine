@@ -242,6 +242,21 @@ namespace g {
 	}
 
 	/**
+	 * 削除対象のデータ
+	 */
+	export interface RemoveAtlasData {
+		/**
+		 * 削除対象のSurfaceAtlas
+		 */
+		surfaceAtlas: SurfaceAtlas[];
+
+		/**
+		 * 削除対象のグリフ
+		 */
+		glyphs: Glyph[][];
+	}
+
+	/**
 	 * DynamicFontで使用される、SurfaceAtlasを管理する。
 	 */
 	export class SurfaceAtlasSet implements Destroyable {
@@ -254,6 +269,11 @@ namespace g {
 		 * @private
 		 */
 		_surfaceAtlases: SurfaceAtlas[];
+
+		/**
+		 * @private
+		 */
+		_atlasGlyphsTable: Glyph[][];
 
 		/**
 		 * @private
@@ -274,11 +294,6 @@ namespace g {
 		 * @private
 		 */
 		_currentAtlasIndex: number;
-
-		/**
-		 * @private
-		 */
-		_atlasGlyphsTable: Glyph[][];
 
 		constructor(params: SurfaceAtlasSetParameterObject) {
 			this._surfaceAtlases = [];
@@ -313,7 +328,7 @@ namespace g {
 		 * 使用度の低いサーフェスアトラスを配列から削除する。
 		 * @private
 		 */
-		_removeLeastFrequentlyUsedAtlas(removedNum: number): {surfaceAtlas: SurfaceAtlas[], glyphs: Glyph[][]} {
+		_removeLeastFrequentlyUsedAtlas(removedNum: number): RemoveAtlasData {
 			const removedAtlases = [];
 			const removedGlyphs = [];
 
@@ -372,11 +387,9 @@ namespace g {
 
 				for (let i = 0; i < glyphs.length; i++) {
 					const glyph = glyphs[i];
-					if (glyph.surface === atlas._surface) {
-						glyph.surface = null;
-						glyph.isSurfaceValid = false;
-						glyph._atlas = null;
-					}
+					glyph.surface = null;
+					glyph.isSurfaceValid = false;
+					glyph._atlas = null;
 				}
 				atlas.destroy();
 			}
