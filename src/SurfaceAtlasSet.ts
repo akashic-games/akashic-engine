@@ -244,7 +244,7 @@ namespace g {
 	/**
 	 * DynamicFontで使用される、SurfaceAtlasを管理する。
 	 */
-	export class SurfaceAtlasSet implements Registrable<DynamicFont>, Destroyable {
+	export class SurfaceAtlasSet implements Destroyable {
 		/**
 		 * SurfaceAtlas最大保持数初期値
 		 */
@@ -278,13 +278,13 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_dynamicFonts: DynamicFont[];
+		_atlasGlyphsTable: Glyph[][];
 
 		constructor(params: SurfaceAtlasSetParameterObject) {
 			this._surfaceAtlases = [];
+			this._atlasGlyphsTable = [];
 			this._resourceFactory = params.game.resourceFactory;
 			this._currentAtlasIndex = 0;
-			this._dynamicFonts = [];
 			const hint = params.hint ? params.hint : {};
 			this._maxAtlasNum = hint.maxAtlasNum ? hint.maxAtlasNum : SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM;
 
@@ -302,7 +302,8 @@ namespace g {
 		 * @private
 		 */
 		_deleteAtlas(delteNum: number): void {
-			const removedAtlases = this._removeLeastFrequentlyUsedAtlas(delteNum);
+			const removedObject = this._removeLeastFrequentlyUsedAtlas(delteNum);
+			const removedAtlases = removedObject.surfaceAtlas;
 			for (let i = 0; i < removedAtlases.length; ++i) {
 				removedAtlases[i].destroy();
 			}
@@ -312,8 +313,9 @@ namespace g {
 		 * 使用度の低いサーフェスアトラスを配列から削除する。
 		 * @private
 		 */
-		_removeLeastFrequentlyUsedAtlas(removedNum: number): SurfaceAtlas[] {
+		_removeLeastFrequentlyUsedAtlas(removedNum: number): {surfaceAtlas: SurfaceAtlas[], glyphs: Glyph[][]} {
 			const removedAtlases = [];
+			const removedGlyphs = [];
 
 			for (var n = 0; n < removedNum; ++n) {
 				var minScore = Number.MAX_VALUE;
@@ -324,11 +326,12 @@ namespace g {
 						lowScoreAtlasIndex = i;
 					}
 				}
-				let removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
+				const removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
 				removedAtlases.push(removedAtlas);
+				removedGlyphs.push(this._atlasGlyphsTable.splice(lowScoreAtlasIndex, 1)[0]);
 			}
 
-			return removedAtlases;
+			return {surfaceAtlas: removedAtlases, glyphs: removedGlyphs};
 		}
 
 		/**
@@ -348,6 +351,9 @@ namespace g {
 					glyph.surface = atlas._surface;
 					glyph.x = slot.x;
 					glyph.y = slot.y;
+					if (!this._atlasGlyphsTable[index])
+						this._atlasGlyphsTable[index] = [];
+					this._atlasGlyphsTable[index].push(glyph);
 					return atlas;
 				}
 			}
@@ -360,21 +366,16 @@ namespace g {
 		 */
 		_reallocateAtlas(): void {
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
-				let atlas = this._removeLeastFrequentlyUsedAtlas(1)[0];
+				const removedObject = this._removeLeastFrequentlyUsedAtlas(1);
+				const atlas = removedObject.surfaceAtlas[0];
+				const glyphs = removedObject.glyphs[0];
 
-				for (let i = 0; i < this._dynamicFonts.length; ++i) {
-					const df = this._dynamicFonts[i];
-					const glyphs = df.getGlyphs();
-
-					for (let key in glyphs) {
-						if (glyphs.hasOwnProperty(key)) {
-							var glyph = glyphs[key];
-							if (glyph.surface === atlas._surface) {
-								glyph.surface = null;
-								glyph.isSurfaceValid = false;
-								glyph._atlas = null;
-							}
-						}
+				for (let i = 0; i < glyphs.length; i++) {
+					const glyph = glyphs[i];
+					if (glyph.surface === atlas._surface) {
+						glyph.surface = null;
+						glyph.isSurfaceValid = false;
+						glyph._atlas = null;
 					}
 				}
 				atlas.destroy();
@@ -382,31 +383,6 @@ namespace g {
 
 			this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
 			this._currentAtlasIndex = this._surfaceAtlases.length - 1;
-		}
-
-		/**
-		 * このSurfaceAtlasSetに紐付くDynamicFontを登録する。
-		 *
-		 * このメソッドはDynamicFontから暗黙に呼び出される。ゲーム開発者がこのメソッドを明示的に呼び出す必要はない。
-		 * @param dynamicFont 登録するDynamicFont
-		 */
-		register(dynamicFont: DynamicFont): void {
-			if (this._dynamicFonts.indexOf(dynamicFont) === -1 ) {
-				this._dynamicFonts.push(dynamicFont);
-			}
-		}
-
-		/**
-		 * このSurfaceAtlasSetからDynamicFontの登録を削除する。
-		 *
-		 * このメソッドはDynamicFontから暗黙に呼び出される。ゲーム開発者がこのメソッドを明示的に利用する必要はない。
-		 * @param dynamicFont 削除するDynamicFont
-		 */
-		unregister(dynamicFont: DynamicFont): void {
-			const removeIndex = this._dynamicFonts.indexOf(dynamicFont);
-			if (removeIndex >= 0) {
-				this._dynamicFonts.splice(removeIndex, 1);
-			}
 		}
 
 		/**
@@ -513,7 +489,7 @@ namespace g {
 			}
 			this._surfaceAtlases = undefined;
 			this._resourceFactory = undefined;
-			this._dynamicFonts = undefined;
+			this._atlasGlyphsTable = undefined;
 		}
 
 		/**

@@ -219,7 +219,6 @@ namespace g {
 				this._atlasSet = param.game.surfaceAtlasSet;
 			}
 
-			this._atlasSet.register(this);
 			this._atlasSet.addAtlas();
 
 			if (this.hint.presetChars) {
@@ -337,7 +336,6 @@ namespace g {
 		}
 
 		destroy(): void {
-			this._atlasSet.unregister(this);
 			if (this._isSurfaceAtlasSetOwner) {
 				this._atlasSet.destroy();
 			}
