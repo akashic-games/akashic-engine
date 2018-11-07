@@ -233,13 +233,6 @@ namespace g {
 		}
 
 		/**
-		 * グリフ情報を取得する。
-		 */
-		getGlyphs(): { [key: number]: Glyph } {
-			return this._glyphs;
-		}
-
-		/**
 		 * グリフの取得。
 		 *
 		 * 取得に失敗するとnullが返る。
@@ -270,11 +263,9 @@ namespace g {
 			// スコア更新
 			// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 			// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
+			glyph._atlas._accessScore += 1;
 			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
 				var atlas = this._atlasSet.getAtlas(i);
-				if (atlas === glyph._atlas) {
-					atlas._accessScore += 1;
-				}
 				atlas._accessScore /= 2;
 			}
 

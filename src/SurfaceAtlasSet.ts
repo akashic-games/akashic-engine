@@ -248,7 +248,7 @@ namespace g {
 		/**
 		 * 削除対象のSurfaceAtlas
 		 */
-		surfaceAtlas: SurfaceAtlas[];
+		surfaceAtlases: SurfaceAtlas[];
 
 		/**
 		 * 削除対象のグリフ
@@ -318,7 +318,7 @@ namespace g {
 		 */
 		_deleteAtlas(delteNum: number): void {
 			const removedObject = this._removeLeastFrequentlyUsedAtlas(delteNum);
-			const removedAtlases = removedObject.surfaceAtlas;
+			const removedAtlases = removedObject.surfaceAtlases;
 			for (let i = 0; i < removedAtlases.length; ++i) {
 				removedAtlases[i].destroy();
 			}
@@ -346,7 +346,7 @@ namespace g {
 				removedGlyphs.push(this._atlasGlyphsTable.splice(lowScoreAtlasIndex, 1)[0]);
 			}
 
-			return {surfaceAtlas: removedAtlases, glyphs: removedGlyphs};
+			return {surfaceAtlases: removedAtlases, glyphs: removedGlyphs};
 		}
 
 		/**
@@ -382,7 +382,7 @@ namespace g {
 		_reallocateAtlas(): void {
 			if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 				const removedObject = this._removeLeastFrequentlyUsedAtlas(1);
-				const atlas = removedObject.surfaceAtlas[0];
+				const atlas = removedObject.surfaceAtlases[0];
 				const glyphs = removedObject.glyphs[0];
 
 				for (let i = 0; i < glyphs.length; i++) {

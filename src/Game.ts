@@ -958,7 +958,6 @@ namespace g {
 				this.surfaceAtlasSet.destroy();
 			this.surfaceAtlasSet = new SurfaceAtlasSet({ game: this });
 
-
 			switch (this._configuration.defaultLoadingScene) {
 			case "none":
 				// Note: 何も描画しない実装として利用している
