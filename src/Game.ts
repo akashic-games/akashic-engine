@@ -287,6 +287,11 @@ namespace g {
 		lastOmittedLocalTickCount: number;
 
 		/**
+		 * ゲーム全体で共有するサーフェスアトラス。
+		 */
+		surfaceAtlasSet: SurfaceAtlasSet;
+
+		/**
 		 * イベントとTriggerのマップ。
 		 * @private
 		 */
@@ -479,6 +484,7 @@ namespace g {
 			this.defaultAudioSystemId = "sound";
 			this.storage = new Storage(this);
 			this.assets = {};
+			this.surfaceAtlasSet = undefined;
 
 			// TODO: (GAMEDEV-666) この三つのイベントはGame自身がデフォルトのイベントハンドラを持って処理する必要があるかも
 			this.join = new Trigger<JoinEvent>();
@@ -948,6 +954,10 @@ namespace g {
 			this._isTerminated = false;
 			this.vars = {};
 
+			if (this.surfaceAtlasSet)
+				this.surfaceAtlasSet.destroy();
+			this.surfaceAtlasSet = new SurfaceAtlasSet({ game: this });
+
 			switch (this._configuration.defaultLoadingScene) {
 			case "none":
 				// Note: 何も描画しない実装として利用している
@@ -1049,6 +1059,8 @@ namespace g {
 			this._focusingCamera = undefined;
 			this._configuration = undefined;
 			this._sceneChangeRequests = [];
+			this.surfaceAtlasSet.destroy();
+			this.surfaceAtlasSet = undefined;
 		}
 
 		/**

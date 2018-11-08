@@ -14,199 +14,11 @@ namespace g {
 	}
 
 	/**
-	 * SurfaceAtlasの空き領域管理クラス。
-	 *
-	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
-	 */
-	export class SurfaceAtlasSlot {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-		prev: SurfaceAtlasSlot;
-		next: SurfaceAtlasSlot;
-
-		constructor(x: number, y: number, width: number, height: number) {
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-			this.prev = null;
-			this.next = null;
-		}
-	}
-
-	function getSurfaceAtlasSlot(slot: SurfaceAtlasSlot, width: number, height: number): SurfaceAtlasSlot {
-		while (slot) {
-			if (slot.width >= width && slot.height >= height) {
-				return slot;
-			}
-			slot = slot.next;
-		}
-
-		return null;
-	}
-
-	function calcAtlasSize(hint: DynamicFontHint): CommonSize {
-		var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
-		var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));
-		return { width: width, height: height };
-	}
-
-	/**
-	 * サーフェスアトラス。
-	 *
-	 * 与えられたサーフェスの指定された領域をコピーし一枚のサーフェスにまとめる。
-	 *
-	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
-	 */
-	export class SurfaceAtlas implements Destroyable {
-		/**
-		 * @private
-		 */
-		_surface: Surface;
-
-		/**
-		 * @private
-		 */
-		_emptySurfaceAtlasSlotHead: SurfaceAtlasSlot;
-
-		/**
-		 * @private
-		 */
-		_accessScore: number;
-
-		/**
-		 * @private
-		 */
-		_usedRectangleAreaSize: CommonSize;
-
-		constructor(surface: Surface) {
-			this._surface = surface;
-			this._emptySurfaceAtlasSlotHead = new SurfaceAtlasSlot(0, 0, this._surface.width, this._surface.height);
-			this._accessScore = 0;
-			this._usedRectangleAreaSize = { width: 0, height: 0 };
-		}
-
-		/**
-		 * @private
-		 */
-		_acquireSurfaceAtlasSlot(width: number, height: number): SurfaceAtlasSlot {
-			// Renderer#drawImage()でサーフェス上の一部を描画するとき、
-			// 指定した部分に隣接する画素がにじみ出る現象が確認されている。
-			// ここれではそれを避けるため1pixelの余白を与えている。
-			width += 1;
-			height += 1;
-
-			var slot = getSurfaceAtlasSlot(this._emptySurfaceAtlasSlotHead, width, height);
-
-			if (! slot) {
-				return null;
-			}
-
-			var remainWidth = slot.width - width;
-			var remainHeight = slot.height - height;
-			var left: SurfaceAtlasSlot;
-			var right: SurfaceAtlasSlot;
-			if (remainWidth <= remainHeight) {
-				left  = new SurfaceAtlasSlot(slot.x + width, slot.y,          remainWidth, height);
-				right = new SurfaceAtlasSlot(slot.x,         slot.y + height, slot.width,  remainHeight);
-			} else {
-				left  = new SurfaceAtlasSlot(slot.x,         slot.y + height, width,       remainHeight);
-				right = new SurfaceAtlasSlot(slot.x + width, slot.y,          remainWidth, slot.height);
-			}
-
-			left.prev = slot.prev;
-			left.next = right;
-			if (left.prev === null) { // left is head
-				this._emptySurfaceAtlasSlotHead = left;
-			} else {
-				left.prev.next = left;
-			}
-
-			right.prev = left;
-			right.next = slot.next;
-			if (right.next) {
-				right.next.prev = right;
-			}
-
-			const acquiredSlot = new SurfaceAtlasSlot(slot.x, slot.y, width, height);
-
-			this._updateUsedRectangleAreaSize(acquiredSlot);
-
-			return acquiredSlot;
-		}
-
-		/**
-		 * @private
-		 */
-		_updateUsedRectangleAreaSize(slot: SurfaceAtlasSlot): void {
-			const slotRight = slot.x + slot.width;
-			const slotBottom = slot.y + slot.height;
-			if (slotRight > this._usedRectangleAreaSize.width) {
-				this._usedRectangleAreaSize.width = slotRight;
-			}
-			if (slotBottom > this._usedRectangleAreaSize.height) {
-				this._usedRectangleAreaSize.height = slotBottom;
-			}
-		}
-
-		/**
-		 * サーフェスの追加。
-		 *
-		 * @param surface サーフェスアトラス上に配置される画像のサーフェス。
-		 * @param rect サーフェス上の領域を表す矩形。この領域内の画像がサーフェスアトラス上に複製・配置される。
-		 */
-		addSurface(surface: Surface, rect: CommonArea): SurfaceAtlasSlot {
-			var slot = this._acquireSurfaceAtlasSlot(rect.width, rect.height);
-			if (! slot) {
-				return null;
-			}
-
-			var renderer = this._surface.renderer();
-			renderer.begin();
-			renderer.drawImage(surface, rect.x, rect.y, rect.width, rect.height, slot.x, slot.y);
-			renderer.end();
-
-			return slot;
-		}
-
-		 /**
- 		 * このSurfaceAtlasの破棄を行う。
- 		 * 以後、このSurfaceを利用することは出来なくなる。
- 		 */
-		destroy(): void {
-			this._surface.destroy();
-		}
-
-		/**
-		 * このSurfaceAtlasが破棄済であるかどうかを判定する。
-		 */
-		destroyed(): boolean {
-			return this._surface.destroyed();
-		}
-
-		/**
-		 * _surfaceを複製する。
-		 *
-		 * 複製されたSurfaceは文字を格納するのに必要な最低限のサイズになる。
-		 */
-		duplicateSurface(resourceFactory: ResourceFactory): Surface {
-			const src = this._surface;
-			const dst = resourceFactory.createSurface(this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height);
-
-			const renderer = dst.renderer();
-			renderer.begin();
-			renderer.drawImage(src, 0, 0, this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height, 0, 0);
-			renderer.end();
-
-			return dst;
-		}
-	}
-
-	/**
 	 * `DynamicFont` のコンストラクタに渡すことができるパラメータ。
 	 * 各メンバの詳細は `DynamicFont` の同名メンバの説明を参照すること。
+	 * パラメータのsurfaceAtlasSetが存在する場合は、パラメータのsurfaceAtlasSetを使用する。
+	 * surfaceAtlasSetが存在せず、DynamicFontHintが存在する場合、DynamicFontが管理するSurfaceAtlasSetを使用する。
+	 * surfaceAtlasSetが存在せず、DynamicFontHintが存在しない場合、gameが持つ共通のSurfaceAtlasSetを使用する。
 	 */
 	export interface DynamicFontParameterObject {
 		/**
@@ -262,6 +74,12 @@ namespace g {
 		 * @default false
 		 */
 		strokeOnly?: boolean;
+
+		/**
+		 * サーフェスアトラスセット
+		 * @default undefined
+		 */
+		surfaceAtlasSet?: SurfaceAtlasSet;
 	}
 
 	/**
@@ -270,32 +88,7 @@ namespace g {
 	 * ゲーム開発者はDynamicFontが効率よく動作するための各種初期値・最大値などを
 	 * 提示できる。DynamicFontはこれを参考にするが、そのまま採用するとは限らない。
 	 */
-	export interface DynamicFontHint {
-		/**
-		 * 初期アトラス幅。
-		 */
-		initialAtlasWidth?: number;
-
-		/**
-		 * 初期アトラス高さ。
-		 */
-		initialAtlasHeight?: number;
-
-		/**
-		 * 最大アトラス幅。
-		 */
-		maxAtlasWidth?: number;
-
-		/**
-		 * 最大アトラス高さ。
-		 */
-		maxAtlasHeight?: number;
-
-		/**
-		 * 最大アトラス数。
-		 */
-		maxAtlasNum?: number;
-
+	export interface DynamicFontHint extends SurfaceAtlasSetHint {
 		/**
 		 * あらかじめグリフを生成する文字のセット。
 		 */
@@ -379,22 +172,17 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_atlases: SurfaceAtlas[];
-
-		/**
-		 * @private
-		 */
-		_currentAtlasIndex: number;
-
-		/**
-		 * @private
-		 */
 		_destroyed: boolean;
 
 		/**
 		 * @private
 		 */
-		_atlasSize: CommonSize;
+		_isSurfaceAtlasSetOwner: boolean;
+
+		/**
+		 * @private
+		 */
+		_atlasSet: SurfaceAtlasSet;
 
 		/**
 		 * 各種パラメータを指定して `DynamicFont` のインスタンスを生成する。
@@ -414,20 +202,24 @@ namespace g {
 				this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
 					this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
 			this._glyphs = {};
-			this._atlases = [];
-			this._currentAtlasIndex = 0;
 			this._destroyed = false;
+			this._isSurfaceAtlasSetOwner = false;
 
-			// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
-			// 縦横2048pxのテクスチャ一枚のアトラスにまとめる形にする
-			this.hint.initialAtlasWidth = this.hint.initialAtlasWidth ? this.hint.initialAtlasWidth : 2048;
-			this.hint.initialAtlasHeight = this.hint.initialAtlasHeight ? this.hint.initialAtlasHeight : 2048;
-			this.hint.maxAtlasWidth = this.hint.maxAtlasWidth ? this.hint.maxAtlasWidth : 2048;
-			this.hint.maxAtlasHeight = this.hint.maxAtlasHeight ? this.hint.maxAtlasHeight : 2048;
-			this.hint.maxAtlasNum = this.hint.maxAtlasNum ? this.hint.maxAtlasNum : 1;
+			// NOTE: hint の特定プロパティ(baselineHeight)を分岐の条件にした場合、後でプロパティを追加した時に
+			// ここで追従漏れの懸念があるため、引数の hint が省略されているかで分岐させている。
+			if (param.surfaceAtlasSet) {
+				this._atlasSet = param.surfaceAtlasSet;
+			} else if (!!param.hint) {
+				this._isSurfaceAtlasSetOwner = true;
+				this._atlasSet = new SurfaceAtlasSet({
+					game: param.game,
+					hint: this.hint
+				});
+			} else {
+				this._atlasSet = param.game.surfaceAtlasSet;
+			}
 
-			this._atlasSize = calcAtlasSize(this.hint);
-			this._atlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+			this._atlasSet.addAtlas();
 
 			if (this.hint.presetChars) {
 				for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
@@ -458,23 +250,9 @@ namespace g {
 				glyph = this._glyphFactory.create(code);
 
 				if (glyph.surface) { // 空白文字でなければアトラス化する
-
-					// グリフがアトラスより大きいとき、`_addToAtlas()`は失敗する。
-					// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
-					// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
-					if (glyph.width > this._atlasSize.width || glyph.height > this._atlasSize.height) {
-						return null;
-					}
-
-					let atlas = this._addToAtlas(glyph);
+					const atlas = this._atlasSet.addGlyph(glyph);
 					if (! atlas) {
-						this._reallocateAtlas();
-
-						// retry
-						atlas = this._addToAtlas(glyph);
-						if (! atlas) {
-							return null;
-						}
+						return null;
 					}
 					glyph._atlas = atlas;
 				}
@@ -485,11 +263,9 @@ namespace g {
 			// スコア更新
 			// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 			// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
-			for (var i = 0; i < this._atlases.length; i++) {
-				var atlas = this._atlases[i];
-				if (atlas === glyph._atlas) {
-					atlas._accessScore += 1;
-				}
+			glyph._atlas._accessScore += 1;
+			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
+				var atlas = this._atlasSet.getAtlas(i);
 				atlas._accessScore /= 2;
 			}
 
@@ -505,7 +281,7 @@ namespace g {
 		 * @param missingGlyph `BitmapFont#map` に存在しないコードポイントの代わりに表示するべき文字。最初の一文字が用いられる。
 		 */
 		asBitmapFont(missingGlyphChar?: string): BitmapFont {
-			if (this._atlases.length !== 1) {
+			if (this._atlasSet.getAtlasNum() !== 1) {
 				return null;
 			}
 
@@ -538,7 +314,8 @@ namespace g {
 			// しかし defaultGlyphHeight は BitmapFont#size にも用いられる。
 			// そのために this.size をコンストラクタの第４引数に与えることにする。
 			let missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
-			const surface = this._atlases[0].duplicateSurface(this._resourceFactory);
+			const surface = this._atlasSet.getAtlas(0).duplicateSurface(this._resourceFactory);
+
 			const bitmapFont = new BitmapFont({
 				src: surface,
 				map: glyphAreaMap,
@@ -549,86 +326,9 @@ namespace g {
 			return bitmapFont;
 		}
 
-		/**
-		 * @private
-		 */
-		_removeLowUseAtlas(): SurfaceAtlas {
-			var minScore = Number.MAX_VALUE;
-			var lowScoreAtlasIndex = -1;
-			for (var i = 0; i < this._atlases.length; i++) {
-				if (this._atlases[i]._accessScore <= minScore) {
-					minScore = this._atlases[i]._accessScore;
-					lowScoreAtlasIndex = i;
-				}
-			}
-
-			let removedAtlas = this._atlases.splice(lowScoreAtlasIndex, 1)[0];
-
-			return removedAtlas;
-		}
-
-		/**
-		 * @private
-		 */
-		_reallocateAtlas(): void {
-			if (this._atlases.length >= this.hint.maxAtlasNum) {
-				let atlas = this._removeLowUseAtlas();
-				let glyphs = this._glyphs;
-
-				for (let key in glyphs) {
-					if (glyphs.hasOwnProperty(key)) {
-						var glyph = glyphs[key];
-						if (glyph.surface === atlas._surface) {
-							glyph.surface = null;
-							glyph.isSurfaceValid = false;
-							glyph._atlas = null;
-						}
-					}
-				}
-				atlas.destroy();
-			}
-
-			this._atlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
-			this._currentAtlasIndex = this._atlases.length - 1;
-		}
-
-		/**
-		 * @private
-		 */
-		_addToAtlas(glyph: Glyph): SurfaceAtlas {
-			let atlas: SurfaceAtlas = null;
-			let slot: SurfaceAtlasSlot = null;
-			let area = {
-				x: glyph.x,
-				y: glyph.y,
-				width: glyph.width,
-				height: glyph.height
-			};
-			for (let i = 0; i < this._atlases.length; i++) {
-				let index = (this._currentAtlasIndex + i) % this._atlases.length;
-				atlas = this._atlases[index];
-				slot = atlas.addSurface(glyph.surface, area);
-				if (slot) {
-					this._currentAtlasIndex = index;
-					break;
-				}
-			}
-
-			if (! slot) {
-				return null;
-			}
-
-			glyph.surface.destroy();
-			glyph.surface = atlas._surface;
-			glyph.x = slot.x;
-			glyph.y = slot.y;
-
-			return atlas;
-		}
-
 		destroy(): void {
-			for (var i = 0; i < this._atlases.length; i++) {
-				this._atlases[i].destroy();
+			if (this._isSurfaceAtlasSetOwner) {
+				this._atlasSet.destroy();
 			}
 			this._glyphs = null;
 			this._glyphFactory = null;

@@ -27,13 +27,12 @@ describe("test DynamicFont", function() {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
-		expect(font.hint).toEqual({
-				initialAtlasWidth: 2048,
-				initialAtlasHeight: 2048,
-				maxAtlasWidth: 2048,
-				maxAtlasHeight: 2048,
-				maxAtlasNum: 1
+		expect(font._atlasSet.getAtlasSize()).toEqual({
+				height: 512,
+				width: 512
 		});
+
+		expect(font._atlasSet.getMaxAtlasNum()).toEqual(g.SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
 	});
 	it("初期化 - Given hint", function() {
 		var runtime = skeletonRuntime();
@@ -69,6 +68,11 @@ describe("test DynamicFont", function() {
 				maxAtlasHeight: 4000,
 				maxAtlasNum: 5
 		});
+		expect(font._atlasSet.getAtlasSize()).toEqual({
+			height: 2000,
+			width: 1000
+		});
+		expect(font._atlasSet.getMaxAtlasNum()).toEqual(5);
 	});
 	it("初期化 - ParameterObject, 文字列配列によるフォントファミリ指定", function() {
 		const runtime = skeletonRuntime();
@@ -93,5 +97,41 @@ describe("test DynamicFont", function() {
 		const font = new g.DynamicFont(param);
 		expect(font.fontFamily).toBe(param.fontFamily);
 		expect(font.size).toBe(font.size);
+	});
+
+	describe("destroy", function () {
+		it("DynamicFontがオーナーのSurfaceAtlasSetはDynamoicFontのdestroyで破棄される", function () {
+			const df = new g.DynamicFont({
+				game: skeletonRuntime().game,
+				fontFamily: "Mock明朝",
+				size: 20,
+				hint: {
+					maxAtlasNum: 2,
+					maxAtlasWidth: 100,
+					baselineHeight: 20
+				}
+			});
+			df.destroy();
+			expect(df._atlasSet.destroyed()).toBeTruthy();
+		});
+		it("DynamicFont以外がオーナーのSurfaceAtlasSetはDynamoicFontのdestroyで破棄されない", function () {
+			const df = new g.DynamicFont({
+				game: skeletonRuntime().game,
+				fontFamily: "Mock明朝",
+				size: 20,
+			});
+			df.destroy();
+			expect(df._atlasSet.destroyed()).toBeFalsy();
+
+			const sas = new g.SurfaceAtlasSet({game: skeletonRuntime().game});
+			const df2 = new g.DynamicFont({
+				game: skeletonRuntime().game,
+				fontFamily: "Mock明朝",
+				size: 20,
+				surfaceAtlasSet: sas
+			});
+			df2.destroy();
+			expect(df2._atlasSet.destroyed()).toBeFalsy();
+		});
 	});
 });
