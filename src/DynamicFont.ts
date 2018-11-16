@@ -255,6 +255,7 @@ namespace g {
 						return null;
 					}
 					glyph._atlas = atlas;
+					glyph._atlas._accessScore += 1;
 				}
 
 				this._glyphs[code] = glyph;
@@ -263,7 +264,6 @@ namespace g {
 			// スコア更新
 			// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 			// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
-			glyph._atlas._accessScore += 1;
 			for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
 				var atlas = this._atlasSet.getAtlas(i);
 				atlas._accessScore /= 2;
