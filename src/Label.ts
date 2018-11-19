@@ -184,6 +184,15 @@ namespace g {
 				var glyphScale = this.fontSize / this.font.size;
 				var glyphWidth = glyph.advanceWidth * glyphScale;
 
+				var code = glyph.code;
+				if (!glyph.isSurfaceValid) {
+					glyph = this.font.glyphForCharacter(code);
+					if (!glyph) {
+						this._outputOfWarnLogWithNoGlyph(code, "renderCache()");
+						continue;
+					}
+				}
+
 				if (glyph.surface) { // 非空白文字
 					textRenderer.save();
 					textRenderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
@@ -258,11 +267,7 @@ namespace g {
 
 				var glyph = this.font.glyphForCharacter(code);
 				if (! glyph) {
-					const str = (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
-					this.game().logger.warn(
-						"Label#_invalidateSelf(): failed to get a glyph for '" + str + "' " +
-						"(BitmapFont might not have the glyph or DynamicFont might create a glyph larger than its atlas)."
-					);
+					this._outputOfWarnLogWithNoGlyph(code, "_invalidateSelf()");
 					continue;
 				}
 
@@ -285,6 +290,14 @@ namespace g {
 			}
 
 			this.height = maxHeight * glyphScale;
+		}
+
+		private _outputOfWarnLogWithNoGlyph(code: number, functionName: string): void {
+			const str = (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
+			this.game().logger.warn(
+				"Label#" + functionName + ": failed to get a glyph for '" + str + "' " +
+				"(BitmapFont might not have the glyph or DynamicFont might create a glyph larger than its atlas)."
+			);
 		}
 	}
 }
