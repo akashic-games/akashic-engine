@@ -206,11 +206,14 @@ namespace g {
 		 * @private
 		 */
 		_renderBackground(): void {
-			if (this._bgSurface && !this._bgSurface.destroyed()) {
-				this._bgSurface.destroy();
-			}
 			if (this.backgroundImage && this.backgroundEffector) {
-				this._bgSurface = this.backgroundEffector.render(this.backgroundImage, this.width, this.height);
+				const bgSurface = this.backgroundEffector.render(this.backgroundImage, this.width, this.height);
+				if (this._bgSurface !== bgSurface) {
+					if (this._bgSurface && !this._bgSurface.destroyed()) {
+						this._bgSurface.destroy();
+					}
+					this._bgSurface = bgSurface;
+				}
 			} else {
 				this._bgSurface = undefined;
 			}
