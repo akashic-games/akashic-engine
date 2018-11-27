@@ -181,21 +181,51 @@ namespace g {
 			super.invalidate();
 		}
 
+		/**
+		 * Label自身の描画を行う。
+		 */
+		renderDrawImage(renderer: Renderer, padding: number): void {
+			// glyphのoffsetXが負の値の場合(fontにstrokeWidth指定)、描画時に描画先のX座標を調整する。
+			var destOffsetX;
+			switch (this.textAlign) {
+				case g.TextAlign.Center:
+					destOffsetX = this.widthAutoAdjust ? this._moveMinusX : 0; break;
+				case g.TextAlign.Right:
+					destOffsetX = this.widthAutoAdjust ? - this._movePlusX : this._movePlusX; break;
+				default:
+					destOffsetX = this._moveMinusX; break;
+			}
+
+			renderer.translate(-padding, -padding);
+			renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + padding, this._cacheSize.height + padding, destOffsetX, 0);
+			renderer.translate(padding, padding);
+		}
+
 		renderCache(renderer: Renderer): void {
 			if (!this.fontSize || this.height <= 0 || this._textWidth <= 0) {
 				return;
 			}
-			console.log("++++++++++++++++++++++++ moveX:", this._moveMinusX);
-			var textSurface =  this.scene.game.resourceFactory.createSurface(Math.ceil(this._textWidth), Math.ceil(this.height));
-			var textRenderer = textSurface.renderer();
 
-			textRenderer.begin();
-			textRenderer.save();
-			if (this.textAlign !== g.TextAlign.Right && this._moveMinusX < 0) {
-				textRenderer.translate(Math.abs(this._moveMinusX), 0);
-			} else if (this._movePlusX > 0) {
-				textRenderer.translate(this._movePlusX, 0);
+			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
+			var offsetX: number;
+			switch (this.textAlign) {
+				case TextAlign.Center:
+					offsetX = this.width / 2 - this._textWidth / 2 * scale;
+					break;
+				case TextAlign.Right:
+					offsetX = this.width - this._textWidth * scale;
+					if (this._movePlusX > 0) offsetX += this._movePlusX;
+					break;
+				default:
+					offsetX = 0;
+					break;
 			}
+
+			if (this.textAlign !== g.TextAlign.Right && this._moveMinusX < 0) {
+				offsetX += Math.abs(this._moveMinusX);
+			}
+
+			renderer.translate(offsetX, 0);
 
 			for (var i = 0; i < this.glyphs.length; ++i) {
 				var glyph = this.glyphs[i];
@@ -212,75 +242,19 @@ namespace g {
 					}
 				}
 
-				// let offsetX = glyph.offsetX;
-				// if (this._moveMinusX < 0) {
-				// 	// 開始位置を移動している場合、移動した位置からoffsetを再計算する。
-				// 	offsetX = glyph.offsetX - this._moveMinusX;
-				// }
-				// DEBUG
-				var str = (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
-				console.log(i + " :[" + str + "]: x:" + glyph.x, "width:" + glyph.width, "offX:" + glyph.offsetX);
-
-
 				if (glyph.surface) { // 非空白文字
-					textRenderer.save();
-					textRenderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-					textRenderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
-					textRenderer.restore();
+					renderer.save();
+					renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
+					renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
+					renderer.restore();
 				}
-
-				/*
-				if (i === 0) {
-					console.log("@@@@@@@", glyph.x, glyph.y, glyph.width, glyph.height);
-					var ctx = textSurface.canvas.getContext("2d");
-					ctx.save();
-					ctx.font = "20px sans-serif";
-					ctx.textAlign = "left";
-					ctx.textBaseline = "alphabetic";
-					ctx.lineJoin = "bevel";
-					ctx.lineWidth = 5;
-					ctx.strokeStyle = "green";
-					ctx.strokeText("❤", 0, glyph.height + glyph.offsetY);
-					ctx.fillStyle = "blue";
-					ctx.fillText("❤", 0, glyph.height + glyph.offsetY);
-					ctx.restore();
-					cnt++;
-				}
-				*/
-
-				textRenderer.translate(glyphWidth, 0);
+				renderer.translate(glyphWidth, 0);
 			}
-			textRenderer.restore();
-			textRenderer.end();
 
-			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
-			var offsetX: number;
-			switch (this.textAlign) {
-				case TextAlign.Center:
-					offsetX = this.width / 2 - this._textWidth / 2 * scale;
-					break;
-				case TextAlign.Right:
-					offsetX = this.width - this._textWidth * scale;
-					break;
-				default:
-					offsetX = this._moveMinusX;
-					break;
-			}
 			renderer.save();
-			renderer.translate(offsetX, 0);
 			if (scale !== 1) {
 				renderer.transform([scale, 0, 0, 1, 0, 0]);
 			}
-			renderer.drawImage(
-				textSurface,
-				0,
-				0,
-				this._textWidth,
-				this.height,
-				0,
-				0
-			);
-			textSurface.destroy();
 			if (this.textColor) {
 				renderer.setCompositeOperation(CompositeOperation.SourceAtop);
 				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
@@ -304,7 +278,7 @@ namespace g {
 				this.height = 0;
 				return;
 			}
-			console.log("-------------------------------------------------------");
+
 			var maxHeight = 0;
 			var glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
 			for (var i = 0; i < this.text.length; ++i) {
@@ -327,24 +301,19 @@ namespace g {
 				}
 				this.glyphs.push(glyph);
 
-				// 最初の文字の offsetX が0未満の場合、x軸を renderCache() 内で offsetX 分移動する。
-				// x軸を移動した場合や offsetX が0未満の glyph がある最後の文字の場合、offset での差分の幅を算出し _textWidth へ追加する。
+				// 最初の文字の offsetX が0未満の場合、描画時に offsetX 分移動する。
+				// x座標を移動した場合や offsetX が0未満の glyph がある最後の文字の場合、offset での差分の幅を算出し _textWidth へ追加する。
 				let diffWidth = 0;
 				if (i === 0 && glyph.offsetX < 0) {
 					diffWidth = Math.abs(glyph.offsetX);
 					this._moveMinusX = glyph.offsetX;
 				}
-
 				if (glyph.width !== 0 && glyph.offsetX < 0) {
 					this._movePlusX = Math.abs(glyph.advanceWidth - glyph.width - glyph.offsetX);
 				}
 				if (i === this.text.length - 1 && this._movePlusX > 0) {
 					diffWidth += this._movePlusX;
 				}
-				// DEBUG
-				var str = (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
-				// tslint:disable-next-line:max-line-length
-				console.log(`@@ ${i}:[${str}]`, `width:${glyph.width}, advanceW:${glyph.advanceWidth}, offsetX:${glyph.offsetX}, diffWidth:${diffWidth}`);
 
 				this._textWidth += (glyph.advanceWidth + diffWidth) * glyphScale;
 
