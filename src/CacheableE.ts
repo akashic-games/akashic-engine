@@ -109,7 +109,9 @@ namespace g {
 				cacheRenderer.end();
 			}
 			if (this._cache && this._cacheSize.width > 0 && this._cacheSize.height > 0) {
-				this.renderDrawImage(renderer, padding);
+				renderer.translate(-padding, -padding);
+				this.renderSelfFromCache(renderer);
+				renderer.translate(padding, padding);
 			}
 			return this._shouldRenderChildren;
 		}
@@ -118,10 +120,8 @@ namespace g {
 		 * 描画を行う。
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
-		renderDrawImage(renderer: Renderer, padding: number): void {
-			renderer.translate(-padding, -padding);
-			renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + padding, this._cacheSize.height + padding, 0, 0);
-			renderer.translate(padding, padding);
+		renderSelfFromCache(renderer: Renderer): void {
+			renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + CacheableE.PADDING, this._cacheSize.height + CacheableE.PADDING, 0, 0);
 		}
 
 		/**

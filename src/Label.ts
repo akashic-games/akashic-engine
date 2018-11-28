@@ -129,12 +129,12 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_moveMinusX: number;
+		_overhangLeft: number;
 
 		/**
 		 * @private
 		 */
-		_movePlusX: number;
+		_overhangRight: number;
 
 		/**
 		 * 各種パラメータを指定して `Label` のインスタンスを生成する。
@@ -152,8 +152,8 @@ namespace g {
 			this.textColor = param.textColor;
 			this._textWidth = 0;
 			this._game = undefined;
-			this._moveMinusX = 0;
-			this._movePlusX = 0;
+			this._overhangLeft = 0;
+			this._overhangRight = 0;
 			this._invalidateSelf();
 		}
 
@@ -184,21 +184,30 @@ namespace g {
 		/**
 		 * Label自身の描画を行う。
 		 */
-		renderDrawImage(renderer: Renderer, padding: number): void {
+		renderSelfFromCache(renderer: Renderer): void {
 			// glyphのoffsetXが負の値の場合(fontにstrokeWidth指定)、描画時に描画先のX座標を調整する。
 			var destOffsetX;
 			switch (this.textAlign) {
 				case g.TextAlign.Center:
-					destOffsetX = this.widthAutoAdjust ? this._moveMinusX : 0; break;
+					destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
+					break;
 				case g.TextAlign.Right:
-					destOffsetX = this.widthAutoAdjust ? - this._movePlusX : this._movePlusX; break;
+					destOffsetX = this.widthAutoAdjust ? - this._overhangRight : this._overhangRight;
+					break;
 				default:
-					destOffsetX = this._moveMinusX; break;
+					destOffsetX = this._overhangLeft;
+					break;
 			}
 
-			renderer.translate(-padding, -padding);
-			renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + padding, this._cacheSize.height + padding, destOffsetX, 0);
-			renderer.translate(padding, padding);
+			renderer.drawImage(
+				this._cache,
+				0,
+				0,
+				this._cacheSize.width + CacheableE.PADDING,
+				this._cacheSize.height + CacheableE.PADDING,
+				destOffsetX,
+				0
+			);
 		}
 
 		renderCache(renderer: Renderer): void {
@@ -206,6 +215,8 @@ namespace g {
 				return;
 			}
 
+			var textSurface = null;
+			var textRenderer = renderer;
 			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
 			var offsetX: number;
 			switch (this.textAlign) {
@@ -214,23 +225,32 @@ namespace g {
 					break;
 				case TextAlign.Right:
 					offsetX = this.width - this._textWidth * scale;
-					if (this._movePlusX > 0) offsetX += this._movePlusX;
+					if (this._overhangRight > 0) offsetX += this._overhangRight;
 					break;
 				default:
 					offsetX = 0;
 					break;
 			}
 
-			if (this.textAlign !== g.TextAlign.Right && this._moveMinusX < 0) {
-				offsetX += Math.abs(this._moveMinusX);
+			if (this.textAlign !== g.TextAlign.Right && this._overhangLeft < 0) {
+				offsetX += Math.abs(this._overhangLeft);
 			}
-
 			renderer.translate(offsetX, 0);
 
+			if (scale !== 1) {
+				renderer.transform([scale, 0, 0, 1, 0, 0]);
+			}
+
+			if (this.textColor) {
+				textSurface = this.scene.game.resourceFactory.createSurface(Math.ceil(this._textWidth), Math.ceil(this.height));
+				textRenderer = textSurface.renderer();
+				textRenderer.begin();
+			}
+
+			textRenderer.save();
+			var glyphScale = this.fontSize / this.font.size;
 			for (var i = 0; i < this.glyphs.length; ++i) {
 				var glyph = this.glyphs[i];
-
-				var glyphScale = this.fontSize / this.font.size;
 				var glyphWidth = glyph.advanceWidth * glyphScale;
 
 				var code = glyph.code;
@@ -243,19 +263,28 @@ namespace g {
 				}
 
 				if (glyph.surface) { // 非空白文字
-					renderer.save();
-					renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-					renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
-					renderer.restore();
+					textRenderer.save();
+					textRenderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
+					textRenderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
+					textRenderer.restore();
 				}
-				renderer.translate(glyphWidth, 0);
+				textRenderer.translate(glyphWidth, 0);
 			}
+			textRenderer.restore();
 
 			renderer.save();
-			if (scale !== 1) {
-				renderer.transform([scale, 0, 0, 1, 0, 0]);
-			}
-			if (this.textColor) {
+			if (textSurface) {
+				textRenderer.end();
+				renderer.drawImage(
+					textSurface,
+					0,
+					0,
+					this._textWidth,
+					this.height,
+					0,
+					0
+				);
+				textSurface.destroy();
 				renderer.setCompositeOperation(CompositeOperation.SourceAtop);
 				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
 			}
@@ -301,18 +330,18 @@ namespace g {
 				}
 				this.glyphs.push(glyph);
 
-				// 最初の文字の offsetX が0未満の場合、描画時に offsetX 分移動する。
-				// x座標を移動した場合や offsetX が0未満の glyph がある最後の文字の場合、offset での差分の幅を算出し _textWidth へ追加する。
+				// Font に StrokeWidth が設定されている場合、文字の描画内容は、描画の基準点よりも左にはみ出る場合や、glyph.advanceWidth より右にはみ出る場合がある。
+				// キャッシュサーフェスの幅は、最初の文字と最後の文字のはみ出し部分を考慮して求める必要がある。
 				let diffWidth = 0;
 				if (i === 0 && glyph.offsetX < 0) {
 					diffWidth = Math.abs(glyph.offsetX);
-					this._moveMinusX = glyph.offsetX;
+					this._overhangLeft = glyph.offsetX;
 				}
 				if (glyph.width !== 0 && glyph.offsetX < 0) {
-					this._movePlusX = Math.abs(glyph.advanceWidth - glyph.width - glyph.offsetX);
+					this._overhangRight = Math.abs(glyph.advanceWidth - glyph.width - glyph.offsetX);
 				}
-				if (i === this.text.length - 1 && this._movePlusX > 0) {
-					diffWidth += this._movePlusX;
+				if (i === this.text.length - 1 && this._overhangRight > 0) {
+					diffWidth += this._overhangRight;
 				}
 
 				this._textWidth += (glyph.advanceWidth + diffWidth) * glyphScale;
