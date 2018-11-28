@@ -117,7 +117,7 @@ namespace g {
 		}
 
 		/**
-		 * 描画を行う。
+		 * 内部キャッシュから自身の描画を行う。
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
 		renderSelfFromCache(renderer: Renderer): void {
