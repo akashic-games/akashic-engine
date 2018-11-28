@@ -241,24 +241,37 @@ namespace g {
 				renderer.transform([scale, 0, 0, 1, 0, 0]);
 			}
 
-			if (this.textColor) {
-				var textSurface = this.scene.game.resourceFactory.createSurface(Math.ceil(this._textWidth), Math.ceil(this.height));
-				var textRenderer = textSurface.renderer();
+			renderer.save();
+			var glyphScale = this.fontSize / this.font.size;
+			for (var i = 0; i < this.glyphs.length; ++i) {
+				var glyph = this.glyphs[i];
+				var glyphWidth = glyph.advanceWidth * glyphScale;
 
-				textRenderer.begin();
-				this._drawText(textRenderer);
-				textRenderer.end();
+				var code = glyph.code;
+				if (!glyph.isSurfaceValid) {
+					glyph = this.font.glyphForCharacter(code);
+					if (!glyph) {
+						this._outputOfWarnLogWithNoGlyph(code, "renderCache()");
+						continue;
+					}
+				}
 
-				renderer.save();
-				renderer.drawImage(textSurface, 0, 0, this._textWidth, this.height, 0, 0);
-				textSurface.destroy();
-				renderer.setCompositeOperation(CompositeOperation.SourceAtop);
-				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
-				renderer.restore();
-
-			} else {
-				this._drawText(renderer);
+				if (glyph.surface) { // 非空白文字
+					renderer.save();
+					renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
+					renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
+					renderer.restore();
+				}
+				renderer.translate(glyphWidth, 0);
 			}
+			renderer.restore();
+
+			renderer.save();
+			if (this.textColor) {
+				renderer.setCompositeOperation(g.CompositeOperation.SourceAtop);
+				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
+			}
+			renderer.restore();
 		}
 
 		/**
@@ -334,33 +347,6 @@ namespace g {
 				"Label#" + functionName + ": failed to get a glyph for '" + str + "' " +
 				"(BitmapFont might not have the glyph or DynamicFont might create a glyph larger than its atlas)."
 			);
-		}
-
-		private _drawText(renderer: Renderer): void {
-			renderer.save();
-			var glyphScale = this.fontSize / this.font.size;
-			for (var i = 0; i < this.glyphs.length; ++i) {
-				var glyph = this.glyphs[i];
-				var glyphWidth = glyph.advanceWidth * glyphScale;
-
-				var code = glyph.code;
-				if (!glyph.isSurfaceValid) {
-					glyph = this.font.glyphForCharacter(code);
-					if (!glyph) {
-						this._outputOfWarnLogWithNoGlyph(code, "renderCache()");
-						continue;
-					}
-				}
-
-				if (glyph.surface) { // 非空白文字
-					renderer.save();
-					renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-					renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
-					renderer.restore();
-				}
-				renderer.translate(glyphWidth, 0);
-			}
-			renderer.restore();
 		}
 	}
 }
