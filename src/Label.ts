@@ -187,18 +187,18 @@ namespace g {
 		 * Label自身の描画を行う。
 		 */
 		renderSelfFromCache(renderer: Renderer): void {
-			// glyphのoffsetXが負の値の場合(fontにstrokeWidth指定)、描画時に描画先のX座標を調整する。
+			// glyphのはみ出し量に応じて、描画先のX座標を調整する。
 			var destOffsetX;
 			switch (this.textAlign) {
-				case g.TextAlign.Center:
-					destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
-					break;
-				case g.TextAlign.Right:
-					destOffsetX = this.widthAutoAdjust ? - this._overhangRight : this._overhangRight;
-					break;
-				default:
-					destOffsetX = this._overhangLeft;
-					break;
+			case g.TextAlign.Center:
+				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
+				break;
+			case g.TextAlign.Right:
+				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
+				break;
+			default:
+				destOffsetX = this._overhangLeft;
+				break;
 			}
 
 			renderer.drawImage(
@@ -220,20 +220,19 @@ namespace g {
 			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
 			var offsetX: number;
 			switch (this.textAlign) {
-				case TextAlign.Center:
-					offsetX = this.width / 2 - this._textWidth / 2 * scale;
-					break;
-				case TextAlign.Right:
-					offsetX = this.width - this._textWidth * scale;
-					if (this._overhangRight > 0) offsetX += this._overhangRight;
-					break;
-				default:
-					offsetX = 0;
-					break;
+			case TextAlign.Center:
+				offsetX = this.width / 2 - this._textWidth / 2 * scale;
+				break;
+			case TextAlign.Right:
+				offsetX = this.width - (this._textWidth - this._overhangRight) * scale;
+				break;
+			default:
+				offsetX = 0;
+				break;
 			}
 
-			if (this.textAlign !== g.TextAlign.Right && this._overhangLeft < 0) {
-				offsetX += Math.abs(this._overhangLeft);
+			if (this.textAlign !== g.TextAlign.Right) {
+				offsetX -= this._overhangLeft;
 			}
 			renderer.translate(offsetX, 0);
 
@@ -268,7 +267,7 @@ namespace g {
 
 			renderer.save();
 			if (this.textColor) {
-				renderer.setCompositeOperation(g.CompositeOperation.SourceAtop);
+				renderer.setCompositeOperation(CompositeOperation.SourceAtop);
 				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
 			}
 			renderer.restore();
@@ -316,14 +315,14 @@ namespace g {
 				// Font に StrokeWidth が設定されている場合、文字の描画内容は、描画の基準点よりも左にはみ出る場合や、glyph.advanceWidth より右にはみ出る場合がある。
 				// キャッシュサーフェスの幅は、最初の文字と最後の文字のはみ出し部分を考慮して求める必要がある。
 				let diffWidth = 0;
-				if (i === 0 && glyph.offsetX < 0) {
-					diffWidth = Math.abs(glyph.offsetX);
-					this._overhangLeft = glyph.offsetX;
+				if (i === 0) {
+					this._overhangLeft = Math.min(glyph.offsetX, 0);
+					diffWidth = -this._overhangLeft;
 				}
-				if (glyph.width !== 0 && glyph.offsetX < 0) {
-					this._overhangRight = Math.abs(glyph.advanceWidth - glyph.width - glyph.offsetX);
-				}
-				if (i === this.text.length - 1 && this._overhangRight > 0) {
+
+				if (i === this.text.length - 2 && glyph.width !== 0) {
+					// サロゲートペアの2つめに対応する glyph が text の最後の場合、glyph.width 等は0となるため、最後2文字からを条件とする。
+					this._overhangRight = Math.max((glyph.width + glyph.offsetX) - glyph.advanceWidth, 0);
 					diffWidth += this._overhangRight;
 				}
 
