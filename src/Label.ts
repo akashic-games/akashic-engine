@@ -144,6 +144,18 @@ namespace g {
 		_game: Game;
 
 		/**
+		 * @private
+		 * 最初の文字が描画の基準点から左にはみだす量。
+		 */
+		_overhangLeft: number;
+
+		/**
+		 * @private
+		 * 最後の文字が glyph.advanceWidth から右にはみだす量。
+		 */
+		_overhangRight: number;
+
+		/**
 		 * `Label` のインスタンスを生成する。
 		 * @deprecated このコンストラクタは非推奨機能である。代わりに `LabelParameterObject` を使うコンストラクタを用いるべきである。
 		 * @param scene このエンティティの属する `Scene`
@@ -152,6 +164,7 @@ namespace g {
 		 * @param fontSize フォントサイズ
 		 */
 		constructor(scene: Scene, text: string, font: BitmapFont, fontSize: number);
+
 		/**
 		 * 各種パラメータを指定して `Label` のインスタンスを生成する。
 		 * @param param このエンティティに指定するパラメータ
@@ -173,6 +186,8 @@ namespace g {
 				this.textColor = undefined;
 				this._textWidth = 0;
 				this._game = undefined;
+				this._overhangLeft = 0;
+				this._overhangRight = 0;
 				this._invalidateSelf();
 			} else {
 				var param = <LabelParameterObject>sceneOrParam;
@@ -191,6 +206,8 @@ namespace g {
 				this.textColor = param.textColor;
 				this._textWidth = 0;
 				this._game = undefined;
+				this._overhangLeft = 0;
+				this._overhangRight = 0;
 				this._invalidateSelf();
 			}
 		}
@@ -219,61 +236,77 @@ namespace g {
 			super.invalidate();
 		}
 
+		/**
+		 * Label自身の描画を行う。
+		 */
+		renderSelfFromCache(renderer: Renderer): void {
+			// glyphのはみ出し量に応じて、描画先のX座標を調整する。
+			var destOffsetX;
+			switch (this.textAlign) {
+			case g.TextAlign.Center:
+				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
+				break;
+			case g.TextAlign.Right:
+				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
+				break;
+			default:
+				destOffsetX = this._overhangLeft;
+				break;
+			}
+
+			renderer.drawImage(
+				this._cache,
+				0,
+				0,
+				this._cacheSize.width + CacheableE.PADDING,
+				this._cacheSize.height + CacheableE.PADDING,
+				destOffsetX,
+				0
+			);
+		}
+
 		renderCache(renderer: Renderer): void {
 			if (!this.fontSize || this.height <= 0 || this._textWidth <= 0) {
 				return;
 			}
-			var textSurface =  this.scene.game.resourceFactory.createSurface(Math.ceil(this._textWidth), Math.ceil(this.height));
-			var textRenderer = textSurface.renderer();
-
-			textRenderer.begin();
-			textRenderer.save();
-			for (var i = 0; i < this.glyphs.length; ++i) {
-				var glyph = this.glyphs[i];
-
-				var glyphScale = this.fontSize / this.font.size;
-				var glyphWidth = glyph.advanceWidth * glyphScale;
-
-				if (glyph.surface) { // 非空白文字
-					textRenderer.save();
-					textRenderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-					textRenderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
-					textRenderer.restore();
-				}
-
-				textRenderer.translate(glyphWidth, 0);
-			}
-			textRenderer.restore();
-			textRenderer.end();
 
 			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
-			var offsetX: number;
+			var offsetX = 0;
 			switch (this.textAlign) {
-				case TextAlign.Center:
-					offsetX = this.width / 2 - this._textWidth / 2 * scale;
-					break;
-				case TextAlign.Right:
-					offsetX = this.width - this._textWidth * scale;
-					break;
-				default:
-					offsetX = 0;
-					break;
+			case TextAlign.Center:
+				offsetX = this.width / 2 - (this._textWidth + this._overhangLeft) / 2 * scale;
+				break;
+			case TextAlign.Right:
+				offsetX = this.width - (this._textWidth - this._overhangRight) * scale;
+				break;
+			default:
+				offsetX -= this._overhangLeft;
+				break;
 			}
-			renderer.save();
+
 			renderer.translate(offsetX, 0);
+
 			if (scale !== 1) {
 				renderer.transform([scale, 0, 0, 1, 0, 0]);
 			}
-			renderer.drawImage(
-				textSurface,
-				0,
-				0,
-				this._textWidth,
-				this.height,
-				0,
-				0
-			);
-			textSurface.destroy();
+
+			renderer.save();
+			var glyphScale = this.fontSize / this.font.size;
+			for (var i = 0; i < this.glyphs.length; ++i) {
+				var glyph = this.glyphs[i];
+				var glyphWidth = glyph.advanceWidth * glyphScale;
+
+				if (glyph.surface) { // 非空白文字
+					renderer.save();
+					renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
+					renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
+					renderer.restore();
+				}
+				renderer.translate(glyphWidth, 0);
+			}
+			renderer.restore();
+
+			renderer.save();
 			if (this.textColor) {
 				renderer.setCompositeOperation(CompositeOperation.SourceAtop);
 				renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
@@ -302,9 +335,23 @@ namespace g {
 				return;
 			}
 
+			var effectiveTextLastIndex = this.text.length - 1;
+			// 右のはみだし量を求めるため、text内での有効な最後の glyph のindexを解決する。
+			for (var i = this.text.length - 1; i >= 0; --i) {
+				var code = g.Util.charCodeAt(this.text, i);
+				if (!code) {
+					continue;
+				}
+				var glyph = this.font.glyphForCharacter(code);
+				if (glyph && glyph.width !== 0 && glyph.advanceWidth !== 0) {
+					effectiveTextLastIndex = i;
+					break;
+				}
+			}
+
 			var maxHeight = 0;
 			var glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
-			for (var i = 0; i < this.text.length; ++i) {
+			for (var i = 0; i <= effectiveTextLastIndex; ++i) {
 				const code = g.Util.charCodeAt(this.text, i);
 				if (! code) {
 					continue;
@@ -327,7 +374,21 @@ namespace g {
 					continue;
 				}
 				this.glyphs.push(glyph);
-				this._textWidth += glyph.advanceWidth * glyphScale;
+
+				// Font に StrokeWidth が設定されている場合、文字の描画内容は、描画の基準点よりも左にはみ出る場合や、glyph.advanceWidth より右にはみ出る場合がある。
+				// キャッシュサーフェスの幅は、最初の文字と最後の文字のはみ出し部分を考慮して求める必要がある。
+				let overhang = 0;
+				if (i === 0) {
+					this._overhangLeft = Math.min(glyph.offsetX, 0);
+					overhang = -this._overhangLeft;
+				}
+
+				if (i === effectiveTextLastIndex) {
+					this._overhangRight = Math.max((glyph.width + glyph.offsetX) - glyph.advanceWidth, 0);
+					overhang += this._overhangRight;
+				}
+
+				this._textWidth += (glyph.advanceWidth + overhang) * glyphScale;
 
 				var height = glyph.offsetY + glyph.height;
 				if (maxHeight < height) {

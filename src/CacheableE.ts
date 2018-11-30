@@ -118,10 +118,18 @@ namespace g {
 			}
 			if (this._cache && this._cacheSize.width > 0 && this._cacheSize.height > 0) {
 				renderer.translate(-padding, -padding);
-				renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + padding, this._cacheSize.height + padding, 0, 0);
+				this.renderSelfFromCache(renderer);
 				renderer.translate(padding, padding);
 			}
 			return this._shouldRenderChildren;
+		}
+
+		/**
+		 * 内部キャッシュから自身の描画を行う。
+		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
+		 */
+		renderSelfFromCache(renderer: Renderer): void {
+			renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + CacheableE.PADDING, this._cacheSize.height + CacheableE.PADDING, 0, 0);
 		}
 
 		/**
