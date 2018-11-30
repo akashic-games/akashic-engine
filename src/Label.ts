@@ -287,9 +287,9 @@ namespace g {
 				return;
 			}
 
-			var effectiveTextLastIndex = this.text.length;
+			var effectiveTextLastIndex = this.text.length - 1;
 			// 右のはみだし量を求めるため、text内での有効な最後の glyph のindexを解決する。
-			for (var i = this.text.length; i >= 0; --i) {
+			for (var i = this.text.length - 1; i >= 0; --i) {
 				var code = g.Util.charCodeAt(this.text, i);
 				if (!code) {
 					continue;
@@ -325,7 +325,7 @@ namespace g {
 
 				// Font に StrokeWidth が設定されている場合、文字の描画内容は、描画の基準点よりも左にはみ出る場合や、glyph.advanceWidth より右にはみ出る場合がある。
 				// キャッシュサーフェスの幅は、最初の文字と最後の文字のはみ出し部分を考慮して求める必要がある。
-				var overhang = 0;
+				let overhang = 0;
 				if (i === 0) {
 					this._overhangLeft = Math.min(glyph.offsetX, 0);
 					overhang = -this._overhangLeft;
