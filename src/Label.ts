@@ -218,22 +218,19 @@ namespace g {
 			}
 
 			var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
-			var offsetX: number;
+			var offsetX = 0;
 			switch (this.textAlign) {
 			case TextAlign.Center:
-				offsetX = this.width / 2 - this._textWidth / 2 * scale;
+				offsetX = this.width / 2 - (this._textWidth + this._overhangLeft) / 2 * scale;
 				break;
 			case TextAlign.Right:
 				offsetX = this.width - (this._textWidth - this._overhangRight) * scale;
 				break;
 			default:
-				offsetX = 0;
+				offsetX -= this._overhangLeft;
 				break;
 			}
 
-			if (this.textAlign !== g.TextAlign.Right) {
-				offsetX -= this._overhangLeft;
-			}
 			renderer.translate(offsetX, 0);
 
 			if (scale !== 1) {
@@ -290,9 +287,23 @@ namespace g {
 				return;
 			}
 
+			var effectiveTextLastIndex = this.text.length;
+			// 右のはみだし量を求めるため、text内での有効な最後の glyph のindexを解決する。
+			for (var i = this.text.length; i >= 0; --i) {
+				var code = g.Util.charCodeAt(this.text, i);
+				if (!code) {
+					continue;
+				}
+				var glyph = this.font.glyphForCharacter(code);
+				if (glyph && glyph.width !== 0 && glyph.advanceWidth !== 0) {
+					effectiveTextLastIndex = i;
+					break;
+				}
+			}
+
 			var maxHeight = 0;
 			var glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
-			for (var i = 0; i < this.text.length; ++i) {
+			for (var i = 0; i <= effectiveTextLastIndex; ++i) {
 				const code = g.Util.charCodeAt(this.text, i);
 				if (! code) {
 					continue;
@@ -314,19 +325,18 @@ namespace g {
 
 				// Font に StrokeWidth が設定されている場合、文字の描画内容は、描画の基準点よりも左にはみ出る場合や、glyph.advanceWidth より右にはみ出る場合がある。
 				// キャッシュサーフェスの幅は、最初の文字と最後の文字のはみ出し部分を考慮して求める必要がある。
-				let diffWidth = 0;
+				var overhang = 0;
 				if (i === 0) {
 					this._overhangLeft = Math.min(glyph.offsetX, 0);
-					diffWidth = -this._overhangLeft;
+					overhang = -this._overhangLeft;
 				}
 
-				if (i === this.text.length - 2 && glyph.width !== 0) {
-					// サロゲートペアの2つめに対応する glyph が text の最後の場合、glyph.width 等は0となるため、最後2文字からを条件とする。
+				if (i === effectiveTextLastIndex) {
 					this._overhangRight = Math.max((glyph.width + glyph.offsetX) - glyph.advanceWidth, 0);
-					diffWidth += this._overhangRight;
+					overhang += this._overhangRight;
 				}
 
-				this._textWidth += (glyph.advanceWidth + diffWidth) * glyphScale;
+				this._textWidth += (glyph.advanceWidth + overhang) * glyphScale;
 
 				var height = glyph.offsetY + glyph.height;
 				if (maxHeight < height) {
