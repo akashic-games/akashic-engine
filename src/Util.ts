@@ -30,8 +30,8 @@ namespace g {
 		 */
 		export function distanceBetweenAreas(p1: CommonArea, p2: CommonArea): number {
 			return Util.distance(
-				p1.x - p1.width / 2, p1.y - p1.height / 2,
-				p2.x - p2.width / 2, p2.y - p2.height / 2);
+				p1.x + p1.width / 2, p1.y + p1.height / 2,
+				p2.x + p2.width / 2, p2.y + p2.height / 2);
 		}
 
 		/**

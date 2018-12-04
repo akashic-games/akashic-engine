@@ -52,9 +52,11 @@ describe("test Util", function() {
 	});
 
 	it("distanceBetweenAreas", function() {
-		var area1 = {x: 2, y: 2, width: 2, height: 2}; // center: (1, 1)
-		var area2 = {x: 3, y: 5, width: 2, height: 4}; // center: (2, 3)
-		expect(g.Util.distanceBetweenAreas(area1, area2).toFixed(2)).toEqual('2.24');
+		var area1 = {x: 2, y: 2, width: 2, height: 2}; // center: (3, 3)
+		var area2 = {x: 3, y: 5, width: 2, height: 4}; // center: (4, 7)
+		var area3 = {x: -4, y: 3, width: 7, height: -4}; // center: (-0.5, 1)
+		expect(g.Util.distanceBetweenAreas(area1, area2).toFixed(2)).toEqual(Math.sqrt(Math.pow(4 - 3, 2) + Math.pow(7 - 3, 2)).toFixed(2));
+		expect(g.Util.distanceBetweenAreas(area1, area3).toFixed(2)).toEqual(Math.sqrt(Math.pow(-0.5 - 3, 2) + Math.pow(1 - 3, 2)).toFixed(2));
 	});
 
 	it("findAssetByPathAsFile", function () {
