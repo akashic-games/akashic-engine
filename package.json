@@ -36,7 +36,7 @@
     "minify": "npm run build && npm run minify:node && npm run minify:browser",
     "minify:node": "uglifyjs -o ./lib/main.node.min.js --compress --mangle -- lib/main.node.js",
     "minify:browser": "uglifyjs lib/main.js -o ./lib/main.min.js",
-    "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts",
+    "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts --project ./tsconfig.json",
     "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts"
   },
   "files": [
