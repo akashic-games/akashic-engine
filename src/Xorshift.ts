@@ -19,6 +19,10 @@ namespace g {
 			return ret;
 		}
 
+		constructor(seed: number) {
+			this.initState(seed);
+		}
+
 		// シード値が1つの場合にどのようにして初期状態を定義するかは特に定まっていない
 		// このコードはロジック的な裏付けは無いが採用例が多いために採用した
 		// 以下採用例
@@ -35,10 +39,6 @@ namespace g {
 			this._state1U = seed;
 			seed = factor * (seed ^ (seed >> 30)) + 4;
 			this._state1L = seed;
-		}
-
-		constructor(seed: number) {
-			this.initState(seed);
 		}
 
 		randomInt(): number[] {
