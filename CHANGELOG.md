@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.4.7
+
+不具合修正
+ * `g.Util.distanceBetweenAreas()` の処理が誤っていた問題を修正。
+
 ## 2.4.6
 
 不具合修正
