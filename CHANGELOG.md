@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.4.8
+
+不具合修正
+ * `g.Trigger#_handlers` が存在しない場合でも `g.Trigger#fire()` が実行されてしまう問題を修正。
+
 ## 2.4.7
 
 不具合修正

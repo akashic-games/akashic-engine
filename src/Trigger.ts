@@ -217,7 +217,7 @@ namespace g {
 		 * @param arg ハンドラに与えられる引数
 		 */
 		fire(arg?: T): void {
-			if (! this._handlers.length)
+			if (! this._handlers || ! this._handlers.length)
 				return;
 
 			const handlers = this._handlers.concat();
