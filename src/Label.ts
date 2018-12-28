@@ -227,7 +227,7 @@ namespace g {
 				offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
 				break;
 			default:
-				offsetX -= this._overhangLeft;
+				offsetX -= this._overhangLeft * scale;
 				break;
 			}
 
