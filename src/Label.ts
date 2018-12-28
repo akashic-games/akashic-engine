@@ -224,7 +224,7 @@ namespace g {
 				offsetX = this.width / 2 - (this._textWidth + this._overhangLeft) / 2 * scale;
 				break;
 			case TextAlign.Right:
-				offsetX = this.width - (this._textWidth - this._overhangRight) * scale;
+				offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
 				break;
 			default:
 				offsetX -= this._overhangLeft;
