@@ -73,7 +73,7 @@ namespace g {
 		 * `LogLevel.Error` のログを出力する。
 		 * @param message ログメッセージ
 		 * @param cause 追加の補助情報。省略された場合、 `undefined`
-		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.log` を利用すべきである。
+		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.error()` や `console.log()` を利用すべきである。
 		 */
 		error(message: string, cause?: any): void {
 			this.logging.fire({
@@ -88,7 +88,7 @@ namespace g {
 		 * `LogLevel.Warn` のログを出力する。
 		 * @param message ログメッセージ
 		 * @param cause 追加の補助情報。省略された場合、 `undefined`
-		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.log` を利用すべきである。
+		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.warn()` や `console.log()` を利用すべきである。
 		 */
 		warn(message: string, cause?: any): void {
 			this.logging.fire({
@@ -103,7 +103,7 @@ namespace g {
 		 * `LogLevel.Info` のログを出力する。
 		 * @param message ログメッセージ
 		 * @param cause 追加の補助情報。省略された場合、 `undefined`
-		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.log` を利用すべきである。
+		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.info()` や `console.log()` を利用すべきである。
 		 */
 		info(message: string, cause?: any): void {
 			this.logging.fire({
@@ -118,7 +118,7 @@ namespace g {
 		 * `LogLevel.Debug` のログを出力する。
 		 * @param message ログメッセージ
 		 * @param cause 追加の補助情報。省略された場合、 `undefined`
-		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.log` を利用すべきである。
+		 * @deprecated このメソッドは非推奨である。ゲーム開発者はこのメソッドではなく単に `console.debug()` や `console.log()` を利用すべきである。
 		 */
 		debug(message: string, cause?: any): void {
 			this.logging.fire({
