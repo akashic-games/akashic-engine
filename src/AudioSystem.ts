@@ -206,8 +206,9 @@ namespace g {
 				if (this._suppressingAudio) {
 					var audio = this._suppressingAudio;
 					this._suppressingAudio = undefined;
-					if (!audio.destroyed()) {
+					if (!audio.destroyed() && this.player._isSuppresingMusicPlay()) {
 						this.player.play(audio);
+						this.player._changeSuppressingMusicPlay(false);
 					}
 				}
 			}
@@ -225,6 +226,7 @@ namespace g {
 
 			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
 			if (this._playbackRate !== 1.0) {
+				this.player._changeSuppressingMusicPlay(true);
 				e.player.stop();
 				this._suppressingAudio = e.audio;
 			}
@@ -234,6 +236,10 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
+			if (this._suppressingAudio) {
+				this._suppressingAudio = undefined;
+				this.player._changeSuppressingMusicPlay(false);
+			}
 			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
