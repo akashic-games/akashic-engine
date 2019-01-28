@@ -55,10 +55,10 @@ namespace g {
 		_system: AudioSystem;
 
 		/**
-		 * 音楽再生を抑止中か否か。
+		 * 音声再生を抑止中か否か。
 		 * @private
 		 */
-		_suppressingMusicPlay: boolean;
+		_suppressed: boolean;
 
 		/**
 		 * `AudioPlayer` のインスタンスを生成する。
@@ -71,7 +71,7 @@ namespace g {
 			this._muted = system._muted;
 			this._playbackRate = system._playbackRate;
 			this._system = system;
-			this._suppressingMusicPlay = false;
+			this._suppressed = false;
 		}
 
 		/**
@@ -93,13 +93,13 @@ namespace g {
 		 *
 		 * 停止後、 `this.stopped` がfireされる。
 		 * 再生中でない場合、何もしない(`stopped` もfireされない)。
-		 * 音楽の抑止中は再生中とし、`currentAudio` はクリアしない。
+		 * 音声の抑止中は再生中とし、`currentAudio` はクリアしない。
 		 */
 		stop(): void {
 			var audio = this.currentAudio;
 			if (!audio)
 				return;
-			if (!this._suppressingMusicPlay)
+			if (!this._suppressed)
 				this.currentAudio = undefined;
 			this.stopped.fire({
 				player: this,
@@ -183,19 +183,19 @@ namespace g {
 		}
 
 		/**
-		 * 音楽再生の抑止状態を変更する。
-		 * @param isSuppressing
+		 * 音声再生の抑止状態を変更する。
+		 * @param isSuppressed
 		 */
-		_changeSuppressingMusicPlay(isSuppressing: boolean): void {
-			this._suppressingMusicPlay = isSuppressing;
+		_changeSuppressed(isSuppressed: boolean): void {
+			this._suppressed = isSuppressed;
 		}
 
 		/**
-		 * 音楽再生を抑止中か否か。
+		 * 音声再生を抑止中か否か。
 		 * @private
 		 */
-		_isSuppresingMusicPlay(): boolean {
-			return this._suppressingMusicPlay;
+		_isSuppressed(): boolean {
+			return this._suppressed;
 		}
 	}
 }
