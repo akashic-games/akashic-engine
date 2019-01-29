@@ -145,9 +145,9 @@ namespace g {
 		}
 
 		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			if (this.player.currentAudio && this.player.currentAudio.id === asset.id)
-				return [this.player];
-			return [];
+			if (this.player.currentAudio && this.player.currentAudio.id !== asset.id)
+				return [];
+			return [this.player];
 		}
 
 		createPlayer(): AudioPlayer {
@@ -237,7 +237,7 @@ namespace g {
 			if (this._suppressingAudio) {
 				this._suppressingAudio = undefined;
 			}
-			if (this._destroyRequestedAssets[e.audio.id]) {
+			if (e.audio && this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
 			}

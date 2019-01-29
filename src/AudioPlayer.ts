@@ -89,8 +89,6 @@ namespace g {
 		 */
 		stop(): void {
 			var audio = this.currentAudio;
-			if (!audio)
-				return;
 			this.currentAudio = undefined;
 			this.stopped.fire({
 				player: this,
