@@ -145,10 +145,6 @@ namespace g {
 		}
 
 		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			// pdi-browser の HTMLAudioPlayer#stop もしくは、WebAudioPlayer#stop で AudioPlayer.currentAudio が存在しない場合は、
-			// AudioPlayer#stop が呼ばれないため、_suppressingAudio を代入して呼び出せるようにする。
-			if (this._suppressingAudio && !this.player.currentAudio)
-				this.player.currentAudio = this._suppressingAudio;
 			if (this.player.currentAudio && this.player.currentAudio.id === asset.id)
 				return [this.player];
 			return [];
