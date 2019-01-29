@@ -67,7 +67,7 @@ describe("test AudioPlayer", function() {
 		var system = game.audio["sound"];
 		var asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
 		var player = system.createPlayer();
-
+		player.currentAudio = asset;
 		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
 		expect(player._playbackRate).toBe(0.3);
