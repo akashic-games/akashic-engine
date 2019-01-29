@@ -67,7 +67,7 @@ describe("test AudioPlayer", function() {
 		var system = game.audio["sound"];
 		var asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
 		var player = system.createPlayer();
-		player.currentAudio = asset;
+
 		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
 		expect(player._playbackRate).toBe(0.3);
@@ -128,18 +128,21 @@ describe("test AudioPlayer", function() {
 		expect(player1._playbackRate).toBe(0.4);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeFalsy();
 
 		// 非等倍再生時、開始直後に止まる
 		player1.stop();
 		resetCalledCount();
 		player1.play(asset);
 		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(1);
+		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeTruthy();
 
 		// 等倍再生に戻すと、再生され直す
 		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(2);
-		expect(stoppedCalled).toBe(1);
+		expect(playedCalled).toBe(1);
+		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeFalsy();
 
 		// 再生速度サポートの場合
 		expect(player1._playbackRate).toBe(1.0);

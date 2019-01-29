@@ -145,9 +145,9 @@ namespace g {
 		}
 
 		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			if (this.player.currentAudio && this.player.currentAudio.id !== asset.id)
-				return [];
-			return [this.player];
+			if (this.player.currentAudio && this.player.currentAudio.id === asset.id)
+				return [this.player];
+			return [];
 		}
 
 		createPlayer(): AudioPlayer {
@@ -207,7 +207,7 @@ namespace g {
 					var audio = this._suppressingAudio;
 					this._suppressingAudio = undefined;
 					if (!audio.destroyed()) {
-						this.player.play(audio);
+						this.player._changeMuted(false);
 					}
 				}
 			}
@@ -223,9 +223,12 @@ namespace g {
 			if (e.player._supportsPlaybackRate())
 				return;
 
+			if (e.player._muted)
+				e.player._changeMuted(false);
+
 			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
 			if (this._playbackRate !== 1.0) {
-				e.player.stop();
+				e.player._changeMuted(true);
 				this._suppressingAudio = e.audio;
 			}
 		}
@@ -237,7 +240,7 @@ namespace g {
 			if (this._suppressingAudio) {
 				this._suppressingAudio = undefined;
 			}
-			if (e.audio && this._destroyRequestedAssets[e.audio.id]) {
+			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
 			}
