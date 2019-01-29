@@ -55,12 +55,6 @@ namespace g {
 		_system: AudioSystem;
 
 		/**
-		 * 音声再生を抑止中か否か。
-		 * @private
-		 */
-		_suppressed: boolean;
-
-		/**
 		 * `AudioPlayer` のインスタンスを生成する。
 		 */
 		constructor(system: AudioSystem) {
@@ -71,7 +65,6 @@ namespace g {
 			this._muted = system._muted;
 			this._playbackRate = system._playbackRate;
 			this._system = system;
-			this._suppressed = false;
 		}
 
 		/**
@@ -93,14 +86,12 @@ namespace g {
 		 *
 		 * 停止後、 `this.stopped` がfireされる。
 		 * 再生中でない場合、何もしない(`stopped` もfireされない)。
-		 * 音声の抑止中は再生中とし、`currentAudio` はクリアしない。
 		 */
 		stop(): void {
 			var audio = this.currentAudio;
 			if (!audio)
 				return;
-			if (!this._suppressed)
-				this.currentAudio = undefined;
+			this.currentAudio = undefined;
 			this.stopped.fire({
 				player: this,
 				audio: audio
@@ -180,22 +171,6 @@ namespace g {
 		 */
 		_onVolumeChanged(): void {
 			// nothing to do
-		}
-
-		/**
-		 * 音声再生の抑止状態を変更する。
-		 * @param isSuppressed
-		 */
-		_changeSuppressed(isSuppressed: boolean): void {
-			this._suppressed = isSuppressed;
-		}
-
-		/**
-		 * 音声再生を抑止中か否か。
-		 * @private
-		 */
-		_isSuppressed(): boolean {
-			return this._suppressed;
 		}
 	}
 }

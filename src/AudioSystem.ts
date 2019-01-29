@@ -145,6 +145,10 @@ namespace g {
 		}
 
 		findPlayers(asset: AudioAsset): AudioPlayer[] {
+			// pdi-browser の HTMLAudioPlayer#stop もしくは、WebAudioPlayer#stop で AudioPlayer.currentAudio が存在しない場合は、
+			// AudioPlayer#stop が呼ばれないため、_suppressingAudio を代入して呼び出せるようにする。
+			if (this._suppressingAudio && !this.player.currentAudio)
+				this.player.currentAudio = this._suppressingAudio;
 			if (this.player.currentAudio && this.player.currentAudio.id === asset.id)
 				return [this.player];
 			return [];
@@ -206,9 +210,8 @@ namespace g {
 				if (this._suppressingAudio) {
 					var audio = this._suppressingAudio;
 					this._suppressingAudio = undefined;
-					if (!audio.destroyed() && this.player._isSuppressed()) {
+					if (!audio.destroyed()) {
 						this.player.play(audio);
-						this.player._changeSuppressed(false);
 					}
 				}
 			}
@@ -226,7 +229,6 @@ namespace g {
 
 			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
 			if (this._playbackRate !== 1.0) {
-				this.player._changeSuppressed(true);
 				e.player.stop();
 				this._suppressingAudio = e.audio;
 			}
@@ -238,7 +240,6 @@ namespace g {
 		_onPlayerStopped(e: AudioPlayerEvent): void {
 			if (this._suppressingAudio) {
 				this._suppressingAudio = undefined;
-				this.player._changeSuppressed(false);
 			}
 			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
