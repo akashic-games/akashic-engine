@@ -223,9 +223,6 @@ namespace g {
 			if (e.player._supportsPlaybackRate())
 				return;
 
-			if (e.player._muted)
-				e.player._changeMuted(false);
-
 			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
 			if (this._playbackRate !== 1.0) {
 				e.player._changeMuted(true);
@@ -239,6 +236,7 @@ namespace g {
 		_onPlayerStopped(e: AudioPlayerEvent): void {
 			if (this._suppressingAudio) {
 				this._suppressingAudio = undefined;
+				this.player._changeMuted(false);
 			}
 			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
