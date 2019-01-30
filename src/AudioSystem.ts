@@ -320,7 +320,7 @@ namespace g {
 			if (e.player._supportsPlaybackRate())
 				return;
 
-			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
+			// 再生速度非対応の場合のフォールバック: 鳴らさず即ミュートにする
 			if (this._playbackRate !== 1.0) {
 				e.player.stop();
 			}
