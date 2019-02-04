@@ -123,23 +123,26 @@ describe("test AudioPlayer", function() {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音は止めない
+		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音はミュートにしない
 		system._setPlaybackRate(0.4);
 		expect(player1._playbackRate).toBe(0.4);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeFalsy();
 
-		// 非等倍再生時、開始直後に止まる
+		// 非等倍再生時、開始直後にミュートとなる
 		player1.stop();
 		resetCalledCount();
 		player1.play(asset);
 		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(1);
+		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeTruthy();
 
 		// 等倍再生に戻すと、再生され直す
 		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(2);
-		expect(stoppedCalled).toBe(1);
+		expect(playedCalled).toBe(1);
+		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeFalsy();
 
 		// 再生速度サポートの場合
 		expect(player1._playbackRate).toBe(1.0);

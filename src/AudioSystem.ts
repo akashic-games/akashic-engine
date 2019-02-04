@@ -201,13 +201,13 @@ namespace g {
 		 * @private
 		 */
 		_onUnsupportedPlaybackRateChanged(): void {
-			// 再生速度非対応の場合のフォールバック: 鳴らそうとして止めていた音があれば鳴らし直す
+			// 再生速度非対応の場合のフォールバック: 鳴らそうとしてミュートしていた音があれば鳴らし直す
 			if (this._playbackRate === 1.0) {
 				if (this._suppressingAudio) {
 					var audio = this._suppressingAudio;
 					this._suppressingAudio = undefined;
 					if (!audio.destroyed()) {
-						this.player.play(audio);
+						this.player._changeMuted(false);
 					}
 				}
 			}
@@ -223,9 +223,9 @@ namespace g {
 			if (e.player._supportsPlaybackRate())
 				return;
 
-			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
+			// 再生速度非対応の場合のフォールバック: 鳴らさず即ミュートにする
 			if (this._playbackRate !== 1.0) {
-				e.player.stop();
+				e.player._changeMuted(true);
 				this._suppressingAudio = e.audio;
 			}
 		}
@@ -234,6 +234,10 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
+			if (this._suppressingAudio) {
+				this._suppressingAudio = undefined;
+				this.player._changeMuted(false);
+			}
 			if (this._destroyRequestedAssets[e.audio.id]) {
 				delete this._destroyRequestedAssets[e.audio.id];
 				e.audio.destroy();
