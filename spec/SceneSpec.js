@@ -245,6 +245,7 @@ describe("test Scene", function() {
 		}, 0);
 	});
 
+
 	it("prefetch - called twice", function (done) {
 		var game = new mock.Game({ width: 320, height: 320, assets: assetsConfiguration });
 		var scene = new g.Scene({
@@ -253,7 +254,7 @@ describe("test Scene", function() {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.add(done);
+		scene._ready.add(() => {done()});
 		scene.prefetch();
 		scene.prefetch();
 		game.resourceFactory.flushDelayedAssets();
@@ -267,12 +268,10 @@ describe("test Scene", function() {
 		var scene = new g.Scene({game: game});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.add(done);
+		scene._ready.add(() =>{done()});
 		scene.prefetch();
 		game.resourceFactory.flushDelayedAssets();
-		setTimeout(function () {
-			scene._load();
-		}, 0);
+		setTimeout(() => {scene._load()}, 0);
 	});
 
 	// prefetch()テストメモ
@@ -567,7 +566,7 @@ describe("test Scene", function() {
 		scene.destroy();
 		game.resourceFactory.flushDelayedAssets();
 
-		setTimeout(done, 0);
+		setTimeout(() => {done()}, 0);
 	});
 
 	it("handles asset loading failure", function(done) {

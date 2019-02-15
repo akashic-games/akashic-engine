@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.4.11
+
+不具合修正
+ * 早送り中に `g.AudioAsset#stop` の実行により停止されたオーディオが早送り終了後に再生されてしまう問題を修正。
+
 ## 2.4.10
 
 その他変更
@@ -8,7 +13,7 @@
 ### ゲーム開発者への影響
 
  * `g.Logger` の各ログ出力メソッドを非推奨に
-    * `g.Logger#error()` `g.Logger#warn()` `g.Logger#info()` `g.Logger#debug()` を利用している場合、呼び出し箇所を `console` の各メソッドに置き換えるか、 `Game` に紐づいた `Logger#logging.add()` に `console.log()` を出力する関数を登録してください。 
+    * `g.Logger#error()` `g.Logger#warn()` `g.Logger#info()` `g.Logger#debug()` を利用している場合、呼び出し箇所を `console` の各メソッドに置き換えるか、 `Game` に紐づいた `Logger#logging.add()` に `console.log()` を出力する関数を登録してください。
 
 ### 非推奨機能の変更
 
