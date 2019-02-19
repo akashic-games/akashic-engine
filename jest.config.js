@@ -20,7 +20,7 @@ module.exports = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: ["../lib/main.node.js"],
+  collectCoverageFrom: ["lib/main.node.js"],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -32,10 +32,10 @@ module.exports = {
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
-     "json",
-     "text",
-     "lcov",
-     "clover"
+  // "json",
+  // "text",
+   "lcov"
+  // "clover"
   ],
 
   // An object that configures minimum threshold enforcement for coverage results
@@ -108,7 +108,7 @@ module.exports = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  rootDir: "./spec/",
+  rootDir: "./",
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
@@ -119,7 +119,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles : ["./helpers/mock.js", "./helpers/customMatchers.js", "./helpers/skeleton.js"],
+  setupFiles : ["./spec/helpers/mock.js", "./spec/helpers/customMatchers.js", "./spec/helpers/skeleton.js"],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
