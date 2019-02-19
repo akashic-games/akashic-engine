@@ -245,7 +245,6 @@ describe("test Scene", function() {
 		}, 0);
 	});
 
-
 	it("prefetch - called twice", function (done) {
 		var game = new mock.Game({ width: 320, height: 320, assets: assetsConfiguration });
 		var scene = new g.Scene({
