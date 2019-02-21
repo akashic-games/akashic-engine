@@ -98,6 +98,6 @@ describe("Collision.withinAreas()", function() {
 	it("Miss Distance", function() {
 		expect(g.Collision.withinAreas(area1, area1, 0)).toBe(true);
 		expect(g.Collision.withinAreas(area2, area3)).toBe(false);
-		expect(g.Collision.withinAreas(area2, area3), -1).toBe(false);
+		expect(g.Collision.withinAreas(area2, area3 -1)).toBe(false);
 	});
 });
