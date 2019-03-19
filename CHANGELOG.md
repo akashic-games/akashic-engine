@@ -1,5 +1,8 @@
 # ChangeLog
 
+## Unreleased changes
+* 内部で使用しているテストフレームワークの変更
+
 ## 2.4.11
 
 不具合修正
