@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 2.4.12
 * 内部で使用しているテストフレームワークの変更
 
 ## 2.4.11
