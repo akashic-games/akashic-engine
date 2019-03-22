@@ -310,6 +310,11 @@ namespace g {
 			var players = this.players;
 			for (var i = 0; i < players.length; ++i) {
 				players[i]._changePlaybackRate(this._playbackRate);
+
+				// 再生速度非対応の場合のフォールバック: 即止める
+				if (this._playbackRate !== 1.0) {
+					players[i].stop();
+				}
 			}
 		}
 
@@ -320,9 +325,10 @@ namespace g {
 			if (e.player._supportsPlaybackRate())
 				return;
 
-			// 再生速度非対応の場合のフォールバック: 即ミュートにする。
-			const isMuted = this._playbackRate !== 1.0;
-			this._setMuted(isMuted);
+			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
+			if (this._playbackRate !== 1.0) {
+				e.player.stop();
+			}
 		}
 
 		/**
