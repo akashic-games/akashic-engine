@@ -196,11 +196,11 @@ describe("test AudioPlayer", function() {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音は止めない
+		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音を止める
 		system._setPlaybackRate(0.6);
 		expect(player1._playbackRate).toBe(0.6);
 		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
+		expect(stoppedCalled).toBe(1);
 
 		// 非等倍再生時、開始直後に止まる
 		player1.stop();
