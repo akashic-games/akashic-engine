@@ -142,7 +142,7 @@ module.exports = {
   //   "**/?(*.)+(spec|test).[tj]s?(x)"
   // ],
   // testMatch: ["./**/*[sS]pec.js"],
-  testMatch: ["./**/SceneSpec.js"],
+  testMatch: ["./**/*[sS]pec.js"],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
