@@ -312,7 +312,7 @@ namespace g {
 				players[i]._changePlaybackRate(this._playbackRate);
 
 				// 再生速度非対応の場合のフォールバック: 即止める
-				if (this._playbackRate !== 1.0) {
+				if (!players[i]._supportsPlaybackRate() && this._playbackRate !== 1.0) {
 					players[i].stop();
 				}
 			}
