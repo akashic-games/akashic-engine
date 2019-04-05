@@ -327,10 +327,12 @@ namespace g {
 				throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 			switch (conf.type) {
 			case "image":
-				return resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+				var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+				asset.initialize(<ImageAssetHint>conf.hint);
+				return asset;
 			case "audio":
 				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, conf.hint);
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":

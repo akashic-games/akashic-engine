@@ -80,6 +80,7 @@ namespace g {
 	export abstract class ImageAsset extends Asset {
 		width: number;
 		height: number;
+		hint: ImageAssetHint;
 
 		constructor(id: string, assetPath: string, width: number, height: number) {
 			super(id, assetPath);
@@ -88,6 +89,10 @@ namespace g {
 		}
 
 		abstract asSurface(): Surface;
+
+		initialize(hint: ImageAssetHint): void {
+			this.hint = hint;
+		}
 	}
 
 	/**
