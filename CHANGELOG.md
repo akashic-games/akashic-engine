@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 2.4.14
+ * `ImageAsset#hint: ImageAssetHint` `ImageAsset#initialize()` を追加
+
 ## 2.4.13
 
 その他変更

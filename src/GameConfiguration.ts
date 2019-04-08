@@ -40,9 +40,9 @@ namespace g {
 		useRealSize?: boolean;
 
 		/**
-		 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。`type` が `"audio"` の場合にのみ存在。
+		 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。`type` が `"audio"` または `"image"` の場合にのみ存在。
 		 */
-		hint?: AudioAssetHint;
+		hint?: AudioAssetHint | ImageAssetHint;
 	}
 
 	/**
@@ -115,6 +115,13 @@ namespace g {
 	 */
 	export interface AudioAssetHint {
 		streaming?: boolean;
+	}
+
+	/**
+	 * ImageAssetの設定を表すインターフェース。
+	 */
+	export interface ImageAssetHint {
+		untainted?: boolean;
 	}
 
 	/**

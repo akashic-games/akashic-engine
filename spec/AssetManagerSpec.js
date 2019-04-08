@@ -26,6 +26,9 @@ describe("test AssetManager", function() {
 				virtualPath: "path2.png",
 				width: 1,
 				height: 1,
+				hint: {
+					untainted: true
+				}
 			},
 			zoo: {
 				type: "audio",
@@ -204,6 +207,7 @@ describe("test AssetManager", function() {
 		var handler = {
 			_onAssetLoad: function (a) {
 				expect(a.id).toBe("foo");
+				expect(a.hint).toBeUndefined();
 				expect(a.destroyed()).toBe(false);
 				manager.unrefAsset("foo");
 				expect(a.destroyed()).toBe(true);
@@ -224,7 +228,8 @@ describe("test AssetManager", function() {
 
 		var handler = {
 			_onAssetLoad: function (a) {
-				expect(a.id).toBe("foo");
+				expect(a.id).toBe("bar");
+				expect(a.hint).toEqual({untainted: true});
 				done();
 			},
 			_onAssetError: function (a, err, mgr) {
@@ -232,7 +237,7 @@ describe("test AssetManager", function() {
 				done();
 			}
 		};
-		manager.requestAssets(["foo"], handler);
+		manager.requestAssets(["bar"], handler);
 	});
 
 	it("loads assets multiple times", function (done) {
