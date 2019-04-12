@@ -12,13 +12,14 @@ namespace g {
 		snapshot?: any;
 
 		/**
-		 * ローカル起動時引数。
+		 * 起動引数。
 		 */
 		args?: any;
 
 		/**
 		 * グローバル起動引数。
 		 * `snapshot` が指定される場合は常に指定されない。
+		 * @deprecated 非推奨である。ゲーム開発者はこの値を利用するべきではない。
 		 */
 		globalArgs?: any;
 	}
