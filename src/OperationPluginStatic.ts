@@ -1,18 +1,20 @@
-namespace g {
+import { Game } from "./Game";
+import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
+import { OperationPlugin } from "./OperationPlugin";
+
+/**
+ * Operation Pluginの実装すべきstatic methodについての定義。
+ */
+export interface OperationPluginStatic {
 	/**
-	 * Operation Pluginの実装すべきstatic methodについての定義。
+	 * 実行環境がこのpluginをサポートしているか返す。
 	 */
-	export interface OperationPluginStatic {
-		/**
-		 * 実行環境がこのpluginをサポートしているか返す。
-		 */
-		isSupported: () => boolean;
-		/**
-		 * OperationPluginを生成する。
-		 * @param game このプラグインに紐づく `Game`
-		 * @param viewInfo このプラグインが参照すべきviewの情報。環境によっては `null` でありうる。
-		 * @param option game.jsonに指定されたこのプラグイン向けのオプション
-		 */
-		new (game: Game, viewInfo: OperationPluginViewInfo, option?: any): OperationPlugin;
-	}
+	isSupported: () => boolean;
+	/**
+	 * OperationPluginを生成する。
+	 * @param game このプラグインに紐づく `Game`
+	 * @param viewInfo このプラグインが参照すべきviewの情報。環境によっては `null` でありうる。
+	 * @param option game.jsonに指定されたこのプラグイン向けのオプション
+	 */
+	new (game: Game, viewInfo: OperationPluginViewInfo, option?: any): OperationPlugin;
 }

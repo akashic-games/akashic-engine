@@ -1,16 +1,16 @@
-namespace g {
-	export class RequireCachedValue implements RequireCacheable {
-		_value: any;
+import { RequireCacheable } from "./RequireCacheable";
 
-		constructor(value: any) {
-			this._value = value;
-		}
+export class RequireCachedValue implements RequireCacheable {
+	_value: any;
 
-		/**
-		 * @private
-		 */
-		_cachedValue(): any {
-			return this._value;
-		}
+	constructor(value: any) {
+		this._value = value;
+	}
+
+	/**
+	 * @private
+	 */
+	_cachedValue(): any {
+		return this._value;
 	}
 }

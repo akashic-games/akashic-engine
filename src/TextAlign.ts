@@ -1,20 +1,17 @@
-namespace g {
+/**
+ * テキストの描画位置。
+ */
+export enum TextAlign {
 	/**
-	 * テキストの描画位置。
+	 * 左寄せ。
 	 */
-	export enum TextAlign {
-		/**
-		 * 左寄せ。
-		 */
-		Left,
-		/**
-		 * 中央寄せ。
-		 */
-		Center,
-		/**
-		 * 右寄せ。
-		 */
-		Right
-	}
-
+	Left,
+	/**
+	 * 中央寄せ。
+	 */
+	Center,
+	/**
+	 * 右寄せ。
+	 */
+	Right
 }

@@ -1,18 +1,16 @@
 {
     "compilerOptions": {
-        "module": "system",
+        "module": "commonjs",
         "target": "es5",
         "lib": ["es5"],
         "noImplicitAny": true,
         "declaration": true,
         "outDir": "tmp",
-        "outFile": "tmp/tmp.js",
         "rootDir": ".",
         "sourceMap": false,
         "types": []
     },
-    "files": [
-        "typings/console.d.ts",
-        "src/index.ts"
+    "include": [
+        "src/**/*.ts"
     ]
 }
