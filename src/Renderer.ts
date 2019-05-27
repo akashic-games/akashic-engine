@@ -1,7 +1,7 @@
 import { Game } from "./Game";
 import { Camera } from "./Camera";
 import { Surface } from "./Surface";
-import { TextBaseline } from "./SystemLabel";
+import { TextBaseline } from "./TextBaseline";
 import { TextAlign } from "./TextAlign";
 import { FontFamily } from "./FontFamily";
 import { CompositeOperation } from "./CompositeOperation";

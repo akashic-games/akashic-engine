@@ -60,6 +60,7 @@ export * from "./OperationPluginManager";
 export * from "./executeEnvironmentVariables";
 export * from "./DynamicFont";
 export * from "./SurfaceAtlasSet";
+export * from "./TextBaseline";
 
 // non-ordered files
 export * from "./AudioSystemManager";
