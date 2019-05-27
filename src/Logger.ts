@@ -1,4 +1,3 @@
-import { Game } from "./Game";
 import { Destroyable } from "./Destroyable";
 import { Trigger } from "./Trigger";
 
@@ -26,10 +25,6 @@ export interface Log {
 	 */
 	level: LogLevel;
 	/**
-	 * ログの出力元である `Game` 。
-	 */
-	game: Game;
-	/**
 	 * ログ内容。
 	 */
 	message: string;
@@ -44,10 +39,6 @@ export interface Log {
  */
 export class Logger implements Destroyable {
 	/**
-	 * この `Logger` に紐づく `Game` 。
-	 */
-	game: Game;
-	/**
 	 * ログ出力イベント。
 	 * ログ出力は、このイベントをfireして各ハンドラにログ内容を渡すことで実現される。
 	 */
@@ -55,21 +46,18 @@ export class Logger implements Destroyable {
 
 	/**
 	 * `Logger` のインスタンスを生成する。
-	 * @param game この `Logger` に紐づく `Game` 。
 	 */
-	constructor(game: Game) {
-		this.game = game;
+	constructor() {
 		this.logging = new Trigger<Log>();
 	}
 
 	destroy(): void {
-		this.game = undefined;
 		this.logging.destroy();
 		this.logging = undefined;
 	}
 
 	destroyed(): boolean {
-		return !this.game;
+		return !this.logging;
 	}
 
 	/**
@@ -80,7 +68,6 @@ export class Logger implements Destroyable {
 	 */
 	error(message: string, cause?: any): void {
 		this.logging.fire({
-			game: this.game,
 			level: LogLevel.Error,
 			message: message,
 			cause: cause
@@ -95,7 +82,6 @@ export class Logger implements Destroyable {
 	 */
 	warn(message: string, cause?: any): void {
 		this.logging.fire({
-			game: this.game,
 			level: LogLevel.Warn,
 			message: message,
 			cause: cause
@@ -110,7 +96,6 @@ export class Logger implements Destroyable {
 	 */
 	info(message: string, cause?: any): void {
 		this.logging.fire({
-			game: this.game,
 			level: LogLevel.Info,
 			message: message,
 			cause: cause
@@ -125,7 +110,6 @@ export class Logger implements Destroyable {
 	 */
 	debug(message: string, cause?: any): void {
 		this.logging.fire({
-			game: this.game,
 			level: LogLevel.Debug,
 			message: message,
 			cause: cause

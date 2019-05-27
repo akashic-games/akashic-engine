@@ -544,7 +544,7 @@ export abstract class Game implements Registrable<E> {
 
 		this.external = {};
 
-		this.logger = new Logger(this);
+		this.logger = new Logger();
 		this._main = gameConfiguration.main;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
