@@ -512,7 +512,7 @@ export abstract class Game implements Registrable<E> {
 			sound: new SoundAudioSystem("sound", this)
 		};
 		this.defaultAudioSystemId = "sound";
-		this.storage = new Storage(this);
+		this.storage = new Storage();
 		this.assets = {};
 		this.surfaceAtlasSet = undefined;
 

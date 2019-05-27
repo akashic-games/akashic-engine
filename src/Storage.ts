@@ -1,5 +1,4 @@
 import { StorageLoadError } from "./errors";
-import { Game } from "./Game";
 
 // TODO: (GAMEDEV-1549) コメント整理
 /**
@@ -319,11 +318,6 @@ export class Storage {
 	/**
 	 * @private
 	 */
-	_game: Game;
-
-	/**
-	 * @private
-	 */
 	_write: (key: StorageKey, value: StorageValue, option: StorageWriteOption) => void;
 
 	/**
@@ -335,10 +329,6 @@ export class Storage {
 	 * @private
 	 */
 	_requestedKeysForJoinPlayer: StorageReadKey[];
-
-	constructor(game: Game) {
-		this._game = game;
-	}
 
 	/**
 	 * ストレージに値を書き込む。
