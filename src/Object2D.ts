@@ -1,8 +1,7 @@
 import { CompositeOperation } from "./CompositeOperation";
 import { CommonArea, CommonOffset, CommonSize } from "./commons";
-import { Matrix } from "./Matrix";
+import { Matrix, PlainMatrix } from "./Matrix";
 import { ExceptionFactory } from "./errors";
-import { Util } from "./Util";
 
 /**
  * `Object2D` のコンストラクタに渡すことができるパラメータ。
@@ -280,7 +279,7 @@ export class Object2D implements CommonArea {
 	 */
 	getMatrix(): Matrix {
 		if (! this._matrix) {
-			this._matrix = Util.createMatrix();
+			this._matrix = PlainMatrix.createPlainMatrix();
 		} else if (! this._matrix._modified) {
 			return this._matrix;
 		}

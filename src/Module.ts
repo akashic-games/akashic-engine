@@ -1,7 +1,6 @@
 import { Game } from "./Game";
 import { ExceptionFactory } from "./errors";
 import { PathUtil } from "./PathUtil";
-import { Util } from "./Util";
 import { ScriptAssetContext } from "./ScriptAssetContext";
 import { RequireCachedValue } from "./RequireCachedValue";
 import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
@@ -65,10 +64,10 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
 
 		// 2.a. LOAD_AS_FILE(Y + X)
 		if (!targetScriptAsset)
-			targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+			targetScriptAsset = _findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 		// 2.b. LOAD_AS_DIRECTORY(Y + X)
 		if (!targetScriptAsset)
-			targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+			targetScriptAsset = _findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 
 	} else {
 		// 3. LOAD_NODE_MODULES(X, dirname(Y))
@@ -86,10 +85,10 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
 			for (var i = 0; i < dirs.length; ++i) {
 				var dir = dirs[i];
 				resolvedPath = PathUtil.resolvePath(dir, path);
-				targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+				targetScriptAsset = _findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 				if (targetScriptAsset)
 					break;
-				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+				targetScriptAsset = _findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 				if (targetScriptAsset)
 					break;
 			}
@@ -115,6 +114,49 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
 		}
 	}
 	throw ExceptionFactory.createAssertionError("g._require: can not find module: " + path);
+}
+
+/**
+ * 与えられたパス文字列がファイルパスであると仮定して、対応するアセットを探す。
+ * 見つかった場合そのアセットを、そうでない場合 `undefined` を返す。
+ * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
+ *
+ * @param resolvedPath パス文字列
+ * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
+ */
+export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset {
+	if (liveAssetPathTable.hasOwnProperty(resolvedPath))
+		return liveAssetPathTable[resolvedPath];
+	if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js"))
+		return liveAssetPathTable[resolvedPath + ".js"];
+	return undefined;
+}
+
+/**
+ * 与えられたパス文字列がディレクトリパスであると仮定して、対応するアセットを探す。
+ * 見つかった場合そのアセットを、そうでない場合 `undefined` を返す。
+ * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
+ * ディレクトリ内に package.json が存在する場合、package.json 自体もアセットとして
+ * `liveAssetPathTable` から参照可能でなければならないことに注意。
+ *
+ * @param resolvedPath パス文字列
+ * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
+ */
+export function _findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset {
+	var path: string;
+	path = resolvedPath + "/package.json";
+	if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path] instanceof TextAsset) {
+		var pkg = JSON.parse((<TextAsset>liveAssetPathTable[path]).data);
+		if (pkg && typeof pkg.main === "string") {
+			var asset = _findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
+			if (asset)
+				return asset;
+		}
+	}
+	path = resolvedPath + "/index.js";
+	if (liveAssetPathTable.hasOwnProperty(path))
+		return liveAssetPathTable[path];
+	return undefined;
 }
 
 /**

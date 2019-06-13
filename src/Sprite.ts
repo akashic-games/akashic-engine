@@ -1,10 +1,11 @@
 import { Surface } from "./Surface";
 import { Asset } from "./Asset";
 import { EParameterObject, E } from "./E";
-import { Matrix } from "./Matrix";
-import { Util } from "./Util";
+import { Matrix, PlainMatrix } from "./Matrix";
 import { Renderer } from "./Renderer";
 import { Camera } from "./Camera";
+import {ImageAsset} from "./ImageAsset";
+import { _migrateAnimatingHandler, _setupAnimatingHandler } from "./AnimatingHandler";
 
 /**
  * `Sprite` のコンストラクタに渡すことができるパラメータ。
@@ -101,7 +102,7 @@ export class Sprite extends E {
 	 */
 	constructor(param: SpriteParameterObject) {
 		super(param);
-		this.surface = Util.asSurface(param.src);
+		this.surface = ImageAsset.asSurface(param.src);
 		if (!("width" in param))
 			this.width = this.surface.width;
 		if (!("height" in param))
@@ -112,7 +113,7 @@ export class Sprite extends E {
 		this.srcY = param.srcY || 0;
 		this._stretchMatrix = undefined;
 		this._beforeSurface = this.surface;
-		Util.setupAnimatingHandler(this, this.surface);
+		_setupAnimatingHandler(this, this.surface);
 		this._invalidateSelf();
 	}
 
@@ -201,11 +202,11 @@ export class Sprite extends E {
 		if (this.width === this.srcWidth && this.height === this.srcHeight) {
 			this._stretchMatrix = undefined;
 		} else {
-			this._stretchMatrix = Util.createMatrix();
+			this._stretchMatrix = PlainMatrix.createPlainMatrix();
 			this._stretchMatrix.scale(this.width / this.srcWidth, this.height / this.srcHeight);
 		}
 		if (this.surface !== this._beforeSurface) {
-			Util.migrateAnimatingHandler(this, this._beforeSurface, this.surface);
+			_migrateAnimatingHandler(this, this._beforeSurface, this.surface);
 			this._beforeSurface = this.surface;
 		}
 	}

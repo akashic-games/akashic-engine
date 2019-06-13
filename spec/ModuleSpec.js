@@ -675,4 +675,44 @@ describe("test Module", function() {
 		});
 		game._startLoadingGlobalAssets();
 	});
+
+	it("_findAssetByPathAsFile", function () {
+		var game = new mock.Game({ width: 320, height: 320 });
+		var liveAssetPathTable = {
+			"foo/bar.js": game.resourceFactory.createScriptAsset("bar", "/foo/bar.js"),
+			"zoo.js": game.resourceFactory.createScriptAsset("zoo", "/zoo.js"),
+		};
+		expect(g._findAssetByPathAsFile("foo/bar.js", liveAssetPathTable)).toBe(liveAssetPathTable["foo/bar.js"]);
+		expect(g._findAssetByPathAsFile("foo/bar", liveAssetPathTable)).toBe(liveAssetPathTable["foo/bar.js"]);
+		expect(g._findAssetByPathAsFile("zoo", liveAssetPathTable)).toBe(liveAssetPathTable["zoo.js"]);
+		expect(g._findAssetByPathAsFile("zoo/roo.js", liveAssetPathTable)).toBe(undefined);
+	});
+
+	it("_findAssetByPathDirectory", function (done) {
+		var game = new mock.Game({ width: 320, height: 320 });
+		var pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
+		var liveAssetPathTable = {
+			"foo/root.js": game.resourceFactory.createScriptAsset("root", "/foo/root.js"),
+			"foo/package.json": pkgJsonAsset,
+			"foo/index.js": game.resourceFactory.createScriptAsset("fooindex", "/foo/index.js"),
+			"bar/index.js": game.resourceFactory.createScriptAsset("barindex", "/bar/index.js"),
+			"zoo/roo/notMain.js": game.resourceFactory.createScriptAsset("zooRooNotMain", "/zoo/roo/notMain.js"),
+		};
+		game.resourceFactory.scriptContents = {
+			"foo/package.json": '{ "main": "root.js" }',
+		};
+		pkgJsonAsset._load({
+			_onAssetError: function (e) { throw e; },
+			_onAssetLoad: function (a) {
+				try {
+					expect(g._findAssetByPathAsDirectory("foo", liveAssetPathTable)).toBe(liveAssetPathTable["foo/root.js"]);
+					expect(g._findAssetByPathAsDirectory("bar", liveAssetPathTable)).toBe(liveAssetPathTable["bar/index.js"]);
+					expect(g._findAssetByPathAsDirectory("zoo/roo", liveAssetPathTable)).toBe(undefined);
+					expect(g._findAssetByPathAsDirectory("tee", liveAssetPathTable)).toBe(undefined);
+				} finally {
+					done();
+				}
+			}
+		});
+	});
 });

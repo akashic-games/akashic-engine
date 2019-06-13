@@ -4,7 +4,6 @@ import { ImageAsset } from "./ImageAsset";
 import { CommonRect, CommonArea, CommonOffset } from "./commons";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { Renderer } from "./Renderer";
-import { Util } from "./Util";
 import { EntityStateFlags } from "./EntityStateFlags";
 import { Camera } from "./Camera";
 import { Matrix } from "./Matrix";
@@ -124,7 +123,7 @@ export class Pane extends CacheableE {
 		super(param);
 		this._oldWidth = param.width;
 		this._oldHeight = param.height;
-		this.backgroundImage = Util.asSurface(param.backgroundImage);
+		this.backgroundImage = ImageAsset.asSurface(param.backgroundImage);
 		this.backgroundEffector = param.backgroundEffector;
 		this._shouldRenderChildren = false;
 		this._padding = param.padding;
