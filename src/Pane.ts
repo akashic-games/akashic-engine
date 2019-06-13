@@ -1,6 +1,6 @@
 import { CacheableEParameterObject, CacheableE } from "./CacheableE";
 import { Surface } from "./Surface";
-import { ImageAsset } from "./Asset";
+import { ImageAsset } from "./ImageAsset";
 import { CommonRect, CommonArea, CommonOffset } from "./commons";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { Renderer } from "./Renderer";

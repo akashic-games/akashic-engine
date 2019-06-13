@@ -5,9 +5,11 @@ import { E } from "./E";
 import { Camera } from "./Camera";
 import { Sprite } from "./Sprite";
 import { ExceptionFactory } from "./errors";
-import { Asset, ImageAsset, TextAsset } from "./Asset";
+import { Asset } from "./Asset";
 import { Surface } from "./Surface";
 import { PathUtil } from "./PathUtil";
+import { ImageAsset } from "./ImageAsset";
+import { TextAsset } from "./TextAsset";
 
 /**
  * ユーティリティ。

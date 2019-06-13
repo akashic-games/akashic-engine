@@ -4,11 +4,15 @@ import { SurfaceAtlas } from "./SurfaceAtlasSet";
 import { GlyphFactory } from "./GlyphFactory";
 import { FontWeight } from "./DynamicFont";
 import { FontFamily } from "./FontFamily";
-import { ScriptAsset, TextAsset, AudioAsset, VideoAsset, ImageAsset } from "./Asset";
 import { AudioPlayer } from "./AudioPlayer";
 import { AudioSystem } from "./AudioSystem";
 import { AudioAssetHint } from "./GameConfiguration";
 import { VideoSystem } from "./VideoSystem";
+import { ImageAsset } from "./ImageAsset";
+import { VideoAsset } from "./VideoAsset";
+import { AudioAsset } from "./AudioAsset";
+import { TextAsset } from "./TextAsset";
+import { ScriptAsset } from "./ScriptAsset";
 
 /**
  * リソースの生成を行うクラス。

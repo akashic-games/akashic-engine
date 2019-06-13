@@ -1,5 +1,5 @@
-import { VideoAsset } from "./Asset";
 import { Trigger } from "./Trigger";
+import { VideoAsset } from "./VideoAsset";
 
 export interface VideoPlayerEvent {
 	player: VideoPlayer;

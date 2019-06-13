@@ -1,4 +1,4 @@
-import { Asset, AudioAsset, VideoAsset } from "./Asset";
+import { Asset } from "./Asset";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import {
 	AudioSystemConfigurationMap, ModuleMainScriptsMap, AssetConfigurationMap, DynamicAssetConfiguration,
@@ -9,6 +9,8 @@ import { Game } from "./Game";
 import { ExceptionFactory, AssetLoadError } from "./errors";
 import { VideoSystem } from "./VideoSystem";
 import { AssetLoadErrorType } from "./AssetLoadErrorType";
+import { AudioAsset } from "./AudioAsset";
+import { VideoAsset } from "./VideoAsset";
 
 class AssetLoadingInfo {
 	asset: Asset;

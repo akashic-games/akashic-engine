@@ -1,5 +1,5 @@
 import { SpriteParameterObject, Sprite } from "./Sprite";
-import { ImageAsset } from "./Asset";
+import { ImageAsset } from "./ImageAsset";
 import { Surface } from "./Surface";
 import { Trigger } from "./Trigger";
 import { Timer } from "./Timer";
