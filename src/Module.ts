@@ -1,11 +1,13 @@
 import { Game } from "./Game";
-import { Asset, ScriptAsset, TextAsset } from "./Asset";
 import { ExceptionFactory } from "./errors";
 import { PathUtil } from "./PathUtil";
 import { Util } from "./Util";
 import { ScriptAssetContext } from "./ScriptAssetContext";
 import { RequireCachedValue } from "./RequireCachedValue";
 import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
+import { ScriptAsset } from "./ScriptAsset";
+import { TextAsset } from "./TextAsset";
+import { Asset } from "./Asset";
 
 declare var g: any;
 
