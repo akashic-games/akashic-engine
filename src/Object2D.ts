@@ -279,7 +279,7 @@ export class Object2D implements CommonArea {
 	 */
 	getMatrix(): Matrix {
 		if (! this._matrix) {
-			this._matrix = PlainMatrix.createPlainMatrix();
+			this._matrix = new PlainMatrix();
 		} else if (! this._matrix._modified) {
 			return this._matrix;
 		}

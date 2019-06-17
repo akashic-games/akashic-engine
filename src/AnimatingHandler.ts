@@ -16,12 +16,12 @@ export type AnimatingHandler = {
 /**
  * サーフェスのアニメーティングイベントへのハンドラ登録。
  *
- * これはゲームエンジンが利用するものであり、ゲーム開発者が呼び出す必要はない。
+ * これはエンジンが利用するものであり、ゲーム開発者が呼び出す必要はない。
  *
  * @param animatingHandler アニメーティングハンドラ
  * @param surface サーフェス
  */
-export function _setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: Surface): void {
+export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: Surface): void {
 	if (surface.isDynamic) {
 		surface.animatingStarted.add(animatingHandler._onAnimatingStarted, animatingHandler);
 		surface.animatingStopped.add(animatingHandler._onAnimatingStopped, animatingHandler);
@@ -34,13 +34,13 @@ export function _setupAnimatingHandler(animatingHandler: AnimatingHandler, surfa
 /**
  * アニメーティングハンドラを別のサーフェスへ移動する。
  *
- * これはゲームエンジンが利用するものであり、ゲーム開発者が呼び出す必要はない。
+ * これはエンジンが利用するものであり、ゲーム開発者が呼び出す必要はない。
  *
  * @param animatingHandler アニメーティングハンドラ
  * @param beforeSurface ハンドラ登録を解除するサーフェス
  * @param afterSurface ハンドラを登録するサーフェス
  */
-export function _migrateAnimatingHandler(animatingHandler: AnimatingHandler, beforeSurface: Surface, afterSurface: Surface): void {
+export function migrateAnimatingHandler(animatingHandler: AnimatingHandler, beforeSurface: Surface, afterSurface: Surface): void {
 	animatingHandler._onAnimatingStopped();
 
 	if (!beforeSurface.destroyed() && beforeSurface.isDynamic) {

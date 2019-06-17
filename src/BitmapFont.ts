@@ -2,7 +2,7 @@ import { Glyph, GlyphArea } from "./Glyph";
 import { Asset } from "./Asset";
 import { Surface } from "./Surface";
 import { Font } from "./Font";
-import { ImageAsset } from "./ImageAsset";
+import { SurfaceUtil } from "./SurfaceUtil";
 
 /**
  * `BitmapFont` のコンストラクタに渡すことができるパラメータ。
@@ -52,7 +52,7 @@ export class BitmapFont implements Font {
 	 * @param param `BitmapFont` に設定するパラメータ
 	 */
 	constructor(param: BitmapFontParameterObject) {
-		this.surface = ImageAsset.asSurface(param.src);
+		this.surface = SurfaceUtil.asSurface(param.src);
 		this.map = param.map;
 		this.defaultGlyphWidth = param.defaultGlyphWidth;
 		this.defaultGlyphHeight = param.defaultGlyphHeight;

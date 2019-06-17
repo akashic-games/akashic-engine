@@ -1,4 +1,4 @@
-describe("SpriteFactory", function() {
+describe("test SpriteFactory", function() {
 	var g = require('../lib/main.node.js');
 	it("createSpriteFromE", function () {
 		var runtime = skeletonRuntime();

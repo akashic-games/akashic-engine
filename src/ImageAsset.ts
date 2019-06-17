@@ -1,7 +1,6 @@
 import { Asset } from "./Asset";
 import { Surface } from "./Surface";
 import { ImageAssetHint } from "./GameConfiguration";
-import { ExceptionFactory } from "./errors";
 
 /**
  * 画像リソースを表すクラス。
@@ -16,23 +15,6 @@ export abstract class ImageAsset extends Asset {
 	width: number;
 	height: number;
 	hint: ImageAssetHint;
-
-	/**
-	 * 引数 `src` が `undefined` または `Surface` でそのまま返す。
-	 * そうでなくかつ `ImageAsset` であれば `Surface` に変換して返す。
-	 *
-	 * @param src
-	 */
-	static asSurface(src: Asset|Surface): Surface {
-		// Note: TypeScriptのtype guardを活用するため、あえて1つのifで1つの型しか判定していない
-		if (!src)
-			return <Surface>src;
-		if (src instanceof Surface)
-			return src;
-		if (src instanceof ImageAsset)
-			return src.asSurface();
-		throw ExceptionFactory.createTypeMismatchError("Surface#asSurface", "ImageAsset|Surface", src);
-	}
 
 	constructor(id: string, assetPath: string, width: number, height: number) {
 		super(id, assetPath);

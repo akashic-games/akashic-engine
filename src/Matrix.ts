@@ -114,15 +114,6 @@ export class PlainMatrix {
 	 */
 	_matrix: [number, number, number, number, number, number];
 
-	// Note: オーバーロードされているのでjsdoc省略
-	static createPlainMatrix(width?: number, height?: number, scaleX?: number, scaleY?: number, angle?: number): PlainMatrix {
-		// Note: asm.js対応環境ではasm.js対応のMatrixを生成するなどしたいため、オーバーヘッドを許容する
-		if (width === undefined)
-			return new PlainMatrix();
-
-		return new PlainMatrix(width, height, scaleX, scaleY, angle);
-	}
-
 	/**
 	 * 無変換の変換行列を表す `PlainMatrix` のインスタンスを作成する。
 	 */
