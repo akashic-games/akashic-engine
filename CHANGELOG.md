@@ -1,5 +1,17 @@
 # ChangeLog
 
+## Unreleased Changes
+* Utilにあった関数の配置(場合によっては関数名も変更)を以下のように変更します。
+  * g.Util.createSpriteFromE => g.SpriteFactory.createSpriteFromE
+  * g.Util.createSpriteFromScene => g.SpriteFactory.createSpriteFromScene
+  * g.Util.asSurface => g.SurfaceUtil.asSurface
+  * g.Util.AnimatingHandler => g.SurfaceUtil.AnimatingHandler
+  * g.Util.setupAnimatingHandler=> g.SurfaceUtil.setupAnimatingHandler
+  * g.Util.migrateAnimatingHandler=> g.SurfaceUtil.migrateAnimatingHandler
+  * g.Util.findAssetByPathAsFile => g._findAssetByPathAsFile (Module.tsに配置)
+  * g.Util.findAssetByPathDirectory => g._findAssetByPathDirectory (Module.tsに配置)
+  * g.Util.createMatrixは削除
+
 ## 2.4.14
  * `ImageAsset#hint: ImageAssetHint` `ImageAsset#initialize()` を追加
 

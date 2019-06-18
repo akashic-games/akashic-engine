@@ -5,7 +5,6 @@ import { Matrix, PlainMatrix } from "./Matrix";
 import { Renderer } from "./Renderer";
 import { Camera } from "./Camera";
 import { SurfaceUtil } from "./SurfaceUtil";
-import { migrateAnimatingHandler, setupAnimatingHandler } from "./AnimatingHandler";
 
 /**
  * `Sprite` のコンストラクタに渡すことができるパラメータ。
@@ -113,7 +112,7 @@ export class Sprite extends E {
 		this.srcY = param.srcY || 0;
 		this._stretchMatrix = undefined;
 		this._beforeSurface = this.surface;
-		setupAnimatingHandler(this, this.surface);
+		SurfaceUtil.setupAnimatingHandler(this, this.surface);
 		this._invalidateSelf();
 	}
 
@@ -206,7 +205,7 @@ export class Sprite extends E {
 			this._stretchMatrix.scale(this.width / this.srcWidth, this.height / this.srcHeight);
 		}
 		if (this.surface !== this._beforeSurface) {
-			migrateAnimatingHandler(this, this._beforeSurface, this.surface);
+			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface, this.surface);
 			this._beforeSurface = this.surface;
 		}
 	}
