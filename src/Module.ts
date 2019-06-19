@@ -124,7 +124,7 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
  * @param resolvedPath パス文字列
  * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
  */
-export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset {
+export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset | undefined {
 	if (liveAssetPathTable.hasOwnProperty(resolvedPath))
 		return liveAssetPathTable[resolvedPath];
 	if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js"))
@@ -142,11 +142,11 @@ export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable:
  * @param resolvedPath パス文字列
  * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
  */
-export function _findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset {
+export function _findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset | undefined {
 	var path: string;
 	path = resolvedPath + "/package.json";
 	if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path] instanceof TextAsset) {
-		var pkg = JSON.parse((<TextAsset>liveAssetPathTable[path]).data);
+		var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 		if (pkg && typeof pkg.main === "string") {
 			var asset = _findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 			if (asset)
