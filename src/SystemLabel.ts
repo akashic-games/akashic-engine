@@ -90,7 +90,7 @@ export interface SystemLabelParameterObject extends EParameterObject {
  * `SystemLabel` はユーザインタラクションの対象に含めるべきではない。
  * 上述のとおり、各実行環境で描画内容の同一性が保証されないためである。
  * ユーザ入力文字列を含め、 `SystemLabel` によって提示される情報は、参考程度に表示されるなどに留めるべきである。
- * 具体的には `SystemLabel` を `touchable` にする、 `Util.createSpriteFromE()` の対象に含めるなどを行うべきではない。
+ * 具体的には `SystemLabel` を `touchable` にする、 `SpriteFactory.createSpriteFromE()` の対象に含めるなどを行うべきではない。
  * ボタンのようなエンティティのキャプション部分も出来る限り `Label` を用いるべきで、 `SystemLabel` を利用するべきではない。
  *
  * また、akashic-engineは `SystemLabel` の描画順を保証しない。
