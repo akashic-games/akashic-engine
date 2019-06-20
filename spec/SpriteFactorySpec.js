@@ -1,5 +1,5 @@
 describe("test SpriteFactory", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	it("createSpriteFromE", function () {
 		var runtime = skeletonRuntime();
 		var scene = runtime.scene;

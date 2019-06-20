@@ -1,5 +1,5 @@
 describe("test OperationPluginManager", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	var mock = require("./helpers/mock");
 
 	// テスト用ダミー操作プラグイン

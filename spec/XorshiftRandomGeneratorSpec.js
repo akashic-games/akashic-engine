@@ -1,5 +1,5 @@
 describe("test XorshiftRandomGenerator", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	var spec = require('./support/randomGenerator.js').spec;
 
 	beforeEach(function() {

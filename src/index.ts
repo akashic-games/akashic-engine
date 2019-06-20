@@ -61,6 +61,13 @@ export * from "./executeEnvironmentVariables";
 export * from "./DynamicFont";
 export * from "./SurfaceAtlasSet";
 export * from "./TextBaseline";
+export * from "./ImageAsset";
+export * from "./AudioAsset";
+export * from "./TextAsset";
+export * from "./AssetLoadFailureInfo";
+export * from "./AssetLoadHandler";
+export * from "./ScriptAsset";
+export * from "./VideoAsset";
 
 // non-ordered files
 export * from "./AudioSystemManager";

@@ -5,8 +5,7 @@
         "lib": ["es5"],
         "noImplicitAny": true,
         "declaration": true,
-        "outDir": "tmp",
-        "rootDir": ".",
+        "outDir": "lib",
         "sourceMap": false,
         "types": []
     },

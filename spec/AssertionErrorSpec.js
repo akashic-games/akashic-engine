@@ -1,5 +1,5 @@
 describe("test AssertionError", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib');
 
 	beforeEach(function() {
 	});

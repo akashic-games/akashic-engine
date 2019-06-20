@@ -10,8 +10,7 @@
         "types": []
     },
     "files": [
-        "typings/node/node.d.ts",
-        "../lib/main.node.d.ts",
+        "../lib/index.d.ts",
         "helpers/customMatchers.ts",
         "helpers/mock.ts",
         "helpers/skeleton.ts"

@@ -1,5 +1,5 @@
 describe("test BitmapFont", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	var skeletonRuntime = require("./helpers/skeleton");
 
 	beforeEach(function() {

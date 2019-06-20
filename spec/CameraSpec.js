@@ -1,5 +1,5 @@
 describe("test Camera", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	var mock = require("./helpers/mock");
 	var runtime, e;
 	var skeletonRuntime = require("./helpers/skeleton");

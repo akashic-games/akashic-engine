@@ -1,5 +1,5 @@
 describe("Collision.intersect()", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 
 	beforeEach(function() {
 	});
@@ -21,7 +21,7 @@ describe("Collision.intersect()", function() {
 });
 
 describe("Collision.intersectAreas()", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 
 	beforeEach(function() {
 	});
@@ -44,7 +44,7 @@ describe("Collision.intersectAreas()", function() {
 });
 
 describe("Collision.within()", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 
 	beforeEach(function() {
 	});
@@ -73,7 +73,7 @@ describe("Collision.within()", function() {
 });
 
 describe("Collision.withinAreas()", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 
 	beforeEach(function() {
 	});

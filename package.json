@@ -7,26 +7,27 @@
     "concat": "^1.0.3",
     "cpx": "^1.5.0",
     "del": "~0.1.3",
+    "dts-bundle-generator": "^3.1.0",
     "jest": "^24.1.0",
     "renamer": "^0.6.1",
     "rimraf": "^2.6.1",
+    "rollup": "^1.15.6",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.3",
     "textlint": "^5.6.0",
     "textlint-rule-max-ten": "^1.2.2",
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "tslint": "^5.4.3",
     "typedoc": "^0.11.1",
-    "typescript": "~2.1.6",
+    "typescript": "^3.5.2",
     "uglify-js": "^2.6.0"
   },
   "scripts": {
-    "prepublish": "npm run minify && npm run doc",
-    "prepare": "npm run prepublish",
-    "build": "npm run clean && tsc -p ./ && npm run compile:cp && npm run concat:define && npm run concat:node",
+    "build": "npm run clean && tsc -p ./ && rollup -c rollup.config.js",
     "clean": "rimraf tmp && rimraf lib",
-    "compile:cp": "cpx tmp/tmp.d.ts lib && cpx tmp/tmp.js lib && renamer --find tmp --replace main ./lib/*",
-    "concat:define": "concat scripts/conf/platforms/node/prefix.d.ts lib/main.d.ts scripts/conf/platforms/node/suffix.d.ts -o lib/main.node.d.ts",
     "concat:node": "concat scripts/conf/platforms/node/prefix.js lib/main.js scripts/conf/platforms/node/suffix.js -o lib/main.node.js",
+    "bundle": "dts-bundle-generator -o dist/main.node.d.ts --umd-module-name g src/index.ts",
     "test": "npm run build && npm run test:compile && npm run test:jest",
     "test:compile": "tsc -p ./spec",
     "test:jest": "jest",
@@ -48,7 +49,7 @@
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
   },
-  "typings": "lib/main.node.d.ts",
+  "typings": "dist/index.d.ts",
   "author": "DWANGO Co., Ltd.",
   "license": "MIT"
 }

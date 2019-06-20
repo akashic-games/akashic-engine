@@ -1,14 +1,15 @@
-import g = require("../../lib/main.node");
-export class Renderer extends g.Renderer {
-	constructor() {
-		super();
-		this.methodCallHistoryWithParams = [];
-	}
+import * as g from "../../lib";
 
+export class Renderer extends g.Renderer {
 	methodCallHistoryWithParams: {
 		methodName: string;
 		params?: {}
 	}[];
+
+	constructor() {
+		super();
+		this.methodCallHistoryWithParams = [];
+	}
 
 	clearMethodCallHistory(): void {
 		this.methodCallHistoryWithParams = [];
@@ -178,10 +179,11 @@ export class Renderer extends g.Renderer {
 }
 
 export class Surface extends g.Surface {
+	createdRenderer: g.Renderer;
+
 	constructor(width: number, height: number, drawable?: any, isDynamic: boolean = false) {
 		super(width, height, drawable, isDynamic);
 	}
-	createdRenderer: g.Renderer;
 
 	renderer(): g.Renderer {
 		var r = new Renderer();

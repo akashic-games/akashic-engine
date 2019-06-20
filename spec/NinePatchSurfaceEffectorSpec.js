@@ -1,5 +1,5 @@
 describe("test NinePatchSurfaceEffector", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	var mock = require("./helpers/mock");
 	var game;
 
