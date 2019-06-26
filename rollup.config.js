@@ -7,7 +7,7 @@ export default [
 		output: {
 			name: "g",
 			file: "dist/main.node.js",
-			format: "iife"
+			format: "umd"
 		},
 		plugins: [
 			resolve(),
