@@ -24,10 +24,11 @@
     "uglify-js": "^2.6.0"
   },
   "scripts": {
-    "build": "npm run clean && tsc -p ./ && rollup -c rollup.config.js",
+    "build": "npm run clean && tsc -p ./ && npm run bundle:js && npm run bundle:ts",
+    "bundle:js": "rollup -c rollup.config.js",
+    "bundle:ts": "dts-bundle-generator -o dist/main.node.d.ts --umd-module-name g src/index.ts",
     "clean": "rimraf tmp && rimraf lib",
     "concat:node": "concat scripts/conf/platforms/node/prefix.js lib/main.js scripts/conf/platforms/node/suffix.js -o lib/main.node.js",
-    "bundle": "dts-bundle-generator -o dist/main.node.d.ts --umd-module-name g src/index.ts",
     "test": "npm run build && npm run test:compile && npm run test:jest",
     "test:compile": "tsc -p ./spec",
     "test:jest": "jest",
@@ -40,6 +41,7 @@
   },
   "files": [
     "lib",
+    "dist",
     "index.js"
   ],
   "repository": {
@@ -49,7 +51,7 @@
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/main.node.d.ts",
   "author": "DWANGO Co., Ltd.",
   "license": "MIT"
 }
