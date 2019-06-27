@@ -14,28 +14,27 @@
     "rollup": "^1.15.6",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.3",
+    "rollup-plugin-uglify": "^6.0.2",
     "textlint": "^5.6.0",
     "textlint-rule-max-ten": "^1.2.2",
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "tslint": "^5.4.3",
     "typedoc": "^0.11.1",
-    "typescript": "^3.5.2",
-    "uglify-js": "^2.6.0"
+    "typescript": "^3.5.2"
   },
   "scripts": {
-    "build": "npm run clean && tsc -p ./ && npm run bundle:js && npm run bundle:ts",
+    "build": "npm run clean && tsc -p ./ && npm run bundle",
+    "bundle": "npm run bundle:js && npm run bundle:main:dts && npm run bundle:runtime:dts && npm run bundle:min:dts",
     "bundle:js": "rollup -c rollup.config.js",
-    "bundle:ts": "dts-bundle-generator -o dist/main.node.d.ts --umd-module-name g src/index.ts",
+    "bundle:main:dts": "dts-bundle-generator -o dist/main.d.ts src/index.ts",
+    "bundle:runtime:dts": "dts-bundle-generator -o dist/main.runtime.d.ts --umd-module-name g src/index.runtime.ts",
+    "bundle:min:dts": "dts-bundle-generator -o dist/main.min.d.ts src/index.ts",
     "clean": "rimraf tmp && rimraf lib",
-    "concat:node": "concat scripts/conf/platforms/node/prefix.js lib/main.js scripts/conf/platforms/node/suffix.js -o lib/main.node.js",
     "test": "npm run build && npm run test:compile && npm run test:jest",
     "test:compile": "tsc -p ./spec",
     "test:jest": "jest",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "minify": "npm run build && npm run minify:node && npm run minify:browser",
-    "minify:node": "uglifyjs -o ./lib/main.node.min.js --compress --mangle -- lib/main.node.js",
-    "minify:browser": "uglifyjs lib/main.js -o ./lib/main.min.js",
     "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts --project ./tsconfig.json",
     "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts"
   },
@@ -51,7 +50,7 @@
   "publishConfig": {
     "@akashic:registry": "https://registry.npmjs.org/"
   },
-  "typings": "dist/main.node.d.ts",
+  "typings": "lib/index.d.ts",
   "author": "DWANGO Co., Ltd.",
   "license": "MIT"
 }

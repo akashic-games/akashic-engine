@@ -19,3 +19,5 @@ export var dirname: string;
  * スクリプトアセットのファイルパス。
  */
 export var filename: string;
+
+export * from ".";
