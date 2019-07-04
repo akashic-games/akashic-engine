@@ -16,9 +16,9 @@ Akashic Engineの詳細な利用方法については、 [公式ページ](https
 
 ### TypeScript での型定義の利用
 
-TypeScriptでゲームを開発する場合には、型定義ファイルとしてこのリポジトリの `dist/index.runtime.d.ts` を使うことができます。
+TypeScriptでゲームを開発する場合には、型定義ファイルとしてこのリポジトリの `dist/main.runtime.d.ts` を使うことができます。
 `npm install -D @akashic/akashic-engine` でインストールの上、
-tsconfig.json で `node_modules/@akashic/akashic-engine/dist/index.runtime.d.ts` を参照するなどの方法で、 `tsc` に与えてください。
+tsconfig.json で `node_modules/@akashic/akashic-engine/dist/main.runtime.d.ts` を参照するなどの方法で、 `tsc` に与えてください。
 
 ## ビルド方法
 
