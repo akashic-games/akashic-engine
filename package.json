@@ -20,13 +20,15 @@
     "typescript": "^3.5.2"
   },
   "scripts": {
+    "prepublish": "npm run build && npm run doc",
+    "prepare": "npm run prepublish",
     "build": "npm run clean && tsc -p ./ && npm run bundle",
     "bundle": "npm run bundle:js && npm run bundle:main:dts && npm run bundle:runtime:dts && npm run bundle:min:dts",
     "bundle:js": "rollup -c rollup.config.js",
     "bundle:main:dts": "dts-bundle-generator -o dist/main.d.ts src/index.ts",
     "bundle:runtime:dts": "dts-bundle-generator -o dist/main.runtime.d.ts --umd-module-name g src/index.runtime.ts",
     "bundle:min:dts": "dts-bundle-generator -o dist/main.min.d.ts src/index.ts",
-    "clean": "rimraf tmp && rimraf lib",
+    "clean": "rimraf dist && rimraf lib",
     "test": "npm run build && npm run test:compile && npm run test:jest",
     "test:compile": "tsc -p ./spec",
     "test:jest": "jest",
