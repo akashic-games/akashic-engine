@@ -465,13 +465,13 @@ namespace g {
 				this.remove();
 
 			if (this.children) {
-				this.children.forEach((child) => {
-					this.remove(child);
-				});
-				// ここでchildrenはsliceせずに直接処理する: 仮にエンティティが動的に増えたとしても例外なくすべて破壊する
-				// 万一destroyが子エンティティを減らさない場合 (サブクラスがこれをオーバーライドしてremoveもsuper.destroy()もしない時) 無限ループになるので注意
-				while (this.children.length)
-					this.children[this.children.length - 1].destroy();  // 暗黙にremoveされるので不要なコピーを避けるため後ろから破壊する
+
+				for (var i = this.children.length -1; i <= 0; --i) {
+					this.children[i].destroy();
+				}
+				if (this.children.length !== 0) {
+					throw ExceptionFactory.createAssertionError("E#destroy: can not destroy all children")
+				}
 
 				this.children = undefined;
 			}
