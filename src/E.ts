@@ -466,12 +466,11 @@ namespace g {
 
 			if (this.children) {
 
-				for (var i = this.children.length -1; i <= 0; --i) {
+				for (var i = this.children.length -1; i >= 0; --i) {
 					this.children[i].destroy();
 				}
-				if (this.children.length !== 0) {
-					throw ExceptionFactory.createAssertionError("E#destroy: can not destroy all children")
-				}
+				if (this.children.length !== 0)
+					throw ExceptionFactory.createAssertionError("E#destroy: can not destroy all children, " + this.children.length);
 
 				this.children = undefined;
 			}
