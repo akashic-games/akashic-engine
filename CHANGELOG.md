@@ -12,6 +12,10 @@
   * g.Util.findAssetByPathDirectory => g._findAssetByPathDirectory (Module.tsに配置)
   * g.Util.createMatrixは削除
 
+## 2.4.15
+その他変更
+ * `g.E` を継承したクラスで無限ループが発生しないよう変更
+
 ## 2.4.14
  * `ImageAsset#hint: ImageAssetHint` `ImageAsset#initialize()` を追加
 
