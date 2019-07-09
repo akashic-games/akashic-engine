@@ -1,4 +1,4 @@
-var g = require("../lib/main.node.js");
+var g = require("../lib/");
 describe("test Matrix", function () {
 
 	beforeEach(function () {

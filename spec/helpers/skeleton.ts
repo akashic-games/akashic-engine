@@ -1,5 +1,6 @@
-import g = require("../../lib/main.node");
-import mock = require("./mock");
+import * as g from "../../lib";
+import * as mock from "./mock";
+
 function skeletonRuntime(gameConfiguration?: g.GameConfiguration): any {
 	if (!gameConfiguration)
 		gameConfiguration = { width: 320, height: 320 };

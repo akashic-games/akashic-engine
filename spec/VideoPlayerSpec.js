@@ -1,5 +1,5 @@
 describe("VideoPlayer", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 
 	it("initializes itself", function() {
 		const player = new g.VideoPlayer();

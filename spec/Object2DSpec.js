@@ -1,4 +1,4 @@
-var g = require("../lib/main.node.js");
+var g = require("../lib/");
 describe("test Object2D", function () {
 	var e;
 

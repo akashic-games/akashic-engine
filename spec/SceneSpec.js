@@ -1,5 +1,5 @@
 describe("test Scene", function() {
-	var g = require('../lib/main.node.js');
+	var g = require('../lib/');
 	var mock = require("./helpers/mock");
 	var skeletonRuntime = require("./helpers/skeleton");
 
