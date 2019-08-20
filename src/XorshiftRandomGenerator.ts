@@ -28,7 +28,7 @@ namespace g {
 		}
 
 		generate(): number {
-			return this.generate();
+			return this._xorshift.random();
 		}
 
 		serialize(): XorshiftRandomGeneratorSerialization {
