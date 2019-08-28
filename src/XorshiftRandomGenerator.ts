@@ -27,6 +27,10 @@ namespace g {
 			return this._xorshift.nextInt(min, max + 1);
 		}
 
+		generate(): number {
+			return this._xorshift.random();
+		}
+
 		serialize(): XorshiftRandomGeneratorSerialization {
 			return {
 				_seed: this.seed,

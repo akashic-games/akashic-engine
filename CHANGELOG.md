@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.5.1
+機能追加
+ * `g.Game#random#generate()` を追加
+
 ## 2.5.0
 その他変更
  * `g.game.getCurrentTime()` の戻り値が整数になるよう変更
