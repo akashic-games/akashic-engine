@@ -739,7 +739,7 @@ function main() {
     var intervalId = scene.setInterval(200, function () {
       rect.x += 10;
       rect.modified();
-    }); 
+    });
     scene.setTimeout(3000, function () {
       scene.clearInterval(intervalId);
     });
@@ -912,7 +912,7 @@ Akashic Engine のゲームで音を鳴らす場合は、一つの効果音や�
 Ogg Vorbis 形式 (.ogg) と AAC 形式 (.aac) の二種類のファイルを用意する必要があります。
 これは、Webページで音を再生する際に、利用可能な形式がブラウザごとに異なっているためです。
 
-ファイルが用意できたら `se1.ogg` と `se1.aac` を `sound` ディレクトリに配置して、
+ファイルが用意できたら `se1.ogg` と `se1.aac` を `audio` ディレクトリに配置して、
 `akashic scan` コマンドでアセットとして追加します。
 
 ```sh
