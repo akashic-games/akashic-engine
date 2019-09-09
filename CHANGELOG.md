@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 2.5.2
+機能追加
+ * `g.Game#isActiveInstance()` を追加
+
 ## 2.5.1
 機能追加
  * `g.Game#random#generate()` を追加
