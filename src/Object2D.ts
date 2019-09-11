@@ -60,6 +60,13 @@ namespace g {
 		 * @default undefined
 		 */
 		compositeOperation?: CompositeOperation;
+
+		/**
+		 * オブジェクトのアンカー。オブジェクトの左上端を原点とした座標で指定する。
+		 * 省略された場合、オブジェクトの中央座標がアンカーになる。
+		 * @default undefined
+		 */
+		anchor?: CommonOffset;
 	}
 
 	/**
@@ -131,6 +138,13 @@ namespace g {
 		compositeOperation: CompositeOperation;
 
 		/**
+		 * オブジェクトのアンカー。オブジェクトの左上端を原点とした座標で指定する。
+		 * 初期値は `undefined` である。
+		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
+		 */
+		anchor: CommonOffset;
+
+		/**
 		 * 変換行列のキャッシュ。 `Object2D` は状態に変更があった時、本値の_modifiedをtrueにする必要がある。
 		 * 初期値は `undefined` であり、 `getMatrix()` によって必要な時に生成されるため、
 		 * `if (this._matrix) this._matrix._modified = true` という式で記述する必要がある。
@@ -163,6 +177,7 @@ namespace g {
 				this.scaleY = 1;
 				this.angle = 0;
 				this.compositeOperation = undefined;
+				this.anchor = undefined;
 				this._matrix = undefined;
 			} else {
 				this.x = param.x || 0;
@@ -174,6 +189,7 @@ namespace g {
 				this.scaleY = "scaleY" in param ? param.scaleY : 1;
 				this.angle = param.angle || 0;
 				this.compositeOperation = param.compositeOperation;
+				this.anchor = param.anchor;
 				this._matrix = undefined;
 			}
 		}
@@ -290,7 +306,21 @@ namespace g {
 		 */
 		_updateMatrix(): void {
 			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
-				this._matrix.update(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
+				if (this.anchor) {
+					this._matrix.update(
+						this.width,
+						this.height,
+						this.scaleX,
+						this.scaleY,
+						this.angle,
+						this.x,
+						this.y,
+						this.anchor.x,
+						this.anchor.y
+					);
+				} else {
+					this._matrix.update(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
+				}
 			} else {
 				this._matrix.reset(this.x, this.y);
 			}

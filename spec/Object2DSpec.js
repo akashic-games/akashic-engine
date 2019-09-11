@@ -18,6 +18,7 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toEqual(1);
 		expect(e.angle).toEqual(0);
 		expect(e.compositeOperation).toBeUndefined();
+		expect(e.anchor).toBeUndefined();
 		expect(e._matrix).toBeUndefined();
 	});
 
@@ -32,6 +33,7 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toEqual(1);
 		expect(e.angle).toEqual(0);
 		expect(e.compositeOperation).toBeUndefined();
+		expect(e.anchor).toBeUndefined();
 		expect(e._matrix).toBeUndefined();
 
 		var e = new g.Object2D({
@@ -43,7 +45,8 @@ describe("test Object2D", function () {
 			scaleX: 0.4,
 			scaleY: 1.2,
 			angle: 10,
-			compositeOperation: g.CompositeOperation.SourceAtop
+			compositeOperation: g.CompositeOperation.SourceAtop,
+			anchor: {x: 1, y: 1}
 		});
 		expect(e.x).toEqual(1);
 		expect(e.y).toEqual(2);
@@ -54,6 +57,7 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toEqual(1.2);
 		expect(e.angle).toEqual(10);
 		expect(e.compositeOperation).toEqual(g.CompositeOperation.SourceAtop);
+		expect(e.anchor).toEqual({x: 1, y: 1});
 		expect(e._matrix).toBeUndefined();
 	});
 
