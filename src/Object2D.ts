@@ -62,11 +62,18 @@ namespace g {
 		compositeOperation?: CompositeOperation;
 
 		/**
-		 * オブジェクトのアンカー。オブジェクトの左上端を原点とした座標で指定する。
-		 * 省略された場合、オブジェクトの中央座標がアンカーになる。
+		 * オブジェクトのアンカーのx座標。
+		 * オブジェクトの横幅に対する割合を0～1の値域で指定する。
 		 * @default undefined
 		 */
-		anchor?: CommonOffset;
+		anchorX?: number;
+
+		/**
+		 * オブジェクトのアンカーのy座標。
+		 * オブジェクトの縦幅に対する割合を0～1の値域で指定する。
+		 * @default undefined
+		 */
+		anchorY?: number;
 	}
 
 	/**
@@ -138,11 +145,18 @@ namespace g {
 		compositeOperation: CompositeOperation;
 
 		/**
-		 * オブジェクトのアンカー。オブジェクトの左上端を原点とした座標で指定する。
+		 * オブジェクトのアンカーのx座標。オブジェクトの横幅に対する割合を0～1の値域で指定する。
 		 * 初期値は `undefined` である。
 		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 		 */
-		anchor: CommonOffset;
+		anchorX: number;
+
+		/**
+		 * オブジェクトのアンカーのy座標。オブジェクトの縦幅に対する割合を0～1の値域で指定する。
+		 * 初期値は `undefined` である。
+		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
+		 */
+		anchorY: number;
 
 		/**
 		 * 変換行列のキャッシュ。 `Object2D` は状態に変更があった時、本値の_modifiedをtrueにする必要がある。
@@ -177,7 +191,8 @@ namespace g {
 				this.scaleY = 1;
 				this.angle = 0;
 				this.compositeOperation = undefined;
-				this.anchor = undefined;
+				this.anchorX = undefined;
+				this.anchorY = undefined;
 				this._matrix = undefined;
 			} else {
 				this.x = param.x || 0;
@@ -189,7 +204,8 @@ namespace g {
 				this.scaleY = "scaleY" in param ? param.scaleY : 1;
 				this.angle = param.angle || 0;
 				this.compositeOperation = param.compositeOperation;
-				this.anchor = param.anchor;
+				this.anchorX = param.anchorX;
+				this.anchorY = param.anchorY;
 				this._matrix = undefined;
 			}
 		}
@@ -287,6 +303,15 @@ namespace g {
 		}
 
 		/**
+		 * オブジェクトのアンカーを設定する。
+		 * `E` や `Camera2D` においてこのメソッドを呼び出した場合、 `modified()` を呼び出す必要がある。
+		 */
+		anchor(x: number, y: number): void {
+			this.anchorX = x;
+			this.anchorY = y;
+		}
+
+		/**
 		 * このオブジェクトの変換行列を得る。
 		 */
 		getMatrix(): Matrix {
@@ -305,22 +330,20 @@ namespace g {
 		 * @private
 		 */
 		_updateMatrix(): void {
-			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
-				if (this.anchor) {
-					this._matrix.update(
-						this.width,
-						this.height,
-						this.scaleX,
-						this.scaleY,
-						this.angle,
-						this.x,
-						this.y,
-						this.anchor.x,
-						this.anchor.y
-					);
-				} else {
-					this._matrix.update(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
-				}
+			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null) {
+				const actualAnchorX = this.anchorX != null ? this.anchorX : 0.5;
+				const actualAnchorY = this.anchorY != null ? this.anchorY : 0.5;
+				this._matrix.update(
+					this.width,
+					this.height,
+					this.scaleX,
+					this.scaleY,
+					this.angle,
+					this.x,
+					this.y,
+					actualAnchorX,
+					actualAnchorY
+				);
 			} else {
 				this._matrix.reset(this.x, this.y);
 			}

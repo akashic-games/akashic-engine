@@ -196,8 +196,20 @@ namespace g {
 		 */
 		_updateMatrix(): void {
 			// カメラの angle, x, y はエンティティと逆方向に作用することに注意。
-			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
-				this._matrix.updateByInverse(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
+			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1  || this.anchorX != null || this.anchorY != null) {
+				const actualAnchorX = this.anchorX != null ? this.anchorX : 0.5;
+				const actualAnchorY = this.anchorY != null ? this.anchorY : 0.5;
+				this._matrix.updateByInverse(
+					this.width,
+					this.height,
+					this.scaleX,
+					this.scaleY,
+					this.angle,
+					this.x,
+					this.y,
+					actualAnchorX,
+					actualAnchorY
+				);
 			} else {
 				this._matrix.reset(-this.x, -this.y);
 			}

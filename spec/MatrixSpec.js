@@ -35,13 +35,13 @@ describe("test Matrix", function () {
 		var cosValue = Math.cos(rad);
 		var sinValue = Math.sin(rad);
 		var anchorX = 0;
-		var anchorY = undefined;
+		var anchorY = 0.5;
 		m.update(10, 8, 2, 3, angle, 100, 50, anchorX, anchorY);
 
 		var expected = new g.PlainMatrix();
 		var tmp = new g.PlainMatrix();
 
-		tmp._matrix = [1, 0, 0, 1, anchorX, 8/2];
+		tmp._matrix = [1, 0, 0, 1, anchorX * 10, anchorY * 8];
 		expected.multiply(tmp);
 		tmp._matrix = [1, 0, 0, 1, 100, 50];
 		expected.multiply(tmp);
@@ -49,7 +49,7 @@ describe("test Matrix", function () {
 		expected.multiply(tmp);
 		tmp._matrix = [2, 0, 0, 3, 0, 0];
 		expected.multiply(tmp);
-		tmp._matrix = [1, 0, 0, 1, -1 * anchorX, -8/2];
+		tmp._matrix = [1, 0, 0, 1, -1 * anchorX * 10, -1 * anchorY * 8];
 		expected.multiply(tmp);
 
 		expect(m._matrix).toBeNear(expected._matrix, 10);
@@ -61,14 +61,14 @@ describe("test Matrix", function () {
 		var rad = angle * Math.PI / 180;
 		var cosValue = Math.cos(rad);
 		var sinValue = Math.sin(rad);
-		var anchorX = undefined;
-		var anchorY = 8;
+		var anchorX = 1;
+		var anchorY = 0;
 		m.updateByInverse(10, 8, 2, 3, angle, 100, 50, anchorX, anchorY);
 
 		var expected = new g.PlainMatrix();
 		var tmp = new g.PlainMatrix();
 
-		tmp._matrix = [1, 0, 0, 1, 10/2, anchorY];
+		tmp._matrix = [1, 0, 0, 1, anchorX * 10, anchorY * 8];
 		expected.multiply(tmp);
 		tmp._matrix = [1/2, 0, 0, 1/3, 0, 0];
 		expected.multiply(tmp);
@@ -76,7 +76,7 @@ describe("test Matrix", function () {
 		expected.multiply(tmp);
 		tmp._matrix = [1, 0, 0, 1, -100, -50];
 		expected.multiply(tmp);
-		tmp._matrix = [1, 0, 0, 1, -10/2, -1 * anchorY];
+		tmp._matrix = [1, 0, 0, 1, -1 * anchorX * 10, -1 * anchorY * 8];
 		expected.multiply(tmp);
 
 		expect(m._matrix).toBeNear(expected._matrix, 10);

@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Unreleased Changes
+機能追加
+* ゲームオブジェクトにアンカーポイントを指定できる機能の追加
+
 ## 2.5.1
 機能追加
  * `g.Game#random#generate()` を追加

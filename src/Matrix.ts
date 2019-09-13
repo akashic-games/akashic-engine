@@ -48,8 +48,8 @@ namespace g {
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
 		 * @param x x座標
 		 * @param y y座標
-		 * @param anchorX アンカーのx座標
-		 * @param anchorY アンカーのy座標
+		 * @param anchorX アンカーのx座標。対象の横幅に対する割合を0～1の値域で指定する。
+		 * @param anchorY アンカーのy座標。対象の縦幅に対する割合を0～1の値域で指定する。
 		 */
 		update(
 			width: number,
@@ -59,8 +59,8 @@ namespace g {
 			angle: number,
 			x: number,
 			y: number,
-			anchorX?: number,
-			anchorY?: number
+			anchorX: number,
+			anchorY: number
 		): void;
 
 		/**
@@ -72,8 +72,8 @@ namespace g {
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
 		 * @param x x座標
 		 * @param y y座標
-		 * @param anchorX アンカーのx座標
-		 * @param anchorY アンカーのy座標
+		 * @param anchorX アンカーのx座標。対象の横幅に対する割合を0～1の値域で指定する。
+		 * @param anchorY アンカーのy座標。対象の縦幅に対する割合を0～1の値域で指定する。
 		 */
 		updateByInverse(
 			width: number,
@@ -83,8 +83,8 @@ namespace g {
 			angle: number,
 			x: number,
 			y: number,
-			anchorX?: number,
-			anchorY?: number
+			anchorX: number,
+			anchorY: number
 		): void;
 
 		/**
@@ -149,14 +149,24 @@ namespace g {
 		 * @param scaleX 対象の横方向への拡大率
 		 * @param scaleY 対象の縦方向への拡大率
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
+		 * @param anchorX アンカーのx座標。対象の横幅に対する割合を0～1の値域で指定する。
+		 * @param angle anchorY アンカーのy座標。対象の縦幅に対する割合を0～1の値域で指定する。
 		 */
-		constructor(width: number, height: number, scaleX: number, scaleY: number, angle: number);
+		constructor(width: number, height: number, scaleX: number, scaleY: number, angle: number, anchorX?: number, anchorY?: number);
 		/**
 		 * 指定の `Matrix` と同じ変換行列を表す `PlainMatrix` のインスタンスを生成する。
 		 */
 		constructor(src: Matrix);
 
-		constructor(widthOrSrc?: number|Matrix, height?: number, scaleX?: number, scaleY?: number, angle?: number) {
+		constructor(
+			widthOrSrc?: number|Matrix,
+			height?: number,
+			scaleX?: number,
+			scaleY?: number,
+			angle?: number,
+			anchorX?: number,
+			anchorY?: number
+		) {
 			// TODO: (GAMEDEV-845) Float32Arrayの方が速いらしいので、polyfillして使うかどうか検討
 			if (widthOrSrc === undefined) {
 				this._modified = false;
@@ -164,7 +174,9 @@ namespace g {
 			} else if (typeof widthOrSrc === "number") {
 				this._modified = false;
 				this._matrix = <[number, number, number, number, number, number]>new Array<number>(6);
-				this.update(widthOrSrc, height, scaleX, scaleY, angle, 0, 0);
+				const actualAnchorX = anchorX != null ? anchorX : 0.5;
+				const actualAnchorY = anchorY != null ? anchorY : 0.5;
+				this.update(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, actualAnchorX, actualAnchorY);
 			} else {
 				this._modified = widthOrSrc._modified;
 				this._matrix = [
@@ -186,11 +198,11 @@ namespace g {
 			angle: number,
 			x: number,
 			y: number,
-			anchorX?: number,
-			anchorY?: number
+			anchorX: number,
+			anchorY: number
 		): void {
 			// ここで求める変換行列Mは、引数で指定された変形を、拡大・回転・平行移動の順に適用するものである。
-			// 変形の原点は引数で指定された矩形の中心、すなわち (width/2, height/2) の位置である。従って
+			// 変形の原点は引数で指定された位置の原寸大、すなわち (anchorX * width, anchorY * height) の位置である。従って
 			//    M = A^-1 T R S A
 			// である。ただしここでA, S, R, Tは、それぞれ以下を表す変換行列である:
 			//    A: 矩形の中心を原点に移す(平行移動する)変換
@@ -202,7 +214,7 @@ namespace g {
 			//    A = [  0    1   -h]    S = [  0   sy    0]    R = [  s    c    0]    T = [  0    1    y]
 			//           0    0    1            0    0    1            0    0    1            0    0    1
 			// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
-			// (ただし theta = angle * PI / 180)、w = (width / 2), h = (height / 2) である。
+			// (ただし theta = angle * PI / 180)、w = anchorX * width, h = anchorY * height である。
 			// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
 			var r = angle * Math.PI / 180;
 			var _cos = Math.cos(r);
@@ -211,8 +223,8 @@ namespace g {
 			var b = _sin * scaleX;
 			var c = _sin * scaleY;
 			var d = _cos * scaleY;
-			var w = anchorX != null ? anchorX : width / 2;
-			var h = anchorY != null ? anchorY : height / 2;
+			var w = anchorX * width;
+			var h = anchorY * height;
 			this._matrix[0] = a;
 			this._matrix[1] = b;
 			this._matrix[2] = -c;
@@ -229,8 +241,8 @@ namespace g {
 			angle: number,
 			x: number,
 			y: number,
-			anchorX?: number,
-			anchorY?: number
+			anchorX: number,
+			anchorY: number
 		): void {
 			// ここで求める変換行列は、update() の求める行列Mの逆行列、M^-1である。update() のコメントに記述のとおり、
 			//    M = A^-1 T R S A
@@ -249,8 +261,8 @@ namespace g {
 			var b = _sin / scaleY;
 			var c = _sin / scaleX;
 			var d = _cos / scaleY;
-			var w = anchorX != null ? anchorX : width / 2;
-			var h = anchorY != null ? anchorY : height / 2;
+			var w = anchorX * width;
+			var h = anchorY * height;
 			this._matrix[0] = a;
 			this._matrix[1] = -b;
 			this._matrix[2] = c;
