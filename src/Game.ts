@@ -835,10 +835,10 @@ namespace g {
 		abstract getCurrentTime(): number;
 
 		/**
-		 * このインスタンスがActive AEであるかどうか返す。
+		 * このインスタンスがアクティブインスタンスであるかどうか返す。
 		 * 
 		 * ゲーム開発者は、この値の真偽に起因する処理で、ゲームのローカルな実行状態を変更してはならず、
-		 * `raiseEvent` などによって、グローバルな状態を更新する必要がある。
+		 * `raiseEvent()` などによって、グローバルな状態を更新する必要がある。
 		 */
 		abstract isActiveInstance(): boolean;
 
