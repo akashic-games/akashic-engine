@@ -102,7 +102,16 @@ describe("test Camera", function() {
 		cam.angle = angle;
 		cam.modified();
 		mat = cam.getMatrix();
-		expected.updateByInverse(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);  // angle も逆方向に作用する
+		expected.updateByInverse(320, 240, 1, 1, 10, 10, 100);  // angle も逆方向に作用する
+		expect(mat._matrix).toEqual(expected._matrix);
+	});
+
+	it("anchor", function() {
+		var game = new mock.Game({ width: 320, height: 240 });
+		var cam = new g.Camera2D({game: game, angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5});
+		var expected = new g.PlainMatrix();
+		var mat = cam.getMatrix();
+		expected.updateByInverseWithAnchor(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);
 		expect(mat._matrix).toEqual(expected._matrix);
 	});
 
@@ -135,7 +144,7 @@ describe("test Camera", function() {
 		cam._applyTransformToRenderer(renderer);
 		expect(renderer.methodCallHistory).toEqual(["transform"]);
 		var mat = new g.PlainMatrix();
-		mat.updateByInverse(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);  // angle も逆方向に作用する
+		mat.updateByInverse(320, 240, 1, 1, 10, 10, 100);  // angle も逆方向に作用する
 		expect(cam.getMatrix()._matrix).toEqual(mat._matrix);
 		expect(renderer.methodCallParamsHistory("transform")).toEqual([{ matrix: mat._matrix }]);
 	});

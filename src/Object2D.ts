@@ -149,14 +149,14 @@ namespace g {
 		 * 初期値は `undefined` である。
 		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 		 */
-		anchorX: number;
+		anchorX: number | undefined;
 
 		/**
 		 * オブジェクトのアンカーのy座標。オブジェクトの縦幅に対する割合を0～1の値域で指定する。
 		 * 初期値は `undefined` である。
 		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 		 */
-		anchorY: number;
+		anchorY: number | undefined;
 
 		/**
 		 * 変換行列のキャッシュ。 `Object2D` は状態に変更があった時、本値の_modifiedをtrueにする必要がある。
@@ -330,10 +330,10 @@ namespace g {
 		 * @private
 		 */
 		_updateMatrix(): void {
-			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null) {
+			if (this.anchorX != null || this.anchorY != null) {
 				const actualAnchorX = this.anchorX != null ? this.anchorX : 0.5;
 				const actualAnchorY = this.anchorY != null ? this.anchorY : 0.5;
-				this._matrix.update(
+				this._matrix.updateWithAnchor(
 					this.width,
 					this.height,
 					this.scaleX,
@@ -344,6 +344,8 @@ namespace g {
 					actualAnchorX,
 					actualAnchorY
 				);
+			} else if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
+				this._matrix.update(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
 			} else {
 				this._matrix.reset(this.x, this.y);
 			}

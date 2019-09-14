@@ -70,7 +70,7 @@ describe("test E", function () {
 
 		// parameter object で初期化してもコンストラクタ内で modified() していないが、問題なく動作することを確認しておく
 		var mat = new g.PlainMatrix();
-		mat.update(5, 4, 2, 3, 0, 10, 20, 0.5, 0.5);
+		mat.update(5, 4, 2, 3, 0, 10, 20);
 		expect(e.getMatrix()._matrix).toEqual(mat._matrix);
 
 		var e = new g.E({

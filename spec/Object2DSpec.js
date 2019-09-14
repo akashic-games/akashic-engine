@@ -215,10 +215,13 @@ describe("test Object2D", function () {
 		expect(e.getMatrix()).toEqual(scarecrow);
 		expect(e._matrix._modified).toBe(false);
 
+		e.resizeTo(20, 20);
 		e.moveTo(10, 10);
 		e.anchor(1, 1);
 		e._matrix._modified = true;
-		expect(e.getMatrix()._matrix).toBeNear([1, 0, 0, 1, 10, 10], 10);
+		var expected = new g.PlainMatrix();
+		expected.updateWithAnchor(20, 20, 1, 1, 0, 10, 10, 1, 1);
+		expect(e.getMatrix()._matrix).toEqual(expected._matrix);
 		expect(e._matrix._modified).toBe(false);
 	});
 });
