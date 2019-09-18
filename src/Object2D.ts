@@ -62,15 +62,18 @@ namespace g {
 		compositeOperation?: CompositeOperation;
 
 		/**
-		 * オブジェクトのアンカーのx座標。
-		 * オブジェクトの横幅に対する割合を0～1の値域で指定する。
+		 * オブジェクトのアンカーのx座標。アンカーについては以下の通り。
+		 * ・アンカーとして設定した箇所が Object2D の基点 (座標原点、拡大・縮小などの基点) となる。
+		 * ・単位は相対値 (Object2D の左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1)) である。
+		 * anchorXとanchorYの両方が省略された場合、Object2D の座標原点は左上端座標、拡大・縮小などの基点は中央座標となる。
+		 * anchorYが指定されてanchorXが省略された場合、anchorXは0.5として計算が行われる。(ただし、anchorXの値は`undefined`のまま)
 		 * @default undefined
 		 */
 		anchorX?: number;
 
 		/**
 		 * オブジェクトのアンカーのy座標。
-		 * オブジェクトの縦幅に対する割合を0～1の値域で指定する。
+		 * anchorXが指定されてanchorYが省略された場合、anchorYは0.5として計算が行われる。(ただし、anchorYの値は`undefined`のまま)
 		 * @default undefined
 		 */
 		anchorY?: number;
@@ -145,16 +148,19 @@ namespace g {
 		compositeOperation: CompositeOperation;
 
 		/**
-		 * オブジェクトのアンカーのx座標。オブジェクトの横幅に対する割合を0～1の値域で指定する。
-		 * 初期値は `undefined` である。
-		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
+		 * オブジェクトのアンカーのx座標。アンカーについては以下の通り。
+		 * ・アンカーとして設定した箇所が Object2D の基点 (座標原点、拡大・縮小などの基点) となる。
+		 * ・単位は相対値 (Object2D の左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1)) である。
+		 * anchorXとanchorYの両方が省略された場合、Object2D の座標原点は左上端座標、拡大・縮小などの基点は中央座標となる。
+		 * 初期値は `undefined` だが、anchorYが指定されてanchorXが省略された場合、anchorXは0.5として計算が行われる。(ただし、anchorXの値は`undefined`のまま)
+		 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 		 */
 		anchorX: number | undefined;
 
 		/**
-		 * オブジェクトのアンカーのy座標。オブジェクトの縦幅に対する割合を0～1の値域で指定する。
-		 * 初期値は `undefined` である。
-		 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
+		 * オブジェクトのアンカーのy座標。
+		 * 初期値は `undefined` だが、anchorXが指定されてanchorYが省略された場合、anchorYは0.5として計算が行われる。(ただし、anchorYの値は`undefined`のまま)
+		 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 		 */
 		anchorY: number | undefined;
 

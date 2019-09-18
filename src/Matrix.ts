@@ -174,7 +174,7 @@ namespace g {
 		 * @param scaleY 対象の縦方向への拡大率
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
 		 * @param anchorX アンカーのx座標。対象の横幅に対する割合を0～1の値域で指定する。
-		 * @param angle anchorY アンカーのy座標。対象の縦幅に対する割合を0～1の値域で指定する。
+		 * @param anchorY アンカーのy座標。対象の縦幅に対する割合を0～1の値域で指定する。
 		 */
 		constructor(width: number, height: number, scaleX: number, scaleY: number, angle: number, anchorX?: number, anchorY?: number);
 		/**
