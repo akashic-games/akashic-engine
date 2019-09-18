@@ -1,5 +1,16 @@
 # ChangeLog
 
+## Unreleased Changes
+機能追加
+ * `g.Font` をインタフェースから抽象クラスに変更
+ * `g.Font#measureText()` を追加
+
+### ゲーム開発者への影響
+ * `g.Font` がインタフェースから抽象クラスに変更されました。
+  * `g.Font` の実装クラスが存在する場合、 `g.Font` を継承する必要があります。
+ * `g.Font#measureText()` が追加されました。
+  * `g.Font` の実装クラスが存在する場合、 追加されたメソッドに対する処理を実装する必要があります。
+
 ## 2.5.1
 機能追加
  * `g.Game#random#generate()` を追加

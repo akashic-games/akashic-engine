@@ -34,7 +34,7 @@ namespace g {
 	/**
 	 * ラスタ画像によるフォント。
 	 */
-	export class BitmapFont implements Font {
+	export class BitmapFont extends Font {
 		surface: Surface;
 		defaultGlyphWidth: number;
 		defaultGlyphHeight: number;
@@ -47,6 +47,7 @@ namespace g {
 		 * @param param `BitmapFont` に設定するパラメータ
 		 */
 		constructor(param: BitmapFontParameterObject) {
+			super();
 			this.surface = Util.asSurface(param.src);
 			this.map = param.map;
 			this.defaultGlyphWidth = param.defaultGlyphWidth;
