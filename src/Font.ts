@@ -30,21 +30,36 @@ namespace g {
 		 */
 		measureText(text: string): TextMetrix {
 			let width = 0;
-			let offsetX = 0;
+			let actualBoundingBoxLeft = 0;
+			let actualBoundingBoxRight = 0;
+			let lastGlyph: g.Glyph;
 
 			for (let i = 0; i < text.length; i++) {
 				const code = g.Util.charCodeAt(text, i);
-				if (! code) continue;
+				if (!code)
+					continue;
 
 				const glyph = this.glyphForCharacter(code);
-				if (glyph.x < 0 || glyph.y < 0) continue;
-				if (glyph.width < 0 || glyph.height < 0) continue;
+				if (!glyph || glyph.x < 0 || glyph.y < 0 || glyph.width < 0 || glyph.height < 0)
+					continue;
 
-				offsetX += glyph.advanceWidth;
-				width = offsetX + (glyph.offsetX + glyph.width - glyph.advanceWidth);
+				if (i === 0) {
+					actualBoundingBoxLeft = -glyph.offsetX;
+				}
+
+				lastGlyph = glyph;
+				width += glyph.advanceWidth;
 			}
 
-			return { width };
+			if (lastGlyph) {
+				actualBoundingBoxRight = width + lastGlyph.offsetX + lastGlyph.width - lastGlyph.advanceWidth;
+			}
+
+			return {
+				width,
+				actualBoundingBoxLeft,
+				actualBoundingBoxRight
+			};
 		}
 	}
 }
