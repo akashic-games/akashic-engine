@@ -4,9 +4,27 @@
 機能追加
 * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
 
+## 2.5.2
+
+機能追加
+
+ * `g.Game#isActiveInstance()` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#isActiveInstance()` を追加
+    * ゲーム開発者は、このメソッドを使うことで、そのインスタンスがアクティブインスタンスか知ることができます。
+
 ## 2.5.1
+
 機能追加
  * `g.Game#random#generate()` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#random#generate()` を追加
+    * `Math.random()` と同じように呼び出すことができる乱数生成メソッドです。
+    * ゲーム開発者は、コンテンツ内で使用している `Math.random()` をこのメソッドに適切に置き換えることで、ロジックに変更を加えずにAkashic対応することができます。
 
 ## 2.5.0
 その他変更
