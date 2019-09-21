@@ -2,7 +2,7 @@
 
 ## Unreleased Changes
 機能追加
-* ゲームオブジェクトにアンカーポイントを指定できる機能の追加
+* `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
 
 ## 2.5.1
 機能追加
