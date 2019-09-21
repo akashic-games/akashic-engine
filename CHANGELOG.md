@@ -2,7 +2,12 @@
 
 ## Unreleased Changes
 機能追加
-* `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+ * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+    * ゲーム開発者は、これらのプロパティを指定することで、対象のオブジェクトのアンカーを設定することができます。
 
 ## 2.5.2
 
