@@ -112,7 +112,7 @@ export interface DynamicFontHint extends SurfaceAtlasSetHint {
 /**
  * ビットマップフォントを逐次生成するフォント。
  */
-export class DynamicFont implements Font {
+export class DynamicFont extends Font {
 	/**
 	 * フォントファミリ。
 	 *
@@ -198,6 +198,7 @@ export class DynamicFont implements Font {
 	 * @param param `DynamicFont` に設定するパラメータ
 	 */
 	constructor(param: DynamicFontParameterObject) {
+		super();
 		this.fontFamily = param.fontFamily;
 		this.size = param.size;
 		this.hint = ("hint" in param) ? param.hint : {};
