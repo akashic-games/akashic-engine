@@ -60,8 +60,8 @@ namespace g {
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
 		 * @param x x座標
 		 * @param y y座標
-		 * @param anchorX アンカーのx座標。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
-		 * @param anchorY アンカーのy座標。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
+		 * @param anchorX アンカーの横位置。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
+		 * @param anchorY アンカーの縦位置。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
 		 */
 		updateWithAnchor(
 			width: number,
@@ -96,8 +96,8 @@ namespace g {
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
 		 * @param x x座標
 		 * @param y y座標
-		 * @param anchorX アンカーのx座標。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
-		 * @param anchorY アンカーのy座標。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
+		 * @param anchorX アンカーの横位置。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
+		 * @param anchorY アンカーの縦位置。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
 		 */
 		updateByInverseWithAnchor(
 			width: number,
@@ -173,8 +173,8 @@ namespace g {
 		 * @param scaleX 対象の横方向への拡大率
 		 * @param scaleY 対象の縦方向への拡大率
 		 * @param angle 角度。単位は `degree` であり `radian` ではない
-		 * @param anchorX アンカーのx座標。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
-		 * @param anchorY アンカーのy座標。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
+		 * @param anchorX アンカーの横位置。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
+		 * @param anchorY アンカーの縦位置。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
 		 */
 		constructor(width: number, height: number, scaleX: number, scaleY: number, angle: number, anchorX?: number, anchorY?: number);
 		/**
