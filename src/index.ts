@@ -58,7 +58,10 @@
 /// <reference path="OperationPluginViewInfo.ts" />
 /// <reference path="OperationPluginManager.ts" />
 /// <reference path="executeEnvironmentVariables.ts" />
+/// <reference path="TextMetrix.ts" />
+/// <reference path="Font.ts" />
 /// <reference path="DynamicFont.ts" />
+/// <reference path="BitmapFont.ts" />
 /// <reference path="SurfaceAtlasSet.ts" />
 
 // non-ordered files
@@ -66,13 +69,11 @@
 /// <reference path="CompositeOperation.ts" />
 /// <reference path="EventFilter.ts" />
 /// <reference path="GlyphFactory.ts" />
-/// <reference path="Font.ts" />
 /// <reference path="GameMainParameterObject.ts" />
 /// <reference path="LocalTickMode.ts" />
 /// <reference path="NinePatchSurfaceEffector.ts" />
 /// <reference path="PathUtil.ts" />
 /// <reference path="FontFamily.ts" />
-/// <reference path="BitmapFont.ts" />
 /// <reference path="SystemLabel.ts" />
 /// <reference path="TextAlign.ts" />
 /// <reference path="TickGenerationMode.ts" />
