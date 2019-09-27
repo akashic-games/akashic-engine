@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased Changes
+## 2.5.4
 機能追加
  * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
 
