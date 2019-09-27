@@ -1,6 +1,5 @@
 import { Scene } from "./Scene";
-import { EParameterObject, E } from "./E";
-import { Renderer } from "./Renderer";
+import { E } from "./E";
 import { Camera } from "./Camera";
 import { Sprite } from "./Sprite";
 import { ExceptionFactory } from "./errors";

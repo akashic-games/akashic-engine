@@ -2,17 +2,19 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "lib": ["es5"],
+    "lib": [
+      "es5"
+    ],
     "noImplicitAny": true,
     "declaration": true,
     "outDir": "lib",
     "sourceMap": false,
-    "types": []
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
     "src/__tests__/**/*.ts"
   ]
 }
