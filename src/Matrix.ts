@@ -198,10 +198,8 @@ namespace g {
 			} else if (typeof widthOrSrc === "number") {
 				this._modified = false;
 				this._matrix = <[number, number, number, number, number, number]>new Array<number>(6);
-				if (anchorX != null || anchorY != null) {
-					const actualAnchorX = anchorX != null ? anchorX : 0.5;
-					const actualAnchorY = anchorY != null ? anchorY : 0.5;
-					this.updateWithAnchor(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, actualAnchorX, actualAnchorY);
+				if (anchorX != null) {
+					this.updateWithAnchor(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, anchorX, anchorY);
 				} else {
 					this.update(widthOrSrc, height, scaleX, scaleY, angle, 0, 0);
 				}
