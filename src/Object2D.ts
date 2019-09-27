@@ -349,7 +349,7 @@ namespace g {
 		 * @private
 		 */
 		_updateMatrix(): void {
-			if (this.anchorX != null) {
+			if (this.anchorX != null && this.anchorY != null) {
 				this._matrix.updateWithAnchor(
 					this.width,
 					this.height,

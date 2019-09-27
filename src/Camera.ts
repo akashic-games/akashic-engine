@@ -196,7 +196,7 @@ namespace g {
 		 */
 		_updateMatrix(): void {
 			// カメラの angle, x, y はエンティティと逆方向に作用することに注意。
-			if (this.anchorX != null) {
+			if (this.anchorX != null && this.anchorY != null) {
 				this._matrix.updateByInverseWithAnchor(
 					this.width,
 					this.height,

@@ -198,7 +198,7 @@ namespace g {
 			} else if (typeof widthOrSrc === "number") {
 				this._modified = false;
 				this._matrix = <[number, number, number, number, number, number]>new Array<number>(6);
-				if (anchorX != null) {
+				if (anchorX != null && anchorY != null) {
 					this.updateWithAnchor(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, anchorX, anchorY);
 				} else {
 					this.update(widthOrSrc, height, scaleX, scaleY, angle, 0, 0);
