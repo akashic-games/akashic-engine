@@ -78,22 +78,13 @@ export const customMatchers = {
 		return result;
 	},
 	toBeNear: (received: number[], expected: number[], threshold: number): jest.CustomMatcherResult => {
-		/*
-		function near(received: number[], expected: number[], threshold: number): boolean {
-			if (expected instanceof Array) {
-				// return expected.every((v: any, i: number) => near(threshold, v, actual[i]));
-				return expected.every((v: any, i: number) => near(threshold, v, received[i]));
-			} else {
-				return Math.abs(expected - received) <= Math.pow(10, -threshold);
-			}
-		}
-		var result = { pass: false, message: "" };
-		if (near(threshold, expected, received)) result.pass = true;
-		*/
-
 		return {
-			pass: true,
-			message: "ok"
+			pass: near(received, expected, threshold),
+			message: ""
 		};
 	}
 };
+
+function near(received: number[], expected: number[], threshold: number): boolean {
+	return expected.every((v, i) => Math.abs(v - received[i]) <= Math.pow(10, -threshold));
+}
