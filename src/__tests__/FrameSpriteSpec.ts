@@ -41,10 +41,10 @@ describe("test FrameSprite", () => {
 		expect(sp.frameNumber).toBe(1);
 		sp.modified();
 		expect(sp._lastUsedIndex).toBe(4);
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(2);
 		expect(sp._lastUsedIndex).toBe(5);
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(3);
 		expect(sp._lastUsedIndex).toBe(6);
 		expect(sp._timer).toBeDefined();
@@ -100,8 +100,8 @@ describe("test FrameSprite", () => {
 		sp.frameNumber = 1;
 		sp.start();
 		sp.modified();
-		runtime.game.tick();
-		runtime.game.tick();
+		runtime.game.tick(true);
+		runtime.game.tick(true);
 
 		expect(sp.frameNumber).toBe(3);
 		expect(sp._lastUsedIndex).toBe(6);
@@ -114,10 +114,10 @@ describe("test FrameSprite", () => {
 		expect(sp.frameNumber).toBe(0);
 		expect(sp._lastUsedIndex).toBe(7);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(1);
 		expect(sp._lastUsedIndex).toBe(8);
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(0);
 		expect(sp._lastUsedIndex).toBe(7);
 
@@ -128,7 +128,7 @@ describe("test FrameSprite", () => {
 		expect(sp.frameNumber).toBe(1);
 		expect(sp._lastUsedIndex).toBe(8);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(0);
 		expect(sp._lastUsedIndex).toBe(7);
 
@@ -139,15 +139,15 @@ describe("test FrameSprite", () => {
 		expect(sp.frameNumber).toBe(0);
 		expect(sp._lastUsedIndex).toBe(10);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(1);
 		expect(sp._lastUsedIndex).toBe(11);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(2);
 		expect(sp._lastUsedIndex).toBe(12);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sp.frameNumber).toBe(0);
 		expect(sp._lastUsedIndex).toBe(10);
 	});
@@ -204,17 +204,17 @@ describe("test FrameSprite", () => {
 		expect(sprite._lastUsedIndex).toBe(10);
 		expect(isFired).toBe(false);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sprite.frameNumber).toBe(1);
 		expect(sprite._lastUsedIndex).toBe(11);
 		expect(isFired).toBe(false);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sprite.frameNumber).toBe(2);
 		expect(sprite._lastUsedIndex).toBe(12);
 		expect(isFired).toBe(false);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sprite.frameNumber).toBe(0);
 		expect(sprite._lastUsedIndex).toBe(10);
 		expect(isFired).toBe(false);
@@ -240,17 +240,17 @@ describe("test FrameSprite", () => {
 		expect(sprite._lastUsedIndex).toBe(10);
 		expect(isFired).toBe(false);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sprite.frameNumber).toBe(1);
 		expect(sprite._lastUsedIndex).toBe(11);
 		expect(isFired).toBe(false);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sprite.frameNumber).toBe(2);
 		expect(sprite._lastUsedIndex).toBe(12);
 		expect(isFired).toBe(false);
 
-		runtime.game.tick();
+		runtime.game.tick(true);
 		expect(sprite.frameNumber).toBe(2);
 		expect(sprite._lastUsedIndex).toBe(12);
 		expect(isFired).toBe(true);

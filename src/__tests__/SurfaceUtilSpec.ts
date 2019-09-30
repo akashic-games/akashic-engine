@@ -11,7 +11,7 @@ describe("test SurfaceUtil", () => {
 		expect(SurfaceUtil.asSurface(surface)).toBe(surface);
 		expect(SurfaceUtil.asSurface(undefined)).toBeUndefined();
 		expect(() => {
-			SurfaceUtil.asSurface(scene);
+			SurfaceUtil.asSurface(scene as any);
 		}).toThrowError("TypeMismatchError");
 
 		const game = new Game({

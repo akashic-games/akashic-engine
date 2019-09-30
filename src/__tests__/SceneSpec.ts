@@ -1010,16 +1010,16 @@ describe("test Scene", () => {
 		timer.elapsed.add(() => {
 			fail("invalid call");
 		}, undefined);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 		timer.elapsed.removeAll({ owner: undefined });
 		expect(scene._timer._timers.length).toBe(1);
 		let success = false;
 		timer.elapsed.add(() => {
 			success = true;
 		});
-		game.tick(1);
+		game.tick(true);
 		expect(success).toBe(true);
 
 		expect(timer.canDelete()).toBe(false);
@@ -1044,11 +1044,11 @@ describe("test Scene", () => {
 		});
 		expect(scene1._timer._timers.length).toBe(1);
 
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 		state1 = true;
-		game.tick(1);
+		game.tick(true);
 		expect(success1).toBe(true);
 
 		const scene2 = new Scene({ game: game });
@@ -1067,11 +1067,11 @@ describe("test Scene", () => {
 			// do nothing
 		});
 		expect(scene2._timer._timers.length).toBe(1);
-		game.tick(1);
+		game.tick(true);
 		state2 = true;
-		game.tick(1);
+		game.tick(true);
 		expect(success2).toBe(true);
-		game.tick(10); // どれだけ時間経過してもscene1のtimerは呼ばれない
+		game.tick(true, 10); // どれだけ時間経過してもscene1のtimerは呼ばれない
 
 		scene2.clearInterval(holder3);
 		expect(scene1._timer._timers.length).toBe(1);
@@ -1098,18 +1098,18 @@ describe("test Scene", () => {
 		});
 		expect(scene1._timer._timers.length).toBe(1);
 
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 		state1 = true;
-		game.tick(1);
+		game.tick(true);
 		expect(success1).toBe(true);
 		state1 = false;
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 		expect(scene1._timer._timers.length).toBe(0);
 	});
 
@@ -1128,18 +1128,18 @@ describe("test Scene", () => {
 			owner
 		);
 
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 		expect(callCount).toBe(0);
-		game.tick(1);
+		game.tick(true);
 		expect(callCount).toBe(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 		expect(callCount).toBe(1);
 	});
 
@@ -1156,11 +1156,11 @@ describe("test Scene", () => {
 		scene1.clearTimeout(holder1);
 		expect(scene1._timer._timers.length).toBe(0);
 
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
+		game.tick(true);
 	});
 
 	it("setInterval - release scene", () => {
@@ -1215,21 +1215,21 @@ describe("test Scene", () => {
 			owner
 		);
 
-		game.tick(1);
-		game.tick(1);
-		game.tick(1); // 3/32*1000 = 93.75ms
+		game.tick(true);
+		game.tick(true);
+		game.tick(true); // 3/32*1000 = 93.75ms
 		expect(callCount).toBe(0);
-		game.tick(1); // 4/32*1000 = 125ms
+		game.tick(true); // 4/32*1000 = 125ms
 		expect(callCount).toBe(1);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
 		expect(callCount).toBe(1);
-		game.tick(1); // 7/32*1000 = 218.75ms
+		game.tick(true); // 7/32*1000 = 218.75ms
 		expect(callCount).toBe(2);
-		game.tick(1);
-		game.tick(1);
+		game.tick(true);
+		game.tick(true);
 		expect(callCount).toBe(2);
-		game.tick(1); // 10/32*1000 = 312.5ms
+		game.tick(true); // 10/32*1000 = 312.5ms
 		expect(callCount).toBe(3);
 	});
 
