@@ -40,7 +40,6 @@ describe.skip("test OperationPluginManager", () => {
 	let game: Game;
 
 	beforeEach(() => {
-		expect.extend(customMatchers);
 		global.g._require = (game: Game, path: string, currentModule?: Module) => {
 			switch (path) {
 				case "/script/op-plugin.js":

@@ -2,11 +2,9 @@ import { customMatchers } from "./helpers";
 import { Xorshift } from "..";
 const RefXorshift = require("xorshift").constructor; // tslint:disable-line: no-var-requires
 
-describe.skip("test XorshiftRandomGenerator", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe.skip("test XorshiftRandomGenerator", () => {
 	it("Xorshift - nextInt", () => {
 		// この関数のマジックナンバーは単にテスト用であり他に依存しない
 

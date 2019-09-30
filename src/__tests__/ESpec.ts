@@ -1,16 +1,17 @@
-import { EntityStateFlags, customMatchers, skeletonRuntime, Game, Renderer } from "./helpers";
+import { EntityStateFlags, customMatchers, skeletonRuntime, Game, Renderer, Runtime } from "./helpers";
 import { E, PlainMatrix, Scene, PointDownEvent, Camera2D, PointEvent, CompositeOperation } from "..";
 
-describe("test E", () => {
-	let runtime: any, e: any;
+expect.extend(customMatchers);
 
-	function resetUpdated(runtime: any): void {
+describe("test E", () => {
+	let runtime: Runtime, e: E;
+
+	function resetUpdated(runtime: Runtime): void {
 		runtime.game.modified = false;
 		e.state &= ~EntityStateFlags.Modified;
 	}
 
 	beforeEach(() => {
-		expect.extend(customMatchers);
 		runtime = skeletonRuntime();
 		e = new E({ scene: runtime.scene });
 		runtime.scene.append(e);
@@ -335,19 +336,19 @@ describe("test E", () => {
 		e.pointUp.add(() => {
 			/* do nothing */
 		});
-		expect(e._message).toBeDefined();
-		expect(e._pointDown).toBeDefined();
-		expect(e._pointMove).toBeDefined();
-		expect(e._pointUp).toBeDefined();
+		expect((e as any)._message).toBeDefined();
+		expect((e as any)._pointDown).toBeDefined();
+		expect((e as any)._pointMove).toBeDefined();
+		expect((e as any)._pointUp).toBeDefined();
 
 		e.destroy();
 		expect(e.parent).toBe(undefined);
 		expect(e.destroyed()).toBe(true);
 		expect(e.children).toBe(undefined);
-		expect(e._message).toBeUndefined();
-		expect(e._pointDown).toBeUndefined();
-		expect(e._pointMove).toBeUndefined();
-		expect(e._pointUp).toBeUndefined();
+		expect((e as any)._message).toBeUndefined();
+		expect((e as any)._pointDown).toBeUndefined();
+		expect((e as any)._pointMove).toBeUndefined();
+		expect((e as any)._pointUp).toBeUndefined();
 	});
 
 	it("modified", () => {
@@ -381,17 +382,17 @@ describe("test E", () => {
 	});
 
 	it("update", () => {
-		expect(e._update).toBeUndefined();
+		expect((e as any)._update).toBeUndefined();
 		expect(runtime.scene.update.length > 0).toBe(false);
-		runtime.game.tick(1);
+		runtime.game.tick(true);
 
 		// auto chain
 		expect(e.update).not.toBeUndefined();
-		expect(e._update).not.toBeUndefined();
-		expect(e._update.chain).not.toBeUndefined();
+		expect((e as any)._update).not.toBeUndefined();
+		expect((e as any)._update.chain).not.toBeUndefined();
 		expect(runtime.scene.update.length > 0).toBe(false);
 
-		runtime.game.tick(1);
+		runtime.game.tick(true);
 
 		let estate = false;
 		let esuccess = false;
@@ -402,22 +403,22 @@ describe("test E", () => {
 		expect(runtime.scene.update.length > 0).toBe(true);
 
 		estate = true;
-		runtime.game.tick(1);
+		runtime.game.tick(true);
 		expect(esuccess).toBe(true);
 
 		const scene2 = new Scene({ game: runtime.game });
 		runtime.game.pushScene(scene2);
 		runtime.game._flushSceneChangeRequests();
 		estate = false;
-		runtime.game.tick(1);
-		runtime.game.tick(1);
-		runtime.game.tick(1);
+		runtime.game.tick(true);
+		runtime.game.tick(true);
+		runtime.game.tick(true);
 
 		runtime.game.popScene();
 		runtime.game._flushSceneChangeRequests();
 		estate = true;
 		esuccess = false;
-		runtime.game.tick(1);
+		runtime.game.tick(true);
 		expect(esuccess).toBe(true);
 
 		const scene3 = new Scene({ game: runtime.game });
@@ -427,20 +428,20 @@ describe("test E", () => {
 
 		expect(scene3.update.length > 0).toBe(false);
 		expect(runtime.scene.update.destroyed()).toBe(true);
-		runtime.game.tick(1);
+		runtime.game.tick(true);
 	});
 
 	it("operate", () => {
-		expect(e._pointDown).toBeUndefined();
+		expect((e as any)._pointDown).toBeUndefined();
 		expect(runtime.scene.pointDownCapture.length > 0).toBe(false);
 		expect(e.pointDown).not.toBeUndefined();
-		expect(e._pointDown).not.toBeUndefined();
-		expect(e._pointDown.chain).not.toBeUndefined();
+		expect((e as any)._pointDown).not.toBeUndefined();
+		expect((e as any)._pointDown.chain).not.toBeUndefined();
 		expect(runtime.scene.pointDownCapture.length > 0).toBe(false);
 
 		const operationTick = () => {
 			runtime.game.events.push(new PointDownEvent(1, e, { x: 0, y: 0 }, { id: "1" }));
-			runtime.game.tick(1);
+			runtime.game.tick(true);
 		};
 		let estate = false;
 		let esuccess = false;

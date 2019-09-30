@@ -11,10 +11,10 @@ import {
 	NinePatchSurfaceEffector,
 	SpriteFactory
 } from "..";
-import { ImageAsset, Surface, Renderer, skeletonRuntime } from "./helpers";
+import { ImageAsset, Surface, Renderer, skeletonRuntime, Runtime } from "./helpers";
 
 describe("test Destroy", () => {
-	let runtime: any;
+	let runtime: Runtime;
 	let bmpfont: BitmapFont;
 	let imageAsset: ImageAsset;
 
@@ -69,7 +69,7 @@ describe("test Destroy", () => {
 			defaultGlyphHeight: 12,
 			missingGlyph: missingGlyph
 		});
-		imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
+		imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200) as ImageAsset;
 	});
 
 	it("auto destroy", () => {

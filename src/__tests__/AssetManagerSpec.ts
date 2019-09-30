@@ -1,6 +1,8 @@
 import { AssetManager, ImageAsset, AssetManagerLoadHandler } from "..";
 import { Game, Surface, customMatchers } from "./helpers";
 
+expect.extend(customMatchers);
+
 describe("test AssetManager", () => {
 	const gameConfiguration = {
 		width: 320,
@@ -87,10 +89,6 @@ describe("test AssetManager", () => {
 			}
 		}
 	};
-
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
 
 	it("初期化", () => {
 		const game = new Game(gameConfiguration, "/");

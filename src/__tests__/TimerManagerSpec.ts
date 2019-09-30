@@ -1,11 +1,12 @@
 import { Trigger, TimerManager, Timer } from "..";
 import { customMatchers } from "./helpers";
 
+expect.extend(customMatchers);
+
 describe("test TimerManager", () => {
 	let trigger: Trigger<void>;
 
 	beforeEach(() => {
-		expect.extend(customMatchers);
 		trigger = new Trigger();
 	});
 

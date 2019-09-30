@@ -5,7 +5,6 @@ describe("test NinePatchSurfaceEffector", () => {
 	let game: Game;
 
 	beforeEach(() => {
-		expect.extend(customMatchers);
 		game = new Game({ width: 320, height: 320 });
 	});
 

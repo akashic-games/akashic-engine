@@ -1,9 +1,10 @@
 import { SurfaceUtil, ImageAsset } from "..";
 import { Surface, Game, skeletonRuntime, customMatchers } from "./helpers";
 
+expect.extend(customMatchers);
+
 describe("test SurfaceUtil", () => {
 	it("asSurface", done => {
-		expect.extend(customMatchers);
 		const runtime = skeletonRuntime();
 		const scene = runtime.scene;
 		const surface = new Surface(1, 1);

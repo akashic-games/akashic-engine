@@ -1,8 +1,8 @@
-import { skeletonRuntime } from "./helpers";
 import { E } from "..";
+import { skeletonRuntime, Runtime } from "./helpers";
 
 describe("test E", () => {
-	let runtime: any, e: E;
+	let runtime: Runtime, e: E;
 
 	beforeEach(() => {
 		runtime = skeletonRuntime();

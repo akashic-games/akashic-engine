@@ -1,12 +1,13 @@
 import { Object2D, CompositeOperation, PlainMatrix } from "..";
 import { customMatchers } from "./helpers";
 
+expect.extend(customMatchers);
+
 describe("test Object2D", () => {
 	let e: Object2D;
 
 	beforeEach(() => {
 		e = new Object2D();
-		expect.extend(customMatchers);
 	});
 
 	it("初期化", () => {

@@ -1,11 +1,9 @@
 import { XorshiftRandomGenerator } from "..";
 import { customMatchers } from "./helpers";
 
-describe("test XorshiftRandomGenerator", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe("test XorshiftRandomGenerator", () => {
 	it("初期化", () => {
 		const generator = new XorshiftRandomGenerator(1);
 		expect(generator.seed).toEqual(1);

@@ -1,6 +1,8 @@
 import { Module, _require, Scene, PathUtil, XorshiftRandomGenerator, _findAssetByPathAsFile, _findAssetByPathAsDirectory } from "..";
 import { customMatchers, Game } from "./helpers";
 
+expect.extend(customMatchers);
+
 describe("test Module", () => {
 	function resolveGameConfigurationPath(gameConfiguration: any, pathConverter: any): any {
 		function objectMap(obj: any, f: any): any {
@@ -255,10 +257,6 @@ describe("test Module", () => {
 		"/script/cache2.js": "module.exports = { v1: require('randomnumber'), v2: require('randomnumber') };",
 		"/node_modules/randomnumber/index.js": "module.exports = g.game.random.get(0, 1000000);"
 	};
-
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
 
 	it("初期化", done => {
 		const path = "/path/to/the/module.js";

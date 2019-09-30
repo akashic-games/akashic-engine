@@ -1,11 +1,9 @@
 import { PlainMatrix } from "..";
 import { customMatchers } from "./helpers";
 
-describe("test Matrix", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe("test Matrix", () => {
 	it("初期化", () => {
 		let m: PlainMatrix;
 		m = new PlainMatrix();

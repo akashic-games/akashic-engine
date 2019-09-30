@@ -1,11 +1,12 @@
 import { Pane, CommonRect, SurfaceUtil, E, Sprite } from "..";
-import { customMatchers, skeletonRuntime, Surface, EntityStateFlags, Renderer } from "./helpers";
+import { customMatchers, skeletonRuntime, Surface, EntityStateFlags, Renderer, Runtime } from "./helpers";
+
+expect.extend(customMatchers);
 
 describe("test Pane", () => {
-	let runtime: any;
+	let runtime: Runtime;
 
 	beforeEach(() => {
-		expect.extend(customMatchers);
 		runtime = skeletonRuntime();
 	});
 

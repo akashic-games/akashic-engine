@@ -13,7 +13,6 @@ describe("test Sprite", () => {
 
 	beforeEach(() => {
 		updated = false;
-		expect.extend(customMatchers);
 	});
 
 	it("初期化", () => {

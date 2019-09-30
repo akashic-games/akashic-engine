@@ -1,11 +1,9 @@
 import { customMatchers, skeletonRuntime } from "./helpers";
 import { FilledRect, LogLevel } from "..";
 
-describe("test ColorBox", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe("test ColorBox", () => {
 	it("初期化", () => {
 		const runtime = skeletonRuntime();
 		const box = new FilledRect({

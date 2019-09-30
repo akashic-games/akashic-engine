@@ -1,11 +1,9 @@
 import { Trigger } from "..";
 import { Surface, customMatchers } from "./helpers";
 
-describe("test Surface", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe("test Surface", () => {
 	it("初期化", () => {
 		const width = 1;
 		const height = 2;

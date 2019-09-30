@@ -14,11 +14,9 @@ import {
 	Camera2D
 } from "..";
 
-describe.skip("test Game", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe.skip("test Game", () => {
 	it("初期化", () => {
 		const game = new Game({ width: 320, height: 270 }, undefined, "foo");
 		expect(game._idx).toBe(0);

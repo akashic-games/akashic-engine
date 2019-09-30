@@ -32,15 +32,17 @@ export class Renderer extends g.Renderer {
 	}
 
 	get methodCallHistory(): string[] {
-		var ret: string[] = [];
-		for (var i = 0; i < this.methodCallHistoryWithParams.length; ++i) ret.push(this.methodCallHistoryWithParams[i].methodName);
+		const ret: string[] = [];
+		for (let i = 0; i < this.methodCallHistoryWithParams.length; ++i) ret.push(this.methodCallHistoryWithParams[i].methodName);
 		return ret;
 	}
 
-	// 指定したメソッド名のパラメータを配列にして返す
+	/**
+	 * 指定したメソッド名のパラメータを配列にして返す
+	 */
 	methodCallParamsHistory(name: string): any[] {
-		var params: any[] = [];
-		for (var i = 0; i < this.methodCallHistoryWithParams.length; ++i) {
+		const params: any[] = [];
+		for (let i = 0; i < this.methodCallHistoryWithParams.length; ++i) {
 			if (this.methodCallHistoryWithParams[i].methodName === name) params.push(this.methodCallHistoryWithParams[i].params);
 		}
 		return params;
@@ -221,7 +223,7 @@ export class Surface extends g.Surface {
 	}
 
 	renderer(): g.Renderer {
-		var r = new Renderer();
+		const r = new Renderer();
 		this.createdRenderer = r;
 		return r;
 	}
@@ -328,7 +330,7 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 	_flushDelayed(): void {
 		if (this._delaying || !this._loadingResult) return;
 		if (this.destroyed()) return;
-		var loader = this._lastGivenLoader;
+		const loader = this._lastGivenLoader;
 		if (this._isError) {
 			loader._onAssetError.apply(loader, this._loadingResult);
 		} else {
@@ -413,10 +415,10 @@ export class ScriptAsset extends g.ScriptAsset {
 				return new g.Scene({ game: env.game });
 			});
 		} else {
-			var prefix = "(function(exports, require, module, __filename, __dirname) {";
-			var suffix = "})(g.module.exports, g.module.require, g.module, g.filename, g.dirname);";
-			var content = (<ResourceFactory>this.game.resourceFactory).scriptContents[env.module.filename];
-			var f = new Function("g", prefix + content + suffix);
+			const prefix = "(function(exports, require, module, __filename, __dirname) {";
+			const suffix = "})(g.module.exports, g.module.require, g.module, g.filename, g.dirname);";
+			const content = (<ResourceFactory>this.game.resourceFactory).scriptContents[env.module.filename];
+			const f = new Function("g", prefix + content + suffix);
 			f(env);
 			return env.module.exports;
 		}
@@ -512,7 +514,7 @@ export class ResourceFactory extends g.ResourceFactory {
 	// func() とその呼び出し先で生成されたアセットは、指定回数だけロードに失敗したのち成功する。
 	// -1を指定した場合、ロードは retriable が偽に設定された AssetLoadFatalError で失敗する。
 	withNecessaryRetryCount(necessaryRetryCount: number, func: () => void): void {
-		var originalValue = this._necessaryRetryCount;
+		const originalValue = this._necessaryRetryCount;
 		try {
 			this._necessaryRetryCount = necessaryRetryCount;
 			func();
@@ -532,7 +534,7 @@ export class ResourceFactory extends g.ResourceFactory {
 
 	createImageAsset(id: string, assetPath: string, width: number, height: number): g.ImageAsset {
 		if (this.createsDelayedAsset) {
-			var ret = new DelayedImageAsset(this._necessaryRetryCount, id, assetPath, width, height);
+			const ret = new DelayedImageAsset(this._necessaryRetryCount, id, assetPath, width, height);
 			this._delayedAssets.push(ret);
 			return ret;
 		} else {

@@ -14,6 +14,8 @@ import {
 } from "..";
 import { Game, customMatchers, skeletonRuntime } from "./helpers";
 
+expect.extend(customMatchers);
+
 describe("test Scene", () => {
 	const assetsConfiguration: { [path: string]: AssetConfiguration } = {
 		foo: {
@@ -35,10 +37,6 @@ describe("test Scene", () => {
 		width: 320,
 		height: 320,
 		assets: assetsConfiguration
-	});
-
-	beforeEach(() => {
-		expect.extend(customMatchers);
 	});
 
 	it("初期化 - SceneParameterObject", () => {

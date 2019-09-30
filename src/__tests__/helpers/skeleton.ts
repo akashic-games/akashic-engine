@@ -1,10 +1,15 @@
-import * as g from "../..";
-import * as mock from "./mock";
+import { Scene, GameConfiguration } from "../../";
+import { Game } from "./mock";
 
-export function skeletonRuntime(gameConfiguration?: g.GameConfiguration): any {
+export interface Runtime {
+	game: Game;
+	scene: Scene;
+}
+
+export function skeletonRuntime(gameConfiguration?: GameConfiguration): Runtime {
 	if (!gameConfiguration) gameConfiguration = { width: 320, height: 320 };
-	var game = new mock.Game(gameConfiguration);
-	var scene = new g.Scene({ game: game });
+	const game = new Game(gameConfiguration);
+	const scene = new Scene({ game });
 	game.pushScene(scene);
 	game._flushSceneChangeRequests();
 	return {

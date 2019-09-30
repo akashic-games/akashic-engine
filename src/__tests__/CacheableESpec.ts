@@ -1,11 +1,10 @@
 import { Camera2D } from "..";
-import { CacheableE, Renderer, EntityStateFlags, customMatchers, skeletonRuntime } from "./helpers";
+import { CacheableE, Renderer, EntityStateFlags, skeletonRuntime, Runtime } from "./helpers";
 
 describe("test CacheableE", () => {
-	let runtime: any;
+	let runtime: Runtime;
 
 	beforeEach(() => {
-		expect.extend(customMatchers);
 		runtime = skeletonRuntime();
 	});
 

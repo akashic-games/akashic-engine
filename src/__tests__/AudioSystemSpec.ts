@@ -1,11 +1,9 @@
 import { MusicAudioSystem } from "..";
 import { Game, ResourceFactory, AudioPlayer, customMatchers } from "./helpers";
 
-describe("test AudioPlayer", () => {
-	beforeEach(() => {
-		expect.extend(customMatchers);
-	});
+expect.extend(customMatchers);
 
+describe("test AudioPlayer", () => {
 	it("AudioSystem#volumeの入力値チェック", () => {
 		const game = new Game({ width: 320, height: 320 });
 		const system = new MusicAudioSystem("music", game);
