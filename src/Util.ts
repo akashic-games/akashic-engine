@@ -48,18 +48,20 @@ namespace g {
 		 * @param scaleX 対象の横方向への拡大率
 		 * @param scaleY 対象の縦方向への拡大率
 		 * @param angle 角度。単位はdegreeでありradianではない
+		 * @param anchorX アンカーの横位置。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
+		 * @param anchorY アンカーの縦位置。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
 		 */
 		export function createMatrix(width: number, height: number,
-		                             scaleX: number, scaleY: number, angle: number): Matrix;
+		                             scaleX: number, scaleY: number, angle: number, anchorX?: number, anchorY?: number): Matrix;
 
 		// Note: オーバーロードされているのでjsdoc省略
 		export function createMatrix(width?: number, height?: number,
-		                             scaleX?: number, scaleY?: number, angle?: number): Matrix {
+		                             scaleX?: number, scaleY?: number, angle?: number, anchorX?: number, anchorY?: number): Matrix {
 			// Note: asm.js対応環境ではasm.js対応のMatrixを生成するなどしたいため、オーバーヘッドを許容する
 			if (width === undefined)
 				return new PlainMatrix();
 
-			return new PlainMatrix(width, height, scaleX, scaleY, angle);
+			return new PlainMatrix(width, height, scaleX, scaleY, angle, anchorX, anchorY);
 		}
 
 		/**

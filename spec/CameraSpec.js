@@ -106,6 +106,15 @@ describe("test Camera", function() {
 		expect(mat._matrix).toEqual(expected._matrix);
 	});
 
+	it("anchor", function() {
+		var game = new mock.Game({ width: 320, height: 240 });
+		var cam = new g.Camera2D({game: game, angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5});
+		var expected = new g.PlainMatrix();
+		var mat = cam.getMatrix();
+		expected.updateByInverseWithAnchor(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);
+		expect(mat._matrix).toEqual(expected._matrix);
+	});
+
 	it("_applyTransformToRenderer", function() {
 		var game = new mock.Game({ width: 320, height: 240 });
 		var cam = new g.Camera2D({game: game});

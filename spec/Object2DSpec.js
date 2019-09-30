@@ -18,6 +18,8 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toEqual(1);
 		expect(e.angle).toEqual(0);
 		expect(e.compositeOperation).toBeUndefined();
+		expect(e.anchorX).toBeUndefined();
+		expect(e.anchorY).toBeUndefined();
 		expect(e._matrix).toBeUndefined();
 	});
 
@@ -32,6 +34,8 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toEqual(1);
 		expect(e.angle).toEqual(0);
 		expect(e.compositeOperation).toBeUndefined();
+		expect(e.anchorX).toBeUndefined();
+		expect(e.anchorY).toBeUndefined();
 		expect(e._matrix).toBeUndefined();
 
 		var e = new g.Object2D({
@@ -43,7 +47,9 @@ describe("test Object2D", function () {
 			scaleX: 0.4,
 			scaleY: 1.2,
 			angle: 10,
-			compositeOperation: g.CompositeOperation.SourceAtop
+			compositeOperation: g.CompositeOperation.SourceAtop,
+			anchorX: 0,
+			anchorY: 1
 		});
 		expect(e.x).toEqual(1);
 		expect(e.y).toEqual(2);
@@ -54,6 +60,8 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toEqual(1.2);
 		expect(e.angle).toEqual(10);
 		expect(e.compositeOperation).toEqual(g.CompositeOperation.SourceAtop);
+		expect(e.anchorX).toBe(0);
+		expect(e.anchorY).toBe(1);
 		expect(e._matrix).toBeUndefined();
 	});
 
@@ -181,6 +189,15 @@ describe("test Object2D", function () {
 		expect(e.scaleY).toBe(1);
 	});
 
+	it("anchor", function () {
+		e.anchor(1, 0);
+		expect(e.anchorX).toBe(1);
+		expect(e.anchorY).toBe(0);
+		e.anchor(0.5, 0.5);
+		expect(e.anchorX).toBe(0.5);
+		expect(e.anchorY).toBe(0.5);
+	});
+
 	it("getMatrix", function () {
 		var scarecrow = g.Util.createMatrix();
 
@@ -196,6 +213,15 @@ describe("test Object2D", function () {
 		e._matrix._modified = true;
 		scarecrow = g.Util.createMatrix();
 		expect(e.getMatrix()).toEqual(scarecrow);
+		expect(e._matrix._modified).toBe(false);
+
+		e.resizeTo(20, 20);
+		e.moveTo(10, 10);
+		e.anchor(1, 1);
+		e._matrix._modified = true;
+		var expected = new g.PlainMatrix();
+		expected.updateWithAnchor(20, 20, 1, 1, 0, 10, 10, 1, 1);
+		expect(e.getMatrix()._matrix).toEqual(expected._matrix);
 		expect(e._matrix._modified).toBe(false);
 	});
 });
