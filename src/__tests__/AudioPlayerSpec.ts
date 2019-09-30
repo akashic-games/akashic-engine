@@ -3,9 +3,9 @@ import { Game, AudioPlayer } from "./helpers";
 
 describe("test AudioPlayer", () => {
 	it("初期化-music", () => {
-		var game = new Game({ width: 320, height: 320 });
-		var system = new MusicAudioSystem("music", game);
-		var player = new AudioPlayer(system);
+		const game = new Game({ width: 320, height: 320 });
+		const system = new MusicAudioSystem("music", game);
+		const player = new AudioPlayer(system);
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(Trigger);
 		expect(player.stopped.constructor).toBe(Trigger);
@@ -13,10 +13,10 @@ describe("test AudioPlayer", () => {
 	});
 
 	it("初期化-sound", () => {
-		var game = new Game({ width: 320, height: 320 });
-		var system = new SoundAudioSystem("voice", game);
+		const game = new Game({ width: 320, height: 320 });
+		const system = new SoundAudioSystem("voice", game);
 		system.volume = 0.5;
-		var player = new AudioPlayer(system);
+		const player = new AudioPlayer(system);
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(Trigger);
 		expect(player.stopped.constructor).toBe(Trigger);

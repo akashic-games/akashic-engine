@@ -72,7 +72,7 @@ describe("test Object2D", () => {
 		expect(e.x).toEqual(0);
 		expect(e.y).toEqual(-1);
 
-		var pos = { x: 1, y: 1 };
+		const pos = { x: 1, y: 1 };
 		e.moveTo(pos);
 		expect(e.x).toEqual(1);
 		expect(e.y).toEqual(1);
@@ -130,7 +130,7 @@ describe("test Object2D", () => {
 		expect(e.width).toEqual(-200);
 		expect(e.height).toEqual(-200);
 
-		var size = { width: 100, height: 100 };
+		const size = { width: 100, height: 100 };
 		e.resizeTo(size);
 		expect(e.width).toEqual(100);
 		expect(e.height).toEqual(100);
@@ -139,14 +139,14 @@ describe("test Object2D", () => {
 	it("resizeTo - AssertionError", () => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 
-		var size = { width: 100, height: 100 };
+		const size = { width: 100, height: 100 };
 		expect(() => {
 			e.resizeTo(100, size as any);
 		}).toThrowError("AssertionError");
 	});
 
 	it("resizeToEntity", () => {
-		var e2 = new Object2D();
+		const e2 = new Object2D();
 		e.resizeTo(e2);
 		expect(e.width).toEqual(e2.width);
 		expect(e.height).toEqual(e2.height);
