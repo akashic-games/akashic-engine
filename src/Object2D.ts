@@ -64,6 +64,28 @@ export interface Object2DParameterObject {
 	 * @default undefined
 	 */
 	compositeOperation?: CompositeOperation;
+
+	/**
+	 * オブジェクトのアンカーの横位置。アンカーについては以下の通り。
+	 * * アンカーとして設定した箇所がこのオブジェクトの基点 (位置、拡縮・回転の基点) となる。
+	 * * 単位は相対値 (左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1) ) である。
+	 * anchorXとanchorYの両方が省略された場合、このオブジェクトの位置 (x, y) は左上端を基準に決定され、拡縮・回転の基点は中央座標となる。
+	 * これは前バージョンとの互換性のための挙動である。
+	 * anchorX, anchorYのどちらかのみを指定した場合の動作は不定である。
+	 * @default undefined
+	 */
+	anchorX?: number;
+
+	/**
+	 * オブジェクトのアンカーの縦位置。アンカーについては以下の通り。
+	 * * アンカーとして設定した箇所がこのオブジェクトの基点 (位置、拡縮・回転の基点) となる。
+	 * * 単位は相対値 (左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1) ) である。
+	 * anchorXとanchorYの両方が省略された場合、このオブジェクトの位置 (x, y) は左上端を基準に決定され、拡縮・回転の基点は中央座標となる。
+	 * これは前バージョンとの互換性のための挙動である。
+	 * anchorX, anchorYのどちらかのみを指定した場合の動作は不定である。
+	 * @default undefined
+	 */
+	anchorY?: number;
 }
 
 /**
@@ -135,6 +157,30 @@ export class Object2D implements CommonArea {
 	compositeOperation: CompositeOperation;
 
 	/**
+	 * オブジェクトのアンカーの横位置。アンカーについては以下の通り。
+	 * * アンカーとして設定した箇所がこのオブジェクトの基点 (位置、拡縮・回転の基点) となる。
+	 * * 単位は相対値 (左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1) ) である。
+	 * anchorXとanchorYの両方が省略された場合、このオブジェクトの位置 (x, y) は左上端を基準に決定され、拡縮・回転の基点は中央座標となる。
+	 * これは前バージョンとの互換性のための挙動である。
+	 * anchorX, anchorYのどちらかのみを指定した場合の動作は不定である。
+	 * 初期値は `undefined` である。
+	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
+	 */
+	anchorX: number | undefined;
+
+	/**
+	 * オブジェクトのアンカーの縦位置。アンカーについては以下の通り。
+	 * * アンカーとして設定した箇所がこのオブジェクトの基点 (位置、拡縮・回転の基点) となる。
+	 * * 単位は相対値 (左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1) ) である。
+	 * anchorXとanchorYの両方が省略された場合、このオブジェクトの位置 (x, y) は左上端を基準に決定され、拡縮・回転の基点は中央座標となる。
+	 * これは前バージョンとの互換性のための挙動である。
+	 * anchorX, anchorYのどちらかのみを指定した場合の動作は不定である。
+	 * 初期値は `undefined` である。
+	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
+	 */
+	anchorY: number | undefined;
+
+	/**
 	 * 変換行列のキャッシュ。 `Object2D` は状態に変更があった時、本値の_modifiedをtrueにする必要がある。
 	 * 初期値は `undefined` であり、 `getMatrix()` によって必要な時に生成されるため、
 	 * `if (this._matrix) this._matrix._modified = true` という式で記述する必要がある。
@@ -167,6 +213,8 @@ export class Object2D implements CommonArea {
 			this.scaleY = 1;
 			this.angle = 0;
 			this.compositeOperation = undefined;
+			this.anchorX = undefined;
+			this.anchorY = undefined;
 			this._matrix = undefined;
 		} else {
 			this.x = param.x || 0;
@@ -178,6 +226,8 @@ export class Object2D implements CommonArea {
 			this.scaleY = "scaleY" in param ? param.scaleY : 1;
 			this.angle = param.angle || 0;
 			this.compositeOperation = param.compositeOperation;
+			this.anchorX = param.anchorX;
+			this.anchorY = param.anchorY;
 			this._matrix = undefined;
 		}
 	}
@@ -275,6 +325,16 @@ export class Object2D implements CommonArea {
 	}
 
 	/**
+	 * オブジェクトのアンカーの位置を設定する。
+	 * このメソッドは `anchorX` と `anchorY` を同時に設定するためのユーティリティメソッドである。
+	 * `E` や `Camera2D` においてこのメソッドを呼び出した場合、 `modified()` を呼び出す必要がある。
+	 */
+	anchor(x: number, y: number): void {
+		this.anchorX = x;
+		this.anchorY = y;
+	}
+
+	/**
 	 * このオブジェクトの変換行列を得る。
 	 */
 	getMatrix(): Matrix {
@@ -293,7 +353,19 @@ export class Object2D implements CommonArea {
 	 * @private
 	 */
 	_updateMatrix(): void {
-		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
+		if (this.anchorX != null && this.anchorY != null) {
+			this._matrix.updateWithAnchor(
+				this.width,
+				this.height,
+				this.scaleX,
+				this.scaleY,
+				this.angle,
+				this.x,
+				this.y,
+				this.anchorX,
+				this.anchorY
+			);
+		} else if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
 			this._matrix.update(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
 		} else {
 			this._matrix.reset(this.x, this.y);
