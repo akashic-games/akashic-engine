@@ -10,13 +10,13 @@ import { ExceptionFactory } from "./errors";
 export interface Object2DParameterObject {
 
 	/**
-	 * このオブジェクトの横位置。実際の座標位置はscaleX, scaleY, angleの値も考慮する必要がある。
+	 * このオブジェクトの横位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
 	 * @default 0
 	 */
 	x?: number;
 
 	/**
-	 * このオブジェクトの縦位置。実際の座標位置はscaleX, scaleY, angleの値も考慮する必要がある。
+	 * このオブジェクトの縦位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
 	 * @default 0
 	 */
 	y?: number;
@@ -95,14 +95,14 @@ export interface Object2DParameterObject {
 export class Object2D implements CommonArea {
 	/**
 	 * このオブジェクトの横位置。
-	 * 初期値は `0` である。実際の座標位置はscaleX, scaleY, angleの値も考慮する必要がある。
+	 * 初期値は `0` である。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
 	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 */
 	x: number;
 
 	/**
 	 * このオブジェクトの縦位置。
-	 * 初期値は `0` である。実際の座標位置はscaleX, scaleY, angleの値も考慮する必要がある。
+	 * 初期値は `0` である。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
 	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 */
 	y: number;
