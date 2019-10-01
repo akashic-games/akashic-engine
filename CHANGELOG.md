@@ -12,6 +12,57 @@
   * g.Util.findAssetByPathDirectory => g._findAssetByPathDirectory (Module.tsに配置)
   * g.Util.createMatrixは削除
 
+## 2.5.4
+機能追加
+ * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+    * ゲーム開発者は、これらのプロパティを指定することで、対象のオブジェクトのアンカーを設定することができます。
+
+## 2.5.3
+
+機能追加
+ * `g.Font` をインタフェースから抽象クラスに変更
+ * `g.Font#measureText()` を追加
+
+### ゲーム開発者への影響
+ * `g.Font` がインタフェースから抽象クラスに変更されました。
+  * `g.Font` の実装クラスが存在する場合、 `g.Font` を継承する必要があります。
+ * `g.Font#measureText()` が追加されました。
+  * `g.Font` の実装クラスが存在する場合、 追加されたメソッドに対する処理を実装する必要があります。
+
+## 2.5.2
+
+機能追加
+
+ * `g.Game#isActiveInstance()` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#isActiveInstance()` を追加
+    * ゲーム開発者は、このメソッドを使うことで、そのインスタンスがアクティブインスタンスか知ることができます。
+
+## 2.5.1
+
+機能追加
+ * `g.Game#random#generate()` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#random#generate()` を追加
+    * `Math.random()` と同じように呼び出すことができる乱数生成メソッドです。
+    * ゲーム開発者は、コンテンツ内で使用している `Math.random()` をこのメソッドに適切に置き換えることで、ロジックに変更を加えずにAkashic対応することができます。
+
+## 2.5.0
+その他変更
+ * `g.game.getCurrentTime()` の戻り値が整数になるよう変更
+
+## 2.4.15
+その他変更
+ * `g.E` を継承したクラスで無限ループが発生しないよう変更
+
 ## 2.4.14
  * `ImageAsset#hint: ImageAssetHint` `ImageAsset#initialize()` を追加
 

@@ -22,5 +22,7 @@ export abstract class RandomGenerator {
 
 	abstract get(min: number, max: number): number;
 
+	abstract generate(): number;
+
 	abstract serialize(): any;
 }

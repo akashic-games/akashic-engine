@@ -349,7 +349,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		}
 
 		renderer.save();
-		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
+		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null) {
 			// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
 			renderer.transform(this.getMatrix()._matrix);
 		} else {
@@ -479,10 +479,11 @@ export class E extends Object2D implements CommonArea, Destroyable {
 			this.remove();
 
 		if (this.children) {
-			// ここでchildrenはsliceせずに直接処理する: 仮にエンティティが動的に増えたとしても例外なくすべて破壊する
-			// 万一destroyが子エンティティを減らさない場合 (サブクラスがこれをオーバーライドしてremoveもsuper.destroy()もしない時) 無限ループになるので注意
-			while (this.children.length)
-				this.children[this.children.length - 1].destroy();  // 暗黙にremoveされるので不要なコピーを避けるため後ろから破壊する
+			for (var i = this.children.length - 1; i >= 0; --i) {
+				this.children[i].destroy();
+			}
+			if (this.children.length !== 0)
+				throw ExceptionFactory.createAssertionError("E#destroy: can not destroy all children, " + this.children.length);
 
 			this.children = undefined;
 		}
@@ -536,8 +537,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		if (this._matrix)
 			this._matrix._modified = true;
 
-		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.opacity !== 1 || this.compositeOperation !== undefined ||
-			this.shaderProgram !== undefined) {
+		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null
+			|| this.opacity !== 1 || this.compositeOperation !== undefined || this.shaderProgram !== undefined) {
 			this.state &= ~EntityStateFlags.ContextLess;
 		} else {
 			this.state |= EntityStateFlags.ContextLess;

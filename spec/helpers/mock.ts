@@ -585,6 +585,10 @@ export class Game extends g.Game {
 	removeEventFilter(filter: g.EventFilter): void {
 		throw new Error("not implemented");
 	}
+
+	isActiveInstance(): boolean {
+		return false;
+	}
 }
 
 // g.Entitystateflags の定義はconst enumで書かれているので、javaScriptのテストコードからは直接参照できない。
