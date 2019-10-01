@@ -98,6 +98,15 @@ describe("test Camera", () => {
 		expect(mat._matrix).toEqual(expected._matrix);
 	});
 
+	it("anchor", () => {
+		const game = new Game({ width: 320, height: 240 });
+		const cam = new Camera2D({ game: game, angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5 });
+		const expected = new PlainMatrix();
+		const mat = cam.getMatrix();
+		expected.updateByInverseWithAnchor(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);
+		expect(mat._matrix).toEqual(expected._matrix);
+	});
+
 	it("_applyTransformToRenderer", () => {
 		const game = new Game({ width: 320, height: 240 });
 		const cam = new Camera2D({ game: game });

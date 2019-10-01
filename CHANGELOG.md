@@ -12,6 +12,15 @@
   * g.Util.findAssetByPathDirectory => g._findAssetByPathDirectory (Module.tsに配置)
   * g.Util.createMatrixは削除
 
+## 2.5.4
+機能追加
+ * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
+    * ゲーム開発者は、これらのプロパティを指定することで、対象のオブジェクトのアンカーを設定することができます。
+
 ## 2.5.3
 
 機能追加
