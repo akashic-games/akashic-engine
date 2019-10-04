@@ -21,7 +21,7 @@
     "tslint": "^5.18.0",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.3",
-    "xorshift": "^0.2.0"
+    "xorshift": "0.2.0"
   },
   "scripts": {
     "prepublish": "npm run build && npm run doc",
