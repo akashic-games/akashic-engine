@@ -4,8 +4,10 @@
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "devDependencies": {
+    "@types/jest": "^24.0.18",
     "dts-bundle-generator": "^3.1.0",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
     "rollup": "^1.16.2",
     "rollup-plugin-commonjs": "^10.0.1",
@@ -15,9 +17,11 @@
     "textlint-rule-max-ten": "^2.0.3",
     "textlint-rule-no-mix-dearu-desumasu": "^4.0.0",
     "textlint-rule-prh": "^5.2.1",
+    "ts-jest": "^24.1.0",
     "tslint": "^5.18.0",
     "typedoc": "^0.14.2",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.2",
+    "xorshift": "^1.1.1"
   },
   "scripts": {
     "prepublish": "npm run build && npm run doc",
@@ -27,11 +31,11 @@
     "bundle:js": "rollup -c rollup.config.js",
     "bundle:runtime:dts": "dts-bundle-generator -o dist/main.runtime.d.ts --umd-module-name g src/index.runtime.ts",
     "clean": "rimraf dist && rimraf lib",
-    "test": "npm run build && npm run test:compile && npm run test:jest",
-    "test:compile": "tsc -p ./spec",
-    "test:jest": "jest",
+    "test": "npm run test:format && npm run test:jest",
+    "test:jest": "jest --config jest.config.js",
+    "test:format": "prettier --config prettier.config.js --write ./src/__tests__/**/*.ts",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts --project ./tsconfig.json",
+    "lint": "tslint -c tslint.json src/**/*.ts --project ./tsconfig.json --fix",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [
