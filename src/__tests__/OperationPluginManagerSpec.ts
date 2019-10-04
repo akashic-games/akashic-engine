@@ -1,55 +1,63 @@
-import { Game, customMatchers } from "./helpers";
-import { OperationPluginViewInfo, Trigger, _require, Module, GameConfiguration } from "..";
+import { Game } from "./helpers";
+import { OperationPluginViewInfo, Trigger, Module, GameConfiguration } from "..";
+import * as mod from "../Module";
+import { InternalOperationPluginOperation, OperationPluginOperation } from "../OperationPluginOperation";
 
-describe.skip("test OperationPluginManager", () => {
-	// テスト用ダミー操作プラグイン
-	class TestOperationPlugin {
-		operationTrigger: Trigger<any> = new Trigger();
-		_game: Game;
-		_viewInfo: OperationPluginViewInfo;
-		_option: any;
-		_started: boolean = false;
-		constructor(game: Game, viewInfo: OperationPluginViewInfo, option: any) {
-			this._game = game;
-			this._viewInfo = viewInfo;
-			this._option = option;
-		}
+// テスト用ダミー操作プラグイン
+class TestOperationPlugin {
+	operationTrigger: Trigger<any> = new Trigger();
+	_game: Game;
+	_viewInfo: OperationPluginViewInfo;
+	_option: any;
+	_started: boolean = false;
 
-		isSupported(): boolean {
-			return true;
-		}
-		start(): void {
-			this._started = true;
-		}
-		stop(): void {
-			this._started = false;
-		}
-		debugFire(v: any): void {
-			this.operationTrigger.fire(v);
-		}
+	static isSupported(): boolean {
+		return true;
 	}
 
-	class TestOperationPluginUnsupported extends TestOperationPlugin {
-		isSupported(): boolean {
-			return false;
-		}
+	constructor(game: Game, viewInfo: OperationPluginViewInfo, option: any) {
+		this._game = game;
+		this._viewInfo = viewInfo;
+		this._option = option;
 	}
 
-	const require_original = global.g._require;
+	start(): void {
+		this._started = true;
+	}
+
+	stop(): void {
+		this._started = false;
+	}
+
+	debugFire(v: any): void {
+		this.operationTrigger.fire(v);
+	}
+}
+
+class TestOperationPluginUnsupported extends TestOperationPlugin {
+	static isSupported(): boolean {
+		return false;
+	}
+}
+
+const require_original = mod._require;
+
+jest.spyOn(mod, "_require").mockImplementation((game: Game, path: string, currentModule?: Module) => {
+	switch (path) {
+		case "/script/op-plugin.js":
+			return TestOperationPlugin;
+		case "/script/op-plugin-unsupported.js":
+			return TestOperationPluginUnsupported;
+		default:
+			return require_original.call(null, game, path, currentModule);
+	}
+});
+
+describe("test OperationPluginManager", () => {
 	const dummyViewInfo: OperationPluginViewInfo = { dummy: true } as any;
 	let game: Game;
 
 	beforeEach(() => {
-		global.g._require = (game: Game, path: string, currentModule?: Module) => {
-			switch (path) {
-				case "/script/op-plugin.js":
-					return TestOperationPlugin;
-				case "/script/op-plugin-unsupported.js":
-					return TestOperationPluginUnsupported;
-				default:
-					return require_original.call(null, game, path, currentModule);
-			}
-		};
 		const conf: GameConfiguration = {
 			width: 320,
 			height: 270,
@@ -79,15 +87,15 @@ describe.skip("test OperationPluginManager", () => {
 
 	it("initialize()", done => {
 		game._loaded.add(() => {
-			const self = game._operationPluginManager as any;
-			expect(self._initialized).toBe(false);
+			const self = game._operationPluginManager;
+			expect((self as any)._initialized).toBe(false);
 			self.initialize();
-			expect(self._initialized).toBe(true);
+			expect((self as any)._initialized).toBe(true);
 			self.initialize(); // 通過パス稼ぎのため二度目の呼び出し
 			expect(self.plugins[42]).not.toBeFalsy();
-			expect(self.plugins[42]._started).toBe(true);
-			expect(self.plugins[42]._game).toBe(game);
-			expect(self.plugins[42]._viewInfo).toBe(dummyViewInfo);
+			expect((self.plugins[42] as any)._started).toBe(true);
+			expect((self.plugins[42] as any)._game).toBe(game);
+			expect((self.plugins[42] as any)._viewInfo).toBe(dummyViewInfo);
 			expect(self.plugins[10]).toBeFalsy();
 			expect(self.plugins[15]).toBeFalsy();
 			done();
@@ -100,7 +108,7 @@ describe.skip("test OperationPluginManager", () => {
 			const self = game._operationPluginManager;
 			self.initialize();
 
-			const ops: any[] = [];
+			const ops: InternalOperationPluginOperation[] = [];
 			self.operated.add(op => {
 				ops.push(op);
 			});

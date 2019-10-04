@@ -1,10 +1,10 @@
-import { customMatchers } from "./helpers";
 import { Xorshift } from "..";
+import { customMatchers } from "./helpers";
 const RefXorshift = require("xorshift").constructor; // tslint:disable-line: no-var-requires
 
 expect.extend(customMatchers);
 
-describe.skip("test XorshiftRandomGenerator", () => {
+describe("test XorshiftRandomGenerator", () => {
 	it("Xorshift - nextInt", () => {
 		// この関数のマジックナンバーは単にテスト用であり他に依存しない
 
@@ -22,18 +22,15 @@ describe.skip("test XorshiftRandomGenerator", () => {
 	});
 
 	it("Xorshift - vs reference implementation", () => {
-		const generator = new Xorshift(0);
-		(generator as any)._state0U = 100;
-		(generator as any)._state0L = 101;
-		(generator as any)._state1U = 102;
-		(generator as any)._state1L = 103;
-		const ref = new RefXorshift([100, 101, 102, 103]);
-		const result = [];
-		const refResult = [];
-		for (let i = 0; i < 1000; ++i) {
-			result.push(generator.random());
-			refResult.push(ref.random());
+		const generator = Xorshift.deserialize({
+			_state0U: 100,
+			_state0L: 101,
+			_state1U: 102,
+			_state1L: 103
+		});
+		const ref = new RefXorshift([100, 101, 102, 103]) as Xorshift;
+		for (let i = 0; i < 100; ++i) {
+			expect(generator.random()).toEqual(ref.random());
 		}
-		expect(result).toEqual(refResult);
 	});
 });
