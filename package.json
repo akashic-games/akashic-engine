@@ -31,7 +31,7 @@
     "bundle:js": "rollup -c rollup.config.js",
     "bundle:runtime:dts": "dts-bundle-generator -o dist/main.runtime.d.ts --umd-module-name g src/index.runtime.ts",
     "clean": "rimraf dist && rimraf lib",
-    "test": "npm run test:jest && npm run test:format",
+    "test": "npm run test:format && npm run test:jest",
     "test:jest": "jest --config jest.config.js",
     "test:format": "prettier --config prettier.config.js --write ./src/__tests__/**/*.ts",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
