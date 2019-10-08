@@ -1,4 +1,3 @@
-import { customMatchers, Game, Renderer, EntityStateFlags } from "./helpers";
 import {
 	ImageAsset,
 	ScriptAsset,
@@ -11,12 +10,14 @@ import {
 	MessageEvent,
 	XorshiftRandomGenerator,
 	SoundAudioSystem,
-	Camera2D
+	Camera2D,
+	LoadingSceneParameterObject
 } from "..";
+import { customMatchers, Game, Renderer, EntityStateFlags } from "./helpers";
 
 expect.extend(customMatchers);
 
-describe.skip("test Game", () => {
+describe("test Game", () => {
 	it("初期化", () => {
 		const game = new Game({ width: 320, height: 270 }, undefined, "foo");
 		expect(game._idx).toBe(0);
@@ -304,7 +305,7 @@ describe.skip("test Game", () => {
 		let logs: string[] = [];
 
 		class TestLoadingScene extends LoadingScene {
-			constructor(param: any) {
+			constructor(param: LoadingSceneParameterObject) {
 				super(param);
 				this.loaded.add(() => {
 					logs.push("LoadingSceneLoaded");
@@ -322,16 +323,19 @@ describe.skip("test Game", () => {
 
 		game._loaded.add(() => {
 			game.loadingScene = loadingScene;
-			const scene = new Scene({
+
+			class MockScene1 extends Scene {
+				_load(): void {
+					logs.push("SceneLoad");
+					super._load();
+				}
+			}
+
+			const scene = new MockScene1({
 				game: game,
 				assetIds: ["foo"],
 				name: "scene1"
 			});
-			const oload = scene._load;
-			scene._load = (...args: any[]) => {
-				logs.push("SceneLoad");
-				return oload.apply(this, args);
-			};
 			scene.assetLoaded.add(a => {
 				logs.push("SceneAssetLoaded");
 			});
@@ -345,12 +349,15 @@ describe.skip("test Game", () => {
 
 				// LoadingScene の読み込みが終わっている状態でのシーン遷移をテスト
 				logs = [];
-				const scene2 = new Scene({ game: game, assetIds: ["foo"] });
-				const oload = scene2._load;
-				scene2._load = (...args: any[]) => {
-					logs.push("Scene2Load");
-					return oload.apply(this, args);
-				};
+
+				class MockScene2 extends Scene {
+					_load(): void {
+						logs.push("Scene2Load");
+						super._load();
+					}
+				}
+
+				const scene2 = new MockScene2({ game: game, assetIds: ["foo"] });
 				scene2.assetLoaded.add(a => {
 					logs.push("Scene2AssetLoaded");
 				});
@@ -395,8 +402,11 @@ describe.skip("test Game", () => {
 		let logs: string[] = [];
 
 		class TestLoadingScene extends LoadingScene {
-			constructor(param: any) {
+			constructor(param: LoadingSceneParameterObject) {
 				super(param);
+				this.assetLoaded.add(() => {
+					logs.push("LoadingSceneAssetLoaded");
+				});
 				this.loaded.add(() => {
 					logs.push("LoadingSceneLoaded");
 				});
@@ -413,12 +423,15 @@ describe.skip("test Game", () => {
 
 		game._loaded.add(() => {
 			game.loadingScene = loadingScene;
-			const scene = new Scene({ game: game, assetIds: ["zoo"] });
-			const oload = scene._load;
-			scene._load = (...args: any[]) => {
-				logs.push("SceneLoad");
-				return oload.apply(this, args);
-			};
+
+			class MockScene1 extends Scene {
+				_load(): void {
+					logs.push("SceneLoad");
+					super._load();
+				}
+			}
+
+			const scene = new MockScene1({ game: game, assetIds: ["zoo"] });
 			scene.assetLoaded.add(a => {
 				logs.push("SceneAssetLoaded");
 			});
@@ -434,12 +447,15 @@ describe.skip("test Game", () => {
 
 				// LoadingScene の読み込みが終わっている状態でのシーン遷移をテスト
 				logs = [];
-				const scene2 = new Scene({ game: game, assetIds: ["zoo"] });
-				const oload = scene2._load;
-				scene2._load = (...args: any[]) => {
-					logs.push("Scene2Load");
-					return oload.apply(this, args);
-				};
+
+				class MockScene2 extends Scene {
+					_load(): void {
+						logs.push("Scene2Load");
+						super._load();
+					}
+				}
+
+				const scene2 = new MockScene2({ game: game, assetIds: ["zoo"] });
 				scene2.assetLoaded.add(a => {
 					logs.push("Scene2AssetLoaded");
 				});

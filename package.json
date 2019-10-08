@@ -8,7 +8,7 @@
     "dts-bundle-generator": "^3.1.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
-    "rimraf": "^2.6.3",
+    "rimraf": "^3.0.0",
     "rollup": "^1.16.2",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-node-resolve": "^5.1.0",
@@ -19,9 +19,9 @@
     "textlint-rule-prh": "^5.2.1",
     "ts-jest": "^24.1.0",
     "tslint": "^5.18.0",
-    "typedoc": "^0.14.2",
-    "typescript": "^3.5.2",
-    "xorshift": "^1.1.1"
+    "typedoc": "^0.15.0",
+    "typescript": "^3.6.3",
+    "xorshift": "0.2.0"
   },
   "scripts": {
     "prepublish": "npm run build && npm run doc",
