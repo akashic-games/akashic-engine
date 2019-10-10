@@ -181,7 +181,7 @@ namespace g {
 		 * @private
 		 */
 		_applyTransformToRenderer(renderer: Renderer): void {
-			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
+			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null) {
 				// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
 				renderer.transform(this.getMatrix()._matrix);
 			} else {
@@ -196,8 +196,28 @@ namespace g {
 		 */
 		_updateMatrix(): void {
 			// カメラの angle, x, y はエンティティと逆方向に作用することに注意。
-			if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
-				this._matrix.updateByInverse(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
+			if (this.anchorX != null && this.anchorY != null) {
+				this._matrix.updateByInverseWithAnchor(
+					this.width,
+					this.height,
+					this.scaleX,
+					this.scaleY,
+					this.angle,
+					this.x,
+					this.y,
+					this.anchorX,
+					this.anchorY
+				);
+			} else if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
+				this._matrix.updateByInverse(
+					this.width,
+					this.height,
+					this.scaleX,
+					this.scaleY,
+					this.angle,
+					this.x,
+					this.y
+				);
 			} else {
 				this._matrix.reset(-this.x, -this.y);
 			}
