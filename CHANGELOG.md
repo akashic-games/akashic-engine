@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 2.5.5
+
+不具合修正
+ * game.json で audio アセットの `"systemId"` が指定されなかった時、使用される `hint` パラメータが `"sound"` と食い違っていた問題を修正
+   * 一部環境でアセットロードに失敗する原因になっていました。
+
 ## 2.5.4
 機能追加
  * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
@@ -13,6 +19,7 @@
 
 機能追加
  * `g.Font` をインタフェースから抽象クラスに変更
+
  * `g.Font#measureText()` を追加
 
 ### ゲーム開発者への影響

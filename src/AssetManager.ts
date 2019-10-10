@@ -281,12 +281,16 @@ namespace g {
 					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
 					if (conf.duration === undefined)
 						conf.duration = 0;
+					if (!conf.systemId || !audioSystemConfMap[conf.systemId])
+						conf.systemId = this.game.defaultAudioSystemId;
 					const audioSystemConf = audioSystemConfMap[conf.systemId];
+					if (!audioSystemConf)
+						throw ExceptionFactory.createAssertionError("AssetManager#_normalize: unknown systemId for the audio asset: " + p);
 					if (conf.loop === undefined) {
-						conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
+						conf.loop = !!audioSystemConf.loop;
 					}
 					if (conf.hint === undefined) {
-						conf.hint = audioSystemConf ? audioSystemConf.hint : {};
+						conf.hint = audioSystemConf.hint || { streaming: false };
 					}
 				}
 				if (conf.type === "video") {
@@ -331,7 +335,7 @@ namespace g {
 				asset.initialize(<ImageAssetHint>conf.hint);
 				return asset;
 			case "audio":
-				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
+				var system = this.game.audio[conf.systemId] || this.game.audio[this.game.defaultAudioSystemId];
 				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);

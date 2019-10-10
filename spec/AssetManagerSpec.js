@@ -7,6 +7,10 @@ describe("test AssetManager", function() {
 		height: 320,
 		fps: 30,
 		audio: {
+			"user": {
+				loop: false,
+				hint: { streaming: false }
+			},
 			"user2": {
 				loop: true,
 				hint: { streaming: true }
@@ -140,7 +144,7 @@ describe("test AssetManager", function() {
 		expect(manager.configuration.corge.systemId).toEqual("user");
 		expect(manager.configuration.corge.duration).toEqual(gameConfiguration.assets.corge.duration);
 		expect(manager.configuration.corge.loop).toEqual(false);
-		expect(manager.configuration.corge.hint).toEqual({});
+		expect(manager.configuration.corge.hint).toEqual({ streaming: false });
 
 		expect(manager.configuration.grault.systemId).toEqual("user2");
 		expect(manager.configuration.grault.duration).toEqual(gameConfiguration.assets.grault.duration);
@@ -198,6 +202,32 @@ describe("test AssetManager", function() {
 		expect(function () { new mock.Game({ width: 320, height: "320" /* not a number */, assets: legalConf }, "/foo/bar/"); }).toThrowError("AssertionError");
 		expect(function () { new mock.Game({ width: 320, height: 320, fps: "60" /* not a number */, assets: legalConf }, "/foo/bar/"); }).toThrowError("AssertionError");
 		expect(function () { new mock.Game({ width: 320, height: 320, fps: 120 /* out of (0-60] */, assets: legalConf }, "/foo/bar/"); }).toThrowError("AssertionError");
+	});
+
+	it("normalizes audio assets declarations", function () {
+		var configuration = {
+			width: 320,
+			height: 320,
+			fps: 30,
+			assets: {
+				foo: {
+					type: "audio",
+					path: "audio/foo",
+					virtualPath: "audio/foo"
+					// no systemId given: treated as "sound"
+				}
+			}
+		};
+		var game = new mock.Game(configuration, "/");
+		var manager = game._assetManager;
+		expect(manager.configuration.foo.type).toBe("audio");
+		expect(manager.configuration.foo.path).toBe("audio/foo");
+		expect(manager.configuration.foo.virtualPath).toBe("audio/foo");
+		expect(manager.configuration.foo.duration).toBe(0);
+		expect(manager.configuration.foo.global).toBe(false);
+		expect(manager.configuration.foo.hint).toEqual({ streaming: false });
+		expect(manager.configuration.foo.loop).toBe(false);
+		expect(manager.configuration.foo.systemId).toBe("sound");
 	});
 
 	it("loads/unloads an asset", function (done) {
