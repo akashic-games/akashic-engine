@@ -50,7 +50,7 @@ export abstract class VideoAsset extends ImageAsset {
 
 	abstract asSurface(): Surface;
 
-	play(loop?: boolean): VideoPlayer {
+	play(_loop?: boolean): VideoPlayer {
 		this.getPlayer().play(this);
 		return this.getPlayer();
 	}

@@ -110,7 +110,8 @@ export class SurfaceAtlas implements Destroyable {
 
 		left.prev = slot.prev;
 		left.next = right;
-		if (left.prev === null) { // left is head
+		if (left.prev === null) {
+			// left is head
 			this._emptySurfaceAtlasSlotHead = left;
 		} else {
 			left.prev.next = left;
@@ -195,7 +196,6 @@ export class SurfaceAtlas implements Destroyable {
 	}
 }
 
-
 /**
  * SurfaceAtlasが効率よく動作するためのヒント。
  *
@@ -227,7 +227,6 @@ export interface SurfaceAtlasSetHint {
 	 * 最大アトラス保持数。
 	 */
 	maxAtlasNum?: number;
-
 }
 
 /**
@@ -312,10 +311,10 @@ export class SurfaceAtlasSet implements Destroyable {
 		// 指定がないとき、やや古いモバイルデバイスでも確保できると言われる
 		// 縦横512pxのテクスチャ一枚のアトラスにまとめる形にする
 		// 2048x2048で確保してしまうと、Edge, Chrome にて処理が非常に遅くなることがある
-		hint.initialAtlasWidth  = hint.initialAtlasWidth ? hint.initialAtlasWidth : 512;
+		hint.initialAtlasWidth = hint.initialAtlasWidth ? hint.initialAtlasWidth : 512;
 		hint.initialAtlasHeight = hint.initialAtlasHeight ? hint.initialAtlasHeight : 512;
-		hint.maxAtlasWidth      = hint.maxAtlasWidth ? hint.maxAtlasWidth : 512;
-		hint.maxAtlasHeight     = hint.maxAtlasHeight ? hint.maxAtlasHeight : 512;
+		hint.maxAtlasWidth = hint.maxAtlasWidth ? hint.maxAtlasWidth : 512;
+		hint.maxAtlasHeight = hint.maxAtlasHeight ? hint.maxAtlasHeight : 512;
 		this._atlasSize = calcAtlasSize(hint);
 	}
 
@@ -352,7 +351,7 @@ export class SurfaceAtlasSet implements Destroyable {
 			removedGlyphs.push(this._atlasGlyphsTable.splice(lowScoreAtlasIndex, 1)[0]);
 		}
 
-		return {surfaceAtlases: removedAtlases, glyphs: removedGlyphs};
+		return { surfaceAtlases: removedAtlases, glyphs: removedGlyphs };
 	}
 
 	/**
@@ -372,8 +371,7 @@ export class SurfaceAtlasSet implements Destroyable {
 				glyph.surface = atlas._surface;
 				glyph.x = slot.x;
 				glyph.y = slot.y;
-				if (!this._atlasGlyphsTable[index])
-					this._atlasGlyphsTable[index] = [];
+				if (!this._atlasGlyphsTable[index]) this._atlasGlyphsTable[index] = [];
 				this._atlasGlyphsTable[index].push(glyph);
 				return atlas;
 			}

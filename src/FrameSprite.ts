@@ -12,7 +12,7 @@ export interface FrameSpriteParameterObject extends SpriteParameterObject {
 	/**
 	 * 画像として使う `Surface` または `ImageAsset` 。
 	 */
-	src: Surface|ImageAsset;
+	src: Surface | ImageAsset;
 
 	/**
 	 * このエンティティの幅
@@ -156,11 +156,9 @@ export class FrameSprite extends Sprite {
 	 * アニメーションを開始する。
 	 */
 	start(): void {
-		if (this.interval === undefined)
-			this.interval = 1000 / this.game().fps;
+		if (this.interval === undefined) this.interval = 1000 / this.game().fps;
 
-		if (this._timer)
-			this._free();
+		if (this._timer) this._free();
 
 		this._timer = this.scene.createTimer(this.interval);
 		this._timer.elapsed.add(this._onElapsed, this);
@@ -180,8 +178,7 @@ export class FrameSprite extends Sprite {
 	 * アニメーションを停止する。
 	 */
 	stop(): void {
-		if (this._timer)
-			this._free();
+		if (this._timer) this._free();
 	}
 
 	/**
@@ -214,12 +211,10 @@ export class FrameSprite extends Sprite {
 	 * @private
 	 */
 	_free(): void {
-		if (! this._timer)
-			return;
+		if (!this._timer) return;
 
 		this._timer.elapsed.remove(this._onElapsed, this);
-		if (this._timer.canDelete())
-			this.scene.deleteTimer(this._timer);
+		if (this._timer.canDelete()) this.scene.deleteTimer(this._timer);
 
 		this._timer = undefined;
 	}
@@ -236,7 +231,6 @@ export class FrameSprite extends Sprite {
 	}
 
 	private _modifiedSelf(isBubbling?: boolean): void {
-		if (this._lastUsedIndex !== this.frames[this.frameNumber])
-			this._changeFrame();
+		if (this._lastUsedIndex !== this.frames[this.frameNumber]) this._changeFrame();
 	}
 }

@@ -92,8 +92,7 @@ export class AudioPlayer {
 	 */
 	stop(): void {
 		var audio = this.currentAudio;
-		if (!audio)
-			return;
+		if (!audio) return;
 		this.currentAudio = undefined;
 		this.stopped.fire({
 			player: this,

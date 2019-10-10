@@ -40,12 +40,10 @@ export abstract class Font implements Destroyable {
 
 		for (let i = 0; i < text.length; i++) {
 			const code = Util.charCodeAt(text, i);
-			if (!code)
-				continue;
+			if (!code) continue;
 
 			const glyph = this.glyphForCharacter(code);
-			if (!glyph || glyph.x < 0 || glyph.y < 0 || glyph.width < 0 || glyph.height < 0)
-				continue;
+			if (!glyph || glyph.x < 0 || glyph.y < 0 || glyph.width < 0 || glyph.height < 0) continue;
 
 			if (i === 0) {
 				actualBoundingBoxLeft = -glyph.offsetX;

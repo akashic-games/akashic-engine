@@ -30,9 +30,7 @@ export module Util {
 	 * @param {CommonArea} p2 矩形2
 	 */
 	export function distanceBetweenAreas(p1: CommonArea, p2: CommonArea): number {
-		return Util.distance(
-			p1.x + p1.width / 2, p1.y + p1.height / 2,
-			p2.x + p2.width / 2, p2.y + p2.height / 2);
+		return Util.distance(p1.x + p1.width / 2, p1.y + p1.height / 2, p2.x + p2.width / 2, p2.y + p2.height / 2);
 	}
 
 	/**
@@ -49,13 +47,14 @@ export module Util {
 	export function charCodeAt(str: string, idx: number): number {
 		var code = str.charCodeAt(idx);
 
-		if (0xD800 <= code && code <= 0xDBFF) {
+		if (0xd800 <= code && code <= 0xdbff) {
 			var hi = code;
 			var low = str.charCodeAt(idx + 1);
 			return (hi << 16) | low;
 		}
 
-		if (0xDC00 <= code && code <= 0xDFFF) { // Low surrogate
+		if (0xdc00 <= code && code <= 0xdfff) {
+			// Low surrogate
 			return null;
 		}
 

@@ -148,8 +148,7 @@ export class Camera2D extends Object2D implements Camera {
 	 */
 	modified(): void {
 		this._modifiedCount = (this._modifiedCount + 1) % 32768;
-		if (this._matrix)
-			this._matrix._modified = true;
+		if (this._matrix) this._matrix._modified = true;
 
 		this.game.modified = true;
 	}
@@ -190,8 +189,7 @@ export class Camera2D extends Object2D implements Camera {
 		} else {
 			renderer.translate(-this.x, -this.y);
 		}
-		if (this.opacity !== 1)
-			renderer.opacity(this.opacity);
+		if (this.opacity !== 1) renderer.opacity(this.opacity);
 	}
 
 	/**
@@ -212,15 +210,7 @@ export class Camera2D extends Object2D implements Camera {
 				this.anchorY
 			);
 		} else if (this.angle || this.scaleX !== 1 || this.scaleY !== 1) {
-			this._matrix.updateByInverse(
-				this.width,
-				this.height,
-				this.scaleX,
-				this.scaleY,
-				this.angle,
-				this.x,
-				this.y
-			);
+			this._matrix.updateByInverse(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y);
 		} else {
 			this._matrix.reset(-this.x, -this.y);
 		}

@@ -19,10 +19,17 @@ export module Collision {
 	 * @param {number} width2 t2幅
 	 * @param {number} height2 t2高さ
 	 */
-	export function intersect(x1: number, y1: number, width1: number, height1: number,
-	                          x2: number, y2: number, width2: number, height2: number): boolean {
-		return (x1 <= x2 + width2) && (x2 <= x1 + width1)
-			&& (y1 <= y2 + height2) && (y2 <= y1 + height1);
+	export function intersect(
+		x1: number,
+		y1: number,
+		width1: number,
+		height1: number,
+		x2: number,
+		y2: number,
+		width2: number,
+		height2: number
+	): boolean {
+		return x1 <= x2 + width2 && x2 <= x1 + width1 && y1 <= y2 + height2 && y2 <= y1 + height1;
 	}
 
 	/**
@@ -32,8 +39,7 @@ export module Collision {
 	 * @param {CommonArea} t2 矩形2
 	 */
 	export function intersectAreas(t1: CommonArea, t2: CommonArea): boolean {
-		return Collision.intersect(
-			t1.x, t1.y, t1.width, t1.height, t2.x, t2.y, t2.width, t2.height);
+		return Collision.intersect(t1.x, t1.y, t1.width, t1.height, t2.x, t2.y, t2.width, t2.height);
 	}
 
 	/**
@@ -45,8 +51,7 @@ export module Collision {
 	 * @param {number} t2y t1-X
 	 * @param {number} [distance=1] 衝突判定閾値 [pixel]
 	 */
-	export function within(t1x: number, t1y: number, t2x: number, t2y: number,
-	                       distance: number = 1): boolean {
+	export function within(t1x: number, t1y: number, t2x: number, t2y: number, distance: number = 1): boolean {
 		return distance >= Util.distance(t1x, t1y, t2x, t2y);
 	}
 

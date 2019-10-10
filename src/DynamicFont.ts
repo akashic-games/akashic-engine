@@ -40,7 +40,7 @@ export interface DynamicFontParameterObject {
 	 *
 	 * g.FontFamilyの定義する定数、フォント名、またはそれらの配列で指定する。
 	 */
-	fontFamily: FontFamily|string|(FontFamily|string)[];
+	fontFamily: FontFamily | string | (FontFamily | string)[];
 
 	/**
 	 * フォントサイズ。
@@ -118,7 +118,7 @@ export class DynamicFont extends Font {
 	 *
 	 * このプロパティは読み出し専用である。
 	 */
-	fontFamily: FontFamily|string|(FontFamily|string)[];
+	fontFamily: FontFamily | string | (FontFamily | string)[];
 
 	/**
 	 * フォントサイズ。
@@ -171,7 +171,7 @@ export class DynamicFont extends Font {
 	/**
 	 * @private
 	 */
-	_glyphs: {[key: number]: Glyph};
+	_glyphs: { [key: number]: Glyph };
 
 	/**
 	 * @private
@@ -201,16 +201,23 @@ export class DynamicFont extends Font {
 		super();
 		this.fontFamily = param.fontFamily;
 		this.size = param.size;
-		this.hint = ("hint" in param) ? param.hint : {};
-		this.fontColor = ("fontColor" in param) ? param.fontColor : "black";
-		this.fontWeight = ("fontWeight" in param) ? param.fontWeight : FontWeight.Normal;
-		this.strokeWidth = ("strokeWidth" in param) ? param.strokeWidth : 0;
-		this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
-		this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
+		this.hint = "hint" in param ? param.hint : {};
+		this.fontColor = "fontColor" in param ? param.fontColor : "black";
+		this.fontWeight = "fontWeight" in param ? param.fontWeight : FontWeight.Normal;
+		this.strokeWidth = "strokeWidth" in param ? param.strokeWidth : 0;
+		this.strokeColor = "strokeColor" in param ? param.strokeColor : "black";
+		this.strokeOnly = "strokeOnly" in param ? param.strokeOnly : false;
 		this._resourceFactory = param.game.resourceFactory;
-		this._glyphFactory =
-			this._resourceFactory.createGlyphFactory(this.fontFamily, this.size, this.hint.baselineHeight,
-				this.fontColor, this.strokeWidth, this.strokeColor, this.strokeOnly, this.fontWeight);
+		this._glyphFactory = this._resourceFactory.createGlyphFactory(
+			this.fontFamily,
+			this.size,
+			this.hint.baselineHeight,
+			this.fontColor,
+			this.strokeWidth,
+			this.strokeColor,
+			this.strokeOnly,
+			this.fontWeight
+		);
 		this._glyphs = {};
 		this._destroyed = false;
 		this._isSurfaceAtlasSetOwner = false;
@@ -234,7 +241,7 @@ export class DynamicFont extends Font {
 		if (this.hint.presetChars) {
 			for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
 				let code = Util.charCodeAt(this.hint.presetChars, i);
-				if (! code) {
+				if (!code) {
 					continue;
 				}
 				this.glyphForCharacter(code);
@@ -256,12 +263,13 @@ export class DynamicFont extends Font {
 	glyphForCharacter(code: number): Glyph {
 		var glyph = this._glyphs[code];
 
-		if (! (glyph && glyph.isSurfaceValid)) {
+		if (!(glyph && glyph.isSurfaceValid)) {
 			glyph = this._glyphFactory.create(code);
 
-			if (glyph.surface) { // 空白文字でなければアトラス化する
+			if (glyph.surface) {
+				// 空白文字でなければアトラス化する
 				const atlas = this._atlasSet.addGlyph(glyph);
-				if (! atlas) {
+				if (!atlas) {
 					return null;
 				}
 				glyph._atlas = atlas;
@@ -301,7 +309,7 @@ export class DynamicFont extends Font {
 			this.glyphForCharacter(missingGlyphCharCodePoint);
 		}
 
-		const glyphAreaMap: {[key: string]: GlyphArea} = {};
+		const glyphAreaMap: { [key: string]: GlyphArea } = {};
 		Object.keys(this._glyphs).forEach((_key: string) => {
 			const key = Number(_key);
 			const glyph = this._glyphs[key];

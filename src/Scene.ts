@@ -123,10 +123,8 @@ export class SceneAssetHolder {
 	}
 
 	request(): boolean {
-		if (this.waitingAssetsCount === 0)
-			return false;
-		if (this._requested)
-			return true;
+		if (this.waitingAssetsCount === 0) return false;
+		if (this._requested) return true;
 		this._requested = true;
 		this._assetManager.requestAssets(this._assetIds, this);
 		return true;
@@ -155,8 +153,7 @@ export class SceneAssetHolder {
 	 * @private
 	 */
 	_onAssetError(asset: Asset, error: AssetLoadError, assetManager: AssetManager): void {
-		if (this.destroyed() || this._scene.destroyed())
-			return;
+		if (this.destroyed() || this._scene.destroyed()) return;
 		var failureInfo = {
 			asset: asset,
 			error: error,
@@ -167,8 +164,7 @@ export class SceneAssetHolder {
 			this._assetManager.retryLoad(asset);
 		} else {
 			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
-			if (this._assetManager.configuration[asset.id])
-				this._scene.game.terminateGame();
+			if (this._assetManager.configuration[asset.id]) this._scene.game.terminateGame();
 		}
 		this._scene.assetLoadCompleted.fire(asset);
 	}
@@ -177,8 +173,7 @@ export class SceneAssetHolder {
 	 * @private
 	 */
 	_onAssetLoad(asset: Asset): void {
-		if (this.destroyed() || this._scene.destroyed())
-			return;
+		if (this.destroyed() || this._scene.destroyed()) return;
 
 		this._scene.assets[asset.id] = asset;
 		this._scene.assetLoaded.fire(asset);
@@ -188,8 +183,7 @@ export class SceneAssetHolder {
 		--this.waitingAssetsCount;
 		if (this.waitingAssetsCount < 0)
 			throw ExceptionFactory.createAssertionError("SceneAssetHolder#_onAssetLoad: broken waitingAssetsCount");
-		if (this.waitingAssetsCount > 0)
-			return;
+		if (this.waitingAssetsCount > 0) return;
 
 		if (this._direct) {
 			this.callHandler();
@@ -311,7 +305,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * アセットID をkeyに、対応するアセットのインスタンスを得ることができる。
 	 * keyはこのシーンの生成時、コンストラクタの第二引数 `assetIds` に渡された配列に含まれる文字列でなければならない。
 	 */
-	assets: {[key: string]: Asset};
+	assets: { [key: string]: Asset };
 
 	/**
 	 * このシーンの属するゲーム。
@@ -522,15 +516,18 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			this.storageValues = this._storageLoader._valueStore;
 		}
 
-		local = (param.local === undefined) ? LocalTickMode.NonLocal
-					: (param.local === false) ? LocalTickMode.NonLocal
-					: (param.local === true) ? LocalTickMode.FullLocal
-											: <LocalTickMode>param.local;
-		tickGenerationMode = (param.tickGenerationMode !== undefined) ? param.tickGenerationMode : TickGenerationMode.ByClock;
+		local =
+			param.local === undefined
+				? LocalTickMode.NonLocal
+				: param.local === false
+				? LocalTickMode.NonLocal
+				: param.local === true
+				? LocalTickMode.FullLocal
+				: <LocalTickMode>param.local;
+		tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
 		this.name = param.name;
 
-		if (!assetIds)
-			assetIds = [];
+		if (!assetIds) assetIds = [];
 
 		this.game = game;
 		this.local = local;
@@ -601,13 +598,11 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
 		var gameDb = this.game.db;
 		for (var p in gameDb) {
-			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this)
-				gameDb[p].destroy();
+			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
 		}
 		var gameDb = this.game._localDb;
 		for (var p in gameDb) {
-			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this)
-				gameDb[p].destroy();
+			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
 		}
 
 		this._timer.destroy();
@@ -624,8 +619,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
-		for (var i = 0; i < this._assetHolders.length; ++i)
-			this._assetHolders[i].destroy();
+		for (var i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();
 		this._sceneAssetHolder.destroy();
 
 		this._storageLoader = undefined;
@@ -697,9 +691,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	setInterval(handler: (() => void) | number, interval: any, owner?: any): TimerIdentifier {
 		const t = this._timer;
 		if (typeof handler === "number") {
-			this.game.logger.warn("[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first.");
-			return (owner != null) ? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
-									: t.setInterval(interval /* 1 */, handler /* 0 */, null);
+			this.game.logger.warn(
+				"[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first."
+			);
+			return owner != null
+				? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
+				: t.setInterval(interval /* 1 */, handler /* 0 */, null);
 		}
 		return t.setInterval(handler, interval, owner);
 	}
@@ -751,9 +748,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	setTimeout(handler: (() => void) | number, milliseconds: any, owner?: any): TimerIdentifier {
 		const t = this._timer;
 		if (typeof handler === "number") {
-			this.game.logger.warn("[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first.");
-			return (owner != null) ? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
-									: t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
+			this.game.logger.warn(
+				"[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first."
+			);
+			return owner != null
+				? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
+				: t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
 		}
 		return t.setTimeout(handler, milliseconds, owner);
 	}
@@ -783,8 +783,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param toPush 現在のシーンを残したままにするなら真、削除して遷移するなら偽を指定する。省略された場合偽
 	 */
 	gotoScene(next: Scene, toPush?: boolean): void {
-		if (! this.isCurrentScene())
-			throw ExceptionFactory.createAssertionError("Scene#gotoScene: this scene is not the current scene");
+		if (!this.isCurrentScene()) throw ExceptionFactory.createAssertionError("Scene#gotoScene: this scene is not the current scene");
 		if (toPush) {
 			this.game.pushScene(next);
 		} else {
@@ -800,8 +799,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンが現在のシーンでない場合、 `AssertionError` がthrowされる。
 	 */
 	end(): void {
-		if (! this.isCurrentScene())
-			throw ExceptionFactory.createAssertionError("Scene#end: this scene is not the current scene");
+		if (!this.isCurrentScene()) throw ExceptionFactory.createAssertionError("Scene#end: this scene is not the current scene");
 
 		this.game.popScene();
 	}
@@ -849,8 +847,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param target 挿入位置にある子エンティティ
 	 */
 	insertBefore(e: E, target: E): void {
-		if (e.parent)
-			e.remove();
+		if (e.parent) e.remove();
 
 		e.parent = this;
 
@@ -870,8 +867,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 */
 	remove(e: E): void {
 		var index = this.children.indexOf(e);
-		if (index === -1)
-			return;
+		if (index === -1) return;
 		this.children[index].parent = undefined;
 		this.children.splice(index, 1);
 		this.modified(true);
@@ -884,25 +880,19 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
 	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
-		var mayConsumeLocalTick = (this.local !== LocalTickMode.NonLocal);
+		var mayConsumeLocalTick = this.local !== LocalTickMode.NonLocal;
 		var children = this.children;
 		var m: Matrix = undefined;
-		if (camera && camera instanceof Camera2D)
-			m = camera.getMatrix();
+		if (camera && camera instanceof Camera2D) m = camera.getMatrix();
 
 		for (var i = children.length - 1; i >= 0; --i) {
-			var ret = children[i].findPointSourceByPoint(
-				point,
-				m,
-				force,
-				camera
-			);
+			var ret = children[i].findPointSourceByPoint(point, m, force, camera);
 			if (ret) {
 				ret.local = ret.target.local || mayConsumeLocalTick;
 				return ret;
 			}
 		}
-		return {target: undefined, point: undefined, local: mayConsumeLocalTick};
+		return { target: undefined, point: undefined, local: mayConsumeLocalTick };
 	}
 
 	/**
@@ -920,8 +910,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			// _load() 呼び出し後に prefetch() する意味はない(先読みではない)。
 			return;
 		}
-		if (this._prefetchRequested)
-			return;
+		if (this._prefetchRequested) return;
 		this._prefetchRequested = true;
 		this._sceneAssetHolder.request();
 	}
@@ -932,8 +921,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * `Scene#storageValues` の内容をシリアライズする。
 	 */
 	serializeStorageValues(): StorageValueStoreSerialization {
-		if (!this._storageLoader)
-			return undefined;
+		if (!this._storageLoader) return undefined;
 		return this._storageLoader._valueStoreSerialization;
 	}
 
@@ -981,8 +969,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_load(): void {
-		if (this._loaded)
-			return;
+		if (this._loaded) return;
 		this._loaded = true;
 
 		var needsWait = this._sceneAssetHolder.request();
@@ -990,8 +977,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			this._storageLoader._load(this);
 			needsWait = true;
 		}
-		if (!needsWait)
-			this._notifySceneReady();
+		if (!needsWait) this._notifySceneReady();
 	}
 
 	/**
@@ -1022,8 +1008,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_onStorageLoaded(): void {
-		if (this._sceneAssetHolder.waitingAssetsCount === 0)
-			this._notifySceneReady();
+		if (this._sceneAssetHolder.waitingAssetsCount === 0) this._notifySceneReady();
 	}
 
 	/**

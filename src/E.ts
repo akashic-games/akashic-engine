@@ -37,7 +37,7 @@ export interface EParameterObject extends Object2DParameterObject {
 	 * このエンティティの親
 	 * @default undefined
 	 */
-	parent?: E|Scene;
+	parent?: E | Scene;
 
 	/**
 	 * このエンティティの全子エンティティ。
@@ -127,7 +127,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	/**
 	 * 親。
 	 */
-	parent: E|Scene;
+	parent: E | Scene;
 
 	/**
 	 * このエンティティが属するシーン。
@@ -185,8 +185,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get update(): Trigger<void> {
-		if (! this._update)
-			this._update = new ChainTrigger<void>(this.scene.update);
+		if (!this._update) this._update = new ChainTrigger<void>(this.scene.update);
 		return this._update;
 	}
 	// updateは代入する必要がないのでsetterを定義しない
@@ -196,8 +195,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get message(): Trigger<MessageEvent> {
-		if (! this._message)
-			this._message = new ChainTrigger<MessageEvent>(this.scene.message);
+		if (!this._message) this._message = new ChainTrigger<MessageEvent>(this.scene.message);
 		return this._message;
 	}
 	// messageは代入する必要がないのでsetterを定義しない
@@ -207,7 +205,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get pointDown(): Trigger<PointDownEvent> {
-		if (! this._pointDown)
+		if (!this._pointDown)
 			this._pointDown = new ChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this._isTargetOperation, this);
 		return this._pointDown;
 	}
@@ -218,8 +216,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get pointUp(): Trigger<PointUpEvent> {
-		if (! this._pointUp)
-			this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
+		if (!this._pointUp) this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
 		return this._pointUp;
 	}
 	// pointUpは代入する必要がないのでsetterを定義しない
@@ -229,7 +226,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get pointMove(): Trigger<PointMoveEvent> {
-		if (! this._pointMove)
+		if (!this._pointMove)
 			this._pointMove = new ChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this._isTargetOperation, this);
 		return this._pointMove;
 	}
@@ -264,8 +261,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		return this._touchable;
 	}
 	set touchable(v: boolean) {
-		if (this._touchable === v)
-			return;
+		if (this._touchable === v) return;
 
 		this._touchable = v;
 		if (v) {
@@ -297,21 +293,17 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 		// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
 		// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
-		this.local = (param.scene.local !== LocalTickMode.NonLocal) || !!param.local;
+		this.local = param.scene.local !== LocalTickMode.NonLocal || !!param.local;
 
 		if (param.children) {
-			for (var i = 0; i < param.children.length; ++i)
-				this.append(param.children[i]);
+			for (var i = 0; i < param.children.length; ++i) this.append(param.children[i]);
 		}
 		if (param.parent) {
 			param.parent.append(this);
 		}
-		if (param.targetCameras)
-			this.targetCameras = param.targetCameras;
-		if ("touchable" in param)
-			this.touchable = param.touchable;
-		if (!!param.hidden)
-			this.hide();
+		if (param.targetCameras) this.targetCameras = param.targetCameras;
+		if ("touchable" in param) this.touchable = param.touchable;
+		if (!!param.hidden) this.hide();
 
 		// set id, scene
 		this.id = param.id;
@@ -329,11 +321,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	render(renderer: Renderer, camera?: Camera): void {
 		this.state &= ~EntityStateFlags.Modified;
 
-		if (this.state & EntityStateFlags.Hidden)
-			return;
+		if (this.state & EntityStateFlags.Hidden) return;
 		var cams = this._targetCameras;
-		if (cams && cams.length > 0 && (!camera || cams.indexOf(camera) === -1))
-			return;
+		if (cams && cams.length > 0 && (!camera || cams.indexOf(camera) === -1)) return;
 
 		if (this.state & EntityStateFlags.ContextLess) {
 			renderer.translate(this.x, this.y);
@@ -341,8 +331,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 			if (goDown && this.children) {
 				var children = this.children;
 				var len = children.length;
-				for (var i = 0; i < len; ++i)
-					children[i].render(renderer, camera);
+				for (var i = 0; i < len; ++i) children[i].render(renderer, camera);
 			}
 			renderer.translate(-this.x, -this.y);
 			return;
@@ -357,22 +346,18 @@ export class E extends Object2D implements CommonArea, Destroyable {
 			renderer.translate(this.x, this.y);
 		}
 
-		if (this.opacity !== 1)
-			renderer.opacity(this.opacity);
+		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
-		if (this.compositeOperation !== undefined)
-			renderer.setCompositeOperation(this.compositeOperation);
+		if (this.compositeOperation !== undefined) renderer.setCompositeOperation(this.compositeOperation);
 
-		if (this.shaderProgram !== undefined && renderer.isSupportedShaderProgram())
-			renderer.setShaderProgram(this.shaderProgram);
+		if (this.shaderProgram !== undefined && renderer.isSupportedShaderProgram()) renderer.setShaderProgram(this.shaderProgram);
 
 		var goDown = this.renderSelf(renderer, camera);
 
 		if (goDown && this.children) {
 			// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
 			var children = this.children;
-			for (var i = 0; i < children.length; ++i)
-				children[i].render(renderer, camera);
+			for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 		}
 		renderer.restore();
 	}
@@ -419,10 +404,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * @param target 挿入位置にある子エンティティ
 	 */
 	insertBefore(e: E, target: E): void {
-		if (e.parent)
-			e.remove();
-		if (! this.children)
-			this.children = [];
+		if (e.parent) e.remove();
+		if (!this.children) this.children = [];
 
 		e.parent = this;
 
@@ -454,13 +437,12 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		}
 
 		var index = this.children ? this.children.indexOf(e) : -1;
-		if (index < 0)
-			throw ExceptionFactory.createAssertionError("E#remove: invalid child");
+		if (index < 0) throw ExceptionFactory.createAssertionError("E#remove: invalid child");
 		this.children[index].parent = undefined;
 		this.children.splice(index, 1);
 
 		if (e._touchable || e._hasTouchableChildren) {
-			if (! this._findTouchableChildren(this)) {
+			if (!this._findTouchableChildren(this)) {
 				this._hasTouchableChildren = false;
 				this._disableTouchPropagation();
 			}
@@ -475,8 +457,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * 子孫を持っている場合、子孫も破棄される。
 	 */
 	destroy(): void {
-		if (this.parent)
-			this.remove();
+		if (this.parent) this.remove();
 
 		if (this.children) {
 			for (var i = this.children.length - 1; i >= 0; --i) {
@@ -534,22 +515,27 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	modified(isBubbling?: boolean): void {
 		// _matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
-		if (this._matrix)
-			this._matrix._modified = true;
+		if (this._matrix) this._matrix._modified = true;
 
-		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null
-			|| this.opacity !== 1 || this.compositeOperation !== undefined || this.shaderProgram !== undefined) {
+		if (
+			this.angle ||
+			this.scaleX !== 1 ||
+			this.scaleY !== 1 ||
+			this.anchorX != null ||
+			this.anchorY != null ||
+			this.opacity !== 1 ||
+			this.compositeOperation !== undefined ||
+			this.shaderProgram !== undefined
+		) {
 			this.state &= ~EntityStateFlags.ContextLess;
 		} else {
 			this.state |= EntityStateFlags.ContextLess;
 		}
 
-		if (this.state & EntityStateFlags.Modified)
-			return;
+		if (this.state & EntityStateFlags.Modified) return;
 		this.state |= EntityStateFlags.Modified;
 
-		if (this.parent)
-			this.parent.modified(true);
+		if (this.parent) this.parent.modified(true);
 	}
 
 	/**
@@ -581,12 +567,10 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
 	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean, camera?: Camera): PointSource {
-		if (this.state & EntityStateFlags.Hidden)
-			return undefined;
+		if (this.state & EntityStateFlags.Hidden) return undefined;
 
 		var cams = this._targetCameras;
-		if (cams && cams.length > 0 && (!camera || cams.indexOf(camera) === -1))
-			return undefined;
+		if (cams && cams.length > 0 && (!camera || cams.indexOf(camera) === -1)) return undefined;
 
 		m = m ? m.multiplyNew(this.getMatrix()) : this.getMatrix().clone();
 		var p = m.multiplyInverseForPoint(point);
@@ -597,15 +581,13 @@ export class E extends Object2D implements CommonArea, Destroyable {
 					var child = this.children[i];
 					if (force || child._touchable || child._hasTouchableChildren) {
 						var target = child.findPointSourceByPoint(point, m, force, camera);
-						if (target)
-							return target;
+						if (target) return target;
 					}
 				}
 			}
 		}
 
-		if (!(force || this._touchable))
-			return undefined;
+		if (!(force || this._touchable)) return undefined;
 
 		// 逆行列をポイントにかけた結果がEにヒットしているかを計算
 		if (0 <= p.x && this.width > p.x && 0 <= p.y && this.height > p.y) {
@@ -632,8 +614,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * 生成直後のエンティティは表示状態であり、 `hide()` を呼び出さない限りこのメソッドを呼び出す必要はない。
 	 */
 	show(): void {
-		if (!(this.state & EntityStateFlags.Hidden))
-			return;
+		if (!(this.state & EntityStateFlags.Hidden)) return;
 		this.state &= ~EntityStateFlags.Hidden;
 		if (this.parent) {
 			this.parent.modified(true);
@@ -648,8 +629,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * `this#pointDown`, `pointMove`, `pointUp` なども通常の方法ではfireされなくなる。
 	 */
 	hide(): void {
-		if (this.state & EntityStateFlags.Hidden)
-			return;
+		if (this.state & EntityStateFlags.Hidden) return;
 		this.state |= EntityStateFlags.Hidden;
 		if (this.parent) {
 			this.parent.modified(true);
@@ -678,41 +658,43 @@ export class E extends Object2D implements CommonArea, Destroyable {
 			return undefined;
 		}
 
-		var thisBoundingRect: CommonRect = {left: 0, right: this.width, top: 0, bottom: this.height};
+		var thisBoundingRect: CommonRect = {
+			left: 0,
+			right: this.width,
+			top: 0,
+			bottom: this.height
+		};
 
 		var targetCoordinates: CommonOffset[] = [
-			{x: thisBoundingRect.left, y: thisBoundingRect.top},
-			{x: thisBoundingRect.left, y: thisBoundingRect.bottom},
-			{x: thisBoundingRect.right, y: thisBoundingRect.top},
-			{x: thisBoundingRect.right, y: thisBoundingRect.bottom}
+			{ x: thisBoundingRect.left, y: thisBoundingRect.top },
+			{ x: thisBoundingRect.left, y: thisBoundingRect.bottom },
+			{ x: thisBoundingRect.right, y: thisBoundingRect.top },
+			{ x: thisBoundingRect.right, y: thisBoundingRect.bottom }
 		];
 
 		var convertedPoint = matrix.multiplyPoint(targetCoordinates[0]);
-		var result: CommonRect  = {left: convertedPoint.x, right: convertedPoint.x, top: convertedPoint.y, bottom: convertedPoint.y};
+		var result: CommonRect = {
+			left: convertedPoint.x,
+			right: convertedPoint.x,
+			top: convertedPoint.y,
+			bottom: convertedPoint.y
+		};
 		for (var i = 1; i < targetCoordinates.length; ++i) {
 			convertedPoint = matrix.multiplyPoint(targetCoordinates[i]);
-			if (result.left > convertedPoint.x)
-				result.left = convertedPoint.x;
-			if (result.right < convertedPoint.x)
-				result.right = convertedPoint.x;
-			if (result.top > convertedPoint.y)
-				result.top = convertedPoint.y;
-			if (result.bottom < convertedPoint.y)
-				result.bottom = convertedPoint.y;
+			if (result.left > convertedPoint.x) result.left = convertedPoint.x;
+			if (result.right < convertedPoint.x) result.right = convertedPoint.x;
+			if (result.top > convertedPoint.y) result.top = convertedPoint.y;
+			if (result.bottom < convertedPoint.y) result.bottom = convertedPoint.y;
 		}
 
 		if (this.children !== undefined) {
 			for (var i = 0; i < this.children.length; ++i) {
 				var nowResult = this.children[i]._calculateBoundingRect(matrix, c);
 				if (nowResult) {
-					if (result.left > nowResult.left)
-						result.left = nowResult.left;
-					if (result.right < nowResult.right)
-						result.right = nowResult.right;
-					if (result.top > nowResult.top)
-						result.top = nowResult.top;
-					if (result.bottom < nowResult.bottom)
-						result.bottom = nowResult.bottom;
+					if (result.left > nowResult.left) result.left = nowResult.left;
+					if (result.right < nowResult.right) result.right = nowResult.right;
+					if (result.top > nowResult.top) result.top = nowResult.top;
+					if (result.bottom < nowResult.bottom) result.bottom = nowResult.bottom;
 				}
 			}
 		}
@@ -736,8 +718,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	_disableTouchPropagation(): void {
 		var p: E = <E>this.parent;
 		while (p instanceof E && p._hasTouchableChildren) {
-			if (this._findTouchableChildren(p))
-				break;
+			if (this._findTouchableChildren(p)) break;
 			p._hasTouchableChildren = false;
 			p = <E>p.parent;
 		}
@@ -747,10 +728,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * @private
 	 */
 	_isTargetOperation(e: PointEvent): boolean {
-		if (this.state & EntityStateFlags.Hidden)
-			return false;
-		if (e instanceof PointEvent)
-			return this._touchable && e.target === this;
+		if (this.state & EntityStateFlags.Hidden) return false;
+		if (e instanceof PointEvent) return this._touchable && e.target === this;
 
 		return false;
 	}
@@ -758,11 +737,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	private _findTouchableChildren(e: E): E {
 		if (e.children) {
 			for (var i = 0; i < e.children.length; ++i) {
-				if (e.children[i].touchable)
-					return e.children[i];
+				if (e.children[i].touchable) return e.children[i];
 				var tmp = this._findTouchableChildren(e.children[i]);
-				if (tmp)
-					return tmp;
+				if (tmp) return tmp;
 			}
 		}
 		return undefined;

@@ -16,7 +16,7 @@ class OperationHandler {
 	private _handler: (op: InternalOperationPluginOperation) => void;
 	private _handlerOwner: any;
 
-	constructor( code: number, owner: any, handler: (op: InternalOperationPluginOperation) => void) {
+	constructor(code: number, owner: any, handler: (op: InternalOperationPluginOperation) => void) {
 		this._code = code;
 		this._handler = handler;
 		this._handlerOwner = owner;
@@ -86,31 +86,26 @@ export class OperationPluginManager {
 	}
 
 	stopAll(): void {
-		if (!this._initialized)
-			return;
+		if (!this._initialized) return;
 		for (var i = 0; i < this._infos.length; ++i) {
 			var info = this._infos[i];
-			if (info._plugin)
-				info._plugin.stop();
+			if (info._plugin) info._plugin.stop();
 		}
 	}
 
 	private _doAutoStart(): void {
 		for (var i = 0; i < this._infos.length; ++i) {
 			var info = this._infos[i];
-			if (!info.manualStart && info._plugin)
-				info._plugin.start();
+			if (!info.manualStart && info._plugin) info._plugin.start();
 		}
 	}
 
 	private _loadOperationPlugins(): void {
 		for (var i = 0; i < this._infos.length; ++i) {
 			var info = this._infos[i];
-			if (!info.script)
-				continue;
+			if (!info.script) continue;
 			var pluginClass = <OperationPluginStatic>_require(this._game, info.script);
-			if (!pluginClass.isSupported())
-				continue;
+			if (!pluginClass.isSupported()) continue;
 			var plugin = new pluginClass(this._game, this._viewInfo, info.option);
 			var code = info.code;
 			if (this.plugins[code]) {
@@ -123,4 +118,3 @@ export class OperationPluginManager {
 		}
 	}
 }
-

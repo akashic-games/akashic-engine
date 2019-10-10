@@ -27,8 +27,7 @@ export abstract class Renderer {
 		}
 
 		var children = scene.children;
-		for (var i = 0; i < children.length; ++i)
-			children[i].render(this, camera);
+		for (var i = 0; i < children.length; ++i) children[i].render(this, camera);
 
 		if (camera) {
 			this.restore();
@@ -55,15 +54,26 @@ export abstract class Renderer {
 	 * @param destOffsetX 描画先のX座標。0以上の数値でなければならない
 	 * @param destOffsetY 描画先のY座標。0以上の数値でなければならない
 	 */
-	abstract drawImage(surface: Surface, offsetX: number, offsetY: number, width: number, height: number,
-	                   destOffsetX: number, destOffsetY: number): void;
+	abstract drawImage(
+		surface: Surface,
+		offsetX: number,
+		offsetY: number,
+		width: number,
+		height: number,
+		destOffsetX: number,
+		destOffsetY: number
+	): void;
 
 	abstract drawSprites(
 		surface: Surface,
-		offsetX: number[], offsetY: number[],
-		width: number[], height: number[],
-		canvasOffsetX: number[], canvasOffsetY: number[],
-		count: number): void;
+		offsetX: number[],
+		offsetY: number[],
+		width: number[],
+		height: number[],
+		canvasOffsetX: number[],
+		canvasOffsetY: number[],
+		count: number
+	): void;
 
 	/**
 	 * 指定されたSystemLabelの描画を行う。
@@ -81,9 +91,20 @@ export abstract class Renderer {
 	 * @param strokeColor 描画する輪郭色。CSS Colorでなければならない
 	 * @param strokeOnly 文字色の描画フラグ
 	 */
-	abstract drawSystemText(text: string, x: number, y: number, maxWidth: number, fontSize: number,
-	                        textAlign: TextAlign, textBaseline: TextBaseline, textColor: string, fontFamily: FontFamily,
-	                        strokeWidth: number, strokeColor: string, strokeOnly: boolean): void;
+	abstract drawSystemText(
+		text: string,
+		x: number,
+		y: number,
+		maxWidth: number,
+		fontSize: number,
+		textAlign: TextAlign,
+		textBaseline: TextBaseline,
+		textColor: string,
+		fontFamily: FontFamily,
+		strokeWidth: number,
+		strokeColor: string,
+		strokeOnly: boolean
+	): void;
 
 	abstract translate(x: number, y: number): void;
 
@@ -129,8 +150,15 @@ export abstract class Renderer {
 	 * 引数は CanvasRenderingContext2D#putImageData() と同様である。
 	 * 本メソッドの呼び出しは `Renderer#end()` から `Renderer#begin()` の間でなければならない。
 	 */
-	abstract _putImageData(imageData: ImageData, dx: number, dy: number, dirtyX?: number, dirtyY?: number,
-	                       dirtyWidth?: number, dirtyHeight?: number): void;
+	abstract _putImageData(
+		imageData: ImageData,
+		dx: number,
+		dy: number,
+		dirtyX?: number,
+		dirtyY?: number,
+		dirtyWidth?: number,
+		dirtyHeight?: number
+	): void;
 
 	end(): void {
 		// nothing to do

@@ -45,8 +45,7 @@ export abstract class AudioAsset extends Asset {
 
 	stop(): void {
 		var players = this._system.findPlayers(this);
-		for (var i = 0; i < players.length; ++i)
-			players[i].stop();
+		for (var i = 0; i < players.length; ++i) players[i].stop();
 	}
 
 	inUse(): boolean {
@@ -54,8 +53,7 @@ export abstract class AudioAsset extends Asset {
 	}
 
 	destroy(): void {
-		if (this._system)
-			this.stop();
+		if (this._system) this.stop();
 
 		this.data = undefined;
 		this._system = undefined;

@@ -56,4 +56,3 @@ export interface XorshiftRandomGeneratorSerialization {
 	 */
 	_xorshift: XorshiftSerialization;
 }
-

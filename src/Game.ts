@@ -29,7 +29,6 @@ import { EventFilter } from "./EventFilter";
 import { DefaultLoadingScene } from "./DefaultLoadingScene";
 import { _require } from "./Module";
 
-
 /**
  * シーン遷移要求のタイプ。
  */
@@ -126,7 +125,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * このコンテンツに関連付けられるエンティティ。(ローカルなエンティティを除く)
 	 */
-	db: {[idx: number]: E};
+	db: { [idx: number]: E };
 	/**
 	 * このコンテンツを描画するためのオブジェクト群。
 	 */
@@ -180,7 +179,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * グローバルアセットのマップ。this._initialScene.assets のエイリアス。
 	 */
-	assets: {[key: string]: Asset};
+	assets: { [key: string]: Asset };
 
 	/**
 	 * グローバルアセットが読み込み済みの場合真。でなければ偽。
@@ -218,7 +217,7 @@ export abstract class Game implements Registrable<E> {
 	 * 本ゲームで利用可能なオーディオシステム群。デフォルトはmusicとsoundが登録されている。
 	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
 	 */
-	audio: {[key: string]: AudioSystem};
+	audio: { [key: string]: AudioSystem };
 
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
@@ -278,7 +277,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * ロードしている操作プラグインを保持するオブジェクト。
 	 */
-	operationPlugins: {[key: number]: OperationPlugin};
+	operationPlugins: { [key: number]: OperationPlugin };
 
 	/**
 	 * 画面サイズの変更時にfireされるTrigger。
@@ -325,7 +324,7 @@ export abstract class Game implements Registrable<E> {
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
-	_eventTriggerMap: {[key: number]: Trigger<Event>};
+	_eventTriggerMap: { [key: number]: Trigger<Event> };
 
 	/**
 	 * グローバルアセットを読み込むための初期シーン。必ずシーンスタックの一番下に存在する。これをpopScene()することはできない。
@@ -357,7 +356,7 @@ export abstract class Game implements Registrable<E> {
 	 * g.require経由の場合ここに格納される。
 	 * @private
 	 */
-	_scriptCaches: {[key: string]: RequireCacheable};
+	_scriptCaches: { [key: string]: RequireCacheable };
 
 	/**
 	 * グローバルアセットの読み込み待ちハンドラ。
@@ -476,10 +475,8 @@ export abstract class Game implements Registrable<E> {
 		return this._focusingCamera;
 	}
 	set focusingCamera(c: Camera) {
-		if (c === this._focusingCamera)
-			return;
-		if (this.modified)
-			this.render(this._focusingCamera);
+		if (c === this._focusingCamera) return;
+		if (this.modified) this.render(this._focusingCamera);
 		this._focusingCamera = c;
 	}
 
@@ -491,8 +488,13 @@ export abstract class Game implements Registrable<E> {
 	 * @param selfId このゲームを実行するユーザのID。省略された場合、`undefined`
 	 * @param operationPluginViewInfo このゲームの操作プラグインに与えるviewの情報
 	 */
-	constructor(gameConfiguration: GameConfiguration, resourceFactory: ResourceFactory,
-	            assetBase?: string, selfId?: string, operationPluginViewInfo?: OperationPluginViewInfo) {
+	constructor(
+		gameConfiguration: GameConfiguration,
+		resourceFactory: ResourceFactory,
+		assetBase?: string,
+		selfId?: string,
+		operationPluginViewInfo?: OperationPluginViewInfo
+	) {
 		gameConfiguration = this._normalizeConfiguration(gameConfiguration);
 		this.fps = gameConfiguration.fps;
 		this.width = gameConfiguration.width;
@@ -579,7 +581,10 @@ export abstract class Game implements Registrable<E> {
 	 * @param scene 遷移後のシーン
 	 */
 	pushScene(scene: Scene): void {
-		this._sceneChangeRequests.push({ type: SceneChangeType.Push, scene: scene });
+		this._sceneChangeRequests.push({
+			type: SceneChangeType.Push,
+			scene: scene
+		});
 	}
 
 	/**
@@ -596,7 +601,11 @@ export abstract class Game implements Registrable<E> {
 	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
 	 */
 	replaceScene(scene: Scene, preserveCurrent?: boolean): void {
-		this._sceneChangeRequests.push({ type: SceneChangeType.Replace, scene: scene, preserveCurrent: preserveCurrent });
+		this._sceneChangeRequests.push({
+			type: SceneChangeType.Replace,
+			scene: scene,
+			preserveCurrent: preserveCurrent
+		});
 	}
 
 	/**
@@ -611,7 +620,10 @@ export abstract class Game implements Registrable<E> {
 	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
 	 */
 	popScene(preserveCurrent?: boolean): void {
-		this._sceneChangeRequests.push({ type: SceneChangeType.Pop, preserveCurrent: preserveCurrent });
+		this._sceneChangeRequests.push({
+			type: SceneChangeType.Pop,
+			preserveCurrent: preserveCurrent
+		});
 	}
 
 	/**
@@ -619,7 +631,7 @@ export abstract class Game implements Registrable<E> {
 	 * ない場合、 `undefined` を返す。
 	 */
 	scene(): Scene {
-		if (! this.scenes.length) return undefined;
+		if (!this.scenes.length) return undefined;
 		return this.scenes[this.scenes.length - 1];
 	}
 
@@ -637,8 +649,7 @@ export abstract class Game implements Registrable<E> {
 	tick(advanceAge: boolean, omittedTickCount?: number): boolean {
 		var scene: Scene = undefined;
 
-		if (this._isTerminated)
-			return false;
+		if (this._isTerminated) return false;
 
 		this.isLastTickLocal = !advanceAge;
 		this.lastOmittedLocalTickCount = omittedTickCount || 0;
@@ -649,14 +660,12 @@ export abstract class Game implements Registrable<E> {
 				this.events = [];
 				for (var i = 0; i < events.length; ++i) {
 					var trigger = this._eventTriggerMap[events[i].type];
-					if (trigger)
-						trigger.fire(events[i]);
+					if (trigger) trigger.fire(events[i]);
 				}
 			}
 
 			scene.update.fire();
-			if (advanceAge)
-				++this.age;
+			if (advanceAge) ++this.age;
 		}
 
 		if (this._sceneChangeRequests.length) {
@@ -676,9 +685,8 @@ export abstract class Game implements Registrable<E> {
 	 */
 	render(camera?: Camera): void {
 		if (!camera) camera = this.focusingCamera;
-		var renderers = this.renderers;	// unsafe
-		for (var i = 0; i < renderers.length; ++i)
-			renderers[i].draw(this, camera);
+		var renderers = this.renderers; // unsafe
+		for (var i = 0; i < renderers.length; ++i) renderers[i].draw(this, camera);
 		this.modified = false;
 	}
 
@@ -717,12 +725,10 @@ export abstract class Game implements Registrable<E> {
 			} else {
 				// register前にidがある: スナップショットからの復元用パス
 				// スナップショットはローカルエンティティを残さないはずだが、実装上はできるようにしておく。
-				if (e.id > 0)
-					throw ExceptionFactory.createAssertionError("Game#register: invalid local id: " + e.id);
+				if (e.id > 0) throw ExceptionFactory.createAssertionError("Game#register: invalid local id: " + e.id);
 				if (this._localDb.hasOwnProperty(String(e.id)))
 					throw ExceptionFactory.createAssertionError("Game#register: conflicted id: " + e.id);
-				if (this._localIdx > e.id)
-					this._localIdx = e.id;
+				if (this._localIdx > e.id) this._localIdx = e.id;
 			}
 			this._localDb[e.id] = e;
 		} else {
@@ -730,13 +736,11 @@ export abstract class Game implements Registrable<E> {
 				e.id = ++this._idx;
 			} else {
 				// register前にidがある: スナップショットからの復元用パス
-				if (e.id < 0)
-					throw ExceptionFactory.createAssertionError("Game#register: invalid non-local id: " + e.id);
+				if (e.id < 0) throw ExceptionFactory.createAssertionError("Game#register: invalid non-local id: " + e.id);
 				if (this.db.hasOwnProperty(String(e.id)))
 					throw ExceptionFactory.createAssertionError("Game#register: conflicted id: " + e.id);
 				// _idxがユニークな値を作れるよう更新しておく
-				if (this._idx < e.id)
-					this._idx = e.id;
+				if (this._idx < e.id) this._idx = e.id;
 			}
 			this.db[e.id] = e;
 		}
@@ -876,7 +880,10 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_fireSceneReady(scene: Scene): void {
-		this._sceneChangeRequests.push({ type: SceneChangeType.FireReady, scene: scene });
+		this._sceneChangeRequests.push({
+			type: SceneChangeType.FireReady,
+			scene: scene
+		});
 	}
 
 	/**
@@ -884,7 +891,10 @@ export abstract class Game implements Registrable<E> {
 	 */
 	_fireSceneLoaded(scene: Scene): void {
 		if (scene._loadingState < SceneLoadState.LoadedFired) {
-			this._sceneChangeRequests.push({ type: SceneChangeType.FireLoaded, scene: scene });
+			this._sceneChangeRequests.push({
+				type: SceneChangeType.FireLoaded,
+				scene: scene
+			});
 		}
 	}
 
@@ -892,19 +902,19 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_callSceneAssetHolderHandler(assetHolder: SceneAssetHolder): void {
-		this._sceneChangeRequests.push({ type: SceneChangeType.CallAssetHolderHandler, assetHolder: assetHolder });
+		this._sceneChangeRequests.push({
+			type: SceneChangeType.CallAssetHolderHandler,
+			assetHolder: assetHolder
+		});
 	}
 
 	/**
 	 * @private
 	 */
 	_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
-		if (!gameConfiguration)
-			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
-		if (!("assets" in gameConfiguration))
-			gameConfiguration.assets = {};
-		if (!("fps" in gameConfiguration))
-			gameConfiguration.fps = 30;
+		if (!gameConfiguration) throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
+		if (!("assets" in gameConfiguration)) gameConfiguration.assets = {};
+		if (!("fps" in gameConfiguration)) gameConfiguration.fps = 30;
 		if (typeof gameConfiguration.fps !== "number")
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: fps must be given as a number");
 		if (!(0 <= gameConfiguration.fps && gameConfiguration.fps <= 60))
@@ -936,8 +946,7 @@ export abstract class Game implements Registrable<E> {
 	 */
 	_decodeOperationPluginOperation(code: number, op: (number | string)[]): any {
 		var plugins = this._operationPluginManager.plugins;
-		if (!plugins[code] || !plugins[code].decode)
-			return op;
+		if (!plugins[code] || !plugins[code].decode) return op;
 		return plugins[code].decode(op);
 	}
 
@@ -959,10 +968,8 @@ export abstract class Game implements Registrable<E> {
 		}
 
 		if (param) {
-			if (param.age !== undefined)
-				this.age = param.age;
-			if (param.randGen !== undefined)
-				this.random = param.randGen;
+			if (param.age !== undefined) this.age = param.age;
+			if (param.randGen !== undefined) this.random = param.randGen;
 		}
 
 		this._audioSystemManager._reset();
@@ -989,18 +996,17 @@ export abstract class Game implements Registrable<E> {
 		this._isTerminated = false;
 		this.vars = {};
 
-		if (this.surfaceAtlasSet)
-			this.surfaceAtlasSet.destroy();
+		if (this.surfaceAtlasSet) this.surfaceAtlasSet.destroy();
 		this.surfaceAtlasSet = new SurfaceAtlasSet({ game: this });
 
 		switch (this._configuration.defaultLoadingScene) {
-		case "none":
-			// Note: 何も描画しない実装として利用している
-			this._defaultLoadingScene = new LoadingScene({ game: this });
-			break;
-		default:
-			this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
-			break;
+			case "none":
+				// Note: 何も描画しない実装として利用している
+				this._defaultLoadingScene = new LoadingScene({ game: this });
+				break;
+			default:
+				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
+				break;
 		}
 	}
 
@@ -1048,8 +1054,7 @@ export abstract class Game implements Registrable<E> {
 		this.assetBase = "";
 		this.selfId = undefined;
 		var audioSystemIds = Object.keys(this.audio);
-		for (var i = 0; i < audioSystemIds.length; ++i)
-			this.audio[audioSystemIds[i]].stopAll();
+		for (var i = 0; i < audioSystemIds.length; ++i) this.audio[audioSystemIds[i]].stopAll();
 		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
 		this.logger.destroy();
@@ -1123,8 +1128,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_startLoadingGlobalAssets(): void {
-		if (this.isLoaded)
-			throw ExceptionFactory.createAssertionError("Game#_startLoadingGlobalAssets: already loaded.");
+		if (this.isLoaded) throw ExceptionFactory.createAssertionError("Game#_startLoadingGlobalAssets: already loaded.");
 		this.pushScene(this._initialScene);
 		this._flushSceneChangeRequests();
 	}
@@ -1134,7 +1138,7 @@ export abstract class Game implements Registrable<E> {
 	 */
 	_updateEventTriggers(scene: Scene): void {
 		this.modified = true;
-		if (! scene) {
+		if (!scene) {
 			this._eventTriggerMap[EventType.Message] = undefined;
 			this._eventTriggerMap[EventType.PointDown] = undefined;
 			this._eventTriggerMap[EventType.PointMove] = undefined;
@@ -1189,37 +1193,34 @@ export abstract class Game implements Registrable<E> {
 			for (var i = 0; i < reqs.length; ++i) {
 				var req = reqs[i];
 				switch (req.type) {
-				case SceneChangeType.Push:
-					var oldScene = this.scene();
-					if (oldScene) {
-						oldScene._deactivate();
-					}
-					this._doPushScene(req.scene);
-					break;
-				case SceneChangeType.Replace:
-					// Note: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
-					this._doPopScene(req.preserveCurrent, false);
-					this._doPushScene(req.scene);
-					break;
-				case SceneChangeType.Pop:
-					this._doPopScene(req.preserveCurrent, true);
-					break;
-				case SceneChangeType.FireReady:
-					if (!req.scene.destroyed())
-						req.scene._fireReady();
-					break;
-				case SceneChangeType.FireLoaded:
-					if (!req.scene.destroyed())
-						req.scene._fireLoaded();
-					break;
-				case SceneChangeType.CallAssetHolderHandler:
-					req.assetHolder.callHandler();
-					break;
-				default:
-					throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
+					case SceneChangeType.Push:
+						var oldScene = this.scene();
+						if (oldScene) {
+							oldScene._deactivate();
+						}
+						this._doPushScene(req.scene);
+						break;
+					case SceneChangeType.Replace:
+						// Note: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
+						this._doPopScene(req.preserveCurrent, false);
+						this._doPushScene(req.scene);
+						break;
+					case SceneChangeType.Pop:
+						this._doPopScene(req.preserveCurrent, true);
+						break;
+					case SceneChangeType.FireReady:
+						if (!req.scene.destroyed()) req.scene._fireReady();
+						break;
+					case SceneChangeType.FireLoaded:
+						if (!req.scene.destroyed()) req.scene._fireLoaded();
+						break;
+					case SceneChangeType.CallAssetHolderHandler:
+						req.assetHolder.callHandler();
+						break;
+					default:
+						throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
 				}
 			}
-
 		} while (this._sceneChangeRequests.length > 0); // flush中に追加される限りflushを続行する
 	}
 
@@ -1227,10 +1228,8 @@ export abstract class Game implements Registrable<E> {
 		var scene = this.scenes.pop();
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
-		if (!preserveCurrent)
-			scene.destroy();
-		if (fireSceneChanged)
-			this._sceneChanged.fire(this.scene());
+		if (!preserveCurrent) scene.destroy();
+		if (fireSceneChanged) this._sceneChanged.fire(this.scene());
 	}
 
 	private _start(): void {
@@ -1250,7 +1249,7 @@ export abstract class Game implements Registrable<E> {
 					throw ExceptionFactory.createAssertionError("Game#_start: global asset 'snapshotLoader' not found.");
 				var loader = _require(this, "snapshotLoader");
 				loader(this._mainParameter.snapshot);
-				this._flushSceneChangeRequests();  // スナップショットローダもシーン遷移を要求する可能性がある(というかまずする)
+				this._flushSceneChangeRequests(); // スナップショットローダもシーン遷移を要求する可能性がある(というかまずする)
 			}
 			this._started.fire();
 			return;
@@ -1260,18 +1259,19 @@ export abstract class Game implements Registrable<E> {
 		if (!mainFun || typeof mainFun !== "function")
 			throw ExceptionFactory.createAssertionError("Game#_start: Entry point '" + this._main + "' not found.");
 		mainFun(this._mainParameter);
-		this._flushSceneChangeRequests();  // シーン遷移を要求する可能性がある(というかまずする)
+		this._flushSceneChangeRequests(); // シーン遷移を要求する可能性がある(というかまずする)
 		this._started.fire();
 	}
 
 	private _doPushScene(scene: Scene, loadingScene?: LoadingScene): void {
-		if (!loadingScene)
-			loadingScene = this.loadingScene || this._defaultLoadingScene;
+		if (!loadingScene) loadingScene = this.loadingScene || this._defaultLoadingScene;
 		this.scenes.push(scene);
 
 		if (scene._needsLoading() && scene._loadingState < SceneLoadState.LoadedFired) {
 			if (this._defaultLoadingScene._needsLoading())
-				throw ExceptionFactory.createAssertionError("Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages.");
+				throw ExceptionFactory.createAssertionError(
+					"Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages."
+				);
 			this._doPushScene(loadingScene, this._defaultLoadingScene);
 			loadingScene.reset(scene);
 		} else {

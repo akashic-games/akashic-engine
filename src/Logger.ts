@@ -116,4 +116,3 @@ export class Logger implements Destroyable {
 		});
 	}
 }
-

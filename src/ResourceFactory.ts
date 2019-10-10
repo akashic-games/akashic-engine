@@ -24,11 +24,24 @@ import { ScriptAsset } from "./ScriptAsset";
 export abstract class ResourceFactory {
 	abstract createImageAsset(id: string, assetPath: string, width: number, height: number): ImageAsset;
 
-	abstract createVideoAsset(id: string, assetPath: string, width: number, height: number, system: VideoSystem,
-	                          loop: boolean, useRealSize: boolean): VideoAsset;
+	abstract createVideoAsset(
+		id: string,
+		assetPath: string,
+		width: number,
+		height: number,
+		system: VideoSystem,
+		loop: boolean,
+		useRealSize: boolean
+	): VideoAsset;
 
-	abstract createAudioAsset(id: string, assetPath: string, duration: number, system: AudioSystem,
-	                          loop: boolean, hint: AudioAssetHint): AudioAsset;
+	abstract createAudioAsset(
+		id: string,
+		assetPath: string,
+		duration: number,
+		system: AudioSystem,
+		loop: boolean,
+		hint: AudioAssetHint
+	): AudioAsset;
 
 	abstract createTextAsset(id: string, assetPath: string): TextAsset;
 
@@ -58,9 +71,16 @@ export abstract class ResourceFactory {
 	 * @param strokeOnly ストロークのみを描画するか否か。省略された場合、偽として扱われる
 	 * @param fontWeight フォントウェイト。省略された場合、 `FontWeight.Normal` として扱われる
 	 */
-	abstract createGlyphFactory(fontFamily: FontFamily|string|(FontFamily|string)[], fontSize: number, baselineHeight?: number,
-	                            fontColor?: string, strokeWidth?: number, strokeColor?: string, strokeOnly?: boolean,
-	                            fontWeight?: FontWeight): GlyphFactory;
+	abstract createGlyphFactory(
+		fontFamily: FontFamily | string | (FontFamily | string)[],
+		fontSize: number,
+		baselineHeight?: number,
+		fontColor?: string,
+		strokeWidth?: number,
+		strokeColor?: string,
+		strokeOnly?: boolean,
+		fontWeight?: FontWeight
+	): GlyphFactory;
 
 	createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
 		return new SurfaceAtlas(this.createSurface(width, height));
@@ -71,7 +91,12 @@ export abstract class ResourceFactory {
 	 * 範囲を指定しない場合は、指定SurfaceをコピーしたSurfaceを返す。
 	 */
 	createTrimmedSurface(targetSurface: Surface, targetArea?: CommonArea): Surface {
-		const area = targetArea || {x: 0, y: 0, width: targetSurface.width, height: targetSurface.height};
+		const area = targetArea || {
+			x: 0,
+			y: 0,
+			width: targetSurface.width,
+			height: targetSurface.height
+		};
 		const surface = this.createSurface(area.width, area.height);
 		const renderer = surface.renderer();
 		renderer.begin();

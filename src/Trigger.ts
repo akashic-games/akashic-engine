@@ -91,7 +91,6 @@ export interface TriggerSearchConditions<T> {
 	name?: string;
 }
 
-
 /**
  * イベント通知機構クラス。
  */
@@ -216,20 +215,19 @@ export class Trigger<T> {
 	 * @param arg ハンドラに与えられる引数
 	 */
 	fire(arg?: T): void {
-		if (! this._handlers || ! this._handlers.length)
-			return;
+		if (!this._handlers || !this._handlers.length) return;
 
 		const handlers = this._handlers.concat();
 		for (let i = 0; i < handlers.length; i++) {
 			const handler = handlers[i];
 			if (handler.func.call(handler.owner, arg) || handler.once) {
 				const index = this._handlers.indexOf(handler);
-				if (index !== -1)
-					this._handlers.splice(index, 1);
+				if (index !== -1) this._handlers.splice(index, 1);
 			}
 		}
 
-		if (this._handlers)  // TODO 条件文は暫定対応
+		if (this._handlers)
+			// TODO 条件文は暫定対応
 			this.length = this._handlers.length;
 	}
 
@@ -302,7 +300,7 @@ export class Trigger<T> {
 		if (params) {
 			for (let i = 0; i < this._handlers.length; i++) {
 				const handler = this._handlers[i];
-				if (! this._comparePartial(params, handler)) {
+				if (!this._comparePartial(params, handler)) {
 					handlers.push(handler);
 				}
 			}
@@ -331,12 +329,9 @@ export class Trigger<T> {
 	 * @private
 	 */
 	_comparePartial(target: TriggerSearchConditions<T>, compare: TriggerSearchConditions<T>): boolean {
-		if (target.func !== undefined && target.func !== compare.func)
-			return false;
-		if (target.owner !== undefined && target.owner !== compare.owner)
-			return false;
-		if (target.name !== undefined && target.name !== compare.name)
-			return false;
+		if (target.func !== undefined && target.func !== compare.func) return false;
+		if (target.owner !== undefined && target.owner !== compare.owner) return false;
+		if (target.name !== undefined && target.name !== compare.name) return false;
 
 		return true;
 	}
@@ -390,7 +385,7 @@ export class ChainTrigger<T> extends Trigger<T> {
 	add(paramsOrHandler: any, owner?: any): void {
 		super.add(paramsOrHandler, owner);
 
-		if (! this._isActivated) {
+		if (!this._isActivated) {
 			this.chain.add(this._onChainTriggerFired, this);
 			this._isActivated = true;
 		}
@@ -399,7 +394,7 @@ export class ChainTrigger<T> extends Trigger<T> {
 	addOnce(paramsOrHandler: any, owner?: any): void {
 		super.addOnce(paramsOrHandler, owner);
 
-		if (! this._isActivated) {
+		if (!this._isActivated) {
 			this.chain.add(this._onChainTriggerFired, this);
 			this._isActivated = true;
 		}
@@ -442,4 +437,3 @@ export class ChainTrigger<T> extends Trigger<T> {
 		}
 	}
 }
-

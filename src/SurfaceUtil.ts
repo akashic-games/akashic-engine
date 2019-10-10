@@ -10,7 +10,7 @@ export module SurfaceUtil {
 	 *
 	 * @param src
 	 */
-	export function asSurface(src: Asset|Surface): Surface {
+	export function asSurface(src: Asset | Surface): Surface {
 		if (!src) {
 			return src as Surface;
 		} else if (src instanceof Surface) {
@@ -26,12 +26,12 @@ export module SurfaceUtil {
 		/**
 		 * @private
 		 */
-		_onAnimatingStarted: () => void,
+		_onAnimatingStarted: () => void;
 
 		/**
 		 * @private
 		 */
-		_onAnimatingStopped: () => void
+		_onAnimatingStopped: () => void;
 	};
 
 	/**

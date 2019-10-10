@@ -154,11 +154,11 @@ export class Label extends CacheableE {
 		super(param);
 		this.text = param.text;
 		this.font = param.font;
-		this.textAlign = ("textAlign" in param) ? param.textAlign : TextAlign.Left;
+		this.textAlign = "textAlign" in param ? param.textAlign : TextAlign.Left;
 		this.glyphs = new Array(param.text.length);
 		this.fontSize = param.fontSize;
 		this.maxWidth = param.maxWidth;
-		this.widthAutoAdjust = ("widthAutoAdjust" in param) ? param.widthAutoAdjust : true;
+		this.widthAutoAdjust = "widthAutoAdjust" in param ? param.widthAutoAdjust : true;
 		this.textColor = param.textColor;
 		this._textWidth = 0;
 		this._game = undefined;
@@ -198,15 +198,15 @@ export class Label extends CacheableE {
 		// glyphのはみ出し量に応じて、描画先のX座標を調整する。
 		var destOffsetX;
 		switch (this.textAlign) {
-		case TextAlign.Center:
-			destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
-			break;
-		case TextAlign.Right:
-			destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
-			break;
-		default:
-			destOffsetX = this._overhangLeft;
-			break;
+			case TextAlign.Center:
+				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
+				break;
+			case TextAlign.Right:
+				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
+				break;
+			default:
+				destOffsetX = this._overhangLeft;
+				break;
 		}
 
 		renderer.drawImage(
@@ -225,18 +225,18 @@ export class Label extends CacheableE {
 			return;
 		}
 
-		var scale = (this.maxWidth > 0 && this.maxWidth < this._textWidth) ? this.maxWidth / this._textWidth : 1;
+		var scale = this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
 		var offsetX = 0;
 		switch (this.textAlign) {
-		case TextAlign.Center:
-			offsetX = this.width / 2 - (this._textWidth + this._overhangLeft) / 2 * scale;
-			break;
-		case TextAlign.Right:
-			offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
-			break;
-		default:
-			offsetX -= this._overhangLeft * scale;
-			break;
+			case TextAlign.Center:
+				offsetX = this.width / 2 - ((this._textWidth + this._overhangLeft) / 2) * scale;
+				break;
+			case TextAlign.Right:
+				offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
+				break;
+			default:
+				offsetX -= this._overhangLeft * scale;
+				break;
 		}
 
 		renderer.translate(offsetX, 0);
@@ -260,7 +260,8 @@ export class Label extends CacheableE {
 				}
 			}
 
-			if (glyph.surface) { // 非空白文字
+			if (glyph.surface) {
+				// 非空白文字
 				renderer.save();
 				renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
 				renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
@@ -313,12 +314,12 @@ export class Label extends CacheableE {
 		var glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
 		for (var i = 0; i <= effectiveTextLastIndex; ++i) {
 			const code = Util.charCodeAt(this.text, i);
-			if (! code) {
+			if (!code) {
 				continue;
 			}
 
 			var glyph = this.font.glyphForCharacter(code);
-			if (! glyph) {
+			if (!glyph) {
 				this._outputOfWarnLogWithNoGlyph(code, "_invalidateSelf()");
 				continue;
 			}
@@ -340,7 +341,7 @@ export class Label extends CacheableE {
 			}
 
 			if (i === effectiveTextLastIndex) {
-				this._overhangRight = Math.max((glyph.width + glyph.offsetX) - glyph.advanceWidth, 0);
+				this._overhangRight = Math.max(glyph.width + glyph.offsetX - glyph.advanceWidth, 0);
 				overhang += this._overhangRight;
 			}
 
@@ -359,11 +360,14 @@ export class Label extends CacheableE {
 	}
 
 	private _outputOfWarnLogWithNoGlyph(code: number, functionName: string): void {
-		const str = (code & 0xFFFF0000) ? String.fromCharCode((code & 0xFFFF0000) >>> 16, code & 0xFFFF) : String.fromCharCode(code);
+		const str = code & 0xffff0000 ? String.fromCharCode((code & 0xffff0000) >>> 16, code & 0xffff) : String.fromCharCode(code);
 		this.game().logger.warn(
-			"Label#" + functionName + ": failed to get a glyph for '" + str + "' " +
-			"(BitmapFont might not have the glyph or DynamicFont might create a glyph larger than its atlas)."
+			"Label#" +
+				functionName +
+				": failed to get a glyph for '" +
+				str +
+				"' " +
+				"(BitmapFont might not have the glyph or DynamicFont might create a glyph larger than its atlas)."
 		);
 	}
 }
-

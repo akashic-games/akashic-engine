@@ -8,7 +8,6 @@ import { ExceptionFactory } from "./errors";
  * 各メンバの詳細は `Object2D` の同名メンバの説明を参照すること。
  */
 export interface Object2DParameterObject {
-
 	/**
 	 * このオブジェクトの横位置。実際の座標位置はscaleX, scaleY, angle, anchorX, anchorYの値も考慮する必要がある。
 	 * @default 0
@@ -247,7 +246,7 @@ export class Object2D implements CommonArea {
 	 * @param obj X,Y座標
 	 */
 	moveTo(obj: CommonOffset): void;
-	moveTo(posOrX: number|CommonOffset, y?: number): void {
+	moveTo(posOrX: number | CommonOffset, y?: number): void {
 		if (typeof posOrX === "number" && typeof y !== "number") {
 			throw ExceptionFactory.createAssertionError("Object2D#moveTo: arguments must be CommonOffset or pair of x and y as a number.");
 		}
@@ -288,9 +287,11 @@ export class Object2D implements CommonArea {
 	 * @param size 幅と高さ
 	 */
 	resizeTo(size: CommonSize): void;
-	resizeTo(sizeOrWidth: number|CommonSize, height?: number): void {
+	resizeTo(sizeOrWidth: number | CommonSize, height?: number): void {
 		if (typeof sizeOrWidth === "number" && typeof height !== "number") {
-			throw ExceptionFactory.createAssertionError("Object2D#resizeTo: arguments must be CommonSize or pair of width and height as a number.");
+			throw ExceptionFactory.createAssertionError(
+				"Object2D#resizeTo: arguments must be CommonSize or pair of width and height as a number."
+			);
 		}
 		if (typeof sizeOrWidth === "number") {
 			this.width = sizeOrWidth;
@@ -338,9 +339,9 @@ export class Object2D implements CommonArea {
 	 * このオブジェクトの変換行列を得る。
 	 */
 	getMatrix(): Matrix {
-		if (! this._matrix) {
+		if (!this._matrix) {
 			this._matrix = new PlainMatrix();
-		} else if (! this._matrix._modified) {
+		} else if (!this._matrix._modified) {
 			return this._matrix;
 		}
 		this._updateMatrix();
