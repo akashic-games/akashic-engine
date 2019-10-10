@@ -1,4 +1,22 @@
 {
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
+  "extends": [
+    "tslint-config-prettier"
+  ],
+  "prettier": [
+    true,
+    {
+      "arrowParens": "avoid",
+      "bracketSpacing": true,
+      "printWidth": 140,
+      "singleQuote": false,
+      "tabWidth": 4,
+      "trailingComma": "none",
+      "useTabs": true
+    }
+  ],
   "rules": {
     "align": [true,
       "parameters",

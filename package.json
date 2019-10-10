@@ -6,6 +6,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "dts-bundle-generator": "^3.1.0",
+    "husky": "^3.0.8",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "rimraf": "^3.0.0",
@@ -19,6 +20,8 @@
     "textlint-rule-prh": "^5.2.1",
     "ts-jest": "^24.1.0",
     "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.3",
     "xorshift": "0.2.0"
@@ -31,11 +34,10 @@
     "bundle:js": "rollup -c rollup.config.js",
     "bundle:runtime:dts": "dts-bundle-generator -o dist/main.runtime.d.ts --umd-module-name g src/index.runtime.ts",
     "clean": "rimraf dist && rimraf lib",
-    "test": "npm run test:format && npm run test:jest",
+    "test": "npm run test:jest && npm run lint && npm run textlint",
     "test:jest": "jest --config jest.config.js",
-    "test:format": "prettier --config prettier.config.js --write ./src/__tests__/**/*.ts",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "lint": "tslint -c tslint.json src/**/*.ts --project ./tsconfig.json --fix",
+    "lint": "tslint -c tslint.json --project ./tsconfig.json --fix",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [
