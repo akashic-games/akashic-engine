@@ -1,7 +1,7 @@
-import { Glyph, GlyphArea } from "./Glyph";
 import { Asset } from "./Asset";
-import { Surface } from "./Surface";
 import { Font } from "./Font";
+import { Glyph, GlyphArea } from "./Glyph";
+import { Surface } from "./Surface";
 import { SurfaceUtil } from "./SurfaceUtil";
 
 /**

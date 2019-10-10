@@ -1,6 +1,6 @@
-import { Trigger } from "./Trigger";
-import { AudioSystem } from "./AudioSystem";
 import { AudioAsset } from "./AudioAsset";
+import { AudioSystem } from "./AudioSystem";
+import { Trigger } from "./Trigger";
 
 export interface AudioPlayerEvent {
 	player: AudioPlayer;

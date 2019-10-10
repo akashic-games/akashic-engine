@@ -1,5 +1,5 @@
-import { Util } from "./Util";
 import { CommonArea } from "./commons";
+import { Util } from "./Util";
 
 /**
  * オブジェクトの衝突を表す。

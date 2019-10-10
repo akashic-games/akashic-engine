@@ -1,5 +1,5 @@
-import { Module } from "./Module";
 import { Game } from "./Game";
+import { Module } from "./Module";
 
 /**
  * `ScriptAsset` の実行時、`g` 以下に加えられる値を定めたinterface。

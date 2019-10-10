@@ -1,12 +1,12 @@
 import { BitmapFont } from "./BitmapFont";
-import { GlyphArea, Glyph } from "./Glyph";
-import { Util } from "./Util";
-import { SurfaceAtlasSet, SurfaceAtlasSetHint } from "./SurfaceAtlasSet";
-import { Game } from "./Game";
-import { FontFamily } from "./FontFamily";
 import { Font } from "./Font";
-import { ResourceFactory } from "./ResourceFactory";
+import { FontFamily } from "./FontFamily";
+import { Game } from "./Game";
+import { Glyph, GlyphArea } from "./Glyph";
 import { GlyphFactory } from "./GlyphFactory";
+import { ResourceFactory } from "./ResourceFactory";
+import { SurfaceAtlasSet, SurfaceAtlasSetHint } from "./SurfaceAtlasSet";
+import { Util } from "./Util";
 
 /**
  * 文字列描画のフォントウェイト。

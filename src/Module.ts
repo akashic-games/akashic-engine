@@ -1,12 +1,12 @@
-import { Game } from "./Game";
-import { ExceptionFactory } from "./errors";
-import { PathUtil } from "./PathUtil";
-import { ScriptAssetContext } from "./ScriptAssetContext";
-import { RequireCachedValue } from "./RequireCachedValue";
-import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
-import { ScriptAsset } from "./ScriptAsset";
-import { TextAsset } from "./TextAsset";
 import { Asset } from "./Asset";
+import { ExceptionFactory } from "./errors";
+import { Game } from "./Game";
+import { PathUtil } from "./PathUtil";
+import { RequireCachedValue } from "./RequireCachedValue";
+import { ScriptAsset } from "./ScriptAsset";
+import { ScriptAssetContext } from "./ScriptAssetContext";
+import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
+import { TextAsset } from "./TextAsset";
 
 declare var g: any;
 

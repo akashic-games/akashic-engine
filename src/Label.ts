@@ -1,10 +1,10 @@
-import { CacheableEParameterObject, CacheableE } from "./CacheableE";
-import { Font } from "./Font";
-import { TextAlign } from "./TextAlign";
-import { Glyph } from "./Glyph";
-import { Game } from "./Game";
-import { Renderer } from "./Renderer";
+import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 import { CompositeOperation } from "./CompositeOperation";
+import { Font } from "./Font";
+import { Game } from "./Game";
+import { Glyph } from "./Glyph";
+import { Renderer } from "./Renderer";
+import { TextAlign } from "./TextAlign";
 import { Util } from "./Util";
 
 /**

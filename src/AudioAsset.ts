@@ -1,7 +1,7 @@
 import { Asset } from "./Asset";
-import { AudioAssetHint } from "./GameConfiguration";
-import { AudioSystem } from "./AudioSystem";
 import { AudioPlayer } from "./AudioPlayer";
+import { AudioSystem } from "./AudioSystem";
+import { AudioAssetHint } from "./GameConfiguration";
 
 /**
  * 音リソースを表すクラス。

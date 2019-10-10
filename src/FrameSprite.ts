@@ -1,8 +1,8 @@
-import { SpriteParameterObject, Sprite } from "./Sprite";
 import { ImageAsset } from "./ImageAsset";
+import { Sprite, SpriteParameterObject } from "./Sprite";
 import { Surface } from "./Surface";
-import { Trigger } from "./Trigger";
 import { Timer } from "./Timer";
+import { Trigger } from "./Trigger";
 
 /**
  * `FrameSprite` のコンストラクタに渡すことができるパラメータ。

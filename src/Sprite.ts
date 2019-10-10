@@ -1,9 +1,9 @@
-import { Surface } from "./Surface";
 import { Asset } from "./Asset";
-import { EParameterObject, E } from "./E";
+import { Camera } from "./Camera";
+import { E, EParameterObject } from "./E";
 import { Matrix, PlainMatrix } from "./Matrix";
 import { Renderer } from "./Renderer";
-import { Camera } from "./Camera";
+import { Surface } from "./Surface";
 import { SurfaceUtil } from "./SurfaceUtil";
 
 /**

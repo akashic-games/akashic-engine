@@ -1,7 +1,7 @@
-import { CompositeOperation } from "./CompositeOperation";
 import { CommonArea, CommonOffset, CommonSize } from "./commons";
-import { Matrix, PlainMatrix } from "./Matrix";
+import { CompositeOperation } from "./CompositeOperation";
 import { ExceptionFactory } from "./errors";
+import { Matrix, PlainMatrix } from "./Matrix";
 
 /**
  * `Object2D` のコンストラクタに渡すことができるパラメータ。

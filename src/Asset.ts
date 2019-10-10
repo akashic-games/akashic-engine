@@ -1,6 +1,6 @@
+import { AssetLoadHandler } from "./AssetLoadHandler";
 import { Destroyable } from "./Destroyable";
 import { Trigger } from "./Trigger";
-import { AssetLoadHandler } from "./AssetLoadHandler";
 
 /**
  * 各種リソースを表すクラス。

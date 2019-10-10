@@ -1,9 +1,9 @@
 import { CommonSize } from "./commons";
 import { Destroyable } from "./Destroyable";
-import { Surface } from "./Surface";
+import { Game } from "./Game";
 import { Glyph } from "./Glyph";
 import { ResourceFactory } from "./ResourceFactory";
-import { Game } from "./Game";
+import { Surface } from "./Surface";
 
 /**
  * SurfaceAtlasの空き領域管理クラス。

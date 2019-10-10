@@ -1,8 +1,8 @@
-import { RandomGenerator } from "./RandomGenerator";
-import { Player } from "./Player";
-import { StorageValueStore } from "./Storage";
 import { CommonOffset } from "./commons";
 import { E } from "./E";
+import { Player } from "./Player";
+import { RandomGenerator } from "./RandomGenerator";
+import { StorageValueStore } from "./Storage";
 
 /**
  * イベントの種別。

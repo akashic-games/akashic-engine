@@ -1,6 +1,6 @@
 import { Asset } from "./Asset";
-import { AssetLoadError } from "./errors";
 import { AssetManager } from "./AssetManager";
+import { AssetLoadError } from "./errors";
 
 /**
  * `AssetManager` から `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。

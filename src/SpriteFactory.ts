@@ -1,8 +1,8 @@
-import { Scene } from "./Scene";
-import { E } from "./E";
 import { Camera } from "./Camera";
-import { Sprite } from "./Sprite";
+import { E } from "./E";
 import { ExceptionFactory } from "./errors";
+import { Scene } from "./Scene";
+import { Sprite } from "./Sprite";
 
 export class SpriteFactory {
 	/**

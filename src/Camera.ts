@@ -1,6 +1,6 @@
-import { Renderer } from "./Renderer";
 import { Game } from "./Game";
-import { Object2DParameterObject, Object2D } from "./Object2D";
+import { Object2D, Object2DParameterObject } from "./Object2D";
+import { Renderer } from "./Renderer";
 
 /**
  * カメラを表すインターフェース。

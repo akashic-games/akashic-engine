@@ -1,22 +1,22 @@
 import { Asset } from "./Asset";
+import { AssetLoadErrorType } from "./AssetLoadErrorType";
+import { AssetLoadHandler } from "./AssetLoadHandler";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
+import { AudioAsset } from "./AudioAsset";
+import { AssetLoadError, ExceptionFactory } from "./errors";
+import { Game } from "./Game";
 import {
-	AudioSystemConfigurationMap,
-	ModuleMainScriptsMap,
-	AssetConfigurationMap,
-	DynamicAssetConfiguration,
 	AssetConfiguration,
 	AssetConfigurationBase,
+	AssetConfigurationMap,
+	AudioAssetHint,
+	AudioSystemConfigurationMap,
+	DynamicAssetConfiguration,
 	ImageAssetHint,
-	AudioAssetHint
+	ModuleMainScriptsMap
 } from "./GameConfiguration";
-import { AssetLoadHandler } from "./AssetLoadHandler";
-import { Game } from "./Game";
-import { ExceptionFactory, AssetLoadError } from "./errors";
-import { VideoSystem } from "./VideoSystem";
-import { AssetLoadErrorType } from "./AssetLoadErrorType";
-import { AudioAsset } from "./AudioAsset";
 import { VideoAsset } from "./VideoAsset";
+import { VideoSystem } from "./VideoSystem";
 
 class AssetLoadingInfo {
 	asset: Asset;

@@ -1,8 +1,8 @@
-import { Renderer } from "./Renderer";
-import { Trigger } from "./Trigger";
-import { ExceptionFactory } from "./errors";
 import { CommonSize } from "./commons";
 import { Destroyable } from "./Destroyable";
+import { ExceptionFactory } from "./errors";
+import { Renderer } from "./Renderer";
+import { Trigger } from "./Trigger";
 
 /**
  * 描画領域を表すクラス。

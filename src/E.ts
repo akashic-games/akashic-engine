@@ -1,17 +1,17 @@
-import { Object2DParameterObject, Object2D } from "./Object2D";
-import { Scene } from "./Scene";
 import { Camera } from "./Camera";
-import { ShaderProgram } from "./Shader";
-import { Destroyable } from "./Destroyable";
 import { CommonArea, CommonOffset, CommonRect } from "./commons";
+import { Destroyable } from "./Destroyable";
 import { EntityStateFlags } from "./EntityStateFlags";
-import { Trigger, ChainTrigger } from "./Trigger";
-import { MessageEvent, PointDownEvent, PointUpEvent, PointMoveEvent, PointSource, PointEvent } from "./Event";
-import { LocalTickMode } from "./LocalTickMode";
-import { Renderer } from "./Renderer";
-import { Game } from "./Game";
 import { ExceptionFactory } from "./errors";
+import { MessageEvent, PointDownEvent, PointEvent, PointMoveEvent, PointSource, PointUpEvent } from "./Event";
+import { Game } from "./Game";
+import { LocalTickMode } from "./LocalTickMode";
 import { Matrix } from "./Matrix";
+import { Object2D, Object2DParameterObject } from "./Object2D";
+import { Renderer } from "./Renderer";
+import { Scene } from "./Scene";
+import { ShaderProgram } from "./Shader";
+import { ChainTrigger, Trigger } from "./Trigger";
 
 /**
  * `E` のコンストラクタに渡すことができるパラメータ。

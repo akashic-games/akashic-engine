@@ -1,7 +1,7 @@
 import { ImageAsset } from "./ImageAsset";
-import { VideoSystem } from "./VideoSystem";
 import { Surface } from "./Surface";
 import { VideoPlayer } from "./VideoPlayer";
+import { VideoSystem } from "./VideoSystem";
 
 /**
  * 動画リソースを表すクラス。

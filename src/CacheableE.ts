@@ -1,9 +1,9 @@
-import { CommonSize } from "./commons";
-import { EParameterObject, E } from "./E";
-import { Surface } from "./Surface";
-import { Renderer } from "./Renderer";
 import { Camera } from "./Camera";
+import { CommonSize } from "./commons";
+import { E, EParameterObject } from "./E";
 import { EntityStateFlags } from "./EntityStateFlags";
+import { Renderer } from "./Renderer";
+import { Surface } from "./Surface";
 
 /**
  * `CacheableE` のコンストラクタに渡すことができるパラメータ。

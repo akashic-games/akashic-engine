@@ -1,22 +1,22 @@
-import { AssetManager } from "./AssetManager";
-import { DynamicAssetConfiguration } from "./GameConfiguration";
 import { Asset } from "./Asset";
-import { AssetLoadError, ExceptionFactory, StorageLoadError } from "./errors";
-import { Game } from "./Game";
-import { StorageReadKey, StorageValueStoreSerialization, StorageLoaderHandler, StorageValueStore, StorageLoader } from "./Storage";
-import { LocalTickMode } from "./LocalTickMode";
-import { TickGenerationMode } from "./TickGenerationMode";
-import { E } from "./E";
-import { Registrable } from "./Registrable";
-import { Destroyable } from "./Destroyable";
-import { Trigger } from "./Trigger";
 import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
-import { MessageEvent, PointDownEvent, PointMoveEvent, PointUpEvent, OperationEvent, PointSource } from "./Event";
-import { TimerManager, TimerIdentifier } from "./TimerManager";
-import { Timer } from "./Timer";
-import { CommonOffset } from "./commons";
+import { AssetManager } from "./AssetManager";
 import { Camera, Camera2D } from "./Camera";
+import { CommonOffset } from "./commons";
+import { Destroyable } from "./Destroyable";
+import { E } from "./E";
+import { AssetLoadError, ExceptionFactory, StorageLoadError } from "./errors";
+import { MessageEvent, OperationEvent, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./Event";
+import { Game } from "./Game";
+import { DynamicAssetConfiguration } from "./GameConfiguration";
+import { LocalTickMode } from "./LocalTickMode";
 import { Matrix } from "./Matrix";
+import { Registrable } from "./Registrable";
+import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
+import { TickGenerationMode } from "./TickGenerationMode";
+import { Timer } from "./Timer";
+import { TimerIdentifier, TimerManager } from "./TimerManager";
+import { Trigger } from "./Trigger";
 
 /**
  * SceneAssetHolder のコンストラクタに指定できるパラメータ。

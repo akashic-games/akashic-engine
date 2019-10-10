@@ -1,8 +1,8 @@
-import { Renderer } from "./Renderer";
 import { Camera } from "./Camera";
-import { EParameterObject, E } from "./E";
-import { TextAlign } from "./TextAlign";
+import { E, EParameterObject } from "./E";
 import { FontFamily } from "./FontFamily";
+import { Renderer } from "./Renderer";
+import { TextAlign } from "./TextAlign";
 import { TextBaseline } from "./TextBaseline";
 
 /**

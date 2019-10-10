@@ -1,4 +1,4 @@
-import { EParameterObject, E } from "./E";
+import { E, EParameterObject } from "./E";
 import { ExceptionFactory } from "./errors";
 import { Renderer } from "./Renderer";
 

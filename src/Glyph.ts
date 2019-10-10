@@ -1,5 +1,5 @@
-import { SurfaceAtlas } from "./SurfaceAtlasSet";
 import { Surface } from "./Surface";
+import { SurfaceAtlas } from "./SurfaceAtlasSet";
 
 /**
  * グリフの領域を表すインターフェース。

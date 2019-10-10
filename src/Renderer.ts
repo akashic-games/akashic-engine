@@ -1,12 +1,12 @@
-import { Game } from "./Game";
 import { Camera } from "./Camera";
-import { Surface } from "./Surface";
-import { TextBaseline } from "./TextBaseline";
-import { TextAlign } from "./TextAlign";
-import { FontFamily } from "./FontFamily";
 import { CompositeOperation } from "./CompositeOperation";
-import { ShaderProgram } from "./Shader";
+import { FontFamily } from "./FontFamily";
+import { Game } from "./Game";
 import { ImageData } from "./ImageData";
+import { ShaderProgram } from "./Shader";
+import { Surface } from "./Surface";
+import { TextAlign } from "./TextAlign";
+import { TextBaseline } from "./TextBaseline";
 
 /**
  * ゲームの描画を行うクラス。

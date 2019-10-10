@@ -1,18 +1,18 @@
-import { Surface } from "./Surface";
-import { CommonArea } from "./commons";
-import { SurfaceAtlas } from "./SurfaceAtlasSet";
-import { GlyphFactory } from "./GlyphFactory";
-import { FontWeight } from "./DynamicFont";
-import { FontFamily } from "./FontFamily";
+import { AudioAsset } from "./AudioAsset";
 import { AudioPlayer } from "./AudioPlayer";
 import { AudioSystem } from "./AudioSystem";
+import { CommonArea } from "./commons";
+import { FontWeight } from "./DynamicFont";
+import { FontFamily } from "./FontFamily";
 import { AudioAssetHint } from "./GameConfiguration";
-import { VideoSystem } from "./VideoSystem";
+import { GlyphFactory } from "./GlyphFactory";
 import { ImageAsset } from "./ImageAsset";
-import { VideoAsset } from "./VideoAsset";
-import { AudioAsset } from "./AudioAsset";
-import { TextAsset } from "./TextAsset";
 import { ScriptAsset } from "./ScriptAsset";
+import { Surface } from "./Surface";
+import { SurfaceAtlas } from "./SurfaceAtlasSet";
+import { TextAsset } from "./TextAsset";
+import { VideoAsset } from "./VideoAsset";
+import { VideoSystem } from "./VideoSystem";
 
 /**
  * リソースの生成を行うクラス。

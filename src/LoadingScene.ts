@@ -1,6 +1,6 @@
-import { Scene, SceneLoadState, SceneParameterObject } from "./Scene";
 import { Asset } from "./Asset";
 import { ExceptionFactory } from "./errors";
+import { Scene, SceneLoadState, SceneParameterObject } from "./Scene";
 import { Trigger } from "./Trigger";
 
 export interface LoadingSceneParameterObject extends SceneParameterObject {

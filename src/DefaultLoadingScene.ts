@@ -1,12 +1,12 @@
-import { Game } from "./Game";
+import { Asset } from "./Asset";
+import { Camera, Camera2D } from "./Camera";
 import { E, EParameterObject } from "./E";
+import { FilledRect } from "./FilledRect";
+import { Game } from "./Game";
+import { LoadingScene } from "./LoadingScene";
 import { Object2D } from "./Object2D";
 import { Renderer } from "./Renderer";
-import { Camera, Camera2D } from "./Camera";
-import { LoadingScene } from "./LoadingScene";
-import { FilledRect } from "./FilledRect";
 import { Scene } from "./Scene";
-import { Asset } from "./Asset";
 
 /**
  * `DeafultLoadingScene` のコンストラクタに渡すことができるパラメータ。

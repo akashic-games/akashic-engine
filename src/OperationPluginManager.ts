@@ -1,11 +1,11 @@
-import { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
-import { OperationPlugin } from "./OperationPlugin";
 import { Game } from "./Game";
-import { Trigger } from "./Trigger";
-import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
-import { InternalOperationPluginInfo } from "./OperationPluginInfo";
-import { OperationPluginStatic } from "./OperationPluginStatic";
 import { _require } from "./Module";
+import { OperationPlugin } from "./OperationPlugin";
+import { InternalOperationPluginInfo } from "./OperationPluginInfo";
+import { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
+import { OperationPluginStatic } from "./OperationPluginStatic";
+import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
+import { Trigger } from "./Trigger";
 
 /**
  * 操作プラグインからの通知をハンドルするクラス。

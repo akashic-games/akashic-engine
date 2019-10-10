@@ -1,8 +1,8 @@
-import { AudioPlayerEvent, AudioPlayer } from "./AudioPlayer";
-import { Game } from "./Game";
 import { Asset } from "./Asset";
-import { ExceptionFactory } from "./errors";
 import { AudioAsset } from "./AudioAsset";
+import { AudioPlayer, AudioPlayerEvent } from "./AudioPlayer";
+import { ExceptionFactory } from "./errors";
+import { Game } from "./Game";
 
 export abstract class AudioSystem {
 	id: string;

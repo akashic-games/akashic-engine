@@ -78,6 +78,7 @@
       "check-else",
       "check-whitespace"
     ],
+    "ordered-imports": true,
     "quotemark": [true, "double"],
     "radix": true,
     "semicolon": true,

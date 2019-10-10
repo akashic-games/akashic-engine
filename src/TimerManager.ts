@@ -1,7 +1,7 @@
+import { Destroyable } from "./Destroyable";
 import { ExceptionFactory } from "./errors";
 import { Timer } from "./Timer";
 import { Trigger } from "./Trigger";
-import { Destroyable } from "./Destroyable";
 
 /**
  * `Scene#setTimeout` や `Scene#setInterval` の実行単位を表す。

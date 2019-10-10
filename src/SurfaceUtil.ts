@@ -1,7 +1,7 @@
 import { Asset } from "./Asset";
+import { ExceptionFactory } from "./errors";
 import { ImageAsset } from "./ImageAsset";
 import { Surface } from "./Surface";
-import { ExceptionFactory } from "./errors";
 
 export module SurfaceUtil {
 	/**

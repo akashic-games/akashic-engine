@@ -1,6 +1,6 @@
+import { ExceptionFactory } from "./errors";
 import { RandomGenerator } from "./RandomGenerator";
 import { Xorshift, XorshiftSerialization } from "./Xorshift";
-import { ExceptionFactory } from "./errors";
 
 /**
  * Xorshiftを用いた乱数生成期。

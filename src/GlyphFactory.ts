@@ -1,5 +1,5 @@
-import { FontFamily } from "./FontFamily";
 import { FontWeight } from "./DynamicFont";
+import { FontFamily } from "./FontFamily";
 import { Glyph } from "./Glyph";
 
 /**
