@@ -45,8 +45,7 @@ export class AudioSystemManager {
 	 * @private
 	 */
 	_setMuted(muted: boolean): void {
-		if (this._muted === muted)
-			return;
+		if (this._muted === muted) return;
 
 		this._muted = muted;
 		var systems = this._game.audio;
@@ -60,8 +59,7 @@ export class AudioSystemManager {
 	 * @private
 	 */
 	_setPlaybackRate(rate: number): void {
-		if (this._playbackRate === rate)
-			return;
+		if (this._playbackRate === rate) return;
 
 		this._playbackRate = rate;
 		var systems = this._game.audio;

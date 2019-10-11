@@ -55,7 +55,7 @@ export class Xorshift {
 		var t2L = 0;
 
 		var a1 = 23;
-		var m1 = 0xFFFFFFFF << (32 - a1);
+		var m1 = 0xffffffff << (32 - a1);
 		t1U = (s1U << a1) | ((s1L & m1) >>> (32 - a1));
 		t1L = s1L << a1;
 		s1U = s1U ^ t1U;
@@ -65,14 +65,14 @@ export class Xorshift {
 		t1L = s1L ^ s0L;
 
 		var a2 = 17;
-		var m2 = 0xFFFFFFFF >>> (32 - a2);
+		var m2 = 0xffffffff >>> (32 - a2);
 		t2U = s1U >>> a2;
 		t2L = (s1L >>> a2) | ((s1U & m2) << (32 - a2));
 		t1U = t1U ^ t2U;
 		t1L = t1L ^ t2L;
 
 		var a3 = 26;
-		var m3 = 0xFFFFFFFF >>> (32 - a3);
+		var m3 = 0xffffffff >>> (32 - a3);
 		t2U = s0U >>> a3;
 		t2L = (s0L >>> a3) | ((s0U & m3) << (32 - a3));
 		t1U = t1U ^ t2U;
@@ -82,7 +82,7 @@ export class Xorshift {
 		this._state1L = t1L;
 
 		var sumL = (t1L >>> 0) + (s0L >>> 0);
-		t2U = (t1U + s0U + (sumL / 2 >>> 31)) >>> 0;
+		t2U = (t1U + s0U + ((sumL / 2) >>> 31)) >>> 0;
 		t2L = sumL >>> 0;
 
 		return [t2U, t2L];

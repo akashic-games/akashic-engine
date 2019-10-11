@@ -1,5 +1,5 @@
-import { SurfaceAtlas } from "./SurfaceAtlasSet";
 import { Surface } from "./Surface";
+import { SurfaceAtlas } from "./SurfaceAtlasSet";
 
 /**
  * グリフの領域を表すインターフェース。
@@ -93,9 +93,18 @@ export class Glyph {
 	/**
 	 * `Glyph` のインスタンスを生成する。
 	 */
-	constructor(code: number, x: number, y: number, width: number, height: number,
-	            offsetX: number = 0, offsetY: number = 0, advanceWidth: number = width,
-	            surface?: Surface, isSurfaceValid: boolean = !!surface) {
+	constructor(
+		code: number,
+		x: number,
+		y: number,
+		width: number,
+		height: number,
+		offsetX: number = 0,
+		offsetY: number = 0,
+		advanceWidth: number = width,
+		surface?: Surface,
+		isSurfaceValid: boolean = !!surface
+	) {
 		this.code = code;
 		this.x = x;
 		this.y = y;
@@ -118,7 +127,6 @@ export class Glyph {
 		if (!this.width || !this.height) {
 			return 0;
 		}
-		return fontSize / this.height * this.width;
+		return (fontSize / this.height) * this.width;
 	}
 }
-

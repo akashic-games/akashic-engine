@@ -1,5 +1,5 @@
-import { FontFamily } from "./FontFamily";
 import { FontWeight } from "./DynamicFont";
+import { FontFamily } from "./FontFamily";
 import { Glyph } from "./Glyph";
 
 /**
@@ -15,7 +15,7 @@ export abstract class GlyphFactory {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	fontFamily: FontFamily|string|(FontFamily|string)[];
+	fontFamily: FontFamily | string | (FontFamily | string)[];
 
 	/**
 	 * フォントサイズ。
@@ -77,9 +77,16 @@ export abstract class GlyphFactory {
 	 * @param strokeOnly 輪郭を描画するか否か
 	 * @param fontWeight フォントウェイト
 	 */
-	constructor(fontFamily: FontFamily|string|(FontFamily|string)[], fontSize: number, baselineHeight: number = fontSize,
-	            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
-	            fontWeight: FontWeight = FontWeight.Normal) {
+	constructor(
+		fontFamily: FontFamily | string | (FontFamily | string)[],
+		fontSize: number,
+		baselineHeight: number = fontSize,
+		fontColor: string = "black",
+		strokeWidth: number = 0,
+		strokeColor: string = "black",
+		strokeOnly: boolean = false,
+		fontWeight: FontWeight = FontWeight.Normal
+	) {
 		this.fontFamily = fontFamily;
 		this.fontSize = fontSize;
 		this.fontWeight = fontWeight;
@@ -99,4 +106,3 @@ export abstract class GlyphFactory {
 	 */
 	abstract create(code: number): Glyph;
 }
-

@@ -1,8 +1,8 @@
-import { Scene } from "./Scene";
-import { E } from "./E";
 import { Camera } from "./Camera";
-import { Sprite } from "./Sprite";
+import { E } from "./E";
 import { ExceptionFactory } from "./errors";
+import { Scene } from "./Scene";
+import { Sprite } from "./Sprite";
 
 export class SpriteFactory {
 	/**
@@ -27,15 +27,12 @@ export class SpriteFactory {
 		width = boundingRect.right - boundingRect.left;
 		height = boundingRect.bottom - boundingRect.top;
 
-		if (boundingRect.left < e.x)
-			x = e.x - boundingRect.left;
-		if (boundingRect.top < e.y)
-			y = e.y - boundingRect.top;
+		if (boundingRect.left < e.x) x = e.x - boundingRect.left;
+		if (boundingRect.top < e.y) y = e.y - boundingRect.top;
 
 		e.moveTo(x, y);
 		// 再描画フラグを立てたくないために e._matrix を直接触っている
-		if (e._matrix)
-			e._matrix._modified = true;
+		if (e._matrix) e._matrix._modified = true;
 
 		var surface = scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 		var renderer = surface.renderer();
@@ -52,8 +49,7 @@ export class SpriteFactory {
 		s.moveTo(boundingRect.left, boundingRect.top);
 
 		e.moveTo(oldX, oldY);
-		if (e._matrix)
-			e._matrix._modified = true;
+		if (e._matrix) e._matrix._modified = true;
 
 		return s;
 	}
@@ -70,8 +66,7 @@ export class SpriteFactory {
 		renderer.begin();
 
 		var children = fromScene.children;
-		for (var i = 0; i < children.length; ++i)
-			children[i].render(renderer, camera);
+		for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 
 		renderer.end();
 

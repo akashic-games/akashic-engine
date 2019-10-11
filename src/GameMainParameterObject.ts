@@ -1,4 +1,3 @@
-
 /**
  * ゲームのエントリポイントに渡される引数。
  */
@@ -23,4 +22,3 @@ export interface GameMainParameterObject {
 	 */
 	globalArgs?: any;
 }
-

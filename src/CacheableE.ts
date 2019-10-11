@@ -1,9 +1,9 @@
-import { CommonSize } from "./commons";
-import { EParameterObject, E } from "./E";
-import { Surface } from "./Surface";
-import { Renderer } from "./Renderer";
 import { Camera } from "./Camera";
+import { CommonSize } from "./commons";
+import { E, EParameterObject } from "./E";
 import { EntityStateFlags } from "./EntityStateFlags";
+import { Renderer } from "./Renderer";
+import { Surface } from "./Surface";
 
 /**
  * `CacheableE` のコンストラクタに渡すことができるパラメータ。
@@ -91,7 +91,7 @@ export abstract class CacheableE extends E {
 			this._cacheSize = this.calculateCacheSize();
 			var w = Math.ceil(this._cacheSize.width) + padding * 2;
 			var h = Math.ceil(this._cacheSize.height) + padding * 2;
-			var isNew = !this._cache || (this._cache.width < w) || (this._cache.height < h);
+			var isNew = !this._cache || this._cache.width < w || this._cache.height < h;
 			if (isNew) {
 				if (this._cache && !this._cache.destroyed()) {
 					this._cache.destroy();
@@ -102,7 +102,7 @@ export abstract class CacheableE extends E {
 
 			var cacheRenderer = this._renderer;
 			cacheRenderer.begin();
-			if (! isNew) {
+			if (!isNew) {
 				cacheRenderer.clear();
 			}
 
@@ -127,7 +127,15 @@ export abstract class CacheableE extends E {
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
 	renderSelfFromCache(renderer: Renderer): void {
-		renderer.drawImage(this._cache, 0, 0, this._cacheSize.width + CacheableE.PADDING, this._cacheSize.height + CacheableE.PADDING, 0, 0);
+		renderer.drawImage(
+			this._cache,
+			0,
+			0,
+			this._cacheSize.width + CacheableE.PADDING,
+			this._cacheSize.height + CacheableE.PADDING,
+			0,
+			0
+		);
 	}
 
 	/**

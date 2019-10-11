@@ -1,8 +1,8 @@
-import { RandomGenerator } from "./RandomGenerator";
-import { Player } from "./Player";
-import { StorageValueStore } from "./Storage";
 import { CommonOffset } from "./commons";
 import { E } from "./E";
+import { Player } from "./Player";
+import { RandomGenerator } from "./RandomGenerator";
+import { StorageValueStore } from "./Storage";
 
 /**
  * イベントの種別。
@@ -140,8 +140,16 @@ export class PointUpEvent extends PointEvent {
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
-	constructor(pointerId: number, target: E, point: CommonOffset,
-	            prevDelta: CommonOffset, startDelta: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+	constructor(
+		pointerId: number,
+		target: E,
+		point: CommonOffset,
+		prevDelta: CommonOffset,
+		startDelta: CommonOffset,
+		player?: Player,
+		local?: boolean,
+		priority?: number
+	) {
 		super(pointerId, target, point, player, local, priority);
 		this.prevDelta = prevDelta;
 		this.startDelta = startDelta;
@@ -164,8 +172,16 @@ export class PointMoveEvent extends PointEvent {
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
-	constructor(pointerId: number, target: E, point: CommonOffset,
-	            prevDelta: CommonOffset, startDelta: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+	constructor(
+		pointerId: number,
+		target: E,
+		point: CommonOffset,
+		prevDelta: CommonOffset,
+		startDelta: CommonOffset,
+		player?: Player,
+		local?: boolean,
+		priority?: number
+	) {
 		super(pointerId, target, point, player, local, priority);
 		this.prevDelta = prevDelta;
 		this.startDelta = startDelta;

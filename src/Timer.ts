@@ -1,5 +1,5 @@
-import { Trigger } from "./Trigger";
 import { Destroyable } from "./Destroyable";
+import { Trigger } from "./Trigger";
 
 /**
  * 一定時間で繰り返される処理を表すタイマー。

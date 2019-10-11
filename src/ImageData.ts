@@ -18,4 +18,3 @@ export interface ImageData extends CommonSize {
 	 */
 	data: Uint8ClampedArray;
 }
-

@@ -24,7 +24,7 @@ export interface ShaderProgramParameterObject {
 	 * フラグメントシェーダに指定可能なuniform値のマップ。
 	 * @default undefined
 	 */
-	uniforms?: {[key: string]: ShaderUniform};
+	uniforms?: { [key: string]: ShaderUniform };
 }
 
 /**
@@ -53,7 +53,7 @@ export class ShaderProgram {
 	 * 各シェーダに与えられるuniform値のマップ。
 	 * この値は本クラスの生成時にのみ指定可能であり、 `ShaderUniform#value` 以外の値を直接書き換えてはならない。
 	 */
-	uniforms: {[name: string]: ShaderUniform};
+	uniforms: { [name: string]: ShaderUniform };
 
 	/**
 	 * シェーダプログラムの実体。

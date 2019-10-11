@@ -1,16 +1,22 @@
 import { Asset } from "./Asset";
-import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
-import {
-	AudioSystemConfigurationMap, ModuleMainScriptsMap, AssetConfigurationMap, DynamicAssetConfiguration,
-	AssetConfiguration, AssetConfigurationBase, ImageAssetHint, AudioAssetHint
-} from "./GameConfiguration";
-import { AssetLoadHandler } from "./AssetLoadHandler";
-import { Game } from "./Game";
-import { ExceptionFactory, AssetLoadError } from "./errors";
-import { VideoSystem } from "./VideoSystem";
 import { AssetLoadErrorType } from "./AssetLoadErrorType";
+import { AssetLoadHandler } from "./AssetLoadHandler";
+import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioAsset } from "./AudioAsset";
+import { AssetLoadError, ExceptionFactory } from "./errors";
+import { Game } from "./Game";
+import {
+	AssetConfiguration,
+	AssetConfigurationBase,
+	AssetConfigurationMap,
+	AudioAssetHint,
+	AudioSystemConfigurationMap,
+	DynamicAssetConfiguration,
+	ImageAssetHint,
+	ModuleMainScriptsMap
+} from "./GameConfiguration";
 import { VideoAsset } from "./VideoAsset";
+import { VideoSystem } from "./VideoSystem";
 
 class AssetLoadingInfo {
 	asset: Asset;
@@ -41,7 +47,7 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): Audi
 	};
 
 	for (let key in systemDefaults) {
-		if (! (key in confMap)) {
+		if (!(key in confMap)) {
 			confMap[key] = systemDefaults[key];
 		}
 	}
@@ -68,14 +74,14 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * コンストラクタに渡されたアセットの設定。(assets.json が入っていることが期待される)
 	 */
-	configuration: {[key: string]: any};
+	configuration: { [key: string]: any };
 
 	/**
 	 * 読み込み済みのアセット。
 	 * requestAssets() で読み込みをリクエストしたゲーム開発者はコールバックでアセットを受け取るので、この変数を参照する必要は通常ない
 	 * @private
 	 */
-	_assets: {[key: string]: Asset};
+	_assets: { [key: string]: Asset };
 
 	/**
 	 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
@@ -83,13 +89,13 @@ export class AssetManager implements AssetLoadHandler {
 	 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 	 * @private
 	 */
-	_liveAssetVirtualPathTable: {[key: string]: Asset};
+	_liveAssetVirtualPathTable: { [key: string]: Asset };
 
 	/**
 	 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
 	 * @private
 	 */
-	_liveAbsolutePathTable: {[path: string]: string};
+	_liveAbsolutePathTable: { [path: string]: string };
 
 	/**
 	 * requireの第一引数から対応する仮想パスを引くためのテーブル。
@@ -103,12 +109,12 @@ export class AssetManager implements AssetLoadHandler {
 	 * なおロード中であっても参照に数える。つまり (this._refCounts[id] > 1) であるなら !!(this._assets[id] || this._loadings[id])
 	 * @private
 	 */
-	_refCounts: {[key: string]: number};
+	_refCounts: { [key: string]: number };
 
 	/**
 	 * 読み込み中のアセットの情報。
 	 */
-	private _loadings: {[key: string]: AssetLoadingInfo};
+	private _loadings: { [key: string]: AssetLoadingInfo };
 
 	/**
 	 * `AssetManager` のインスタンスを生成する。
@@ -116,8 +122,12 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param game このインスタンスが属するゲーム
 	 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 	 */
-	constructor(game: Game, conf?: AssetConfigurationMap, audioSystemConfMap?: AudioSystemConfigurationMap,
-	            moduleMainScripts?: ModuleMainScriptsMap) {
+	constructor(
+		game: Game,
+		conf?: AssetConfigurationMap,
+		audioSystemConfMap?: AudioSystemConfigurationMap,
+		moduleMainScripts?: ModuleMainScriptsMap
+	) {
 		this.game = game;
 		this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 		this._assets = {};
@@ -182,10 +192,8 @@ export class AssetManager implements AssetLoadHandler {
 		var ret: string[] = [];
 		var conf = this.configuration;
 		for (var p in conf) {
-			if (!conf.hasOwnProperty(p))
-				continue;
-			if (conf[p].global)
-				ret.push(p);
+			if (!conf.hasOwnProperty(p)) continue;
+			if (conf[p].global) ret.push(p);
 		}
 		return ret;
 	}
@@ -202,7 +210,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param handler 要求結果を受け取るハンドラ
 	 */
 	requestAsset(assetIdOrConf: string | DynamicAssetConfiguration, handler: AssetManagerLoadHandler): boolean {
-		var assetId = (typeof assetIdOrConf === "string") ? assetIdOrConf : (<DynamicAssetConfiguration>assetIdOrConf).id;
+		var assetId = typeof assetIdOrConf === "string" ? assetIdOrConf : (<DynamicAssetConfiguration>assetIdOrConf).id;
 		var waiting = false;
 		var loadingInfo: AssetLoadingInfo;
 		if (this._assets.hasOwnProperty(assetId)) {
@@ -232,9 +240,8 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetOrId 参照カウントを減らすアセットまたはアセットID
 	 */
 	unrefAsset(assetOrId: string | Asset): void {
-		var assetId = (typeof assetOrId === "string") ? assetOrId : assetOrId.id;
-		if (--this._refCounts[assetId] > 0)
-			return;
+		var assetId = typeof assetOrId === "string" ? assetOrId : assetOrId.id;
+		if (--this._refCounts[assetId] > 0) return;
 		this._releaseAsset(assetId);
 	}
 
@@ -269,9 +276,8 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
-		var ret: {[key: string]: AssetConfiguration} = {};
-		if (!(configuration instanceof Object))
-			throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
+		var ret: { [key: string]: AssetConfiguration } = {};
+		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 		for (var p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
 			var conf = <AssetConfiguration>Object.create(configuration[p]);
@@ -292,8 +298,7 @@ export class AssetManager implements AssetLoadHandler {
 			}
 			if (conf.type === "audio") {
 				// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
-				if (conf.duration === undefined)
-					conf.duration = 0;
+				if (conf.duration === undefined) conf.duration = 0;
 				const audioSystemConf = audioSystemConfMap[conf.systemId];
 				if (conf.loop === undefined) {
 					conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
@@ -303,16 +308,17 @@ export class AssetManager implements AssetLoadHandler {
 				}
 			}
 			if (conf.type === "video") {
-				if (! conf.useRealSize) {
+				if (!conf.useRealSize) {
 					if (typeof conf.width !== "number")
 						throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong width given for the video asset: " + p);
 					if (typeof conf.height !== "number")
-						throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong height given for the video asset: " + p);
+						throw ExceptionFactory.createAssertionError(
+							"AssetManager#_normalize: wrong height given for the video asset: " + p
+						);
 					conf.useRealSize = false;
 				}
 			}
-			if (!conf.global)
-				conf.global = false;
+			if (!conf.global) conf.global = false;
 			ret[p] = conf;
 		}
 		return ret;
@@ -336,26 +342,27 @@ export class AssetManager implements AssetLoadHandler {
 			uri = dynConf.uri;
 		}
 		var resourceFactory = this.game.resourceFactory;
-		if (!conf)
-			throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
+		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 		switch (conf.type) {
-		case "image":
-			var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
-			asset.initialize(<ImageAssetHint>conf.hint);
-			return asset;
-		case "audio":
-			var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-			return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
-		case "text":
-			return resourceFactory.createTextAsset(id, uri);
-		case "script":
-			return resourceFactory.createScriptAsset(id, uri);
-		case "video":
-			// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
-			// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
-			return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, new VideoSystem(), conf.loop, conf.useRealSize);
-		default:
-			throw ExceptionFactory.createAssertionError("AssertionError#_createAssetFor: unknown asset type " + conf.type + " for asset ID: " + id);
+			case "image":
+				var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+				asset.initialize(<ImageAssetHint>conf.hint);
+				return asset;
+			case "audio":
+				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
+			case "text":
+				return resourceFactory.createTextAsset(id, uri);
+			case "script":
+				return resourceFactory.createScriptAsset(id, uri);
+			case "video":
+				// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
+				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
+				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, new VideoSystem(), conf.loop, conf.useRealSize);
+			default:
+				throw ExceptionFactory.createAssertionError(
+					"AssertionError#_createAssetFor: unknown asset type " + conf.type + " for asset ID: " + id
+				);
 		}
 	}
 
@@ -385,8 +392,7 @@ export class AssetManager implements AssetLoadHandler {
 			const virtualPath = this.configuration[assetId].virtualPath;
 			if (virtualPath && this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath))
 				delete this._liveAssetVirtualPathTable[virtualPath];
-			if (path && this._liveAbsolutePathTable.hasOwnProperty(path))
-				delete this._liveAbsolutePathTable[path];
+			if (path && this._liveAbsolutePathTable.hasOwnProperty(path)) delete this._liveAbsolutePathTable[path];
 		}
 	}
 
@@ -403,8 +409,7 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	_onAssetError(asset: Asset, error: AssetLoadError): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
-		if (this.destroyed() || asset.destroyed())
-			return;
+		if (this.destroyed() || asset.destroyed()) return;
 
 		var loadingInfo = this._loadings[asset.id];
 		var hs = loadingInfo.handlers;
@@ -414,10 +419,8 @@ export class AssetManager implements AssetLoadHandler {
 		if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT && error.retriable) {
 			error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, AssetLoadErrorType.RetryLimitExceeded, error);
 		}
-		if (!error.retriable)
-			delete this._loadings[asset.id];
-		for (var i = 0; i < hs.length; ++i)
-			hs[i]._onAssetError(asset, error, this);
+		if (!error.retriable) delete this._loadings[asset.id];
+		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetError(asset, error, this);
 	}
 
 	/**
@@ -425,8 +428,7 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	_onAssetLoad(asset: Asset): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
-		if (this.destroyed() || asset.destroyed())
-			return;
+		if (this.destroyed() || asset.destroyed()) return;
 
 		var loadingInfo = this._loadings[asset.id];
 		loadingInfo.loading = false;
@@ -443,12 +445,10 @@ export class AssetManager implements AssetLoadHandler {
 				if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
 					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
 			}
-			if (!this._liveAbsolutePathTable.hasOwnProperty(asset.path))
-				this._liveAbsolutePathTable[asset.path] = virtualPath;
+			if (!this._liveAbsolutePathTable.hasOwnProperty(asset.path)) this._liveAbsolutePathTable[asset.path] = virtualPath;
 		}
 
 		var hs = loadingInfo.handlers;
-		for (var i = 0; i < hs.length; ++i)
-			hs[i]._onAssetLoad(asset);
+		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetLoad(asset);
 	}
 }

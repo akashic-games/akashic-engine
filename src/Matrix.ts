@@ -143,7 +143,6 @@ export interface Matrix {
 	 * @param point この変換行列との積を求める座標
 	 */
 	multiplyPoint(point: CommonOffset): CommonOffset;
-
 }
 
 /**
@@ -184,7 +183,7 @@ export class PlainMatrix {
 	constructor(src: Matrix);
 
 	constructor(
-		widthOrSrc?: number|Matrix,
+		widthOrSrc?: number | Matrix,
 		height?: number,
 		scaleX?: number,
 		scaleY?: number,
@@ -233,7 +232,7 @@ export class PlainMatrix {
 		// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
 		// (ただし theta = angle * PI / 180)、w = (width / 2), h = (height / 2) である。
 		// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
-		var r = angle * Math.PI / 180;
+		var r = (angle * Math.PI) / 180;
 		var _cos = Math.cos(r);
 		var _sin = Math.sin(r);
 		var a = _cos * scaleX;
@@ -276,7 +275,7 @@ export class PlainMatrix {
 		// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
 		// (ただし theta = angle * PI / 180)、w = anchorX * width, h = anchorY * height である。
 		// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
-		const r = angle * Math.PI / 180;
+		const r = (angle * Math.PI) / 180;
 		const _cos = Math.cos(r);
 		const _sin = Math.sin(r);
 		const a = _cos * scaleX;
@@ -304,7 +303,7 @@ export class PlainMatrix {
 		//              0    0    1                0     0    1               0    0    1               0    0    1
 		// ここで各変数は update() のコメントのものと同様である。
 		// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
-		var r = angle * Math.PI / 180;
+		var r = (angle * Math.PI) / 180;
 		var _cos = Math.cos(r);
 		var _sin = Math.sin(r);
 		var a = _cos / scaleX;
@@ -318,7 +317,7 @@ export class PlainMatrix {
 		this._matrix[2] = c;
 		this._matrix[3] = d;
 		this._matrix[4] = -a * (w + x) - c * (h + y) + w;
-		this._matrix[5] =  b * (w + x) - d * (h + y) + h;
+		this._matrix[5] = b * (w + x) - d * (h + y) + h;
 	}
 
 	updateByInverseWithAnchor(
@@ -342,7 +341,7 @@ export class PlainMatrix {
 		//              0    0    1                0     0    1               0    0    1               0    0    1
 		// ここで各変数は updateWithAnchor() のコメントのものと同様である。
 		// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
-		const r = angle * Math.PI / 180;
+		const r = (angle * Math.PI) / 180;
 		const _cos = Math.cos(r);
 		const _sin = Math.sin(r);
 		const a = _cos / scaleX;
@@ -356,7 +355,7 @@ export class PlainMatrix {
 		this._matrix[2] = c;
 		this._matrix[3] = d;
 		this._matrix[4] = -a * x - c * y + w;
-		this._matrix[5] =  b * x - d * y + h;
+		this._matrix[5] = b * x - d * y + h;
 	}
 
 	multiply(matrix: Matrix): void {
@@ -418,8 +417,6 @@ export class PlainMatrix {
 		var m = this._matrix;
 		var x = m[0] * point.x + m[2] * point.y + m[4];
 		var y = m[1] * point.x + m[3] * point.y + m[5];
-		return {x: x, y: y};
+		return { x: x, y: y };
 	}
-
 }
-

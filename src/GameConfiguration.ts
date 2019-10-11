@@ -1,6 +1,5 @@
 import { OperationPluginInfo } from "./OperationPluginInfo";
 
-
 /**
  * Assetの設定の共通部分。
  */
@@ -91,12 +90,12 @@ export interface DynamicAssetConfiguration extends AssetConfigurationBase {
 /**
  * アセット宣言
  */
-export type AssetConfigurationMap = {[key: string]: AssetConfiguration};
+export type AssetConfigurationMap = { [key: string]: AssetConfiguration };
 
 /**
  * require()解決用のエントリポイント
  */
-export type ModuleMainScriptsMap = {[path: string]: string};
+export type ModuleMainScriptsMap = { [path: string]: string };
 
 /**
  * AudioSystemの設定を表すインターフェース。
@@ -109,7 +108,9 @@ export interface AudioSystemConfiguration {
 /**
  * オーディオシステム宣言
  */
-export type AudioSystemConfigurationMap = {[key: string]: AudioSystemConfiguration};
+export type AudioSystemConfigurationMap = {
+	[key: string]: AudioSystemConfiguration;
+};
 
 /**
  * AudioSystemの設定を表すインターフェース。
@@ -195,4 +196,3 @@ export interface GameConfiguration {
 	 */
 	defaultLoadingScene?: "default" | "none";
 }
-

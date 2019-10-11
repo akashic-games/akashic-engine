@@ -1,6 +1,6 @@
 import { Game } from "./Game";
-import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
 import { OperationPlugin } from "./OperationPlugin";
+import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
 
 /**
  * Operation Pluginの実装すべきstatic methodについての定義。

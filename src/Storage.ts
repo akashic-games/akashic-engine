@@ -83,7 +83,7 @@ export interface StorageWriteOption {
 	/**
 	 * 現在保存されている値と比較する値。
 	 */
-	comparisonValue?: string|number;
+	comparisonValue?: string | number;
 	/**
 	 * 操作種別。
 	 */
@@ -143,7 +143,7 @@ export interface StorageValue {
 	/**
 	 * 取得結果を表すデータ。
 	 */
-	data: number|string;
+	data: number | string;
 	/**
 	 * データタグ。
 	 */
@@ -196,7 +196,7 @@ export class StorageValueStore {
 	 * 通常、インデックスは `Scene` のコンストラクタに指定した `storageKeys` のインデックスに対応する。
 	 * @param keyOrIndex `StorageKey` 又はインデックス
 	 */
-	get(keyOrIndex: StorageReadKey|number): StorageValue[] {
+	get(keyOrIndex: StorageReadKey | number): StorageValue[] {
 		if (this._values === undefined) {
 			return [];
 		}
@@ -209,10 +209,12 @@ export class StorageValueStore {
 			}
 			for (var i = 0; i < this._keys.length; ++i) {
 				var target = this._keys[i];
-				if (target.region === keyOrIndex.region
-					&& target.regionKey === keyOrIndex.regionKey
-					&& target.userId === keyOrIndex.userId
-					&& target.gameId === keyOrIndex.gameId) {
+				if (
+					target.region === keyOrIndex.region &&
+					target.regionKey === keyOrIndex.regionKey &&
+					target.userId === keyOrIndex.userId &&
+					target.gameId === keyOrIndex.gameId
+				) {
 					return this._values[i];
 				}
 			}
@@ -226,10 +228,9 @@ export class StorageValueStore {
 	 * 通常、インデックスは `Scene` のコンストラクタに指定した `storageKeys` のインデックスに対応する。
 	 * @param keyOrIndex `StorageKey` 又はインデックス
 	 */
-	getOne(keyOrIndex: StorageReadKey|number): StorageValue {
+	getOne(keyOrIndex: StorageReadKey | number): StorageValue {
 		var values = this.get(keyOrIndex);
-		if (!values)
-			return undefined;
+		if (!values) return undefined;
 
 		return values[0];
 	}
@@ -295,18 +296,15 @@ export class StorageLoader {
 	_onLoaded(values: StorageValue[][], serialization?: StorageValueStoreSerialization): void {
 		this._valueStore._values = values;
 		this._loaded = true;
-		if (serialization)
-			this._valueStoreSerialization = serialization;
-		if (this._handler)
-			this._handler._onStorageLoaded();
+		if (serialization) this._valueStoreSerialization = serialization;
+		if (this._handler) this._handler._onStorageLoaded();
 	}
 
 	/**
 	 * @private
 	 */
 	_onError(error: StorageLoadError): void {
-		if (this._handler)
-			this._handler._onStorageLoadError(error);
+		if (this._handler) this._handler._onStorageLoadError(error);
 	}
 }
 
@@ -378,4 +376,3 @@ export class Storage {
 		this._load = load;
 	}
 }
-

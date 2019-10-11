@@ -1,7 +1,7 @@
 import { ImageAsset } from "./ImageAsset";
-import { VideoSystem } from "./VideoSystem";
 import { Surface } from "./Surface";
 import { VideoPlayer } from "./VideoPlayer";
+import { VideoSystem } from "./VideoSystem";
 
 /**
  * 動画リソースを表すクラス。
@@ -50,7 +50,7 @@ export abstract class VideoAsset extends ImageAsset {
 
 	abstract asSurface(): Surface;
 
-	play(loop?: boolean): VideoPlayer {
+	play(_loop?: boolean): VideoPlayer {
 		this.getPlayer().play(this);
 		return this.getPlayer();
 	}

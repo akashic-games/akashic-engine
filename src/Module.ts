@@ -1,12 +1,12 @@
-import { Game } from "./Game";
-import { ExceptionFactory } from "./errors";
-import { PathUtil } from "./PathUtil";
-import { ScriptAssetContext } from "./ScriptAssetContext";
-import { RequireCachedValue } from "./RequireCachedValue";
-import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
-import { ScriptAsset } from "./ScriptAsset";
-import { TextAsset } from "./TextAsset";
 import { Asset } from "./Asset";
+import { ExceptionFactory } from "./errors";
+import { Game } from "./Game";
+import { PathUtil } from "./PathUtil";
+import { RequireCachedValue } from "./RequireCachedValue";
+import { ScriptAsset } from "./ScriptAsset";
+import { ScriptAssetContext } from "./ScriptAssetContext";
+import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
+import { TextAsset } from "./TextAsset";
 
 declare var g: any;
 
@@ -51,8 +51,7 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
 				throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
 			resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 		} else {
-			if (!(/^\.\//.test(path)))
-				throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
+			if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
 			resolvedPath = path.substring(2);
 		}
 
@@ -63,12 +62,9 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
 		}
 
 		// 2.a. LOAD_AS_FILE(Y + X)
-		if (!targetScriptAsset)
-			targetScriptAsset = _findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+		if (!targetScriptAsset) targetScriptAsset = _findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 		// 2.b. LOAD_AS_DIRECTORY(Y + X)
-		if (!targetScriptAsset)
-			targetScriptAsset = _findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-
+		if (!targetScriptAsset) targetScriptAsset = _findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 	} else {
 		// 3. LOAD_NODE_MODULES(X, dirname(Y))
 		// `path` は node module の名前であると仮定して探す
@@ -79,36 +75,32 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
 			targetScriptAsset = game._assetManager._liveAssetVirtualPathTable[resolvedPath];
 		}
 
-		if (! targetScriptAsset) {
+		if (!targetScriptAsset) {
 			var dirs = currentModule ? currentModule.paths : [];
 			dirs.push("node_modules");
 			for (var i = 0; i < dirs.length; ++i) {
 				var dir = dirs[i];
 				resolvedPath = PathUtil.resolvePath(dir, path);
 				targetScriptAsset = _findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-				if (targetScriptAsset)
-					break;
+				if (targetScriptAsset) break;
 				targetScriptAsset = _findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-				if (targetScriptAsset)
-					break;
+				if (targetScriptAsset) break;
 			}
 		}
 	}
 
 	if (targetScriptAsset) {
-		if (game._scriptCaches.hasOwnProperty(resolvedPath))
-			return game._scriptCaches[resolvedPath]._cachedValue();
+		if (game._scriptCaches.hasOwnProperty(resolvedPath)) return game._scriptCaches[resolvedPath]._cachedValue();
 
 		if (targetScriptAsset instanceof ScriptAsset) {
 			var context = new ScriptAssetContext(game, targetScriptAsset);
 			game._scriptCaches[resolvedPath] = context;
 			return context._executeScript(currentModule);
-
 		} else if (targetScriptAsset instanceof TextAsset) {
 			// JSONの場合の特殊挙動をトレースするためのコード。node.jsの仕様に準ずる
 			if (targetScriptAsset && PathUtil.resolveExtname(path) === ".json") {
 				// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
-				var cache = game._scriptCaches[resolvedPath] = new RequireCachedValue(JSON.parse(targetScriptAsset.data));
+				var cache = (game._scriptCaches[resolvedPath] = new RequireCachedValue(JSON.parse(targetScriptAsset.data)));
 				return cache._cachedValue();
 			}
 		}
@@ -124,11 +116,9 @@ export function _require(game: Game, path: string, currentModule?: Module): any 
  * @param resolvedPath パス文字列
  * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
  */
-export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset | undefined {
-	if (liveAssetPathTable.hasOwnProperty(resolvedPath))
-		return liveAssetPathTable[resolvedPath];
-	if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js"))
-		return liveAssetPathTable[resolvedPath + ".js"];
+export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
+	if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return liveAssetPathTable[resolvedPath];
+	if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return liveAssetPathTable[resolvedPath + ".js"];
 	return undefined;
 }
 
@@ -142,20 +132,18 @@ export function _findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable:
  * @param resolvedPath パス文字列
  * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
  */
-export function _findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset | undefined {
+export function _findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
 	var path: string;
 	path = resolvedPath + "/package.json";
 	if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path] instanceof TextAsset) {
 		var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 		if (pkg && typeof pkg.main === "string") {
 			var asset = _findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
-			if (asset)
-				return asset;
+			if (asset) return asset;
 		}
 	}
 	path = resolvedPath + "/index.js";
-	if (liveAssetPathTable.hasOwnProperty(path))
-		return liveAssetPathTable[path];
+	if (liveAssetPathTable.hasOwnProperty(path)) return liveAssetPathTable[path];
 	return undefined;
 }
 
@@ -261,8 +249,7 @@ export class Module {
 
 		// メソッドとしてではなく単体で呼ばれるのでメソッドにせずここで実体を代入する
 		this.require = (path: string) => {
-			return (path === "g") ? _g : _require(game, path, this);
+			return path === "g" ? _g : _require(game, path, this);
 		};
 	}
 }
-

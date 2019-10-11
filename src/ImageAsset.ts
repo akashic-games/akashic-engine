@@ -1,6 +1,6 @@
 import { Asset } from "./Asset";
-import { Surface } from "./Surface";
 import { ImageAssetHint } from "./GameConfiguration";
+import { Surface } from "./Surface";
 
 /**
  * 画像リソースを表すクラス。

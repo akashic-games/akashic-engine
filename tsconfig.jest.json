@@ -1,14 +1,6 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
-    "lib": [
-      "es5"
-    ],
-    "noImplicitAny": true,
-    "declaration": true,
-    "outDir": "lib",
-    "sourceMap": false,
     "types": [
       "jest",
       "node"

@@ -1,6 +1,6 @@
-import { Trigger } from "./Trigger";
-import { AudioSystem } from "./AudioSystem";
 import { AudioAsset } from "./AudioAsset";
+import { AudioSystem } from "./AudioSystem";
+import { Trigger } from "./Trigger";
 
 export interface AudioPlayerEvent {
 	player: AudioPlayer;
@@ -92,8 +92,7 @@ export class AudioPlayer {
 	 */
 	stop(): void {
 		var audio = this.currentAudio;
-		if (!audio)
-			return;
+		if (!audio) return;
 		this.currentAudio = undefined;
 		this.stopped.fire({
 			player: this,
