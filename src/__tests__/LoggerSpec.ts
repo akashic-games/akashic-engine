@@ -1,4 +1,4 @@
-import { LogLevel, Log } from "..";
+import { Log, LogLevel } from "..";
 import { skeletonRuntime } from "./helpers";
 
 describe("Logger", () => {

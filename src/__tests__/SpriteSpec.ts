@@ -1,5 +1,5 @@
-import { Sprite, LogLevel } from "..";
-import { skeletonRuntime, Surface, Renderer, customMatchers } from "./helpers";
+import { LogLevel, Sprite } from "..";
+import { Renderer, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Sprite", () => {
 	let updated = false;

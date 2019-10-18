@@ -1,4 +1,4 @@
-import { FontFamily, TextAlign, TextBaseline, SystemLabel } from "..";
+import { FontFamily, SystemLabel, TextAlign, TextBaseline } from "..";
 import { skeletonRuntime } from "./helpers";
 
 describe("test SystemLabel", () => {

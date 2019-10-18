@@ -1,5 +1,5 @@
-import { Pane, CommonRect, SurfaceUtil, E, Sprite } from "..";
-import { customMatchers, skeletonRuntime, Surface, EntityStateFlags, Renderer, Runtime } from "./helpers";
+import { CommonRect, E, Pane, Sprite, SurfaceUtil } from "..";
+import { customMatchers, EntityStateFlags, Renderer, Runtime, skeletonRuntime, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 

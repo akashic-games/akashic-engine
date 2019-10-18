@@ -1,5 +1,5 @@
-import { skeletonRuntime, Renderer, Surface } from "./helpers";
-import { BitmapFont, Label, TextAlign, CompositeOperation, GlyphArea } from "..";
+import { BitmapFont, CompositeOperation, GlyphArea, Label, TextAlign } from "..";
+import { Renderer, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Label", () => {
 	it("初期化", () => {

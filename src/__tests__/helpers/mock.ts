@@ -347,7 +347,7 @@ export class AudioAsset extends g.AudioAsset {
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: g.AudioSystem,
+		system: g.AudioSystemLike,
 		loop: boolean,
 		hint: g.AudioAssetHint
 	) {
@@ -546,7 +546,7 @@ export class ResourceFactory extends g.ResourceFactory {
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: g.AudioSystem,
+		system: g.AudioSystemLike,
 		loop: boolean,
 		hint: g.AudioAssetHint
 	): g.AudioAsset {

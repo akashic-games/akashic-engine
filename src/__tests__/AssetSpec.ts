@@ -1,5 +1,5 @@
 import { MusicAudioSystem, VideoSystem } from "..";
-import { Game, AudioAsset, VideoAsset } from "./helpers";
+import { AudioAsset, Game, VideoAsset } from "./helpers";
 
 describe("test Asset", () => {
 	it("AudioAsset 初期化", () => {

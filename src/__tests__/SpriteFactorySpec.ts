@@ -1,4 +1,4 @@
-import { E, SpriteFactory, Sprite } from "..";
+import { E, Sprite, SpriteFactory } from "..";
 import { skeletonRuntime } from "./helpers";
 
 describe("test SpriteFactory", () => {

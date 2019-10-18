@@ -1,21 +1,23 @@
-import { Asset } from "./Asset";
-import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
-import { AssetManager } from "./AssetManager";
-import { Camera, Camera2D } from "./Camera";
-import { CommonOffset } from "./commons";
-import { Destroyable } from "./Destroyable";
-import { E } from "./E";
-import { AssetLoadError, ExceptionFactory, StorageLoadError } from "./errors";
-import { MessageEvent, OperationEvent, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./Event";
+import { ExceptionFactory } from "./commons/ExceptionFactory";
+import { AssetManager } from "./domain/AssetManager";
+import { Camera } from "./domain/Camera";
+import { Camera2D } from "./domain/Camera2D";
+import { E } from "./domain/entities/E";
+import { MessageEvent, OperationEvent, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/Event";
+import { Matrix } from "./domain/Matrix";
+import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
+import { Timer } from "./domain/Timer";
+import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
-import { DynamicAssetConfiguration } from "./GameConfiguration";
-import { LocalTickMode } from "./LocalTickMode";
-import { Matrix } from "./Matrix";
-import { Registrable } from "./Registrable";
-import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
-import { TickGenerationMode } from "./TickGenerationMode";
-import { Timer } from "./Timer";
-import { TimerIdentifier, TimerManager } from "./TimerManager";
+import { AssetLike } from "./interfaces/AssetLike";
+import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
+import { CommonOffset } from "./interfaces/commons";
+import { Destroyable } from "./interfaces/Destroyable";
+import { DynamicAssetConfiguration } from "./interfaces/DynamicAssetConfiguration";
+import { AssetLoadError, StorageLoadError } from "./interfaces/errors";
+import { LocalTickMode } from "./interfaces/LocalTickMode";
+import { Registrable } from "./interfaces/Registrable";
+import { TickGenerationMode } from "./interfaces/TickGenerationMode";
 import { Trigger } from "./Trigger";
 
 /**
@@ -103,7 +105,7 @@ export class SceneAssetHolder {
 	/**
 	 * @private
 	 */
-	_assets: Asset[];
+	_assets: AssetLike[];
 
 	/**
 	 * @private
@@ -152,7 +154,7 @@ export class SceneAssetHolder {
 	/**
 	 * @private
 	 */
-	_onAssetError(asset: Asset, error: AssetLoadError, assetManager: AssetManager): void {
+	_onAssetError(asset: AssetLike, error: AssetLoadError, assetManager: AssetManager): void {
 		if (this.destroyed() || this._scene.destroyed()) return;
 		var failureInfo = {
 			asset: asset,
@@ -172,7 +174,7 @@ export class SceneAssetHolder {
 	/**
 	 * @private
 	 */
-	_onAssetLoad(asset: Asset): void {
+	_onAssetLoad(asset: AssetLike): void {
 		if (this.destroyed() || this._scene.destroyed()) return;
 
 		this._scene.assets[asset.id] = asset;
@@ -305,7 +307,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * アセットID をkeyに、対応するアセットのインスタンスを得ることができる。
 	 * keyはこのシーンの生成時、コンストラクタの第二引数 `assetIds` に渡された配列に含まれる文字列でなければならない。
 	 */
-	assets: { [key: string]: Asset };
+	assets: { [key: string]: AssetLike };
 
 	/**
 	 * このシーンの属するゲーム。
@@ -365,7 +367,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンのアセットが一つ読み込まれる度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	assetLoaded: Trigger<Asset>;
+	assetLoaded: Trigger<AssetLike>;
 
 	/**
 	 * アセット読み込み失敗イベント。
@@ -382,7 +384,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	assetLoadCompleted: Trigger<Asset>;
+	assetLoadCompleted: Trigger<AssetLike>;
 
 	/**
 	 * シーンの状態。
@@ -544,9 +546,9 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.update = new Trigger<void>();
 		this._timer = new TimerManager(this.update, this.game.fps);
 
-		this.assetLoaded = new Trigger<Asset>();
+		this.assetLoaded = new Trigger<AssetLike>();
 		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
-		this.assetLoadCompleted = new Trigger<Asset>();
+		this.assetLoadCompleted = new Trigger<AssetLike>();
 
 		this.message = new Trigger<MessageEvent>();
 		this.pointDownCapture = new Trigger<PointDownEvent>();

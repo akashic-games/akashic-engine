@@ -1,5 +1,5 @@
-import { MusicAudioSystem, Trigger, SoundAudioSystem } from "..";
-import { Game, AudioPlayer } from "./helpers";
+import { MusicAudioSystem, SoundAudioSystem, Trigger } from "..";
+import { AudioPlayer, Game } from "./helpers";
 
 describe("test AudioPlayer", () => {
 	it("初期化-music", () => {

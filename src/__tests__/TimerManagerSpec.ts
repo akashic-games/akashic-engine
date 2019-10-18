@@ -1,4 +1,4 @@
-import { Trigger, TimerManager, Timer } from "..";
+import { Timer, TimerManager, Trigger } from "..";
 import { customMatchers } from "./helpers";
 
 expect.extend(customMatchers);

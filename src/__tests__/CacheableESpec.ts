@@ -1,5 +1,5 @@
 import { Camera2D } from "..";
-import { CacheableE, Renderer, EntityStateFlags, skeletonRuntime, Runtime } from "./helpers";
+import { CacheableE, EntityStateFlags, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 describe("test CacheableE", () => {
 	let runtime: Runtime;

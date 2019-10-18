@@ -1,5 +1,5 @@
-import { EntityStateFlags, customMatchers, skeletonRuntime, Game, Renderer, Runtime } from "./helpers";
-import { E, PlainMatrix, Scene, PointDownEvent, Camera2D, PointEvent, CompositeOperation } from "..";
+import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, PointEvent, Scene } from "..";
+import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 

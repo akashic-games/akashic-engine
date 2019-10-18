@@ -1,5 +1,5 @@
-import { customMatchers, skeletonRuntime } from "./helpers";
 import { FilledRect, LogLevel } from "..";
+import { customMatchers, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 

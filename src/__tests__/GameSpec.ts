@@ -1,19 +1,21 @@
 import {
-	ImageAsset,
-	ScriptAsset,
-	Scene,
-	LoadingScene,
-	LocalTickMode,
-	EventType,
-	E,
-	SceneState,
-	MessageEvent,
-	XorshiftRandomGenerator,
-	SoundAudioSystem,
 	Camera2D,
-	LoadingSceneParameterObject
+	E,
+	EventType,
+	ImageAsset,
+	LoadingScene,
+	LoadingSceneParameterObject,
+	LocalTickMode,
+	MessageEvent,
+	Scene,
+	SceneState,
+	ScriptAsset,
+	SoundAudioSystem,
+	XorshiftRandomGenerator
 } from "..";
-import { customMatchers, Game, Renderer, EntityStateFlags } from "./helpers";
+import { AssetConfiguration } from "../interfaces/AssetConfiguration";
+import { GameConfiguration } from "../interfaces/GameConfiguration";
+import { customMatchers, EntityStateFlags, Game, Renderer } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -85,7 +87,7 @@ describe("test Game", () => {
 	});
 
 	it("_loadAndStart", done => {
-		const assets = {
+		const assets: {[id: string]: AssetConfiguration} = {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
@@ -111,7 +113,7 @@ describe("test Game", () => {
 	});
 
 	it("must fire 'loaded' of mainScene at age 0", done => {
-		const assets = {
+		const assets: {[id: string]: AssetConfiguration} = {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
@@ -147,7 +149,7 @@ describe("test Game", () => {
 	});
 
 	it("_loadAndStart - with entry point", done => {
-		const assets = {
+		const assets: {[id: string]: AssetConfiguration} = {
 			dummy: {
 				type: "script",
 				path: "/dummy/dummy.js", // パスはダミー
@@ -170,7 +172,7 @@ describe("test Game", () => {
 	});
 
 	it("_loadAndStart - after loaded", done => {
-		const assets = {
+		const assets: {[id: string]: AssetConfiguration} = {
 			mainScene: {
 				type: "script",
 				path: "/script/mainScene.js",
@@ -256,7 +258,7 @@ describe("test Game", () => {
 	});
 
 	it("tick", done => {
-		const assets = {
+		const assets: {[id: string]: AssetConfiguration} = {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
@@ -395,6 +397,7 @@ describe("test Game", () => {
 					type: "audio",
 					path: "/path/to/a/file",
 					virtualPath: "path/to/a/file",
+					systemId: "sound",
 					duration: 1984
 				}
 			}
@@ -493,6 +496,7 @@ describe("test Game", () => {
 					type: "audio",
 					path: "/path/to/a/file",
 					virtualPath: "path/to/a/file",
+					systemId: "sound",
 					duration: 1984
 				}
 			}
@@ -540,7 +544,7 @@ describe("test Game", () => {
 	});
 
 	it("_sceneChanged", done => {
-		const gameConfiguration = {
+		const gameConfiguration: GameConfiguration = {
 			width: 320,
 			height: 320,
 			fps: 30,
@@ -556,6 +560,7 @@ describe("test Game", () => {
 					type: "audio",
 					path: "/path/to/a/file",
 					virtualPath: "path/to/a/file",
+					systemId: "sound",
 					duration: 1984
 				}
 			}

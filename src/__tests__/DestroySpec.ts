@@ -1,17 +1,17 @@
 import {
 	BitmapFont,
-	Scene,
 	E,
-	Sprite,
+	FilledRect,
 	FrameSprite,
 	Label,
-	Pane,
-	FilledRect,
-	SystemLabel,
 	NinePatchSurfaceEffector,
-	SpriteFactory
+	Pane,
+	Scene,
+	Sprite,
+	SpriteFactory,
+	SystemLabel
 } from "..";
-import { ImageAsset, Surface, Renderer, skeletonRuntime, Runtime } from "./helpers";
+import { ImageAsset, Renderer, Runtime, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Destroy", () => {
 	let runtime: Runtime;

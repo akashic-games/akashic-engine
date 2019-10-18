@@ -1,4 +1,4 @@
-import { SurfaceAtlasSet, SurfaceAtlasSetParameterObject, Glyph, SurfaceAtlas } from "..";
+import { Glyph, SurfaceAtlas, SurfaceAtlasSet, SurfaceAtlasSetParameterObject } from "..";
 import { skeletonRuntime, Surface } from "./helpers";
 
 describe("test SurfaceAtlasSet", () => {
@@ -6,7 +6,7 @@ describe("test SurfaceAtlasSet", () => {
 
 	it("初期化", () => {
 		const runtime = skeletonRuntime();
-		surfaceAtlasSet = new SurfaceAtlasSet({ game: runtime.game });
+		surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: runtime.game.resourceFactory });
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
 		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
 		expect(surfaceAtlasSet.getAtlasSize()).toEqual({ width: 512, height: 512 });
@@ -15,7 +15,7 @@ describe("test SurfaceAtlasSet", () => {
 	it("初期化 パラメータあり", () => {
 		const runtime = skeletonRuntime();
 		const surfaceAtlasSetParams: SurfaceAtlasSetParameterObject = {
-			game: runtime.game,
+			resourceFactory: runtime.game.resourceFactory,
 			hint: {
 				initialAtlasWidth: 1,
 				initialAtlasHeight: 1,
