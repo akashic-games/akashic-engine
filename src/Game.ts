@@ -718,7 +718,7 @@ namespace g {
 		 */
 		abortGame(): void {
 			this.terminateGame();
-			this._terminateGame();
+			this._abortGame();
 		}
 
 		/**
@@ -1099,9 +1099,8 @@ namespace g {
 		/**
 		 * @private
 		 * エラーを出してゲームを途中終了させるメソッド。
-		 * 機能的にはterminateではなくabortなのだが、既に派生クラスでオーバーライドされているので、メソッド名は変更しない。
 		 */
-		_terminateGame(): void {
+		_abortGame(): void {
 			// do nothing.
 		}
 

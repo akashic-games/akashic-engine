@@ -662,7 +662,7 @@ describe("test Game", function() {
 		game.abortGame();
 		expect(game._isTerminated).toBe(true);
 		expect(game.leftGame).toBe(true);
-		expect(game.terminatedGame).toBe(true);
+		expect(game.abortedGame).toBe(true);
 		game.tick();
 		expect(count).toBe(2);
 		game.tick();
@@ -686,7 +686,7 @@ describe("test Game", function() {
 		game.terminateGame();
 		expect(game._isTerminated).toBe(true);
 		expect(game.leftGame).toBe(true);
-		expect(game.terminatedGame).toBe(false); // Game#_terminatedGameは呼ばれないのでfalse
+		expect(game.abortedGame).toBe(false); // Game#_abortedGameは呼ばれないのでfalse
 		game.tick();
 		expect(count).toBe(1);
 	});

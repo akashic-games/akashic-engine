@@ -475,7 +475,7 @@ export class ResourceFactory extends g.ResourceFactory {
 
 export class Game extends g.Game {
 	leftGame: boolean;
-	terminatedGame: boolean;
+	abortedGame: boolean;
 	raisedEvents: g.Event[];
 	raisedTicks: g.Event[][];
 	suppressedLogLevel: g.LogLevel;
@@ -488,7 +488,7 @@ export class Game extends g.Game {
 		super(gameConfiguration, resourceFactory, assetBase, selfId, operationPluginViewInfo);
 		resourceFactory.init(this);
 		this.leftGame = false;
-		this.terminatedGame = false;
+		this.abortedGame = false;
 		this.raisedEvents = [];
 		this.raisedTicks = [];
 		this.suppressedLogLevel = undefined;
@@ -513,8 +513,8 @@ export class Game extends g.Game {
 		this.leftGame = true;
 	}
 
-	_terminateGame(): void {
-		this.terminatedGame = true;
+	_abortGame(): void {
+		this.abortedGame = true;
 	}
 
 	raiseEvent(e: g.Event): void {
