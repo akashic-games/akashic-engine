@@ -408,7 +408,7 @@ namespace g {
 		_cameraIdx: number;
 
 		/**
-		 * `this.terminateGame()` もしくは `this.abortGame()` が呼び出された後か否か。
+		 * `this.terminateGame()` が呼び出された後か否か。
 		 * これが真の場合、 `this.tick()` は何も行わない。
 		 * @private
 		 */
@@ -761,9 +761,8 @@ namespace g {
 		 * ゲーム開発者がこのメソッドを利用する必要はない。
 		 */
 		abortGame(): void {
-			this._leaveGame();
-			this._isTerminated = true;
-			this._terminateGame();
+			this.terminateGame();
+			this._abortGame();
 		}
 
 		/**
@@ -1155,9 +1154,8 @@ namespace g {
 		/**
 		 * @private
 		 * エラーを出してゲームを途中終了させるメソッド。
-		 * 機能的にはterminateではなくabortなのだが、既に派生クラスでオーバーライドされているので、メソッド名は変更しない。
 		 */
-		_terminateGame(): void {
+		_abortGame(): void {
 			// do nothing.
 		}
 
