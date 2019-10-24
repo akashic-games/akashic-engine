@@ -1,5 +1,5 @@
 import { Trigger } from "..";
-import { Surface, customMatchers } from "./helpers";
+import { customMatchers, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 

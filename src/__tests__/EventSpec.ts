@@ -1,15 +1,15 @@
 import {
-	PointDownEvent,
-	PointUpEvent,
 	EventType,
-	PointMoveEvent,
-	MessageEvent,
 	JoinEvent,
 	LeaveEvent,
-	TimestampEvent,
-	XorshiftRandomGenerator,
+	MessageEvent,
+	OperationEvent,
+	PointDownEvent,
+	PointMoveEvent,
+	PointUpEvent,
 	SeedEvent,
-	OperationEvent
+	TimestampEvent,
+	XorshiftRandomGenerator
 } from "..";
 
 describe("test Event", () => {

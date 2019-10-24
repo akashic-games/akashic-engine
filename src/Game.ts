@@ -1,32 +1,34 @@
-import { Asset } from "./Asset";
-import { AssetManager } from "./AssetManager";
-import { AudioSystem, MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
-import { AudioSystemManager } from "./AudioSystemManager";
-import { Camera } from "./Camera";
-import { CommonOffset, CommonSize } from "./commons";
-import { DefaultLoadingScene } from "./DefaultLoadingScene";
-import { E } from "./E";
-import { ExceptionFactory } from "./errors";
-import { Event, EventType, JoinEvent, LeaveEvent, PointSource, SeedEvent } from "./Event";
-import { EventFilter } from "./EventFilter";
-import { GameConfiguration } from "./GameConfiguration";
-import { GameMainParameterObject } from "./GameMainParameterObject";
-import { LoadingScene } from "./LoadingScene";
-import { Logger } from "./Logger";
-import { _require } from "./Module";
-import { OperationPlugin } from "./OperationPlugin";
-import { InternalOperationPluginInfo } from "./OperationPluginInfo";
-import { OperationPluginManager } from "./OperationPluginManager";
-import { InternalOperationPluginOperation } from "./OperationPluginOperation";
-import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
-import { RandomGenerator } from "./RandomGenerator";
-import { Registrable } from "./Registrable";
-import { Renderer } from "./Renderer";
-import { RequireCacheable } from "./RequireCacheable";
-import { ResourceFactory } from "./ResourceFactory";
+import { ExceptionFactory } from "./commons/ExceptionFactory";
+import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
+import { AssetManager } from "./domain/AssetManager";
+import { AudioSystemManager } from "./domain/AudioSystemManager";
+import { Camera } from "./domain/Camera";
+import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
+import { E } from "./domain/entities/E";
+import { Event, EventType, JoinEvent, LeaveEvent, PointSource, SeedEvent } from "./domain/Event";
+import { LoadingScene } from "./domain/LoadingScene";
+import { Logger } from "./domain/Logger";
+import { _require } from "./domain/Module";
+import { OperationPluginManager } from "./domain/OperationPluginManager";
+import { RandomGenerator } from "./domain/RandomGenerator";
+import { RequireCacheable } from "./domain/RequireCacheable";
+import { Storage } from "./domain/Storage";
+import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
+import { AssetLike } from "./interfaces/AssetLike";
+import { AudioSystemLike } from "./interfaces/AudioSystemLike";
+import { CommonOffset, CommonSize } from "./interfaces/commons";
+import { EventFilter } from "./interfaces/EventFilter";
+import { GameConfiguration } from "./interfaces/GameConfiguration";
+import { GameMainParameterObject } from "./interfaces/GameMainParameterObject";
+import { OperationPlugin } from "./interfaces/OperationPlugin";
+import { InternalOperationPluginInfo } from "./interfaces/OperationPluginInfo";
+import { InternalOperationPluginOperation } from "./interfaces/OperationPluginOperation";
+import { OperationPluginViewInfo } from "./interfaces/OperationPluginViewInfo";
+import { Registrable } from "./interfaces/Registrable";
+import { RendererLike } from "./interfaces/RendererLike";
+import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
+import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
 import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
-import { Storage } from "./Storage";
-import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { Trigger } from "./Trigger";
 
 /**
@@ -129,7 +131,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * このコンテンツを描画するためのオブジェクト群。
 	 */
-	renderers: Renderer[];
+	renderers: RendererLike[];
 	/**
 	 * シーンのスタック。
 	 */
@@ -179,7 +181,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * グローバルアセットのマップ。this._initialScene.assets のエイリアス。
 	 */
-	assets: { [key: string]: Asset };
+	assets: { [key: string]: AssetLike };
 
 	/**
 	 * グローバルアセットが読み込み済みの場合真。でなければ偽。
@@ -217,7 +219,7 @@ export abstract class Game implements Registrable<E> {
 	 * 本ゲームで利用可能なオーディオシステム群。デフォルトはmusicとsoundが登録されている。
 	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
 	 */
-	audio: { [key: string]: AudioSystem };
+	audio: { [key: string]: AudioSystemLike };
 
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
@@ -248,7 +250,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * 各種リソースのファクトリ。
 	 */
-	resourceFactory: ResourceFactory;
+	resourceFactory: ResourceFactoryLike;
 
 	/**
 	 * ストレージ。
@@ -318,7 +320,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * ゲーム全体で共有するサーフェスアトラス。
 	 */
-	surfaceAtlasSet: SurfaceAtlasSet;
+	surfaceAtlasSet: SurfaceAtlasSetLike;
 
 	/**
 	 * イベントとTriggerのマップ。
@@ -490,7 +492,7 @@ export abstract class Game implements Registrable<E> {
 	 */
 	constructor(
 		gameConfiguration: GameConfiguration,
-		resourceFactory: ResourceFactory,
+		resourceFactory: ResourceFactoryLike,
 		assetBase?: string,
 		selfId?: string,
 		operationPluginViewInfo?: OperationPluginViewInfo
@@ -684,9 +686,33 @@ export abstract class Game implements Registrable<E> {
 	 * @param camera 対象のカメラ。省略された場合 `Game.focusingCamera`
 	 */
 	render(camera?: Camera): void {
+		var scene = this.scene();
+		if (!scene) return;
+
 		if (!camera) camera = this.focusingCamera;
 		var renderers = this.renderers; // unsafe
-		for (var i = 0; i < renderers.length; ++i) renderers[i].draw(this, camera);
+
+		for (let i = 0; i < renderers.length; ++i) {
+			const renderer = renderers[i];
+
+			renderer.begin();
+			renderer.save();
+			renderer.clear();
+			if (camera) {
+				renderer.save();
+				camera._applyTransformToRenderer(renderer);
+			}
+
+			var children = scene.children;
+			for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
+
+			if (camera) {
+				renderer.restore();
+			}
+
+			renderer.restore();
+			renderer.end();
+		}
 		this.modified = false;
 	}
 
@@ -997,7 +1023,7 @@ export abstract class Game implements Registrable<E> {
 		this.vars = {};
 
 		if (this.surfaceAtlasSet) this.surfaceAtlasSet.destroy();
-		this.surfaceAtlasSet = new SurfaceAtlasSet({ game: this });
+		this.surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: this.resourceFactory });
 
 		switch (this._configuration.defaultLoadingScene) {
 			case "none":

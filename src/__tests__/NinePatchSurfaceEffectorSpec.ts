@@ -1,5 +1,5 @@
-import { customMatchers, Game, Surface, Renderer } from "./helpers";
 import { NinePatchSurfaceEffector } from "..";
+import { Game, Renderer, Surface } from "./helpers";
 
 describe("test NinePatchSurfaceEffector", () => {
 	let game: Game;

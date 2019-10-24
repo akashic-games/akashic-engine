@@ -1,4 +1,6 @@
-import { Module, _require, Scene, PathUtil, XorshiftRandomGenerator, _findAssetByPathAsFile, _findAssetByPathAsDirectory } from "..";
+import {
+	_findAssetByPathAsDirectory, _findAssetByPathAsFile, _require, GameConfiguration, Module, PathUtil, Scene, XorshiftRandomGenerator
+} from "..";
 import { customMatchers, Game } from "./helpers";
 
 expect.extend(customMatchers);
@@ -26,7 +28,7 @@ describe("test Module", () => {
 		});
 	}
 
-	const gameConfiguration: any = {
+	const gameConfiguration: GameConfiguration = {
 		width: 320,
 		height: 320,
 		fps: 30,

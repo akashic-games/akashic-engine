@@ -1,4 +1,4 @@
-import { VideoPlayer, Trigger } from "..";
+import { Trigger, VideoPlayer } from "..";
 
 describe("VideoPlayer", () => {
 	it("initializes itself", () => {

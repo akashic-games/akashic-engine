@@ -1,5 +1,5 @@
-import { SurfaceUtil, ImageAsset } from "..";
-import { Surface, Game, skeletonRuntime, customMatchers } from "./helpers";
+import { ImageAsset, SurfaceUtil } from "..";
+import { customMatchers, Game, skeletonRuntime, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -29,7 +29,7 @@ describe("test SurfaceUtil", () => {
 			}
 		});
 		game._loaded.add(() => {
-			expect(SurfaceUtil.asSurface(game.assets.foo)).toEqual((game.assets.foo as ImageAsset).asSurface());
+			expect(SurfaceUtil.asSurface(game.assets.foo as ImageAsset)).toEqual((game.assets.foo as ImageAsset).asSurface());
 			done();
 		});
 		game._startLoadingGlobalAssets();

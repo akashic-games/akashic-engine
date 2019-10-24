@@ -1,4 +1,4 @@
-import { Object2D, CompositeOperation, PlainMatrix } from "..";
+import { CompositeOperation, Object2D, PlainMatrix } from "..";
 import { customMatchers } from "./helpers";
 
 expect.extend(customMatchers);

@@ -1,7 +1,12 @@
+import {
+	GameConfiguration,
+	InternalOperationPluginOperation,
+	Module,
+	OperationPluginViewInfo,
+	Trigger
+} from "..";
+import * as mod from "../domain/Module";
 import { Game } from "./helpers";
-import { OperationPluginViewInfo, Trigger, Module, GameConfiguration } from "..";
-import * as mod from "../Module";
-import { InternalOperationPluginOperation, OperationPluginOperation } from "../OperationPluginOperation";
 
 // テスト用ダミー操作プラグイン
 class TestOperationPlugin {

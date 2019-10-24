@@ -1,10 +1,17 @@
-import { AssetManager, ImageAsset, AssetManagerLoadHandler } from "..";
-import { Game, Surface, customMatchers } from "./helpers";
+import {
+	AssetManager,
+	AssetManagerLoadHandler,
+	AudioAssetConfigurationBase,
+	GameConfiguration,
+	ImageAsset,
+	ImageAssetConfigurationBase
+} from "..";
+import { customMatchers, Game, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 
 describe("test AssetManager", () => {
-	const gameConfiguration = {
+	const gameConfiguration: GameConfiguration = {
 		width: 320,
 		height: 320,
 		fps: 30,
@@ -113,37 +120,37 @@ describe("test AssetManager", () => {
 		expect(Object.keys((manager as any)._loadings).length).toEqual(0);
 
 		expect(manager.configuration.zoo.systemId).toEqual("music");
-		expect(manager.configuration.zoo.duration).toEqual(gameConfiguration.assets.zoo.duration);
+		expect(manager.configuration.zoo.duration).toEqual((gameConfiguration.assets.zoo as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.zoo.loop).toEqual(true);
 		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
 
 		expect(manager.configuration.baz.systemId).toEqual("music");
-		expect(manager.configuration.baz.duration).toEqual(gameConfiguration.assets.baz.duration);
+		expect(manager.configuration.baz.duration).toEqual((gameConfiguration.assets.baz as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.baz.loop).toEqual(false);
 		expect(manager.configuration.baz.hint).toEqual({ streaming: false });
 
 		expect(manager.configuration.qux.systemId).toEqual("sound");
-		expect(manager.configuration.qux.duration).toEqual(gameConfiguration.assets.qux.duration);
+		expect(manager.configuration.qux.duration).toEqual((gameConfiguration.assets.qux as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.qux.loop).toEqual(false);
 		expect(manager.configuration.qux.hint).toEqual({ streaming: false });
 
 		expect(manager.configuration.quux.systemId).toEqual("sound");
-		expect(manager.configuration.quux.duration).toEqual(gameConfiguration.assets.quux.duration);
+		expect(manager.configuration.quux.duration).toEqual((gameConfiguration.assets.quux as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.quux.loop).toEqual(true);
 		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
 
 		expect(manager.configuration.corge.systemId).toEqual("user");
-		expect(manager.configuration.corge.duration).toEqual(gameConfiguration.assets.corge.duration);
+		expect(manager.configuration.corge.duration).toEqual((gameConfiguration.assets.corge as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.corge.loop).toEqual(false);
 		expect(manager.configuration.corge.hint).toEqual({});
 
 		expect(manager.configuration.grault.systemId).toEqual("user2");
-		expect(manager.configuration.grault.duration).toEqual(gameConfiguration.assets.grault.duration);
+		expect(manager.configuration.grault.duration).toEqual((gameConfiguration.assets.grault as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.grault.loop).toEqual(true);
 		expect(manager.configuration.grault.hint).toEqual({ streaming: true });
 
 		expect(manager.configuration.garply.systemId).toEqual("user2");
-		expect(manager.configuration.garply.duration).toEqual(gameConfiguration.assets.garply.duration);
+		expect(manager.configuration.garply.duration).toEqual((gameConfiguration.assets.garply as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.garply.loop).toEqual(false);
 		expect(manager.configuration.garply.hint).toEqual({ streaming: false });
 	});
@@ -156,8 +163,8 @@ describe("test AssetManager", () => {
 				virtualPath: "foo.png"
 				// no path given
 			}
-		};
-		expect(() => new Game({ width: 320, height: 320, assets: illegalConf as any })).toThrowError("AssertionError");
+		} as any;
+		expect(() => new Game({ width: 320, height: 320, assets: illegalConf })).toThrowError("AssertionError");
 
 		const illegalConf2 = {
 			foo: {
@@ -166,7 +173,7 @@ describe("test AssetManager", () => {
 				width: 1
 				// no virtualPath given
 			}
-		};
+		} as any;
 		expect(() => new Game({ width: 320, height: 320, assets: illegalConf2 })).toThrowError("AssertionError");
 
 		const illegalConf3 = {
@@ -177,10 +184,10 @@ describe("test AssetManager", () => {
 				width: 1
 				// no height given
 			}
-		};
+		} as any;
 		expect(() => new Game({ width: 320, height: 320, assets: illegalConf3 })).toThrowError("AssertionError");
 
-		const legalConf = {
+		const legalConf: {[id: string]: ImageAssetConfigurationBase} = {
 			foo: {
 				type: "image",
 				path: "/foo.png",

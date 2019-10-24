@@ -119,7 +119,7 @@ describe("test DynamicFont", () => {
 			df.destroy();
 			expect(df._atlasSet.destroyed()).toBeFalsy();
 
-			const sas = new SurfaceAtlasSet({ game: skeletonRuntime().game });
+			const sas = new SurfaceAtlasSet({ resourceFactory: skeletonRuntime().game.resourceFactory });
 			const df2 = new DynamicFont({
 				game: skeletonRuntime().game,
 				fontFamily: "Mock明朝",

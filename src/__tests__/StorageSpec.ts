@@ -1,14 +1,14 @@
 import {
 	AssetConfiguration,
+	Scene,
 	Storage,
+	StorageCondition,
+	StorageCountsOperation,
 	StorageKey,
 	StorageLoader,
-	Scene,
-	StorageValue,
-	StorageWriteOption,
 	StorageRegion,
-	StorageCondition,
-	StorageCountsOperation
+	StorageValue,
+	StorageWriteOption
 } from "..";
 import { Game } from "./helpers";
 

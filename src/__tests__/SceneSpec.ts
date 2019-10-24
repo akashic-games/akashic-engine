@@ -1,18 +1,18 @@
 import {
-	AssetConfiguration,
-	Scene,
-	LocalTickMode,
-	TickGenerationMode,
-	Trigger,
-	StorageRegion,
-	E,
-	ImageAsset,
-	AudioAsset,
 	Asset,
 	AssetManager,
-	SceneState
+	AudioAsset,
+	E,
+	ImageAsset,
+	LocalTickMode,
+	Scene,
+	SceneState,
+	StorageRegion,
+	TickGenerationMode,
+	Trigger
 } from "..";
-import { Game, customMatchers, skeletonRuntime } from "./helpers";
+import { AssetConfiguration } from "../interfaces/AssetConfiguration";
+import { customMatchers, Game, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -629,6 +629,7 @@ describe("test Scene", () => {
 							id: "zooAudio",
 							type: "audio",
 							duration: 450,
+							systemId: "sound",
 							uri: "http://dummy.unused.example/zoo"
 						}
 					],
