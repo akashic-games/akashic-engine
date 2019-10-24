@@ -684,6 +684,8 @@ namespace g {
 		}
 
 		/**
+		 * @deprecated 現在このメソッドは呼び出しても何も行わない。
+		 * 
 		 * このゲームを離脱する。
 		 *
 		 * 多人数プレイの場合、他のクライアントでは `Game#leave` イベントがfireされる。
@@ -703,6 +705,19 @@ namespace g {
 		terminateGame(): void {
 			this._leaveGame();
 			this._isTerminated = true;
+		}
+
+		/**
+		 * エラーを出してこのゲームを途中終了する。
+		 *
+		 * エンジンに対して続行の断念を通知する。
+		 * このメソッドの呼び出し後、このクライアントの操作要求は送信されない。
+		 * またこのクライアントのゲーム実行は行われない(updateを含むイベントのfireはおきない)。
+		 * このメソッドはアセットロードやストレージロードのエラー時に暗黙に呼び出される。
+		 * ゲーム開発者がこのメソッドを利用する必要はない。
+		 */
+		abortGame(): void {
+			this.terminateGame();
 			this._terminateGame();
 		}
 
@@ -1083,6 +1098,8 @@ namespace g {
 
 		/**
 		 * @private
+		 * エラーを出してゲームを途中終了させるメソッド。
+		 * 機能的にはterminateではなくabortなのだが、既に派生クラスでオーバーライドされているので、メソッド名は変更しない。
 		 */
 		_terminateGame(): void {
 			// do nothing.

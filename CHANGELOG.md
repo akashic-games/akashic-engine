@@ -1,5 +1,10 @@
 # ChangeLog
 
+## UnreleasedChanges
+
+不具合修正
+* `Game#terminateGame()` を直接呼ぶとエラーが発生する不具合の修正
+
 ## 1.12.17
 
 不具合修正
