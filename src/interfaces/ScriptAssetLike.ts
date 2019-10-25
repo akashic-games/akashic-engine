@@ -1,5 +1,5 @@
-import { ScriptAssetExecuteEnvironment } from "../types/ScriptAssetExecuteEnvironment";
 import { AssetLike } from "./AssetLike";
+import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
 
 /**
  * スクリプトリソースを表すインターフェース。

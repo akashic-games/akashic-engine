@@ -1,7 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { Game } from "../Game";
+import { ScriptAssetExecuteEnvironment } from "../interfaces/ScriptAssetExecuteEnvironment";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { ScriptAssetExecuteEnvironment } from "../types/ScriptAssetExecuteEnvironment";
 import { Module } from "./Module";
 import { RequireCacheable } from "./RequireCacheable";
 

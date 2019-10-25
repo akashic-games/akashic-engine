@@ -1,4 +1,4 @@
-import { ScriptAssetExecuteEnvironment } from "../types/ScriptAssetExecuteEnvironment";
+import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
 
 /**
  * Node.js が提供する module の互換インターフェース。

@@ -1,7 +1,7 @@
 import { Game } from "../Game";
+import { SurfaceEffector } from "../interfaces/SurfaceEffector";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { CommonArea, CommonOffset, CommonRect } from "../types/commons";
-import { SurfaceEffector } from "../types/SurfaceEffector";
 
 /**
  * ナインパッチによる描画処理を提供するSurfaceEffector。
