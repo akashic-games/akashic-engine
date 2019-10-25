@@ -1,10 +1,10 @@
 import { Game } from "../Game";
-import { OperationPlugin } from "../interfaces/OperationPlugin";
-import { InternalOperationPluginInfo } from "../interfaces/OperationPluginInfo";
-import { InternalOperationPluginOperation, OperationPluginOperation } from "../interfaces/OperationPluginOperation";
-import { OperationPluginStatic } from "../interfaces/OperationPluginStatic";
-import { OperationPluginViewInfo } from "../interfaces/OperationPluginViewInfo";
 import { Trigger } from "../Trigger";
+import { OperationPlugin } from "../types/OperationPlugin";
+import { InternalOperationPluginInfo } from "../types/OperationPluginInfo";
+import { InternalOperationPluginOperation, OperationPluginOperation } from "../types/OperationPluginOperation";
+import { OperationPluginStatic } from "../types/OperationPluginStatic";
+import { OperationPluginViewInfo } from "../types/OperationPluginViewInfo";
 import { _require } from "./Module";
 
 /**

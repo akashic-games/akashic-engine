@@ -1,4 +1,4 @@
-import { StorageLoadError } from "../interfaces/errors";
+import { StorageLoadError } from "../types/errors";
 
 // TODO: (GAMEDEV-1549) コメント整理
 /**

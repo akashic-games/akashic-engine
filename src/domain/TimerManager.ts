@@ -1,6 +1,6 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { Destroyable } from "../interfaces/Destroyable";
 import { Trigger } from "../Trigger";
+import { Destroyable } from "../types/Destroyable";
 import { Timer } from "./Timer";
 
 /**

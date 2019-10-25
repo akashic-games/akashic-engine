@@ -1,6 +1,6 @@
 import { Trigger } from "../Trigger";
-import { Destroyable } from "./Destroyable";
-import { AssetLoadError } from "./errors";
+import { Destroyable } from "../types/Destroyable";
+import { AssetLoadError } from "../types/errors";
 
 /**
  * `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。

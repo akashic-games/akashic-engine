@@ -1,9 +1,9 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { CommonSize } from "../interfaces/commons";
-import { Destroyable } from "../interfaces/Destroyable";
 import { RendererLike } from "../interfaces/RendererLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { Trigger } from "../Trigger";
+import { CommonSize } from "../types/commons";
+import { Destroyable } from "../types/Destroyable";
 
 /**
  * 描画領域を表すクラス。

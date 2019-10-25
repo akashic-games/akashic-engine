@@ -1,4 +1,4 @@
-import { ModuleLike } from "./ModuleLike";
+import { ModuleLike } from "../interfaces/ModuleLike";
 
 /**
  * `ScriptAsset` の実行時、`g` 以下に加えられる値を定めたinterface。

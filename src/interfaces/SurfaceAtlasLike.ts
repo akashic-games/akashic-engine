@@ -1,4 +1,4 @@
-import { Destroyable } from "./Destroyable";
+import { Destroyable } from "../types/Destroyable";
 import { GlyphLike } from "./GlyphLike";
 import { ResourceFactoryLike } from "./ResourceFactoryLike";
 import { SurfaceAtlasSlotLike } from "./SurfaceAtlasSlotLike";

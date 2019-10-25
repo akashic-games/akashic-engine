@@ -1,5 +1,5 @@
-import { ScriptAssetExecuteEnvironment } from "../interfaces/ScriptAssetExecuteEnvironment";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
+import { ScriptAssetExecuteEnvironment } from "../types/ScriptAssetExecuteEnvironment";
 import { Asset } from "./Asset";
 
 /**

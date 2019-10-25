@@ -1,4 +1,4 @@
-import { CommonArea } from "../interfaces/commons";
+import { CommonArea } from "../types/commons";
 import { Util } from "./Util";
 
 /**

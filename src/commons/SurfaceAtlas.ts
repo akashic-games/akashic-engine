@@ -1,9 +1,9 @@
-import { CommonSize } from "../interfaces/commons";
 import { GlyphLike } from "../interfaces/GlyphLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasLike } from "../interfaces/SurfaceAtlasLike";
 import { SurfaceAtlasSlotLike } from "../interfaces/SurfaceAtlasSlotLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
+import { CommonSize } from "../types/commons";
 import { SurfaceAtlasSlot } from "./SurfaceAtrasSlot";
 
 function getSurfaceAtlasSlot(slot: SurfaceAtlasSlotLike, width: number, height: number): SurfaceAtlasSlotLike {

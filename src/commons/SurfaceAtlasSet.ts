@@ -1,9 +1,9 @@
-import { CommonSize } from "../interfaces/commons";
-import { Destroyable } from "../interfaces/Destroyable";
 import { GlyphLike } from "../interfaces/GlyphLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasLike } from "../interfaces/SurfaceAtlasLike";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
+import { CommonSize } from "../types/commons";
+import { Destroyable } from "../types/Destroyable";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));

@@ -1,11 +1,11 @@
-import { CompositeOperation } from "../interfaces/CompositeOperation";
-import { FontFamily } from "../interfaces/FontFamily";
-import { ImageData } from "../interfaces/ImageData";
 import { RendererLike } from "../interfaces/RendererLike";
 import { ShaderProgramLike } from "../interfaces/ShaderProgramLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { TextAlign } from "../interfaces/TextAlign";
-import { TextBaseline } from "../interfaces/TextBaseline";
+import { CompositeOperation } from "../types/CompositeOperation";
+import { FontFamily } from "../types/FontFamily";
+import { ImageData } from "../types/ImageData";
+import { TextAlign } from "../types/TextAlign";
+import { TextBaseline } from "../types/TextBaseline";
 
 /**
  * ゲームの描画を行うクラス。

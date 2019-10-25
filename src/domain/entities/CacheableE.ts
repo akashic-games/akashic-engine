@@ -1,7 +1,7 @@
-import { CommonSize } from "../../interfaces/commons";
-import { EntityStateFlags } from "../../interfaces/EntityStateFlags";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { SurfaceLike } from "../../interfaces/SurfaceLike";
+import { CommonSize } from "../../types/commons";
+import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
 import { E, EParameterObject } from "./E";
 

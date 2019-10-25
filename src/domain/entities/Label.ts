@@ -1,9 +1,9 @@
 import { Font } from "../../domain/Font";
 import { Game } from "../../Game";
-import { CompositeOperation } from "../../interfaces/CompositeOperation";
 import { GlyphLike } from "../../interfaces/GlyphLike";
 import { RendererLike } from "../../interfaces/RendererLike";
-import { TextAlign } from "../../interfaces/TextAlign";
+import { CompositeOperation } from "../../types/CompositeOperation";
+import { TextAlign } from "../../types/TextAlign";
 import { Util } from "../Util";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 

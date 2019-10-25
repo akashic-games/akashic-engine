@@ -1,5 +1,5 @@
-import { FontFamily } from "./FontFamily";
-import { FontWeight } from "./FontWeight";
+import { FontFamily } from "../types/FontFamily";
+import { FontWeight } from "../types/FontWeight";
 import { GlyphLike } from "./GlyphLike";
 
 /**

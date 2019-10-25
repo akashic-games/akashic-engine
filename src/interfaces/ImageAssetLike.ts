@@ -1,4 +1,4 @@
-import { ImageAssetHint } from "./AssetConfiguration";
+import { ImageAssetHint } from "../types/AssetConfiguration";
 import { AssetLike } from "./AssetLike";
 import { SurfaceLike } from "./SurfaceLike";
 
