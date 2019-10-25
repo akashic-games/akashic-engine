@@ -2,10 +2,7 @@ import { RendererLike } from "../interfaces/RendererLike";
 import { ShaderProgramLike } from "../interfaces/ShaderProgramLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { CompositeOperation } from "../types/CompositeOperation";
-import { FontFamily } from "../types/FontFamily";
 import { ImageData } from "../types/ImageData";
-import { TextAlign } from "../types/TextAlign";
-import { TextBaseline } from "../types/TextBaseline";
 
 /**
  * ゲームの描画を行うクラス。
@@ -49,37 +46,6 @@ export abstract class Renderer implements RendererLike {
 		canvasOffsetX: number[],
 		canvasOffsetY: number[],
 		count: number
-	): void;
-
-	/**
-	 * 指定されたSystemLabelの描画を行う。
-	 *
-	 * @param text 描画するText内容
-	 * @param x 描画元のX座標。0以上の数値でなければならない
-	 * @param y 描画元のY座標。0以上の数値でなければならない
-	 * @param maxWidth 描画する矩形の幅。0より大きい数値でなければならない
-	 * @param fontSize 描画する矩形の高さ。0より大きい数値でなければならない
-	 * @param textAlign 描画するテキストのアラインメント
-	 * @param textBaseline 描画するテキストのベースライン
-	 * @param textColor 描画する文字色。CSS Colorでなければならない
-	 * @param fontFamily 描画するフォントファミリ
-	 * @param strokeWidth 描画する輪郭幅。0以上の数値でなければならない
-	 * @param strokeColor 描画する輪郭色。CSS Colorでなければならない
-	 * @param strokeOnly 文字色の描画フラグ
-	 */
-	abstract drawSystemText(
-		text: string,
-		x: number,
-		y: number,
-		maxWidth: number,
-		fontSize: number,
-		textAlign: TextAlign,
-		textBaseline: TextBaseline,
-		textColor: string,
-		fontFamily: FontFamily,
-		strokeWidth: number,
-		strokeColor: string,
-		strokeOnly: boolean
 	): void;
 
 	abstract translate(x: number, y: number): void;

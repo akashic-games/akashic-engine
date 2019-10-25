@@ -158,38 +158,6 @@ export class Renderer extends g.Renderer {
 		});
 	}
 
-	drawSystemText(
-		text: string,
-		x: number,
-		y: number,
-		maxWidth: number,
-		fontSize: number,
-		textAlign: g.TextAlign,
-		textBaseline: g.TextBaseline,
-		textColor: string,
-		fontFamily: g.FontFamily,
-		strokeWidth: number,
-		strokeColor: string,
-		strokeOnly: boolean
-	): void {
-		this.methodCallHistoryWithParams.push({
-			methodName: "drawSystemText",
-			params: {
-				text: text,
-				x: x,
-				y: y,
-				maxWidth: maxWidth,
-				fontSize: fontSize,
-				textAlign: textAlign,
-				textBaseline: textBaseline,
-				textColor: textColor,
-				fontFamily: fontFamily,
-				strokeWidth: strokeWidth,
-				strokeColor: strokeColor,
-				strokeOnly: strokeOnly
-			}
-		});
-	}
 	setTransform(matrix: number[]): void {
 		throw new Error("not implemented");
 	}
