@@ -769,10 +769,8 @@ Akashic Engine に用意された乱数生成器を利用すると、
 以下の式は0以上9以下の整数をランダムに一つ選んで返します。
 
 ```javascript
-g.game.random[0].get(0, 9);
+g.game.random.get(0, 9);
 ```
-
-> `random` が配列になっているのは歴史的経緯によるもので、`[0]` 以外は利用できません。
 
 JavaScript 標準関数の `Math.random()` を利用しても乱数を生成できますが、
 将来的な拡張で利用するために、Akashic Engine のゲームでは
@@ -800,7 +798,7 @@ function main() {
 
 function createRect(scene, x, y) {
   var colors = ["blue", "navy", "royalblue", "skyblue"];
-  var idx = g.game.random[0].get(0, colors.length - 1);
+  var idx = g.game.random.get(0, colors.length - 1);
   return rect = new g.FilledRect({
     scene: scene,
     x: x,
