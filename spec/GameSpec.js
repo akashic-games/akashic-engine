@@ -648,32 +648,6 @@ describe("test Game", function() {
 		expect(game.leftGame).toBe(true);
 	});
 
-	it("abortGame", function() {
-		var game = new mock.Game({ width: 320, height: 320 });
-		var scene = new g.Scene({game: game});
-
-		var count = 0;
-		scene.update.add(function () {
-			++count;
-		});
-		game.pushScene(scene);
-		game._flushSceneChangeRequests();
-
-		game.classicTick();
-		expect(count).toBe(1);
-		game.classicTick();
-		expect(count).toBe(2);
-
-		game.abortGame();
-		expect(game._isTerminated).toBe(true);
-		expect(game.leftGame).toBe(true);
-		expect(game.abortedGame).toBe(true);
-		game.classicTick();
-		expect(count).toBe(2);
-		game.classicTick();
-		expect(count).toBe(2);
-	});
-
 	it("terminateGame", function() {
 		var game = new mock.Game({ width: 320, height: 320 });
 		var scene = new g.Scene({game: game});
