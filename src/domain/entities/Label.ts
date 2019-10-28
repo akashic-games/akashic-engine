@@ -361,7 +361,7 @@ export class Label extends CacheableE {
 
 	private _outputOfWarnLogWithNoGlyph(code: number, functionName: string): void {
 		const str = code & 0xffff0000 ? String.fromCharCode((code & 0xffff0000) >>> 16, code & 0xffff) : String.fromCharCode(code);
-		this.game().logger.warn(
+		console.warn(
 			"Label#" +
 				functionName +
 				": failed to get a glyph for '" +

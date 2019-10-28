@@ -7,8 +7,11 @@
     "declaration": true,
     "outDir": "lib",
     "sourceMap": false,
-    "types": []
+    "types": ["node"]
   },
+  "files": [
+    "./typings/console.d.ts"
+  ],
   "include": [
     "src/**/*.ts"
   ],

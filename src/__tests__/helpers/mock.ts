@@ -571,7 +571,6 @@ export class Game extends g.Game {
 	terminatedGame: boolean;
 	raisedEvents: g.Event[];
 	raisedTicks: g.Event[][];
-	suppressedLogLevel: g.LogLevel;
 
 	autoTickForInternalEvents: boolean;
 	resourceFactory: ResourceFactory;
@@ -589,7 +588,6 @@ export class Game extends g.Game {
 		this.terminatedGame = false;
 		this.raisedEvents = [];
 		this.raisedTicks = [];
-		this.suppressedLogLevel = undefined;
 		this.autoTickForInternalEvents = true;
 	}
 

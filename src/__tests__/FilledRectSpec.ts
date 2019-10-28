@@ -1,4 +1,4 @@
-import { FilledRect, LogLevel } from "..";
+import { FilledRect } from "..";
 import { customMatchers, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -25,7 +25,6 @@ describe("test ColorBox", () => {
 
 	it("初期化 - Mismatch cssColor", () => {
 		const runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = LogLevel.Debug;
 		expect(() => {
 			return new FilledRect({
 				scene: runtime.scene,
@@ -46,6 +45,5 @@ describe("test ColorBox", () => {
 				opacity: 0.4
 			});
 		}).toThrowError("TypeMismatchError");
-		runtime.game.suppressedLogLevel = undefined;
 	});
 });

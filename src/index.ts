@@ -29,7 +29,6 @@ export * from "./domain/DynamicFont";
 export * from "./domain/Event";
 export * from "./domain/Font";
 export * from "./domain/LoadingScene";
-export * from "./domain/Logger";
 export * from "./domain/Matrix";
 export * from "./domain/Module";
 export * from "./domain/NinePatchSurfaceEffector";

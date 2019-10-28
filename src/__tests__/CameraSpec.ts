@@ -1,10 +1,9 @@
-import { Camera2D, LogLevel, Matrix, PlainMatrix } from "..";
+import { Camera2D, Matrix, PlainMatrix } from "..";
 import { Game, Renderer } from "./helpers";
 
 describe("test Camera", () => {
 	it("初期化", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		game.suppressedLogLevel = LogLevel.Debug;
 		const cam1 = new Camera2D({ game: game });
 		expect(cam1.game).toBe(game);
 		expect(cam1.id).toBe(0);

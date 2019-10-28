@@ -19,11 +19,11 @@
 var scene = new g.Scene({game: game, assetIds: ["apple"], name: "SampleScene"});
 // ハンドラを登録
 scene.assetLoadFailed.handle(function (failure) {
-    // Loggerでログ出力
-    game.logger.warn("load error for '" + failure.asset.id + "' in " + scene.name, failure);
+    // console でログ出力
+    console.warn("load error for '" + failure.asset.id + "' in " + scene.name, failure);
     // リトライ不可能の場合、この後ゲームが終了される
     if (!failure.error.retriable)
-        game.logger.error("bye.", failure);
+        console.error("bye.", failure);
 });
 ```
 
@@ -56,7 +56,7 @@ Akashicがアセット読み込みの再試行を行うかどうかは `failure.
 scene.assetLoadFailed.handle(function (failure) {
     // 再試行をキャンセルし、ゲーム続行を断念する
     failure.cancelRetry = true;
-    game.logger.error("bye.", failure);
+    console.error("bye.", failure);
 });
 ```
 
