@@ -134,8 +134,8 @@ export class MusicAudioSystem extends AudioSystem {
 	get player(): AudioPlayerLike {
 		if (!this._player) {
 			this._player = this.game.resourceFactory.createAudioPlayer(this);
-			this._player.played.handle(this, this._onPlayerPlayed);
-			this._player.stopped.handle(this, this._onPlayerStopped);
+			this._player.played.add(this._onPlayerPlayed, this);
+			this._player.stopped.add(this._onPlayerStopped, this);
 		}
 		return this._player;
 	}
@@ -260,8 +260,8 @@ export class SoundAudioSystem extends AudioSystem {
 		var player = this.game.resourceFactory.createAudioPlayer(this);
 		if (player.canHandleStopped()) this.players.push(player);
 
-		player.played.handle(this, this._onPlayerPlayed);
-		player.stopped.handle(this, this._onPlayerStopped);
+		player.played.add(this._onPlayerPlayed, this);
+		player.stopped.add(this._onPlayerStopped, this);
 
 		return player;
 	}

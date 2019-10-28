@@ -170,7 +170,7 @@ please access to http://localhost:3000/game/ by web-browser
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var rect = new g.FilledRect({
       scene: scene,
       cssColor: "#ff0000",
@@ -299,7 +299,7 @@ Akashic Engine の機能はグローバル変数 `g` を通して利用できま
 エンティティをシーンに追加する操作は、シーンの読み込み後に行う必要があります。
 シーンの読み込み完了のようなタイミングを通知するのに、
 Akashic Engine はトリガーとよばれる仕組みを利用します。
-トリガーには `handle()` メソッドで関数を登録することができます。
+トリガーには `add()` メソッドで関数を登録することができます。
 トリガーに対応するイベントが発生すると、登録されたメソッドが呼び出されます。
 
 シーンの読み込み完了のタイミングを知るには `scene.loaded` トリガーを利用します。
@@ -307,7 +307,7 @@ Akashic Engine はトリガーとよばれる仕組みを利用します。
 
 ```javascript
 var scene = new g.Scene({game: g.game});
-scene.loaded.handle(onSceneLoaded);
+scene.loaded.add(onSceneLoaded);
 
 function onSceneLoaded() {
   // シーンが読み込まれたときに行う処理
@@ -319,7 +319,7 @@ function onSceneLoaded() {
 ```javascript
 var scene = new g.Scene({game: g.game});
 
-scene.loaded.handle(function () {
+scene.loaded.add(function () {
   // シーンが読み込まれたときに行う処理
 });
 ```
@@ -330,7 +330,7 @@ scene.loaded.handle(function () {
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var rect = createRect(scene);
     scene.append(rect);
   });
@@ -384,7 +384,7 @@ var rectHeight = 40, rectWidth = 60, rectMargin = 10;
 
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var x, y, rect;
     for (y = 0; y < g.game.height; y += rectHeight + rectMargin) {
       for (x = 0; x < g.game.width; x += rectWidth + rectMargin) {
@@ -469,7 +469,7 @@ INFO: Done!
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game, assetIds: ["player"]});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var sprite = new g.Sprite({scene: scene, src: scene.assets["player"]});
     scene.append(sprite);
   });
@@ -529,7 +529,7 @@ group.append(child);
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var group = new g.E({scene: scene, x: 50, y: 50, angle: 30});
     var rect1 = createRect(scene, 0, 0, "darkgreen");
     group.append(rect1);
@@ -597,7 +597,7 @@ rect.modified();
 以下はシーンの `update` トリガーを利用して矩形 `rect` を右に移動させるコードです。
 
 ```javascript
-scene.update.handle(function () {
+scene.update.add(function () {
   ++rect.x;
   rect.modified();
 });
@@ -610,11 +610,11 @@ scene.update.handle(function () {
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var rect = createRect(scene);
     scene.append(rect);
     // scene の update を設定
-    scene.update.handle(function () {
+    scene.update.add(function () {
       ++rect.x;
       rect.modified();
     });
@@ -640,7 +640,7 @@ module.exports = main;
 以下はエンティティ `rect` のトリガーを利用したコードです。
 
 ```javascript
-rect.update.handle(function () {
+rect.update.add(function () {
   ++rect.x;
   rect.modified();
 });
@@ -657,11 +657,11 @@ rect.update.handle(function () {
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var rect = createRect(scene);
     scene.append(rect);
     // rect の update を利用
-    rect.update.handle(function () {
+    rect.update.add(function () {
       moveRect(rect);
     });
   });
@@ -733,7 +733,7 @@ scene.setInterval(500, function () {
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var rect = createRect(scene);
     scene.append(rect);
     var intervalId = scene.setInterval(200, function () {
@@ -784,7 +784,7 @@ var size = 25, margin = 15;
 
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var x, y, rect;
     for (y = 0; y < g.game.height; y += size + margin) {
       for (x = 0; x < g.game.width; x += size + margin) {
@@ -833,11 +833,11 @@ Akashic Engine ではユーザがタップやクリックするとポイント�
 
 ```javascript
 rect.touchable = true;
-rect.pointDown.handle(function () {
+rect.pointDown.add(function () {
   rect.cssColor = "red";
   rect.modified();
 });
-rect.pointUp.handle(function () {
+rect.pointUp.add(function () {
   rect.cssColor = "gray";
   rect.modified();
 });
@@ -848,7 +848,7 @@ rect.pointUp.handle(function () {
 トリガーの座標を取得するには、以下のようなコードになります。
 
 ```javascript
-rect.pointDown.handle(function (ev) {
+rect.pointDown.add(function (ev) {
   var x = ev.point.x;
   var y = ev.point.y;
   ...
@@ -867,7 +867,7 @@ rect.pointDown.handle(function (ev) {
 以下は矩形エンティティ `rect` を指やマウス操作で移動するコード例です。
 
 ```javascript
-rect.pointMove.handle(function (ev) {
+rect.pointMove.add(function (ev) {
   rect.x += ev.prevDelta.x;
   rect.y += ev.prevDelta.y;
   rect.modified();
@@ -886,8 +886,8 @@ rect.pointMove.handle(function (ev) {
 
 ```javascript
 var scene = new g.Scene({game: g.game});
-scene.loaded.handle(function () {
-  scene.pointDownCapture.handle(function (ev) {
+scene.loaded.add(function () {
+  scene.pointDownCapture.add(function (ev) {
     var size = 20;
     var rect = new g.FilledRect({
       scene: scene,
@@ -931,8 +931,8 @@ scene.assets["se1"].play();
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game, assetIds: ["se1"]});
-  scene.loaded.handle(function () {
-    scene.pointDownCapture.handle(function () {
+  scene.loaded.add(function () {
+    scene.pointDownCapture.add(function () {
       scene.assets["se1"].play();
     });
   });
@@ -977,9 +977,9 @@ BGM は自動的にループ再生されるので、`play()` メソッドはシ�
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game, assetIds: ["bgm", "se1"]});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     scene.assets["bgm"].play();
-    scene.pointDownCapture.handle(function () {
+    scene.pointDownCapture.add(function () {
       scene.assets["se1"].play();
     });
   });
@@ -1039,7 +1039,7 @@ var label = new g.Label({
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var font = new g.DynamicFont(g.FontFamily.SansSerif, 15, g.game);
     var label = new g.Label({
       scene: scene,
@@ -1091,7 +1091,7 @@ label.invalidate();
 ```
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var font = new g.DynamicFont(g.FontFamily.SansSerif, 15, g.game);
 	var count = 0;
     var label = new g.Label({
@@ -1126,7 +1126,7 @@ module.exports = main;
 ```javascript
 function main() {
   var scene = new g.Scene({game: g.game});
-      scene.loaded.handle(function () {
+      scene.loaded.add(function () {
       var pane = new g.Pane({scene: scene, width: 50, height: 50});
       var rect = new g.FilledRect({
         scene: scene,
@@ -1164,7 +1164,7 @@ module.exports = main;
 ```
 function main() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var pane = new g.Pane({scene: scene, width: 50, height: 50});
     var rect = new g.FilledRect({
       scene: scene,
@@ -1177,7 +1177,7 @@ function main() {
     });
     pane.append(rect);
     scene.append(pane);
-    rect.update.handle(function () {
+    rect.update.add(function () {
       ++rect.angle;
       rect.modified();
     });
@@ -1214,9 +1214,9 @@ function main() {
 
 function createSceneA() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     scene.append(createRect(scene, "red"));
-    scene.pointDownCapture.handle(function () {
+    scene.pointDownCapture.add(function () {
       g.game.replaceScene(createSceneB());
     });
   });
@@ -1225,9 +1225,9 @@ function createSceneA() {
 
 function createSceneB() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     scene.append(createRect(scene, "blue"));
-    scene.pointDownCapture.handle(function () {
+    scene.pointDownCapture.add(function () {
       g.game.replaceScene(createSceneA());
     });
   });
@@ -1256,7 +1256,7 @@ Akashic Engine のスクリプトを複数のファイルに分けて記述し�
 ```javascript
 module.exports.create = function() {
   var scene = new g.Scene({game: g.game});
-  scene.loaded.handle(function () {
+  scene.loaded.add(function () {
     var rect = new g.FilledRect({
       scene: scene,
       cssColor: "red",

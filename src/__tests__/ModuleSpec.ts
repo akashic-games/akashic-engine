@@ -643,7 +643,7 @@ describe("test Module", () => {
 	it("require - virtual path altering directory", done => {
 		const game = new Game(gameConfiguration, "/");
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.handle(() => {
+		game._loaded.add(() => {
 			const module = new Module(game, "dummypath", "/script/realpath.js");
 			const mod = module.require("../../foo"); // virtualPath: /script/some/deep/vpath.js からのrequire()
 			expect(mod.me).toBe("script-foo");

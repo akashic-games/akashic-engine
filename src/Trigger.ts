@@ -196,14 +196,6 @@ export class Trigger<T> {
 	}
 
 	/**
-	 * このTriggerにハンドラを追加する。
-	 * @deprecated 互換性のために残されている。代わりに `add()` を利用すべきである。実装の変化のため、 `func` が `boolean` を返した時の動作はサポートされていない。
-	 */
-	handle(owner: any, func?: HandlerFunction<T>, name?: string): void {
-		this.add(func ? { owner, func, name } : { func: owner });
-	}
-
-	/**
 	 * このTriggerを発火する。
 	 *
 	 * 登録された全ハンドラの関数を、引数 `arg` を与えて呼び出す。

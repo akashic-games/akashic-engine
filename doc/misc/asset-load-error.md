@@ -18,7 +18,7 @@
 ```javascript
 var scene = new g.Scene({game: game, assetIds: ["apple"], name: "SampleScene"});
 // ハンドラを登録
-scene.assetLoadFailed.handle(function (failure) {
+scene.assetLoadFailed.add(function (failure) {
     // console でログ出力
     console.warn("load error for '" + failure.asset.id + "' in " + scene.name, failure);
     // リトライ不可能の場合、この後ゲームが終了される
@@ -53,7 +53,7 @@ Akashicがアセット読み込みの再試行を行うかどうかは `failure.
 以下に例を示します。
 
 ```javascript
-scene.assetLoadFailed.handle(function (failure) {
+scene.assetLoadFailed.add(function (failure) {
     // 再試行をキャンセルし、ゲーム続行を断念する
     failure.cancelRetry = true;
     console.error("bye.", failure);
