@@ -5,7 +5,7 @@ describe("test NinePatchSurfaceEffector", () => {
 	let game: Game;
 
 	beforeEach(() => {
-		game = new Game({ width: 320, height: 320 });
+		game = new Game({ width: 320, height: 320, main: "" });
 	});
 
 	it("constructor - default borderWidth = 4", () => {

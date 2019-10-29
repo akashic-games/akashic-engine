@@ -24,7 +24,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("start", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sp = new FrameSprite({
 			scene: runtime.scene,
@@ -51,7 +51,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("stop", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sp = new FrameSprite({
 			scene: runtime.scene,
@@ -69,7 +69,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("destroy", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sp = new FrameSprite({
 			scene: runtime.scene,
@@ -87,7 +87,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("frame/frameNumber", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sp = new FrameSprite({
 			scene: runtime.scene,
@@ -153,7 +153,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("_free", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sp = new FrameSprite({
 			scene: runtime.scene,
@@ -170,7 +170,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("createBySprite", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sprite = new Sprite({
 			scene: runtime.scene,
@@ -185,7 +185,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("loop", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sprite = new FrameSprite({
 			scene: runtime.scene,
@@ -221,7 +221,7 @@ describe("test FrameSprite", () => {
 	});
 
 	it("not loop", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 30, main: "" });
 		const surface = new Surface(480, 480);
 		const sprite = new FrameSprite({
 			scene: runtime.scene,

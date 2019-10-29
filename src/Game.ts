@@ -1262,25 +1262,6 @@ export abstract class Game implements Registrable<E> {
 		this._operationPluginManager.initialize();
 		this.operationPlugins = this._operationPluginManager.plugins;
 
-		// deprecated の挙動: エントリポイントの指定がない場合
-		if (!this._main) {
-			if (!this._mainParameter.snapshot) {
-				if (!(<any>this.assets).mainScene)
-					throw ExceptionFactory.createAssertionError("Game#_start: global asset 'mainScene' not found.");
-				var mainScene = _require(this, "mainScene")();
-				this.pushScene(mainScene);
-				this._flushSceneChangeRequests();
-			} else {
-				if (!(<any>this.assets).snapshotLoader)
-					throw ExceptionFactory.createAssertionError("Game#_start: global asset 'snapshotLoader' not found.");
-				var loader = _require(this, "snapshotLoader");
-				loader(this._mainParameter.snapshot);
-				this._flushSceneChangeRequests(); // スナップショットローダもシーン遷移を要求する可能性がある(というかまずする)
-			}
-			this._started.fire();
-			return;
-		}
-
 		var mainFun = _require(this, this._main);
 		if (!mainFun || typeof mainFun !== "function")
 			throw ExceptionFactory.createAssertionError("Game#_start: Entry point '" + this._main + "' not found.");

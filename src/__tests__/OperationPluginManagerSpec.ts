@@ -70,7 +70,8 @@ describe("test OperationPluginManager", () => {
 				{ code: 42, script: "/script/op-plugin.js" },
 				{ code: 10, script: undefined },
 				{ code: 15, script: "/script/op-plugin-unsupported.js" }
-			]
+			],
+			main: ""
 		};
 		game = new Game(conf, "/", "foo", dummyViewInfo);
 	});

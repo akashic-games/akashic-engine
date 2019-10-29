@@ -32,6 +32,7 @@ describe("test Module", () => {
 		width: 320,
 		height: 320,
 		fps: 30,
+		main: "/script/foo.js",
 		assets: {
 			aGlobalAssetFoo: {
 				type: "script",
@@ -706,7 +707,7 @@ describe("test Module", () => {
 	});
 
 	it("_findAssetByPathAsFile", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const liveAssetPathTable = {
 			"foo/bar.js": game.resourceFactory.createScriptAsset("bar", "/foo/bar.js"),
 			"zoo.js": game.resourceFactory.createScriptAsset("zoo", "/zoo.js")
@@ -718,7 +719,7 @@ describe("test Module", () => {
 	});
 
 	it("_findAssetByPathDirectory", done => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
 		const liveAssetPathTable = {
 			"foo/root.js": game.resourceFactory.createScriptAsset("root", "/foo/root.js"),

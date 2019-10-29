@@ -36,6 +36,7 @@ describe("test Scene", () => {
 	const game = new Game({
 		width: 320,
 		height: 320,
+		main: "",
 		assets: assetsConfiguration
 	});
 
@@ -264,6 +265,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -294,6 +296,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -317,6 +320,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({ game: game });
@@ -365,6 +369,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -399,6 +404,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -434,6 +440,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const keys = [
@@ -488,6 +495,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const keys = [
@@ -544,6 +552,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const keys = [
@@ -596,6 +605,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 
@@ -677,6 +687,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -698,6 +709,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -738,6 +750,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -759,6 +772,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -796,6 +810,7 @@ describe("test Scene", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "",
 			assets: assetsConfiguration
 		});
 		const scene = new Scene({
@@ -1002,7 +1017,7 @@ describe("test Scene", () => {
 	});
 
 	it("createTimer/deleteTimer", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
 		const game = runtime.game;
 		const scene = runtime.scene;
 		const timer = scene.createTimer(100);
@@ -1032,17 +1047,17 @@ describe("test Scene", () => {
 	});
 
 	it("setInterval/clearInterval", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
 		const game = runtime.game;
 		const scene1 = game.scene();
 		let state1 = false;
 		let success1 = false;
 
 		expect(scene1._timer._timers.length).toBe(0);
-		const holder1 = scene1.setInterval(100, () => {
+		const holder1 = scene1.setInterval(() => {
 			if (!state1) fail("fail1");
 			success1 = true;
-		});
+		}, 100);
 		expect(scene1._timer._timers.length).toBe(1);
 
 		game.tick(true);
@@ -1058,15 +1073,15 @@ describe("test Scene", () => {
 		game.pushScene(scene2);
 		game._flushSceneChangeRequests();
 		state1 = false;
-		const holder2 = scene2.setInterval(50, () => {
+		const holder2 = scene2.setInterval(() => {
 			if (!state2) fail("fail2");
 			success2 = true;
-		});
+		}, 50);
 		expect(scene1._timer._timers.length).toBe(1);
 		expect(scene2._timer._timers.length).toBe(1);
-		const holder3 = scene2.setInterval(50, () => {
+		const holder3 = scene2.setInterval(() => {
 			// do nothing
-		});
+		}, 50);
 		expect(scene2._timer._timers.length).toBe(1);
 		game.tick(true);
 		state2 = true;
@@ -1086,17 +1101,17 @@ describe("test Scene", () => {
 	});
 
 	it("setTimeout - deprecated", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
 		const game = runtime.game;
 		const scene1 = game.scene();
 		let state1 = false;
 		let success1 = false;
 
 		expect(scene1._timer._timers.length).toBe(0);
-		const holder1 = scene1.setTimeout(100, () => {
+		const holder1 = scene1.setTimeout(() => {
 			if (!state1) fail("fail1");
 			success1 = true;
-		});
+		}, 100);
 		expect(scene1._timer._timers.length).toBe(1);
 
 		game.tick(true);
@@ -1115,7 +1130,7 @@ describe("test Scene", () => {
 	});
 
 	it("setTimeout", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
 		const game = runtime.game;
 		const scene = game.scene();
 		const owner = {};
@@ -1145,14 +1160,14 @@ describe("test Scene", () => {
 	});
 
 	it("clearTimeout", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
 		const game = runtime.game;
 		const scene1 = game.scene();
 
 		expect(scene1._timer._timers.length).toBe(0);
-		const holder1 = scene1.setTimeout(100, () => {
+		const holder1 = scene1.setTimeout(() => {
 			fail("fail1");
-		});
+		}, 100);
 		expect(scene1._timer._timers.length).toBe(1);
 		scene1.clearTimeout(holder1);
 		expect(scene1._timer._timers.length).toBe(0);
@@ -1165,28 +1180,28 @@ describe("test Scene", () => {
 	});
 
 	it("setInterval - release scene", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, main: "" });
 		const game = runtime.game;
 		const scene1 = game.scene();
 		const state2 = false;
 
 		expect(scene1._timer._timers.length).toBe(0);
-		scene1.setInterval(100, () => {
+		scene1.setInterval(() => {
 			// do nothing
-		});
+		}, 100);
 		expect(scene1._timer._timers.length).toBe(1);
 
 		const scene2 = new Scene({ game: game });
 		game.pushScene(scene2);
 		game._flushSceneChangeRequests();
-		scene2.setInterval(50, () => {
+		scene2.setInterval(() => {
 			if (!state2) fail("fail2");
-		});
+		}, 50);
 		expect(scene1._timer._timers.length).toBe(1);
 		expect(scene2._timer._timers.length).toBe(1);
-		scene2.setInterval(50, () => {
+		scene2.setInterval(() => {
 			// do nothing
-		});
+		}, 50);
 		expect(scene1._timer._timers.length).toBe(1);
 		expect(scene2._timer._timers.length).toBe(1);
 
@@ -1202,7 +1217,7 @@ describe("test Scene", () => {
 	});
 
 	it("setInterval", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32 });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
 		const game = runtime.game;
 		const scene = game.scene();
 		const owner = {};
@@ -1236,7 +1251,7 @@ describe("test Scene", () => {
 
 	it("isCurrentScene/gotoScene/end", done => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		game._loaded.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
@@ -1270,7 +1285,7 @@ describe("test Scene", () => {
 
 	it("gotoScene - AssertionError", done => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		game._loaded.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
@@ -1285,7 +1300,7 @@ describe("test Scene", () => {
 
 	it("end - AssertionError", done => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		game._loaded.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });

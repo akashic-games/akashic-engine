@@ -15,6 +15,7 @@ describe("test AssetManager", () => {
 		width: 320,
 		height: 320,
 		fps: 30,
+		main: "mainScene",
 		audio: {
 			user2: {
 				loop: true,
@@ -164,7 +165,7 @@ describe("test AssetManager", () => {
 				// no path given
 			}
 		} as any;
-		expect(() => new Game({ width: 320, height: 320, assets: illegalConf })).toThrowError("AssertionError");
+		expect(() => new Game({ width: 320, height: 320, assets: illegalConf, main: "mainScene" })).toThrowError("AssertionError");
 
 		const illegalConf2 = {
 			foo: {
@@ -174,7 +175,7 @@ describe("test AssetManager", () => {
 				// no virtualPath given
 			}
 		} as any;
-		expect(() => new Game({ width: 320, height: 320, assets: illegalConf2 })).toThrowError("AssertionError");
+		expect(() => new Game({ width: 320, height: 320, assets: illegalConf2, main: "mainScene" })).toThrowError("AssertionError");
 
 		const illegalConf3 = {
 			foo: {
@@ -185,7 +186,7 @@ describe("test AssetManager", () => {
 				// no height given
 			}
 		} as any;
-		expect(() => new Game({ width: 320, height: 320, assets: illegalConf3 })).toThrowError("AssertionError");
+		expect(() => new Game({ width: 320, height: 320, assets: illegalConf3, main: "mainScene" })).toThrowError("AssertionError");
 
 		const legalConf: {[id: string]: ImageAssetConfigurationBase} = {
 			foo: {
@@ -201,7 +202,8 @@ describe("test AssetManager", () => {
 				{
 					width: "320" as any /* not a number */,
 					height: 320,
-					assets: legalConf
+					assets: legalConf,
+					main: "mainScene"
 				},
 				"/foo/bar/"
 			);
@@ -211,7 +213,8 @@ describe("test AssetManager", () => {
 				{
 					width: 320,
 					height: "320" as any /* not a number */,
-					assets: legalConf
+					assets: legalConf,
+					main: "mainScene"
 				},
 				"/foo/bar/"
 			);
@@ -222,7 +225,8 @@ describe("test AssetManager", () => {
 					width: 320,
 					height: 320,
 					fps: "60" as any /* not a number */,
-					assets: legalConf
+					assets: legalConf,
+					main: "mainScene"
 				},
 				"/foo/bar/"
 			);
@@ -233,7 +237,8 @@ describe("test AssetManager", () => {
 					width: 320,
 					height: 320,
 					fps: 120 /* out of (0-60] */,
-					assets: legalConf
+					assets: legalConf,
+					main: "mainScene"
 				},
 				"/foo/bar/"
 			);
