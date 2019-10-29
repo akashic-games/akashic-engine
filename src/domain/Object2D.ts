@@ -1,6 +1,6 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { CommonArea, CommonOffset, CommonSize } from "../interfaces/commons";
-import { CompositeOperation } from "../interfaces/CompositeOperation";
+import { CommonArea, CommonOffset, CommonSize } from "../types/commons";
+import { CompositeOperation } from "../types/CompositeOperation";
 import { Matrix, PlainMatrix } from "./Matrix";
 
 /**

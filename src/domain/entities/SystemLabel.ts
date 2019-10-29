@@ -1,7 +1,7 @@
-import { FontFamily } from "../../interfaces/FontFamily";
 import { RendererLike } from "../../interfaces/RendererLike";
-import { TextAlign } from "../../interfaces/TextAlign";
-import { TextBaseline } from "../../interfaces/TextBaseline";
+import { FontFamily } from "../../types/FontFamily";
+import { TextAlign } from "../../types/TextAlign";
+import { TextBaseline } from "../../types/TextBaseline";
 import { Camera } from "../Camera";
 import { E, EParameterObject } from "./E";
 

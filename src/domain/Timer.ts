@@ -1,5 +1,5 @@
-import { Destroyable } from "../interfaces/Destroyable";
 import { Trigger } from "../Trigger";
+import { Destroyable } from "../types/Destroyable";
 
 /**
  * 一定時間で繰り返される処理を表すタイマー。

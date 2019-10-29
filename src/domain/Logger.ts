@@ -1,5 +1,5 @@
-import { Destroyable } from "../interfaces/Destroyable";
 import { Trigger } from "../Trigger";
+import { Destroyable } from "../types/Destroyable";
 
 /**
  * ログレベル。

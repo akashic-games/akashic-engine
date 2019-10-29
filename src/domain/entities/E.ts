@@ -2,14 +2,14 @@ import { ExceptionFactory } from "../../commons/ExceptionFactory";
 import { MessageEvent, PointDownEvent, PointEvent, PointMoveEvent, PointSource, PointUpEvent } from "../../domain/Event";
 import { Matrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
-import { CommonArea, CommonOffset, CommonRect } from "../../interfaces/commons";
-import { Destroyable } from "../../interfaces/Destroyable";
-import { EntityStateFlags } from "../../interfaces/EntityStateFlags";
-import { LocalTickMode } from "../../interfaces/LocalTickMode";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
 import { Scene } from "../../Scene";
 import { ChainTrigger, Trigger } from "../../Trigger";
+import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
+import { Destroyable } from "../../types/Destroyable";
+import { EntityStateFlags } from "../../types/EntityStateFlags";
+import { LocalTickMode } from "../../types/LocalTickMode";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
 

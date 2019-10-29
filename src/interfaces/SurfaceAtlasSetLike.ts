@@ -1,5 +1,5 @@
-import { CommonSize } from "./commons";
-import { Destroyable } from "./Destroyable";
+import { CommonSize } from "../types/commons";
+import { Destroyable } from "../types/Destroyable";
 import { GlyphLike } from "./GlyphLike";
 import { SurfaceAtlasLike } from "./SurfaceAtlasLike";
 

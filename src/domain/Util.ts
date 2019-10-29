@@ -1,4 +1,4 @@
-import { CommonArea, CommonOffset } from "../interfaces/commons";
+import { CommonArea, CommonOffset } from "../types/commons";
 
 /**
  * ユーティリティ。

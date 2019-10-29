@@ -11,14 +11,14 @@ import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
-import { CommonOffset } from "./interfaces/commons";
-import { Destroyable } from "./interfaces/Destroyable";
-import { DynamicAssetConfiguration } from "./interfaces/DynamicAssetConfiguration";
-import { AssetLoadError, StorageLoadError } from "./interfaces/errors";
-import { LocalTickMode } from "./interfaces/LocalTickMode";
-import { Registrable } from "./interfaces/Registrable";
-import { TickGenerationMode } from "./interfaces/TickGenerationMode";
 import { Trigger } from "./Trigger";
+import { CommonOffset } from "./types/commons";
+import { Destroyable } from "./types/Destroyable";
+import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
+import { AssetLoadError, StorageLoadError } from "./types/errors";
+import { LocalTickMode } from "./types/LocalTickMode";
+import { Registrable } from "./types/Registrable";
+import { TickGenerationMode } from "./types/TickGenerationMode";
 
 /**
  * SceneAssetHolder のコンストラクタに指定できるパラメータ。

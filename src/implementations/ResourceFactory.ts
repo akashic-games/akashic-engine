@@ -1,11 +1,7 @@
 import { SurfaceAtlas } from "../commons/SurfaceAtlas";
-import { AudioAssetHint } from "../interfaces/AssetConfiguration";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerLike } from "../interfaces/AudioPlayerLike";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
-import { CommonArea } from "../interfaces/commons";
-import { FontFamily } from "../interfaces/FontFamily";
-import { FontWeight } from "../interfaces/FontWeight";
 import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
 import { ImageAssetLike } from "../interfaces/ImageAssetLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
@@ -14,6 +10,10 @@ import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { TextAssetLike } from "../interfaces/TextAssetLike";
 import { VideoAssetLike } from "../interfaces/VideoAssetLike";
 import { VideoSystemLike } from "../interfaces/VideoSystemLike";
+import { AudioAssetHint } from "../types/AssetConfiguration";
+import { CommonArea } from "../types/commons";
+import { FontFamily } from "../types/FontFamily";
+import { FontWeight } from "../types/FontWeight";
 
 /**
  * リソースの生成を行うクラス。

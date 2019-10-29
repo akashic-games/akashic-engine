@@ -1,4 +1,4 @@
-import { ShaderUniform } from "./ShaderUniform";
+import { ShaderUniform } from "../types/ShaderUniform";
 
 export interface ShaderProgramLike {
 	/**

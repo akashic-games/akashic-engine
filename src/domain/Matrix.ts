@@ -1,4 +1,4 @@
-import { CommonOffset } from "../interfaces/commons";
+import { CommonOffset } from "../types/commons";
 
 /**
  * 変換行列を表すインターフェース。

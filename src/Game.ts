@@ -16,20 +16,20 @@ import { Storage } from "./domain/Storage";
 import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AudioSystemLike } from "./interfaces/AudioSystemLike";
-import { CommonOffset, CommonSize } from "./interfaces/commons";
-import { EventFilter } from "./interfaces/EventFilter";
-import { GameConfiguration } from "./interfaces/GameConfiguration";
-import { GameMainParameterObject } from "./interfaces/GameMainParameterObject";
-import { OperationPlugin } from "./interfaces/OperationPlugin";
-import { InternalOperationPluginInfo } from "./interfaces/OperationPluginInfo";
-import { InternalOperationPluginOperation } from "./interfaces/OperationPluginOperation";
-import { OperationPluginViewInfo } from "./interfaces/OperationPluginViewInfo";
-import { Registrable } from "./interfaces/Registrable";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
 import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
 import { Trigger } from "./Trigger";
+import { CommonOffset, CommonSize } from "./types/commons";
+import { EventFilter } from "./types/EventFilter";
+import { GameConfiguration } from "./types/GameConfiguration";
+import { GameMainParameterObject } from "./types/GameMainParameterObject";
+import { OperationPlugin } from "./types/OperationPlugin";
+import { InternalOperationPluginInfo } from "./types/OperationPluginInfo";
+import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
+import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
+import { Registrable } from "./types/Registrable";
 
 /**
  * シーン遷移要求のタイプ。

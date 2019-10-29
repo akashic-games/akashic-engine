@@ -1,5 +1,5 @@
 import { AssetLike } from "../interfaces/AssetLike";
-import { AssetLoadError } from "../interfaces/errors";
+import { AssetLoadError } from "../types/errors";
 import { AssetManager } from "./AssetManager";
 
 /**

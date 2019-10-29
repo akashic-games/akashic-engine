@@ -1,8 +1,10 @@
 import {
+	AssetConfiguration,
 	Camera2D,
 	E,
 	EventType,
 	ImageAsset,
+	GameConfiguration,
 	LoadingScene,
 	LoadingSceneParameterObject,
 	LocalTickMode,
@@ -13,8 +15,6 @@ import {
 	SoundAudioSystem,
 	XorshiftRandomGenerator
 } from "..";
-import { AssetConfiguration } from "../interfaces/AssetConfiguration";
-import { GameConfiguration } from "../interfaces/GameConfiguration";
 import { customMatchers, EntityStateFlags, Game, Renderer } from "./helpers";
 
 expect.extend(customMatchers);

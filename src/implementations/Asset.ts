@@ -1,6 +1,6 @@
 import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
-import { Destroyable } from "../interfaces/Destroyable";
 import { Trigger } from "../Trigger";
+import { Destroyable } from "../types/Destroyable";
 
 /**
  * 各種リソースを表すクラス。

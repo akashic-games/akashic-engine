@@ -1,9 +1,9 @@
-import { AudioAssetHint } from "./AssetConfiguration";
+import { AudioAssetHint } from "../types/AssetConfiguration";
+import { FontFamily } from "../types/FontFamily";
+import { FontWeight } from "../types/FontWeight";
 import { AudioAssetLike } from "./AudioAssetLike";
 import { AudioPlayerLike } from "./AudioPlayerLike";
 import { AudioSystemLike } from "./AudioSystemLike";
-import { FontFamily } from "./FontFamily";
-import { FontWeight } from "./FontWeight";
 import { GlyphFactoryLike } from "./GlyphFactoryLike";
 import { ImageAssetLike } from "./ImageAssetLike";
 import { ScriptAssetLike } from "./ScriptAssetLike";

@@ -1,5 +1,5 @@
-import { AssetLoadErrorType } from "../interfaces/AssetLoadErrorType";
-import { AssertionError, AssetLoadError, TypeMismatchError } from "../interfaces/errors";
+import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
+import { AssertionError, AssetLoadError, TypeMismatchError } from "../types/errors";
 
 /**
  * 例外生成ファクトリ。

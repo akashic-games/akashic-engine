@@ -1,7 +1,7 @@
-import { FontFamily } from "../interfaces/FontFamily";
-import { FontWeight } from "../interfaces/FontWeight";
 import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
 import { GlyphLike } from "../interfaces/GlyphLike";
+import { FontFamily } from "../types/FontFamily";
+import { FontWeight } from "../types/FontWeight";
 
 /**
  * グリフファクトリ。

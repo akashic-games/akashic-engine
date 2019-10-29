@@ -1,5 +1,5 @@
+import { AssetLoadError } from "../types/errors";
 import { AssetLike } from "./AssetLike";
-import { AssetLoadError } from "./errors";
 
 /**
  * `Asset` の読み込み失敗を通知するインターフェース。

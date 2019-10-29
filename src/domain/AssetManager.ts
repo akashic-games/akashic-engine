@@ -1,6 +1,12 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { VideoSystem } from "../commons/VideoSystem";
 import { Game } from "../Game";
+import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
+import { AudioAssetLike } from "../interfaces/AudioAssetLike";
+import { ImageAssetLike } from "../interfaces/ImageAssetLike";
+import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
+import { TextAssetLike } from "../interfaces/TextAssetLike";
+import { VideoAssetLike } from "../interfaces/VideoAssetLike";
 import {
 	AssetConfiguration,
 	AssetConfigurationMap,
@@ -8,16 +14,10 @@ import {
 	AudioSystemConfigurationMap,
 	ImageAssetHint,
 	ModuleMainScriptsMap
-} from "../interfaces/AssetConfiguration";
-import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
-import { AssetLoadErrorType } from "../interfaces/AssetLoadErrorType";
-import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { DynamicAssetConfiguration } from "../interfaces/DynamicAssetConfiguration";
-import { AssetLoadError } from "../interfaces/errors";
-import { ImageAssetLike } from "../interfaces/ImageAssetLike";
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { TextAssetLike } from "../interfaces/TextAssetLike";
-import { VideoAssetLike } from "../interfaces/VideoAssetLike";
+} from "../types/AssetConfiguration";
+import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
+import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
+import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 
 class AssetLoadingInfo {

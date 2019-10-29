@@ -1,5 +1,5 @@
-import { CommonOffset } from "../interfaces/commons";
-import { Player } from "../interfaces/Player";
+import { CommonOffset } from "../types/commons";
+import { Player } from "../types/Player";
 import { E } from "./entities/E";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";

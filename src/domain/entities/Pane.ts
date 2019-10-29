@@ -1,11 +1,11 @@
 import { Matrix } from "../../domain/Matrix";
 import { SurfaceUtil } from "../../domain/SurfaceUtil";
-import { CommonArea, CommonOffset, CommonRect } from "../../interfaces/commons";
-import { EntityStateFlags } from "../../interfaces/EntityStateFlags";
 import { ImageAssetLike } from "../../interfaces/ImageAssetLike";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { SurfaceEffector } from "../../interfaces/SurfaceEffector";
 import { SurfaceLike } from "../../interfaces/SurfaceLike";
+import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
+import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 

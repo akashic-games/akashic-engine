@@ -1,5 +1,6 @@
 import {
 	Asset,
+	AssetConfiguration,
 	AssetManager,
 	AudioAsset,
 	E,
@@ -11,7 +12,6 @@ import {
 	TickGenerationMode,
 	Trigger
 } from "..";
-import { AssetConfiguration } from "../interfaces/AssetConfiguration";
 import { customMatchers, Game, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
