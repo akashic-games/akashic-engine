@@ -8,8 +8,7 @@ import {
 	Pane,
 	Scene,
 	Sprite,
-	SpriteFactory,
-	SystemLabel
+	SpriteFactory
 } from "..";
 import { ImageAsset, Renderer, Runtime, skeletonRuntime, Surface } from "./helpers";
 
@@ -45,13 +44,7 @@ describe("test Destroy", () => {
 				backgroundImage: imageAsset,
 				backgroundEffector: new NinePatchSurfaceEffector(runtime.game)
 			}),
-			new FilledRect({ scene: scene, cssColor: "red", width: 32, height: 32 }),
-			new SystemLabel({
-				scene: scene,
-				fontSize: 13,
-				text: " ",
-				textColor: "red"
-			})
+			new FilledRect({ scene: scene, cssColor: "red", width: 32, height: 32 })
 		];
 		entities.push(SpriteFactory.createSpriteFromScene(scene, scene));
 		entities.push(SpriteFactory.createSpriteFromE(scene, entities[0]));

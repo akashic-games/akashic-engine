@@ -1,4 +1,4 @@
-import { LogLevel, Sprite } from "..";
+import { Sprite } from "..";
 import { Renderer, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Sprite", () => {
@@ -17,7 +17,6 @@ describe("test Sprite", () => {
 
 	it("初期化", () => {
 		const runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = LogLevel.Debug;
 		const surface = new Surface(480, 480);
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
@@ -56,12 +55,10 @@ describe("test Sprite", () => {
 		expect(sprite2.srcY).toEqual(0);
 		expect(sprite2.surface).toBe(surface2);
 		expect(sprite2._beforeSurface).toEqual(sprite2.surface);
-		runtime.game.suppressedLogLevel = undefined;
 	});
 
 	it("初期化 - 動画サーフェス", () => {
 		const runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = LogLevel.Debug;
 
 		const surface = new Surface(16, 32, {}, true);
 		const sprite = new MonitorSprite({
@@ -87,13 +84,10 @@ describe("test Sprite", () => {
 		surface.animatingStopped.fire();
 		sprite.update.fire();
 		expect(updated).toBe(false);
-
-		runtime.game.suppressedLogLevel = undefined;
 	});
 
 	it("初期化 - 動画サーフェス(再生中)", () => {
 		const runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = LogLevel.Debug;
 
 		const surface = new Surface(16, 32, { isPlaying: true }, true);
 		expect(surface.isPlaying()).toBe(true);
@@ -114,8 +108,6 @@ describe("test Sprite", () => {
 
 		sprite.update.fire();
 		expect(updated).toBe(true);
-
-		runtime.game.suppressedLogLevel = undefined;
 	});
 
 	it("初期化 - ParameterObject", () => {
@@ -269,7 +261,6 @@ describe("test Sprite", () => {
 
 	it("停止中の動画サーフェスへの切り替え", () => {
 		const runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = LogLevel.Debug;
 
 		const surface1 = new Surface(16, 32, { isPlaying: false }, true);
 		const surface2 = new Surface(16, 32, { isPlaying: false }, true);
@@ -294,12 +285,10 @@ describe("test Sprite", () => {
 		sprite.update.fire();
 		expect(updated).toBe(true);
 
-		runtime.game.suppressedLogLevel = undefined;
 	});
 
 	it("再生中の動画サーフェスへの切り替え", () => {
 		const runtime = skeletonRuntime();
-		runtime.game.suppressedLogLevel = LogLevel.Debug;
 
 		const surface1 = new Surface(16, 32, { isPlaying: false }, true);
 		const surface2 = new Surface(16, 32, { isPlaying: true }, true);
@@ -318,7 +307,5 @@ describe("test Sprite", () => {
 
 		sprite.update.fire();
 		expect(updated).toBe(true);
-
-		runtime.game.suppressedLogLevel = undefined;
 	});
 });

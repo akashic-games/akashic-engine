@@ -199,7 +199,7 @@ describe("test E", () => {
 	});
 
 	it("scene", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });
 		const e2 = new E({ scene: scene });
 		expect(e.game() === runtime.game).toBe(true);
@@ -711,7 +711,7 @@ describe("test E", () => {
 	});
 
 	it("findPointSource - local scene", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game, local: true });
 		game.pushScene(scene);
 		game._flushSceneChangeRequests();

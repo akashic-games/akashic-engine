@@ -7,7 +7,11 @@
     "declaration": true,
     "outDir": "lib",
     "sourceMap": false,
-    "types": []
+    "types": ["console"],
+    "typeRoots": [
+      "node_modules/@types",
+      "./typings"
+    ]
   },
   "include": [
     "src/**/*.ts"

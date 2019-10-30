@@ -7,7 +7,6 @@ import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E } from "./domain/entities/E";
 import { Event, EventType, JoinEvent, LeaveEvent, PointSource, SeedEvent } from "./domain/Event";
 import { LoadingScene } from "./domain/LoadingScene";
-import { Logger } from "./domain/Logger";
 import { _require } from "./domain/Module";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { RandomGenerator } from "./domain/RandomGenerator";
@@ -114,14 +113,13 @@ export interface GameResetParameterObject {
  * 1. Sceneの生成時、コンストラクタに引数として渡す
  * 2. Sceneに紐付かないイベント Game#join, Game#leave, Game#seed を処理する
  * 3. 乱数を発生させるため、Game#randomにアクセスしRandomGeneratorを取得する
- * 4. ログを出力するため、Game#loggerでコンテンツに紐付くLoggerを取得する
- * 5. ゲームのメタ情報を確認するため、Game#width, Game#height, Game#fpsにアクセスする
- * 6. グローバルアセットを取得するため、Game#assetsにアクセスする
- * 7. LoadingSceneを変更するため、Game#loadingSceneにゲーム開発者の定義したLoadingSceneを指定する
- * 8. スナップショット機能を作るため、Game#snapshotRequestにアクセスする
- * 9. 現在フォーカスされているCamera情報を得るため、Game#focusingCameraにアクセスする
- * 10.AudioSystemを直接制御するため、Game#audioにアクセスする
- * 11.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
+ * 4. ゲームのメタ情報を確認するため、Game#width, Game#height, Game#fpsにアクセスする
+ * 5. グローバルアセットを取得するため、Game#assetsにアクセスする
+ * 6. LoadingSceneを変更するため、Game#loadingSceneにゲーム開発者の定義したLoadingSceneを指定する
+ * 7. スナップショット機能を作るため、Game#snapshotRequestにアクセスする
+ * 8. 現在フォーカスされているCamera情報を得るため、Game#focusingCameraにアクセスする
+ * 9. AudioSystemを直接制御するため、Game#audioにアクセスする
+ * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
  */
 export abstract class Game implements Registrable<E> {
 	/**
@@ -225,11 +223,6 @@ export abstract class Game implements Registrable<E> {
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
 	 */
 	defaultAudioSystemId: string;
-
-	/**
-	 * ログ出力を行う部品。プラットフォームに依存しないエラーやデバッグ情報の出力を行う。
-	 */
-	logger: Logger;
 
 	/**
 	 * スナップショット要求通知。
@@ -548,7 +541,6 @@ export abstract class Game implements Registrable<E> {
 
 		this.external = {};
 
-		this.logger = new Logger();
 		this._main = gameConfiguration.main;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
@@ -1083,8 +1075,6 @@ export abstract class Game implements Registrable<E> {
 		for (var i = 0; i < audioSystemIds.length; ++i) this.audio[audioSystemIds[i]].stopAll();
 		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
-		this.logger.destroy();
-		this.logger = undefined;
 		this.snapshotRequest.destroy();
 		this.snapshotRequest = undefined;
 
@@ -1261,25 +1251,6 @@ export abstract class Game implements Registrable<E> {
 	private _start(): void {
 		this._operationPluginManager.initialize();
 		this.operationPlugins = this._operationPluginManager.plugins;
-
-		// deprecated の挙動: エントリポイントの指定がない場合
-		if (!this._main) {
-			if (!this._mainParameter.snapshot) {
-				if (!(<any>this.assets).mainScene)
-					throw ExceptionFactory.createAssertionError("Game#_start: global asset 'mainScene' not found.");
-				var mainScene = _require(this, "mainScene")();
-				this.pushScene(mainScene);
-				this._flushSceneChangeRequests();
-			} else {
-				if (!(<any>this.assets).snapshotLoader)
-					throw ExceptionFactory.createAssertionError("Game#_start: global asset 'snapshotLoader' not found.");
-				var loader = _require(this, "snapshotLoader");
-				loader(this._mainParameter.snapshot);
-				this._flushSceneChangeRequests(); // スナップショットローダもシーン遷移を要求する可能性がある(というかまずする)
-			}
-			this._started.fire();
-			return;
-		}
 
 		var mainFun = _require(this, this._main);
 		if (!mainFun || typeof mainFun !== "function")

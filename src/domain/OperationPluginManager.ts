@@ -114,7 +114,7 @@ export class OperationPluginManager {
 			this.plugins[code] = plugin;
 			info._plugin = plugin;
 			var handler = new OperationHandler(code, this.operated, this.operated.fire);
-			plugin.operationTrigger.handle(handler, handler.onOperation);
+			plugin.operationTrigger.add(handler.onOperation, handler);
 		}
 	}
 }

@@ -23,12 +23,8 @@ export interface GameConfiguration {
 
 	/**
 	 * エントリポイント。require() できるパス。
-	 *
-	 * 省略された場合、アセット mainScene (典型的には script/mainScene.js)と
-	 * スナップショットローダ snapshotLoader (典型的には script/snapshotLoader.js; 必要なら)を使う従来の挙動が採用される。
-	 * 省略可能だが、省略は非推奨である。
 	 */
-	main?: string;
+	main: string;
 
 	/**
 	 * AudioSystemの追加定義。キーにsystem名を書く。不要(デフォルトの "sound" と "music" しか使わない)なら省略してよい。

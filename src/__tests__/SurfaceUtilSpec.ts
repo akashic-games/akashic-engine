@@ -17,6 +17,7 @@ describe("test SurfaceUtil", () => {
 		const game = new Game({
 			width: 320,
 			height: 270,
+			main: "",
 			assets: {
 				foo: {
 					type: "image",

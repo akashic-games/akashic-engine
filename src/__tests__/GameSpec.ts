@@ -21,7 +21,7 @@ expect.extend(customMatchers);
 
 describe("test Game", () => {
 	it("初期化", () => {
-		const game = new Game({ width: 320, height: 270 }, undefined, "foo");
+		const game = new Game({ width: 320, height: 270, main: "" }, undefined, "foo");
 		expect(game._idx).toBe(0);
 		expect(game.db).toEqual({});
 		expect(game.renderers.length).toBe(0);
@@ -42,7 +42,7 @@ describe("test Game", () => {
 	});
 
 	it("_destroy()", () => {
-		const game = new Game({ width: 320, height: 270 }, undefined, "foo");
+		const game = new Game({ width: 320, height: 270, main: "" }, undefined, "foo");
 		game._destroy();
 		expect(game.db).toBe(undefined);
 		expect(game.renderers).toBe(undefined);
@@ -60,6 +60,7 @@ describe("test Game", () => {
 		const game = new Game({
 			width: 320,
 			height: 270,
+			main: "",
 			assets: {
 				foo: {
 					type: "image",
@@ -96,7 +97,7 @@ describe("test Game", () => {
 				global: true
 			}
 		};
-		const game = new Game({ width: 320, height: 320, assets: assets });
+		const game = new Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" });
 
 		let loadedFired = false;
 		game._loaded.add(() => {
@@ -117,13 +118,13 @@ describe("test Game", () => {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
-				path: "/script/mainScene.js",
+				path: "./script/mainScene.js",
 				virtualPath: "script/mainScene.js",
 				global: true
 			}
 		};
-		const game = new Game({ width: 320, height: 320, assets: assets });
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = () => { return g.game.__test__(); };";
+		const game = new Game({ width: 320, height: 320, assets: assets, main: "./script/mainScene.js" });
+		game.resourceFactory.scriptContents["./script/mainScene.js"] = "module.exports = () => g.game.__test__();";
 
 		let testPass = false;
 		function requestTick(): void {
@@ -142,6 +143,7 @@ describe("test Game", () => {
 				expect(game.age).toBe(0);
 				testPass = true;
 			});
+			game.pushScene(scene);
 			requestTick();
 			return scene;
 		};
@@ -180,7 +182,7 @@ describe("test Game", () => {
 				global: true
 			}
 		};
-		const game = new Game({ width: 320, height: 320, assets: assets }, "/");
+		const game = new Game({ width: 320, height: 320, assets: assets, main: "./script/mainScene.js" }, "/");
 		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = () => { return g.game.__test__(); };";
 
 		(game as any).__test__ = () => {
@@ -204,7 +206,7 @@ describe("test Game", () => {
 	});
 
 	it("pushScene", done => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 
 		game._loaded.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -222,7 +224,7 @@ describe("test Game", () => {
 	});
 
 	it("popScene", done => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 
 		game._loaded.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -242,7 +244,7 @@ describe("test Game", () => {
 	});
 
 	it("replaceScene", done => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 
 		game._loaded.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -262,12 +264,12 @@ describe("test Game", () => {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
-				path: "/dummy/dummy.js", // パスはダミーであり使用されてはいない。tsのScriptAssetを参照のこと
+				path: "./dummy/dummy.js", // パスはダミーであり使用されてはいない。tsのScriptAssetを参照のこと
 				virtualPath: "dummy/dummy.js",
 				global: true
 			}
 		};
-		const game = new Game({ width: 320, height: 320, assets: assets });
+		const game = new Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" });
 		game._loaded.add(() => {
 			const scene = new Scene({ game: game });
 			game.pushScene(scene);
@@ -294,6 +296,7 @@ describe("test Game", () => {
 			width: 320,
 			height: 320,
 			fps: 30,
+			main: "",
 			assets: {
 				foo: {
 					type: "image",
@@ -385,6 +388,7 @@ describe("test Game", () => {
 			width: 320,
 			height: 320,
 			fps: 30,
+			main: "",
 			assets: {
 				foo: {
 					type: "image",
@@ -484,6 +488,7 @@ describe("test Game", () => {
 			width: 320,
 			height: 320,
 			fps: 30,
+			main: "",
 			assets: {
 				foo: {
 					type: "image",
@@ -548,6 +553,7 @@ describe("test Game", () => {
 			width: 320,
 			height: 320,
 			fps: 30,
+			main: "",
 			assets: {
 				foo: {
 					type: "image",
@@ -641,7 +647,7 @@ describe("test Game", () => {
 	});
 
 	it("scene", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });
 		const scene2 = new Scene({ game: game });
 		game.pushScene(scene);
@@ -653,7 +659,7 @@ describe("test Game", () => {
 	});
 
 	it("register", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });
 		const e = new E({ scene: scene });
 		expect(e.id).toBe(1);
@@ -670,7 +676,7 @@ describe("test Game", () => {
 	});
 
 	it("unregister", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });
 		const e = new E({ scene: scene });
 		expect(game.db).toEqual({ 1: e });
@@ -685,13 +691,13 @@ describe("test Game", () => {
 	});
 
 	it("leaveGame", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		game.leaveGame();
 		expect(game.leftGame).toBe(true);
 	});
 
 	it("terminateGame", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });
 
 		let count = 0;
@@ -715,7 +721,7 @@ describe("test Game", () => {
 	});
 
 	it("no crash on Scene#destroy()", done => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 
 		game._loaded.add(() => {
 			const scene = new Scene({ game: game });
@@ -725,10 +731,10 @@ describe("test Game", () => {
 				scene.update.add(() => {
 					game.popScene();
 				});
-				scene.setInterval(1, () => {
+				scene.setInterval(() => {
 					// 「update が popScene してシーンを破壊した後にこれを呼ぼうとしてクラッシュする」ことが問題だった
 					timerFired = true;
-				});
+				}, 1);
 
 				game._initialScene.stateChanged.add(state => {
 					if (state === SceneState.Active) {
@@ -746,7 +752,7 @@ describe("test Game", () => {
 	});
 
 	it("raiseEvent", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const ev = new MessageEvent("data");
 		const ev2 = new MessageEvent("foo");
 		game.raiseEvent(ev);
@@ -757,7 +763,7 @@ describe("test Game", () => {
 	});
 
 	it("vars", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		expect(game.vars).toEqual({});
 		game.vars.myState = "well";
 		expect(game.vars.myState).toBe("well");
@@ -767,16 +773,17 @@ describe("test Game", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "./script/mainScene.js",
 			assets: {
 				mainScene: {
 					type: "script",
 					global: true,
-					path: "/script/mainScene.js",
+					path: "./script/mainScene.js",
 					virtualPath: "script/mainScene.js"
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = () => {return new g.Scene({game: g.game})}";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s);}";
 		expect(game.age).toBe(0);
 		expect(game.random).toBe(null);
 
@@ -807,16 +814,17 @@ describe("test Game", () => {
 		const game = new Game({
 			width: 320,
 			height: 320,
+			main: "./script/mainScene.js",
 			assets: {
 				mainScene: {
 					type: "script",
 					global: true,
-					path: "/script/mainScene.js",
+					path: "./script/mainScene.js",
 					virtualPath: "script/mainScene.js"
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = () => {return new g.Scene({game: g.game})};";
+		game.resourceFactory.scriptContents["./script/mainScene.js"] = "module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s); };";
 		expect(game.age).toBe(0);
 		expect(game.random).toBe(null);
 
@@ -853,7 +861,7 @@ describe("test Game", () => {
 	});
 
 	it("controls audio volume", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 
 		expect(game._audioSystemManager._playbackRate).toBe(1.0);
 		expect(game._audioSystemManager._muted).toBe(false);
@@ -898,7 +906,7 @@ describe("test Game", () => {
 	});
 
 	it("focusingCamera", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const r = new Renderer();
 		game.renderers.push(r);
 		const scene = new Scene({ game: game });

@@ -671,36 +671,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param interval 実行間隔(ミリ秒)
 	 * @param owner handlerの所有者。省略された場合、null
 	 */
-	setInterval(handler: () => void, interval: number, owner?: any): TimerIdentifier;
-	/**
-	 * 一定間隔で定期的に実行される処理を作成する。
-	 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
-	 * @param interval 実行間隔(ミリ秒)
-	 * @param owner handlerの所有者。省略された場合、null
-	 * @param handler 処理
-	 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
-	 */
-	setInterval(interval: number, owner: any, handler: () => void): TimerIdentifier;
-	/**
-	 * 一定間隔で定期的に実行される処理を作成する。
-	 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
-	 * @param interval 実行間隔(ミリ秒)
-	 * @param handler 処理
-	 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
-	 */
-	setInterval(interval: number, handler: () => void): TimerIdentifier;
-
-	setInterval(handler: (() => void) | number, interval: any, owner?: any): TimerIdentifier {
-		const t = this._timer;
-		if (typeof handler === "number") {
-			this.game.logger.warn(
-				"[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first."
-			);
-			return owner != null
-				? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
-				: t.setInterval(interval /* 1 */, handler /* 0 */, null);
-		}
-		return t.setInterval(handler, interval, owner);
+	setInterval(handler: () => void, interval: number, owner?: any): TimerIdentifier {
+		return this._timer.setInterval(handler, interval, owner);
 	}
 
 	/**
@@ -726,38 +698,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param milliseconds 時間(ミリ秒)
 	 * @param owner handlerの所有者。省略された場合、null
 	 */
-	setTimeout(handler: () => void, milliseconds: number, owner?: any): TimerIdentifier;
-	/**
-	 * 一定時間後に一度だけ実行される処理を作成する。
-	 *
-	 * `milliseconds` ミリ秒後(以降)に、一度だけ `owner` を `this` として `handler` を呼び出す。
-	 * @param handler 処理
-	 * @param milliseconds 時間(ミリ秒)
-	 * @param owner handlerの所有者。省略された場合、null
-	 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
-	 */
-	setTimeout(milliseconds: number, owner: any, handler: () => void): TimerIdentifier;
-	/**
-	 * 一定時間後に一度だけ実行される処理を作成する。
-	 *
-	 * `milliseconds` ミリ秒後(以降)に、一度だけ `handler` を呼び出す。
-	 * @param handler 処理
-	 * @param milliseconds 時間(ミリ秒)
-	 * @deprecated この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。
-	 */
-	setTimeout(milliseconds: number, handler: () => void): TimerIdentifier;
-
-	setTimeout(handler: (() => void) | number, milliseconds: any, owner?: any): TimerIdentifier {
-		const t = this._timer;
-		if (typeof handler === "number") {
-			this.game.logger.warn(
-				"[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first."
-			);
-			return owner != null
-				? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
-				: t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
-		}
-		return t.setTimeout(handler, milliseconds, owner);
+	setTimeout(handler: () => void, milliseconds: number, owner?: any): TimerIdentifier {
+		return this._timer.setTimeout(handler, milliseconds, owner);
 	}
 
 	/**

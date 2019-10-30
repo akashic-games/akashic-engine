@@ -33,7 +33,8 @@ describe("test Storage", () => {
 	const game = new Game({
 		width: 320,
 		height: 320,
-		assets: assetsConfiguration
+		assets: assetsConfiguration,
+		main: ""
 	});
 
 	it("初期化", () => {

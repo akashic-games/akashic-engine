@@ -141,29 +141,6 @@ mainスクリプトは、次の仕様を満たす関数をエクスポートす�
 * 引数 `param: g.GameMainParameterObject` を受け取り、値を返さない (`(param: g.GameMainParameterObject) => void`)
 * 呼び出された時、 `g.Game#pushScene()` によるシーンの追加など、ゲームの初期化処理を行う
 
-akashic-engine@1.1.2 以前では、このフィールドは存在しませんでした。
-エンジンは後方互換性のため、 `main` が指定されていない場合には、以下のような内容のmainスクリプトが与えられたかのように振る舞います。
-
-```js
-module.exports = function (param) {
-  if (!param.snapshot) {
-    var mainSceneFun = require("mainScene");
-    g.game.pushScene(mainSceneFun());
-  } else {
-    var snapshotLoader = require("snapshotLoader");
-    snapshotLoader(param.snapshot);
-  }
-}
-```
-
-この場合、assets は少なくとも "mainScene" という名前のキーを持つ必要があります。
-アセットID "mainScene" を持つアセットは、type が "script"  で global は true、
-すなわちグローバルなスクリプトアセットでなければなりません。
-
-(上の例ではrequire()にアセットIDを渡していることに気をつけてください。
-akashic-engineの提供するrequire()は、Node.jsなどのそれと異なり、game.jsonに存在するアセットIDを(優先的に)解決します。
-これは歴史的経緯によるものです。上の例では説明のために使っていますが、この動作の利用は非推奨です。)
-
 ### globalScripts
 
 akashic-engine@0.1.0 で導入。

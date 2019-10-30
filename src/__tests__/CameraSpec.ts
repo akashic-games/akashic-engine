@@ -1,10 +1,9 @@
-import { Camera2D, LogLevel, Matrix, PlainMatrix } from "..";
+import { Camera2D, Matrix, PlainMatrix } from "..";
 import { Game, Renderer } from "./helpers";
 
 describe("test Camera", () => {
 	it("初期化", () => {
-		const game = new Game({ width: 320, height: 320 });
-		game.suppressedLogLevel = LogLevel.Debug;
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const cam1 = new Camera2D({ game: game });
 		expect(cam1.game).toBe(game);
 		expect(cam1.id).toBe(0);
@@ -57,7 +56,7 @@ describe("test Camera", () => {
 	});
 
 	it("modified", () => {
-		const game = new Game({ width: 320, height: 320 });
+		const game = new Game({ width: 320, height: 320, main: "" });
 		const cam = new Camera2D({ game: game });
 
 		game.modified = false; // テストのためリセット
@@ -75,7 +74,7 @@ describe("test Camera", () => {
 	});
 
 	it("x, y, angle", () => {
-		const game = new Game({ width: 320, height: 240 });
+		const game = new Game({ width: 320, height: 240, main: "" });
 		const cam = new Camera2D({ game: game });
 		const expected = new PlainMatrix();
 		let mat: Matrix;
@@ -99,7 +98,7 @@ describe("test Camera", () => {
 	});
 
 	it("anchor", () => {
-		const game = new Game({ width: 320, height: 240 });
+		const game = new Game({ width: 320, height: 240, main: "" });
 		const cam = new Camera2D({ game: game, angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5 });
 		const expected = new PlainMatrix();
 		const mat = cam.getMatrix();
@@ -108,7 +107,7 @@ describe("test Camera", () => {
 	});
 
 	it("_applyTransformToRenderer", () => {
-		const game = new Game({ width: 320, height: 240 });
+		const game = new Game({ width: 320, height: 240, main: "" });
 		const cam = new Camera2D({ game: game });
 		const surface = game.resourceFactory.createSurface(320, 240);
 		const renderer = surface.renderer() as Renderer;
@@ -142,7 +141,7 @@ describe("test Camera", () => {
 	});
 
 	it("serialize", () => {
-		const game = new Game({ width: 320, height: 240 });
+		const game = new Game({ width: 320, height: 240, main: "" });
 
 		const cam = new Camera2D({
 			game: game,
