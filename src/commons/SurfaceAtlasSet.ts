@@ -145,7 +145,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike, Destroyable {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
-			const slot = atlas.addSurface(glyph);
+			const slot = atlas.addSurface(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height);
 
 			if (slot) {
 				this._currentAtlasIndex = index;

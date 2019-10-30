@@ -1,5 +1,3 @@
-import { GlyphLike } from "../interfaces/GlyphLike";
-import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasLike } from "../interfaces/SurfaceAtlasLike";
 import { SurfaceAtlasSlotLike } from "../interfaces/SurfaceAtlasSlotLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
@@ -117,19 +115,19 @@ export class SurfaceAtlas implements SurfaceAtlasLike {
 	}
 
 	/**
-	 * サーフェスの追加。
+	 * サーフェスを追加する。
 	 *
-	 * @param glyph グリフのサーフェスが持つ情報をSurfaceAtlasへ配置
+	 * @param surface 追加するサーフェス
 	 */
-	addSurface(glyph: GlyphLike): SurfaceAtlasSlotLike {
-		var slot = this._acquireSurfaceAtlasSlot(glyph.width, glyph.height);
+	addSurface(surface: SurfaceLike, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlotLike {
+		const slot = this._acquireSurfaceAtlasSlot(width, height);
 		if (!slot) {
 			return null;
 		}
 
-		var renderer = this._surface.renderer();
+		const renderer = this._surface.renderer();
 		renderer.begin();
-		renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, slot.x, slot.y);
+		renderer.drawImage(surface, offsetX, offsetY, width, height, slot.x, slot.y);
 		renderer.end();
 
 		return slot;
@@ -151,20 +149,10 @@ export class SurfaceAtlas implements SurfaceAtlasLike {
 	}
 
 	/**
-	 * _surfaceを複製する。
-	 *
-	 * 複製されたSurfaceは文字を格納するのに必要な最低限のサイズになる。
+	 * このSurfaceAtlasの大きさを取得する。
 	 */
-	duplicateSurface(resourceFactory: ResourceFactoryLike): SurfaceLike {
-		const src = this._surface;
-		const dst = resourceFactory.createSurface(this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height);
-
-		const renderer = dst.renderer();
-		renderer.begin();
-		renderer.drawImage(src, 0, 0, this._usedRectangleAreaSize.width, this._usedRectangleAreaSize.height, 0, 0);
-		renderer.end();
-
-		return dst;
+	getAtlasSize(): CommonSize {
+		return this._usedRectangleAreaSize;
 	}
 
 	getAccessScore(): number {
