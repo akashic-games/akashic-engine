@@ -338,7 +338,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		}
 
 		renderer.save();
-		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX != null || this.anchorY != null) {
+		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX !== 0 || this.anchorY !== 0) {
 			// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
 			renderer.transform(this.getMatrix()._matrix);
 		} else {
@@ -521,8 +521,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 			this.angle ||
 			this.scaleX !== 1 ||
 			this.scaleY !== 1 ||
-			this.anchorX != null ||
-			this.anchorY != null ||
+			this.anchorX !== 0 ||
+			this.anchorY !== 0 ||
 			this.opacity !== 1 ||
 			this.compositeOperation !== undefined ||
 			this.shaderProgram !== undefined

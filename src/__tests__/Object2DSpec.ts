@@ -20,8 +20,8 @@ describe("test Object2D", () => {
 		expect(e.scaleY).toEqual(1);
 		expect(e.angle).toEqual(0);
 		expect(e.compositeOperation).toBeUndefined();
-		expect(e.anchorX).toBeUndefined();
-		expect(e.anchorY).toBeUndefined();
+		expect(e.anchorX).toBe(0);
+		expect(e.anchorY).toBe(0);
 		expect(e._matrix).toBeUndefined();
 	});
 
@@ -36,8 +36,8 @@ describe("test Object2D", () => {
 		expect(e.scaleY).toEqual(1);
 		expect(e.angle).toEqual(0);
 		expect(e.compositeOperation).toBeUndefined();
-		expect(e.anchorX).toBeUndefined();
-		expect(e.anchorY).toBeUndefined();
+		expect(e.anchorX).toBe(0);
+		expect(e.anchorY).toBe(0);
 		expect(e._matrix).toBeUndefined();
 
 		e = new Object2D({
@@ -210,7 +210,7 @@ describe("test Object2D", () => {
 
 		e.scale(2);
 		e._matrix._modified = true;
-		scarecrow = new PlainMatrix(0, 0, 2, 2, 0);
+		scarecrow = new PlainMatrix(0, 0, 2, 2, 0, 1, 1);
 		expect(e.getMatrix()).toEqual(scarecrow);
 		expect(e._matrix._modified).toBe(false);
 
@@ -225,7 +225,7 @@ describe("test Object2D", () => {
 		e.anchor(1, 1);
 		e._matrix._modified = true;
 		const expected = new PlainMatrix();
-		expected.updateWithAnchor(20, 20, 1, 1, 0, 10, 10, 1, 1);
+		expected.update(20, 20, 1, 1, 0, 10, 10, 1, 1);
 		expect(e.getMatrix()._matrix).toEqual(expected._matrix);
 		expect(e._matrix._modified).toBe(false);
 	});
