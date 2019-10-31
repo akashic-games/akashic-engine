@@ -1,9 +1,12 @@
 # ChangeLog
 
-## UnreleasedChanges
+## 1.13.0
 
 不具合修正
 * `Game#terminateGame()` を直接呼ぶとエラーが発生する不具合の修正
+
+### エンジン開発者への影響
+* `Game#_terminateGame()` を `Game#_abortGame()` にリネームしたので、このメソッドに依存している箇所の修正が必要です。
 
 ## 1.12.17
 
