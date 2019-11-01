@@ -213,8 +213,8 @@ export class Object2D implements CommonArea {
 			this.scaleY = "scaleY" in param ? param.scaleY : 1;
 			this.angle = param.angle || 0;
 			this.compositeOperation = param.compositeOperation;
-			this.anchorX = "anchorX" in param ? param.anchorX : 0;
-			this.anchorY = "anchorY" in param ? param.anchorY : 0;
+			this.anchorX = param.anchorX || 0;
+			this.anchorY = param.anchorY || 0;
 			this._matrix = undefined;
 		}
 	}
