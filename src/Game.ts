@@ -3,6 +3,7 @@ import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
 import { AssetManager } from "./domain/AssetManager";
 import { AudioSystemManager } from "./domain/AudioSystemManager";
 import { Camera } from "./domain/Camera";
+import { Camera2D, Camera2DParameterObject } from "./domain/Camera2D";
 import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E } from "./domain/entities/E";
 import { Event, EventType, JoinEvent, LeaveEvent, PointSource, SeedEvent } from "./domain/Event";
@@ -462,8 +463,6 @@ export abstract class Game implements Registrable<E> {
 	 *
 	 * `Game#draw()`, `Game#findPointSource()` のデフォルト値として使用される。
 	 * この値を変更した場合、変更を描画に反映するためには `Game#modified` に真を代入しなければならない。
-	 * (ただしこの値が非 `undefined` の時、`Game#focusingCamera.modified()` を呼び出す場合は
-	 * `Game#modified` の操作は省略できる。)
 	 */
 	// focusingCameraが変更されても古いカメラをtargetCamerasに持つエンティティのEntityStateFlags.Modifiedを取りこぼすことが無いように、変更時にはrenderを呼べるようアクセサを使う
 	get focusingCamera(): Camera {
@@ -724,6 +723,21 @@ export abstract class Game implements Registrable<E> {
 	findPointSource(point: CommonOffset, camera?: Camera): PointSource {
 		if (!camera) camera = this.focusingCamera;
 		return this.scene().findPointSourceByPoint(point, false, camera);
+	}
+
+	/**
+	 * 2D世界におけるカメラを生成して返す。
+	 * 例外的に、`Camera2D` のコンストラクタは `width`, `height` のみ無視することに注意。
+	 *
+	 * @param param Camera2D に渡す値
+	 */
+	createCamera2D(param: Camera2DParameterObject): Camera2D {
+		return new Camera2D({
+			...param,
+			id: !!param.local ? undefined : this._cameraIdx++,
+			width: this.width,
+			height: this.height
+		});
 	}
 
 	/**
