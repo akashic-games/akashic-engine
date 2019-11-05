@@ -721,7 +721,7 @@ export abstract class Game implements Registrable<E> {
 	 * @param point 対象の座標
 	 * @param camera 対象のカメラ。指定しなければ `Game.focusingCamera` が使われる
 	 */
-	findPointSource(point: CommonOffset, camera?: Camera): PointSource {
+	findPointSource(point: CommonOffset, camera?: Camera): PointSource<E> {
 		if (!camera) camera = this.focusingCamera;
 		return this.scene().findPointSourceByPoint(point, false, camera);
 	}

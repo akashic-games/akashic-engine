@@ -1,6 +1,5 @@
 import { CommonOffset } from "../types/commons";
 import { Player } from "../types/Player";
-import { E } from "./entities/E";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";
 
@@ -76,25 +75,25 @@ export interface Event {
 }
 
 /**
- * ポインティングソースによって対象となるエンティティを表すインターフェース。
- * エンティティとエンティティから見た相対座標によって構成される。
+ * ポインティングソースによる対象を表すインターフェース。
+ * 対象とその対象から見た相対座標によって構成される。
  */
-export interface PointSource {
-	target: E;
+export interface PointSource<T extends CommonOffset> {
+	target: T;
 	point: CommonOffset;
 	local?: boolean;
 }
 
 /**
  * ポインティング操作を表すイベント。
- * PointEvent#targetでそのポインティング操作の対象となったエンティティが、
- * PointEvent#pointでそのエンティティから見ての相対座標が取得できる。
+ * PointEvent#targetでそのポインティング操作の対象が、
+ * PointEvent#pointでその対象からの相対座標が取得できる。
  *
  * 本イベントはマルチタッチに対応しており、PointEvent#pointerIdを参照することで識別することが出来る。
  *
  * abstract
  */
-export class PointEvent implements Event {
+export class PointEvent<T extends CommonOffset> implements Event {
 	/**
 	 * 本クラスはどのtypeにも属さない。
 	 */
@@ -104,9 +103,9 @@ export class PointEvent implements Event {
 	player: Player;
 	pointerId: number;
 	point: CommonOffset;
-	target: E;
+	target: T;
 
-	constructor(pointerId: number, target: E, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
 		this.priority = priority;
 		this.local = local;
 		this.player = player;
@@ -119,10 +118,10 @@ export class PointEvent implements Event {
 /**
  * ポインティング操作の開始を表すイベント。
  */
-export class PointDownEvent extends PointEvent {
+export class PointDownEvent<T extends CommonOffset> extends PointEvent<T> {
 	type: EventType = EventType.PointDown;
 
-	constructor(pointerId: number, target: E, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
 		super(pointerId, target, point, player, local, priority);
 	}
 }
@@ -135,14 +134,14 @@ export class PointDownEvent extends PointEvent {
  * PointUpEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
-export class PointUpEvent extends PointEvent {
+export class PointUpEvent<T extends CommonOffset> extends PointEvent<T> {
 	type: EventType = EventType.PointUp;
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
 	constructor(
 		pointerId: number,
-		target: E,
+		target: T,
 		point: CommonOffset,
 		prevDelta: CommonOffset,
 		startDelta: CommonOffset,
@@ -167,14 +166,14 @@ export class PointUpEvent extends PointEvent {
  * 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
-export class PointMoveEvent extends PointEvent {
+export class PointMoveEvent<T extends CommonOffset> extends PointEvent<T> {
 	type: EventType = EventType.PointMove;
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
 	constructor(
 		pointerId: number,
-		target: E,
+		target: T,
 		point: CommonOffset,
 		prevDelta: CommonOffset,
 		startDelta: CommonOffset,

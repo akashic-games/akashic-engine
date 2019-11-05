@@ -175,9 +175,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 	private _update: Trigger<void>;
 	private _message: Trigger<MessageEvent>;
-	private _pointDown: Trigger<PointDownEvent>;
-	private _pointUp: Trigger<PointUpEvent>;
-	private _pointMove: Trigger<PointMoveEvent>;
+	private _pointDown: Trigger<PointDownEvent<E>>;
+	private _pointUp: Trigger<PointUpEvent<E>>;
+	private _pointMove: Trigger<PointMoveEvent<E>>;
 	private _touchable: boolean;
 
 	/**
@@ -204,9 +204,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint downイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get pointDown(): Trigger<PointDownEvent> {
+	get pointDown(): Trigger<PointDownEvent<E>> {
 		if (!this._pointDown)
-			this._pointDown = new ChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this._isTargetOperation, this);
+			this._pointDown = new ChainTrigger<PointDownEvent<E>>(this.scene.pointDownCapture, this._isTargetOperation, this);
 		return this._pointDown;
 	}
 	// pointDownは代入する必要がないのでsetterを定義しない
@@ -215,8 +215,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint upイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get pointUp(): Trigger<PointUpEvent> {
-		if (!this._pointUp) this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
+	get pointUp(): Trigger<PointUpEvent<E>> {
+		if (!this._pointUp) this._pointUp = new ChainTrigger<PointUpEvent<E>>(this.scene.pointUpCapture, this._isTargetOperation, this);
 		return this._pointUp;
 	}
 	// pointUpは代入する必要がないのでsetterを定義しない
@@ -225,9 +225,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint moveイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get pointMove(): Trigger<PointMoveEvent> {
+	get pointMove(): Trigger<PointMoveEvent<E>> {
 		if (!this._pointMove)
-			this._pointMove = new ChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this._isTargetOperation, this);
+			this._pointMove = new ChainTrigger<PointMoveEvent<E>>(this.scene.pointMoveCapture, this._isTargetOperation, this);
 		return this._pointMove;
 	}
 	// pointMoveは代入する必要がないのでsetterを定義しない
@@ -566,7 +566,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * @param force touchable指定を無視する場合真を指定する。省略された場合、偽
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
-	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean, camera?: Camera): PointSource {
+	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean, camera?: Camera): PointSource<E> {
 		if (this.state & EntityStateFlags.Hidden) return undefined;
 
 		var cams = this._targetCameras;
@@ -727,7 +727,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	/**
 	 * @private
 	 */
-	_isTargetOperation(e: PointEvent): boolean {
+	_isTargetOperation(e: PointEvent<E>): boolean {
 		if (this.state & EntityStateFlags.Hidden) return false;
 		if (e instanceof PointEvent) return this._touchable && e.target === this;
 
