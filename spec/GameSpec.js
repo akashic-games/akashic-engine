@@ -656,15 +656,13 @@ describe("test Game", function() {
 
 		game.tick();
 		expect(count).toBe(1);
-		game.tick();
-		expect(count).toBe(2);
 
 		game.terminateGame();
-		expect(game.terminatedGame).toBe(true);
+		expect(game._isTerminated).toBe(true);
+		expect(game.leftGame).toBe(true);
+		expect(game.abortedGame).toBe(false); // Game#_abortedGameは呼ばれないのでfalse
 		game.tick();
-		expect(count).toBe(2);
-		game.tick();
-		expect(count).toBe(2);
+		expect(count).toBe(1);
 	});
 
 	it("no crash on Scene#destroy()", function (done) {

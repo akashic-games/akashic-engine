@@ -684,6 +684,8 @@ namespace g {
 		}
 
 		/**
+		 * @deprecated 現在このメソッドは呼び出しても何も行わない。
+		 * 
 		 * このゲームを離脱する。
 		 *
 		 * 多人数プレイの場合、他のクライアントでは `Game#leave` イベントがfireされる。
@@ -703,7 +705,6 @@ namespace g {
 		terminateGame(): void {
 			this._leaveGame();
 			this._isTerminated = true;
-			this._terminateGame();
 		}
 
 		/**
@@ -1083,8 +1084,9 @@ namespace g {
 
 		/**
 		 * @private
+		 * エラーを出してゲームを途中終了させるメソッド。
 		 */
-		_terminateGame(): void {
+		_abortGame(): void {
 			// do nothing.
 		}
 
