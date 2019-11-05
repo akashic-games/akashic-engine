@@ -1,6 +1,6 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "2.5.4",
+  "version": "2.6.0",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "devDependencies": {

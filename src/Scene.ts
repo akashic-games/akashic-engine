@@ -149,8 +149,10 @@ namespace g {
 				this._assetManager.retryLoad(asset);
 			} else {
 				// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
-				if (this._assetManager.configuration[asset.id])
+				if (this._assetManager.configuration[asset.id]) {
 					this._scene.game.terminateGame();
+					this._scene.game._abortGame();
+				}
 			}
 			this._scene.assetLoadCompleted.fire(asset);
 		}
@@ -998,6 +1000,7 @@ namespace g {
 		 */
 		_onStorageLoadError(error: StorageLoadError): void {
 			this.game.terminateGame();
+			this.game._abortGame();
 		}
 
 		/**
