@@ -1,6 +1,5 @@
+import { CommonSize } from "../types/commons";
 import { Destroyable } from "../types/Destroyable";
-import { GlyphLike } from "./GlyphLike";
-import { ResourceFactoryLike } from "./ResourceFactoryLike";
 import { SurfaceAtlasSlotLike } from "./SurfaceAtlasSlotLike";
 import { SurfaceLike } from "./SurfaceLike";
 
@@ -8,8 +7,6 @@ import { SurfaceLike } from "./SurfaceLike";
  * サーフェスアトラス。
  *
  * 与えられたサーフェスの指定された領域をコピーし一枚のサーフェスにまとめる。
- *
- * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export interface SurfaceAtlasLike extends Destroyable {
 	/**
@@ -23,16 +20,18 @@ export interface SurfaceAtlasLike extends Destroyable {
 	_accessScore: number;
 
 	/**
-	 * サーフェスの追加。
+	 * サーフェスを追加する。
 	 *
-	 * @param glyph グリフのサーフェスが持つ情報をSurfaceAtlasへ配置
+	 * @param surface 追加するサーフェス
+	 * @param offsetX サーフェス内におけるX方向のオフセット位置。0以上の数値でなければならない
+	 * @param offsetY サーフェス内におけるY方向のオフセット位置。0以上の数値でなければならない
+	 * @param width サーフェス内における矩形の幅。0より大きい数値でなければならない
+	 * @param height サーフェス内における矩形の高さ。0より大きい数値でなければならない
 	 */
-	addSurface(glyph: GlyphLike): SurfaceAtlasSlotLike;
+	addSurface(surface: SurfaceLike, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlotLike;
 
 	/**
-	 * _surfaceを複製する。
-	 *
-	 * 複製されたSurfaceは文字を格納するのに必要な最低限のサイズになる。
+	 * サーフェスアトラスの大きさを取得する。
 	 */
-	duplicateSurface(resourceFactory: ResourceFactoryLike): SurfaceLike;
+	getAtlasUsedSize(): CommonSize;
 }

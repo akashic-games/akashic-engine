@@ -23,7 +23,7 @@ describe("test DynamicFont", () => {
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
-		expect(font._atlasSet.getAtlasSize()).toEqual({
+		expect(font._atlasSet.getAtlasUsedSize()).toEqual({
 			height: 512,
 			width: 512
 		});
@@ -64,7 +64,7 @@ describe("test DynamicFont", () => {
 			maxAtlasHeight: 4000,
 			maxAtlasNum: 5
 		});
-		expect(font._atlasSet.getAtlasSize()).toEqual({
+		expect(font._atlasSet.getAtlasUsedSize()).toEqual({
 			height: 2000,
 			width: 1000
 		});

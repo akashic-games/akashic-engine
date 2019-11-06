@@ -9,7 +9,7 @@ describe("test SurfaceAtlasSet", () => {
 		surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: runtime.game.resourceFactory });
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
 		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(SurfaceAtlasSet.INITIAL_MAX_SURFACEATLAS_NUM);
-		expect(surfaceAtlasSet.getAtlasSize()).toEqual({ width: 512, height: 512 });
+		expect(surfaceAtlasSet.getAtlasUsedSize()).toEqual({ width: 512, height: 512 });
 	});
 
 	it("初期化 パラメータあり", () => {
@@ -27,7 +27,7 @@ describe("test SurfaceAtlasSet", () => {
 		surfaceAtlasSet = new SurfaceAtlasSet(surfaceAtlasSetParams);
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
 		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(111);
-		expect(surfaceAtlasSet.getAtlasSize()).toEqual({ width: 1, height: 1 });
+		expect(surfaceAtlasSet.getAtlasUsedSize()).toEqual({ width: 1, height: 1 });
 	});
 
 	describe("removeLeastFrequentlyUsedAtlas", () => {

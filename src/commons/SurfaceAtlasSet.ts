@@ -145,7 +145,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike, Destroyable {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
-			const slot = atlas.addSurface(glyph);
+			const slot = atlas.addSurface(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height);
 
 			if (slot) {
 				this._currentAtlasIndex = index;
@@ -250,7 +250,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike, Destroyable {
 	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
-	getAtlasSize(): CommonSize {
+	getAtlasUsedSize(): CommonSize {
 		return this._atlasSize;
 	}
 

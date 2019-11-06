@@ -319,15 +319,21 @@ export class DynamicFont extends Font {
 		// デフォルト値である。ここでは必ず与えているのでデフォルト値としては利用されない。
 		// しかし defaultGlyphHeight は BitmapFont#size にも用いられる。
 		// そのために this.size をコンストラクタの第４引数に与えることにする。
-		let missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
-		const surface = this._atlasSet.getAtlas(0).duplicateSurface(this._resourceFactory);
+		const missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
+		const atlas = this._atlasSet.getAtlas(0);
+		const size = atlas.getAtlasUsedSize();
+		const surface = this._resourceFactory.createSurface(size.width, size.height);
+		const renderer = surface.renderer();
+		renderer.begin();
+		renderer.drawImage(atlas._surface, 0, 0, size.width, size.height, 0, 0);
+		renderer.end();
 
 		const bitmapFont = new BitmapFont({
 			src: surface,
 			map: glyphAreaMap,
 			defaultGlyphWidth: 0,
 			defaultGlyphHeight: this.size,
-			missingGlyph: missingGlyph
+			missingGlyph
 		});
 		return bitmapFont;
 	}
