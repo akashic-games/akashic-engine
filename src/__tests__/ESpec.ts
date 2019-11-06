@@ -74,7 +74,7 @@ describe("test E", () => {
 
 		// parameter object で初期化してもコンストラクタ内で modified() していないが、問題なく動作することを確認しておく
 		const mat = new PlainMatrix();
-		mat.update(5, 4, 2, 3, 0, 10, 20);
+		mat.update(5, 4, 2, 3, 0, 10, 20, 0, 0);
 		expect(e.getMatrix()._matrix).toEqual(mat._matrix);
 
 		e = new E({
@@ -548,8 +548,9 @@ describe("test E", () => {
 
 	it("findPointSource - rotated/scaled", () => {
 		e.touchable = true;
-		e.x = e.y = 100;
 		e.width = e.height = 100;
+		e.x = e.y = 100 + e.width / 2;
+		e.anchorX = e.anchorY = 0.5;
 
 		let found;
 		found = runtime.game.findPointSource({ x: 150, y: 150 });
@@ -1102,7 +1103,7 @@ describe("test E", () => {
 	it("calculateBoundingRect", () => {
 		const runtime = skeletonRuntime();
 		const scene = runtime.scene;
-		const e = new E({ scene: scene });
+		const e = new E({ scene });
 		e.width = 100;
 		e.height = 50;
 		e.scale(2);
@@ -1110,37 +1111,40 @@ describe("test E", () => {
 		e.modified();
 
 		const result = e.calculateBoundingRect();
-		expect(result.left).toBe(-50);
-		expect(result.right).toBe(150);
-		expect(result.top).toBe(-25);
-		expect(result.bottom).toBe(75);
+		expect(result.left).toBe(0);
+		expect(result.right).toBe(200);
+		expect(result.top).toBe(0);
+		expect(result.bottom).toBe(100);
 
-		const e2 = new E({ scene: scene });
+		const e2 = new E({ scene });
 		e2.width = 100;
 		e2.height = 50;
+		e2.anchor(0.5, 0.5);
 		e2.scale(2);
-		e2.moveTo(-100, -50);
+		e2.moveTo(-50, -10);
 		scene.append(e2);
 		e2.modified();
 
 		const result2 = e2.calculateBoundingRect();
 		expect(result2.left).toBe(-150);
 		expect(result2.right).toBe(50);
-		expect(result2.top).toBe(-75);
-		expect(result2.bottom).toBe(25);
+		expect(result2.top).toBe(-60);
+		expect(result2.bottom).toBe(40);
 
-		const e3 = new E({ scene: scene });
+		const e3 = new E({ scene });
 		e3.width = 300;
-		e3.height = 300;
+		e3.height = 400;
 		e3.scale(0.5);
+		e3.anchor(1, 1);
+		e3.moveTo(10, 20);
 		scene.append(e3);
 		e3.modified();
 
 		const result3 = e3.calculateBoundingRect();
-		expect(result3.left).toBe(300 / 4);
-		expect(result3.right).toBe((300 / 4) * 3);
-		expect(result3.top).toBe(300 / 4);
-		expect(result3.bottom).toBe((300 / 4) * 3);
+		expect(result3.left).toBe(-140);
+		expect(result3.right).toBe(10);
+		expect(result3.top).toBe(-180);
+		expect(result3.bottom).toBe(20);
 	});
 
 	it("calculateBoundingRect with camera", () => {

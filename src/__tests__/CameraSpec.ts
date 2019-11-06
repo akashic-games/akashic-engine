@@ -93,7 +93,7 @@ describe("test Camera", () => {
 		cam.angle = angle;
 		cam.modified();
 		mat = cam.getMatrix();
-		expected.updateByInverse(320, 240, 1, 1, 10, 10, 100); // angle も逆方向に作用する
+		expected.updateByInverse(320, 240, 1, 1, 10, 10, 100, 0, 0); // angle も逆方向に作用する
 		expect(mat._matrix).toEqual(expected._matrix);
 	});
 
@@ -102,7 +102,7 @@ describe("test Camera", () => {
 		const cam = new Camera2D({ game: game, angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5 });
 		const expected = new PlainMatrix();
 		const mat = cam.getMatrix();
-		expected.updateByInverseWithAnchor(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);
+		expected.updateByInverse(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);
 		expect(mat._matrix).toEqual(expected._matrix);
 	});
 
@@ -135,7 +135,7 @@ describe("test Camera", () => {
 		cam._applyTransformToRenderer(renderer);
 		expect(renderer.methodCallHistory).toEqual(["transform"]);
 		const mat = new PlainMatrix();
-		mat.updateByInverse(320, 240, 1, 1, 10, 10, 100); // angle も逆方向に作用する
+		mat.updateByInverse(320, 240, 1, 1, 10, 10, 100, 0, 0); // angle も逆方向に作用する
 		expect(cam.getMatrix()._matrix).toEqual(mat._matrix);
 		expect(renderer.methodCallParamsHistory("transform")).toEqual([{ matrix: mat._matrix }]);
 	});

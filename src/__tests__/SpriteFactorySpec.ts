@@ -32,12 +32,16 @@ describe("test SpriteFactory", () => {
 		e.width = 100;
 		e.height = 50;
 		e.opacity = 0.5;
+		e.anchorX = 0;
+		e.anchorY = 0;
 		scene.append(e);
 
 		const e2 = new E({ scene: scene });
 		e2.width = 200;
 		e2.height = 100;
 		e2.opacity = 0.1;
+		e.anchorX = 0;
+		e.anchorY = 0;
 		e2.scale(2);
 		scene.append(e2);
 

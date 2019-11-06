@@ -51,100 +51,163 @@ describe("test E", () => {
 		expect(t).toBeUndefined();
 	});
 
-	it("拡大あり", () => {
-		const xp = 20;
-		const yp = 10;
+	it("拡大あり: アンカーポイントが左上", () => {
 		const scale = 2;
-		const w = (e.width * scale) / 4;
-		const h = (e.height * scale) / 4;
-		e.moveTo(xp, yp);
+		const fromX = 0;
+		const fromY = 0;
+		const toX = e.width * scale;
+		const toY = e.height * scale;
 		e.scale(scale);
-		for (let x = xp - w; x < e.width + w + xp; x++) {
-			for (let y = yp - h; y < e.height + h + yp; y++) {
-				const t = e.findPointSourceByPoint({ x: x, y: y });
+		for (let x = fromX; x < toX; x++) {
+			for (let y = fromY; y < toY; y++) {
+				const t = e.findPointSourceByPoint({ x, y });
 				expect(t.target).toBe(e);
 			}
 		}
 		let t = e.findPointSourceByPoint({
-			x: e.width + xp + w,
-			y: e.height + yp + h - 1
+			x: fromX,
+			y: fromY - 1
 		});
 		expect(t).toBeUndefined();
 		t = e.findPointSourceByPoint({
-			x: e.width + xp + w - 1,
-			y: e.height + yp + h
+			x: fromX - 1,
+			y: fromY
 		});
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp - w - 1, y: yp - h });
+		t = e.findPointSourceByPoint({ x: toX + 1, y: toY });
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp - w, y: yp - h - 1 });
+		t = e.findPointSourceByPoint({ x: toX, y: toY + 1 });
 		expect(t).toBeUndefined();
 	});
 
-	it("回転あり", () => {
-		const xp = 0;
-		const yp = 0;
-		const angle = 180;
-		e.moveTo(xp, yp);
-		e.angle = angle;
-		for (let x = xp + 0.1; x < e.width + xp; x++) {
-			for (let y = yp + 0.1; y < e.height + yp; y++) {
-				const t = e.findPointSourceByPoint({ x: x, y: y });
+	it("拡大あり: アンカーポイントが中央", () => {
+		const scale = 2;
+		const w = e.width * scale;
+		const h = e.height * scale;
+		const fromX = e.width / 2 - e.width * scale / 2;
+		const fromY = e.height / 2 - e.height * scale / 2;
+		const toX = fromX + w;
+		const toY = fromY + h;
+		e.moveTo(e.width / 2, e.height / 2);
+		e.anchor(0.5, 0.5);
+		e.scale(scale);
+		for (let x = fromX; x < toX; x++) {
+			for (let y = fromY; y < toY; y++) {
+				const t = e.findPointSourceByPoint({ x, y });
+				if (t.target == null)
+					console.log(x, y);
 				expect(t.target).toBe(e);
 			}
 		}
 		let t = e.findPointSourceByPoint({
-			x: e.width + xp + 0.1,
-			y: e.height + yp - 1
+			x: fromX,
+			y: fromY - 1
 		});
 		expect(t).toBeUndefined();
 		t = e.findPointSourceByPoint({
-			x: e.width + xp - 1,
-			y: e.height + yp + 0.1
+			x: fromX - 1,
+			y: fromY
 		});
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp - 1, y: yp });
+		t = e.findPointSourceByPoint({ x: toX + 1, y: toY });
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp, y: yp - 1 });
+		t = e.findPointSourceByPoint({ x: toX, y: toY + 1 });
+		expect(t).toBeUndefined();
+	});
+
+	it("回転あり: アンカーポイントが左上", () => {
+		const fromX = -e.height;
+		const fromY = 0;
+		const toX = 0;
+		const toY = e.width;
+		const angle = 90;
+		e.angle = angle;
+		for (let x = fromX + 0.1; x < toX; x++) {
+			for (let y = fromY + 0.1; y < toY; y++) {
+				const t = e.findPointSourceByPoint({ x, y });
+				if (t == null) console.log(x, y)
+				expect(t.target).toBe(e);
+			}
+		}
+		let t = e.findPointSourceByPoint({
+			x: fromX + 0.1,
+			y: fromY - 1
+		});
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({
+			x: fromX - 1,
+			y: fromY + 0.1
+		});
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({ x: toX + 1, y: toY });
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({ x: toX, y: toY + 1 });
+		expect(t).toBeUndefined();
+	});
+
+	it("回転あり: アンカーポイントが中央", () => {
+		const fromX = 0;
+		const fromY = 0;
+		const toX = e.width;
+		const toY = e.height;
+		const angle = 180;
+		e.anchor(0.5, 0.5);
+		e.moveTo(e.width / 2, e.height/ 2);
+		e.angle = angle;
+		for (let x = fromX + 0.1; x < toX; x++) {
+			for (let y = fromY + 0.1; y < toY; y++) {
+				const t = e.findPointSourceByPoint({ x, y });
+				expect(t.target).toBe(e);
+			}
+		}
+		let t = e.findPointSourceByPoint({
+			x: fromX + 0.1,
+			y: fromY - 1
+		});
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({
+			x: fromX - 1,
+			y: fromY + 0.1
+		});
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({ x: toX + 1, y: toY });
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({ x: toX, y: toY + 1 });
 		expect(t).toBeUndefined();
 	});
 
 	it("拡大+回転あり", () => {
-		const xp = 20;
-		const yp = 10;
-		const scale = 2;
-		const w = (e.width * scale) / 4;
-		const h = (e.height * scale) / 4;
 		const angle = 180;
-		e.moveTo(xp, yp);
+		const scale = 2;
+		const fromX = -e.width * scale;
+		const fromY = -e.height * scale;
+		const toX = 0;
+		const toY = 0;
 		e.scale(scale);
 		e.angle = angle;
-		for (let x = xp - w + 0.1; x < e.width + w + xp; x++) {
-			for (let y = yp - h + 0.1; y < e.height + h + yp; y++) {
-				const t = e.findPointSourceByPoint({ x: x, y: y });
+		for (let x = fromX + 0.1; x < toX; x++) {
+			for (let y = fromY + 0.1; y < toY; y++) {
+				const t = e.findPointSourceByPoint({ x, y });
 				expect(t.target).toBe(e);
 			}
 		}
 		let t = e.findPointSourceByPoint({
-			x: e.width + xp + w + 0.1,
-			y: e.height + yp + h - 1
+			x: fromX + 0.1,
+			y: fromY - 1
 		});
 		expect(t).toBeUndefined();
 		t = e.findPointSourceByPoint({
-			x: e.width + xp + w - 1,
-			y: e.height + yp + h + 0.1
+			x: fromX - 1,
+			y: fromY + 0.1
 		});
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp - w - 1, y: yp - h });
+		t = e.findPointSourceByPoint({ x: toX + 1, y: toY });
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp - w, y: yp - h - 1 });
+		t = e.findPointSourceByPoint({ x: toX, y: toY + 1 });
 		expect(t).toBeUndefined();
 	});
 
 	it("入れ子", () => {
-		const xp = 20;
-		const yp = 10;
-		e.moveTo(xp, yp);
 		e.scale(2);
 		const e2 = new E({ scene: runtime.scene });
 		e2.width = 10;
@@ -165,9 +228,6 @@ describe("test E", () => {
 	});
 
 	it("入れ子で両方有効", () => {
-		const xp = 20;
-		const yp = 10;
-		e.moveTo(xp, yp);
 		e.scale(2);
 		const e2 = new E({ scene: runtime.scene });
 		e2.width = 10;
@@ -189,9 +249,6 @@ describe("test E", () => {
 	});
 
 	it("入れ子のやつをappendしてその後remove", () => {
-		const xp = 20;
-		const yp = 10;
-		e.moveTo(xp, yp);
 		e.scale(2);
 		const e2 = new E({ scene: runtime.scene });
 		e2.width = 10;
