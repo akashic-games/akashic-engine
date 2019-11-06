@@ -155,7 +155,7 @@ export class SurfaceAtlas implements SurfaceAtlasLike {
 	/**
 	 * このSurfaceAtlasの大きさを取得する。
 	 */
-	getAtlasSize(): CommonSize {
+	getAtlasUsedSize(): CommonSize {
 		return this._usedRectangleAreaSize;
 	}
 

@@ -321,7 +321,7 @@ export class DynamicFont extends Font {
 		// そのために this.size をコンストラクタの第４引数に与えることにする。
 		const missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
 		const atlas = this._atlasSet.getAtlas(0);
-		const size = atlas.getAtlasSize();
+		const size = atlas.getAtlasUsedSize();
 		const surface = this._resourceFactory.createSurface(size.width, size.height);
 		const renderer = surface.renderer();
 		renderer.begin();

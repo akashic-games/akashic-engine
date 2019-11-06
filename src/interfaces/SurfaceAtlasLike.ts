@@ -33,5 +33,5 @@ export interface SurfaceAtlasLike extends Destroyable {
 	/**
 	 * サーフェスアトラスの大きさを取得する。
 	 */
-	getAtlasSize(): CommonSize;
+	getAtlasUsedSize(): CommonSize;
 }

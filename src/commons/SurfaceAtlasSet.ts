@@ -250,7 +250,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike, Destroyable {
 	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
-	getAtlasSize(): CommonSize {
+	getAtlasUsedSize(): CommonSize {
 		return this._atlasSize;
 	}
 

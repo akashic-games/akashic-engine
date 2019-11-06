@@ -87,7 +87,7 @@ export interface SurfaceAtlasSetLike extends Destroyable {
 	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
-	getAtlasSize(): CommonSize;
+	getAtlasUsedSize(): CommonSize;
 
 	/**
 	 * サーフェスアトラスにグリフを追加する。
