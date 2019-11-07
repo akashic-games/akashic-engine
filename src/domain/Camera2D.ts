@@ -3,7 +3,6 @@ import { Camera } from "./Camera";
 import { Object2D, Object2DParameterObject } from "./Object2D";
 
 export interface Camera2DSerialization {
-	id: number | undefined;
 	param: Camera2DParameterObject;
 }
 
@@ -14,12 +13,6 @@ export interface Camera2DSerialization {
  * 例外的に、`Camera2D` のコンストラクタは `width`, `height` のみ無視することに注意。
  */
 export interface Camera2DParameterObject extends Object2DParameterObject {
-	/**
-	 * このカメラのID。
-	 * @default undefined
-	 */
-	id?: number;
-
 	/**
 	 * このカメラがローカルであるか否か。
 	 * @default false
@@ -35,22 +28,8 @@ export interface Camera2DParameterObject extends Object2DParameterObject {
 
 /**
  * 2D世界におけるカメラ。
- *
- * ゲーム開発者がこのクラスを直接利用する必要はない。
- * `Game#createCamera2D()` を用いるべきである。
  */
 export class Camera2D extends Object2D implements Camera {
-	/**
-	 * このカメラのID。
-	 *
-	 * カメラ生成時に暗黙に設定される値。
-	 * `local` が真である場合、この値は `undefined` である。
-	 *
-	 * ひとつの実行環境中、ある `Game` に対して、ある `undefined` ではない `id` を持つカメラは、最大でもひとつしか存在しない。
-	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を直接変更してはならない。
-	 */
-	id: number | undefined;
-
 	/**
 	 * このカメラがローカルであるか否か。
 	 *
@@ -78,7 +57,6 @@ export class Camera2D extends Object2D implements Camera {
 	static deserialize(ser: any): Camera2D {
 		const s: Camera2DSerialization = ser;
 		const ret = new Camera2D(s.param);
-		ret.id = s.id;
 		return ret;
 	}
 
@@ -89,7 +67,6 @@ export class Camera2D extends Object2D implements Camera {
 	constructor(param: Camera2DParameterObject) {
 		super(param);
 		this.local = !!param.local;
-		this.id = this.local ? undefined : param.id;
 		this.name = param.name;
 		this._modifiedCount = 0;
 	}
@@ -115,7 +92,6 @@ export class Camera2D extends Object2D implements Camera {
 	 */
 	serialize(): any {
 		const ser: Camera2DSerialization = {
-			id: this.id,
 			param: {
 				local: this.local,
 				name: this.name,

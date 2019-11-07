@@ -917,7 +917,7 @@ describe("test Game", () => {
 		expect(e.state).toBe(0);
 		expect(game.modified).toBe(true);
 
-		const camera = game.createCamera2D({});
+		const camera = new Camera2D({});
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
 		expect(e.state).toBe(EntityStateFlags.None);
@@ -931,7 +931,7 @@ describe("test Game", () => {
 		expect(game.modified).toBe(true);
 
 		e.modified();
-		const camera2 = game.createCamera2D({});
+		const camera2 = new Camera2D({});
 		game.focusingCamera = camera2;
 		expect(game.focusingCamera).toEqual(camera2);
 		expect(e.state).toBe(EntityStateFlags.ContextLess);

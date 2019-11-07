@@ -3,19 +3,17 @@ import { Game, Renderer } from "./helpers";
 
 describe("test Camera", () => {
 	it("初期化", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
-		const cam1 = game.createCamera2D({ width: 100, height: 100 });
-		expect(cam1.id).toBe(0);
+		const cam1 = new Camera2D({ width: 320, height: 240 });
 		expect(cam1.local).toBe(false);
 		expect(cam1.name).toBeUndefined();
 		expect(cam1.x).toBe(0);
 		expect(cam1.y).toBe(0);
 		expect(cam1.angle).toBe(0);
 		expect(cam1.width).toBe(320);
-		expect(cam1.height).toBe(320);
+		expect(cam1.height).toBe(240);
 		expect(cam1._modifiedCount).toBe(0);
 
-		const cam2 = game.createCamera2D({
+		const cam2 = new Camera2D({
 			name: "foo",
 			x: 100,
 			y: 10,
@@ -23,36 +21,33 @@ describe("test Camera", () => {
 			width: 80,
 			height: 70
 		});
-		expect(cam2.id).toBe(1);
 		expect(cam2.local).toBe(false);
 		expect(cam2.name).toBe("foo");
 		expect(cam2.x).toBe(100);
 		expect(cam2.y).toBe(10);
 		expect(cam2.angle).toBe(4);
-		expect(cam2.width).toBe(320); // width, height 指定は無視される
-		expect(cam2.height).toBe(320);
+		expect(cam2.width).toBe(80);
+		expect(cam2.height).toBe(70);
 		expect(cam2._modifiedCount).toBe(0);
 
-		const cam3 = game.createCamera2D({
+		const cam3 = new Camera2D({
 			local: true,
 			name: "bar",
 			x: 100,
 			y: 10
 		});
-		expect(cam3.id).toBeUndefined();
 		expect(cam3.local).toBe(true);
 		expect(cam3.name).toBe("bar");
 		expect(cam3.x).toBe(100);
 		expect(cam3.y).toBe(10);
 		expect(cam3.angle).toBe(0);
-		expect(cam3.width).toBe(320);
-		expect(cam3.height).toBe(320);
+		expect(cam3.width).toBe(0);
+		expect(cam3.height).toBe(0);
 		expect(cam3._modifiedCount).toBe(0);
 	});
 
 	it("modified", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
-		const cam = game.createCamera2D({});
+		const cam = new Camera2D({});
 
 		expect(cam._modifiedCount).toBe(0);
 		cam.modified();
@@ -66,8 +61,7 @@ describe("test Camera", () => {
 	});
 
 	it("x, y, angle", () => {
-		const game = new Game({ width: 320, height: 240, main: "" });
-		const cam = game.createCamera2D({});
+		const cam = new Camera2D({});
 		const expected = new PlainMatrix();
 		let mat: Matrix;
 
@@ -90,8 +84,7 @@ describe("test Camera", () => {
 	});
 
 	it("anchor", () => {
-		const game = new Game({ width: 320, height: 240, main: "" });
-		const cam = game.createCamera2D({ angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5 });
+		const cam = new Camera2D({ width: 320, height: 240, angle: 10, x: 10, y: 100, anchorX: 0.5, anchorY: 0.5 });
 		const expected = new PlainMatrix();
 		const mat = cam.getMatrix();
 		expected.updateByInverse(320, 240, 1, 1, 10, 10, 100, 0.5, 0.5);
@@ -100,7 +93,7 @@ describe("test Camera", () => {
 
 	it("_applyTransformToRenderer", () => {
 		const game = new Game({ width: 320, height: 240, main: "" });
-		const cam = game.createCamera2D({});
+		const cam = new Camera2D({});
 		const surface = game.resourceFactory.createSurface(320, 240);
 		const renderer = surface.renderer() as Renderer;
 
@@ -133,9 +126,7 @@ describe("test Camera", () => {
 	});
 
 	it("serialize", () => {
-		const game = new Game({ width: 320, height: 240, main: "" });
-
-		const cam = game.createCamera2D({
+		const cam = new Camera2D({
 			x: 32,
 			y: 15,
 			angle: 3,
@@ -154,8 +145,6 @@ describe("test Camera", () => {
 		expect(cam2.anchorY).toBe(0);
 		expect(cam2.name).toBe("mycamera1");
 		expect(cam2.local).toBe(false);
-		expect(cam2.id).not.toBe(undefined);
-		expect(cam.id === cam2.id).toBe(true);
 
 		cam2.x = 10;
 		cam2.y = 100;
@@ -174,7 +163,5 @@ describe("test Camera", () => {
 		expect(cam3.opacity).toBe(0.5);
 		expect(cam3.name).toBe("mycamera1");
 		expect(cam3.local).toBe(false);
-		expect(cam3.id).not.toBe(undefined);
-		expect(cam.id === cam3.id).toBe(true);
 	});
 });

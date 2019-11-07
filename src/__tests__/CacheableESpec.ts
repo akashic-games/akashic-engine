@@ -45,8 +45,8 @@ describe("test CacheableE", () => {
 	it("renderSelf calls renderCache", () => {
 		const ce = new CacheableE({ scene: runtime.scene });
 		const renderer = new Renderer();
-		const cam1 = runtime.game.createCamera2D({});
-		const cam2 = runtime.game.createCamera2D({});
+		const cam1 = new Camera2D({});
+		const cam2 = new Camera2D({});
 
 		let called = false;
 		ce.renderCache = (r, c) => {
