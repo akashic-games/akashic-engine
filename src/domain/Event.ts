@@ -78,7 +78,7 @@ export interface Event {
  * ポインティングソースによる対象を表すインターフェース。
  * 対象とその対象から見た相対座標によって構成される。
  */
-export interface PointSource<T extends PointTarget> {
+export interface PointSourceBase<T extends PointTarget> {
 	target: T;
 	point: CommonOffset;
 	local?: boolean;
@@ -92,7 +92,7 @@ export interface PointTarget extends CommonOffset {
 }
 
 /**
- * ポインティング操作を表すイベント。
+ * ポインティング操作を表すイベントの基底クラス。
  * PointEvent#targetでそのポインティング操作の対象が、
  * PointEvent#pointでその対象からの相対座標が取得できる。
  *
@@ -100,7 +100,7 @@ export interface PointTarget extends CommonOffset {
  *
  * abstract
  */
-export class PointEvent<T extends PointTarget> implements Event {
+export class PointEventBase<T extends PointTarget> implements Event {
 	/**
 	 * 本クラスはどのtypeにも属さない。
 	 */
@@ -123,9 +123,9 @@ export class PointEvent<T extends PointTarget> implements Event {
 }
 
 /**
- * ポインティング操作の開始を表すイベント。
+ * ポインティング操作の開始を表すイベントの基底クラス。
  */
-export class PointDownEvent<T extends PointTarget> extends PointEvent<T> {
+export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
 	type: EventType = EventType.PointDown;
 
 	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
@@ -134,14 +134,14 @@ export class PointDownEvent<T extends PointTarget> extends PointEvent<T> {
 }
 
 /**
- * ポインティング操作の終了を表すイベント。
+ * ポインティング操作の終了を表すイベントの基底クラス。
  * PointDownEvent後にのみ発生する。
  *
  * PointUpEvent#startDeltaによってPointDownEvent時からの移動量が、
  * PointUpEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
-export class PointUpEvent<T extends PointTarget> extends PointEvent<T> {
+export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
 	type: EventType = EventType.PointUp;
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
@@ -173,7 +173,7 @@ export class PointUpEvent<T extends PointTarget> extends PointEvent<T> {
  * 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
-export class PointMoveEvent<T extends PointTarget> extends PointEvent<T> {
+export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T> {
 	type: EventType = EventType.PointMove;
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;

@@ -2,8 +2,8 @@ import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetManager } from "./domain/AssetManager";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
-import { E } from "./domain/entities/E";
-import { MessageEvent, OperationEvent, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/Event";
+import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
+import { MessageEvent, OperationEvent } from "./domain/Event";
 import { Matrix } from "./domain/Matrix";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
@@ -408,7 +408,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このイベントは `E#pointDown` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint downイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
 	 */
-	pointDownCapture: Trigger<PointDownEvent<E>>;
+	pointDownCapture: Trigger<PointDownEvent>;
 
 	/**
 	 * シーン内でのpoint moveイベント。
@@ -416,7 +416,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このイベントは `E#pointMove` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint moveイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
 	 */
-	pointMoveCapture: Trigger<PointMoveEvent<E>>;
+	pointMoveCapture: Trigger<PointMoveEvent>;
 
 	/**
 	 * シーン内でのpoint upイベント。
@@ -424,7 +424,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このイベントは `E#pointUp` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint upイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
 	 */
-	pointUpCapture: Trigger<PointUpEvent<E>>;
+	pointUpCapture: Trigger<PointUpEvent>;
 
 	/**
 	 * シーン内での操作イベント。
@@ -551,9 +551,9 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.assetLoadCompleted = new Trigger<AssetLike>();
 
 		this.message = new Trigger<MessageEvent>();
-		this.pointDownCapture = new Trigger<PointDownEvent<E>>();
-		this.pointMoveCapture = new Trigger<PointMoveEvent<E>>();
-		this.pointUpCapture = new Trigger<PointUpEvent<E>>();
+		this.pointDownCapture = new Trigger<PointDownEvent>();
+		this.pointMoveCapture = new Trigger<PointMoveEvent>();
+		this.pointUpCapture = new Trigger<PointUpEvent>();
 		this.operation = new Trigger<OperationEvent>();
 
 		this.children = [];
@@ -823,7 +823,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param force touchable指定を無視する場合真を指定する。指定されなかった場合偽
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
-	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource<E> {
+	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
 		var mayConsumeLocalTick = this.local !== LocalTickMode.NonLocal;
 		var children = this.children;
 		var m: Matrix = undefined;

@@ -1,5 +1,12 @@
 import { ExceptionFactory } from "../../commons/ExceptionFactory";
-import { MessageEvent, PointDownEvent, PointEvent, PointMoveEvent, PointSource, PointUpEvent } from "../../domain/Event";
+import {
+	MessageEvent,
+	PointDownEventBase,
+	PointEventBase,
+	PointMoveEventBase,
+	PointSourceBase,
+	PointUpEventBase
+} from "../../domain/Event";
 import { Matrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
 import { RendererLike } from "../../interfaces/RendererLike";
@@ -12,6 +19,51 @@ import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { LocalTickMode } from "../../types/LocalTickMode";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
+
+/**
+ * ポインティングソースによって対象となるエンティティを表すインターフェース。
+ * エンティティとエンティティから見た相対座標によって構成される。
+ */
+export interface PointSource extends PointSourceBase<E> {}
+
+/**
+ * ポインティング操作を表すイベント。
+ * PointEvent#targetでそのポインティング操作の対象が、
+ * PointEvent#pointでその対象からの相対座標が取得できる。
+ *
+ * 本イベントはマルチタッチに対応しており、PointEvent#pointerIdを参照することで識別することが出来る。
+ *
+ * abstract
+ */
+export class PointEvent extends PointEventBase<E> {}
+
+/**
+ * ポインティング操作の開始を表すイベント。
+ */
+export class PointDownEvent extends PointDownEventBase<E> {}
+
+/**
+ * ポインティング操作の終了を表すイベント。
+ * PointDownEvent後にのみ発生する。
+ *
+ * PointUpEvent#startDeltaによってPointDownEvent時からの移動量が、
+ * PointUpEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
+ * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
+ */
+export class PointUpEvent extends PointUpEventBase<E> {}
+
+/**
+ * ポインティング操作の移動を表すイベント。
+ * PointDownEvent後にのみ発生するため、MouseMove相当のものが本イベントとして発生することはない。
+ *
+ * PointMoveEvent#startDeltaによってPointDownEvent時からの移動量が、
+ * PointMoveEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
+ * PointMoveEvent#pointにはPointMoveEvent#pointと同じ値が格納される。
+ *
+ * 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、
+ * カメラの移動等視覚的にポイントが変化している場合にも発生する。
+ */
+export class PointMoveEvent extends PointMoveEventBase<E> {}
 
 /**
  * `E` のコンストラクタに渡すことができるパラメータ。
@@ -175,9 +227,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 	private _update: Trigger<void>;
 	private _message: Trigger<MessageEvent>;
-	private _pointDown: Trigger<PointDownEvent<E>>;
-	private _pointUp: Trigger<PointUpEvent<E>>;
-	private _pointMove: Trigger<PointMoveEvent<E>>;
+	private _pointDown: Trigger<PointDownEvent>;
+	private _pointUp: Trigger<PointUpEvent>;
+	private _pointMove: Trigger<PointMoveEvent>;
 	private _touchable: boolean;
 
 	/**
@@ -204,9 +256,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint downイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get pointDown(): Trigger<PointDownEvent<E>> {
+	get pointDown(): Trigger<PointDownEvent> {
 		if (!this._pointDown)
-			this._pointDown = new ChainTrigger<PointDownEvent<E>>(this.scene.pointDownCapture, this._isTargetOperation, this);
+			this._pointDown = new ChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this._isTargetOperation, this);
 		return this._pointDown;
 	}
 	// pointDownは代入する必要がないのでsetterを定義しない
@@ -215,8 +267,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint upイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get pointUp(): Trigger<PointUpEvent<E>> {
-		if (!this._pointUp) this._pointUp = new ChainTrigger<PointUpEvent<E>>(this.scene.pointUpCapture, this._isTargetOperation, this);
+	get pointUp(): Trigger<PointUpEvent> {
+		if (!this._pointUp) this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
 		return this._pointUp;
 	}
 	// pointUpは代入する必要がないのでsetterを定義しない
@@ -225,9 +277,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint moveイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get pointMove(): Trigger<PointMoveEvent<E>> {
+	get pointMove(): Trigger<PointMoveEvent> {
 		if (!this._pointMove)
-			this._pointMove = new ChainTrigger<PointMoveEvent<E>>(this.scene.pointMoveCapture, this._isTargetOperation, this);
+			this._pointMove = new ChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this._isTargetOperation, this);
 		return this._pointMove;
 	}
 	// pointMoveは代入する必要がないのでsetterを定義しない
@@ -566,7 +618,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * @param force touchable指定を無視する場合真を指定する。省略された場合、偽
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
-	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean, camera?: Camera): PointSource<E> {
+	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean, camera?: Camera): PointSource {
 		if (this.state & EntityStateFlags.Hidden) return undefined;
 
 		var cams = this._targetCameras;
@@ -727,9 +779,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	/**
 	 * @private
 	 */
-	_isTargetOperation(e: PointEvent<E>): boolean {
+	_isTargetOperation(e: PointEvent): boolean {
 		if (this.state & EntityStateFlags.Hidden) return false;
-		if (e instanceof PointEvent) return this._touchable && e.target === this;
+		if (e instanceof PointEventBase) return this._touchable && e.target === this;
 
 		return false;
 	}

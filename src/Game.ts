@@ -4,8 +4,8 @@ import { AssetManager } from "./domain/AssetManager";
 import { AudioSystemManager } from "./domain/AudioSystemManager";
 import { Camera } from "./domain/Camera";
 import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
-import { E } from "./domain/entities/E";
-import { Event, EventType, JoinEvent, LeaveEvent, PointSource, SeedEvent } from "./domain/Event";
+import { E, PointSource } from "./domain/entities/E";
+import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent } from "./domain/Event";
 import { LoadingScene } from "./domain/LoadingScene";
 import { _require } from "./domain/Module";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
@@ -721,7 +721,7 @@ export abstract class Game implements Registrable<E> {
 	 * @param point 対象の座標
 	 * @param camera 対象のカメラ。指定しなければ `Game.focusingCamera` が使われる
 	 */
-	findPointSource(point: CommonOffset, camera?: Camera): PointSource<E> {
+	findPointSource(point: CommonOffset, camera?: Camera): PointSource {
 		if (!camera) camera = this.focusingCamera;
 		return this.scene().findPointSourceByPoint(point, false, camera);
 	}
