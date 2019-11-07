@@ -9,8 +9,6 @@ export interface Camera2DSerialization {
 /**
  * `Camera2D` のコンストラクタに渡すことができるパラメータ。
  * 各メンバの詳細は `Camera2D` の同名メンバの説明を参照すること。
- *
- * 例外的に、`Camera2D` のコンストラクタは `width`, `height` のみ無視することに注意。
  */
 export interface Camera2DParameterObject extends Object2DParameterObject {
 	/**
