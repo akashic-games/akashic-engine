@@ -78,10 +78,17 @@ export interface Event {
  * ポインティングソースによる対象を表すインターフェース。
  * 対象とその対象から見た相対座標によって構成される。
  */
-export interface PointSource<T extends CommonOffset> {
+export interface PointSource<T extends PointTarget> {
 	target: T;
 	point: CommonOffset;
 	local?: boolean;
+}
+
+/**
+ * ポインティングの対象を表すインターフェース。
+ */
+export interface PointTarget extends CommonOffset {
+	id: number;
 }
 
 /**
@@ -93,7 +100,7 @@ export interface PointSource<T extends CommonOffset> {
  *
  * abstract
  */
-export class PointEvent<T extends CommonOffset> implements Event {
+export class PointEvent<T extends PointTarget> implements Event {
 	/**
 	 * 本クラスはどのtypeにも属さない。
 	 */
@@ -118,7 +125,7 @@ export class PointEvent<T extends CommonOffset> implements Event {
 /**
  * ポインティング操作の開始を表すイベント。
  */
-export class PointDownEvent<T extends CommonOffset> extends PointEvent<T> {
+export class PointDownEvent<T extends PointTarget> extends PointEvent<T> {
 	type: EventType = EventType.PointDown;
 
 	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
@@ -134,7 +141,7 @@ export class PointDownEvent<T extends CommonOffset> extends PointEvent<T> {
  * PointUpEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
-export class PointUpEvent<T extends CommonOffset> extends PointEvent<T> {
+export class PointUpEvent<T extends PointTarget> extends PointEvent<T> {
 	type: EventType = EventType.PointUp;
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
@@ -166,7 +173,7 @@ export class PointUpEvent<T extends CommonOffset> extends PointEvent<T> {
  * 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
-export class PointMoveEvent<T extends CommonOffset> extends PointEvent<T> {
+export class PointMoveEvent<T extends PointTarget> extends PointEvent<T> {
 	type: EventType = EventType.PointMove;
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
