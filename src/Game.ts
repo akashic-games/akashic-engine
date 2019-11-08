@@ -518,7 +518,8 @@ namespace g {
 			this._main = gameConfiguration.main;
 			this._mainParameter = undefined;
 			this._configuration = gameConfiguration;
-			this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
+			this._assetManager = new AssetManager(
+				this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 
 			var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 			this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
@@ -729,7 +730,7 @@ namespace g {
 
 		/**
 		 * @deprecated 現在このメソッドは呼び出しても何も行わない。
-		 * 
+		 *
 		 * このゲームを離脱する。
 		 *
 		 * 多人数プレイの場合、他のクライアントでは `Game#leave` イベントがfireされる。
@@ -837,7 +838,7 @@ namespace g {
 
 		/**
 		 * このインスタンスがアクティブインスタンスであるかどうか返す。
-		 * 
+		 *
 		 * ゲーム開発者は、この値の真偽に起因する処理で、ゲームのローカルな実行状態を変更してはならず、
 		 * `raiseEvent()` などによって、グローバルな状態を更新する必要がある。
 		 */
@@ -1243,7 +1244,8 @@ namespace g {
 
 			if (scene._needsLoading() && scene._loadingState < SceneLoadState.LoadedFired) {
 				if (this._defaultLoadingScene._needsLoading())
-					throw ExceptionFactory.createAssertionError("Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages.");
+					throw ExceptionFactory.createAssertionError(
+						"Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages.");
 				this._doPushScene(loadingScene, this._defaultLoadingScene);
 				loadingScene.reset(scene);
 			} else {

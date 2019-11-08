@@ -39,7 +39,8 @@ namespace g {
 		 */
 		render(srcSurface: Surface, width: number, height: number): Surface {
 			var isCreateSurface = true;
-			if (!this._surface || this._surface.width !== width || this._surface.height !== height || this._beforeSrcSurface !== srcSurface) {
+			if (!this._surface || this._surface.width !== width ||
+					this._surface.height !== height || this._beforeSrcSurface !== srcSurface) {
 				this._surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 				this._beforeSrcSurface = srcSurface;
 			} else {

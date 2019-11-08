@@ -233,7 +233,7 @@ namespace g {
 			/**
 			 * @private
 			 */
-			_onAnimatingStarted: () => void,
+			_onAnimatingStarted: () => void;
 
 			/**
 			 * @private
