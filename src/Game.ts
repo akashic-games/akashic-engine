@@ -462,8 +462,6 @@ export abstract class Game implements Registrable<E> {
 	 *
 	 * `Game#draw()`, `Game#findPointSource()` のデフォルト値として使用される。
 	 * この値を変更した場合、変更を描画に反映するためには `Game#modified` に真を代入しなければならない。
-	 * (ただしこの値が非 `undefined` の時、`Game#focusingCamera.modified()` を呼び出す場合は
-	 * `Game#modified` の操作は省略できる。)
 	 */
 	// focusingCameraが変更されても古いカメラをtargetCamerasに持つエンティティのEntityStateFlags.Modifiedを取りこぼすことが無いように、変更時にはrenderを呼べるようアクセサを使う
 	get focusingCamera(): Camera {

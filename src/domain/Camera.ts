@@ -5,13 +5,6 @@ import { RendererLike } from "../interfaces/RendererLike";
  */
 export interface Camera {
 	/**
-	 * このカメラのID。
-	 * カメラ生成時に暗黙に設定される値。
-	 * `local` が真である場合、この値は `undefined` である。
-	 */
-	id: number;
-
-	/**
 	 * このカメラがローカルであるか否か。
 	 */
 	local: boolean;

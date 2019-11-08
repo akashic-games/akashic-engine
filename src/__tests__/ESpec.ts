@@ -480,7 +480,7 @@ describe("test E", () => {
 	});
 
 	it("findPointSource", () => {
-		const cam1 = new Camera2D({ game: runtime.game });
+		const cam1 = new Camera2D({});
 
 		e.touchable = true;
 		e.x = e.y = 100;
@@ -503,7 +503,7 @@ describe("test E", () => {
 		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam1);
 		expect(found && found.target).toBe(face1);
 
-		const cam2 = new Camera2D({ game: runtime.game });
+		const cam2 = new Camera2D({});
 		const face2 = new E({ scene: runtime.scene });
 		face2.touchable = true;
 		face2.x = face2.y = 10;
@@ -867,13 +867,13 @@ describe("test E", () => {
 		expect(e.targetCameras).toEqual([]);
 		expect(e._targetCameras).toEqual([]);
 
-		const c = new Camera2D({ game: runtime.game });
+		const c = new Camera2D({});
 		e.targetCameras = [c];
 
 		expect(e._targetCameras).toEqual([c]);
 		expect(e.targetCameras).toEqual([c]);
 
-		const c2 = new Camera2D({ game: runtime.game });
+		const c2 = new Camera2D({});
 		e.targetCameras = [c, c2];
 
 		expect(e._targetCameras).toEqual([c, c2]);
@@ -919,9 +919,9 @@ describe("test E", () => {
 	it("render with camera", () => {
 		const e = new E({ scene: runtime.scene });
 		const r = new Renderer();
-		const c = new Camera2D({ game: runtime.game });
+		const c = new Camera2D({});
 
-		const c2 = new Camera2D({ game: runtime.game });
+		const c2 = new Camera2D({});
 		e.targetCameras = [c2];
 		e.render(r, c);
 		expect(r.methodCallHistory).toEqual([]);
@@ -991,7 +991,7 @@ describe("test E", () => {
 	it("renderSelf with camera", () => {
 		const e = new E({ scene: runtime.scene });
 		const r = new Renderer();
-		const c = new Camera2D({ game: runtime.game });
+		const c = new Camera2D({});
 
 		expect(e.renderSelf(r, c)).toBe(true);
 		expect(r.methodCallHistory).toEqual([]);
@@ -1161,7 +1161,7 @@ describe("test E", () => {
 		scene.append(e2);
 		e.append(e2);
 
-		const camera = new Camera2D({ game: runtime.game });
+		const camera = new Camera2D({});
 		e.targetCameras.push(camera);
 
 		const result = e.calculateBoundingRect(camera);

@@ -1,25 +1,16 @@
-import { Game } from "../Game";
 import { RendererLike } from "../interfaces/RendererLike";
 import { Camera } from "./Camera";
 import { Object2D, Object2DParameterObject } from "./Object2D";
 
 export interface Camera2DSerialization {
-	id: number;
 	param: Camera2DParameterObject;
 }
 
 /**
  * `Camera2D` のコンストラクタに渡すことができるパラメータ。
  * 各メンバの詳細は `Camera2D` の同名メンバの説明を参照すること。
- *
- * 例外的に、`Camera2D` のコンストラクタは `width`, `height` のみ無視することに注意。
  */
 export interface Camera2DParameterObject extends Object2DParameterObject {
-	/**
-	 * このカメラに紐づける `Game` 。
-	 */
-	game: Game;
-
 	/**
 	 * このカメラがローカルであるか否か。
 	 * @default false
@@ -37,22 +28,6 @@ export interface Camera2DParameterObject extends Object2DParameterObject {
  * 2D世界におけるカメラ。
  */
 export class Camera2D extends Object2D implements Camera {
-	/**
-	 * 紐づいている `Game` 。
-	 */
-	game: Game;
-
-	/**
-	 * このカメラのID。
-	 *
-	 * カメラ生成時に暗黙に設定される値。
-	 * `local` が真である場合、この値は `undefined` である。
-	 *
-	 * ひとつの実行環境中、ある `Game` に対して、ある `undefined` ではない `id` を持つカメラは、最大でもひとつしか存在しない。
-	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を直接変更してはならない。
-	 */
-	id: number;
-
 	/**
 	 * このカメラがローカルであるか否か。
 	 *
@@ -76,13 +51,10 @@ export class Camera2D extends Object2D implements Camera {
 	 * 与えられたシリアリゼーションでカメラを復元する。
 	 *
 	 * @param ser `Camera2D#serialize()` の戻り値
-	 * @param game 復元されたカメラの属する Game
 	 */
-	static deserialize(ser: any, game: Game): Camera2D {
-		var s: Camera2DSerialization = <Camera2DSerialization>ser;
-		s.param.game = game;
-		var ret = new Camera2D(s.param);
-		ret.id = s.id;
+	static deserialize(ser: any): Camera2D {
+		const s: Camera2DSerialization = ser;
+		const ret = new Camera2D(s.param);
 		return ret;
 	}
 
@@ -92,16 +64,9 @@ export class Camera2D extends Object2D implements Camera {
 	 */
 	constructor(param: Camera2DParameterObject) {
 		super(param);
-		this.game = param.game;
 		this.local = !!param.local;
 		this.name = param.name;
 		this._modifiedCount = 0;
-
-		// param の width と height は無視する
-		this.width = param.game.width;
-		this.height = param.game.height;
-
-		this.id = this.local ? undefined : this.game._cameraIdx++;
 	}
 
 	/**
@@ -116,8 +81,6 @@ export class Camera2D extends Object2D implements Camera {
 	modified(): void {
 		this._modifiedCount = (this._modifiedCount + 1) % 32768;
 		if (this._matrix) this._matrix._modified = true;
-
-		this.game.modified = true;
 	}
 
 	/**
@@ -126,10 +89,8 @@ export class Camera2D extends Object2D implements Camera {
 	 * このメソッドの戻り値を `Camera2D#deserialize()` に渡すことで同じ値を持つカメラを復元することができる。
 	 */
 	serialize(): any {
-		var ser = <Camera2DSerialization>{
-			id: this.id,
+		const ser: Camera2DSerialization = {
 			param: {
-				game: <Game>undefined,
 				local: this.local,
 				name: this.name,
 				x: this.x,
@@ -140,6 +101,8 @@ export class Camera2D extends Object2D implements Camera {
 				scaleX: this.scaleX,
 				scaleY: this.scaleY,
 				angle: this.angle,
+				anchorX: this.anchorX,
+				anchorY: this.anchorY,
 				compositeOperation: this.compositeOperation
 			}
 		};
