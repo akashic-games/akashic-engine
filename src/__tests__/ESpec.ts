@@ -1,4 +1,4 @@
-import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, PointEvent, Scene } from "..";
+import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, Scene } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -1060,7 +1060,7 @@ describe("test E", () => {
 
 	it("_isTargetOperation", () => {
 		const e = new E({ scene: runtime.scene });
-		const p = new PointEvent(0, e, { x: 0, y: 0 });
+		const p = new PointDownEvent(0, e, { x: 0, y: 0 });
 
 		expect(e._isTargetOperation(p)).toBe(false);
 		e.touchable = true;

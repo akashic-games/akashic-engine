@@ -1,5 +1,12 @@
 import { ExceptionFactory } from "../../commons/ExceptionFactory";
-import { MessageEvent, PointDownEvent, PointEvent, PointMoveEvent, PointSource, PointUpEvent } from "../../domain/Event";
+import {
+	MessageEvent,
+	PointDownEventBase,
+	PointEventBase,
+	PointMoveEventBase,
+	PointSourceBase,
+	PointUpEventBase
+} from "../../domain/Event";
 import { Matrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
 import { RendererLike } from "../../interfaces/RendererLike";
@@ -12,6 +19,42 @@ import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { LocalTickMode } from "../../types/LocalTickMode";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
+
+/**
+ * ポインティングソースによって対象となるエンティティを表すインターフェース。
+ * エンティティとエンティティから見た相対座標によって構成される。
+ */
+export interface PointSource extends PointSourceBase<E> {}
+
+export type PointEvent = PointEventBase<E>;
+
+/**
+ * ポインティング操作の開始を表すイベント。
+ */
+export class PointDownEvent extends PointDownEventBase<E> {}
+
+/**
+ * ポインティング操作の終了を表すイベント。
+ * PointDownEvent後にのみ発生する。
+ *
+ * PointUpEvent#startDeltaによってPointDownEvent時からの移動量が、
+ * PointUpEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
+ * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
+ */
+export class PointUpEvent extends PointUpEventBase<E> {}
+
+/**
+ * ポインティング操作の移動を表すイベント。
+ * PointDownEvent後にのみ発生するため、MouseMove相当のものが本イベントとして発生することはない。
+ *
+ * PointMoveEvent#startDeltaによってPointDownEvent時からの移動量が、
+ * PointMoveEvent#prevDeltaによって直近のPointMoveEventからの移動量が取得出来る。
+ * PointMoveEvent#pointにはPointMoveEvent#pointと同じ値が格納される。
+ *
+ * 本イベントは、プレイヤーがポインティングデバイスを移動していなくても、
+ * カメラの移動等視覚的にポイントが変化している場合にも発生する。
+ */
+export class PointMoveEvent extends PointMoveEventBase<E> {}
 
 /**
  * `E` のコンストラクタに渡すことができるパラメータ。
@@ -729,7 +772,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	_isTargetOperation(e: PointEvent): boolean {
 		if (this.state & EntityStateFlags.Hidden) return false;
-		if (e instanceof PointEvent) return this._touchable && e.target === this;
+		if (e instanceof PointEventBase) return this._touchable && e.target === this;
 
 		return false;
 	}
