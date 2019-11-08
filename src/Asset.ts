@@ -131,7 +131,8 @@ namespace g {
 		 */
 		_useRealSize: boolean;
 
-		constructor(id: string, assetPath: string, width: number, height: number, system: VideoSystem, loop: boolean, useRealSize: boolean) {
+		constructor(id: string, assetPath: string, width: number, height: number,
+		    system: VideoSystem, loop: boolean, useRealSize: boolean) {
 			super(id, assetPath, width, height);
 			this.realWidth = 0;
 			this.realHeight = 0;
