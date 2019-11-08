@@ -26,16 +26,7 @@ import { Object2D, Object2DParameterObject } from "../Object2D";
  */
 export interface PointSource extends PointSourceBase<E> {}
 
-/**
- * ポインティング操作を表すイベント。
- * PointEvent#targetでそのポインティング操作の対象が、
- * PointEvent#pointでその対象からの相対座標が取得できる。
- *
- * 本イベントはマルチタッチに対応しており、PointEvent#pointerIdを参照することで識別することが出来る。
- *
- * abstract
- */
-export class PointEvent extends PointEventBase<E> {}
+export type PointEvent = PointEventBase<E>;
 
 /**
  * ポインティング操作の開始を表すイベント。
