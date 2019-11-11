@@ -76,6 +76,16 @@ module.exports = {
             "error"
         ],
         "@typescript-eslint/type-annotation-spacing": "error",
+        "@typescript-eslint/typedef": ["error", {
+            "propertyDeclaration": true,
+            "memberVariableDeclaration": true,
+            "parameter": true,
+            "arrowParameter": false
+        }],
+        "@typescript-eslint/explicit-function-return-type": ["error", {
+            "allowExpressions": true,
+            "allowTypedFunctionExpressions": true
+        }],
         "camelcase": "off",
         "curly": "off",
         "dot-notation": "error",
@@ -128,6 +138,8 @@ module.exports = {
         "no-new-wrappers": "error",
         "no-redeclare": "off",
         "no-trailing-spaces": "error",
+        "comma-spacing": "error",
+        "brace-style": "error",
         "no-underscore-dangle": "off",
         "no-unused-expressions": "error",
         "no-unused-labels": "error",
@@ -137,29 +149,6 @@ module.exports = {
             "error",
             {
                 "rules": {
-                    "jsdoc-format": true,
-                    "no-unused-variable": true,
-                    "one-line": [
-                        true,
-                        "check-open-brace",
-                        "check-catch",
-                        "check-else",
-                        "check-whitespace"
-                    ],
-                    "trailing-comma": [
-                        true,
-                        {
-                            "multiline": "never",
-                            "singleline": "never"
-                        }
-                    ],
-                    "typedef": [
-                        true,
-                        "property-declaration",
-                        "member-variable-declaration",
-                        "parameter",
-                        "call-signature"
-                    ],
                     "whitespace": [
                         true,
                         "check-branch",

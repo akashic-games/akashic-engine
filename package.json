@@ -19,8 +19,8 @@
     "textlint-rule-no-mix-dearu-desumasu": "^1.4.0",
     "textlint-rule-prh": "^2.4.0",
     "tslint": "^5.4.3",
-    "typedoc": "^0.11.1",
-    "typescript": "^3.2.1",
+    "typedoc": "^0.15.0",
+    "typescript": "~3.6.0",
     "uglify-js": "^2.6.0"
   },
   "scripts": {
@@ -38,7 +38,7 @@
     "minify": "npm run build && npm run minify:node && npm run minify:browser",
     "minify:node": "uglifyjs -o ./lib/main.node.min.js --compress --mangle -- lib/main.node.js",
     "minify:browser": "uglifyjs lib/main.js -o ./lib/main.min.js",
-    "lint": "tslint -c tslint.json src/**/*.ts spec/*.ts spec/helpers/**/*.ts --project ./tsconfig.json",
+    "lint": "eslint -c .eslintrc.js  src/*.ts  --parser-options \"project: './tsconfig.json'\"",
     "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts"
   },
   "files": [
