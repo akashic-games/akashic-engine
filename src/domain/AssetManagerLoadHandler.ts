@@ -1,6 +1,5 @@
 import { AssetLike } from "../interfaces/AssetLike";
 import { AssetLoadError } from "../types/errors";
-import { AssetManager } from "./AssetManager";
 
 /**
  * `AssetManager` から `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。
@@ -11,9 +10,9 @@ export interface AssetManagerLoadHandler {
 	 * 読み込失敗の通知を受ける関数。
 	 * @param asset 読み込みに失敗したアセット
 	 * @param error 失敗の内容を表すエラー
-	 * @param manager アセットの読み込みを試みた`AssetManager`. この値の `retryLoad()` を呼び出すことで読み込みを再試行できる
+	 * @param callback `読み込みの再試行を行うコールバック関数
 	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError, manager: AssetManager): void;
+	_onAssetError(asset: AssetLike, error: AssetLoadError, callback?: (asset: AssetLike) => void): void;
 
 	/**
 	 * 読み込み完了の通知を受ける関数。
