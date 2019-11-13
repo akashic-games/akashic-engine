@@ -36,6 +36,7 @@ export * from "./domain/Object2D";
 export * from "./domain/OperationPluginManager";
 export * from "./domain/PathUtil";
 export * from "./domain/RandomGenerator";
+export * from "./domain/ModuleManager";
 export * from "./domain/RequireCacheable";
 export * from "./domain/RequireCachedValue";
 export * from "./domain/ScriptAssetContext";
