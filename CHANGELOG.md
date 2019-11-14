@@ -1,6 +1,12 @@
 # ChangeLog
 
+## 2.6.1
+
+その他変更
+ * TypeScript3.6でコンパイルするように修正
+
 ## 2.6.0
+
 不具合修正
 * `Game#terminateGame()` を直接呼ぶとエラーが発生する不具合の修正
 
@@ -8,6 +14,7 @@
 * `Game#_terminateGame()` を `Game#_abortGame()` にリネームしたので、このメソッドに依存している箇所の修正が必要です。
 
 ## 2.5.4
+
 機能追加
  * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
 
