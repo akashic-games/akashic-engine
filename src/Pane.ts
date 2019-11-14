@@ -266,7 +266,8 @@ namespace g {
 			if (this._childrenSurface && !this._childrenSurface.destroyed()) {
 				this._childrenSurface.destroy();
 			}
-			this._childrenSurface = resourceFactory.createSurface(Math.ceil(this._childrenArea.width), Math.ceil(this._childrenArea.height));
+			this._childrenSurface =
+				resourceFactory.createSurface(Math.ceil(this._childrenArea.width), Math.ceil(this._childrenArea.height));
 			this._childrenRenderer = this._childrenSurface.renderer();
 			this._normalizedPadding = r;
 		}

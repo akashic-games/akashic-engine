@@ -84,7 +84,8 @@ namespace g {
 		 */
 		_setPlaybackRate(value: number): void {
 			if (value < 0 || isNaN(value) || typeof value !== "number")
-				throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
+				throw ExceptionFactory.createAssertionError(
+					"AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
 
 			var before = this._playbackRate;
 			this._playbackRate = value;

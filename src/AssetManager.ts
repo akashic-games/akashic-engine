@@ -273,9 +273,11 @@ namespace g {
 				}
 				if (conf.type === "image") {
 					if (typeof conf.width !== "number")
-						throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong width given for the image asset: " + p);
+						throw ExceptionFactory.createAssertionError(
+							"AssetManager#_normalize: wrong width given for the image asset: " + p);
 					if (typeof conf.height !== "number")
-						throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong height given for the image asset: " + p);
+						throw ExceptionFactory.createAssertionError(
+							"AssetManager#_normalize: wrong height given for the image asset: " + p);
 				}
 				if (conf.type === "audio") {
 					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
@@ -292,9 +294,11 @@ namespace g {
 				if (conf.type === "video") {
 					if (! conf.useRealSize) {
 						if (typeof conf.width !== "number")
-							throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong width given for the video asset: " + p);
+							throw ExceptionFactory.createAssertionError(
+								"AssetManager#_normalize: wrong width given for the video asset: " + p);
 						if (typeof conf.height !== "number")
-							throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong height given for the video asset: " + p);
+							throw ExceptionFactory.createAssertionError(
+								"AssetManager#_normalize: wrong height given for the video asset: " + p);
 						conf.useRealSize = false;
 					}
 				}
@@ -342,7 +346,8 @@ namespace g {
 				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
 				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, new VideoSystem(), conf.loop, conf.useRealSize);
 			default:
-				throw ExceptionFactory.createAssertionError("AssertionError#_createAssetFor: unknown asset type " + conf.type + " for asset ID: " + id);
+				throw ExceptionFactory.createAssertionError(
+					"AssertionError#_createAssetFor: unknown asset type " + conf.type + " for asset ID: " + id);
 			}
 		}
 

@@ -245,7 +245,8 @@ namespace g {
 		moveTo(obj: CommonOffset): void;
 		moveTo(posOrX: number|CommonOffset, y?: number): void {
 			if (typeof posOrX === "number" && typeof y !== "number") {
-				throw ExceptionFactory.createAssertionError("Object2D#moveTo: arguments must be CommonOffset or pair of x and y as a number.");
+				throw ExceptionFactory.createAssertionError(
+					"Object2D#moveTo: arguments must be CommonOffset or pair of x and y as a number.");
 			}
 			if (typeof posOrX === "number") {
 				this.x = posOrX;
@@ -286,7 +287,8 @@ namespace g {
 		resizeTo(size: CommonSize): void;
 		resizeTo(sizeOrWidth: number|CommonSize, height?: number): void {
 			if (typeof sizeOrWidth === "number" && typeof height !== "number") {
-				throw ExceptionFactory.createAssertionError("Object2D#resizeTo: arguments must be CommonSize or pair of width and height as a number.");
+				throw ExceptionFactory.createAssertionError(
+					"Object2D#resizeTo: arguments must be CommonSize or pair of width and height as a number.");
 			}
 			if (typeof sizeOrWidth === "number") {
 				this.width = sizeOrWidth;

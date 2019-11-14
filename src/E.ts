@@ -466,7 +466,7 @@ namespace g {
 
 			if (this.children) {
 
-				for (var i = this.children.length -1; i >= 0; --i) {
+				for (var i = this.children.length - 1; i >= 0; --i) {
 					this.children[i].destroy();
 				}
 				if (this.children.length !== 0)

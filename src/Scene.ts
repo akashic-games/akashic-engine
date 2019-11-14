@@ -681,7 +681,8 @@ namespace g {
 		setInterval(handler: (() => void) | number, interval: any, owner?: any): TimerIdentifier {
 			const t = this._timer;
 			if (typeof handler === "number") {
-				this.game.logger.warn("[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first.");
+				this.game.logger.warn(
+					"[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first.");
 				return (owner != null) ? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
 				                       : t.setInterval(interval /* 1 */, handler /* 0 */, null);
 			}
@@ -735,7 +736,8 @@ namespace g {
 		setTimeout(handler: (() => void) | number, milliseconds: any, owner?: any): TimerIdentifier {
 			const t = this._timer;
 			if (typeof handler === "number") {
-				this.game.logger.warn("[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first.");
+				this.game.logger.warn(
+					"[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first.");
 				return (owner != null) ? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
 				                       : t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
 			}
