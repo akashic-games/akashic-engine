@@ -891,7 +891,11 @@ describe("test Game", () => {
 		expect(game.audio.music._muted).toBe(true);
 
 		// 後から追加された AudioSystem でも GameDriver の値を反映する。
-		const myAudioSys = new SoundAudioSystem("voice_chara1", game);
+		const myAudioSys = new SoundAudioSystem({
+			id: "voice_chara1",
+			audioSystemManager: game._audioSystemManager,
+			resourceFactory: game.resourceFactory
+		});
 		game.audio.chara1 = myAudioSys;
 		expect(game.audio.chara1._playbackRate).toBe(1.7);
 		expect(game.audio.chara1._muted).toBe(true);

@@ -501,10 +501,18 @@ export abstract class Game implements Registrable<E> {
 		this.selfId = selfId || undefined;
 		this.playId = undefined;
 
-		this._audioSystemManager = new AudioSystemManager(this);
+		this._audioSystemManager = new AudioSystemManager();
 		this.audio = {
-			music: new MusicAudioSystem("music", this),
-			sound: new SoundAudioSystem("sound", this)
+			music: new MusicAudioSystem({
+				id: "music",
+				audioSystemManager: this._audioSystemManager,
+				resourceFactory: this.resourceFactory
+			}),
+			sound: new SoundAudioSystem({
+				id: "sound",
+				audioSystemManager: this._audioSystemManager,
+				resourceFactory: this.resourceFactory
+			})
 		};
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
@@ -946,14 +954,14 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_setAudioPlaybackRate(playbackRate: number): void {
-		this._audioSystemManager._setPlaybackRate(playbackRate);
+		this._audioSystemManager._setPlaybackRate(playbackRate, this.audio);
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(muted: boolean): void {
-		this._audioSystemManager._setMuted(muted);
+		this._audioSystemManager._setMuted(muted, this.audio);
 	}
 
 	/**
@@ -988,7 +996,7 @@ export abstract class Game implements Registrable<E> {
 			if (param.randGen !== undefined) this.random = param.randGen;
 		}
 
-		this._audioSystemManager._reset();
+		this._audioSystemManager._reset(this.audio);
 		this._loaded.removeAll({ func: this._start, owner: this });
 		this.join.removeAll();
 		this.leave.removeAll();
@@ -1100,7 +1108,6 @@ export abstract class Game implements Registrable<E> {
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
 		this._assetManager = undefined;
-		this._audioSystemManager._game = undefined;
 		this._audioSystemManager = undefined;
 		this._operationPluginManager = undefined;
 		this._operationPluginOperated.destroy();

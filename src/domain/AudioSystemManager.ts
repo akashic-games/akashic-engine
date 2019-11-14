@@ -1,4 +1,4 @@
-import { Game } from "../Game";
+import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 
 /**
  * `Game#audio` の管理クラス。
@@ -10,11 +10,6 @@ export class AudioSystemManager {
 	/**
 	 * @private
 	 */
-	_game: Game;
-
-	/**
-	 * @private
-	 */
 	_muted: boolean;
 
 	/**
@@ -22,8 +17,7 @@ export class AudioSystemManager {
 	 */
 	_playbackRate: number;
 
-	constructor(game: Game) {
-		this._game = game;
+	constructor() {
 		this._muted = false;
 		this._playbackRate = 1.0;
 	}
@@ -31,10 +25,9 @@ export class AudioSystemManager {
 	/**
 	 * @private
 	 */
-	_reset(): void {
+	_reset(systems: { [key: string]: AudioSystemLike }): void {
 		this._muted = false;
 		this._playbackRate = 1.0;
-		var systems = this._game.audio;
 		for (var id in systems) {
 			if (!systems.hasOwnProperty(id)) continue;
 			systems[id]._reset();
@@ -44,11 +37,10 @@ export class AudioSystemManager {
 	/**
 	 * @private
 	 */
-	_setMuted(muted: boolean): void {
+	_setMuted(muted: boolean, systems: { [key: string]: AudioSystemLike }): void {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-		var systems = this._game.audio;
 		for (var id in systems) {
 			if (!systems.hasOwnProperty(id)) continue;
 			systems[id]._setMuted(muted);
@@ -58,11 +50,10 @@ export class AudioSystemManager {
 	/**
 	 * @private
 	 */
-	_setPlaybackRate(rate: number): void {
+	_setPlaybackRate(rate: number, systems: { [key: string]: AudioSystemLike }): void {
 		if (this._playbackRate === rate) return;
 
 		this._playbackRate = rate;
-		var systems = this._game.audio;
 		for (var id in systems) {
 			if (!systems.hasOwnProperty(id)) continue;
 			systems[id]._setPlaybackRate(rate);
