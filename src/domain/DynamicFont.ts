@@ -189,12 +189,12 @@ export class DynamicFont extends Font {
 		super();
 		this.fontFamily = param.fontFamily;
 		this.size = param.size;
-		this.hint = "hint" in param ? param.hint : {};
-		this.fontColor = "fontColor" in param ? param.fontColor : "black";
-		this.fontWeight = "fontWeight" in param ? param.fontWeight : FontWeight.Normal;
-		this.strokeWidth = "strokeWidth" in param ? param.strokeWidth : 0;
-		this.strokeColor = "strokeColor" in param ? param.strokeColor : "black";
-		this.strokeOnly = "strokeOnly" in param ? param.strokeOnly : false;
+		this.hint = param.hint != null ? param.hint : {};
+		this.fontColor = param.fontColor != null ? param.fontColor : "black";
+		this.fontWeight = param.fontWeight != null ? param.fontWeight : FontWeight.Normal;
+		this.strokeWidth = param.strokeWidth != null ? param.strokeWidth : 0;
+		this.strokeColor = param.strokeColor != null ? param.strokeColor : "black";
+		this.strokeOnly = param.strokeOnly != null ? param.strokeOnly : false;
 		this._resourceFactory = param.game.resourceFactory;
 		this._glyphFactory = this._resourceFactory.createGlyphFactory(
 			this.fontFamily,

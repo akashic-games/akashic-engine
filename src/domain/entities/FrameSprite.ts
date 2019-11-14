@@ -144,7 +144,7 @@ export class FrameSprite extends Sprite {
 		super(param);
 		this._lastUsedIndex = 0;
 		this.frameNumber = param.frameNumber || 0;
-		this.frames = "frames" in param ? param.frames : [0];
+		this.frames = param.frames != null ? param.frames : [0];
 		this.interval = param.interval;
 		this._timer = undefined;
 		this.loop = param.loop != null ? param.loop : true;

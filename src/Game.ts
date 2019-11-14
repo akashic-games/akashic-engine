@@ -929,8 +929,8 @@ export abstract class Game implements Registrable<E> {
 	 */
 	_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
 		if (!gameConfiguration) throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
-		if (!("assets" in gameConfiguration)) gameConfiguration.assets = {};
-		if (!("fps" in gameConfiguration)) gameConfiguration.fps = 30;
+		if (gameConfiguration.assets == null) gameConfiguration.assets = {};
+		if (gameConfiguration.fps == null) gameConfiguration.fps = 30;
 		if (typeof gameConfiguration.fps !== "number")
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: fps must be given as a number");
 		if (!(0 <= gameConfiguration.fps && gameConfiguration.fps <= 60))

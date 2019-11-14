@@ -208,9 +208,9 @@ export class Object2D implements CommonArea {
 			this.y = param.y || 0;
 			this.width = param.width || 0;
 			this.height = param.height || 0;
-			this.opacity = "opacity" in param ? param.opacity : 1;
-			this.scaleX = "scaleX" in param ? param.scaleX : 1;
-			this.scaleY = "scaleY" in param ? param.scaleY : 1;
+			this.opacity = param.opacity != null ? param.opacity : 1;
+			this.scaleX = param.scaleX != null ? param.scaleX : 1;
+			this.scaleY = param.scaleY != null ? param.scaleY : 1;
 			this.angle = param.angle || 0;
 			this.compositeOperation = param.compositeOperation;
 			this.anchorX = param.anchorX || 0;
