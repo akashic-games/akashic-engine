@@ -401,7 +401,7 @@ describe("test Module", () => {
 		game._startLoadingGlobalAssets();
 	});
 
-	it("require - required from basic/URL", done => {
+	it("require - basic/URL", done => {
 		const assetBase = "http://some.where";
 
 		const scripts: { [path: string]: string } = {};
