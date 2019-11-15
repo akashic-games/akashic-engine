@@ -374,7 +374,7 @@ export class ScriptAsset extends g.ScriptAsset {
 		}
 	}
 
-	execute(env: g.ScriptAssetExecuteEnvironment): any {
+	execute(env: g.ScriptAssetRuntimeValue): any {
 		if (!(<ResourceFactory>this.game.resourceFactory).scriptContents.hasOwnProperty(env.module.filename)) {
 			// 特にスクリプトの内容指定がないケース:
 			// ScriptAssetは任意の値を返してよいが、シーンを記述したスクリプトは
