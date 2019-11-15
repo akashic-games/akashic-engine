@@ -1,11 +1,9 @@
 import { ModuleLike } from "../interfaces/ModuleLike";
-import { ScriptAssetExecuteEnvironment } from "../interfaces/ScriptAssetExecuteEnvironment";
+import { ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "../interfaces/ScriptAssetRuntimeValue";
 import { PathUtil } from "./PathUtil";
 
-declare const g: any;
-
 export interface ModuleParameterObject {
-	game: any;
+	runtimeValueBase: ScriptAssetRuntimeValueBase;
 	id: string;
 	path: string;
 	virtualPath?: string;
@@ -72,10 +70,9 @@ export class Module implements ModuleLike {
 	/**
 	 * @private
 	 */
-	_g: ScriptAssetExecuteEnvironment;
+	_runtimeValue: ScriptAssetRuntimeValue;
 
 	constructor(param: ModuleParameterObject) {
-		const game = param.game;
 		const path = param.path;
 		const dirname = PathUtil.resolveDirname(path);
 		// `virtualPath` と `virtualDirname` は　`DynamicAsset` の場合は `undefined` になる。
@@ -83,11 +80,7 @@ export class Module implements ModuleLike {
 		const virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
 		const require = param.require;
 
-		this._g = Object.create(g, {
-			game: {
-				value: game,
-				enumerable: true
-			},
+		this._runtimeValue = Object.create(param.runtimeValueBase, {
 			filename: {
 				value: path,
 				enumerable: true

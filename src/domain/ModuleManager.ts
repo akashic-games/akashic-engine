@@ -1,6 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { AssetLike } from "../interfaces/AssetLike";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
+import { ScriptAssetRuntimeValueBase } from "../interfaces/ScriptAssetRuntimeValue";
 import { TextAssetLike } from "../interfaces/TextAssetLike";
 import { AssetManager } from "./AssetManager";
 import { Module } from "./Module";
@@ -31,11 +32,11 @@ export class ModuleManager {
 	/**
 	 * @private
 	 */
-	_game: any;
+	_runtimeValueBase: ScriptAssetRuntimeValueBase;
 
-	constructor(game: any, assetManager: AssetManager) {
+	constructor(runtimeBase: ScriptAssetRuntimeValueBase, assetManager: AssetManager) {
 		this._assetManager = assetManager;
-		this._game = game;
+		this._runtimeValueBase = runtimeBase;
 		this._scriptCaches = {};
 	}
 
@@ -76,7 +77,7 @@ export class ModuleManager {
 
 			if (currentModule) {
 				if (!currentModule._virtualDirname)
-					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
+					throw ExceptionFactory.createAssertionError("g._require: require from modules without virtualPath is not supported");
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
 				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
@@ -100,7 +101,7 @@ export class ModuleManager {
 			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
 			if (moduleMainScripts[path]) {
 				resolvedPath = moduleMainScripts[path];
-				targetScriptAsset = this._assetManager._liveAssetVirtualPathTable[resolvedPath];
+				targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 			}
 
 			if (!targetScriptAsset) {
@@ -122,7 +123,7 @@ export class ModuleManager {
 
 			if (targetScriptAsset.type === "script") {
 				const module = new Module({
-					game: this._game,
+					runtimeValueBase: this._runtimeValueBase,
 					id: targetScriptAsset.id,
 					path: targetScriptAsset.path,
 					virtualPath: this._assetManager._liveAbsolutePathTable[targetScriptAsset.path],

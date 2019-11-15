@@ -74,7 +74,7 @@ export * from "./interfaces/ImageAssetLike";
 export * from "./interfaces/ModuleLike";
 export * from "./interfaces/RendererLike";
 export * from "./interfaces/ResourceFactoryLike";
-export * from "./interfaces/ScriptAssetExecuteEnvironment";
+export * from "./interfaces/ScriptAssetRuntimeValue";
 export * from "./interfaces/ScriptAssetLike";
 export * from "./interfaces/ShaderProgramLike";
 export * from "./interfaces/SurfaceAtlasLike";

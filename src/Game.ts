@@ -16,6 +16,7 @@ import { AssetLike } from "./interfaces/AssetLike";
 import { AudioSystemLike } from "./interfaces/AudioSystemLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
+import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
 import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
 import { Trigger } from "./Trigger";
@@ -28,6 +29,8 @@ import { InternalOperationPluginInfo } from "./types/OperationPluginInfo";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
+
+declare const g: any;
 
 /**
  * シーン遷移要求のタイプ。
@@ -450,6 +453,12 @@ export abstract class Game implements Registrable<E> {
 	_configuration: GameConfiguration;
 
 	/**
+	 * このゲームの `ScriptAssetRuntimeValueBase` 。
+	 * @private
+	 */
+	_runtimeValueBase: ScriptAssetRuntimeValueBase;
+
+	/**
 	 * 実行待ちのシーン遷移要求。
 	 */
 	private _sceneChangeRequests: SceneChangeRequest[];
@@ -535,12 +544,18 @@ export abstract class Game implements Registrable<E> {
 		this.snapshotRequest = new Trigger<void>();
 
 		this.external = {};
+		this._runtimeValueBase = Object.create(g, {
+			game: {
+				value: this,
+				enumerable: true
+			}
+		});
 
 		this._main = gameConfiguration.main;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
-		this._moduleManager = new ModuleManager(this, this._assetManager);
+		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 		this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);

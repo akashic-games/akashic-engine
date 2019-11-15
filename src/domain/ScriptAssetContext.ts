@@ -54,7 +54,7 @@ export class ScriptAssetContext implements RequireCacheable {
 		}
 
 		this._started = true;
-		this._asset.execute(this._module._g);
+		this._asset.execute(this._module._runtimeValue);
 		this._module.loaded = true;
 		return this._module.exports;
 	}

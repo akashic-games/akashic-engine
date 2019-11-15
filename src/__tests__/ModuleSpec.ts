@@ -3,7 +3,7 @@ import { customMatchers, Game } from "./helpers";
 
 expect.extend(customMatchers);
 
-xdescribe("test Module", () => {
+describe("test Module", () => {
 	function resolveGameConfigurationPath(gameConfiguration: any, pathConverter: any): any {
 		function objectMap(obj: any, f: any): any {
 			const o: any = {};
@@ -271,7 +271,7 @@ xdescribe("test Module", () => {
 				path,
 				virtualPath: path,
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule),
-				game
+				runtimeValueBase: game._runtimeValueBase
 			});
 
 			expect(module.id).toBe("moduleid");
@@ -283,10 +283,10 @@ xdescribe("test Module", () => {
 			expect(module.paths).toEqual(["/path/to/the/node_modules", "/path/to/node_modules", "/path/node_modules", "/node_modules"]);
 			expect(module.require instanceof Function).toBe(true);
 			expect(module._dirname).toBe(dirname);
-			expect(module._g.game).toBe(game);
-			expect(module._g.filename).toBe(path);
-			expect(module._g.dirname).toBe(dirname);
-			expect(module._g.module).toBe(module);
+			expect(module._runtimeValue.game).toBe(game);
+			expect(module._runtimeValue.filename).toBe(path);
+			expect(module._runtimeValue.dirname).toBe(dirname);
+			expect(module._runtimeValue.module).toBe(module);
 			done();
 		});
 		game._startLoadingGlobalAssets();
@@ -308,16 +308,17 @@ xdescribe("test Module", () => {
 	});
 
 	it("require - basic", done => {
-		const game = new Game(gameConfiguration, "/");
+		const game = new Game(gameConfiguration, "./");
 		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.add(() => {
 			const module = new Module({
-				id: "moduleid",
-				path: "./script/dummypath.js",
-				virtualPath: "/script/dummypath.js",
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule),
-				game
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				runtimeValueBase: game._runtimeValueBase,
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 
 			let mod = module.require("./foo");
@@ -400,7 +401,7 @@ xdescribe("test Module", () => {
 		game._startLoadingGlobalAssets();
 	});
 
-	it("require - basic/URL", done => {
+	it("require - required from basic/URL", done => {
 		const assetBase = "http://some.where";
 
 		const scripts: { [path: string]: string } = {};
@@ -413,9 +414,16 @@ xdescribe("test Module", () => {
 
 		const game = new Game(conf, assetBase + "/");
 		const manager = game._moduleManager;
+		const path = assetBase + "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scripts;
 		game._loaded.add(() => {
-			const module = manager._require(assetBase + "/script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 
 			let mod = module.require("./foo");
 			expect(mod.me).toBe("script-foo");
@@ -478,9 +486,16 @@ xdescribe("test Module", () => {
 
 		const game = new Game(conf, assetBase + "/");
 		const manager = game._moduleManager;
+		const path = assetBase + "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scripts;
 		game._loaded.add(() => {
-			const module = manager._require(assetBase + "/script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 
 			let mod = module.require("./foo");
 			expect(mod.me).toBe("script-foo");
@@ -533,9 +548,16 @@ xdescribe("test Module", () => {
 	it("require - directory structure", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.add(() => {
-			const module = manager._require("./script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 
 			const useA = module.require("./useA.js");
 			expect(useA.me).toBe("script-useA");
@@ -595,10 +617,17 @@ xdescribe("test Module", () => {
 
 		const game = new Game(conf, assetBase + "/");
 		const manager = game._moduleManager;
+		const path = assetBase + "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scripts;
 
 		game._loaded.add(() => {
-			const module = manager._require(assetBase + "/script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 
 			const useA = module.require("./useA.js");
 			expect(useA.me).toBe("script-useA");
@@ -631,9 +660,16 @@ xdescribe("test Module", () => {
 	it("require - cyclic", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.add(() => {
-			const module = manager._require("/script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 			const c1 = module.require("cyclic1");
 			expect(c1.me).toBe("cyclic1");
 			expect(c1.thisModule instanceof Module).toBe(true);
@@ -664,9 +700,16 @@ xdescribe("test Module", () => {
 	it("require - virtual path altering directory", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
+		const path = "/script/realpath.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.add(() => {
-			const module = manager._require("/script/realpath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 			const mod = module.require("../../foo"); // virtualPath: /script/some/deep/vpath.js からのrequire()
 			expect(mod.me).toBe("script-foo");
 			expect(mod.thisModule instanceof Module).toBe(true);
@@ -682,10 +725,18 @@ xdescribe("test Module", () => {
 	it("require - cache", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game.random = new XorshiftRandomGenerator(1);
 		game._loaded.add(() => {
-			const module = manager._require("/script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
+
 			const cache1 = module.require("./cache1");
 			expect(cache1.v1).toBe(cache1.v2);
 			expect(cache1.v1).toBe(cache1.cache2.v1);
@@ -697,10 +748,17 @@ xdescribe("test Module", () => {
 
 	it("require - to cascaded module", done => {
 		const game = new Game(gameConfiguration, "/");
-		game.resourceFactory.scriptContents = scriptContents;
 		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
+		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.add(() => {
-			const module = manager._require("/script/dummypath.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 			const mod = module.require("./cascaded");
 			expect(mod.me).toBe("script-cascaded");
 			expect(mod.thisModule instanceof Module).toBe(true);
@@ -716,9 +774,16 @@ xdescribe("test Module", () => {
 	it("require - from cascaded module", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
+		const path = "/cascaded/script.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game._loaded.add(() => {
-			const module = manager._require("/cascaded/script.js");
+			const module = new Module({
+				runtimeValueBase: game._runtimeValueBase,
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+			});
 			const mod = module.require("./dummypath");
 			expect(mod.me).toBe("script-dummymod");
 			expect(mod.thisModule instanceof Module).toBe(true);
