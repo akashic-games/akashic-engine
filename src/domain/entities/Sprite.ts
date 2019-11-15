@@ -102,10 +102,10 @@ export class Sprite extends E {
 	constructor(param: SpriteParameterObject) {
 		super(param);
 		this.surface = SurfaceUtil.asSurface(param.src);
-		if (!("width" in param)) this.width = this.surface.width;
-		if (!("height" in param)) this.height = this.surface.height;
-		this.srcWidth = "srcWidth" in param ? param.srcWidth : this.width;
-		this.srcHeight = "srcHeight" in param ? param.srcHeight : this.height;
+		if (param.width == null) this.width = this.surface.width;
+		if (param.height == null) this.height = this.surface.height;
+		this.srcWidth = param.srcWidth != null ? param.srcWidth : this.width;
+		this.srcHeight = param.srcHeight != null ? param.srcHeight : this.height;
 		this.srcX = param.srcX || 0;
 		this.srcY = param.srcY || 0;
 		this._stretchMatrix = undefined;

@@ -154,11 +154,11 @@ export class Label extends CacheableE {
 		super(param);
 		this.text = param.text;
 		this.font = param.font;
-		this.textAlign = "textAlign" in param ? param.textAlign : TextAlign.Left;
+		this.textAlign = param.textAlign != null ? param.textAlign : TextAlign.Left;
 		this.glyphs = new Array(param.text.length);
 		this.fontSize = param.fontSize;
 		this.maxWidth = param.maxWidth;
-		this.widthAutoAdjust = "widthAutoAdjust" in param ? param.widthAutoAdjust : true;
+		this.widthAutoAdjust = param.widthAutoAdjust != null ? param.widthAutoAdjust : true;
 		this.textColor = param.textColor;
 		this._textWidth = 0;
 		this._game = undefined;

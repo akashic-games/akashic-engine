@@ -345,7 +345,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 			param.parent.append(this);
 		}
 		if (param.targetCameras) this.targetCameras = param.targetCameras;
-		if ("touchable" in param) this.touchable = param.touchable;
+		if (param.touchable != null) this.touchable = param.touchable;
 		if (!!param.hidden) this.hide();
 
 		// set id, scene
