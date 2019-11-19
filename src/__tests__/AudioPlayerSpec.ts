@@ -4,7 +4,6 @@ import { AudioPlayer, Game } from "./helpers";
 describe("test AudioPlayer", () => {
 	it("初期化-music", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		// const system = new MusicAudioSystem("music", game);
 		const system = new MusicAudioSystem({
 			id: "music",
 			audioSystemManager: game._audioSystemManager,

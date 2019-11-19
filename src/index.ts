@@ -62,6 +62,14 @@ export * from "./implementations/TextAsset";
 export * from "./implementations/VideoAsset";
 export * from "./implementations/VideoPlayer";
 
+export * from "./domain/PlaingContextManager";
+export * from "./implementations/PlaingContext";
+export * from "./implementations/PlaingContextFactory";
+export * from "./implementations/PlayableDAta";
+export * from "./interfaces/PlayableDataLike";
+export * from "./interfaces/PlaingContextLike";
+export * from "./interfaces/PlaingContextManagerLike";
+
 export * from "./interfaces/AssetLike";
 export * from "./interfaces/AssetLoadFailureInfo";
 export * from "./interfaces/AudioAssetLike";

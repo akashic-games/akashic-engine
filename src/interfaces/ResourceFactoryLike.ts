@@ -6,6 +6,7 @@ import { AudioPlayerLike } from "./AudioPlayerLike";
 import { AudioSystemLike } from "./AudioSystemLike";
 import { GlyphFactoryLike } from "./GlyphFactoryLike";
 import { ImageAssetLike } from "./ImageAssetLike";
+import { PlaingContextLike } from "./PlaingContextLike";
 import { ScriptAssetLike } from "./ScriptAssetLike";
 import { SurfaceAtlasLike } from "./SurfaceAtlasLike";
 import { SurfaceLike } from "./SurfaceLike";
@@ -37,7 +38,7 @@ export interface ResourceFactoryLike {
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: AudioSystemLike,
+		system: AudioSystemLike | PlaingContextLike,
 		loop: boolean,
 		hint: AudioAssetHint
 	): AudioAssetLike;
@@ -47,6 +48,8 @@ export interface ResourceFactoryLike {
 	createAudioPlayer(system: AudioSystemLike): AudioPlayerLike;
 
 	createScriptAsset(id: string, assetPath: string): ScriptAssetLike;
+
+	createAudioContext(system: any): any;
 
 	/**
 	 * Surface を作成する。

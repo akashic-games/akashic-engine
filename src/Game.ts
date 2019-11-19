@@ -9,12 +9,15 @@ import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent } from "./domain/Eve
 import { LoadingScene } from "./domain/LoadingScene";
 import { _require } from "./domain/Module";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
+import { PlaingContextManager } from "./domain/PlaingContextManager";
 import { RandomGenerator } from "./domain/RandomGenerator";
 import { RequireCacheable } from "./domain/RequireCacheable";
 import { Storage } from "./domain/Storage";
 import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
+import { MusicContext, SoundContext } from "./implementations/PlaingContext";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AudioSystemLike } from "./interfaces/AudioSystemLike";
+import { PlaingContextLike } from "./interfaces/PlaingContextLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
@@ -217,7 +220,8 @@ export abstract class Game implements Registrable<E> {
 	 * 本ゲームで利用可能なオーディオシステム群。デフォルトはmusicとsoundが登録されている。
 	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
 	 */
-	audio: { [key: string]: AudioSystemLike };
+	// audio: { [key: string]: AudioSystemLike };
+	audio: { [key: string]: PlaingContextLike };
 
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
@@ -389,7 +393,8 @@ export abstract class Game implements Registrable<E> {
 	 * Game#audioの管理者。
 	 * @private
 	 */
-	_audioSystemManager: AudioSystemManager;
+	// _audioSystemManager: AudioSystemManager;
+	_audioSystemManager: PlaingContextManager;
 
 	/**
 	 * 操作プラグインの管理者。
@@ -501,16 +506,14 @@ export abstract class Game implements Registrable<E> {
 		this.selfId = selfId || undefined;
 		this.playId = undefined;
 
-		this._audioSystemManager = new AudioSystemManager();
+		this._audioSystemManager = new PlaingContextManager();
 		this.audio = {
-			music: new MusicAudioSystem({
+			music: new MusicContext({
 				id: "music",
-				audioSystemManager: this._audioSystemManager,
 				resourceFactory: this.resourceFactory
 			}),
-			sound: new SoundAudioSystem({
+			sound: new SoundContext({
 				id: "sound",
-				audioSystemManager: this._audioSystemManager,
 				resourceFactory: this.resourceFactory
 			})
 		};
@@ -954,14 +957,14 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_setAudioPlaybackRate(playbackRate: number): void {
-		this._audioSystemManager._setPlaybackRate(playbackRate, this.audio);
+		this._audioSystemManager._setPlaybackRate(playbackRate);
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(muted: boolean): void {
-		this._audioSystemManager._setMuted(muted, this.audio);
+		this._audioSystemManager._setMuted(muted);
 	}
 
 	/**
@@ -996,7 +999,7 @@ export abstract class Game implements Registrable<E> {
 			if (param.randGen !== undefined) this.random = param.randGen;
 		}
 
-		this._audioSystemManager._reset(this.audio);
+		this._audioSystemManager._reset();
 		this._loaded.removeAll({ func: this._start, owner: this });
 		this.join.removeAll();
 		this.leave.removeAll();

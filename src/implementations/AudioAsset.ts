@@ -1,8 +1,22 @@
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { PlaingContextLike } from "../interfaces/PlaingContextLike";
+
+import { PlaingContextManagerLike } from "../interfaces/PlaingContextManagerLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { AudioAssetHint } from "../types/AssetConfiguration";
 import { Asset } from "./Asset";
+import { ContextFactory } from "./PlaingContextFactory";
+import { PlayableData } from "./PlayableData";
+
+export interface AudioAssetParameterObject {
+	id: string;
+	assetPath: string;
+	duration: number;
+	ctxMgr: PlaingContextManagerLike;
+	loop: boolean;
+	hint: AudioAssetHint;
+	_resourceFactory: ResourceFactoryLike;
+}
 
 /**
  * 音リソースを表すクラス。
@@ -14,52 +28,71 @@ import { Asset } from "./Asset";
  */
 export abstract class AudioAsset extends Asset implements AudioAssetLike {
 	type: "audio" = "audio";
-	data: any;
-	duration: number;
-	loop: boolean;
-	hint: AudioAssetHint;
+	playableData: PlayableData;
 
 	/**
 	 * @private
 	 */
-	_system: AudioSystemLike;
+	_contextMgr: PlaingContextManagerLike;
 
 	/**
 	 * @private
 	 */
-	_lastPlayedPlayer: AudioPlayerLike;
+	_lastPlayedCtx: PlaingContextLike;
 
-	constructor(id: string, assetPath: string, duration: number, system: AudioSystemLike, loop: boolean, hint: AudioAssetHint) {
-		super(id, assetPath);
-		this.duration = duration;
-		this.loop = loop;
-		this.hint = hint;
-		this._system = system;
-		this.data = undefined;
+	_resourceFactory: ResourceFactoryLike;
+
+	constructor(params: AudioAssetParameterObject) {
+		super(params.id, params.assetPath);
+		this._contextMgr = params.ctxMgr;
+		this._resourceFactory = params._resourceFactory;
+		this.playableData = new PlayableData({
+			id: params.id,
+			duration: params.duration,
+			loop: params.loop,
+			hint: params.hint,
+			volume: 100
+		});
+		this.playableData.destroyed.add(this.destroy, this);
+		this.playableData.playStart.add(this.playStart, this);
+		this.playableData.playStop.add(this.stop, this);
 	}
 
-	play(): AudioPlayerLike {
-		var player = this._system.createPlayer();
-		player.play(this);
-		this._lastPlayedPlayer = player;
-		return player;
+	createPlaingContext(): PlaingContextLike {
+		return ContextFactory.create(this.id, {
+			id: this.id,
+			// plaingContextManager: this._contextMgr,
+			resourceFactory: this._resourceFactory
+		});
+	}
+
+	playStart(): void {
+		this.play();
+	}
+
+	play(): PlaingContextLike {
+		const ctx = this.createPlaingContext();
+		// this.playableData.play(ctx);
+		ctx.play(this.playableData);
+		this._lastPlayedCtx = ctx;
+		this._contextMgr.addContext(ctx);
+		return ctx;
 	}
 
 	stop(): void {
-		var players = this._system.findPlayers(this);
-		for (var i = 0; i < players.length; ++i) players[i].stop();
+		const ctxs = this._contextMgr.findContext(this.playableData);
+		for (var i = 0; i < ctxs.length; ++i) ctxs[i].stop();
 	}
 
 	inUse(): boolean {
-		return this._system.findPlayers(this).length > 0;
+		return this._contextMgr.findContext(this.playableData).length > 0;
 	}
 
 	destroy(): void {
-		if (this._system) this.stop();
+		if (this._contextMgr) this.stop();
 
-		this.data = undefined;
-		this._system = undefined;
-		this._lastPlayedPlayer = undefined;
+		this._contextMgr = undefined;
+		this._lastPlayedCtx = undefined;
 		super.destroy();
 	}
 }

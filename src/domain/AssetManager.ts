@@ -384,7 +384,7 @@ export class AssetManager implements AssetLoadHandler {
 			path = asset.path;
 			if (asset.inUse()) {
 				if (asset.type === "audio") {
-					asset._system.requestDestroy(asset);
+					// asset._contextMgr.requestDestroy(asset);
 				} else if (asset.type === "video") {
 					// NOTE: 一旦再生完了を待たずに破棄することにする
 					// TODO: 再生中の動画を破棄するタイミングをどのように扱うか検討し実装

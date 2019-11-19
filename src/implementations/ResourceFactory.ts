@@ -1,4 +1,5 @@
 import { SurfaceAtlas } from "../commons/SurfaceAtlas";
+import { PlaingContext } from "../index.runtime";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerLike } from "../interfaces/AudioPlayerLike";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
@@ -49,6 +50,8 @@ export abstract class ResourceFactory implements ResourceFactoryLike {
 	abstract createAudioPlayer(system: AudioSystemLike): AudioPlayerLike;
 
 	abstract createScriptAsset(id: string, assetPath: string): ScriptAssetLike;
+
+	abstract createAudioContext(id: string): PlaingContext;
 
 	/**
 	 * Surface を作成する。

@@ -1,7 +1,7 @@
-import { AudioAssetHint } from "../types/AssetConfiguration";
 import { AssetLike } from "./AssetLike";
-import { AudioPlayerLike } from "./AudioPlayerLike";
-import { AudioSystemLike } from "./AudioSystemLike";
+import { PlaingContextLike } from "./PlaingContextLike";
+import { PlaingContextManagerLike } from "./PlaingContextManagerLike";
+import { PlayableDataLike } from "./PlayableDataLike";
 
 /**
  * 音リソースを表すインターフェース。
@@ -13,15 +13,14 @@ import { AudioSystemLike } from "./AudioSystemLike";
  */
 export interface AudioAssetLike extends AssetLike {
 	type: "audio";
-	data: any;
-	duration: number;
-	loop: boolean;
-	hint: AudioAssetHint;
-	_system: AudioSystemLike;
 
-	play(): AudioPlayerLike;
+	playableData: PlayableDataLike;
+
+	_contextMgr: PlaingContextManagerLike;
+
+	play(): PlaingContextLike;
 
 	stop(): void;
 
-	inUse(): boolean;
+	createPlaingContext(): PlaingContextLike;
 }
