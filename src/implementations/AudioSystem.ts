@@ -11,8 +11,14 @@ export interface AudioSystemParameterObject {
 	 */
 	id: string;
 
+	/**
+	 * audioの管理者
+	 */
 	audioSystemManager: AudioSystemManager;
 
+	/**
+	 * 各種リソースのファクトリ
+	 */
 	resourceFactory: ResourceFactoryLike;
 }
 
