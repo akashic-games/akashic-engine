@@ -22,13 +22,13 @@ export class AudioSystemManager {
 	 */
 	_systems: { [key: string]: AudioSystemLike };
 
+	set systems(systems: { [key: string]: AudioSystemLike }) {
+		this._systems = systems;
+	}
+
 	constructor() {
 		this._muted = false;
 		this._playbackRate = 1.0;
-	}
-
-	set systems(systems: { [key: string]: AudioSystemLike }) {
-		this._systems = systems;
 	}
 
 	/**
