@@ -17,46 +17,55 @@ export class AudioSystemManager {
 	 */
 	_playbackRate: number;
 
+	/**
+	 * @private
+	 */
+	_systems: { [key: string]: AudioSystemLike };
+
 	constructor() {
 		this._muted = false;
 		this._playbackRate = 1.0;
 	}
 
+	set systems(systems: { [key: string]: AudioSystemLike }) {
+		this._systems = systems;
+	}
+
 	/**
 	 * @private
 	 */
-	_reset(systems: { [key: string]: AudioSystemLike }): void {
+	_reset(): void {
 		this._muted = false;
 		this._playbackRate = 1.0;
-		for (var id in systems) {
-			if (!systems.hasOwnProperty(id)) continue;
-			systems[id]._reset();
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._reset();
 		}
 	}
 
 	/**
 	 * @private
 	 */
-	_setMuted(muted: boolean, systems: { [key: string]: AudioSystemLike }): void {
+	_setMuted(muted: boolean): void {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-		for (var id in systems) {
-			if (!systems.hasOwnProperty(id)) continue;
-			systems[id]._setMuted(muted);
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._setMuted(muted);
 		}
 	}
 
 	/**
 	 * @private
 	 */
-	_setPlaybackRate(rate: number, systems: { [key: string]: AudioSystemLike }): void {
+	_setPlaybackRate(rate: number): void {
 		if (this._playbackRate === rate) return;
 
 		this._playbackRate = rate;
-		for (var id in systems) {
-			if (!systems.hasOwnProperty(id)) continue;
-			systems[id]._setPlaybackRate(rate);
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._setPlaybackRate(rate);
 		}
 	}
 }
