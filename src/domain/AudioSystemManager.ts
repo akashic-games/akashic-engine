@@ -1,4 +1,6 @@
+import { MusicAudioSystem, SoundAudioSystem } from "../implementations/AudioSystem";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 
 /**
  * `Game#audio` の管理クラス。
@@ -18,25 +20,51 @@ export class AudioSystemManager {
 	_playbackRate: number;
 
 	/**
+	 * ゲームで利用可能なオーディオシステム群。デフォルトでmusicとsoundを登録する。
+	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
 	 * @private
 	 */
 	_systems: { [key: string]: AudioSystemLike };
 
-	set systems(systems: { [key: string]: AudioSystemLike }) {
-		this._systems = systems;
-	}
-
-	constructor() {
+	constructor(resourceFactory?: ResourceFactoryLike) {
 		this._muted = false;
 		this._playbackRate = 1.0;
+
+		this._systems = {
+			music: new MusicAudioSystem({
+				id: "music",
+				resourceFactory: resourceFactory
+			}),
+			sound: new SoundAudioSystem({
+				id: "sound",
+				resourceFactory: resourceFactory
+			})
+		};
+	}
+
+	/**
+	 * AudioSystemを追加する。
+	 * @param key オーディオシステムのID
+	 * @param system 追加するオーディオシステム
+	 */
+	addSystem(key: string, system: AudioSystemLike): void {
+		system.muted = this._muted;
+		system.playbackRate = this._playbackRate;
+		this._systems[key] = system;
+	}
+
+	/**
+	 * 全ての オーディオを停止する。
+	 */
+	stopAll(): void {
+		const audioSystemIds = Object.keys(this._systems);
+		for (var i = 0; i < audioSystemIds.length; ++i) this._systems[audioSystemIds[i]].stopAll();
 	}
 
 	/**
 	 * @private
 	 */
 	_reset(): void {
-		this._muted = false;
-		this._playbackRate = 1.0;
 		for (var id in this._systems) {
 			if (!this._systems.hasOwnProperty(id)) continue;
 			this._systems[id]._reset();

@@ -1,5 +1,4 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { AudioSystemManager } from "../domain/AudioSystemManager";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
@@ -10,11 +9,6 @@ export interface AudioSystemParameterObject {
 	 * オーディオシステムのID
 	 */
 	id: string;
-
-	/**
-	 * audioの管理者
-	 */
-	audioSystemManager: AudioSystemManager;
 
 	/**
 	 * 各種リソースのファクトリ
@@ -48,11 +42,6 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_audioSystemManager: AudioSystemManager;
-
-	/**
-	 * @private
-	 */
 	_resourceFactory: ResourceFactoryLike;
 
 	// volumeの変更時には通知が必要なのでアクセサを使う。
@@ -69,13 +58,20 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._onVolumeChanged();
 	}
 
+	set muted(mute: boolean) {
+		this._muted = mute;
+	}
+
+	set playbackRate(rate: number) {
+		this._playbackRate = rate;
+	}
+
 	constructor(param: AudioSystemParameterObject) {
 		this.id = param.id;
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
-		this._audioSystemManager = param.audioSystemManager;
-		this._muted = this._audioSystemManager._muted;
-		this._playbackRate = this._audioSystemManager._playbackRate;
+		this._muted = false;
+		this._playbackRate = 1.0;
 		this._resourceFactory = param.resourceFactory;
 	}
 
@@ -96,8 +92,8 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this.stopAll();
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
-		this._muted = this._audioSystemManager._muted;
-		this._playbackRate = this._audioSystemManager._playbackRate;
+		this._muted = false;
+		this._playbackRate = 1.0;
 	}
 
 	/**

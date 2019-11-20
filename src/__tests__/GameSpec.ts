@@ -869,44 +869,45 @@ describe("test Game", () => {
 			game._setAudioPlaybackRate(-0.5);
 		}).toThrowError("AssertionError");
 
-		expect(game.audio.sound._playbackRate).toBe(1.0);
-		expect(game.audio.music._playbackRate).toBe(1.0);
-		expect(game.audio.sound._muted).toBe(false);
-		expect(game.audio.music._muted).toBe(false);
+		const audio = game._audioSystemManager._systems;
+		expect(audio.sound._playbackRate).toBe(1.0);
+		expect(audio.music._playbackRate).toBe(1.0);
+		expect(audio.sound._muted).toBe(false);
+		expect(audio.music._muted).toBe(false);
 
 		game._setMuted(true);
 		game._setMuted(true); // 同じ値を設定するパスのカバレッジ稼ぎ
 		expect(game._audioSystemManager._muted).toBe(true);
-		expect(game.audio.sound._playbackRate).toBe(1.0);
-		expect(game.audio.music._playbackRate).toBe(1.0);
-		expect(game.audio.sound._muted).toBe(true);
-		expect(game.audio.music._muted).toBe(true);
+		expect(audio.sound._playbackRate).toBe(1.0);
+		expect(audio.music._playbackRate).toBe(1.0);
+		expect(audio.sound._muted).toBe(true);
+		expect(audio.music._muted).toBe(true);
 
 		game._setAudioPlaybackRate(1.7);
 		game._setAudioPlaybackRate(1.7); // 同じ値を設定するパスのカバレッジ稼ぎ
 		expect(game._audioSystemManager._playbackRate).toBe(1.7);
-		expect(game.audio.sound._playbackRate).toBe(1.7);
-		expect(game.audio.music._playbackRate).toBe(1.7);
-		expect(game.audio.sound._muted).toBe(true);
-		expect(game.audio.music._muted).toBe(true);
+		expect(audio.sound._playbackRate).toBe(1.7);
+		expect(audio.music._playbackRate).toBe(1.7);
+		expect(audio.sound._muted).toBe(true);
+		expect(audio.music._muted).toBe(true);
 
 		// 後から追加された AudioSystem でも GameDriver の値を反映する。
 		const myAudioSys = new SoundAudioSystem({
 			id: "voice_chara1",
-			audioSystemManager: game._audioSystemManager,
 			resourceFactory: game.resourceFactory
 		});
-		game.audio.chara1 = myAudioSys;
-		expect(game.audio.chara1._playbackRate).toBe(1.7);
-		expect(game.audio.chara1._muted).toBe(true);
+
+		game._audioSystemManager.addSystem("chara1", myAudioSys);
+		expect(audio.chara1._playbackRate).toBe(1.7);
+		expect(audio.chara1._muted).toBe(true);
 		game._setMuted(false);
 		expect(game._audioSystemManager._muted).toBe(false);
-		expect(game.audio.chara1._playbackRate).toBe(1.7);
-		expect(game.audio.sound._playbackRate).toBe(1.7);
-		expect(game.audio.music._playbackRate).toBe(1.7);
-		expect(game.audio.chara1._muted).toBe(false);
-		expect(game.audio.sound._muted).toBe(false);
-		expect(game.audio.music._muted).toBe(false);
+		expect(audio.chara1._playbackRate).toBe(1.7);
+		expect(audio.sound._playbackRate).toBe(1.7);
+		expect(audio.music._playbackRate).toBe(1.7);
+		expect(audio.chara1._muted).toBe(false);
+		expect(audio.sound._muted).toBe(false);
+		expect(audio.music._muted).toBe(false);
 	});
 
 	it("focusingCamera", () => {

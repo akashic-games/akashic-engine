@@ -8,7 +8,6 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = new MusicAudioSystem({
 			id: "music",
-			audioSystemManager: game._audioSystemManager,
 			resourceFactory: game.resourceFactory
 		});
 		expect(() => {
@@ -41,7 +40,6 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = new MusicAudioSystem({
 			id: "music",
-			audioSystemManager: game._audioSystemManager,
 			resourceFactory: game.resourceFactory
 		});
 		const audio = new ResourceFactory().createAudioAsset("testId", "testAssetPath", 0, null, false, null);
@@ -51,7 +49,7 @@ describe("test AudioPlayer", () => {
 
 	it("AudioSystem#_setPlaybackRate", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = game.audio.sound;
+		const system = game._audioSystemManager._systems.sound;
 		const player1 = system.createPlayer();
 		const player2 = system.createPlayer();
 
@@ -65,7 +63,7 @@ describe("test AudioPlayer", () => {
 
 	it("AudioSystem#_changeMuted", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = game.audio.sound;
+		const system = game._audioSystemManager._systems.sound;
 		const player1 = system.createPlayer();
 		const asset = game.resourceFactory.createAudioAsset("a1", "./dummypath", 2000, system, false, null);
 
@@ -83,7 +81,7 @@ describe("test AudioPlayer", () => {
 
 	it("SoundAudioSystem#_reset", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = game.audio.sound;
+		const system = game._audioSystemManager._systems.sound;
 		const asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
 		const player = system.createPlayer();
 
@@ -100,7 +98,7 @@ describe("test AudioPlayer", () => {
 
 	it("MusicAudioSystem#_reset", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = game.audio.music;
+		const system = game._audioSystemManager._systems.music;
 		const asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
 		const player = system.createPlayer();
 
@@ -117,7 +115,7 @@ describe("test AudioPlayer", () => {
 
 	it("MusicAudioSystem#_setPlaybackRate", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = game.audio.music;
+		const system = game._audioSystemManager._systems.music;
 		const player1 = system.createPlayer() as AudioPlayer;
 		const asset = game.resourceFactory.createAudioAsset("a1", "./dummypath", 2000, system, false, null);
 
@@ -191,7 +189,7 @@ describe("test AudioPlayer", () => {
 
 	it("SoundAudioSystem#_setPlaybackRate", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = game.audio.sound;
+		const system = game._audioSystemManager._systems.sound;
 		const player1 = system.createPlayer() as AudioPlayer;
 		const asset = game.resourceFactory.createAudioAsset("a1", "./dummypath", 2000, system, false, null);
 
