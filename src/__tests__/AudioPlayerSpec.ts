@@ -6,7 +6,8 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = new MusicAudioSystem({
 			id: "music",
-			audioSystemManager: game._audioSystemManager,
+			muted: game._audioSystemManager._muted,
+			playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		const player = new AudioPlayer(system);
@@ -20,7 +21,8 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = new SoundAudioSystem({
 			id: "voice",
-			audioSystemManager: game._audioSystemManager,
+			muted: game._audioSystemManager._muted,
+			playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		system.volume = 0.5;

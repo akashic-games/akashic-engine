@@ -34,9 +34,9 @@ export class AudioSystemManager {
 	_reset(): void {
 		this._muted = false;
 		this._playbackRate = 1.0;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._reset();
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._reset();
 		}
 	}
 
@@ -47,9 +47,9 @@ export class AudioSystemManager {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._setMuted(muted);
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._setMuted(muted);
 		}
 	}
 
@@ -60,9 +60,9 @@ export class AudioSystemManager {
 		if (this._playbackRate === rate) return;
 
 		this._playbackRate = rate;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._setPlaybackRate(rate);
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._setPlaybackRate(rate);
 		}
 	}
 }
