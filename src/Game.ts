@@ -516,6 +516,7 @@ export abstract class Game implements Registrable<E> {
 				resourceFactory: this.resourceFactory
 			})
 		};
+		this._audioSystemManager.systems = this.audio;
 
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
@@ -957,14 +958,14 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_setAudioPlaybackRate(playbackRate: number): void {
-		this._audioSystemManager._setPlaybackRate(playbackRate, this.audio);
+		this._audioSystemManager._setPlaybackRate(playbackRate);
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(muted: boolean): void {
-		this._audioSystemManager._setMuted(muted, this.audio);
+		this._audioSystemManager._setMuted(muted);
 	}
 
 	/**
@@ -999,7 +1000,7 @@ export abstract class Game implements Registrable<E> {
 			if (param.randGen !== undefined) this.random = param.randGen;
 		}
 
-		this._audioSystemManager._reset(this.audio);
+		this._audioSystemManager._reset();
 		this._loaded.removeAll({ func: this._start, owner: this });
 		this.join.removeAll();
 		this.leave.removeAll();

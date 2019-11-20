@@ -9,7 +9,8 @@ describe("test Asset", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = new MusicAudioSystem({
 			id: "music",
-			audioSystemManager: game._audioSystemManager,
+			muted: game._audioSystemManager._muted,
+			playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		const hint = { streaming: true };
