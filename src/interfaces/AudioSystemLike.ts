@@ -4,8 +4,6 @@ import { AudioPlayerEvent, AudioPlayerLike } from "./AudioPlayerLike";
 export interface AudioSystemLike {
 	id: string;
 	volume: number;
-	muted: boolean;
-	playbackRate: number;
 
 	/**
 	 * @private

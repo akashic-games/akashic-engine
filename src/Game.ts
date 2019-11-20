@@ -12,7 +12,9 @@ import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { RandomGenerator } from "./domain/RandomGenerator";
 import { RequireCacheable } from "./domain/RequireCacheable";
 import { Storage } from "./domain/Storage";
+import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
 import { AssetLike } from "./interfaces/AssetLike";
+import { AudioSystemLike } from "./interfaces/AudioSystemLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
@@ -116,7 +118,7 @@ export interface GameResetParameterObject {
  * 6. LoadingSceneを変更するため、Game#loadingSceneにゲーム開発者の定義したLoadingSceneを指定する
  * 7. スナップショット機能を作るため、Game#snapshotRequestにアクセスする
  * 8. 現在フォーカスされているCamera情報を得るため、Game#focusingCameraにアクセスする
- * 9. AudioSystemを追加するため、Game#audioSystemManagerにアクセスする
+ * 9. AudioSystemを直接制御するため、Game#audioにアクセスする
  * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
  */
 export abstract class Game implements Registrable<E> {
@@ -210,6 +212,12 @@ export abstract class Game implements Registrable<E> {
 	// ゲーム開発者がこのIDに付随する情報(名前など)を、ローカルエンティティでの表示や
 	// 干渉などで利用したい場合は、外部システムに問い合わせる必要がある。
 	selfId: string;
+
+	/**
+	 * 本ゲームで利用可能なオーディオシステム群。デフォルトはmusicとsoundが登録されている。
+	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
+	 */
+	audio: { [key: string]: AudioSystemLike };
 
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
@@ -493,7 +501,21 @@ export abstract class Game implements Registrable<E> {
 		this.selfId = selfId || undefined;
 		this.playId = undefined;
 
-		this._audioSystemManager = new AudioSystemManager(this.resourceFactory);
+		this._audioSystemManager = new AudioSystemManager();
+		this.audio = {
+			music: new MusicAudioSystem({
+				id: "music",
+				muted: this._audioSystemManager._muted,
+				playbackRate: this._audioSystemManager._playbackRate,
+				resourceFactory: this.resourceFactory
+			}),
+			sound: new SoundAudioSystem({
+				id: "sound",
+				muted: this._audioSystemManager._muted,
+				playbackRate: this._audioSystemManager._playbackRate,
+				resourceFactory: this.resourceFactory
+			})
+		};
 
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
@@ -935,14 +957,14 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_setAudioPlaybackRate(playbackRate: number): void {
-		this._audioSystemManager._setPlaybackRate(playbackRate);
+		this._audioSystemManager._setPlaybackRate(playbackRate, this.audio);
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(muted: boolean): void {
-		this._audioSystemManager._setMuted(muted);
+		this._audioSystemManager._setMuted(muted, this.audio);
 	}
 
 	/**
@@ -977,7 +999,7 @@ export abstract class Game implements Registrable<E> {
 			if (param.randGen !== undefined) this.random = param.randGen;
 		}
 
-		this._audioSystemManager._reset();
+		this._audioSystemManager._reset(this.audio);
 		this._loaded.removeAll({ func: this._start, owner: this });
 		this.join.removeAll();
 		this.leave.removeAll();
@@ -1058,7 +1080,9 @@ export abstract class Game implements Registrable<E> {
 		this.loadingScene = undefined;
 		this.assetBase = "";
 		this.selfId = undefined;
-		this._audioSystemManager.stopAll();
+		var audioSystemIds = Object.keys(this.audio);
+		for (var i = 0; i < audioSystemIds.length; ++i) this.audio[audioSystemIds[i]].stopAll();
+		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
 		this.snapshotRequest.destroy();
 		this.snapshotRequest = undefined;

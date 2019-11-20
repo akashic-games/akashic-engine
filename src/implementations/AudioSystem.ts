@@ -11,6 +11,16 @@ export interface AudioSystemParameterObject {
 	id: string;
 
 	/**
+	 * ミュート中か否か。
+	 */
+	muted: boolean;
+
+	/**
+	 * 再生速度の倍率。
+	 */
+	playbackRate: number;
+
+	/**
 	 * 各種リソースのファクトリ
 	 */
 	resourceFactory: ResourceFactoryLike;
@@ -58,20 +68,12 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._onVolumeChanged();
 	}
 
-	set muted(mute: boolean) {
-		this._muted = mute;
-	}
-
-	set playbackRate(rate: number) {
-		this._playbackRate = rate;
-	}
-
 	constructor(param: AudioSystemParameterObject) {
 		this.id = param.id;
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
-		this._muted = false;
-		this._playbackRate = 1.0;
+		this._muted = param.muted;
+		this._playbackRate = param.playbackRate;
 		this._resourceFactory = param.resourceFactory;
 	}
 

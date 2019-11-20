@@ -360,9 +360,7 @@ export class AssetManager implements AssetLoadHandler {
 				asset.initialize(<ImageAssetHint>conf.hint);
 				return asset;
 			case "audio":
-				var system = conf.systemId
-					? this.game._audioSystemManager._systems[conf.systemId]
-					: this.game._audioSystemManager._systems[this.game.defaultAudioSystemId];
+				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
 				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
