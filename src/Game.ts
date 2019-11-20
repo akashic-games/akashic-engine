@@ -516,6 +516,7 @@ export abstract class Game implements Registrable<E> {
 				resourceFactory: this.resourceFactory
 			})
 		};
+		// TODO: AudioSystemManager, AudioSystem関連のリファクタリングが行われるまでの一時的な対応とする
 		this._audioSystemManager.systems = this.audio;
 
 		this.defaultAudioSystemId = "sound";
