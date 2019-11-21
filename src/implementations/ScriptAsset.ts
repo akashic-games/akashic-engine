@@ -1,5 +1,5 @@
-import { ScriptAssetExecuteEnvironment } from "../interfaces/ScriptAssetExecuteEnvironment";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
+import { ScriptAssetRuntimeValue } from "../interfaces/ScriptAssetRuntimeValue";
 import { Asset } from "./Asset";
 
 /**
@@ -15,7 +15,7 @@ export abstract class ScriptAsset extends Asset implements ScriptAssetLike {
 	type: "script" = "script";
 	script: string;
 
-	abstract execute(execEnv: ScriptAssetExecuteEnvironment): any;
+	abstract execute(execEnv: ScriptAssetRuntimeValue): any;
 
 	destroy(): void {
 		this.script = undefined;

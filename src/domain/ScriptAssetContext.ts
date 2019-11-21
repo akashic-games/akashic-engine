@@ -1,6 +1,4 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { Game } from "../Game";
-import { ScriptAssetExecuteEnvironment } from "../interfaces/ScriptAssetExecuteEnvironment";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
 import { Module } from "./Module";
 import { RequireCacheable } from "./RequireCacheable";
@@ -21,24 +19,16 @@ export class ScriptAssetContext implements RequireCacheable {
 	/**
 	 * @private
 	 */
-	_game: Game;
-
-	/**
-	 * @private
-	 */
 	_module: Module;
 
 	/**
 	 * @private
 	 */
 	_started: boolean;
-	private _g: ScriptAssetExecuteEnvironment;
 
-	constructor(game: Game, asset: ScriptAssetLike) {
-		this._game = game;
+	constructor(asset: ScriptAssetLike, module: Module) {
 		this._asset = asset;
-		this._module = new Module(game, asset.path, asset.path);
-		this._g = this._module._g;
+		this._module = module;
 		this._started = false;
 	}
 
@@ -64,7 +54,7 @@ export class ScriptAssetContext implements RequireCacheable {
 		}
 
 		this._started = true;
-		this._asset.execute(this._g);
+		this._asset.execute(this._module._runtimeValue);
 		this._module.loaded = true;
 		return this._module.exports;
 	}

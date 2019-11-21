@@ -5,7 +5,6 @@ import { InternalOperationPluginInfo } from "../types/OperationPluginInfo";
 import { InternalOperationPluginOperation, OperationPluginOperation } from "../types/OperationPluginOperation";
 import { OperationPluginStatic } from "../types/OperationPluginStatic";
 import { OperationPluginViewInfo } from "../types/OperationPluginViewInfo";
-import { _require } from "./Module";
 
 /**
  * 操作プラグインからの通知をハンドルするクラス。
@@ -104,7 +103,7 @@ export class OperationPluginManager {
 		for (var i = 0; i < this._infos.length; ++i) {
 			var info = this._infos[i];
 			if (!info.script) continue;
-			var pluginClass = <OperationPluginStatic>_require(this._game, info.script);
+			var pluginClass = <OperationPluginStatic>this._game._moduleManager._require(info.script);
 			if (!pluginClass.isSupported()) continue;
 			var plugin = new pluginClass(this._game, this._viewInfo, info.option);
 			var code = info.code;

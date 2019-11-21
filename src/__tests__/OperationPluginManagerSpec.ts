@@ -1,11 +1,4 @@
-import {
-	GameConfiguration,
-	InternalOperationPluginOperation,
-	Module,
-	OperationPluginViewInfo,
-	Trigger
-} from "..";
-import * as mod from "../domain/Module";
+import { GameConfiguration, InternalOperationPluginOperation, Module, OperationPluginViewInfo, Trigger } from "..";
 import { Game } from "./helpers";
 
 // テスト用ダミー操作プラグイン
@@ -45,19 +38,6 @@ class TestOperationPluginUnsupported extends TestOperationPlugin {
 	}
 }
 
-const require_original = mod._require;
-
-jest.spyOn(mod, "_require").mockImplementation((game: Game, path: string, currentModule?: Module) => {
-	switch (path) {
-		case "/script/op-plugin.js":
-			return TestOperationPlugin;
-		case "/script/op-plugin-unsupported.js":
-			return TestOperationPluginUnsupported;
-		default:
-			return require_original.call(null, game, path, currentModule);
-	}
-});
-
 describe("test OperationPluginManager", () => {
 	const dummyViewInfo: OperationPluginViewInfo = { dummy: true } as any;
 	let game: Game;
@@ -74,11 +54,18 @@ describe("test OperationPluginManager", () => {
 			main: ""
 		};
 		game = new Game(conf, "/", "foo", dummyViewInfo);
-	});
-
-	afterEach(() => {
-		// テスト内で require() をトラップするため上書きするので、ここで書き戻す
-		global.g._require = require_original;
+		const manager = game._moduleManager;
+		const require_original = manager._require;
+		manager._require = (path: string, currentModule?: Module) => {
+			switch (path) {
+				case "/script/op-plugin.js":
+					return TestOperationPlugin;
+				case "/script/op-plugin-unsupported.js":
+					return TestOperationPluginUnsupported;
+				default:
+					return require_original.call(manager, game, path, currentModule);
+			}
+		};
 	});
 
 	it("初期化", done => {

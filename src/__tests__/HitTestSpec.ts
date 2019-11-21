@@ -94,8 +94,6 @@ describe("test E", () => {
 		for (let x = fromX; x < toX; x++) {
 			for (let y = fromY; y < toY; y++) {
 				const t = e.findPointSourceByPoint({ x, y });
-				if (t.target == null)
-					console.log(x, y);
 				expect(t.target).toBe(e);
 			}
 		}
@@ -125,7 +123,6 @@ describe("test E", () => {
 		for (let x = fromX + 0.1; x < toX; x++) {
 			for (let y = fromY + 0.1; y < toY; y++) {
 				const t = e.findPointSourceByPoint({ x, y });
-				if (t == null) console.log(x, y)
 				expect(t.target).toBe(e);
 			}
 		}

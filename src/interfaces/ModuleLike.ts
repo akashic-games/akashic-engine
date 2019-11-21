@@ -1,5 +1,3 @@
-import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
-
 /**
  * Node.js が提供する module の互換インターフェース。
  */
@@ -46,19 +44,4 @@ export interface ModuleLike {
 	 * このモジュールの評価時に与えられる `require()` 関数。
 	 */
 	require: (path: string) => any;
-
-	/**
-	 * @private
-	 */
-	_dirname: string;
-
-	/**
-	 * @private
-	 */
-	_virtualDirname: string;
-
-	/**
-	 * @private
-	 */
-	_g: ScriptAssetExecuteEnvironment;
 }

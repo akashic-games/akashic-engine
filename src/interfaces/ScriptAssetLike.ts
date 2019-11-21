@@ -1,5 +1,5 @@
 import { AssetLike } from "./AssetLike";
-import { ScriptAssetExecuteEnvironment } from "./ScriptAssetExecuteEnvironment";
+import { ScriptAssetRuntimeValue } from "./ScriptAssetRuntimeValue";
 
 /**
  * スクリプトリソースを表すインターフェース。
@@ -14,5 +14,5 @@ export interface ScriptAssetLike extends AssetLike {
 	type: "script";
 	script: string;
 
-	execute(execEnv: ScriptAssetExecuteEnvironment): any;
+	execute(execEnv: ScriptAssetRuntimeValue): any;
 }

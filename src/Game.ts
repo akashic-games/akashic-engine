@@ -7,16 +7,16 @@ import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E, PointSource } from "./domain/entities/E";
 import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent } from "./domain/Event";
 import { LoadingScene } from "./domain/LoadingScene";
-import { _require } from "./domain/Module";
+import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { RandomGenerator } from "./domain/RandomGenerator";
-import { RequireCacheable } from "./domain/RequireCacheable";
 import { Storage } from "./domain/Storage";
 import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AudioSystemLike } from "./interfaces/AudioSystemLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
+import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
 import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
 import { Trigger } from "./Trigger";
@@ -29,6 +29,8 @@ import { InternalOperationPluginInfo } from "./types/OperationPluginInfo";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
+
+declare const g: any;
 
 /**
  * シーン遷移要求のタイプ。
@@ -347,13 +349,6 @@ export abstract class Game implements Registrable<E> {
 	_sceneChanged: Trigger<Scene>;
 
 	/**
-	 * ScriptAssetの実行結果キャッシュ。
-	 * g.require経由の場合ここに格納される。
-	 * @private
-	 */
-	_scriptCaches: { [key: string]: RequireCacheable };
-
-	/**
 	 * グローバルアセットの読み込み待ちハンドラ。
 	 * @private
 	 */
@@ -384,6 +379,11 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_assetManager: AssetManager;
+
+	/**
+	 * モジュールの管理者。
+	 */
+	_moduleManager: ModuleManager;
 
 	/**
 	 * Game#audioの管理者。
@@ -451,6 +451,12 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_configuration: GameConfiguration;
+
+	/**
+	 * このゲームの `ScriptAssetRuntimeValueBase` 。
+	 * @private
+	 */
+	_runtimeValueBase: ScriptAssetRuntimeValueBase;
 
 	/**
 	 * 実行待ちのシーン遷移要求。
@@ -538,11 +544,18 @@ export abstract class Game implements Registrable<E> {
 		this.snapshotRequest = new Trigger<void>();
 
 		this.external = {};
+		this._runtimeValueBase = Object.create(g, {
+			game: {
+				value: this,
+				enumerable: true
+			}
+		});
 
 		this._main = gameConfiguration.main;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
+		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 		this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
@@ -1005,7 +1018,6 @@ export abstract class Game implements Registrable<E> {
 		this.modified = true;
 		this.loadingScene = undefined;
 		this._focusingCamera = undefined;
-		this._scriptCaches = {};
 		this.snapshotRequest.removeAll();
 		this._sceneChangeRequests = [];
 
@@ -1091,7 +1103,6 @@ export abstract class Game implements Registrable<E> {
 		this._defaultLoadingScene = undefined;
 		this._sceneChanged.destroy();
 		this._sceneChanged = undefined;
-		this._scriptCaches = undefined;
 		this._loaded.destroy();
 		this._loaded = undefined;
 		this._started.destroy();
@@ -1250,7 +1261,7 @@ export abstract class Game implements Registrable<E> {
 		this._operationPluginManager.initialize();
 		this.operationPlugins = this._operationPluginManager.plugins;
 
-		var mainFun = _require(this, this._main);
+		const mainFun = this._moduleManager._require(this._main);
 		if (!mainFun || typeof mainFun !== "function")
 			throw ExceptionFactory.createAssertionError("Game#_start: Entry point '" + this._main + "' not found.");
 		mainFun(this._mainParameter);
