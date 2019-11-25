@@ -1,4 +1,5 @@
-import { Timer, TimerManager, Trigger } from "..";
+import { Trigger } from "@akashic/trigger";
+import { Timer, TimerManager } from "..";
 import { customMatchers } from "./helpers";
 
 expect.extend(customMatchers);

@@ -1,4 +1,4 @@
-import { Trigger } from "../Trigger";
+import { Trigger } from "@akashic/trigger";
 import { VideoAssetLike } from "./VideoAssetLike";
 
 export interface VideoPlayerEvent {

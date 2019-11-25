@@ -1,3 +1,4 @@
+import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetManager } from "./domain/AssetManager";
 import { Camera } from "./domain/Camera";
@@ -11,7 +12,6 @@ import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
-import { Trigger } from "./Trigger";
 import { CommonOffset } from "./types/commons";
 import { Destroyable } from "./types/Destroyable";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
@@ -968,7 +968,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_fireReady(): void {
-		this._ready.fire(this);
+		if (!this._ready.destroyed()) this._ready.fire(this);
 		this._loadingState = SceneLoadState.ReadyFired;
 	}
 
@@ -976,7 +976,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_fireLoaded(): void {
-		this.loaded.fire(this);
+		if (!this.loaded.destroyed()) this.loaded.fire(this);
 		this._loadingState = SceneLoadState.LoadedFired;
 	}
 }

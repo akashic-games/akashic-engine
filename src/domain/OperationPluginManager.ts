@@ -1,5 +1,5 @@
+import { Trigger } from "@akashic/trigger";
 import { Game } from "../Game";
-import { Trigger } from "../Trigger";
 import { OperationPlugin } from "../types/OperationPlugin";
 import { InternalOperationPluginInfo } from "../types/OperationPluginInfo";
 import { InternalOperationPluginOperation, OperationPluginOperation } from "../types/OperationPluginOperation";

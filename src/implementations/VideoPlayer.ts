@@ -1,6 +1,6 @@
+import { Trigger } from "@akashic/trigger";
 import { VideoAssetLike } from "../interfaces/VideoAssetLike";
 import { VideoPlayerEvent, VideoPlayerLike } from "../interfaces/VideoPlayerLike";
-import { Trigger } from "../Trigger";
 
 /**
  * ビデオ再生を行うクラス。

@@ -1,4 +1,5 @@
-import { Timer, Trigger } from "..";
+import { Trigger } from "@akashic/trigger";
+import { Timer } from "..";
 
 describe("test Timer", () => {
 	it("初期化", () => {

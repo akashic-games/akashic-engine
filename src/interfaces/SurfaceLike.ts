@@ -1,4 +1,4 @@
-import { Trigger } from "../Trigger";
+import { Trigger } from "@akashic/trigger";
 import { CommonSize } from "../types/commons";
 import { Destroyable } from "../types/Destroyable";
 import { RendererLike } from "./RendererLike";

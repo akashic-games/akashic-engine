@@ -1,6 +1,6 @@
 declare global {
 	namespace jest {
-		interface Matchers<R> {
+		interface Matchers<R, T> {
 			toHaveProperty(...properties: string[]): R;
 			toHaveUndefinedValue(...properties: string[]): R;
 			toThrowError(func: () => void): R;
@@ -19,7 +19,7 @@ export const customMatchers = {
 			}).length === properties.length;
 		return {
 			pass,
-			message
+			message: () => message
 		};
 	},
 	toHaveUndefinedValue: (received: any, ...properties: string[]): jest.CustomMatcherResult => {
@@ -36,11 +36,11 @@ export const customMatchers = {
 				}).length === properties.length;
 		return {
 			pass,
-			message
+			message: () => message
 		};
 	},
 	toThrowError: (received: any, expected: string): jest.CustomMatcherResult => {
-		const result = { pass: false, message: "" };
+		const result = { pass: false, message: () => "" };
 		let threw = false;
 		let thrown: Error;
 
@@ -56,18 +56,17 @@ export const customMatchers = {
 		}
 
 		if (!threw) {
-			result.message = "Expected function to throw an exception.";
+			result.message = () => "Expected function to throw an exception.";
 			return result;
 		}
 		if (!(thrown instanceof Error)) {
-			result.message = "Expected function to throw an Error";
+			result.message = () => "Expected function to throw an Error";
 			return result;
 		}
 
 		if (expected == null) {
 			result.pass = true;
-			result.message = "Expected function not to throw, but it threw " + ".";
-
+			result.message = () => "Expected function not to throw, but it threw " + ".";
 			return result;
 		}
 
@@ -80,7 +79,7 @@ export const customMatchers = {
 	toBeNear: (received: number[], expected: number[], threshold: number): jest.CustomMatcherResult => {
 		return {
 			pass: near(received, expected, threshold),
-			message: ""
+			message: () => ""
 		};
 	}
 };

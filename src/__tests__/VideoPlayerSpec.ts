@@ -1,4 +1,5 @@
-import { Trigger, VideoPlayer } from "..";
+import { Trigger } from "@akashic/trigger";
+import { VideoPlayer } from "..";
 
 describe("VideoPlayer", () => {
 	it("initializes itself", () => {

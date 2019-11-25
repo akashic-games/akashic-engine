@@ -1,3 +1,4 @@
+import { Trigger } from "@akashic/trigger";
 import {
 	Asset,
 	AssetConfiguration,
@@ -9,8 +10,7 @@ import {
 	Scene,
 	SceneState,
 	StorageRegion,
-	TickGenerationMode,
-	Trigger
+	TickGenerationMode
 } from "..";
 import { customMatchers, Game, skeletonRuntime } from "./helpers";
 

@@ -1,4 +1,4 @@
-import { Trigger } from "../Trigger";
+import { Trigger } from "@akashic/trigger";
 import { AudioAssetLike } from "./AudioAssetLike";
 
 export interface AudioPlayerEvent {

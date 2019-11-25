@@ -110,7 +110,12 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 				height: this.borderWidth.bottom
 			}
 		];
-		var destCorners: CommonOffset[] = [{ x: 0, y: 0 }, { x: dx2, y: 0 }, { x: 0, y: dy2 }, { x: dx2, y: dy2 }];
+		var destCorners: CommonOffset[] = [
+			{ x: 0, y: 0 },
+			{ x: dx2, y: 0 },
+			{ x: 0, y: dy2 },
+			{ x: dx2, y: dy2 }
+		];
 		var i = 0;
 		for (i = 0; i < srcCorners.length; ++i) {
 			var c = srcCorners[i];
