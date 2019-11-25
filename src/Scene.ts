@@ -968,7 +968,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_fireReady(): void {
-		if (!this._ready.destroyed()) this._ready.fire(this);
+		this._ready.fire(this);
 		this._loadingState = SceneLoadState.ReadyFired;
 	}
 
@@ -976,7 +976,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_fireLoaded(): void {
-		if (!this.loaded.destroyed()) this.loaded.fire(this);
+		this.loaded.fire(this);
 		this._loadingState = SceneLoadState.LoadedFired;
 	}
 }
