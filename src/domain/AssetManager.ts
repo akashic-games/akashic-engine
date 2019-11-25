@@ -431,7 +431,7 @@ export class AssetManager implements AssetLoadHandler {
 			error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, AssetLoadErrorType.RetryLimitExceeded, error);
 		}
 		if (!error.retriable) delete this._loadings[asset.id];
-		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetError(asset, error, this);
+		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetError(asset, error, this.retryLoad.bind(this));
 	}
 
 	/**

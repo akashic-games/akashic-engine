@@ -1,12 +1,38 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { Game } from "../Game";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
+
+export interface AudioSystemParameterObject {
+	/**
+	 * オーディオシステムのID
+	 */
+	id: string;
+
+	/**
+	 * オーディオのボリューム
+	 */
+	volume?: number;
+
+	/**
+	 * ミュート中か否か。
+	 */
+	muted?: boolean;
+
+	/**
+	 * 再生速度の倍率。
+	 */
+	playbackRate?: number;
+
+	/**
+	 * 各種リソースのファクトリ
+	 */
+	resourceFactory: ResourceFactoryLike;
+}
 
 export abstract class AudioSystem implements AudioSystemLike {
 	id: string;
-	game: Game;
 
 	/**
 	 * @private
@@ -28,6 +54,11 @@ export abstract class AudioSystem implements AudioSystemLike {
 	 */
 	_playbackRate: number;
 
+	/**
+	 * @private
+	 */
+	_resourceFactory: ResourceFactoryLike;
+
 	// volumeの変更時には通知が必要なのでアクセサを使う。
 	// 呼び出し頻度が少ないため許容。
 	get volume(): number {
@@ -42,14 +73,13 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._onVolumeChanged();
 	}
 
-	constructor(id: string, game: Game) {
-		var audioSystemManager = game._audioSystemManager;
-		this.id = id;
-		this.game = game;
-		this._volume = 1;
+	constructor(param: AudioSystemParameterObject) {
+		this.id = param.id;
+		this._volume = param.volume || 1;
 		this._destroyRequestedAssets = {};
-		this._muted = audioSystemManager._muted;
-		this._playbackRate = audioSystemManager._playbackRate;
+		this._muted = param.muted || false;
+		this._playbackRate = param.playbackRate || 1.0;
+		this._resourceFactory = param.resourceFactory;
 	}
 
 	abstract stopAll(): void;
@@ -69,8 +99,8 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this.stopAll();
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
-		this._muted = this.game._audioSystemManager._muted;
-		this._playbackRate = this.game._audioSystemManager._playbackRate;
+		this._muted = false;
+		this._playbackRate = 1.0;
 	}
 
 	/**
@@ -133,7 +163,7 @@ export class MusicAudioSystem extends AudioSystem {
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 	get player(): AudioPlayerLike {
 		if (!this._player) {
-			this._player = this.game.resourceFactory.createAudioPlayer(this);
+			this._player = this._resourceFactory.createAudioPlayer(this);
 			this._player.played.add(this._onPlayerPlayed, this);
 			this._player.stopped.add(this._onPlayerStopped, this);
 		}
@@ -143,8 +173,8 @@ export class MusicAudioSystem extends AudioSystem {
 		this._player = v;
 	}
 
-	constructor(id: string, game: Game) {
-		super(id, game);
+	constructor(param: AudioSystemParameterObject) {
+		super(param);
 		this._player = undefined;
 		this._suppressingAudio = undefined;
 	}
@@ -251,13 +281,13 @@ export class MusicAudioSystem extends AudioSystem {
 export class SoundAudioSystem extends AudioSystem {
 	players: AudioPlayerLike[];
 
-	constructor(id: string, game: Game) {
-		super(id, game);
+	constructor(param: AudioSystemParameterObject) {
+		super(param);
 		this.players = [];
 	}
 
 	createPlayer(): AudioPlayerLike {
-		var player = this.game.resourceFactory.createAudioPlayer(this);
+		var player = this._resourceFactory.createAudioPlayer(this);
 		if (player.canHandleStopped()) this.players.push(player);
 
 		player.played.add(this._onPlayerPlayed, this);

@@ -154,7 +154,7 @@ export class SceneAssetHolder {
 	/**
 	 * @private
 	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError, assetManager: AssetManager): void {
+	_onAssetError(asset: AssetLike, error: AssetLoadError): void {
 		if (this.destroyed() || this._scene.destroyed()) return;
 		var failureInfo = {
 			asset: asset,

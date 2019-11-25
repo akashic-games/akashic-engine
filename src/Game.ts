@@ -507,11 +507,24 @@ export abstract class Game implements Registrable<E> {
 		this.selfId = selfId || undefined;
 		this.playId = undefined;
 
-		this._audioSystemManager = new AudioSystemManager(this);
+		this._audioSystemManager = new AudioSystemManager();
 		this.audio = {
-			music: new MusicAudioSystem("music", this),
-			sound: new SoundAudioSystem("sound", this)
+			music: new MusicAudioSystem({
+				id: "music",
+				muted: this._audioSystemManager._muted,
+				playbackRate: this._audioSystemManager._playbackRate,
+				resourceFactory: this.resourceFactory
+			}),
+			sound: new SoundAudioSystem({
+				id: "sound",
+				muted: this._audioSystemManager._muted,
+				playbackRate: this._audioSystemManager._playbackRate,
+				resourceFactory: this.resourceFactory
+			})
 		};
+		// TODO: AudioSystemManager, AudioSystem関連のリファクタリングが行われるまでの一時的な対応とする
+		this._audioSystemManager.systems = this.audio;
+
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
 		this.assets = {};
@@ -1111,7 +1124,6 @@ export abstract class Game implements Registrable<E> {
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
 		this._assetManager = undefined;
-		this._audioSystemManager._game = undefined;
 		this._audioSystemManager = undefined;
 		this._operationPluginManager = undefined;
 		this._operationPluginOperated.destroy();

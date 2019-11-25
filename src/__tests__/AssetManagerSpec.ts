@@ -369,11 +369,10 @@ describe("test AssetManager", () => {
 					done();
 				}
 			},
-			_onAssetError: (a, err, mgr) => {
-				expect(mgr).toBe(manager);
+			_onAssetError: (a, err, callback) => {
 				if (!failureCounts.hasOwnProperty(a.id)) failureCounts[a.id] = 0;
 				++failureCounts[a.id];
-				manager.retryLoad(a);
+				callback(a);
 			}
 		};
 
@@ -394,19 +393,18 @@ describe("test AssetManager", () => {
 				fail("should not succeed to load");
 				done();
 			},
-			_onAssetError: (a, err, mgr) => {
-				expect(mgr).toBe(manager);
+			_onAssetError: (a, err, callback) => {
 				if (!failureCounts.hasOwnProperty(a.id)) failureCounts[a.id] = 0;
 				++failureCounts[a.id];
 
 				if (!err.retriable) {
 					expect(failureCounts[a.id]).toBe(AssetManager.MAX_ERROR_COUNT + 1);
 					expect(() => {
-						manager.retryLoad(a);
+						callback(a);
 					}).toThrowError("AssertionError");
 					++gaveUpCount;
 				} else {
-					manager.retryLoad(a);
+					callback(a);
 				}
 
 				if (gaveUpCount === 2) {
@@ -435,19 +433,18 @@ describe("test AssetManager", () => {
 				fail("should not succeed to load");
 				done();
 			},
-			_onAssetError: (a, err, mgr) => {
-				expect(mgr).toBe(manager);
+			_onAssetError: (a, err, callback) => {
 				if (!failureCounts.hasOwnProperty(a.id)) failureCounts[a.id] = 0;
 				++failureCounts[a.id];
 
 				if (!err.retriable) {
 					expect(failureCounts[a.id]).toBe(1);
 					expect(() => {
-						manager.retryLoad(a);
+						callback(a);
 					}).toThrowError("AssertionError");
 					++gaveUpCount;
 				} else {
-					manager.retryLoad(a);
+					callback(a);
 				}
 
 				if (gaveUpCount === 2) {

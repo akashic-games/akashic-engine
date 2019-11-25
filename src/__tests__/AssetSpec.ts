@@ -7,7 +7,12 @@ describe("test Asset", () => {
 		const path = "path";
 		const duration = 1984;
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = new MusicAudioSystem("music", game);
+		const system = new MusicAudioSystem({
+			id: "music",
+			muted: game._audioSystemManager._muted,
+			playbackRate: game._audioSystemManager._playbackRate,
+			resourceFactory: game.resourceFactory
+		});
 		const hint = { streaming: true };
 		const asset = new AudioAsset(0, id, path, duration, system, true, hint);
 		expect(asset.id).toBe(id);

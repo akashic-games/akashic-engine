@@ -6,7 +6,12 @@ expect.extend(customMatchers);
 describe("test AudioPlayer", () => {
 	it("AudioSystem#volumeの入力値チェック", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = new MusicAudioSystem("music", game);
+		const system = new MusicAudioSystem({
+			id: "music",
+			muted: game._audioSystemManager._muted,
+			playbackRate: game._audioSystemManager._playbackRate,
+			resourceFactory: game.resourceFactory
+		});
 		expect(() => {
 			system.volume = NaN!;
 		}).toThrowError();
@@ -35,7 +40,12 @@ describe("test AudioPlayer", () => {
 
 	it("AudioSystem#_destroyRequestedAssets", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = new MusicAudioSystem("music", game);
+		const system = new MusicAudioSystem({
+			id: "music",
+			muted: game._audioSystemManager._muted,
+			playbackRate: game._audioSystemManager._playbackRate,
+			resourceFactory: game.resourceFactory
+		});
 		const audio = new ResourceFactory().createAudioAsset("testId", "testAssetPath", 0, null, false, null);
 		system.requestDestroy(audio);
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
