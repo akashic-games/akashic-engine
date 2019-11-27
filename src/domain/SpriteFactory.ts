@@ -19,7 +19,7 @@ export class SpriteFactory {
 		var width = e.width;
 		var height = e.height;
 
-		var boundingRect = e.calculateBoundingRect(camera);
+		const boundingRect = e.calculateBoundingRect();
 		if (!boundingRect) {
 			throw ExceptionFactory.createAssertionError("SpriteFactory.createSpriteFromE: camera must look e");
 		}

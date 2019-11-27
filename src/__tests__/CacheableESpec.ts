@@ -11,7 +11,6 @@ describe("test CacheableE", () => {
 	it("初期化", () => {
 		const ce = new CacheableE({ scene: runtime.scene });
 		expect(ce._shouldRenderChildren).toBe(true);
-		expect(ce._targetCameras).toBeUndefined();
 		expect(ce._cache).toBeUndefined();
 		expect(ce._renderer).toBeUndefined();
 		expect(ce._renderedCamera).toBeUndefined();

@@ -284,13 +284,13 @@ export class Pane extends CacheableE {
 	 * Eを継承する他のクラスと異なり、Paneは子要素の位置を包括矩形に含まない。
 	 * @private
 	 */
-	_calculateBoundingRect(m?: Matrix, c?: Camera): CommonRect {
+	_calculateBoundingRect(m?: Matrix): CommonRect {
 		var matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);
 		}
 
-		if (!this.visible() || (c && (!this._targetCameras || this._targetCameras.indexOf(c) === -1))) {
+		if (!this.visible()) {
 			return undefined;
 		}
 

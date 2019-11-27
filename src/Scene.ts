@@ -830,7 +830,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		if (camera && camera instanceof Camera2D) m = camera.getMatrix();
 
 		for (var i = children.length - 1; i >= 0; --i) {
-			var ret = children[i].findPointSourceByPoint(point, m, force, camera);
+			const ret = children[i].findPointSourceByPoint(point, m, force);
 			if (ret) {
 				ret.local = ret.target.local || mayConsumeLocalTick;
 				return ret;

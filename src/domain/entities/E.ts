@@ -89,14 +89,6 @@ export interface EParameterObject extends Object2DParameterObject {
 	children?: E[];
 
 	/**
-	 * このエンティティを表示できるカメラの配列。
-	 * この値が `undefined` または空配列である場合、このエンティティとその子孫はカメラによらず描画される。
-	 * 空でない配列である場合、このエンティティとその子孫は、配列内に含まれるカメラでの描画の際にのみ表示される。
-	 * @default undefined
-	 */
-	targetCameras?: Camera[];
-
-	/**
 	 * プレイヤーにとって触れられるオブジェクトであるかを表す。
 	 * この値が偽である場合、ポインティングイベントの対象にならない。
 	 * @default false
@@ -203,14 +195,6 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	shaderProgram: ShaderProgramLike;
 
 	/**
-	 * このEが「映り込む」カメラの集合。
-	 * 空でない配列が指定されている場合、配列内に存在しないCameraでの描画時にはこのEがスキップされる。
-	 * 初期値はundefinedである。targetCamerasがこの値を暗黙に生成するので、ゲーム開発者はそちらを使うべきである。
-	 * @private
-	 */
-	_targetCameras: Camera[];
-
-	/**
 	 * 子にtouchableなものが含まれているかどうかを表す。
 	 * @private
 	 */
@@ -276,23 +260,6 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	// pointMoveは代入する必要がないのでsetterを定義しない
 
 	/**
-	 * このエンティティを表示できるカメラの配列。
-	 *
-	 * 初期値は空配列である。
-	 * この値が `undefined` または空配列である場合、このエンティティとその子孫はカメラによらず描画される。
-	 * 空でない配列である場合、このエンティティとその子孫は、配列内に含まれるカメラでの描画の際にのみ表示される。
-	 *
-	 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
-	 */
-	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get targetCameras(): Camera[] {
-		return this._targetCameras || (this._targetCameras = []);
-	}
-	set targetCameras(v: Camera[]) {
-		this._targetCameras = v;
-	}
-
-	/**
 	 * プレイヤーにとって触れられるオブジェクトであるかを表す。
 	 *
 	 * この値が偽である場合、ポインティングイベントの対象にならない。
@@ -330,7 +297,6 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		this._pointDown = undefined;
 		this._pointMove = undefined;
 		this._pointUp = undefined;
-		this._targetCameras = undefined;
 		this.tag = param.tag;
 		this.shaderProgram = param.shaderProgram;
 
@@ -344,7 +310,6 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		if (param.parent) {
 			param.parent.append(this);
 		}
-		if (param.targetCameras) this.targetCameras = param.targetCameras;
 		if (param.touchable != null) this.touchable = param.touchable;
 		if (!!param.hidden) this.hide();
 
@@ -365,8 +330,6 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		this.state &= ~EntityStateFlags.Modified;
 
 		if (this.state & EntityStateFlags.Hidden) return;
-		var cams = this._targetCameras;
-		if (cams && cams.length > 0 && (!camera || cams.indexOf(camera) === -1)) return;
 
 		if (this.state & EntityStateFlags.ContextLess) {
 			renderer.translate(this.x, this.y);
@@ -602,28 +565,23 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * 対象が見つからなかった場合、 `undefined` である。戻り値が `undefined` でない場合、その `target` プロパティは次を満たす:
 	 * - このエンティティ(`this`) またはその子孫である
 	 * - `E#touchable` が真である
-	 * - カメラ `camera` から可視である中で最も手前にある
 	 *
 	 * @param point 対象の座標
 	 * @param m `this` に適用する変換行列。省略された場合、単位行列
 	 * @param force touchable指定を無視する場合真を指定する。省略された場合、偽
-	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
-	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean, camera?: Camera): PointSource {
+	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean): PointSource {
 		if (this.state & EntityStateFlags.Hidden) return undefined;
 
-		var cams = this._targetCameras;
-		if (cams && cams.length > 0 && (!camera || cams.indexOf(camera) === -1)) return undefined;
-
 		m = m ? m.multiplyNew(this.getMatrix()) : this.getMatrix().clone();
-		var p = m.multiplyInverseForPoint(point);
+		const p = m.multiplyInverseForPoint(point);
 
 		if (this._hasTouchableChildren || (force && this.children && this.children.length)) {
 			if (this.shouldFindChildrenByPoint(p)) {
-				for (var i = this.children.length - 1; i >= 0; --i) {
-					var child = this.children[i];
+				for (let i = this.children.length - 1; i >= 0; --i) {
+					const child = this.children[i];
 					if (force || child._touchable || child._hasTouchableChildren) {
-						var target = child.findPointSourceByPoint(point, m, force, camera);
+						const target = child.findPointSourceByPoint(point, m, force);
 						if (target) return target;
 					}
 				}
@@ -681,23 +639,21 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 	/**
 	 * このEの包含矩形を計算する。
-	 *
-	 * @param c 使用カメラ。
 	 */
-	calculateBoundingRect(c?: Camera): CommonRect {
-		return this._calculateBoundingRect(undefined, c);
+	calculateBoundingRect(): CommonRect {
+		return this._calculateBoundingRect(undefined);
 	}
 
 	/**
 	 * @private
 	 */
-	_calculateBoundingRect(m?: Matrix, c?: Camera): CommonRect {
+	_calculateBoundingRect(m?: Matrix): CommonRect {
 		var matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);
 		}
 
-		if (!this.visible() || (c && (!this._targetCameras || this._targetCameras.indexOf(c) === -1))) {
+		if (!this.visible()) {
 			return undefined;
 		}
 
@@ -732,7 +688,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 		if (this.children !== undefined) {
 			for (var i = 0; i < this.children.length; ++i) {
-				var nowResult = this.children[i]._calculateBoundingRect(matrix, c);
+				var nowResult = this.children[i]._calculateBoundingRect(matrix);
 				if (nowResult) {
 					if (result.left > nowResult.left) result.left = nowResult.left;
 					if (result.right < nowResult.right) result.right = nowResult.right;
