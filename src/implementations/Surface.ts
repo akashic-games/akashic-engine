@@ -1,7 +1,7 @@
+import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { RendererLike } from "../interfaces/RendererLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { Trigger } from "../Trigger";
 import { CommonSize } from "../types/commons";
 import { Destroyable } from "../types/Destroyable";
 

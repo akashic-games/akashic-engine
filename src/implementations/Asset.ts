@@ -1,5 +1,5 @@
+import { Trigger } from "@akashic/trigger";
 import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
-import { Trigger } from "../Trigger";
 import { Destroyable } from "../types/Destroyable";
 
 /**

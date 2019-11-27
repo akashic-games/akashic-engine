@@ -1,3 +1,4 @@
+import { ChainTrigger, Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "../../commons/ExceptionFactory";
 import {
 	MessageEvent,
@@ -12,7 +13,6 @@ import { Game } from "../../Game";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
 import { Scene } from "../../Scene";
-import { ChainTrigger, Trigger } from "../../Trigger";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
 import { Destroyable } from "../../types/Destroyable";
 import { EntityStateFlags } from "../../types/EntityStateFlags";

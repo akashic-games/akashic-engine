@@ -1,3 +1,4 @@
+import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
 import { AssetManager } from "./domain/AssetManager";
@@ -19,7 +20,6 @@ import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
 import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
-import { Trigger } from "./Trigger";
 import { CommonOffset, CommonSize } from "./types/commons";
 import { EventFilter } from "./types/EventFilter";
 import { GameConfiguration } from "./types/GameConfiguration";

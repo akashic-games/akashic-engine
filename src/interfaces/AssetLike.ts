@@ -1,4 +1,4 @@
-import { Trigger } from "../Trigger";
+import { Trigger } from "@akashic/trigger";
 import { Destroyable } from "../types/Destroyable";
 import { AssetLoadError } from "../types/errors";
 

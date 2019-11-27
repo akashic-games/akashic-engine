@@ -1,5 +1,5 @@
+import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { Trigger } from "../Trigger";
 import { Destroyable } from "../types/Destroyable";
 import { Timer } from "./Timer";
 

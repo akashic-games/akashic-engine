@@ -1,4 +1,5 @@
-import { MusicAudioSystem, SoundAudioSystem, Trigger } from "..";
+import { Trigger } from "@akashic/trigger";
+import { MusicAudioSystem, SoundAudioSystem } from "..";
 import { AudioPlayer, Game } from "./helpers";
 
 describe("test AudioPlayer", () => {

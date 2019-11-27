@@ -1,7 +1,7 @@
+import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { AssetLike } from "../interfaces/AssetLike";
 import { Scene, SceneLoadState, SceneParameterObject } from "../Scene";
-import { Trigger } from "../Trigger";
 
 export interface LoadingSceneParameterObject extends SceneParameterObject {
 	/**
