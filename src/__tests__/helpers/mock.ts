@@ -191,9 +191,10 @@ export class Surface extends g.Surface {
 	}
 
 	renderer(): g.Renderer {
-		const r = new Renderer();
-		this.createdRenderer = r;
-		return r;
+		if (this.createdRenderer == null) {
+			this.createdRenderer = new Renderer();
+		}
+		return this.createdRenderer;
 	}
 
 	isPlaying(): boolean {

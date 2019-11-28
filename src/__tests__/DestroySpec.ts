@@ -1,15 +1,4 @@
-import {
-	BitmapFont,
-	E,
-	FilledRect,
-	FrameSprite,
-	Label,
-	NinePatchSurfaceEffector,
-	Pane,
-	Scene,
-	Sprite,
-	SpriteFactory
-} from "..";
+import { BitmapFont, E, FilledRect, FrameSprite, Label, Pane, Scene, Sprite, SpriteFactory } from "..";
 import { ImageAsset, Renderer, Runtime, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Destroy", () => {
@@ -41,8 +30,7 @@ describe("test Destroy", () => {
 				scene: scene,
 				width: 480,
 				height: 48,
-				backgroundImage: imageAsset,
-				backgroundEffector: new NinePatchSurfaceEffector(runtime.game)
+				backgroundImage: imageAsset
 			}),
 			new FilledRect({ scene: scene, cssColor: "red", width: 32, height: 32 })
 		];
@@ -111,7 +99,6 @@ describe("test Destroy", () => {
 		expect((entities[4] as any)._cache).toBeUndefined();
 		expect((entities[4] as any).__cache.destroyed()).toBe(true);
 		expect((entities[4] as any)._bgSurface).toBeUndefined();
-		expect((entities[4] as any).__bgSurface.destroyed()).toBe(true);
 		expect((entities[4] as any)._childrenSurface).toBeUndefined();
 		expect((entities[4] as any).__childrenSurface.destroyed()).toBe(true);
 		// BitmapFontは自動破棄されない
