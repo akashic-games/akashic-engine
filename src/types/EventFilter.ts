@@ -1,6 +1,8 @@
+import { Event } from "@akashic/playlog";
+
 /**
  * イベントフィルタ。
  *
- * このシグネチャは試験的なものであり、将来的に互換性なく変更される可能性がある。
+ * 詳細は `Game#addEventFilter()` のドキュメントを参照。
  */
-export type EventFilter = (events: any[]) => any[];
+export type EventFilter = (events: Event[]) => Event[];
