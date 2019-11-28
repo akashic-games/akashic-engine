@@ -8,7 +8,6 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
-    "dts-bundle-generator": "^3.3.1",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
@@ -32,9 +31,7 @@
     "prepublish": "npm run build && npm run doc",
     "prepare": "npm run prepublish",
     "build": "npm run clean && tsc -p ./ && npm run bundle",
-    "bundle": "npm run bundle:js && npm run bundle:runtime:dts",
-    "bundle:js": "rollup -c rollup.config.js",
-    "bundle:runtime:dts": "dts-bundle-generator -o dist/main.runtime.d.ts --umd-module-name g src/index.runtime.ts",
+    "bundle": "rollup -c rollup.config.js",
     "clean": "rimraf dist && rimraf lib",
     "test": "npm run test:jest && npm run lint && npm run textlint",
     "test:jest": "jest --config jest.config.js",
@@ -45,7 +42,8 @@
   "files": [
     "lib",
     "dist",
-    "index.js"
+    "index.js",
+    "index.runtime.d.ts"
   ],
   "repository": {
     "type": "git",
