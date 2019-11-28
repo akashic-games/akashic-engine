@@ -1,4 +1,4 @@
-import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, Scene } from "..";
+import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, PointSource, Scene } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -24,7 +24,6 @@ describe("test E", () => {
 		expect(e.local).toBe(false);
 		expect(e.scene).toBe(runtime.scene);
 		expect(e.state).toBe(EntityStateFlags.None);
-		expect(e._targetCameras).toBeUndefined();
 		expect(e._hasTouchableChildren).toBe(false);
 		expect(e.x).toBe(0);
 		expect(e.y).toBe(0);
@@ -40,7 +39,6 @@ describe("test E", () => {
 			scene: runtime.scene,
 			local: true,
 			children: [c1, c2],
-			targetCameras: [],
 			touchable: true,
 			hidden: true,
 			x: 10,
@@ -60,7 +58,6 @@ describe("test E", () => {
 		expect(e.local).toBe(true);
 		expect(e.scene).toBe(runtime.scene);
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.Hidden);
-		expect(e._targetCameras).toEqual([]);
 		expect(e._hasTouchableChildren).toBe(false);
 		expect(e.id in runtime.game.db).toBe(false);
 		expect(e.id in runtime.game._localDb).toBe(true);
@@ -480,8 +477,6 @@ describe("test E", () => {
 	});
 
 	it("findPointSource", () => {
-		const cam1 = new Camera2D({});
-
 		e.touchable = true;
 		e.x = e.y = 100;
 		e.width = e.height = 100;
@@ -490,34 +485,38 @@ describe("test E", () => {
 		face1.touchable = true;
 		face1.x = face1.y = 10;
 		face1.width = face1.height = 10;
-		face1.targetCameras.push(cam1);
 		e.append(face1);
 		face1.modified();
 
-		let found;
+		let found: PointSource;
 		found = runtime.game.findPointSource({ x: 150, y: 150 });
-		expect(found && found.target).toEqual(e);
+		expect(found && found.target).toBe(e);
 		found = runtime.game.findPointSource({ x: 115, y: 115 });
-		expect(found && found.target).toEqual(e);
-
-		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam1);
 		expect(found && found.target).toBe(face1);
 
-		const cam2 = new Camera2D({});
+		const cam1 = new Camera2D({});
+		cam1.x = cam1.y = 10;
+
+		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam1);
+		expect(found && found.target).toBe(e);
+
 		const face2 = new E({ scene: runtime.scene });
-		face2.touchable = true;
 		face2.x = face2.y = 10;
 		face2.width = face2.height = 10;
-		face2.targetCameras.push(cam2);
 		e.append(face2);
 		face2.modified();
 
+		face2.touchable = true;
+		found = runtime.game.findPointSource({ x: 115, y: 115 });
+		expect(found && found.target).toBe(face2);
+
+		face2.touchable = false;
+		found = runtime.game.findPointSource({ x: 115, y: 115 });
+		expect(found && found.target).toBe(face1);
+
+		face1.touchable = false;
 		found = runtime.game.findPointSource({ x: 115, y: 115 });
 		expect(found && found.target).toBe(e);
-		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam1);
-		expect(found && found.target).toBe(face1);
-		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam2);
-		expect(found && found.target).toBe(face2);
 	});
 
 	it("findPointSource - deep", () => {
@@ -860,31 +859,6 @@ describe("test E", () => {
 		expect(firedFlg).toBe(true);
 	});
 
-	it("set/get targetCameras", () => {
-		const e = new E({ scene: runtime.scene });
-
-		expect(e._targetCameras).toBeUndefined();
-		expect(e.targetCameras).toEqual([]);
-		expect(e._targetCameras).toEqual([]);
-
-		const c = new Camera2D({});
-		e.targetCameras = [c];
-
-		expect(e._targetCameras).toEqual([c]);
-		expect(e.targetCameras).toEqual([c]);
-
-		const c2 = new Camera2D({});
-		e.targetCameras = [c, c2];
-
-		expect(e._targetCameras).toEqual([c, c2]);
-		expect(e.targetCameras).toEqual([c, c2]);
-
-		e.targetCameras = [];
-
-		expect(e._targetCameras).toEqual([]);
-		expect(e.targetCameras).toEqual([]);
-	});
-
 	it("set/get touchable", () => {
 		const e = new E({ scene: runtime.scene });
 
@@ -920,12 +894,6 @@ describe("test E", () => {
 		const e = new E({ scene: runtime.scene });
 		const r = new Renderer();
 		const c = new Camera2D({});
-
-		const c2 = new Camera2D({});
-		e.targetCameras = [c2];
-		e.render(r, c);
-		expect(r.methodCallHistory).toEqual([]);
-		e.targetCameras = [c];
 
 		r.clearMethodCallHistory();
 		e.modified();
@@ -1145,38 +1113,6 @@ describe("test E", () => {
 		expect(result3.right).toBe(10);
 		expect(result3.top).toBe(-180);
 		expect(result3.bottom).toBe(20);
-	});
-
-	it("calculateBoundingRect with camera", () => {
-		const runtime = skeletonRuntime();
-		const scene = runtime.scene;
-		const e = new E({ scene: scene });
-		e.width = 100;
-		e.height = 50;
-		scene.append(e);
-
-		const e2 = new E({ scene: scene });
-		e2.width = 200;
-		e2.height = 200;
-		scene.append(e2);
-		e.append(e2);
-
-		const camera = new Camera2D({});
-		e.targetCameras.push(camera);
-
-		const result = e.calculateBoundingRect(camera);
-		expect(result.left).toBe(0);
-		expect(result.right).toBe(100);
-		expect(result.top).toBe(0);
-		expect(result.bottom).toBe(50);
-
-		e2.targetCameras.push(camera);
-
-		const result2 = e.calculateBoundingRect(camera);
-		expect(result2.left).toBe(0);
-		expect(result2.right).toBe(200);
-		expect(result2.top).toBe(0);
-		expect(result2.bottom).toBe(200);
 	});
 
 	it("calculateBoundingRect with children", () => {
