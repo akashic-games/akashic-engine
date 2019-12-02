@@ -204,7 +204,7 @@ export class PlainMatrix {
 			return;
 		}
 		// ここで求める変換行列Mは、引数で指定された変形を、拡大・回転・平行移動の順に適用するものである。
-		// 変形の原点は引数で指定された位置の原寸大、すなわち (anchorX * width, anchorY * height) の位置である。従って
+		// 変形の原点は (anchorX * width, anchorY * height) である。従って
 		//    M = A^-1 T R S A
 		// である。ただしここでA, S, R, Tは、それぞれ以下を表す変換行列である:
 		//    A: アンカーを原点に移す(平行移動する)変換
