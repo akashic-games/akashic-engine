@@ -200,7 +200,7 @@ export class PlainMatrix {
 		anchorY: number | null
 	): void {
 		if (anchorX == null || anchorY == null) {
-			this.updateWithoutAnchor(width, height, scaleX, scaleY, angle, x, y);
+			this._updateWithoutAnchor(width, height, scaleX, scaleY, angle, x, y);
 			return;
 		}
 		// ここで求める変換行列Mは、引数で指定された変形を、拡大・回転・平行移動の順に適用するものである。
@@ -237,8 +237,9 @@ export class PlainMatrix {
 
 	/**
 	 * @deprecated このメソッドは後方互換性のためのみ存在する。通常は `this.update()` を利用すべきである。
+	 * @private
 	 */
-	updateWithoutAnchor(width: number, height: number, scaleX: number, scaleY: number, angle: number, x: number, y: number): void {
+	_updateWithoutAnchor(width: number, height: number, scaleX: number, scaleY: number, angle: number, x: number, y: number): void {
 		// ここで求める変換行列Mは、引数で指定された変形を、拡大・回転・平行移動の順に適用するものである。
 		// 変形の原点は引数で指定された矩形の中心、すなわち (width/2, height/2) の位置である。従って
 		//    M = A^-1 T R S A
@@ -283,7 +284,7 @@ export class PlainMatrix {
 		anchorY: number | null
 	): void {
 		if (anchorX == null || anchorY == null) {
-			this.updateByInverseWithoutAnchor(width, height, scaleX, scaleY, angle, x, y);
+			this._updateByInverseWithoutAnchor(width, height, scaleX, scaleY, angle, x, y);
 			return;
 		}
 		// ここで求める変換行列は、update() の求める行列Mの逆行列、M^-1である。update() のコメントに記述のとおり、
@@ -314,9 +315,18 @@ export class PlainMatrix {
 	}
 
 	/**
-	 * @deprecated このメソッドは後方互換性のためのみ存在する。通常は `this.updateByInverse()` を利用すべきである。
+	 * @deprecated このメソッドは後方互換性のためのみ存在する。通常は `this.update()` を利用すべきである。
+	 * @private
 	 */
-	updateByInverseWithoutAnchor(width: number, height: number, scaleX: number, scaleY: number, angle: number, x: number, y: number): void {
+	_updateByInverseWithoutAnchor(
+		width: number,
+		height: number,
+		scaleX: number,
+		scaleY: number,
+		angle: number,
+		x: number,
+		y: number
+	): void {
 		// ここで求める変換行列は、update() の求める行列Mの逆行列、M^-1である。update() のコメントに記述のとおり、
 		//    M = A^-1 T R S A
 		// であるから、

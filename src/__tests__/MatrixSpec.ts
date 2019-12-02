@@ -70,7 +70,7 @@ describe("test Matrix", () => {
 		const rad = (angle * Math.PI) / 180;
 		const cosValue = Math.cos(rad);
 		const sinValue = Math.sin(rad);
-		m.updateWithoutAnchor(10, 8, 2, 3, angle, 100, 50);
+		m._updateWithoutAnchor(10, 8, 2, 3, angle, 100, 50);
 		const expected = new PlainMatrix();
 		const tmp = new PlainMatrix();
 		tmp._matrix = [1, 0, 0, 1, 10 / 2, 8 / 2];
@@ -92,7 +92,7 @@ describe("test Matrix", () => {
 		const rad = (angle * Math.PI) / 180;
 		const cosValue = Math.cos(rad);
 		const sinValue = Math.sin(rad);
-		m.updateByInverseWithoutAnchor(10, 8, 2, 3, angle, 100, 50);
+		m._updateByInverseWithoutAnchor(10, 8, 2, 3, angle, 100, 50);
 		const expected = new PlainMatrix();
 		const tmp = new PlainMatrix();
 		tmp._matrix = [1, 0, 0, 1, 10 / 2, 8 / 2];
