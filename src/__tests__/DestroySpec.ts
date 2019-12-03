@@ -80,9 +80,9 @@ describe("test Destroy", () => {
 
 		// 参照保持処理
 		// Sprite
-		(entities[1] as any).__surface = (entities[1] as any).surface;
+		(entities[1] as any).__surface = (entities[1] as any)._surface;
 		// FrameSprite
-		(entities[2] as any).__surface = (entities[2] as any).surface;
+		(entities[2] as any).__surface = (entities[2] as any)._surface;
 		// Label
 		(entities[3] as any).__cache = (entities[3] as any)._cache;
 		// Pane
@@ -95,12 +95,12 @@ describe("test Destroy", () => {
 			expect(e.destroyed()).toBe(true);
 		});
 		// Sprite
-		expect((entities[1] as any).surface).toBeUndefined();
+		expect((entities[1] as any)._surface).toBeUndefined();
 		expect((entities[1] as any).__surface.destroyed()).toBe(false);
 		(entities[1] as any).__surface.destroy();
 		expect((entities[1] as any).__surface.destroyed()).toBe(true);
 		// FrameSprite
-		expect((entities[2] as any).surface).toBeUndefined();
+		expect((entities[2] as any)._surface).toBeUndefined();
 		expect((entities[2] as any).__surface.destroyed()).toBe(false);
 		(entities[2] as any).__surface.destroy();
 		expect((entities[2] as any).__surface.destroyed()).toBe(true);
@@ -142,8 +142,8 @@ describe("test Destroy", () => {
 			expect(e[propName]).toBeUndefined();
 			expect(tmp.destroyed()).toBe(true);
 		}
-		destroyAndCheckProp(entities[1], "surface"); // Sprite
-		destroyAndCheckProp(entities[2], "surface"); // FrameSprite
+		destroyAndCheckProp(entities[1], "_surface"); // Sprite
+		destroyAndCheckProp(entities[2], "_surface"); // FrameSprite
 	});
 
 	it("Sprite1つの破棄で複数Spriteが破壊される", () => {
@@ -189,9 +189,9 @@ describe("test Destroy", () => {
 			expect(e.destroyed()).toBe(e === entities[0]);
 			// surfaceのみ破壊されている。（本来あってはいけない状態）
 			if (e === entities[0]) {
-				expect(e.surface).toBeUndefined();
+				expect(e._surface).toBeUndefined();
 			} else {
-				expect(e.surface.destroyed()).toBe(true);
+				expect(e._surface.destroyed()).toBe(true);
 			}
 		});
 	});
@@ -235,7 +235,7 @@ describe("test Destroy", () => {
 		scene.destroy();
 		entities.forEach(e => {
 			expect(e.destroyed()).toBe(true);
-			expect(e.surface).toBeUndefined();
+			expect(e._surface).toBeUndefined();
 		});
 		expect(surface.destroyed()).toBe(false);
 		surface.destroy();
