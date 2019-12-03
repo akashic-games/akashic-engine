@@ -24,37 +24,41 @@ describe("test Sprite", () => {
 			width: 32,
 			height: 48
 		});
-		expect(sprite.width).toEqual(32);
-		expect(sprite.height).toEqual(48);
-		expect(sprite.srcWidth).toEqual(32);
-		expect(sprite.srcHeight).toEqual(48);
-		expect(sprite.srcX).toEqual(0);
-		expect(sprite.srcY).toEqual(0);
-		expect(sprite.surface).toEqual(surface);
-		expect(sprite._beforeSurface).toEqual(sprite.surface);
+		expect(sprite.width).toBe(32);
+		expect(sprite.height).toBe(48);
+		expect(sprite.srcWidth).toBe(32);
+		expect(sprite.srcHeight).toBe(48);
+		expect(sprite.srcX).toBe(0);
+		expect(sprite.srcY).toBe(0);
+		expect(sprite.src).toBeUndefined();
+		expect(sprite._beforeSrc).toBeUndefined();
+		expect(sprite.surface).toBe(surface);
+		expect(sprite._beforeSurface).toBe(sprite.surface);
 
 		sprite.invalidate();
-		expect(sprite.width).toEqual(32);
-		expect(sprite.height).toEqual(48);
+		expect(sprite.width).toBe(32);
+		expect(sprite.height).toBe(48);
 		sprite.srcWidth = 10;
 		sprite.srcHeight = 10;
 		sprite.invalidate();
-		expect(sprite.srcWidth).toEqual(10);
-		expect(sprite.srcHeight).toEqual(10);
+		expect(sprite.srcWidth).toBe(10);
+		expect(sprite.srcHeight).toBe(10);
 
 		const surface2 = new Surface(16, 32);
 		const sprite2 = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface2
 		});
-		expect(sprite2.width).toEqual(16);
-		expect(sprite2.height).toEqual(32);
-		expect(sprite2.srcWidth).toEqual(16);
-		expect(sprite2.srcHeight).toEqual(32);
-		expect(sprite2.srcX).toEqual(0);
-		expect(sprite2.srcY).toEqual(0);
+		expect(sprite2.width).toBe(16);
+		expect(sprite2.height).toBe(32);
+		expect(sprite2.srcWidth).toBe(16);
+		expect(sprite2.srcHeight).toBe(32);
+		expect(sprite2.srcX).toBe(0);
+		expect(sprite2.srcY).toBe(0);
+		expect(sprite2.src).toBeUndefined();
+		expect(sprite._beforeSrc).toBeUndefined();
 		expect(sprite2.surface).toBe(surface2);
-		expect(sprite2._beforeSurface).toEqual(sprite2.surface);
+		expect(sprite2._beforeSurface).toBe(sprite2.surface);
 	});
 
 	it("初期化 - 動画サーフェス", () => {
@@ -284,7 +288,6 @@ describe("test Sprite", () => {
 		surface2.animatingStarted.fire();
 		sprite.update.fire();
 		expect(updated).toBe(true);
-
 	});
 
 	it("再生中の動画サーフェスへの切り替え", () => {
@@ -307,5 +310,34 @@ describe("test Sprite", () => {
 
 		sprite.update.fire();
 		expect(updated).toBe(true);
+	});
+
+	it("srcの変更", () => {
+		const runtime = skeletonRuntime();
+		const imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
+		const sprite = new MonitorSprite({
+			scene: runtime.scene,
+			src: imageAsset
+		});
+		expect(sprite.src).toBe(imageAsset);
+		expect(sprite._beforeSrc).toBe(imageAsset);
+		expect(sprite.surface).toBe(imageAsset.asSurface());
+		expect(sprite._beforeSurface).toBe(imageAsset.asSurface());
+
+		const otherImageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 100, 100);
+		sprite.src = otherImageAsset;
+		sprite.invalidate();
+		expect(sprite.src).toBe(otherImageAsset);
+		expect(sprite._beforeSrc).toBe(otherImageAsset);
+		expect(sprite.surface).toBe(otherImageAsset.asSurface());
+		expect(sprite._beforeSurface).toBe(otherImageAsset.asSurface());
+
+		const surface = new Surface(16, 32);
+		sprite.surface = surface;
+		sprite.invalidate();
+		expect(sprite.src).toBe(otherImageAsset);
+		expect(sprite._beforeSrc).toBe(otherImageAsset);
+		expect(sprite.surface).toBe(surface);
+		expect(sprite._beforeSurface).toBe(surface);
 	});
 });

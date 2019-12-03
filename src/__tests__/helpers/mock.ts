@@ -231,6 +231,7 @@ class LoadFailureController {
 
 export class ImageAsset extends g.ImageAsset {
 	_failureController: LoadFailureController;
+	_surface: Surface;
 
 	constructor(necessaryRetryCount: number, id: string, assetPath: string, width: number, height: number) {
 		super(id, assetPath, width, height);
@@ -246,7 +247,10 @@ export class ImageAsset extends g.ImageAsset {
 	}
 
 	asSurface(): g.Surface {
-		return new Surface(0, 0);
+		if (this._surface == null) {
+			this._surface = new Surface(this.width, this.height);
+		}
+		return this._surface;
 	}
 }
 

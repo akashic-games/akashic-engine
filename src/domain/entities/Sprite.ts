@@ -23,7 +23,7 @@ export interface SpriteParameterObject extends EParameterObject {
 	 * `surface` の描画対象部分の幅。
 	 * 描画はこの値を `this.width` に拡大または縮小する形で行われる。
 	 * 省略された場合、値に `width` があれば `width` 、なければ `src.width` 。
-	 * @default (width !== undefined) ? width : src.width
+	 * @default width || src.width
 	 */
 	srcWidth?: number;
 
@@ -53,9 +53,18 @@ export interface SpriteParameterObject extends EParameterObject {
  */
 export class Sprite extends E {
 	/**
+	 * 描画する `Surface` または `ImageAsset` 。
+	 * `srcX` ・ `srcY` ・ `srcWidth` ・ `srcHeight` の作る矩形がこの画像の範囲外を示す場合、描画結果は保証されない。
+	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
+	 * (ただし `this.src` と `this.surface` を同時に変更した際の動作は未定である。)
+	 */
+	src: SurfaceLike | ImageAssetLike;
+
+	/**
 	 * 描画する画像。
 	 * `srcX` ・ `srcY` ・ `srcWidth` ・ `srcHeight` の作る矩形がこの画像の範囲外を示す場合、描画結果は保証されない。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
+	 * (ただし `this.src` と `this.surface` を同時に変更した際の動作は未定である。)
 	 */
 	surface: SurfaceLike;
 
@@ -93,7 +102,12 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
-	_beforeSurface: SurfaceLike;
+	_beforeSrc: SurfaceLike | ImageAssetLike | undefined;
+
+	/**
+	 * @private
+	 */
+	_beforeSurface: SurfaceLike | undefined;
 
 	/**
 	 * 各種パラメータを指定して `Sprite` のインスタンスを生成する。
@@ -101,7 +115,12 @@ export class Sprite extends E {
 	 */
 	constructor(param: SpriteParameterObject) {
 		super(param);
-		this.surface = SurfaceUtil.asSurface(param.src);
+		if ("_drawable" in param.src) {
+			this.surface = param.src;
+		} else {
+			this.src = param.src;
+			this.surface = SurfaceUtil.asSurface(param.src);
+		}
 		if (param.width == null) this.width = this.surface.width;
 		if (param.height == null) this.height = this.surface.height;
 		this.srcWidth = param.srcWidth != null ? param.srcWidth : this.width;
@@ -109,6 +128,7 @@ export class Sprite extends E {
 		this.srcX = param.srcX || 0;
 		this.srcY = param.srcY || 0;
 		this._stretchMatrix = undefined;
+		this._beforeSrc = this.src;
 		this._beforeSurface = this.surface;
 		SurfaceUtil.setupAnimatingHandler(this, this.surface);
 		this._invalidateSelf();
@@ -182,7 +202,10 @@ export class Sprite extends E {
 				this.surface.animatingStopped.remove(this._onAnimatingStopped, this);
 			}
 		}
+		this.src = undefined;
+		this._beforeSrc = undefined;
 		this.surface = undefined;
+		this._beforeSurface = undefined;
 		super.destroy();
 	}
 
@@ -192,6 +215,14 @@ export class Sprite extends E {
 		} else {
 			this._stretchMatrix = new PlainMatrix();
 			this._stretchMatrix.scale(this.width / this.srcWidth, this.height / this.srcHeight);
+		}
+		if (this.src !== this._beforeSrc) {
+			this._beforeSrc = this.src;
+			if ("_drawable" in this.src) {
+				this.surface = this.src;
+			} else {
+				this.surface = SurfaceUtil.asSurface(this.src);
+			}
 		}
 		if (this.surface !== this._beforeSurface) {
 			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface, this.surface);
