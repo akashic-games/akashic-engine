@@ -127,7 +127,7 @@ export class FrameSprite extends Sprite {
 	static createBySprite(sprite: Sprite, width?: number, height?: number): FrameSprite {
 		var frameSprite = new FrameSprite({
 			scene: sprite.scene,
-			src: sprite.surface,
+			src: sprite.src,
 			width: width === undefined ? sprite.width : width,
 			height: height === undefined ? sprite.height : height
 		});
@@ -224,7 +224,7 @@ export class FrameSprite extends Sprite {
 	 */
 	_changeFrame(): void {
 		var frame = this.frames[this.frameNumber];
-		var sep = Math.floor(this.surface.width / this.srcWidth);
+		var sep = Math.floor(this._surface.width / this.srcWidth);
 		this.srcX = (frame % sep) * this.srcWidth;
 		this.srcY = Math.floor(frame / sep) * this.srcHeight;
 		this._lastUsedIndex = frame;

@@ -23,7 +23,7 @@ export interface SpriteParameterObject extends EParameterObject {
 	 * `surface` の描画対象部分の幅。
 	 * 描画はこの値を `this.width` に拡大または縮小する形で行われる。
 	 * 省略された場合、値に `width` があれば `width` 、なければ `src.width` 。
-	 * @default (width !== undefined) ? width : src.width
+	 * @default width || src.width
 	 */
 	srcWidth?: number;
 
@@ -53,11 +53,11 @@ export interface SpriteParameterObject extends EParameterObject {
  */
 export class Sprite extends E {
 	/**
-	 * 描画する画像。
+	 * 描画する `Surface` または `ImageAsset` 。
 	 * `srcX` ・ `srcY` ・ `srcWidth` ・ `srcHeight` の作る矩形がこの画像の範囲外を示す場合、描画結果は保証されない。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
-	surface: SurfaceLike;
+	src: SurfaceLike | ImageAssetLike;
 
 	/**
 	 * `surface` の描画対象部分の幅。
@@ -88,12 +88,22 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
+	_surface: SurfaceLike;
+
+	/**
+	 * @private
+	 */
 	_stretchMatrix: Matrix;
 
 	/**
 	 * @private
 	 */
-	_beforeSurface: SurfaceLike;
+	_beforeSrc: SurfaceLike | ImageAssetLike | undefined;
+
+	/**
+	 * @private
+	 */
+	_beforeSurface: SurfaceLike | undefined;
 
 	/**
 	 * 各種パラメータを指定して `Sprite` のインスタンスを生成する。
@@ -101,16 +111,22 @@ export class Sprite extends E {
 	 */
 	constructor(param: SpriteParameterObject) {
 		super(param);
-		this.surface = SurfaceUtil.asSurface(param.src);
-		if (param.width == null) this.width = this.surface.width;
-		if (param.height == null) this.height = this.surface.height;
+		this.src = param.src;
+		if ("_drawable" in param.src) {
+			this._surface = param.src;
+		} else {
+			this._surface = SurfaceUtil.asSurface(param.src);
+		}
+		if (param.width == null) this.width = this._surface.width;
+		if (param.height == null) this.height = this._surface.height;
 		this.srcWidth = param.srcWidth != null ? param.srcWidth : this.width;
 		this.srcHeight = param.srcHeight != null ? param.srcHeight : this.height;
 		this.srcX = param.srcX || 0;
 		this.srcY = param.srcY || 0;
 		this._stretchMatrix = undefined;
-		this._beforeSurface = this.surface;
-		SurfaceUtil.setupAnimatingHandler(this, this.surface);
+		this._beforeSrc = this.src;
+		this._beforeSurface = this._surface;
+		SurfaceUtil.setupAnimatingHandler(this, this._surface);
 		this._invalidateSelf();
 	}
 
@@ -152,7 +168,7 @@ export class Sprite extends E {
 			renderer.transform(this._stretchMatrix._matrix);
 		}
 
-		renderer.drawImage(this.surface, this.srcX, this.srcY, this.srcWidth, this.srcHeight, 0, 0);
+		renderer.drawImage(this._surface, this.srcX, this.srcY, this.srcWidth, this.srcHeight, 0, 0);
 
 		if (this._stretchMatrix) renderer.restore();
 
@@ -174,15 +190,17 @@ export class Sprite extends E {
 	 * @param destroySurface trueを指定した場合、このエンティティが抱える `Surface` も合わせて破棄する
 	 */
 	destroy(destroySurface?: boolean): void {
-		if (this.surface && !this.surface.destroyed()) {
+		if (this._surface && !this._surface.destroyed()) {
 			if (destroySurface) {
-				this.surface.destroy();
-			} else if (this.surface.isDynamic) {
-				this.surface.animatingStarted.remove(this._onAnimatingStarted, this);
-				this.surface.animatingStopped.remove(this._onAnimatingStopped, this);
+				this._surface.destroy();
+			} else if (this._surface.isDynamic) {
+				this._surface.animatingStarted.remove(this._onAnimatingStarted, this);
+				this._surface.animatingStopped.remove(this._onAnimatingStopped, this);
 			}
 		}
-		this.surface = undefined;
+		this.src = undefined;
+		this._beforeSrc = undefined;
+		this._surface = undefined;
 		super.destroy();
 	}
 
@@ -193,9 +211,17 @@ export class Sprite extends E {
 			this._stretchMatrix = new PlainMatrix();
 			this._stretchMatrix.scale(this.width / this.srcWidth, this.height / this.srcHeight);
 		}
-		if (this.surface !== this._beforeSurface) {
-			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface, this.surface);
-			this._beforeSurface = this.surface;
+		if (this.src !== this._beforeSrc) {
+			this._beforeSrc = this.src;
+			if ("_drawable" in this.src) {
+				this._surface = this.src;
+			} else {
+				this._surface = SurfaceUtil.asSurface(this.src);
+			}
+		}
+		if (this._surface !== this._beforeSurface) {
+			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface, this._surface);
+			this._beforeSurface = this._surface;
 		}
 	}
 }
