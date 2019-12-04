@@ -59,7 +59,6 @@ export class Pane extends CacheableE {
 
 	/**
 	 * 背景画像の拡大・縮小に用いられる `SurfaceEffector` 。
-	 * (ex. 背景に「枠」の部分を持つ画像を使い、枠部分の拡大率を固定したいような場合は、 `NinePatchSurfaceEffector` を指定すればよい)
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
 	backgroundEffector: SurfaceEffector;
