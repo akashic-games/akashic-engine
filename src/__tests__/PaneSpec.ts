@@ -60,7 +60,37 @@ describe("test Pane", () => {
 			padding: { top: 3, left: 1, right: 4, bottom: 2 },
 			backgroundImage: imageAsset
 		});
-		expect(pane.backgroundImage).toEqual(SurfaceUtil.asSurface(imageAsset));
+		expect(pane._backgroundImageSurface).toEqual(SurfaceUtil.asSurface(imageAsset));
+	});
+
+	it("change backgroundImage", () => {
+		const scene = runtime.scene;
+		const imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
+		const r = new Renderer();
+
+		const pane = new Pane({
+			scene: scene,
+			width: 10,
+			height: 20,
+			padding: 3
+		});
+		scene.append(pane);
+
+		expect(pane.backgroundImage).toBeUndefined();
+		expect(pane._beforeBackgroundImage).toBeUndefined();
+		expect(pane._backgroundImageSurface).toBeUndefined();
+
+		pane.backgroundImage = imageAsset;
+		pane.renderCache(r); // invalidate()
+		expect(pane.backgroundImage).toBe(imageAsset);
+		expect(pane._beforeBackgroundImage).toBe(imageAsset);
+		expect(pane._backgroundImageSurface).toBe(imageAsset.asSurface());
+
+		pane.backgroundImage = undefined;
+		pane.renderCache(r); // invalidate()
+		expect(pane.backgroundImage).toBeUndefined();
+		expect(pane._beforeBackgroundImage).toBeUndefined();
+		expect(pane._backgroundImageSurface).toBeUndefined();
 	});
 
 	it("modified", () => {

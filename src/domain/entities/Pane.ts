@@ -52,16 +52,26 @@ export interface PaneParameterObject extends CacheableEParameterObject {
  */
 export class Pane extends CacheableE {
 	/**
-	 * 背景画像の `Surface` 。
+	 * 背景画像の `ImageAsset` または `Surface` 。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
-	backgroundImage: SurfaceLike; // TODO: (GAMEDEV-2034) Surface|ImageAsset 型になる予定
+	backgroundImage: ImageAssetLike | SurfaceLike | undefined;
 
 	/**
 	 * 背景画像の拡大・縮小に用いられる `SurfaceEffector` 。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
 	backgroundEffector: SurfaceEffector;
+
+	/**
+	 * @private
+	 */
+	_backgroundImageSurface: SurfaceLike | undefined;
+
+	/**
+	 * @private
+	 */
+	_beforeBackgroundImage: ImageAssetLike | SurfaceLike | undefined;
 
 	/**
 	 * @private
@@ -122,7 +132,9 @@ export class Pane extends CacheableE {
 		super(param);
 		this._oldWidth = param.width;
 		this._oldHeight = param.height;
-		this.backgroundImage = SurfaceUtil.asSurface(param.backgroundImage);
+		this.backgroundImage = param.backgroundImage;
+		this._beforeBackgroundImage = param.backgroundImage;
+		this._backgroundImageSurface = SurfaceUtil.asSurface(param.backgroundImage);
 		this.backgroundEffector = param.backgroundEffector;
 		this._shouldRenderChildren = false;
 		this._padding = param.padding;
@@ -174,8 +186,8 @@ export class Pane extends CacheableE {
 
 		if (this._bgSurface) {
 			renderer.drawImage(this._bgSurface, 0, 0, this.width, this.height, 0, 0);
-		} else if (this.backgroundImage) {
-			renderer.drawImage(this.backgroundImage, 0, 0, this.width, this.height, 0, 0);
+		} else if (this._backgroundImageSurface) {
+			renderer.drawImage(this._backgroundImageSurface, 0, 0, this.width, this.height, 0, 0);
 		}
 		if (this._childrenArea.width <= 0 || this._childrenArea.height <= 0) {
 			return;
@@ -194,8 +206,8 @@ export class Pane extends CacheableE {
 	 * @param destroySurface trueを指定した場合、 `backgroundImage` に利用している `Surface` も合わせて破棄する。
 	 */
 	destroy(destroySurface?: boolean): void {
-		if (destroySurface && this.backgroundImage && !this.backgroundImage.destroyed()) {
-			this.backgroundImage.destroy();
+		if (destroySurface && this._backgroundImageSurface && !this._backgroundImageSurface.destroyed()) {
+			this._backgroundImageSurface.destroy();
 		}
 		if (this._bgSurface && !this._bgSurface.destroyed()) {
 			this._bgSurface.destroy();
@@ -204,6 +216,8 @@ export class Pane extends CacheableE {
 			this._childrenSurface.destroy();
 		}
 		this.backgroundImage = undefined;
+		this._backgroundImageSurface = undefined;
+		this._beforeBackgroundImage = undefined;
 		this._bgSurface = undefined;
 		this._childrenSurface = undefined;
 		super.destroy();
@@ -213,8 +227,12 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	_renderBackground(): void {
-		if (this.backgroundImage && this.backgroundEffector) {
-			const bgSurface = this.backgroundEffector.render(this.backgroundImage, this.width, this.height);
+		if (this.backgroundImage !== this._beforeBackgroundImage) {
+			this._backgroundImageSurface = SurfaceUtil.asSurface(this.backgroundImage);
+			this._beforeBackgroundImage = this.backgroundImage;
+		}
+		if (this._backgroundImageSurface && this.backgroundEffector) {
+			const bgSurface = this.backgroundEffector.render(this._backgroundImageSurface, this.width, this.height);
 			if (this._bgSurface !== bgSurface) {
 				if (this._bgSurface && !this._bgSurface.destroyed()) {
 					this._bgSurface.destroy();
