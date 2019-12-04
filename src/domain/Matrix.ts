@@ -236,7 +236,7 @@ export class PlainMatrix {
 	}
 
 	/**
-	 * @deprecated このメソッドは後方互換性のためのみ存在する。通常は `this.update()` を利用すべきである。
+	 * このメソッドは anchorX, anchorY が存在しなかった当時との互換性のため存在する。将来この互換性を破棄する時に削除する予定である。
 	 * @private
 	 */
 	_updateWithoutAnchor(width: number, height: number, scaleX: number, scaleY: number, angle: number, x: number, y: number): void {
@@ -315,7 +315,7 @@ export class PlainMatrix {
 	}
 
 	/**
-	 * @deprecated このメソッドは後方互換性のためのみ存在する。通常は `this.update()` を利用すべきである。
+	 * このメソッドは anchorX, anchorY が存在しなかった当時との互換性のため存在する。将来この互換性を破棄する時に削除する予定である。
 	 * @private
 	 */
 	_updateByInverseWithoutAnchor(
