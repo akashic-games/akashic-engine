@@ -84,8 +84,8 @@ describe("test E", () => {
 		const scale = 2;
 		const w = e.width * scale;
 		const h = e.height * scale;
-		const fromX = e.width / 2 - e.width * scale / 2;
-		const fromY = e.height / 2 - e.height * scale / 2;
+		const fromX = e.width / 2 - (e.width * scale) / 2;
+		const fromY = e.height / 2 - (e.height * scale) / 2;
 		const toX = fromX + w;
 		const toY = fromY + h;
 		e.moveTo(e.width / 2, e.height / 2);
@@ -149,7 +149,7 @@ describe("test E", () => {
 		const toY = e.height;
 		const angle = 180;
 		e.anchor(0.5, 0.5);
-		e.moveTo(e.width / 2, e.height/ 2);
+		e.moveTo(e.width / 2, e.height / 2);
 		e.angle = angle;
 		for (let x = fromX + 0.1; x < toX; x++) {
 			for (let y = fromY + 0.1; y < toY; y++) {
@@ -261,5 +261,39 @@ describe("test E", () => {
 
 		e2.remove();
 		expect(e._hasTouchableChildren).toBe(false);
+	});
+
+	it("deprecated: 座標基点=左上, 拡大+回転の基点=中央", () => {
+		const angle = 180;
+		const scale = 2;
+		const w = e.width * scale;
+		const h = e.height * scale;
+		const fromX = e.width / 2 - w / 2;
+		const fromY = e.height / 2 - h / 2;
+		const toX = fromX + w;
+		const toY = fromY + h;
+		e.scale(scale);
+		e.angle = angle;
+		e.anchorX = null;
+		for (let x = fromX + 0.1; x < toX; x++) {
+			for (let y = fromY + 0.1; y < toY; y++) {
+				const t = e.findPointSourceByPoint({ x, y });
+				expect(t.target).toBe(e);
+			}
+		}
+		let t = e.findPointSourceByPoint({
+			x: fromX + 0.1,
+			y: fromY - 1
+		});
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({
+			x: fromX - 1,
+			y: fromY + 0.1
+		});
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({ x: toX + 1, y: toY });
+		expect(t).toBeUndefined();
+		t = e.findPointSourceByPoint({ x: toX, y: toY + 1 });
+		expect(t).toBeUndefined();
 	});
 });

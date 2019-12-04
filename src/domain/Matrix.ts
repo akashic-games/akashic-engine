@@ -196,11 +196,15 @@ export class PlainMatrix {
 		angle: number,
 		x: number,
 		y: number,
-		anchorX: number,
-		anchorY: number
+		anchorX: number | null,
+		anchorY: number | null
 	): void {
+		if (anchorX == null || anchorY == null) {
+			this._updateWithoutAnchor(width, height, scaleX, scaleY, angle, x, y);
+			return;
+		}
 		// ここで求める変換行列Mは、引数で指定された変形を、拡大・回転・平行移動の順に適用するものである。
-		// 変形の原点は引数で指定された位置の原寸大、すなわち (anchorX * width, anchorY * height) の位置である。従って
+		// 変形の原点は (anchorX * width, anchorY * height) である。従って
 		//    M = A^-1 T R S A
 		// である。ただしここでA, S, R, Tは、それぞれ以下を表す変換行列である:
 		//    A: アンカーを原点に移す(平行移動する)変換
@@ -231,6 +235,43 @@ export class PlainMatrix {
 		this._matrix[5] = -b * w - d * h + y;
 	}
 
+	/**
+	 * このメソッドは anchorX, anchorY が存在しなかった当時との互換性のため存在する。将来この互換性を破棄する時に削除する予定である。
+	 * @private
+	 */
+	_updateWithoutAnchor(width: number, height: number, scaleX: number, scaleY: number, angle: number, x: number, y: number): void {
+		// ここで求める変換行列Mは、引数で指定された変形を、拡大・回転・平行移動の順に適用するものである。
+		// 変形の原点は引数で指定された矩形の中心、すなわち (width/2, height/2) の位置である。従って
+		//    M = A^-1 T R S A
+		// である。ただしここでA, S, R, Tは、それぞれ以下を表す変換行列である:
+		//    A: 矩形の中心を原点に移す(平行移動する)変換
+		//    S: X軸方向にscaleX倍、Y軸方向にscaleY倍する変換
+		//    R: angle度だけ回転する変換
+		//    T: x, yの値だけ平行移動する変換
+		// それらは次のように表せる:
+		//           1    0   -w           sx    0    0            c   -s    0            1    0    x
+		//    A = [  0    1   -h]    S = [  0   sy    0]    R = [  s    c    0]    T = [  0    1    y]
+		//           0    0    1            0    0    1            0    0    1            0    0    1
+		// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
+		// (ただし theta = angle * PI / 180)、w = (width / 2), h = (height / 2) である。
+		// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
+		const r = (angle * Math.PI) / 180;
+		const _cos = Math.cos(r);
+		const _sin = Math.sin(r);
+		const a = _cos * scaleX;
+		const b = _sin * scaleX;
+		const c = _sin * scaleY;
+		const d = _cos * scaleY;
+		const w = width / 2;
+		const h = height / 2;
+		this._matrix[0] = a;
+		this._matrix[1] = b;
+		this._matrix[2] = -c;
+		this._matrix[3] = d;
+		this._matrix[4] = -a * w + c * h + w + x;
+		this._matrix[5] = -b * w - d * h + h + y;
+	}
+
 	updateByInverse(
 		width: number,
 		height: number,
@@ -239,9 +280,13 @@ export class PlainMatrix {
 		angle: number,
 		x: number,
 		y: number,
-		anchorX: number,
-		anchorY: number
+		anchorX: number | null,
+		anchorY: number | null
 	): void {
+		if (anchorX == null || anchorY == null) {
+			this._updateByInverseWithoutAnchor(width, height, scaleX, scaleY, angle, x, y);
+			return;
+		}
 		// ここで求める変換行列は、update() の求める行列Mの逆行列、M^-1である。update() のコメントに記述のとおり、
 		//    M = A^-1 T R S A
 		// であるから、
@@ -267,6 +312,46 @@ export class PlainMatrix {
 		this._matrix[3] = d;
 		this._matrix[4] = -a * x - c * y + w;
 		this._matrix[5] = b * x - d * y + h;
+	}
+
+	/**
+	 * このメソッドは anchorX, anchorY が存在しなかった当時との互換性のため存在する。将来この互換性を破棄する時に削除する予定である。
+	 * @private
+	 */
+	_updateByInverseWithoutAnchor(
+		width: number,
+		height: number,
+		scaleX: number,
+		scaleY: number,
+		angle: number,
+		x: number,
+		y: number
+	): void {
+		// ここで求める変換行列は、update() の求める行列Mの逆行列、M^-1である。update() のコメントに記述のとおり、
+		//    M = A^-1 T R S A
+		// であるから、
+		//    M^-1 = A^-1 S^-1 R^-1 T^-1 A
+		// それぞれは次のように表せる:
+		//              1    0    w             1/sx     0    0               c    s    0               1    0   -x
+		//    A^-1 = [  0    1    h]    S^-1 = [   0  1/sy    0]    R^-1 = [ -s    c    0]    T^-1 = [  0    1   -y]
+		//              0    0    1                0     0    1               0    0    1               0    0    1
+		// ここで各変数は update() のコメントのものと同様である。
+		// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
+		const r = (angle * Math.PI) / 180;
+		const _cos = Math.cos(r);
+		const _sin = Math.sin(r);
+		const a = _cos / scaleX;
+		const b = _sin / scaleY;
+		const c = _sin / scaleX;
+		const d = _cos / scaleY;
+		const w = width / 2;
+		const h = height / 2;
+		this._matrix[0] = a;
+		this._matrix[1] = -b;
+		this._matrix[2] = c;
+		this._matrix[3] = d;
+		this._matrix[4] = -a * (w + x) - c * (h + y) + w;
+		this._matrix[5] = b * (w + x) - d * (h + y) + h;
 	}
 
 	multiply(matrix: Matrix): void {
