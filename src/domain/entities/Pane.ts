@@ -218,6 +218,7 @@ export class Pane extends CacheableE {
 		}
 		this.backgroundImage = undefined;
 		this._backgroundImageSurface = undefined;
+		this._beforeBackgroundImage = undefined;
 		this._bgSurface = undefined;
 		this._childrenSurface = undefined;
 		super.destroy();
