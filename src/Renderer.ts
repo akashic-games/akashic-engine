@@ -17,9 +17,7 @@ namespace g {
 				camera._applyTransformToRenderer(this);
 			}
 
-			var children = scene.children;
-			for (var i = 0; i < children.length; ++i)
-				children[i].render(this, camera);
+			scene.root.render(this, camera);
 
 			if (camera) {
 				this.restore();

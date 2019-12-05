@@ -337,7 +337,7 @@ describe("test Game", function() {
 					]);
 
 					setTimeout(function () {
-						expect(game.loadingScene.loaded.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.loaded.length).toBe(2); // loadingSceneのloadedハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -428,7 +428,7 @@ describe("test Game", function() {
 					]);
 
 					setTimeout(function () {
-						expect(game.loadingScene.loaded.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.loaded.length).toBe(2); // loadingSceneのloadedハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -880,7 +880,7 @@ describe("test Game", function() {
 		var camera2 = new g.Camera2D({game: game});
 		game.focusingCamera = camera2;
 		expect(game.focusingCamera).toEqual(camera2);
-		expect(e.state).toBe( mock.EntityStateFlags.ContextLess);
+		expect(e.state).toBe(mock.EntityStateFlags.ContextLess);
 		expect(game.modified).toBe(false);
 
 		game.modified = false;
