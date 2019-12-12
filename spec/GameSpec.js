@@ -224,6 +224,40 @@ describe("test Game", function() {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("popScene - specified step", function(done) {
+		var game = new mock.Game({ width: 320, height: 320 });
+
+		game._loaded.add(function () { // game.scenes テストのため _loaded を待つ必要がある
+			// popSceneで指定したシーンまで戻る際に経過したシーンは全て削除
+			var scene = new g.Scene({game: game, name: "SCENE1"});
+			var scene2 = new g.Scene({game: game, name: "SCENE2"});
+			var scene3 = new g.Scene({game: game, name: "SCENE3"});
+			game.pushScene(scene);
+			game.pushScene(scene2);
+			game.pushScene(scene3);
+			game.popScene(false, 2);
+			game._flushSceneChangeRequests();
+			expect(game.scenes).toEqual([game._initialScene, scene]);
+			expect(scene.destroyed()).toBe(false);
+			expect(scene2.destroyed()).toBe(true);
+			expect(scene3.destroyed()).toBe(true);
+
+			// popSceneで指定したシーンまで戻る際に経過したシーンは全て残す
+			var scene2Alpha = new g.Scene({game: game, name: "SCENE2_Alpha"});
+			var scene3Beta = new g.Scene({game: game, name: "SCENE3_Beta"});
+			game.pushScene(scene2Alpha);
+			game.pushScene(scene3Beta);
+			game.popScene(true, 3);
+			game._flushSceneChangeRequests();
+			expect(game.scenes).toEqual([game._initialScene]);
+			expect(scene.destroyed()).toBe(false);
+			expect(scene2Alpha.destroyed()).toBe(false);
+			expect(scene3Beta.destroyed()).toBe(false);
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("replaceScene", function(done) {
 		var game = new mock.Game({ width: 320, height: 320 });
 
