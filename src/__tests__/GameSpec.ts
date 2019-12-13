@@ -28,7 +28,7 @@ describe("test Game", () => {
 		expect(game.scenes.length).toBe(0);
 		expect(game.random).toBe(null);
 		expect(game.events.length).toBe(0);
-		expect(game.modified).toBe(true);
+		expect(game._modified).toBe(true);
 		expect(game.external).toEqual({});
 		expect(game.age).toBe(0);
 		expect(game.fps).toBe(30);
@@ -49,7 +49,7 @@ describe("test Game", () => {
 		expect(game.scenes).toBe(undefined);
 		expect(game.random).toBe(undefined);
 		expect(game.events).toBe(undefined);
-		expect(game.modified).toBe(false);
+		expect(game._modified).toBe(false);
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
 		expect(game.playId).toBe(undefined);
@@ -920,29 +920,29 @@ describe("test Game", () => {
 		const e = new E({ scene: scene });
 		scene.append(e);
 		expect(e.state).toBe(0);
-		expect(game.modified).toBe(true);
+		expect(game._modified).toBe(true);
 
 		const camera = new Camera2D({});
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
 		expect(e.state).toBe(EntityStateFlags.None);
-		expect(game.modified).toBe(false);
+		expect(game._modified).toBe(false);
 
 		e.modified();
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.ContextLess);
-		expect(game.modified).toBe(true);
+		expect(game._modified).toBe(true);
 		game.focusingCamera = camera;
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.ContextLess);
-		expect(game.modified).toBe(true);
+		expect(game._modified).toBe(true);
 
 		e.modified();
 		const camera2 = new Camera2D({});
 		game.focusingCamera = camera2;
 		expect(game.focusingCamera).toEqual(camera2);
 		expect(e.state).toBe(EntityStateFlags.ContextLess);
-		expect(game.modified).toBe(false);
+		expect(game._modified).toBe(false);
 
-		game.modified = false;
+		game.modified(false);
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
 	});

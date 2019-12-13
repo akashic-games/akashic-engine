@@ -7,7 +7,7 @@ describe("test E", () => {
 	let runtime: Runtime, e: E;
 
 	function resetUpdated(runtime: Runtime): void {
-		runtime.game.modified = false;
+		runtime.game.modified(false);
 		e.state &= ~EntityStateFlags.Modified;
 	}
 
@@ -350,32 +350,32 @@ describe("test E", () => {
 
 	it("modified", () => {
 		resetUpdated(runtime);
-		expect(runtime.game.modified).toBe(false);
+		expect(runtime.game._modified).toBe(false);
 
 		e.modified();
-		expect(runtime.game.modified).toBe(true);
+		expect(runtime.game._modified).toBe(true);
 
 		resetUpdated(runtime);
 
 		const e2 = new E({ scene: runtime.scene });
 		e.append(e2);
-		expect(runtime.game.modified).toBe(true);
+		expect(runtime.game._modified).toBe(true);
 
 		resetUpdated(runtime);
 		const e3 = new E({ scene: runtime.scene });
 		e.append(e3);
-		expect(runtime.game.modified).toBe(true);
+		expect(runtime.game._modified).toBe(true);
 	});
 
 	it("modified with hide/show", () => {
 		resetUpdated(runtime);
-		expect(runtime.game.modified).toBe(false);
+		expect(runtime.game._modified).toBe(false);
 		e.hide();
-		expect(runtime.game.modified).toBe(true);
+		expect(runtime.game._modified).toBe(true);
 		runtime.game.render();
-		expect(runtime.game.modified).toBe(false);
+		expect(runtime.game._modified).toBe(false);
 		e.show();
-		expect(runtime.game.modified).toBe(true);
+		expect(runtime.game._modified).toBe(true);
 	});
 
 	it("update", () => {
