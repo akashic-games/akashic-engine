@@ -1,4 +1,4 @@
-import { SurfaceLike } from "./SurfaceLike";
+import { SurfaceLike } from "../interfaces/SurfaceLike";
 
 /**
  * `Surface` に対して様々な表現によって書き込む事が出来ることを表すインターフェース。
@@ -7,6 +7,8 @@ import { SurfaceLike } from "./SurfaceLike";
  * `Surface` の描画方法をカスタマイズできるようになっている。(現在は `Pane` のみ)
  * ゲーム開発者は、そのようなクラスに対して `SurfaceEffector` のインスタンスを生成して渡すことができる。
  * 通常、 `SurfaceEffector` の個別のメソッドをゲーム開発者が呼び出す必要はない。
+ *
+ * @deprecated 非推奨である。将来的に削除される。
  */
 export interface SurfaceEffector {
 	/**

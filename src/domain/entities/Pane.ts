@@ -2,11 +2,11 @@ import { Matrix } from "../../domain/Matrix";
 import { SurfaceUtil } from "../../domain/SurfaceUtil";
 import { ImageAssetLike } from "../../interfaces/ImageAssetLike";
 import { RendererLike } from "../../interfaces/RendererLike";
-import { SurfaceEffector } from "../../interfaces/SurfaceEffector";
 import { SurfaceLike } from "../../interfaces/SurfaceLike";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
+import { SurfaceEffector } from "../SurfaceEffector";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 
 /**
@@ -40,6 +40,7 @@ export interface PaneParameterObject extends CacheableEParameterObject {
 	/**
 	 * 背景画像の描画方法を指定する `SurfaceEffector` 。
 	 * `undefined` の場合、描画方法をカスタマイズしない。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 * @default undefined
 	 */
 	backgroundEffector?: SurfaceEffector;
@@ -60,6 +61,7 @@ export class Pane extends CacheableE {
 	/**
 	 * 背景画像の拡大・縮小に用いられる `SurfaceEffector` 。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	backgroundEffector: SurfaceEffector;
 
