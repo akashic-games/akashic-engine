@@ -112,6 +112,7 @@ export module SurfaceUtil {
 		}
 
 		renderer.begin();
+		renderer.clear();
 		//    x0  x1                          x2
 		// y0 +-----------------------------------+
 		//    | 1 |             5             | 2 |

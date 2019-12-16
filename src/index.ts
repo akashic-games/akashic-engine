@@ -32,6 +32,7 @@ export * from "./domain/Font";
 export * from "./domain/LoadingScene";
 export * from "./domain/Matrix";
 export * from "./domain/Module";
+export * from "./domain/NinePatchSurfaceEffector";
 export * from "./domain/Object2D";
 export * from "./domain/OperationPluginManager";
 export * from "./domain/PathUtil";
