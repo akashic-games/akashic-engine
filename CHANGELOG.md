@@ -12,6 +12,9 @@
   * g.Util.findAssetByPathDirectory => g._findAssetByPathDirectory (Module.tsに配置)
   * g.Util.createMatrixは削除
 
+機能追加
+ * `g.Game#popScene`で popする回数をオプションで指定できるようにした
+
 ## 2.5.4
 機能追加
  * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加

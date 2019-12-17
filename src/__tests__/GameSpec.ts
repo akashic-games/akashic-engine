@@ -243,6 +243,40 @@ describe("test Game", () => {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("popScene - specified step", done => {
+		const game = new Game({ width: 320, height: 320, main: "" });
+
+		game._loaded.add(() => { // game.scenes テストのため _loaded を待つ必要がある
+			// popSceneで指定したシーンまで戻る際に経過したシーンは全て削除
+			const scene = new Scene({ game: game, name: "SCENE1" });
+			const scene2 = new Scene({ game: game, name: "SCENE2" });
+			const scene3 = new Scene({ game: game, name: "SCENE3" });
+			game.pushScene(scene);
+			game.pushScene(scene2);
+			game.pushScene(scene3);
+			game.popScene(false, 2);
+			game._flushSceneChangeRequests();
+			expect(game.scenes).toEqual([game._initialScene, scene]);
+			expect(scene.destroyed()).toBe(false);
+			expect(scene2.destroyed()).toBe(true);
+			expect(scene3.destroyed()).toBe(true);
+
+			// popSceneで指定したシーンまで戻る際に経過したシーンは全て残す
+			const scene2Alpha = new Scene({ game: game, name: "SCENE2_Alpha" });
+			const scene3Beta = new Scene({ game: game, name: "SCENE3_Beta" });
+			game.pushScene(scene2Alpha);
+			game.pushScene(scene3Beta);
+			game.popScene(true, 3);
+			game._flushSceneChangeRequests();
+			expect(game.scenes).toEqual([game._initialScene]);
+			expect(scene.destroyed()).toBe(false);
+			expect(scene2Alpha.destroyed()).toBe(false);
+			expect(scene3Beta.destroyed()).toBe(false);
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("replaceScene", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
