@@ -1,3 +1,4 @@
+import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 
 /**
@@ -22,6 +23,21 @@ export class AudioSystemManager {
 	constructor() {
 		this._muted = false;
 		this._playbackRate = 1.0;
+	}
+
+	/**
+	 * 全てのAudioSystemの音量を設定する。
+	 *
+	 * @param volume 音量。0以上1.0以下でなければならない。
+	 */
+	setVolume(volume: number): void {
+		if (volume < 0 || volume > 1 || isNaN(volume) || typeof volume !== "number")
+			throw ExceptionFactory.createAssertionError("AudioSystemManager#volume: expected: 0.0-1.0, actual: " + volume);
+
+		for (let id in this.systems) {
+			if (!this.systems.hasOwnProperty(id)) continue;
+			this.systems[id].volume = volume;
+		}
 	}
 
 	/**
