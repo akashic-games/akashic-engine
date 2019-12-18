@@ -54,6 +54,12 @@ export class AudioPlayer implements AudioPlayerLike {
 	_system: AudioSystemLike;
 
 	/**
+	 * 非等倍速度で開始したか否か。
+	 * @private
+	 */
+	_isStartSkipping: boolean;
+
+	/**
 	 * `AudioPlayer` のインスタンスを生成する。
 	 */
 	constructor(system: AudioSystemLike) {
@@ -64,6 +70,7 @@ export class AudioPlayer implements AudioPlayerLike {
 		this._muted = system._muted;
 		this._playbackRate = system._playbackRate;
 		this._system = system;
+		this._isStartSkipping = this._playbackRate !== 1.0;
 	}
 
 	/**
@@ -74,6 +81,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	 */
 	play(audio: AudioAssetLike): void {
 		this.currentAudio = audio;
+		this._isStartSkipping = this._playbackRate !== 1.0;
 		this.played.fire({
 			player: this,
 			audio: audio
@@ -133,9 +141,8 @@ export class AudioPlayer implements AudioPlayerLike {
 	/**
 	 * 再生速度を変更する。
 	 *
-	 * エンジンユーザが `AudioPlayer` の派生クラスを実装し、
-	 * かつ `this._supportsPlaybackRate()` をオーバライドして真を返すようにするならば、
-	 * このメソッドもオーバーライドして実際に再生速度を変更する処理を行うこと。
+	 * エンジンユーザが `AudioPlayer` の派生クラスを実装する場合、
+	 * このメソッドをオーバーライドして実際に再生速度を変更する処理を行うこと。
 	 * オーバーライド先のメソッドはこのメソッドを呼びださなければならない。
 	 *
 	 * @param rate 再生速度の倍率。0以上でなければならない。1.0で等倍である。
@@ -146,28 +153,42 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * 再生速度の変更に対応するか否か。
+	 * システムによる音量変更通知。
 	 *
-	 * エンジンユーザが `AudioPlayer` の派生クラスを実装し、
-	 * 再生速度の変更に対応する場合、このメソッドをオーバーライドして真を返さねばならない。
-	 * その場合 `_changePlaybackRate()` もオーバーライドし、実際の再生速度変更処理を実装しなければならない。
-	 *
-	 * なおここで「再生速度の変更に対応する」は、任意の速度で実際に再生できることを意味しない。
-	 * 実装は等倍速 (再生速度1.0) で実際に再生できなければならない。
-	 * しかしそれ以外の再生速度が指定された場合、実装はまるで音量がゼロであるかのように振舞ってもよい。
-	 *
-	 * このメソッドが偽を返す場合、エンジンは音声の非等倍速度再生に対するデフォルトの処理を実行する。
-	 * @private
+	 * @param volume
+	 * @private 音量。0以上1.0以下でなければならない
 	 */
-	_supportsPlaybackRate(): boolean {
-		return false;
+	_notifySystemVolumeChanged(volume: number): void {
+		this.changeVolume(volume);
 	}
 
 	/**
-	 * 音量の変更を通知する。
-	 * @deprecated このメソッドは実験的に導入されたが、利用されていない。将来的に削除される。
+	 * システムによるミュート状態変更通知。
+	 *
+	 * @param muted ミュート状態にするか否か
+	 * @private
 	 */
-	_onVolumeChanged(): void {
-		// nothing to do
+	_notifyMutedChanged(muted: boolean): void {
+		this._changeMuted(muted);
+	}
+
+	/**
+	 * システムによる再生速度の変更通知。
+	 *
+	 * 等倍速度から非等倍速度へ変更となった場合、ミュートとする。ただし、変更前に等倍速度で再生されていた音はミュートにしない。
+	 * 非等倍速度から等倍速度へ変更となった場合、ミュート状態であればミュートを解除する。
+	 *
+	 * @param rate 再生速度の倍率。0以上でなければならない。1.0で等倍である。
+	 * @private
+	 */
+	_notifyPlaybackRateChanged(rate: number): void {
+		this._changePlaybackRate(rate);
+		if (!this._isStartSkipping) return;
+
+		if (rate === 1.0 && this._muted) {
+			this._changeMuted(false);
+		} else if (rate !== 1.0) {
+			this._changeMuted(true);
+		}
 	}
 }

@@ -423,21 +423,15 @@ export class VideoAsset extends g.VideoAsset {
 }
 
 export class AudioPlayer extends g.AudioPlayer {
-	supportsPlaybackRateValue: boolean;
 	canHandleStoppedValue: boolean;
 
 	constructor(system: g.AudioSystem) {
 		super(system);
-		this.supportsPlaybackRateValue = true;
 		this.canHandleStoppedValue = true;
 	}
 
 	canHandleStopped(): boolean {
 		return this.canHandleStoppedValue;
-	}
-
-	_supportsPlaybackRate(): boolean {
-		return this.supportsPlaybackRateValue;
 	}
 }
 

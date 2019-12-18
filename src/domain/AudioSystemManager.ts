@@ -32,7 +32,7 @@ export class AudioSystemManager {
 	 */
 	setVolume(volume: number): void {
 		if (volume < 0 || volume > 1 || isNaN(volume) || typeof volume !== "number")
-			throw ExceptionFactory.createAssertionError("AudioSystemManager#volume: expected: 0.0-1.0, actual: " + volume);
+			throw ExceptionFactory.createAssertionError("AudioSystemManager#setVolume: expected: 0.0-1.0, actual: " + volume);
 
 		for (let id in this.systems) {
 			if (!this.systems.hasOwnProperty(id)) continue;

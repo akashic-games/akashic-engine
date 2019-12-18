@@ -138,14 +138,13 @@ describe("test AudioPlayer", () => {
 		});
 
 		expect(player1._playbackRate).toBe(1.0);
-		player1.supportsPlaybackRateValue = false;
 
 		resetCalledCount();
 		player1.play(asset);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音はミュートにしない
+		// 非等倍になった時点で鳴っていた音はミュートにしない
 		system._setPlaybackRate(0.4);
 		expect(player1._playbackRate).toBe(0.4);
 		expect(playedCalled).toBe(1);
@@ -168,7 +167,6 @@ describe("test AudioPlayer", () => {
 
 		// 再生速度サポートの場合
 		expect(player1._playbackRate).toBe(1.0);
-		player1.supportsPlaybackRateValue = true;
 
 		resetCalledCount();
 		player1.play(asset);
@@ -212,14 +210,13 @@ describe("test AudioPlayer", () => {
 		});
 
 		expect(player1._playbackRate).toBe(1.0);
-		player1.supportsPlaybackRateValue = false;
 
 		resetCalledCount();
 		player1.play(asset);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音を止める
+		// 非等倍になった時点で鳴っていた音を止める
 		system._setPlaybackRate(0.6);
 		expect(player1._playbackRate).toBe(0.6);
 		expect(playedCalled).toBe(1);
