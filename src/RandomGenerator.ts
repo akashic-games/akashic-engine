@@ -21,8 +21,18 @@ namespace g {
 			this[0] = this;
 		}
 
+		/**
+		 * 指定された範囲の整数の疑似乱数を生成する。
+		 * 生成される値は両端を含む(i.e. [min, max])ことに注意。
+		 *
+		 * @param min 生成する疑似乱数の最小値
+		 * @param max 生成する疑似乱数の最大値
+		 */
 		abstract get(min: number, max: number): number;
 
+		/**
+		 * 0 以上 1 未満の疑似乱数を生成する。
+		 */
 		abstract generate(): number;
 
 		abstract serialize(): any;
