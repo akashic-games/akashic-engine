@@ -1192,4 +1192,13 @@ describe("test E", () => {
 		e.modified();
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.ContextLess);
 	});
+
+	it("localToGlobal, globalToLocal", () => {
+		const p = new E({ scene: runtime.scene, x: 100, y: 100 });
+		const p2 = new E({ scene: runtime.scene, x: 20, y: 60, parent: p });
+		const e = new E({ scene: runtime.scene, parent: p2 });
+		const targetPoint = { x: 200, y: 300 };
+		expect(e.localToGlobal(targetPoint)).toEqual({ x: 320, y: 460 });
+		expect(e.globalToLocal(targetPoint)).toEqual({ x: 80, y: 140 });
+	});
 });

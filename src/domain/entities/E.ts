@@ -645,6 +645,34 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	}
 
 	/**
+	 * このEの位置を基準とした相対座標をゲームの左上端を基準とした座標に変換する。
+	 * @param offset Eの位置を基準とした相対座標
+	 */
+	localToGlobal(offset: CommonOffset): CommonOffset {
+		let calculated = offset;
+		const parents: E[] = [];
+		for (let parent = this.parent; parent instanceof E; parent = parent.parent) {
+			parents.unshift(parent);
+		}
+		parents.forEach(parent => {
+			calculated = parent.getMatrix().multiplyPoint(calculated);
+		});
+		return calculated;
+	}
+
+	/**
+	 * ゲームの左上端を基準とした座標をこのEの位置を基準とした相対座標に変換する。
+	 * @param offset ゲームの左上端を基準とした座標
+	 */
+	globalToLocal(offset: CommonOffset): CommonOffset {
+		let calculated = offset;
+		for (let parent = this.parent; parent instanceof E; parent = parent.parent) {
+			calculated = parent.getMatrix().multiplyInverseForPoint(calculated);
+		}
+		return calculated;
+	}
+
+	/**
 	 * @private
 	 */
 	_calculateBoundingRect(m?: Matrix): CommonRect {
