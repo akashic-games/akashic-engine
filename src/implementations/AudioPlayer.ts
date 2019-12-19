@@ -40,6 +40,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	 * ミュート中か否か。
 	 * @private
 	 */
+	// TODO: pdi-browser の`_calculateVolume()` でこの_mutedを参照しているが、`AudioSystem#_muted` を参照させるようにしたい。
 	_muted: boolean;
 
 	/**
