@@ -114,20 +114,21 @@ export interface AudioPlayerLike {
 	_changePlaybackRate(rate: number): void;
 
 	/**
-	 * システムによる音量変更通知。
+	 * AudioSystemによる音量変更通知。
 	 * @param volume
 	 */
 	_notifySystemVolumeChanged(volume: number): void;
 	/**
-	 * システムによるミュート状態変更通知。
+	 * AudioSystemによるミュート状態変更通知。
 	 * @param muted
 	 */
 	_notifyMutedChanged(muted: boolean): void;
 	/**
-	 * システムによる再生速度の変更通知。
+	 * AudioSystemによる再生速度の変更通知。
 	 *
-	 * 等倍速度から非等倍速度へ変更となった場合、ミュートとする。ただし、変更前に等倍速度で再生されていた音はミュートにしない。
-	 * 非等倍速度から等倍速度へ変更となった場合、ミュート状態であればミュートを解除する。
+	 * 等倍速度から非等倍速度へ変更となった場合、ミュートにする。
+	 * ただし、変更前に等倍速度で再生されていた音はミュートにしない。
+	 * 非等倍速度から等倍速度へ変更となった場合、AudioSystemが非ミュートでプレイヤーがミュート状態であればミュートを解除する。
 	 *
 	 * @param rate 再生速度の倍率。0以上でなければならない。1.0で等倍である。
 	 */

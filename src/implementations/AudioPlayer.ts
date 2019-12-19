@@ -153,7 +153,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * システムによる音量変更通知。
+	 * AudioSystemによる音量変更通知。
 	 *
 	 * @param volume
 	 * @private 音量。0以上1.0以下でなければならない
@@ -163,7 +163,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * システムによるミュート状態変更通知。
+	 * AudioSystemによるミュート状態変更通知。
 	 *
 	 * @param muted ミュート状態にするか否か
 	 * @private
@@ -173,10 +173,11 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * システムによる再生速度の変更通知。
+	 * AudioSystemによる再生速度の変更通知。
 	 *
-	 * 等倍速度から非等倍速度へ変更となった場合、ミュートとする。ただし、変更前に等倍速度で再生されていた音はミュートにしない。
-	 * 非等倍速度から等倍速度へ変更となった場合、ミュート状態であればミュートを解除する。
+	 * 等倍速度から非等倍速度へ変更となった場合、ミュートにする。
+	 * ただし、変更前に等倍速度で再生されていた音はミュートにしない。
+	 * 非等倍速度から等倍速度へ変更となった場合、AudioSystemが非ミュートでプレイヤーがミュート状態であればミュートを解除する。
 	 *
 	 * @param rate 再生速度の倍率。0以上でなければならない。1.0で等倍である。
 	 * @private
@@ -185,7 +186,7 @@ export class AudioPlayer implements AudioPlayerLike {
 		this._changePlaybackRate(rate);
 		if (!this._isStartSkipping) return;
 
-		if (rate === 1.0 && this._muted) {
+		if (rate === 1.0 && this._muted && !this._system._muted) {
 			this._changeMuted(false);
 		} else if (rate !== 1.0) {
 			this._changeMuted(true);

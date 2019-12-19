@@ -165,6 +165,16 @@ describe("test AudioPlayer", () => {
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeFalsy();
 		expect(player1._playbackRate).toBe(1.0);
+
+		// システムがmute状態の場合、等倍再生に戻してもシステムがミュートなので、playerもミュートのままとなる
+		player1.stop();
+		system._setPlaybackRate(0.5);
+		player1.play(asset);
+		expect(player1._muted).toBeTruthy();
+
+		system._setMuted(true);
+		system._setPlaybackRate(1.0);
+		expect(player1._muted).toBeTruthy();
 	});
 
 	it("SoundAudioSystem#_setPlaybackRate", () => {
