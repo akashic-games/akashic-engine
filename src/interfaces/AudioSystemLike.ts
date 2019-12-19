@@ -71,11 +71,6 @@ export interface MusicAudioSystemLike extends AudioSystemLike {
 	_player: AudioPlayerLike;
 
 	player: AudioPlayerLike;
-
-	/**
-	 * @private
-	 */
-	_onUnsupportedPlaybackRateChanged(): void;
 }
 
 export interface SoundAudioSystemLike extends AudioSystemLike {
