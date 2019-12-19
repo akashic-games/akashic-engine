@@ -224,7 +224,7 @@ export class MusicAudioSystem extends AudioSystem {
 
 		// 非等倍の場合: プレイヤーを即ミュートにする
 		if (this._playbackRate !== 1.0) {
-			e.player._changeMuted(true);
+			e.player._notifyMutedChanged(true);
 		}
 	}
 
@@ -234,7 +234,7 @@ export class MusicAudioSystem extends AudioSystem {
 	_onPlayerStopped(e: AudioPlayerEvent): void {
 		// 非等倍のまま停止となった場合: プレイヤーのミュートを解除する。
 		if (this._playbackRate !== 1.0) {
-			this.player._changeMuted(false);
+			this.player._notifyMutedChanged(false);
 		}
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];
