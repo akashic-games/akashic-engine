@@ -153,7 +153,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * AudioSystemによる音量変更通知。
+	 * 外部の変更による音量変更通知。
 	 *
 	 * @param volume
 	 * @private 音量。0以上1.0以下でなければならない
@@ -163,7 +163,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * AudioSystemによるミュート状態変更通知。
+	 * 外部の変更によるミュート状態変更通知。
 	 *
 	 * @param muted ミュート状態にするか否か
 	 * @private
@@ -173,7 +173,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * AudioSystemによる再生速度の変更通知。
+	 * 外部の変更による再生速度の変更通知。
 	 *
 	 * 等倍速度から非等倍速度へ変更となった場合、ミュートにする。
 	 * ただし、変更前に等倍速度で再生されていた音はミュートにしない。
