@@ -627,21 +627,22 @@ export abstract class Game implements Registrable<E> {
 	}
 
 	/**
-	 * 一つ前のシーンに戻ることを要求する。
+	 * シーンスタックから現在のシーンを取り除くことを要求する
 	 *
 	 * このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
 	 * 実際のシーン遷移は次のフレームまでに(次のupdateのfireまでに)行われる。
-	 * 引数 `preserveCurrent` が偽の場合、このメソッドの呼び出しにより現在のシーンは破棄される。
+	 * 引数 `preserve` が偽の場合、このメソッドの呼び出しにより取り除かれたシーンは全て破棄される。
 	 * またその時 `stateChanged` が引数 `SceneState.Destroyed` でfireされる。
 	 * その後一つ前のシーンの `stateChanged` が引数 `SceneState.Active` でfireされる。
+	 * また、step数がスタックされているシーンの数以上の場合、例外が投げられる。
 	 *
-	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
+	 * @param preserve 真の場合、シーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
+	 * @param step 取り除くシーンの数。省略された場合、1
 	 */
-	popScene(preserveCurrent?: boolean): void {
-		this._sceneChangeRequests.push({
-			type: SceneChangeType.Pop,
-			preserveCurrent: preserveCurrent
-		});
+	popScene(preserve?: boolean, step: number = 1): void {
+		for (let i = 0; i < step; i++) {
+			this._sceneChangeRequests.push({ type: SceneChangeType.Pop, preserveCurrent: preserve });
+		}
 	}
 
 	/**
