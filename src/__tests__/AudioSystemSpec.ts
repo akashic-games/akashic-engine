@@ -164,29 +164,7 @@ describe("test AudioPlayer", () => {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeFalsy();
-
-		// 再生速度サポートの場合
 		expect(player1._playbackRate).toBe(1.0);
-
-		resetCalledCount();
-		player1.play(asset);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-
-		system._setPlaybackRate(0.4);
-		expect(player1._playbackRate).toBe(0.4);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-
-		player1.stop();
-		resetCalledCount();
-		player1.play(asset);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-
-		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
 	});
 
 	it("SoundAudioSystem#_setPlaybackRate", () => {
