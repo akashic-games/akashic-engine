@@ -43,12 +43,6 @@ export class AudioPlayer implements AudioPlayerLike {
 	_muted: boolean;
 
 	/**
-	 * 再生速度の倍率。
-	 * @private
-	 */
-	_playbackRate: number;
-
-	/**
 	 * @private
 	 */
 	_system: AudioSystemLike;
@@ -62,18 +56,22 @@ export class AudioPlayer implements AudioPlayerLike {
 		this.currentAudio = undefined;
 		this.volume = system.volume;
 		this._muted = system._muted;
-		this._playbackRate = system._playbackRate;
 		this._system = system;
 	}
 
 	/**
 	 * `AudioAsset` を再生する。
 	 *
-	 * 再生後、 `this.played` がfireされる。
+	 * 再生後、 等倍速度の再生であれば `this.played` がfireされる。
+	 * 非等倍速度であればミュートにする。
 	 * @param audio 再生するオーディオアセット
 	 */
 	play(audio: AudioAssetLike): void {
 		this.currentAudio = audio;
+		if (this._system._playbackRate !== 1.0) {
+			this._changeMuted(true);
+			return;
+		}
 		this.played.fire({
 			player: this,
 			audio: audio
@@ -131,43 +129,18 @@ export class AudioPlayer implements AudioPlayerLike {
 	}
 
 	/**
-	 * 再生速度を変更する。
+	 * システムによる再生速度の変更通知。
 	 *
-	 * エンジンユーザが `AudioPlayer` の派生クラスを実装し、
-	 * かつ `this._supportsPlaybackRate()` をオーバライドして真を返すようにするならば、
-	 * このメソッドもオーバーライドして実際に再生速度を変更する処理を行うこと。
-	 * オーバーライド先のメソッドはこのメソッドを呼びださなければならない。
+	 * システムの再生速度が等倍速度(1.0)でシステムがミュート状態でない場合、ミュートを解除する。
+	 * 再生速度が非等倍速度の場合、ミュートにする。
 	 *
-	 * @param rate 再生速度の倍率。0以上でなければならない。1.0で等倍である。
 	 * @private
 	 */
-	_changePlaybackRate(rate: number): void {
-		this._playbackRate = rate;
-	}
-
-	/**
-	 * 再生速度の変更に対応するか否か。
-	 *
-	 * エンジンユーザが `AudioPlayer` の派生クラスを実装し、
-	 * 再生速度の変更に対応する場合、このメソッドをオーバーライドして真を返さねばならない。
-	 * その場合 `_changePlaybackRate()` もオーバーライドし、実際の再生速度変更処理を実装しなければならない。
-	 *
-	 * なおここで「再生速度の変更に対応する」は、任意の速度で実際に再生できることを意味しない。
-	 * 実装は等倍速 (再生速度1.0) で実際に再生できなければならない。
-	 * しかしそれ以外の再生速度が指定された場合、実装はまるで音量がゼロであるかのように振舞ってもよい。
-	 *
-	 * このメソッドが偽を返す場合、エンジンは音声の非等倍速度再生に対するデフォルトの処理を実行する。
-	 * @private
-	 */
-	_supportsPlaybackRate(): boolean {
-		return false;
-	}
-
-	/**
-	 * 音量の変更を通知する。
-	 * @deprecated このメソッドは実験的に導入されたが、利用されていない。将来的に削除される。
-	 */
-	_onVolumeChanged(): void {
-		// nothing to do
+	_notifyPlaybackRateChanged(): void {
+		if (this._system._playbackRate === 1.0 && !this._system._muted) {
+			this._changeMuted(false);
+		} else if (this._system._playbackRate !== 1.0) {
+			this._changeMuted(true);
+		}
 	}
 }

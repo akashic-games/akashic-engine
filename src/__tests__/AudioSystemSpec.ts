@@ -55,14 +55,10 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = game.audio.sound;
 		const player1 = system.createPlayer();
-		const player2 = system.createPlayer();
-
-		expect(player1._playbackRate).toBe(1.0);
-		expect(player2._playbackRate).toBe(1.0);
 
 		system._setPlaybackRate(0.3);
-		expect(player1._playbackRate).toBe(0.3);
-		expect(player2._playbackRate).toBe(0.3);
+		expect(system._playbackRate).toBe(0.3);
+		expect(player1._muted).toBeTruthy();
 	});
 
 	it("AudioSystem#_changeMuted", () => {
@@ -91,7 +87,6 @@ describe("test AudioPlayer", () => {
 
 		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
-		expect(player._playbackRate).toBe(0.3);
 		expect(system._playbackRate).toBe(0.3);
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
@@ -104,11 +99,9 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = game.audio.music;
 		const asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
-		const player = system.createPlayer();
 
 		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
-		expect(player._playbackRate).toBe(0.3);
 		expect(system._playbackRate).toBe(0.3);
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
@@ -137,58 +130,31 @@ describe("test AudioPlayer", () => {
 			++stoppedCalled;
 		});
 
-		expect(player1._playbackRate).toBe(1.0);
-		player1.supportsPlaybackRateValue = false;
-
 		resetCalledCount();
 		player1.play(asset);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音はミュートにしない
+		// 非等倍になったらミュートにする
 		system._setPlaybackRate(0.4);
-		expect(player1._playbackRate).toBe(0.4);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-		expect(player1._muted).toBeFalsy();
-
-		// 非等倍再生時、開始直後にミュートとなる
-		player1.stop();
-		resetCalledCount();
-		player1.play(asset);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 
-		// 等倍再生に戻すと、再生され直す
-		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-		expect(player1._muted).toBeFalsy();
-
-		// 再生速度サポートの場合
-		expect(player1._playbackRate).toBe(1.0);
-		player1.supportsPlaybackRateValue = true;
-
-		resetCalledCount();
-		player1.play(asset);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-
-		system._setPlaybackRate(0.4);
-		expect(player1._playbackRate).toBe(0.4);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(0);
-
+		// 非等倍で再生時、Triggerのplayed は実行されずミュートとなる
 		player1.stop();
 		resetCalledCount();
 		player1.play(asset);
-		expect(playedCalled).toBe(1);
+		expect(playedCalled).toBe(0);
 		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeTruthy();
 
+		// 等倍再生に戻すと、ミュートが解除される
+		player1.play(asset);
 		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(1);
+		expect(playedCalled).toBe(0);
 		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeFalsy();
 	});
 
 	it("SoundAudioSystem#_setPlaybackRate", () => {
@@ -211,30 +177,31 @@ describe("test AudioPlayer", () => {
 			++stoppedCalled;
 		});
 
-		expect(player1._playbackRate).toBe(1.0);
-		player1.supportsPlaybackRateValue = false;
-
 		resetCalledCount();
 		player1.play(asset);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 再生速度非サポートでも、非等倍になった時点で鳴っていた音を止める
+		// 非等倍になったらミュートにする
 		system._setPlaybackRate(0.6);
-		expect(player1._playbackRate).toBe(0.6);
 		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(1);
+		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeTruthy();
 
-		// 非等倍再生時、開始直後に止まる
+		// 非等倍で再生時、ミュートになりTriggerのplayed は実行されない
 		player1.stop();
+		player1._changeMuted(false);
 		resetCalledCount();
 		player1.play(asset);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(1);
+		expect(playedCalled).toBe(0);
+		expect(stoppedCalled).toBe(0);
+		expect(player1._muted).toBeTruthy();
 
-		// 等倍再生に戻しても再生しなおしはない (SoundAudioSystemの場合)
+		// 等倍速度に戻してもSoundはミュートのままとなる。
+		const player2 = system.createPlayer() as AudioPlayer;
+		system._setPlaybackRate(0.5);
+		expect(player2._muted).toBeTruthy();
 		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(1);
-		expect(stoppedCalled).toBe(1);
+		expect(player2._muted).toBeTruthy();
 	});
 });

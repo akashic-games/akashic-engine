@@ -150,16 +150,6 @@ export class MusicAudioSystem extends AudioSystem {
 	 */
 	_player: AudioPlayerLike;
 
-	/**
-	 * 再生を抑止されている `AudioAsset` 。
-	 *
-	 * 再生速度に非対応の `AudioPlayer` の場合に、等倍速でない速度で再生を試みたアセット。
-	 * 再生速度が戻された場合に改めて再生されなおす。
-	 * この値は、 `this._player._supportsPlaybackRate()` が偽ある場合にのみ利用される。
-	 * @private
-	 */
-	_suppressingAudio: AudioAssetLike;
-
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 	get player(): AudioPlayerLike {
 		if (!this._player) {
@@ -176,7 +166,6 @@ export class MusicAudioSystem extends AudioSystem {
 	constructor(param: AudioSystemParameterObject) {
 		super(param);
 		this._player = undefined;
-		this._suppressingAudio = undefined;
 	}
 
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {
@@ -203,7 +192,6 @@ export class MusicAudioSystem extends AudioSystem {
 			this._player.stopped.remove({ owner: this, func: this._onPlayerStopped });
 		}
 		this._player = undefined;
-		this._suppressingAudio = undefined;
 	}
 
 	/**
@@ -224,26 +212,12 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlaybackRateChanged(): void {
-		var player = this.player;
-		player._changePlaybackRate(this._playbackRate);
-		if (!player._supportsPlaybackRate()) {
-			this._onUnsupportedPlaybackRateChanged();
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_onUnsupportedPlaybackRateChanged(): void {
-		// 再生速度非対応の場合のフォールバック: 鳴らそうとしてミュートしていた音があれば鳴らし直す
-		if (this._playbackRate === 1.0) {
-			if (this._suppressingAudio) {
-				var audio = this._suppressingAudio;
-				this._suppressingAudio = undefined;
-				if (!audio.destroyed()) {
-					this.player._changeMuted(false);
-				}
-			}
+		// TODO: _changeMuted() を呼んでいるが、PDIのbranchができたら `_notifyChangeMuted()` を作成する。
+		// システムのミュート状態が変更となった時にplayerへ通知し、playerは system._muted を参照する。
+		if (this._playbackRate === 1.0 && !this._muted) {
+			this.player._changeMuted(false);
+		} else if (this._playbackRate !== 1.0) {
+			this.player._changeMuted(true);
 		}
 	}
 
@@ -253,22 +227,14 @@ export class MusicAudioSystem extends AudioSystem {
 	_onPlayerPlayed(e: AudioPlayerEvent): void {
 		if (e.player !== this._player)
 			throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
-
-		if (e.player._supportsPlaybackRate()) return;
-
-		// 再生速度非対応の場合のフォールバック: 鳴らさず即ミュートにする
-		if (this._playbackRate !== 1.0) {
-			e.player._changeMuted(true);
-			this._suppressingAudio = e.audio;
-		}
 	}
 
 	/**
 	 * @private
 	 */
 	_onPlayerStopped(e: AudioPlayerEvent): void {
-		if (this._suppressingAudio) {
-			this._suppressingAudio = undefined;
+		// 非等倍のまま停止となった場合: システムがミュートでなければプレイヤーのミュートを解除する。
+		if (this._playbackRate !== 1.0 && !this._muted) {
 			this.player._changeMuted(false);
 		}
 		if (this._destroyRequestedAssets[e.audio.id]) {
@@ -340,11 +306,8 @@ export class SoundAudioSystem extends AudioSystem {
 	_onPlaybackRateChanged(): void {
 		var players = this.players;
 		for (var i = 0; i < players.length; ++i) {
-			players[i]._changePlaybackRate(this._playbackRate);
-
-			// 再生速度非対応の場合のフォールバック: 即止める
-			if (!players[i]._supportsPlaybackRate() && this._playbackRate !== 1.0) {
-				players[i].stop();
+			if (this._playbackRate !== 1.0) {
+				players[i]._changeMuted(true);
 			}
 		}
 	}
@@ -353,12 +316,7 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlayerPlayed(e: AudioPlayerEvent): void {
-		if (e.player._supportsPlaybackRate()) return;
-
-		// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
-		if (this._playbackRate !== 1.0) {
-			e.player.stop();
-		}
+		// do nothing
 	}
 
 	/**
