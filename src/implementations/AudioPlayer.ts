@@ -127,20 +127,4 @@ export class AudioPlayer implements AudioPlayerLike {
 	_changeMuted(muted: boolean): void {
 		this._muted = muted;
 	}
-
-	/**
-	 * システムによる再生速度の変更通知。
-	 *
-	 * システムの再生速度が等倍速度(1.0)でシステムがミュート状態でない場合、ミュートを解除する。
-	 * 再生速度が非等倍速度の場合、ミュートにする。
-	 *
-	 * @private
-	 */
-	_notifyPlaybackRateChanged(): void {
-		if (this._system._playbackRate === 1.0 && !this._system._muted) {
-			this._changeMuted(false);
-		} else if (this._system._playbackRate !== 1.0) {
-			this._changeMuted(true);
-		}
-	}
 }
