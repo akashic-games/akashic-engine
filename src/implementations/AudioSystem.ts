@@ -205,6 +205,9 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
+		// TODO: _changeMuted() を呼んでいるが、PDI側を修正できるタイミングで `_notifyChangeMuted()` を作成する。
+		//       システムのミュート状態が変更となった時にplayerへ通知し、playerは system._muted を参照する。
+		//       (プレイヤーのミュートは公開APIではないので、プレイヤーミュートをシステムミュートに使用する。)
 		this.player._changeMuted(this._muted);
 	}
 
@@ -212,8 +215,6 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlaybackRateChanged(): void {
-		// TODO: _changeMuted() を呼んでいるが、PDIのbranchができたら `_notifyChangeMuted()` を作成する。
-		// システムのミュート状態が変更となった時にplayerへ通知し、playerは system._muted を参照する。
 		if (this._playbackRate === 1.0 && !this._muted) {
 			this.player._changeMuted(false);
 		} else if (this._playbackRate !== 1.0) {
