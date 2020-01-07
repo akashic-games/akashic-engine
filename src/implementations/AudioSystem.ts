@@ -205,9 +205,9 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
-		// TODO: _changeMuted() を呼んでいるが、PDI側を修正できるタイミングで `_notifyChangeMuted()` を作成する。
-		//       システムのミュート状態が変更となった時にplayerへ通知し、playerは system._muted を参照する。
-		//       (プレイヤーのミュートは公開APIではないので、プレイヤーミュートをシステムミュートに使用する。)
+		// TODO: 現状 _changeMuted() を呼んでいるが、PDI側を修正できるタイミングで AudioSystem から変更通知される `AudioPlayer#_notifyChangeMuted()` を作成し置き換える。
+		//       AudioSystemのミュート状態が変更となった時にAudioPlayerへ通知し、AudioPlayerは AudioSystem._muted を参照する。
+		//       (AudioPlayerのミュートは公開APIではないので、AudioPlayerのミュートをAudioSystemのミュートで使用する。)
 		this.player._changeMuted(this._muted);
 	}
 
@@ -215,10 +215,10 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlaybackRateChanged(): void {
-		if (this._playbackRate === 1.0 && !this._muted) {
-			this.player._changeMuted(false);
-		} else if (this._playbackRate !== 1.0) {
+		if (this._muted) {
 			this.player._changeMuted(true);
+		} else {
+			this.player._changeMuted(this._playbackRate !== 1.0);
 		}
 	}
 
@@ -234,7 +234,7 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlayerStopped(e: AudioPlayerEvent): void {
-		// 非等倍のまま停止となった場合: システムがミュートでなければプレイヤーのミュートを解除する。
+		// 再生速度が非等倍のまま停止となった場合: この AudioSystem がミュートでなければ AudioPlayer のミュートを解除する。
 		if (this._playbackRate !== 1.0 && !this._muted) {
 			this.player._changeMuted(false);
 		}
@@ -306,8 +306,8 @@ export class SoundAudioSystem extends AudioSystem {
 	 */
 	_onPlaybackRateChanged(): void {
 		var players = this.players;
-		for (var i = 0; i < players.length; ++i) {
-			if (this._playbackRate !== 1.0) {
+		if (this._playbackRate !== 1.0) {
+			for (var i = 0; i < players.length; ++i) {
 				players[i]._changeMuted(true);
 			}
 		}
