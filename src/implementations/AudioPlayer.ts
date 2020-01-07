@@ -62,8 +62,7 @@ export class AudioPlayer implements AudioPlayerLike {
 	/**
 	 * `AudioAsset` を再生する。
 	 *
-	 * 再生後、 等倍速度の再生であれば `this.played` がfireされる。
-	 * 非等倍速度であればミュートにする。
+	 * 再生後、`AudioSystem#_playbackRate` が等倍速度 (1.0) であれば `this.played` がfireされる。
 	 * @param audio 再生するオーディオアセット
 	 */
 	play(audio: AudioAssetLike): void {
