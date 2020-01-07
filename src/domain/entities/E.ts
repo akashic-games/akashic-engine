@@ -645,31 +645,29 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	}
 
 	/**
-	 * このEの位置を基準とした相対座標をゲームの左上端を基準とした座標に変換する。
+	 * 対象のエンティティの位置を基準とした相対座標をゲームの左上端を基準とした座標に変換する。
 	 * @param offset Eの位置を基準とした相対座標
+	 * @param entity 対象のエンティティ。デフォルト値はこのE。
 	 */
-	localToGlobal(offset: CommonOffset): CommonOffset {
-		let calculated = offset;
-		const parents: E[] = [];
-		for (let parent = this.parent; parent instanceof E; parent = parent.parent) {
-			parents.unshift(parent);
+	localToGlobal(offset: CommonOffset, entity: E = this): CommonOffset {
+		const parent = entity.parent;
+		if (!parent || parent instanceof Scene) {
+			return offset;
 		}
-		parents.forEach(parent => {
-			calculated = parent.getMatrix().multiplyPoint(calculated);
-		});
-		return calculated;
+		return parent.getMatrix().multiplyPoint(this.localToGlobal(offset, parent));
 	}
 
 	/**
-	 * ゲームの左上端を基準とした座標をこのEの位置を基準とした相対座標に変換する。
+	 * ゲームの左上端を基準とした座標を対象のエンティティの位置を基準とした相対座標に変換する。
 	 * @param offset ゲームの左上端を基準とした座標
+	 * @param entity 対象のエンティティ。デフォルト値はこのE。
 	 */
-	globalToLocal(offset: CommonOffset): CommonOffset {
-		let calculated = offset;
-		for (let parent = this.parent; parent instanceof E; parent = parent.parent) {
-			calculated = parent.getMatrix().multiplyInverseForPoint(calculated);
+	globalToLocal(offset: CommonOffset, entity: E = this): CommonOffset {
+		const parent = entity.parent;
+		if (!parent || parent instanceof Scene) {
+			return offset;
 		}
-		return calculated;
+		return this.globalToLocal(parent.getMatrix().multiplyInverseForPoint(offset), parent);
 	}
 
 	/**
