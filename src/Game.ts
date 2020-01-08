@@ -30,7 +30,7 @@ import { InternalOperationPluginOperation } from "./types/OperationPluginOperati
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
 
-declare const g: any;
+import * as g from "./index.runtime";
 
 /**
  * シーン遷移要求のタイプ。
@@ -557,7 +557,10 @@ export abstract class Game implements Registrable<E> {
 		this.snapshotRequest = new Trigger<void>();
 
 		this.external = {};
-		this._runtimeValueBase = Object.create(typeof g !== "undefined" ? g : null, {
+
+		// FIXME: インスタンス生成時に直接 `Game` を代入している
+		g.setGame(Game);
+		this._runtimeValueBase = Object.create(g, {
 			game: {
 				value: this,
 				enumerable: true
