@@ -1,7 +1,6 @@
 import { Trigger } from "@akashic/trigger";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 
 export interface AudioPlayerParameterObject {
 	volume: number;
