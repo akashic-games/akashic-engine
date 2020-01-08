@@ -557,7 +557,7 @@ export abstract class Game implements Registrable<E> {
 		this.snapshotRequest = new Trigger<void>();
 
 		this.external = {};
-		this._runtimeValueBase = Object.create(g, {
+		this._runtimeValueBase = Object.create(typeof g !== "undefined" ? g : null, {
 			game: {
 				value: this,
 				enumerable: true
