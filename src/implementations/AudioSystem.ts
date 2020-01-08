@@ -234,10 +234,6 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlayerStopped(e: AudioPlayerEvent): void {
-		// 再生速度が非等倍のまま停止となった場合: この AudioSystem がミュートでなければ AudioPlayer のミュートを解除する。
-		if (this._playbackRate !== 1.0 && !this._muted) {
-			this.player._changeMuted(false);
-		}
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];
 			e.audio.destroy();

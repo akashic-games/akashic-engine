@@ -187,21 +187,24 @@ describe("test AudioPlayer", () => {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
+		player1.stop();
 
 		// 非等倍で再生時、ミュートになりTriggerのplayed は実行されない
-		player1.stop();
-		player1._changeMuted(false);
+		const player2 = system.createPlayer() as AudioPlayer;
 		resetCalledCount();
-		player1.play(asset);
+		player2.played.add(() => {
+			++playedCalled;
+		});
+		player2.play(asset);
 		expect(playedCalled).toBe(0);
 		expect(stoppedCalled).toBe(0);
-		expect(player1._muted).toBeTruthy();
+		expect(player2._muted).toBeTruthy();
 
 		// 等倍速度に戻してもSoundはミュートのままとなる。
-		const player2 = system.createPlayer() as AudioPlayer;
+		const player3 = system.createPlayer() as AudioPlayer;
 		system._setPlaybackRate(0.5);
-		expect(player2._muted).toBeTruthy();
+		expect(player3._muted).toBeTruthy();
 		system._setPlaybackRate(1.0);
-		expect(player2._muted).toBeTruthy();
+		expect(player3._muted).toBeTruthy();
 	});
 });

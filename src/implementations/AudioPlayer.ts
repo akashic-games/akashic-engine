@@ -3,6 +3,11 @@ import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 
+export interface AudioPlayerParameterObject {
+	volume: number;
+	muted: boolean;
+}
+
 /**
  * サウンド再生を行うクラス。
  *
@@ -43,34 +48,25 @@ export class AudioPlayer implements AudioPlayerLike {
 	_muted: boolean;
 
 	/**
-	 * @private
-	 */
-	_system: AudioSystemLike;
-
-	/**
 	 * `AudioPlayer` のインスタンスを生成する。
 	 */
-	constructor(system: AudioSystemLike) {
+	constructor(param: AudioPlayerParameterObject) {
 		this.played = new Trigger<AudioPlayerEvent>();
 		this.stopped = new Trigger<AudioPlayerEvent>();
 		this.currentAudio = undefined;
-		this.volume = system.volume;
-		this._muted = system._muted;
-		this._system = system;
+		this.volume = param.volume;
+		this._muted = param.muted;
 	}
 
 	/**
 	 * `AudioAsset` を再生する。
 	 *
-	 * 再生後、`AudioSystem#_playbackRate` が等倍速度 (1.0) であれば `this.played` がfireされる。
+	 * 再生後、ミュート中でなければ `this.played` がfireされる。
 	 * @param audio 再生するオーディオアセット
 	 */
 	play(audio: AudioAssetLike): void {
 		this.currentAudio = audio;
-		if (this._system._playbackRate !== 1.0) {
-			this._changeMuted(true);
-			return;
-		}
+		if (this._muted) return;
 		this.played.fire({
 			player: this,
 			audio: audio
