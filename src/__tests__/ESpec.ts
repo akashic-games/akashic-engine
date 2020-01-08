@@ -1,5 +1,6 @@
 import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, PointSource, Scene } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
+import { Matrix } from "../domain/Matrix";
 
 expect.extend(customMatchers);
 
@@ -1192,13 +1193,62 @@ describe("test E", () => {
 		e.modified();
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.ContextLess);
 	});
+	describe("localToGlobal, globalToLocal", () => {
+		let p: E;
+		let p2: E;
+		let p3: E;
+		let e: E;
+		let anotherRuntime: Runtime;
+		beforeEach(() => {
+			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5, anchorX: 1, anchorY: 1});
+			p2 = new E({ scene: runtime.scene, angle: 45, anchorX: 0.5, anchorY: 0.5, parent: p });
+			p3 = new E({ scene: runtime.scene, x: 20, y: 20, scaleX: 2, scaleY: 3, parent: p2 });
+			e = new E({ scene: runtime.scene, parent: p3, x: 10, y: 0 });
+			anotherRuntime = skeletonRuntime();
+		});
+		it("can convert local point to global point", () => {
+			// 一番上の親エンティティのparentがundefinedの場合
+			const targetPoint = { x: 5, y: 30 };
+			const matrixs = [e.getMatrix(), p3.getMatrix(), p2.getMatrix(), p.getMatrix()];
+			let matrix: Matrix = new PlainMatrix();
+			matrixs.forEach(m => matrix = m.multiplyNew(matrix));
+			const actual = e.localToGlobal(targetPoint);
+			const expected = matrix.multiplyPoint(targetPoint);
+			expect(actual.x).toBeApproximation(expected.x, 10);
+			expect(actual.y).toBeApproximation(expected.y, 10);
 
-	it("localToGlobal, globalToLocal", () => {
-		const p = new E({ scene: runtime.scene, x: 100, y: 100 });
-		const p2 = new E({ scene: runtime.scene, x: 20, y: 60, parent: p });
-		const e = new E({ scene: runtime.scene, parent: p2 });
-		const targetPoint = { x: 200, y: 300 };
-		expect(e.localToGlobal(targetPoint)).toEqual({ x: 320, y: 460 });
-		expect(e.globalToLocal(targetPoint)).toEqual({ x: 80, y: 140 });
+			// 一番上の親エンティティのparentがsceneに変わってもlocalToGlobalの結果は変わらない
+			p.parent = anotherRuntime.scene;
+			anotherRuntime.scene.append(p);
+			const actual2 = e.localToGlobal(targetPoint);
+			expect(actual2.x).toBeApproximation(expected.x, 10);
+			expect(actual2.y).toBeApproximation(expected.y, 10);
+		});
+		it("can convert global point to local point", () => {
+			// 一番上の親エンティティのparentがundefinedの場合
+			const targetPoint = { x: 500, y: 500 };
+			const matrixs = [p.getMatrix(), p2.getMatrix(), p3.getMatrix(), e.getMatrix()];
+			let expected = targetPoint;
+			matrixs.forEach(m => expected = m.multiplyInverseForPoint(expected));
+			const actual = e.globalToLocal(targetPoint);
+			expect(actual.x).toBeApproximation(expected.x, 10);
+			expect(actual.y).toBeApproximation(expected.y, 10);
+
+			// 一番上の親エンティティのparentがsceneに変わってもlocalToGlobalの結果は変わらない
+			p.parent = anotherRuntime.scene;
+			anotherRuntime.scene.append(p);
+			const actual2 = e.globalToLocal(targetPoint);
+			expect(actual2.x).toBeApproximation(expected.x, 10);
+			expect(actual2.y).toBeApproximation(expected.y, 10);
+		});
+		it("is reversible", () => {
+			const targetPoint = { x: 0, y: 0 };
+			const actual = e.localToGlobal(e.globalToLocal(targetPoint));
+			expect(actual.x).toBeApproximation(targetPoint.x, 10);
+			expect(actual.y).toBeApproximation(targetPoint.y, 10);
+			const actual2 = e.globalToLocal(e.localToGlobal(targetPoint));
+			expect(actual2.x).toBeApproximation(targetPoint.x, 10);
+			expect(actual2.y).toBeApproximation(targetPoint.y, 10);
+		});
 	});
 });

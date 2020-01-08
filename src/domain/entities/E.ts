@@ -8,7 +8,7 @@ import {
 	PointSourceBase,
 	PointUpEventBase
 } from "../../domain/Event";
-import { Matrix } from "../../domain/Matrix";
+import { Matrix, PlainMatrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
@@ -645,29 +645,27 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	}
 
 	/**
-	 * 対象のエンティティの位置を基準とした相対座標をゲームの左上端を基準とした座標に変換する。
+	 * このEの位置を基準とした相対座標をゲームの左上端を基準とした座標に変換する。
 	 * @param offset Eの位置を基準とした相対座標
-	 * @param entity 対象のエンティティ。デフォルト値はこのE。
 	 */
-	localToGlobal(offset: CommonOffset, entity: E = this): CommonOffset {
-		const parent = entity.parent;
-		if (!parent || parent instanceof Scene) {
-			return offset;
+	localToGlobal(offset: CommonOffset): CommonOffset {
+		let point = offset;
+		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+			point = entity.getMatrix().multiplyPoint(point);
 		}
-		return parent.getMatrix().multiplyPoint(this.localToGlobal(offset, parent));
+		return point;
 	}
 
 	/**
-	 * ゲームの左上端を基準とした座標を対象のエンティティの位置を基準とした相対座標に変換する。
+	 * ゲームの左上端を基準とした座標をこのEの位置を基準とした相対座標に変換する。
 	 * @param offset ゲームの左上端を基準とした座標
-	 * @param entity 対象のエンティティ。デフォルト値はこのE。
 	 */
-	globalToLocal(offset: CommonOffset, entity: E = this): CommonOffset {
-		const parent = entity.parent;
-		if (!parent || parent instanceof Scene) {
-			return offset;
+	globalToLocal(offset: CommonOffset): CommonOffset {
+		let matrix: Matrix = new PlainMatrix();
+		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+			matrix = entity.getMatrix().multiplyNew(matrix);
 		}
-		return this.globalToLocal(parent.getMatrix().multiplyInverseForPoint(offset), parent);
+		return matrix.multiplyInverseForPoint(offset);
 	}
 
 	/**
