@@ -1,7 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { AudioSystemLike, MusicAudioSystemLike, SoundAudioSystemLike } from "../interfaces/AudioSystemLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 
 export interface AudioSystemParameterObject {
@@ -21,9 +21,9 @@ export interface AudioSystemParameterObject {
 	muted?: boolean;
 
 	/**
-	 * 再生速度の倍率。
+	 * ゲームの再生速度が抑制されているか否か。
 	 */
-	playbackRate?: number;
+	isSuppressed?: boolean;
 
 	/**
 	 * 各種リソースのファクトリ
@@ -52,7 +52,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_playbackRate: number;
+	_isSuppressed: boolean;
 
 	/**
 	 * @private
@@ -78,7 +78,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._volume = param.volume || 1;
 		this._destroyRequestedAssets = {};
 		this._muted = param.muted || false;
-		this._playbackRate = param.playbackRate || 1.0;
+		this._isSuppressed = param.isSuppressed || false;
 		this._resourceFactory = param.resourceFactory;
 	}
 
@@ -100,7 +100,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
 		this._muted = false;
-		this._playbackRate = 1.0;
+		this._isSuppressed = false;
 	}
 
 	/**
@@ -117,15 +117,9 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_setPlaybackRate(value: number): void {
-		if (value < 0 || isNaN(value) || typeof value !== "number")
-			throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
-
-		var before = this._playbackRate;
-		this._playbackRate = value;
-		if (this._playbackRate !== before) {
-			this._onPlaybackRateChanged();
-		}
+	_setSuppressed(value: boolean): void {
+		this._isSuppressed = value;
+		this._onSuppressedChanged();
 	}
 
 	/**
@@ -141,10 +135,20 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	abstract _onPlaybackRateChanged(): void;
+	abstract _onSuppressedChanged(): void;
+
+	/**
+	 * @private
+	 */
+	abstract _onPlayerPlayed(e: AudioPlayerEvent): void;
+
+	/**
+	 * @private
+	 */
+	abstract _onPlayerStopped(e: AudioPlayerEvent): void;
 }
 
-export class MusicAudioSystem extends AudioSystem {
+export class MusicAudioSystem extends AudioSystem implements MusicAudioSystemLike {
 	/**
 	 * @private
 	 */
@@ -214,11 +218,11 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlaybackRateChanged(): void {
+	_onSuppressedChanged(): void {
 		if (this._muted) {
 			this.player._changeMuted(true);
 		} else {
-			this.player._changeMuted(this._playbackRate !== 1.0);
+			this.player._changeMuted(this._isSuppressed);
 		}
 	}
 
@@ -241,7 +245,7 @@ export class MusicAudioSystem extends AudioSystem {
 	}
 }
 
-export class SoundAudioSystem extends AudioSystem {
+export class SoundAudioSystem extends AudioSystem implements SoundAudioSystemLike {
 	players: AudioPlayerLike[];
 
 	constructor(param: AudioSystemParameterObject) {
@@ -300,9 +304,9 @@ export class SoundAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlaybackRateChanged(): void {
+	_onSuppressedChanged(): void {
 		var players = this.players;
-		if (this._playbackRate !== 1.0) {
+		if (this._isSuppressed) {
 			for (var i = 0; i < players.length; ++i) {
 				players[i]._changeMuted(true);
 			}

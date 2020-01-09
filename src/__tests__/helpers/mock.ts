@@ -537,7 +537,7 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 
 	createAudioPlayer(system: g.AudioSystem): g.AudioPlayer {
-		return new AudioPlayer({ volume: system.volume, muted: system._playbackRate !== 1.0 });
+		return new AudioPlayer({ volume: system.volume, muted: system._isSuppressed || system._muted });
 	}
 
 	createGlyphFactory(

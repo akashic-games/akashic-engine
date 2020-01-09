@@ -23,7 +23,7 @@ export interface AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_playbackRate: number;
+	_isSuppressed: boolean;
 
 	stopAll(): void;
 
@@ -46,7 +46,7 @@ export interface AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_setPlaybackRate(value: number): void;
+	_setSuppressed(suppressed: boolean): void;
 
 	/**
 	 * @private
@@ -61,35 +61,7 @@ export interface AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_onPlaybackRateChanged(): void;
-}
-
-export interface MusicAudioSystemLike extends AudioSystemLike {
-	/**
-	 * @private
-	 */
-	_player: AudioPlayerLike;
-
-	/**
-	 * 再生を抑止されている `AudioAsset` 。
-	 *
-	 * 再生速度に非対応の `AudioPlayer` の場合に、等倍速でない速度で再生を試みたアセット。
-	 * 再生速度が戻された場合に改めて再生されなおす。
-	 * この値は、 `this._player._supportsPlaybackRate()` が偽ある場合にのみ利用される。
-	 * @private
-	 */
-	_suppressingAudio: AudioAssetLike;
-
-	player: AudioPlayerLike;
-
-	/**
-	 * @private
-	 */
-	_onUnsupportedPlaybackRateChanged(): void;
-}
-
-export interface SoundAudioSystemLike extends AudioSystemLike {
-	players: AudioPlayerLike[];
+	_onSuppressedChanged(): void;
 
 	/**
 	 * @private
@@ -100,4 +72,17 @@ export interface SoundAudioSystemLike extends AudioSystemLike {
 	 * @private
 	 */
 	_onPlayerPlayed(e: AudioPlayerEvent): void;
+}
+
+export interface MusicAudioSystemLike extends AudioSystemLike {
+	/**
+	 * @private
+	 */
+	_player: AudioPlayerLike;
+
+	player: AudioPlayerLike;
+}
+
+export interface SoundAudioSystemLike extends AudioSystemLike {
+	players: AudioPlayerLike[];
 }

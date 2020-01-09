@@ -8,10 +8,10 @@ describe("test AudioPlayer", () => {
 		const system = new MusicAudioSystem({
 			id: "music",
 			muted: game._audioSystemManager._muted,
-			playbackRate: game._audioSystemManager._playbackRate,
+			isSuppressed: game._audioSystemManager._isSuppressed,
 			resourceFactory: game.resourceFactory
 		});
-		const player = new AudioPlayer({ volume: system.volume, muted: system._playbackRate !== 1.0 });
+		const player = new AudioPlayer({ volume: system.volume, muted: system._isSuppressed || system._muted });
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(Trigger);
 		expect(player.stopped.constructor).toBe(Trigger);
@@ -23,11 +23,11 @@ describe("test AudioPlayer", () => {
 		const system = new SoundAudioSystem({
 			id: "voice",
 			muted: game._audioSystemManager._muted,
-			playbackRate: game._audioSystemManager._playbackRate,
+			isSuppressed: game._audioSystemManager._isSuppressed,
 			resourceFactory: game.resourceFactory
 		});
 		system.volume = 0.5;
-		const player = new AudioPlayer({ volume: system.volume, muted: system._playbackRate !== 1.0 });
+		const player = new AudioPlayer({ volume: system.volume, muted: system._isSuppressed || system._muted });
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(Trigger);
 		expect(player.stopped.constructor).toBe(Trigger);

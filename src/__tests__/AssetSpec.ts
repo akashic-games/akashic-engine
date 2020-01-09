@@ -10,7 +10,7 @@ describe("test Asset", () => {
 		const system = new MusicAudioSystem({
 			id: "music",
 			muted: game._audioSystemManager._muted,
-			playbackRate: game._audioSystemManager._playbackRate,
+			isSuppressed: game._audioSystemManager._isSuppressed,
 			resourceFactory: game.resourceFactory
 		});
 		const hint = { streaming: true };
