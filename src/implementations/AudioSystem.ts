@@ -21,7 +21,7 @@ export interface AudioSystemParameterObject {
 	muted?: boolean;
 
 	/**
-	 * ゲームの再生速度が抑制されているか否か。
+	 * ゲームの再生が抑制されているか否か。
 	 */
 	isSuppressed?: boolean;
 
