@@ -1209,9 +1209,9 @@ describe("test E", () => {
 		it("can convert local point to global point", () => {
 			// 一番上の親エンティティのparentがundefinedの場合
 			const targetPoint = { x: 5, y: 30 };
-			const matrixs = [e.getMatrix(), p3.getMatrix(), p2.getMatrix(), p.getMatrix()];
+			const matrices = [e.getMatrix(), p3.getMatrix(), p2.getMatrix(), p.getMatrix()];
 			let matrix: Matrix = new PlainMatrix();
-			matrixs.forEach(m => matrix = m.multiplyNew(matrix));
+			matrices.forEach(m => matrix = m.multiplyNew(matrix));
 			const actual = e.localToGlobal(targetPoint);
 			const expected = matrix.multiplyPoint(targetPoint);
 			expect(actual.x).toBeApproximation(expected.x, 10);
@@ -1227,9 +1227,9 @@ describe("test E", () => {
 		it("can convert global point to local point", () => {
 			// 一番上の親エンティティのparentがundefinedの場合
 			const targetPoint = { x: 500, y: 500 };
-			const matrixs = [p.getMatrix(), p2.getMatrix(), p3.getMatrix(), e.getMatrix()];
+			const matrices = [p.getMatrix(), p2.getMatrix(), p3.getMatrix(), e.getMatrix()];
 			let expected = targetPoint;
-			matrixs.forEach(m => expected = m.multiplyInverseForPoint(expected));
+			matrices.forEach(m => expected = m.multiplyInverseForPoint(expected));
 			const actual = e.globalToLocal(targetPoint);
 			expect(actual.x).toBeApproximation(expected.x, 10);
 			expect(actual.y).toBeApproximation(expected.y, 10);
