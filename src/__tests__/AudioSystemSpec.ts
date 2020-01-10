@@ -9,7 +9,7 @@ describe("test AudioPlayer", () => {
 		const system = new MusicAudioSystem({
 			id: "music",
 			muted: game._audioSystemManager._muted,
-			isSuppressed: game._audioSystemManager._isSuppressed,
+			playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		expect(() => {
@@ -43,7 +43,7 @@ describe("test AudioPlayer", () => {
 		const system = new MusicAudioSystem({
 			id: "music",
 			muted: game._audioSystemManager._muted,
-			isSuppressed: game._audioSystemManager._isSuppressed,
+			playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		const audio = new ResourceFactory().createAudioAsset("testId", "testAssetPath", 0, null, false, null);
@@ -51,14 +51,16 @@ describe("test AudioPlayer", () => {
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
 	});
 
-	it("AudioSystem#_setSuppressed", () => {
+	it("AudioSystem#_setPlaybackRate", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = game.audio.sound;
 		const player1 = system.createPlayer();
+		const player2 = system.createPlayer();
 
-		system._setSuppressed(true);
+		system._setPlaybackRate(0.3);
 		expect(system._isSuppressed).toBeTruthy();
 		expect(player1._muted).toBeTruthy();
+		expect(player2._muted).toBeTruthy();
 	});
 
 	it("AudioSystem#_changeMuted", () => {
@@ -85,12 +87,13 @@ describe("test AudioPlayer", () => {
 		const asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
 		const player = system.createPlayer();
 
-		system._setSuppressed(true);
+		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
 		expect(system._isSuppressed).toBeTruthy();
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
 		system._reset();
+		expect(player._muted).toBeTruthy();
 		expect(system._isSuppressed).toBeFalsy();
 		expect(system._destroyRequestedAssets).toEqual({});
 	});
@@ -99,9 +102,11 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = game.audio.music;
 		const asset = game.resourceFactory.createAudioAsset("dummy", "audio/dummy", 0, system, true, {});
+		const player = system.createPlayer();
 
-		system._setSuppressed(true);
+		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
+		expect(player._muted).toBeTruthy();
 		expect(system._isSuppressed).toBeTruthy();
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
@@ -110,7 +115,7 @@ describe("test AudioPlayer", () => {
 		expect(system._destroyRequestedAssets).toEqual({});
 	});
 
-	it("MusicAudioSystem#_setSuppressed", () => {
+	it("MusicAudioSystem#_setPlaybackRate", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = game.audio.music;
 		const player1 = system.createPlayer() as AudioPlayer;
@@ -135,13 +140,13 @@ describe("test AudioPlayer", () => {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// ゲームの再生が抑制された時、AudioPlayerをミュートにする
-		system._setSuppressed(true);
+		// 非等倍になったらミュートにする
+		system._setPlaybackRate(0.4);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 
-		// ゲームの再生が抑制された時、Triggerのplayed は実行されずAudioPlayerはミュートとなる
+		// 非等倍で再生時、Triggerのplayed は実行されずミュートとなる
 		player1.stop();
 		resetCalledCount();
 		player1.play(asset);
@@ -149,15 +154,15 @@ describe("test AudioPlayer", () => {
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 
-		// ゲームの再生が抑制状態から通常に戻った時、AudioPlayerのミュートが解除される
+		// 等倍再生に戻すと、ミュートが解除される
 		player1.play(asset);
-		system._setSuppressed(false);
+		system._setPlaybackRate(1.0);
 		expect(playedCalled).toBe(0);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeFalsy();
 	});
 
-	it("SoundAudioSystem#_setSuppressed", () => {
+	it("SoundAudioSystem#_setPlaybackRate", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const system = game.audio.sound;
 		const player1 = system.createPlayer() as AudioPlayer;
@@ -182,14 +187,14 @@ describe("test AudioPlayer", () => {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// ゲームの再生が抑制された時、AudioPlayerをミュートにする
-		system._setSuppressed(true);
+		// 非等倍になったらミュートにする
+		system._setPlaybackRate(0.6);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 		player1.stop();
 
-		// ゲームの再生が抑制された時、Triggerのplayed は実行されずAudioPlayerはミュートとなる
+		// 非等倍で再生時、ミュートになりTriggerのplayed は実行されない
 		const player2 = system.createPlayer() as AudioPlayer;
 		resetCalledCount();
 		player2.played.add(() => {
@@ -200,11 +205,11 @@ describe("test AudioPlayer", () => {
 		expect(stoppedCalled).toBe(0);
 		expect(player2._muted).toBeTruthy();
 
-		// ゲームの再生が抑制状態から通常に戻った時、AudioPlayerのミュートが解除される
+		// 等倍速度に戻してもSoundはミュートのままとなる。
 		const player3 = system.createPlayer() as AudioPlayer;
-		system._setSuppressed(true);
+		system._setPlaybackRate(0.5);
 		expect(player3._muted).toBeTruthy();
-		system._setSuppressed(false);
+		system._setPlaybackRate(1.0);
 		expect(player3._muted).toBeTruthy();
 	});
 });

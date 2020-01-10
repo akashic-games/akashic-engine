@@ -897,7 +897,7 @@ describe("test Game", () => {
 	it("controls audio volume", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		expect(game._audioSystemManager._isSuppressed).toBeFalsy();
+		expect(game._audioSystemManager._playbackRate).toBe(1.0);
 		expect(game._audioSystemManager._muted).toBe(false);
 		expect(() => {
 			game._setAudioPlaybackRate(-0.5);
@@ -916,10 +916,9 @@ describe("test Game", () => {
 		expect(game.audio.sound._muted).toBe(true);
 		expect(game.audio.music._muted).toBe(true);
 
-		game._audioSystemManager._isSuppressed = false;
 		game._setAudioPlaybackRate(1.7);
 		game._setAudioPlaybackRate(1.7); // 同じ値を設定するパスのカバレッジ稼ぎ
-		expect(game._audioSystemManager._isSuppressed).toBeTruthy();
+		expect(game._audioSystemManager._playbackRate).toBe(1.7);
 		expect(game.audio.sound._isSuppressed).toBeTruthy();
 		expect(game.audio.music._isSuppressed).toBeTruthy();
 		expect(game.audio.sound._muted).toBe(true);
@@ -929,7 +928,7 @@ describe("test Game", () => {
 		const myAudioSys = new SoundAudioSystem({
 			id: "voice_chara1",
 			muted: game._audioSystemManager._muted,
-			isSuppressed: game._audioSystemManager._isSuppressed,
+			playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		game.audio.chara1 = myAudioSys;

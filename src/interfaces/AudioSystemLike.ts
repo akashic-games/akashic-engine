@@ -46,7 +46,7 @@ export interface AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_setSuppressed(suppressed: boolean): void;
+	_setPlaybackRate(value: number): void;
 
 	/**
 	 * @private

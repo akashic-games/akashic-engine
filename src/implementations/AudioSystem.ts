@@ -21,9 +21,9 @@ export interface AudioSystemParameterObject {
 	muted?: boolean;
 
 	/**
-	 * ゲームの再生が抑制されているか否か。
+	 * 再生速度の倍率
 	 */
-	isSuppressed?: boolean;
+	playbackRate?: number;
 
 	/**
 	 * 各種リソースのファクトリ
@@ -50,6 +50,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	_destroyRequestedAssets: { [key: string]: AudioAssetLike };
 
 	/**
+	 * 再生速度が等倍以外に指定された等の要因により、音声再生が抑制されているかどうか。
 	 * @private
 	 */
 	_isSuppressed: boolean;
@@ -78,7 +79,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._volume = param.volume || 1;
 		this._destroyRequestedAssets = {};
 		this._muted = param.muted || false;
-		this._isSuppressed = param.isSuppressed || false;
+		this._isSuppressed = param.playbackRate !== 1.0 || false;
 		this._resourceFactory = param.resourceFactory;
 	}
 
@@ -117,9 +118,15 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_setSuppressed(value: boolean): void {
-		this._isSuppressed = value;
-		this._onSuppressedChanged();
+	_setPlaybackRate(value: number): void {
+		if (value < 0 || isNaN(value) || typeof value !== "number")
+			throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
+
+		const suppressed = value !== 1.0;
+		if (this._isSuppressed !== suppressed) {
+			this._isSuppressed = suppressed;
+			this._onSuppressedChanged();
+		}
 	}
 
 	/**

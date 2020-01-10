@@ -512,13 +512,13 @@ export abstract class Game implements Registrable<E> {
 			music: new MusicAudioSystem({
 				id: "music",
 				muted: this._audioSystemManager._muted,
-				isSuppressed: this._audioSystemManager._isSuppressed,
+				playbackRate: this._audioSystemManager._playbackRate,
 				resourceFactory: this.resourceFactory
 			}),
 			sound: new SoundAudioSystem({
 				id: "sound",
 				muted: this._audioSystemManager._muted,
-				isSuppressed: this._audioSystemManager._isSuppressed,
+				playbackRate: this._audioSystemManager._playbackRate,
 				resourceFactory: this.resourceFactory
 			})
 		};
@@ -973,11 +973,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_setAudioPlaybackRate(playbackRate: number): void {
-		if (playbackRate < 0 || isNaN(playbackRate) || typeof playbackRate !== "number")
-			throw ExceptionFactory.createAssertionError(
-				"Game#_setAudioPlaybackRate: expected: greater or equal to 0.0, actual: " + playbackRate
-			);
-		this._audioSystemManager._changePlaybackRate(playbackRate);
+		this._audioSystemManager._setPlaybackRate(playbackRate);
 	}
 
 	/**
