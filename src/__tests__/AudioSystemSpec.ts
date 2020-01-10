@@ -57,6 +57,10 @@ describe("test AudioPlayer", () => {
 		const player1 = system.createPlayer();
 		const player2 = system.createPlayer();
 
+		expect(system._isSuppressed).toBeFalsy();
+		expect(player1._muted).toBeFalsy();
+		expect(player2._muted).toBeFalsy();
+
 		system._setPlaybackRate(0.3);
 		expect(system._isSuppressed).toBeTruthy();
 		expect(player1._muted).toBeTruthy();
