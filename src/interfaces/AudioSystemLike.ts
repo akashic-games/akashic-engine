@@ -20,11 +20,6 @@ export interface AudioSystemLike {
 	 */
 	_destroyRequestedAssets: { [key: string]: AudioAssetLike };
 
-	/**
-	 * @private
-	 */
-	_isSuppressed: boolean;
-
 	stopAll(): void;
 
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[];
@@ -57,11 +52,6 @@ export interface AudioSystemLike {
 	 * @private
 	 */
 	_onMutedChanged(): void;
-
-	/**
-	 * @private
-	 */
-	_onSuppressedChanged(): void;
 
 	/**
 	 * @private

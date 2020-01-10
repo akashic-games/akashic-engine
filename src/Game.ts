@@ -512,13 +512,13 @@ export abstract class Game implements Registrable<E> {
 			music: new MusicAudioSystem({
 				id: "music",
 				muted: this._audioSystemManager._muted,
-				playbackRate: this._audioSystemManager._playbackRate,
+				// playbackRate: this._audioSystemManager._playbackRate,
 				resourceFactory: this.resourceFactory
 			}),
 			sound: new SoundAudioSystem({
 				id: "sound",
 				muted: this._audioSystemManager._muted,
-				playbackRate: this._audioSystemManager._playbackRate,
+				// playbackRate: this._audioSystemManager._playbackRate,
 				resourceFactory: this.resourceFactory
 			})
 		};

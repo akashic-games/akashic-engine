@@ -23,6 +23,7 @@ export interface AudioSystemParameterObject {
 	/**
 	 * 再生速度の倍率。
 	 */
+	// TODO: v3ではゲーム開発者が任意に AudioSystem を追加できるのか仕様確認。
 	playbackRate?: number;
 
 	/**
@@ -121,12 +122,6 @@ export abstract class AudioSystem implements AudioSystemLike {
 	_setPlaybackRate(value: number): void {
 		if (value < 0 || isNaN(value) || typeof value !== "number")
 			throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
-
-		const suppressed = value !== 1.0;
-		if (this._isSuppressed !== suppressed) {
-			this._isSuppressed = suppressed;
-			this._onSuppressedChanged();
-		}
 	}
 
 	/**
@@ -142,7 +137,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	abstract _onSuppressedChanged(): void;
+	// abstract _onSuppressedChanged(): void;
 
 	/**
 	 * @private
@@ -225,12 +220,10 @@ export class MusicAudioSystem extends AudioSystem implements MusicAudioSystemLik
 	/**
 	 * @private
 	 */
-	_onSuppressedChanged(): void {
-		if (this._muted) {
-			this.player._changeMuted(true);
-		} else {
-			this.player._changeMuted(this._isSuppressed);
-		}
+	_setPlaybackRate(rate: number): void {
+		super._setPlaybackRate(rate);
+		this._isSuppressed = rate !== 1.0;
+		this.player._changeMuted(this._isSuppressed || this._muted);
 	}
 
 	/**
@@ -311,7 +304,10 @@ export class SoundAudioSystem extends AudioSystem implements SoundAudioSystemLik
 	/**
 	 * @private
 	 */
-	_onSuppressedChanged(): void {
+	_setPlaybackRate(rate: number): void {
+		super._setPlaybackRate(rate);
+		this._isSuppressed = rate !== 1.0;
+
 		var players = this.players;
 		if (this._isSuppressed) {
 			for (var i = 0; i < players.length; ++i) {
