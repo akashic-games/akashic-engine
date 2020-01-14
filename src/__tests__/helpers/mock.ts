@@ -691,4 +691,6 @@ export class CacheableE extends g.CacheableE {
 
 export interface AudioSystemLike extends g.AudioSystemLike {
 	_muted: boolean;
+
+	_destroyRequestedAssets: { [key: string]: g.AudioAssetLike };
 }
