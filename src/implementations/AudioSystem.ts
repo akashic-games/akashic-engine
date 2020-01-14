@@ -21,12 +21,6 @@ export interface AudioSystemParameterObject {
 	muted?: boolean;
 
 	/**
-	 * 再生速度の倍率。
-	 */
-	// TODO: v3ではゲーム開発者が任意に AudioSystem を追加できるのか仕様確認。
-	playbackRate?: number;
-
-	/**
 	 * 各種リソースのファクトリ
 	 */
 	resourceFactory: ResourceFactoryLike;
@@ -80,7 +74,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._volume = param.volume || 1;
 		this._destroyRequestedAssets = {};
 		this._muted = param.muted || false;
-		this._isSuppressed = param.playbackRate ? param.playbackRate !== 1.0 : false;
+		this._isSuppressed = false;
 		this._resourceFactory = param.resourceFactory;
 	}
 
@@ -133,11 +127,6 @@ export abstract class AudioSystem implements AudioSystemLike {
 	 * @private
 	 */
 	abstract _onMutedChanged(): void;
-
-	/**
-	 * @private
-	 */
-	// abstract _onSuppressedChanged(): void;
 
 	/**
 	 * @private

@@ -9,7 +9,6 @@ describe("test AudioPlayer", () => {
 		const system = new MusicAudioSystem({
 			id: "music",
 			muted: game._audioSystemManager._muted,
-			// playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		expect(() => {
@@ -43,7 +42,6 @@ describe("test AudioPlayer", () => {
 		const system = new MusicAudioSystem({
 			id: "music",
 			muted: game._audioSystemManager._muted,
-			// playbackRate: game._audioSystemManager._playbackRate,
 			resourceFactory: game.resourceFactory
 		});
 		const audio = new ResourceFactory().createAudioAsset("testId", "testAssetPath", 0, null, false, null);
@@ -57,12 +55,10 @@ describe("test AudioPlayer", () => {
 		const player1 = system.createPlayer();
 		const player2 = system.createPlayer();
 
-		// expect(system._isSuppressed).toBeFalsy();
 		expect(player1._muted).toBeFalsy();
 		expect(player2._muted).toBeFalsy();
 
 		system._setPlaybackRate(0.3);
-		// expect(system._isSuppressed).toBeTruthy();
 		expect(player1._muted).toBeTruthy();
 		expect(player2._muted).toBeTruthy();
 	});
@@ -93,12 +89,10 @@ describe("test AudioPlayer", () => {
 
 		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
-		// expect(system._isSuppressed).toBeTruthy();
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
 		system._reset();
 		expect(player._muted).toBeTruthy();
-		// expect(system._isSuppressed).toBeFalsy();
 		expect(system._destroyRequestedAssets).toEqual({});
 	});
 
@@ -111,7 +105,6 @@ describe("test AudioPlayer", () => {
 		system._setPlaybackRate(0.3);
 		system.requestDestroy(asset);
 		expect(player._muted).toBeTruthy();
-		// expect(system._isSuppressed).toBeTruthy();
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
 		system._reset();
@@ -159,7 +152,6 @@ describe("test AudioPlayer", () => {
 		expect(player1._muted).toBeTruthy();
 
 		// 等倍再生に戻すと、ミュートが解除される
-		player1.play(asset);
 		system._setPlaybackRate(1.0);
 		expect(playedCalled).toBe(0);
 		expect(stoppedCalled).toBe(0);
