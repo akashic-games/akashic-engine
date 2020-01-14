@@ -1,24 +1,9 @@
 import { AudioAssetLike } from "./AudioAssetLike";
-import { AudioPlayerEvent, AudioPlayerLike } from "./AudioPlayerLike";
+import { AudioPlayerLike } from "./AudioPlayerLike";
 
 export interface AudioSystemLike {
 	id: string;
 	volume: number;
-
-	/**
-	 * @private
-	 */
-	_volume: number;
-
-	/**
-	 * @private
-	 */
-	_muted: boolean;
-
-	/**
-	 * @private
-	 */
-	_destroyRequestedAssets: { [key: string]: AudioAssetLike };
 
 	stopAll(): void;
 
@@ -42,37 +27,4 @@ export interface AudioSystemLike {
 	 * @private
 	 */
 	_setPlaybackRate(value: number): void;
-
-	/**
-	 * @private
-	 */
-	_onVolumeChanged(): void;
-
-	/**
-	 * @private
-	 */
-	_onMutedChanged(): void;
-
-	/**
-	 * @private
-	 */
-	_onPlayerStopped(e: AudioPlayerEvent): void;
-
-	/**
-	 * @private
-	 */
-	_onPlayerPlayed(e: AudioPlayerEvent): void;
-}
-
-export interface MusicAudioSystemLike extends AudioSystemLike {
-	/**
-	 * @private
-	 */
-	_player: AudioPlayerLike;
-
-	player: AudioPlayerLike;
-}
-
-export interface SoundAudioSystemLike extends AudioSystemLike {
-	players: AudioPlayerLike[];
 }

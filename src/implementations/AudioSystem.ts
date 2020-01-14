@@ -1,7 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike, MusicAudioSystemLike, SoundAudioSystemLike } from "../interfaces/AudioSystemLike";
+import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 
 export interface AudioSystemParameterObject {
@@ -139,7 +139,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	abstract _onPlayerStopped(e: AudioPlayerEvent): void;
 }
 
-export class MusicAudioSystem extends AudioSystem implements MusicAudioSystemLike {
+export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
@@ -234,7 +234,7 @@ export class MusicAudioSystem extends AudioSystem implements MusicAudioSystemLik
 	}
 }
 
-export class SoundAudioSystem extends AudioSystem implements SoundAudioSystemLike {
+export class SoundAudioSystem extends AudioSystem {
 	players: AudioPlayerLike[];
 
 	constructor(param: AudioSystemParameterObject) {
