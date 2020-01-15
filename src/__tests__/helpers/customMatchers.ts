@@ -86,7 +86,7 @@ export const customMatchers = {
 	toBeApproximation: (received: number, expected: number, threshold: number): jest.CustomMatcherResult => {
 		return {
 			pass: isApproximate(received, expected, threshold),
-			message: () => ""
+			message: () => `The distance between actual(${received}) and expected(${expected}) is not less than ${Math.pow(10, -threshold)}`
 		};
 	}
 };

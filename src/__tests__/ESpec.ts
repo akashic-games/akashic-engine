@@ -1209,37 +1209,34 @@ describe("test E", () => {
 		it("can convert local point to global point", () => {
 			// 一番上の親エンティティのparentがundefinedの場合
 			const targetPoint = { x: 5, y: 30 };
-			const matrices = [e.getMatrix(), p3.getMatrix(), p2.getMatrix(), p.getMatrix()];
-			let matrix: Matrix = new PlainMatrix();
-			matrices.forEach(m => matrix = m.multiplyNew(matrix));
 			const actual = e.localToGlobal(targetPoint);
-			const expected = matrix.multiplyPoint(targetPoint);
-			expect(actual.x).toBeApproximation(expected.x, 10);
-			expect(actual.y).toBeApproximation(expected.y, 10);
+			const expected = { x: 78.787, y: 156.568 };
+			// 小数点第2位まで合っていればパスとする
+			expect(actual.x).toBeApproximation(expected.x, 3);
+			expect(actual.y).toBeApproximation(expected.y, 3);
 
 			// 一番上の親エンティティのparentがsceneに変わってもlocalToGlobalの結果は変わらない
 			p.parent = anotherRuntime.scene;
 			anotherRuntime.scene.append(p);
 			const actual2 = e.localToGlobal(targetPoint);
-			expect(actual2.x).toBeApproximation(expected.x, 10);
-			expect(actual2.y).toBeApproximation(expected.y, 10);
+			expect(actual2.x).toBeApproximation(expected.x, 3);
+			expect(actual2.y).toBeApproximation(expected.y, 3);
 		});
 		it("can convert global point to local point", () => {
 			// 一番上の親エンティティのparentがundefinedの場合
 			const targetPoint = { x: 500, y: 500 };
-			const matrices = [p.getMatrix(), p2.getMatrix(), p3.getMatrix(), e.getMatrix()];
-			let expected = targetPoint;
-			matrices.forEach(m => expected = m.multiplyInverseForPoint(expected));
 			const actual = e.globalToLocal(targetPoint);
-			expect(actual.x).toBeApproximation(expected.x, 10);
-			expect(actual.y).toBeApproximation(expected.y, 10);
+			const expected = { x: 545.686, y: -6.667 };
+			// 小数点第2位まで合っていればパスとする
+			expect(actual.x).toBeApproximation(expected.x, 3);
+			expect(actual.y).toBeApproximation(expected.y, 3);
 
 			// 一番上の親エンティティのparentがsceneに変わってもlocalToGlobalの結果は変わらない
 			p.parent = anotherRuntime.scene;
 			anotherRuntime.scene.append(p);
 			const actual2 = e.globalToLocal(targetPoint);
-			expect(actual2.x).toBeApproximation(expected.x, 10);
-			expect(actual2.y).toBeApproximation(expected.y, 10);
+			expect(actual2.x).toBeApproximation(expected.x, 3);
+			expect(actual2.y).toBeApproximation(expected.y, 3);
 		});
 		it("is reversible", () => {
 			const targetPoint = { x: 0, y: 0 };

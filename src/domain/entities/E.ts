@@ -650,6 +650,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	localToGlobal(offset: CommonOffset): CommonOffset {
 		let point = offset;
+		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
 		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
 			point = entity.getMatrix().multiplyPoint(point);
 		}
@@ -662,7 +663,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	globalToLocal(offset: CommonOffset): CommonOffset {
 		let matrix: Matrix = new PlainMatrix();
+		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
 		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+			// 親エンティティのマトリクスを若い順にかける必要があるので、速度面に不安は出るがmultiplyNewメソッドを利用する(multiplyメソッドではそれができない。)。
 			matrix = entity.getMatrix().multiplyNew(matrix);
 		}
 		return matrix.multiplyInverseForPoint(offset);
