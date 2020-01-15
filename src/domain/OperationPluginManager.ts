@@ -35,7 +35,11 @@ class OperationHandler {
 
 /**
  * 操作プラグインを管理するクラス。
- * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ * 通常は game.json の `operationPlugins` フィールドを基に自動的に初期化される他、
+ * ゲーム開発者は本クラスを用いて直接操作プラグインを登録することもできる。
+ * 詳細は `this.register()` のコメントを参照。
+ *
+ * 本クラスのインスタンスをゲーム開発者が直接生成することない。
  */
 export class OperationPluginManager {
 	/**
@@ -74,6 +78,39 @@ export class OperationPluginManager {
 		this._doAutoStart();
 	}
 
+	/**
+	 * 操作プラグインを手動で登録する。
+	 * このメソッドを利用する場合、game.json の `operationPlugins` フィールドから該当の定義を省略する必要がある。
+	 * 登録後、ゲーム開発者自身で `OperationPluginManager#start()` を呼び出さなければならない点に注意。
+	 * @param pluginClass new 可能な操作プラグインの実態
+	 * @param code 操作プラグインの識別コード
+	 * @param option 操作プラグインのコンストラクタに渡すパラメータ
+	 */
+	register(pluginClass: OperationPluginStatic, code: number, option?: any): void {
+		this._infos[code] = {
+			code,
+			_plugin: this._initializeOperationPlugin(pluginClass, code, option)
+		};
+	}
+
+	/**
+	 * 対象の操作プラグインを開始する。
+	 * @param code 操作プラグインの識別コード
+	 */
+	start(code: number): void {
+		if (!this._infos[code] || !this._infos[code]._plugin) return;
+		this._infos[code]._plugin.start();
+	}
+
+	/**
+	 * 対象の操作プラグインを終了する。
+	 * @param code 操作プラグインの識別コード
+	 */
+	stop(code: number): void {
+		if (!this._infos[code] || !this._infos[code]._plugin) return;
+		this._infos[code]._plugin.stop();
+	}
+
 	destroy(): void {
 		this.stopAll();
 		this.operated.destroy();
@@ -86,34 +123,42 @@ export class OperationPluginManager {
 
 	stopAll(): void {
 		if (!this._initialized) return;
-		for (var i = 0; i < this._infos.length; ++i) {
-			var info = this._infos[i];
+		for (let i = 0; i < this._infos.length; ++i) {
+			const info = this._infos[i];
 			if (info._plugin) info._plugin.stop();
 		}
 	}
 
 	private _doAutoStart(): void {
-		for (var i = 0; i < this._infos.length; ++i) {
-			var info = this._infos[i];
+		for (let i = 0; i < this._infos.length; ++i) {
+			const info = this._infos[i];
 			if (!info.manualStart && info._plugin) info._plugin.start();
 		}
 	}
 
 	private _loadOperationPlugins(): void {
-		for (var i = 0; i < this._infos.length; ++i) {
-			var info = this._infos[i];
+		for (let i = 0; i < this._infos.length; ++i) {
+			const info = this._infos[i];
 			if (!info.script) continue;
-			var pluginClass = <OperationPluginStatic>this._game._moduleManager._require(info.script);
-			if (!pluginClass.isSupported()) continue;
-			var plugin = new pluginClass(this._game, this._viewInfo, info.option);
-			var code = info.code;
-			if (this.plugins[code]) {
-				throw new Error("Plugin#code conflicted for code: " + code);
-			}
-			this.plugins[code] = plugin;
-			info._plugin = plugin;
-			var handler = new OperationHandler(code, this.operated, this.operated.fire);
-			plugin.operationTrigger.add(handler.onOperation, handler);
+			const pluginClass = this._game._moduleManager._require(info.script);
+			info._plugin = this._initializeOperationPlugin(pluginClass, info.code, info.option);
 		}
+	}
+
+	private _initializeOperationPlugin(pluginClass: OperationPluginStatic, code: number, option?: any): OperationPlugin | undefined {
+		if (!pluginClass.isSupported()) {
+			return;
+		}
+		if (this.plugins[code]) {
+			throw new Error(`Plugin#code conflicted for code: ${code}`);
+		}
+		if (this._infos[code]) {
+			throw new Error(`this plugin (code: ${code}) is already defined in game.json`);
+		}
+		const plugin = new pluginClass(this._game, this._viewInfo, option);
+		this.plugins[code] = plugin;
+		const handler = new OperationHandler(code, this.operated, this.operated.fire);
+		plugin.operationTrigger.add(handler.onOperation, handler);
+		return plugin;
 	}
 }

@@ -71,9 +71,9 @@ describe("test OperationPluginManager", () => {
 
 	it("初期化", done => {
 		game._loaded.add(() => {
-			expect(game._operationPluginManager).not.toBeFalsy();
-			expect(game._operationPluginManager.operated instanceof Trigger).toBe(true);
-			expect(game._operationPluginManager.plugins).toEqual({});
+			expect(game.operationPluginManager).not.toBeFalsy();
+			expect(game.operationPluginManager.operated instanceof Trigger).toBe(true);
+			expect(game.operationPluginManager.plugins).toEqual({});
 			done();
 		});
 		game._startLoadingGlobalAssets();
@@ -81,7 +81,7 @@ describe("test OperationPluginManager", () => {
 
 	it("initialize()", done => {
 		game._loaded.add(() => {
-			const self = game._operationPluginManager;
+			const self = game.operationPluginManager;
 			expect((self as any)._initialized).toBe(false);
 			self.initialize();
 			expect((self as any)._initialized).toBe(true);
@@ -99,7 +99,7 @@ describe("test OperationPluginManager", () => {
 
 	it("operated", done => {
 		game._loaded.add(() => {
-			const self = game._operationPluginManager;
+			const self = game.operationPluginManager;
 			self.initialize();
 
 			const ops: InternalOperationPluginOperation[] = [];
@@ -107,10 +107,13 @@ describe("test OperationPluginManager", () => {
 				ops.push(op);
 			});
 
-			const plugin = self.plugins[42] as any;
+			const plugin = self.plugins[42] as TestOperationPlugin;
 			plugin.debugFire(["foo", 1]);
 			plugin.debugFire([4]);
-			expect(ops).toEqual([{ _code: 42, data: ["foo", 1] }, { _code: 42, data: [4] }]);
+			expect(ops).toEqual([
+				{ _code: 42, data: ["foo", 1] },
+				{ _code: 42, data: [4] }
+			]);
 			plugin.debugFire({ local: true, data: [] });
 			expect(ops[2]).toEqual({ _code: 42, local: true, data: [] });
 			done();
@@ -118,9 +121,47 @@ describe("test OperationPluginManager", () => {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("register", done => {
+		game._loaded.add(() => {
+			const self = game.operationPluginManager;
+			self.initialize();
+
+			expect((self as any)._infos[30]).toBeUndefined();
+			self.register(TestOperationPlugin, 30, { dummy: true });
+
+			expect((self as any)._infos[30]).toBeDefined();
+			expect((self as any)._infos[30]._plugin).toBeDefined();
+			const plugin1 = self.plugins[30] as TestOperationPlugin;
+			expect(plugin1._option).toEqual({ dummy: true });
+			expect(plugin1._started).toBe(false);
+			self.start(30);
+			expect(plugin1._started).toBe(true);
+
+			expect((self as any)._infos[60]).toBeUndefined();
+			self.register(TestOperationPluginUnsupported, 60, { dummy: false });
+			expect((self as any)._infos[60]).toBeDefined();
+			expect((self as any)._infos[60]._plugin).toBeUndefined();
+			const plugin2 = self.plugins[60] as TestOperationPluginUnsupported;
+			expect(plugin2).toBeUndefined();
+			self.start(60);
+			expect(plugin2).toBeUndefined();
+
+			expect(() => {
+				self.register(TestOperationPlugin, 30);
+			}).toThrowError("Plugin#code conflicted for code: 30");
+			expect(() => {
+				// unsupported の場合初期化されない (=例外が発生しない) ことを確認
+				self.register(TestOperationPluginUnsupported, 42);
+			}).not.toThrowError("Plugin#code conflicted for code: 42");
+
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("destroy", done => {
 		game._loaded.add(() => {
-			const self = game._operationPluginManager;
+			const self = game.operationPluginManager;
 			self.initialize();
 			self.destroy();
 			expect(self.operated).toBeFalsy();
