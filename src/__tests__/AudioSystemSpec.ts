@@ -108,7 +108,6 @@ describe("test AudioPlayer", () => {
 		expect(system._destroyRequestedAssets.dummy).toBe(asset);
 
 		system._reset();
-		// expect(system._isSuppressed).toBeFalsy();
 		expect(system._destroyRequestedAssets).toEqual({});
 	});
 
@@ -137,23 +136,23 @@ describe("test AudioPlayer", () => {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 非等倍になったらミュートにする
+		// 再生速度が非等倍になったらミュートにする
 		system._setPlaybackRate(0.4);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 
-		// 非等倍で再生時、Triggerのplayed は実行されずミュートとなる
+		// 再生速度が非等倍の状態で再生された場合、ミュートとなる
 		player1.stop();
 		resetCalledCount();
 		player1.play(asset);
-		expect(playedCalled).toBe(0);
+		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 
-		// 等倍再生に戻すと、ミュートが解除される
+		// 再生速度が等倍再生に戻った場合、ミュートが解除される
 		system._setPlaybackRate(1.0);
-		expect(playedCalled).toBe(0);
+		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeFalsy();
 	});
@@ -183,25 +182,25 @@ describe("test AudioPlayer", () => {
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 
-		// 非等倍になったらミュートにする
+		// 再生速度が非等倍になったらミュートにする
 		system._setPlaybackRate(0.6);
 		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player1._muted).toBeTruthy();
 		player1.stop();
 
-		// 非等倍で再生時、ミュートになりTriggerのplayed は実行されない
+		// 再生速度が非等倍の状態で再生された場合、ミュートとなる
 		const player2 = system.createPlayer() as AudioPlayer;
 		resetCalledCount();
 		player2.played.add(() => {
 			++playedCalled;
 		});
 		player2.play(asset);
-		expect(playedCalled).toBe(0);
+		expect(playedCalled).toBe(1);
 		expect(stoppedCalled).toBe(0);
 		expect(player2._muted).toBeTruthy();
 
-		// 等倍速度に戻してもSoundはミュートのままとなる。
+		// 再生速度が等倍速度に戻っても Sound はミュートのままとなる。
 		const player3 = system.createPlayer() as AudioPlayer;
 		system._setPlaybackRate(0.5);
 		expect(player3._muted).toBeTruthy();

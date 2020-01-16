@@ -10,7 +10,7 @@ describe("test AudioPlayer", () => {
 			muted: game._audioSystemManager._muted,
 			resourceFactory: game.resourceFactory
 		});
-		const player = new AudioPlayer({ volume: system.volume, muted: system._isSuppressed || system._muted });
+		const player = system.createPlayer();
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(Trigger);
 		expect(player.stopped.constructor).toBe(Trigger);
@@ -25,7 +25,7 @@ describe("test AudioPlayer", () => {
 			resourceFactory: game.resourceFactory
 		});
 		system.volume = 0.5;
-		const player = new AudioPlayer({ volume: system.volume, muted: system._isSuppressed || system._muted });
+		const player = system.createPlayer();
 		expect(player.volume).toBe(system.volume);
 		expect(player.played.constructor).toBe(Trigger);
 		expect(player.stopped.constructor).toBe(Trigger);

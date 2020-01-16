@@ -60,12 +60,11 @@ export class AudioPlayer implements AudioPlayerLike {
 	/**
 	 * `AudioAsset` を再生する。
 	 *
-	 * 再生後、ミュート中でなければ `this.played` がfireされる。
+	 * 再生後、 `this.played` がfireされる。
 	 * @param audio 再生するオーディオアセット
 	 */
 	play(audio: AudioAssetLike): void {
 		this.currentAudio = audio;
-		if (this._muted) return;
 		this.played.fire({
 			player: this,
 			audio: audio

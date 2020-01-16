@@ -127,16 +127,6 @@ export abstract class AudioSystem implements AudioSystemLike {
 	 * @private
 	 */
 	abstract _onMutedChanged(): void;
-
-	/**
-	 * @private
-	 */
-	abstract _onPlayerPlayed(e: AudioPlayerEvent): void;
-
-	/**
-	 * @private
-	 */
-	abstract _onPlayerStopped(e: AudioPlayerEvent): void;
 }
 
 export class MusicAudioSystem extends AudioSystem {
