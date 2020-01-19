@@ -320,7 +320,6 @@ export abstract class Game implements Registrable<E> {
 
 	/**
 	 * 操作プラグインの管理者。
-	 * @private
 	 */
 	operationPluginManager: OperationPluginManager;
 
