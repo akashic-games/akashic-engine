@@ -89,7 +89,7 @@ export class OperationPluginManager {
 	register(pluginClass: OperationPluginStatic, code: number, option?: any): void {
 		this._infos[code] = {
 			code,
-			_plugin: this._initializeOperationPlugin(pluginClass, code, option)
+			_plugin: this._instantiateOperationPlugin(pluginClass, code, option)
 		};
 	}
 
@@ -141,11 +141,11 @@ export class OperationPluginManager {
 			const info = this._infos[i];
 			if (!info.script) continue;
 			const pluginClass = this._game._moduleManager._require(info.script);
-			info._plugin = this._initializeOperationPlugin(pluginClass, info.code, info.option);
+			info._plugin = this._instantiateOperationPlugin(pluginClass, info.code, info.option);
 		}
 	}
 
-	private _initializeOperationPlugin(pluginClass: OperationPluginStatic, code: number, option?: any): OperationPlugin | undefined {
+	private _instantiateOperationPlugin(pluginClass: OperationPluginStatic, code: number, option?: any): OperationPlugin | undefined {
 		if (!pluginClass.isSupported()) {
 			return;
 		}
