@@ -18,6 +18,30 @@ describe("test Matrix", () => {
 		expect(m._matrix).toBeNear(expected, 10);
 	});
 
+	it("can multiply another matrix from right", () => {
+		// m1のマトリクスの値：[2, 0, -0, 2, -10, -10]
+		const m1 = new PlainMatrix(10, 10, 2, 2, 0, 0.5, 0.5);
+		// m2のマトリクスの値：[0.5, 0.866, -0.866, 0.5, 0, 0]
+		const m2 = new PlainMatrix(30, 50, 1, 1, 60, 0, 0);
+		// m1*m2のマトリクスの値：[1, 1.732, -1.732, 1, -10, -10]
+		const expected = [1, 1.732, -1.732, 1, -10, -10];
+		m1.multiply(m2);
+		// マトリクスの各値が小数点第3位まで合っていればパスとする
+		expect(m1._matrix).toBeNear(expected, 4);
+	});
+
+	it("can multiply another matrix from left", () => {
+		// m1のマトリクスの値：[2, 0, -0, 2, -10, -10]
+		const m1 = new PlainMatrix(10, 10, 2, 2, 0, 0.5, 0.5);
+		// m2のマトリクスの値：[0.5, 0.866, -0.866, 0.5, 0, 0]
+		const m2 = new PlainMatrix(30, 50, 1, 1, 60, 0, 0);
+		// m1*m2のマトリクスの値：[1, 1.732, -1.732, 1, -10, -10]
+		const expected = [1, 1.732, -1.732, 1, -10, -10];
+		m2.multiplyLeft(m1);
+		// マトリクスの各値が小数点第3位まで合っていればパスとする
+		expect(m2._matrix).toBeNear(expected, 4);
+	});
+
 	it("update", () => {
 		const m = new PlainMatrix();
 		const angle = 50;

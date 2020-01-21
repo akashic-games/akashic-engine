@@ -29,10 +29,16 @@ export interface Matrix {
 	_matrix: [number, number, number, number, number, number];
 
 	/**
-	 * この変換行列に別の変換行列を掛け合わせる。
+	 * この変換行列に別の変換行列を右側から掛け合わせる。
 	 * @param matrix 掛け合わせる変換行列
 	 */
 	multiply(matrix: Matrix): void;
+
+	/**
+	 * この変換行列に別の変換行列を左側から掛け合わせる。
+	 * @param matrix 掛け合わせる変換行列
+	 */
+	multiplyLeft(matrix: Matrix): void;
 
 	/**
 	 * この変換行列に別の変換行列を掛け合わせた新しい変換行列を返す。
@@ -368,6 +374,21 @@ export class PlainMatrix {
 		m1[3] = m11 * m2[2] + m13 * m2[3];
 		m1[4] = m10 * m2[4] + m12 * m2[5] + m1[4];
 		m1[5] = m11 * m2[4] + m13 * m2[5] + m1[5];
+	}
+
+	multiplyLeft(matrix: Matrix): void {
+		var m1 = matrix._matrix;
+		var m2 = this._matrix;
+
+		var m20 = m2[0];
+		var m22 = m2[2];
+		var m24 = m2[4];
+		m2[0] = m1[0] * m20 + m1[2] * m2[1];
+		m2[1] = m1[1] * m20 + m1[3] * m2[1];
+		m2[2] = m1[0] * m22 + m1[2] * m2[3];
+		m2[3] = m1[1] * m22 + m1[3] * m2[3];
+		m2[4] = m1[0] * m24 + m1[2] * m2[5] + m1[4];
+		m2[5] = m1[1] * m24 + m1[3] * m2[5] + m1[5];
 	}
 
 	multiplyNew(matrix: Matrix): Matrix {
