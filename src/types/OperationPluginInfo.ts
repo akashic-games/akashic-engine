@@ -12,12 +12,13 @@ export interface OperationPluginInfo {
 
 	/**
 	 * プラグインの定義を含むスクリプトファイルのパス。
+	 * スクリプトファイルではない経路で初期化された場合 `undefined` 。
 	 *
 	 * プラグインの定義を得るために、この値が require() に渡される。
 	 * 相対パスであるとき、その基準は game.json のあるディレクトリである。
 	 * また対応するスクリプトアセットは `"global": true` が指定されていなければならない。
 	 */
-	script: string;
+	script?: string;
 
 	/**
 	 * プラグインを new する際に引き渡すオプション。
@@ -39,7 +40,8 @@ export interface OperationPluginInfo {
  */
 export interface InternalOperationPluginInfo extends OperationPluginInfo {
 	/**
+	 * サポートされていない環境など、操作プラグインを初期化できなかった場合 `undefined` 。
 	 * @private
 	 */
-	_plugin: OperationPlugin;
+	_plugin?: OperationPlugin;
 }

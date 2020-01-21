@@ -122,6 +122,7 @@ export interface GameResetParameterObject {
  * 8. 現在フォーカスされているCamera情報を得るため、Game#focusingCameraにアクセスする
  * 9. AudioSystemを直接制御するため、Game#audioにアクセスする
  * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
+ * 11.操作プラグインを直接制御するため、Game#operationPluginManagerにアクセスする
  */
 export abstract class Game implements Registrable<E> {
 	/**
@@ -318,6 +319,11 @@ export abstract class Game implements Registrable<E> {
 	surfaceAtlasSet: SurfaceAtlasSetLike;
 
 	/**
+	 * 操作プラグインの管理者。
+	 */
+	operationPluginManager: OperationPluginManager;
+
+	/**
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
@@ -390,12 +396,6 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_audioSystemManager: AudioSystemManager;
-
-	/**
-	 * 操作プラグインの管理者。
-	 * @private
-	 */
-	_operationPluginManager: OperationPluginManager;
 
 	/**
 	 * 操作プラグインによる操作を通知するTrigger。
@@ -574,9 +574,9 @@ export abstract class Game implements Registrable<E> {
 		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
-		this._operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
+		this.operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
 		this._operationPluginOperated = new Trigger<InternalOperationPluginOperation>();
-		this._operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
+		this.operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
 
 		this._sceneChanged = new Trigger<Scene>();
 		this._sceneChanged.add(this._updateEventTriggers, this);
@@ -991,7 +991,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_decodeOperationPluginOperation(code: number, op: (number | string)[]): any {
-		var plugins = this._operationPluginManager.plugins;
+		const plugins = this.operationPluginManager.plugins;
 		if (!plugins[code] || !plugins[code].decode) return op;
 		return plugins[code].decode(op);
 	}
@@ -1001,7 +1001,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_reset(param?: GameResetParameterObject): void {
-		this._operationPluginManager.stopAll();
+		this.operationPluginManager.stopAll();
 		if (this.scene()) {
 			while (this.scene() !== this._initialScene) {
 				this.popScene();
@@ -1062,7 +1062,7 @@ export abstract class Game implements Registrable<E> {
 	 */
 	_destroy(): void {
 		// ユーザコードを扱う操作プラグインを真っ先に破棄
-		this._operationPluginManager.destroy();
+		this.operationPluginManager.destroy();
 
 		// 到達できるシーンを全て破棄
 		if (this.scene()) {
@@ -1129,7 +1129,7 @@ export abstract class Game implements Registrable<E> {
 		this._assetManager.destroy();
 		this._assetManager = undefined;
 		this._audioSystemManager = undefined;
-		this._operationPluginManager = undefined;
+		this.operationPluginManager = undefined;
 		this._operationPluginOperated.destroy();
 		this._operationPluginOperated = undefined;
 		this._idx = 0;
@@ -1274,8 +1274,8 @@ export abstract class Game implements Registrable<E> {
 	}
 
 	private _start(): void {
-		this._operationPluginManager.initialize();
-		this.operationPlugins = this._operationPluginManager.plugins;
+		this.operationPluginManager.initialize();
+		this.operationPlugins = this.operationPluginManager.plugins;
 
 		const mainFun = this._moduleManager._require(this._main);
 		if (!mainFun || typeof mainFun !== "function")
