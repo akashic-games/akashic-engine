@@ -5,6 +5,7 @@ declare global {
 			toHaveUndefinedValue(...properties: string[]): R;
 			toThrowError(func: () => void): R;
 			toBeNear(expected: number[], threshold: number): R;
+			toBeApproximation(expected: number, threshold: number): R;
 		}
 	}
 }
@@ -81,9 +82,19 @@ export const customMatchers = {
 			pass: near(received, expected, threshold),
 			message: () => ""
 		};
+	},
+	toBeApproximation: (received: number, expected: number, threshold: number): jest.CustomMatcherResult => {
+		return {
+			pass: isApproximate(received, expected, threshold),
+			message: () => `The distance between actual(${received}) and expected(${expected}) is not less than ${Math.pow(10, -threshold)}`
+		};
 	}
 };
 
 function near(received: number[], expected: number[], threshold: number): boolean {
-	return expected.every((v, i) => Math.abs(v - received[i]) <= Math.pow(10, -threshold));
+	return expected.every((v, i) => isApproximate(received[i], v, threshold));
+}
+
+function isApproximate(received: number, expected: number, threshold: number): boolean {
+	return Math.abs(expected - received) <= Math.pow(10, -threshold);
 }

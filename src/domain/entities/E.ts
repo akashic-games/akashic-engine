@@ -8,7 +8,7 @@ import {
 	PointSourceBase,
 	PointUpEventBase
 } from "../../domain/Event";
-import { Matrix } from "../../domain/Matrix";
+import { Matrix, PlainMatrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
@@ -642,6 +642,32 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	calculateBoundingRect(): CommonRect {
 		return this._calculateBoundingRect(undefined);
+	}
+
+	/**
+	 * このEの位置を基準とした相対座標をゲームの左上端を基準とした座標に変換する。
+	 * @param offset Eの位置を基準とした相対座標
+	 */
+	localToGlobal(offset: CommonOffset): CommonOffset {
+		let point = offset;
+		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
+		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+			point = entity.getMatrix().multiplyPoint(point);
+		}
+		return point;
+	}
+
+	/**
+	 * ゲームの左上端を基準とした座標をこのEの位置を基準とした相対座標に変換する。
+	 * @param offset ゲームの左上端を基準とした座標
+	 */
+	globalToLocal(offset: CommonOffset): CommonOffset {
+		let matrix: Matrix = new PlainMatrix();
+		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
+		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+			matrix.multiplyLeft(entity.getMatrix());
+		}
+		return matrix.multiplyInverseForPoint(offset);
 	}
 
 	/**

@@ -1192,4 +1192,84 @@ describe("test E", () => {
 		e.modified();
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.ContextLess);
 	});
+	describe("localToGlobal, globalToLocal", () => {
+		let p: E;
+		let p2: E;
+		let p3: E;
+		let e: E;
+		let anotherRuntime: Runtime;
+		beforeEach(() => {
+			// 各エンティティのマトリクスは以下の値になる
+			// p: [ 0.5, 0, -0, 0.5, 100, 100 ]
+			// p2: [ 0.7071067811865476, 0.7071067811865475, -0.7071067811865475, 0.7071067811865476, 0, 0 ]
+			// p3:  [ 2, 0, -0, 3, 20, 20 ]
+			// e: [ 1, 0, 0, 1, 10, 0 ]
+			// p * p2 * p3 * e: [0.707107, 0.707107, -1.06066, 1.06066, 107.071, 121.213]
+			// ( p * p2 * p3 * e)-1: [0.707107, -0.471405, 0.707107, 0.471405, -161.421, -6.6666]
+			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5, anchorX: 1, anchorY: 1});
+			p2 = new E({ scene: runtime.scene, angle: 45, anchorX: 0.5, anchorY: 0.5, parent: p });
+			p3 = new E({ scene: runtime.scene, x: 20, y: 20, scaleX: 2, scaleY: 3, parent: p2 });
+			e = new E({ scene: runtime.scene, parent: p3, x: 10, y: 0 });
+			anotherRuntime = skeletonRuntime();
+		});
+		it("can convert local point to global point", () => {
+			// 一番上の親エンティティのparentがundefinedの場合
+			const targetPoint = { x: 5, y: 30 };
+			const actual = e.localToGlobal(targetPoint);
+			// (p * p2 * p3 * e) * targetPoint の計算結果
+			const expected = { x: 78.787, y: 156.568 };
+			// 小数点第2位まで合っていればパスとする
+			expect(actual.x).toBeApproximation(expected.x, 3);
+			expect(actual.y).toBeApproximation(expected.y, 3);
+
+			// 一番上の親エンティティのparentがsceneに変わってもlocalToGlobalの結果は変わらない
+			p.parent = anotherRuntime.scene;
+			anotherRuntime.scene.append(p);
+			const actual2 = e.localToGlobal(targetPoint);
+			expect(actual2.x).toBeApproximation(expected.x, 3);
+			expect(actual2.y).toBeApproximation(expected.y, 3);
+		});
+		it("can convert global point to local point", () => {
+			// 一番上の親エンティティのparentがundefinedの場合
+			const targetPoint = { x: 500, y: 500 };
+			const actual = e.globalToLocal(targetPoint);
+			// (p * p2 * p3 * e)-1 * targetPoint の計算結果
+			const expected = { x: 545.686, y: -6.667 };
+			// 小数点第2位まで合っていればパスとする
+			expect(actual.x).toBeApproximation(expected.x, 3);
+			expect(actual.y).toBeApproximation(expected.y, 3);
+
+			// 一番上の親エンティティのparentがsceneに変わってもlocalToGlobalの結果は変わらない
+			p.parent = anotherRuntime.scene;
+			anotherRuntime.scene.append(p);
+			const actual2 = e.globalToLocal(targetPoint);
+			expect(actual2.x).toBeApproximation(expected.x, 3);
+			expect(actual2.y).toBeApproximation(expected.y, 3);
+		});
+		it("is reversible", () => {
+			const targetPoint = { x: 0, y: 0 };
+			const actual = e.localToGlobal(e.globalToLocal(targetPoint));
+			expect(actual.x).toBeApproximation(targetPoint.x, 10);
+			expect(actual.y).toBeApproximation(targetPoint.y, 10);
+			const actual2 = e.globalToLocal(e.localToGlobal(targetPoint));
+			expect(actual2.x).toBeApproximation(targetPoint.x, 10);
+			expect(actual2.y).toBeApproximation(targetPoint.y, 10);
+		});
+		it("can convert predictable values", () => {
+			const targetPoint = { x: 0, y: 0 };
+			// これらのマトリクスはかけると [1, 0, 0, 1, 0, 0] に近似した値となる
+			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5});
+			p2 = new E({ scene: runtime.scene, angle: 45, parent: p });
+			p3 = new E({ scene: runtime.scene, angle: -45, scaleX: 2, scaleY: 2, parent: p2 });
+			e = new E({ scene: runtime.scene, parent: p3, x: -100, y: -100 });
+
+			// localToGlobalとglobalToLocalのどちらを実行しても元の位置に戻る
+			const actual = e.localToGlobal(targetPoint);
+			expect(actual.x).toBeApproximation(targetPoint.x, 3);
+			expect(actual.y).toBeApproximation(targetPoint.y, 3);
+			const actual2 = e.globalToLocal(targetPoint);
+			expect(actual2.x).toBeApproximation(targetPoint.x, 3);
+			expect(actual2.y).toBeApproximation(targetPoint.y, 3);
+		});
+	});
 });
