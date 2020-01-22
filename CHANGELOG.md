@@ -13,7 +13,8 @@
   * g.Util.createMatrixは削除
 
 機能追加
- * `g.Game#popScene`で popする回数をオプションで指定できるようにした
+ * `g.Game#popScene()`で popする回数をオプションで指定できるようにした
+ * `g.E#localToGlobal()` と `g.E#globalToLocal()` を追加
 
 ## 2.5.4
 機能追加
