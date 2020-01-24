@@ -48,12 +48,18 @@ export abstract class AudioSystem implements AudioSystemLike {
 	 * 再生速度が等倍以外に指定された等の要因により、音声再生が抑制されているかどうか。
 	 * @private
 	 */
-	_isSuppressed: boolean;
+	_suppressed: boolean;
 
 	/**
 	 * @private
 	 */
 	_resourceFactory: ResourceFactoryLike;
+
+	/**
+	 * 明示的にミュートされたか否か。
+	 * @private
+	 */
+	_explicitMuted: boolean;
 
 	// volumeの変更時には通知が必要なのでアクセサを使う。
 	// 呼び出し頻度が少ないため許容。
@@ -73,9 +79,10 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this.id = param.id;
 		this._volume = param.volume || 1;
 		this._destroyRequestedAssets = {};
-		this._muted = param.muted || false;
-		this._isSuppressed = false;
+		this._explicitMuted = param.muted || false;
+		this._suppressed = false;
 		this._resourceFactory = param.resourceFactory;
+		this._updateMuted();
 	}
 
 	abstract stopAll(): void;
@@ -96,16 +103,17 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
 		this._muted = false;
-		this._isSuppressed = false;
+		this._suppressed = false;
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(value: boolean): void {
-		var before = this._muted;
-		this._muted = !!value;
-		if (this._muted !== before) {
+		var before = this._explicitMuted;
+		this._explicitMuted = !!value;
+		if (this._explicitMuted !== before) {
+			this._updateMuted();
 			this._onMutedChanged();
 		}
 	}
@@ -116,6 +124,16 @@ export abstract class AudioSystem implements AudioSystemLike {
 	_setPlaybackRate(value: number): void {
 		if (value < 0 || isNaN(value) || typeof value !== "number")
 			throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
+
+		this._suppressed = value !== 1.0;
+		this._updateMuted();
+	}
+
+	/**
+	 * @private
+	 */
+	_updateMuted(): void {
+		this._muted = this._explicitMuted || this._suppressed;
 	}
 
 	/**
@@ -190,9 +208,6 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
-		// TODO: 現状 _changeMuted() を呼んでいるが、PDI側を修正できるタイミングで AudioSystem から変更通知される `AudioPlayer#_notifyChangeMuted()` を作成し置き換える。
-		//       AudioSystemのミュート状態が変更となった時にAudioPlayerへ通知し、AudioPlayerは AudioSystem._muted を参照する。
-		//       (AudioPlayerのミュートは公開APIではないので、AudioPlayerのミュートをAudioSystemのミュートで使用する。)
 		this.player._changeMuted(this._muted);
 	}
 
@@ -201,8 +216,7 @@ export class MusicAudioSystem extends AudioSystem {
 	 */
 	_setPlaybackRate(rate: number): void {
 		super._setPlaybackRate(rate);
-		this._isSuppressed = rate !== 1.0;
-		this.player._changeMuted(this._isSuppressed || this._muted);
+		this.player._changeMuted(this._muted);
 	}
 
 	/**
@@ -285,10 +299,9 @@ export class SoundAudioSystem extends AudioSystem {
 	 */
 	_setPlaybackRate(rate: number): void {
 		super._setPlaybackRate(rate);
-		this._isSuppressed = rate !== 1.0;
 
 		var players = this.players;
-		if (this._isSuppressed) {
+		if (this._suppressed) {
 			for (var i = 0; i < players.length; ++i) {
 				players[i]._changeMuted(true);
 			}

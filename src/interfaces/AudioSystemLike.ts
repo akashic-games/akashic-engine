@@ -5,6 +5,11 @@ export interface AudioSystemLike {
 	id: string;
 	volume: number;
 
+	/**
+	 * @private
+	 */
+	_muted: boolean;
+
 	stopAll(): void;
 
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[];

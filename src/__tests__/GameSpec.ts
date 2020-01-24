@@ -916,6 +916,7 @@ describe("test Game", () => {
 		expect(game.audio.sound._muted).toBe(true);
 		expect(game.audio.music._muted).toBe(true);
 
+		game._setAudioPlaybackRate(1.0);
 		game._setMuted(false);
 		expect(game._audioSystemManager._muted).toBe(false);
 		expect(game.audio.sound._muted).toBe(false);

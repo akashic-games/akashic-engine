@@ -425,8 +425,8 @@ export class VideoAsset extends g.VideoAsset {
 export class AudioPlayer extends g.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
-	constructor(param: g.AudioPlayerParameterObject) {
-		super(param);
+	constructor(system: g.AudioSystem) {
+		super(system);
 		this.canHandleStoppedValue = true;
 	}
 
@@ -537,7 +537,7 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 
 	createAudioPlayer(system: g.AudioSystem): g.AudioPlayer {
-		return new AudioPlayer({ volume: system.volume, muted: system._isSuppressed || system._muted });
+		return new AudioPlayer(system);
 	}
 
 	createGlyphFactory(

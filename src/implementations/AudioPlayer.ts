@@ -1,11 +1,7 @@
 import { Trigger } from "@akashic/trigger";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-
-export interface AudioPlayerParameterObject {
-	volume: number;
-	muted: boolean;
-}
+import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 
 /**
  * サウンド再生を行うクラス。
@@ -47,14 +43,20 @@ export class AudioPlayer implements AudioPlayerLike {
 	_muted: boolean;
 
 	/**
+	 * @private
+	 */
+	_system: AudioSystemLike;
+
+	/**
 	 * `AudioPlayer` のインスタンスを生成する。
 	 */
-	constructor(param: AudioPlayerParameterObject) {
+	constructor(system: AudioSystemLike) {
 		this.played = new Trigger<AudioPlayerEvent>();
 		this.stopped = new Trigger<AudioPlayerEvent>();
 		this.currentAudio = undefined;
-		this.volume = param.volume;
-		this._muted = param.muted;
+		this.volume = system.volume;
+		this._muted = system._muted;
+		this._system = system;
 	}
 
 	/**
