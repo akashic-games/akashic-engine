@@ -56,7 +56,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	_resourceFactory: ResourceFactoryLike;
 
 	/**
-	 * 明示的にミュートされたか否か。
+	 * 明示的に設定された、ミュート中か否か。
 	 * @private
 	 */
 	_explicitMuted: boolean;
