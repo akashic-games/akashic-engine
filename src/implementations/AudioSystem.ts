@@ -104,6 +104,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._destroyRequestedAssets = {};
 		this._muted = false;
 		this._suppressed = false;
+		this._explicitMuted = false;
 	}
 
 	/**
