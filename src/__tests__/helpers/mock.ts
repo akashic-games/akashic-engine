@@ -423,21 +423,15 @@ export class VideoAsset extends g.VideoAsset {
 }
 
 export class AudioPlayer extends g.AudioPlayer {
-	supportsPlaybackRateValue: boolean;
 	canHandleStoppedValue: boolean;
 
 	constructor(system: g.AudioSystem) {
 		super(system);
-		this.supportsPlaybackRateValue = true;
 		this.canHandleStoppedValue = true;
 	}
 
 	canHandleStopped(): boolean {
 		return this.canHandleStoppedValue;
-	}
-
-	_supportsPlaybackRate(): boolean {
-		return this.supportsPlaybackRateValue;
 	}
 }
 
@@ -579,6 +573,7 @@ export class Game extends g.Game {
 
 	autoTickForInternalEvents: boolean;
 	resourceFactory: ResourceFactory;
+	audio: { [key: string]: AudioSystemLike };
 
 	constructor(
 		gameConfiguration: g.GameConfiguration,
@@ -692,4 +687,8 @@ export class CacheableE extends g.CacheableE {
 	renderCache(renderer: Renderer, camera: g.Camera2D): void {
 		// do nothing
 	}
+}
+
+export interface AudioSystemLike extends g.AudioSystemLike {
+	_destroyRequestedAssets: { [key: string]: g.AudioAssetLike };
 }

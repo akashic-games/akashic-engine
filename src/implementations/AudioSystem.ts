@@ -21,11 +21,6 @@ export interface AudioSystemParameterObject {
 	muted?: boolean;
 
 	/**
-	 * 再生速度の倍率。
-	 */
-	playbackRate?: number;
-
-	/**
 	 * 各種リソースのファクトリ
 	 */
 	resourceFactory: ResourceFactoryLike;
@@ -50,14 +45,21 @@ export abstract class AudioSystem implements AudioSystemLike {
 	_destroyRequestedAssets: { [key: string]: AudioAssetLike };
 
 	/**
+	 * 再生速度が等倍以外に指定された等の要因により、音声再生が抑制されているかどうか。
 	 * @private
 	 */
-	_playbackRate: number;
+	_suppressed: boolean;
 
 	/**
 	 * @private
 	 */
 	_resourceFactory: ResourceFactoryLike;
+
+	/**
+	 * 明示的に設定された、ミュート中か否か。
+	 * @private
+	 */
+	_explicitMuted: boolean;
 
 	// volumeの変更時には通知が必要なのでアクセサを使う。
 	// 呼び出し頻度が少ないため許容。
@@ -77,9 +79,10 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this.id = param.id;
 		this._volume = param.volume || 1;
 		this._destroyRequestedAssets = {};
-		this._muted = param.muted || false;
-		this._playbackRate = param.playbackRate || 1.0;
+		this._explicitMuted = param.muted || false;
+		this._suppressed = false;
 		this._resourceFactory = param.resourceFactory;
+		this._updateMuted();
 	}
 
 	abstract stopAll(): void;
@@ -100,16 +103,18 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._volume = 1;
 		this._destroyRequestedAssets = {};
 		this._muted = false;
-		this._playbackRate = 1.0;
+		this._suppressed = false;
+		this._explicitMuted = false;
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(value: boolean): void {
-		var before = this._muted;
-		this._muted = !!value;
-		if (this._muted !== before) {
+		var before = this._explicitMuted;
+		this._explicitMuted = !!value;
+		if (this._explicitMuted !== before) {
+			this._updateMuted();
 			this._onMutedChanged();
 		}
 	}
@@ -121,11 +126,15 @@ export abstract class AudioSystem implements AudioSystemLike {
 		if (value < 0 || isNaN(value) || typeof value !== "number")
 			throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
 
-		var before = this._playbackRate;
-		this._playbackRate = value;
-		if (this._playbackRate !== before) {
-			this._onPlaybackRateChanged();
-		}
+		this._suppressed = value !== 1.0;
+		this._updateMuted();
+	}
+
+	/**
+	 * @private
+	 */
+	_updateMuted(): void {
+		this._muted = this._explicitMuted || this._suppressed;
 	}
 
 	/**
@@ -137,11 +146,6 @@ export abstract class AudioSystem implements AudioSystemLike {
 	 * @private
 	 */
 	abstract _onMutedChanged(): void;
-
-	/**
-	 * @private
-	 */
-	abstract _onPlaybackRateChanged(): void;
 }
 
 export class MusicAudioSystem extends AudioSystem {
@@ -149,16 +153,6 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_player: AudioPlayerLike;
-
-	/**
-	 * 再生を抑止されている `AudioAsset` 。
-	 *
-	 * 再生速度に非対応の `AudioPlayer` の場合に、等倍速でない速度で再生を試みたアセット。
-	 * 再生速度が戻された場合に改めて再生されなおす。
-	 * この値は、 `this._player._supportsPlaybackRate()` が偽ある場合にのみ利用される。
-	 * @private
-	 */
-	_suppressingAudio: AudioAssetLike;
 
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 	get player(): AudioPlayerLike {
@@ -176,7 +170,6 @@ export class MusicAudioSystem extends AudioSystem {
 	constructor(param: AudioSystemParameterObject) {
 		super(param);
 		this._player = undefined;
-		this._suppressingAudio = undefined;
 	}
 
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {
@@ -203,7 +196,6 @@ export class MusicAudioSystem extends AudioSystem {
 			this._player.stopped.remove({ owner: this, func: this._onPlayerStopped });
 		}
 		this._player = undefined;
-		this._suppressingAudio = undefined;
 	}
 
 	/**
@@ -223,28 +215,9 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlaybackRateChanged(): void {
-		var player = this.player;
-		player._changePlaybackRate(this._playbackRate);
-		if (!player._supportsPlaybackRate()) {
-			this._onUnsupportedPlaybackRateChanged();
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_onUnsupportedPlaybackRateChanged(): void {
-		// 再生速度非対応の場合のフォールバック: 鳴らそうとしてミュートしていた音があれば鳴らし直す
-		if (this._playbackRate === 1.0) {
-			if (this._suppressingAudio) {
-				var audio = this._suppressingAudio;
-				this._suppressingAudio = undefined;
-				if (!audio.destroyed()) {
-					this.player._changeMuted(false);
-				}
-			}
-		}
+	_setPlaybackRate(rate: number): void {
+		super._setPlaybackRate(rate);
+		this.player._changeMuted(this._muted);
 	}
 
 	/**
@@ -253,24 +226,12 @@ export class MusicAudioSystem extends AudioSystem {
 	_onPlayerPlayed(e: AudioPlayerEvent): void {
 		if (e.player !== this._player)
 			throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
-
-		if (e.player._supportsPlaybackRate()) return;
-
-		// 再生速度非対応の場合のフォールバック: 鳴らさず即ミュートにする
-		if (this._playbackRate !== 1.0) {
-			e.player._changeMuted(true);
-			this._suppressingAudio = e.audio;
-		}
 	}
 
 	/**
 	 * @private
 	 */
 	_onPlayerStopped(e: AudioPlayerEvent): void {
-		if (this._suppressingAudio) {
-			this._suppressingAudio = undefined;
-			this.player._changeMuted(false);
-		}
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];
 			e.audio.destroy();
@@ -337,14 +298,13 @@ export class SoundAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlaybackRateChanged(): void {
-		var players = this.players;
-		for (var i = 0; i < players.length; ++i) {
-			players[i]._changePlaybackRate(this._playbackRate);
+	_setPlaybackRate(rate: number): void {
+		super._setPlaybackRate(rate);
 
-			// 再生速度非対応の場合のフォールバック: 即止める
-			if (!players[i]._supportsPlaybackRate() && this._playbackRate !== 1.0) {
-				players[i].stop();
+		var players = this.players;
+		if (this._suppressed) {
+			for (var i = 0; i < players.length; ++i) {
+				players[i]._changeMuted(true);
 			}
 		}
 	}
@@ -353,12 +313,7 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onPlayerPlayed(e: AudioPlayerEvent): void {
-		if (e.player._supportsPlaybackRate()) return;
-
-		// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
-		if (this._playbackRate !== 1.0) {
-			e.player.stop();
-		}
+		// do nothing
 	}
 
 	/**

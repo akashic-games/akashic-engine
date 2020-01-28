@@ -12,16 +12,10 @@ export class AudioSystemManager {
 	 */
 	_muted: boolean;
 
-	/**
-	 * @private
-	 */
-	_playbackRate: number;
-
 	systems: { [key: string]: AudioSystemLike };
 
 	constructor() {
 		this._muted = false;
-		this._playbackRate = 1.0;
 	}
 
 	/**
@@ -29,7 +23,6 @@ export class AudioSystemManager {
 	 */
 	_reset(): void {
 		this._muted = false;
-		this._playbackRate = 1.0;
 		for (var id in this.systems) {
 			if (!this.systems.hasOwnProperty(id)) continue;
 			this.systems[id]._reset();
@@ -53,9 +46,6 @@ export class AudioSystemManager {
 	 * @private
 	 */
 	_setPlaybackRate(rate: number): void {
-		if (this._playbackRate === rate) return;
-
-		this._playbackRate = rate;
 		for (var id in this.systems) {
 			if (!this.systems.hasOwnProperty(id)) continue;
 			this.systems[id]._setPlaybackRate(rate);
