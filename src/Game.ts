@@ -2,7 +2,7 @@ import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
 import { AssetManager } from "./domain/AssetManager";
-import { AudioSystemManager } from "./domain/AudioSystemManager";
+import { AudioSystemManager, AudioSystems } from "./domain/AudioSystemManager";
 import { Camera } from "./domain/Camera";
 import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E, PointSource } from "./domain/entities/E";
@@ -12,9 +12,7 @@ import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { RandomGenerator } from "./domain/RandomGenerator";
 import { Storage } from "./domain/Storage";
-import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
 import { AssetLike } from "./interfaces/AssetLike";
-import { AudioSystemLike } from "./interfaces/AudioSystemLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
@@ -217,10 +215,9 @@ export abstract class Game implements Registrable<E> {
 	selfId: string;
 
 	/**
-	 * 本ゲームで利用可能なオーディオシステム群。デフォルトはmusicとsoundが登録されている。
-	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
+	 * 本ゲームで利用可能なオーディオシステム群。musicとsoundが登録されている。
 	 */
-	audio: { [key: string]: AudioSystemLike };
+	audio: AudioSystems;
 
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
@@ -508,20 +505,7 @@ export abstract class Game implements Registrable<E> {
 		this.playId = undefined;
 
 		this._audioSystemManager = new AudioSystemManager();
-		this.audio = {
-			music: new MusicAudioSystem({
-				id: "music",
-				muted: this._audioSystemManager._muted,
-				resourceFactory: this.resourceFactory
-			}),
-			sound: new SoundAudioSystem({
-				id: "sound",
-				muted: this._audioSystemManager._muted,
-				resourceFactory: this.resourceFactory
-			})
-		};
-		// TODO: AudioSystemManager, AudioSystem関連のリファクタリングが行われるまでの一時的な対応とする
-		this._audioSystemManager.systems = this.audio;
+		this.audio = this._audioSystemManager._createAudioSystems(this.resourceFactory);
 
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
@@ -1096,8 +1080,8 @@ export abstract class Game implements Registrable<E> {
 		this.loadingScene = undefined;
 		this.assetBase = "";
 		this.selfId = undefined;
-		var audioSystemIds = Object.keys(this.audio);
-		for (var i = 0; i < audioSystemIds.length; ++i) this.audio[audioSystemIds[i]].stopAll();
+		this.audio.music.stopAll();
+		this.audio.sound.stopAll();
 		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
 		this.snapshotRequest.destroy();

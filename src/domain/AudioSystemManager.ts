@@ -1,4 +1,12 @@
+import { MusicAudioSystem, SoundAudioSystem } from "../implementations/AudioSystem";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
+
+export interface AudioSystems {
+	[key: string]: AudioSystemLike;
+	music: AudioSystemLike;
+	sound: AudioSystemLike;
+}
 
 /**
  * `Game#audio` の管理クラス。
@@ -12,7 +20,10 @@ export class AudioSystemManager {
 	 */
 	_muted: boolean;
 
-	systems: { [key: string]: AudioSystemLike };
+	/*
+	 * @private
+	 */
+	_systems: AudioSystems;
 
 	constructor() {
 		this._muted = false;
@@ -23,9 +34,9 @@ export class AudioSystemManager {
 	 */
 	_reset(): void {
 		this._muted = false;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._reset();
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._reset();
 		}
 	}
 
@@ -36,9 +47,10 @@ export class AudioSystemManager {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._setMuted(muted);
+
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._setMuted(muted);
 		}
 	}
 
@@ -46,9 +58,28 @@ export class AudioSystemManager {
 	 * @private
 	 */
 	_setPlaybackRate(rate: number): void {
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._setPlaybackRate(rate);
+		for (var id in this._systems) {
+			if (!this._systems.hasOwnProperty(id)) continue;
+			this._systems[id]._setPlaybackRate(rate);
 		}
+	}
+
+	/**
+	 * @private
+	 */
+	_createAudioSystems(resourceFactory: ResourceFactoryLike): AudioSystems {
+		this._systems = {
+			music: new MusicAudioSystem({
+				id: "music",
+				muted: this._muted,
+				resourceFactory: resourceFactory
+			}),
+			sound: new SoundAudioSystem({
+				id: "sound",
+				muted: this._muted,
+				resourceFactory: resourceFactory
+			})
+		};
+		return this._systems;
 	}
 }
