@@ -694,6 +694,7 @@ export interface AudioSystemLike extends g.AudioSystemLike {
 }
 
 export interface AudioSystems {
+	[key: string]: AudioSystemLike;
 	music: AudioSystemLike;
 	sound: AudioSystemLike;
 }
