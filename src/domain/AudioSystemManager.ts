@@ -2,31 +2,31 @@ import { MusicAudioSystem, SoundAudioSystem } from "../implementations/AudioSyst
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 
-export interface AudioSystems {
-	[key: string]: AudioSystemLike;
-	music: AudioSystemLike;
-	sound: AudioSystemLike;
-}
-
 /**
- * `Game#audio` の管理クラス。
+ * `AudioSystem` の管理クラス。
  *
  * 複数の `AudioSystem` に一括で必要な状態設定を行う。
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class AudioSystemManager {
 	/**
+	 * ゲームの BGM を扱う AudioSystem
+	 */
+	music: AudioSystemLike;
+
+	/**
+	 * BGM以外の音声を扱う AudioSystem
+	 */
+	sound: AudioSystemLike;
+
+	/**
 	 * @private
 	 */
 	_muted: boolean;
 
-	/*
-	 * @private
-	 */
-	_systems: AudioSystems;
-
-	constructor() {
+	constructor(resourceFactory: ResourceFactoryLike) {
 		this._muted = false;
+		this._createAudioSystems(resourceFactory);
 	}
 
 	/**
@@ -34,10 +34,8 @@ export class AudioSystemManager {
 	 */
 	_reset(): void {
 		this._muted = false;
-		for (var id in this._systems) {
-			if (!this._systems.hasOwnProperty(id)) continue;
-			this._systems[id]._reset();
-		}
+		this.music._reset();
+		this.sound._reset();
 	}
 
 	/**
@@ -47,38 +45,31 @@ export class AudioSystemManager {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-		for (var id in this._systems) {
-			if (!this._systems.hasOwnProperty(id)) continue;
-			this._systems[id]._setMuted(muted);
-		}
+		this.music._setMuted(muted);
+		this.sound._setMuted(muted);
 	}
 
 	/**
 	 * @private
 	 */
 	_setPlaybackRate(rate: number): void {
-		for (var id in this._systems) {
-			if (!this._systems.hasOwnProperty(id)) continue;
-			this._systems[id]._setPlaybackRate(rate);
-		}
+		this.music._setPlaybackRate(rate);
+		this.sound._setPlaybackRate(rate);
 	}
 
 	/**
 	 * @private
 	 */
-	_createAudioSystems(resourceFactory: ResourceFactoryLike): AudioSystems {
-		this._systems = {
-			music: new MusicAudioSystem({
-				id: "music",
-				muted: this._muted,
-				resourceFactory: resourceFactory
-			}),
-			sound: new SoundAudioSystem({
-				id: "sound",
-				muted: this._muted,
-				resourceFactory: resourceFactory
-			})
-		};
-		return this._systems;
+	_createAudioSystems(resourceFactory: ResourceFactoryLike): void {
+		this.music = new MusicAudioSystem({
+			id: "music",
+			muted: this._muted,
+			resourceFactory: resourceFactory
+		});
+		this.sound = new SoundAudioSystem({
+			id: "sound",
+			muted: this._muted,
+			resourceFactory: resourceFactory
+		});
 	}
 }
