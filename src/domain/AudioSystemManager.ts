@@ -47,7 +47,6 @@ export class AudioSystemManager {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-
 		for (var id in this._systems) {
 			if (!this._systems.hasOwnProperty(id)) continue;
 			this._systems[id]._setMuted(muted);

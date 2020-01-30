@@ -1080,8 +1080,8 @@ export abstract class Game implements Registrable<E> {
 		this.loadingScene = undefined;
 		this.assetBase = "";
 		this.selfId = undefined;
-		this.audio.music.stopAll();
-		this.audio.sound.stopAll();
+		var audioSystemIds = Object.keys(this.audio);
+		for (var i = 0; i < audioSystemIds.length; ++i) this.audio[audioSystemIds[i]].stopAll();
 		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
 		this.snapshotRequest.destroy();
