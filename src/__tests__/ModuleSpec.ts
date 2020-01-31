@@ -316,7 +316,7 @@ describe("test Module", () => {
 			const module = new Module({
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				runtimeValueBase: game._runtimeValueBase,
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
@@ -421,7 +421,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 
@@ -493,7 +493,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 
@@ -555,7 +555,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 
@@ -625,7 +625,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 
@@ -667,7 +667,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 			const c1 = module.require("cyclic1");
@@ -707,7 +707,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 			const mod = module.require("../../foo"); // virtualPath: /script/some/deep/vpath.js からのrequire()
@@ -733,7 +733,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 
@@ -756,7 +756,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 			const mod = module.require("./cascaded");
@@ -781,7 +781,7 @@ describe("test Module", () => {
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
 				path,
-				virtualPath: game._assetManager._liveAbsolutePathTable[path],
+				virtualPath: game._assetManager._liveAssetPathTable[path],
 				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
 			});
 			const mod = module.require("./dummypath");

@@ -116,7 +116,7 @@ describe("test AssetManager", () => {
 
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
-		expect(Object.keys(manager._liveAbsolutePathTable).length).toEqual(0);
+		expect(Object.keys(manager._liveAssetPathTable).length).toEqual(0);
 		expect(Object.keys(manager._refCounts).length).toEqual(0);
 		expect(Object.keys((manager as any)._loadings).length).toEqual(0);
 
@@ -304,9 +304,9 @@ describe("test AssetManager", () => {
 					expect(manager._liveAssetVirtualPathTable["path1.png"].id).toBe("foo");
 					expect(manager._liveAssetVirtualPathTable["path2.png"].id).toBe("bar");
 					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("/path/to/a/file");
-					expect(manager._liveAbsolutePathTable["/path1.png"]).toBe("path1.png");
-					expect(manager._liveAbsolutePathTable["/path2.png"]).toBe("path2.png");
-					expect(manager._liveAbsolutePathTable).not.toHaveProperty("path/to/a/file");
+					expect(manager._liveAssetPathTable["/path1.png"]).toBe("path1.png");
+					expect(manager._liveAssetPathTable["/path2.png"]).toBe("path2.png");
+					expect(manager._liveAssetPathTable).not.toHaveProperty("path/to/a/file");
 
 					manager.unrefAssets(innerAssets);
 					expect(manager._refCounts.foo).toBe(1);
@@ -316,9 +316,9 @@ describe("test AssetManager", () => {
 					expect(manager._liveAssetVirtualPathTable["path1.png"].id).toBe("foo");
 					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path2.png");
 					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path/to/a/file");
-					expect(manager._liveAbsolutePathTable["/path1.png"]).toBe("path1.png");
-					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path2.png");
-					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path/to/a/file");
+					expect(manager._liveAssetPathTable["/path1.png"]).toBe("path1.png");
+					expect(manager._liveAssetPathTable).not.toHaveProperty("/path2.png");
+					expect(manager._liveAssetPathTable).not.toHaveProperty("/path/to/a/file");
 
 					manager.unrefAssets(outerAssets);
 					expect(manager._refCounts).not.toHaveProperty("foo");
@@ -328,9 +328,9 @@ describe("test AssetManager", () => {
 					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path1.png");
 					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path2.png");
 					expect(manager._liveAssetVirtualPathTable).not.toHaveProperty("path/to/a/file");
-					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path1.png");
-					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path2.png");
-					expect(manager._liveAbsolutePathTable).not.toHaveProperty("/path/to/a/file");
+					expect(manager._liveAssetPathTable).not.toHaveProperty("/path1.png");
+					expect(manager._liveAssetPathTable).not.toHaveProperty("/path2.png");
+					expect(manager._liveAssetPathTable).not.toHaveProperty("/path/to/a/file");
 					expect(a.destroyed()).toBe(true);
 					done();
 				}

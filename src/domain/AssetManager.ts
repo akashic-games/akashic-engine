@@ -20,16 +20,15 @@ import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 
+export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
+
 class AssetLoadingInfo {
-	asset: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
+	asset: OneOfAssetLike;
 	handlers: AssetManagerLoadHandler[];
 	errorCount: number;
 	loading: boolean;
 
-	constructor(
-		asset: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike,
-		handler: AssetManagerLoadHandler
-	) {
+	constructor(asset: OneOfAssetLike, handler: AssetManagerLoadHandler) {
 		this.asset = asset;
 		this.handlers = [handler];
 		this.errorCount = 0;
@@ -86,9 +85,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * requestAssets() で読み込みをリクエストしたゲーム開発者はコールバックでアセットを受け取るので、この変数を参照する必要は通常ない
 	 * @private
 	 */
-	_assets: {
-		[key: string]: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
-	};
+	_assets: { [key: string]: OneOfAssetLike };
 
 	/**
 	 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
@@ -96,15 +93,13 @@ export class AssetManager implements AssetLoadHandler {
 	 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 	 * @private
 	 */
-	_liveAssetVirtualPathTable: {
-		[key: string]: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
-	};
+	_liveAssetVirtualPathTable: { [key: string]: OneOfAssetLike };
 
 	/**
 	 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
 	 * @private
 	 */
-	_liveAbsolutePathTable: { [path: string]: string };
+	_liveAssetPathTable: { [path: string]: string };
 
 	/**
 	 * requireの第一引数から対応する仮想パスを引くためのテーブル。
@@ -141,7 +136,7 @@ export class AssetManager implements AssetLoadHandler {
 		this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 		this._assets = {};
 		this._liveAssetVirtualPathTable = {};
-		this._liveAbsolutePathTable = {};
+		this._liveAssetPathTable = {};
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
 		this._refCounts = {};
 		this._loadings = {};
@@ -159,7 +154,7 @@ export class AssetManager implements AssetLoadHandler {
 		this.configuration = undefined;
 		this._assets = undefined;
 		this._liveAssetVirtualPathTable = undefined;
-		this._liveAbsolutePathTable = undefined;
+		this._liveAssetPathTable = undefined;
 		this._refCounts = undefined;
 		this._loadings = undefined;
 	}
@@ -284,6 +279,18 @@ export class AssetManager implements AssetLoadHandler {
 		}
 	}
 
+	peekLiveAssetById(assetId: string): AssetLike | undefined {
+		return this._assets[assetId];
+	}
+
+	peekLiveAssetByVirtualPath(virtualPath: string): AssetLike | undefined {
+		return this._liveAssetVirtualPathTable[virtualPath];
+	}
+
+	getAllLiveVirtualPaths(): string[] {
+		return Object.keys(this._liveAssetVirtualPathTable);
+	}
+
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 		var ret: { [key: string]: AssetConfiguration } = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -336,9 +343,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createAssetFor(
-		idOrConf: string | DynamicAssetConfiguration
-	): AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike {
+	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAssetLike {
 		var id: string;
 		var uri: string;
 		var conf: AssetConfiguration | DynamicAssetConfiguration;
@@ -403,7 +408,7 @@ export class AssetManager implements AssetLoadHandler {
 			const virtualPath = this.configuration[assetId].virtualPath;
 			if (virtualPath && this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath))
 				delete this._liveAssetVirtualPathTable[virtualPath];
-			if (path && this._liveAbsolutePathTable.hasOwnProperty(path)) delete this._liveAbsolutePathTable[path];
+			if (path && this._liveAssetPathTable.hasOwnProperty(path)) delete this._liveAssetPathTable[path];
 		}
 	}
 
@@ -418,7 +423,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError): void {
+	_onAssetError(asset: OneOfAssetLike, error: AssetLoadError): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
@@ -437,7 +442,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_onAssetLoad(asset: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike): void {
+	_onAssetLoad(asset: OneOfAssetLike): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
@@ -456,7 +461,7 @@ export class AssetManager implements AssetLoadHandler {
 				if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
 					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
 			}
-			if (!this._liveAbsolutePathTable.hasOwnProperty(asset.path)) this._liveAbsolutePathTable[asset.path] = virtualPath;
+			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = virtualPath;
 		}
 
 		var hs = loadingInfo.handlers;

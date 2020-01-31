@@ -65,7 +65,7 @@ export class ModuleManager {
 		if (path.indexOf("/") === -1) {
 			if (this._assetManager._assets.hasOwnProperty(path)) {
 				targetScriptAsset = this._assetManager._assets[path];
-				resolvedPath = this._assetManager._liveAbsolutePathTable[targetScriptAsset.path];
+				resolvedPath = this._assetManager._liveAssetPathTable[targetScriptAsset.path];
 			}
 		}
 
@@ -126,7 +126,7 @@ export class ModuleManager {
 					runtimeValueBase: this._runtimeValueBase,
 					id: targetScriptAsset.id,
 					path: targetScriptAsset.path,
-					virtualPath: this._assetManager._liveAbsolutePathTable[targetScriptAsset.path],
+					virtualPath: this._assetManager._liveAssetPathTable[targetScriptAsset.path],
 					require: (path: string, mod?: Module) => this._require(path, mod)
 				});
 				const script = new ScriptAssetContext(targetScriptAsset as ScriptAssetLike, module);
