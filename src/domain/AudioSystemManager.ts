@@ -10,12 +10,12 @@ import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
  */
 export class AudioSystemManager {
 	/**
-	 * ゲームの BGM を扱う AudioSystem
+	 * ループ再生可能な AudioSystem
 	 */
 	music: AudioSystemLike;
 
 	/**
-	 * BGM以外の音声を扱う AudioSystem
+	 * 効果音を扱う AudioSystem
 	 */
 	sound: AudioSystemLike;
 
@@ -26,7 +26,7 @@ export class AudioSystemManager {
 
 	constructor(resourceFactory: ResourceFactoryLike) {
 		this._muted = false;
-		this._createAudioSystems(resourceFactory);
+		this._initializeAudioSystems(resourceFactory);
 	}
 
 	/**
@@ -60,7 +60,7 @@ export class AudioSystemManager {
 	/**
 	 * @private
 	 */
-	_createAudioSystems(resourceFactory: ResourceFactoryLike): void {
+	_initializeAudioSystems(resourceFactory: ResourceFactoryLike): void {
 		this.music = new MusicAudioSystem({
 			id: "music",
 			muted: this._muted,

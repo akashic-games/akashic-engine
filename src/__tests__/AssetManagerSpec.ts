@@ -71,29 +71,6 @@ describe("test AssetManager", () => {
 				duration: 5972,
 				loop: true,
 				hint: { streaming: true }
-			},
-			corge: {
-				type: "audio",
-				path: "/path/to/a/file",
-				virtualPath: "path/to/a/file",
-				systemId: "user",
-				duration: 91
-			},
-			grault: {
-				type: "audio",
-				path: "/path/to/a/file",
-				virtualPath: "path/to/a/file",
-				systemId: "user2",
-				duration: 12742
-			},
-			garply: {
-				type: "audio",
-				path: "/path/to/a/file",
-				virtualPath: "path/to/a/file",
-				systemId: "user2",
-				duration: 3474,
-				loop: false,
-				hint: { streaming: false }
 			}
 		}
 	};
@@ -110,9 +87,6 @@ describe("test AssetManager", () => {
 		expect(manager.configuration.baz.path).toBe(gameConfiguration.assets.baz.path);
 		expect(manager.configuration.qux.path).toBe(gameConfiguration.assets.qux.path);
 		expect(manager.configuration.quux.path).toBe(gameConfiguration.assets.quux.path);
-		expect(manager.configuration.corge.path).toBe(gameConfiguration.assets.corge.path);
-		expect(manager.configuration.grault.path).toBe(gameConfiguration.assets.grault.path);
-		expect(manager.configuration.garply.path).toBe(gameConfiguration.assets.grault.path);
 
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
@@ -139,21 +113,6 @@ describe("test AssetManager", () => {
 		expect(manager.configuration.quux.duration).toEqual((gameConfiguration.assets.quux as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.quux.loop).toEqual(true);
 		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
-
-		expect(manager.configuration.corge.systemId).toEqual("user");
-		expect(manager.configuration.corge.duration).toEqual((gameConfiguration.assets.corge as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.corge.loop).toEqual(false);
-		expect(manager.configuration.corge.hint).toEqual({});
-
-		expect(manager.configuration.grault.systemId).toEqual("user2");
-		expect(manager.configuration.grault.duration).toEqual((gameConfiguration.assets.grault as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.grault.loop).toEqual(true);
-		expect(manager.configuration.grault.hint).toEqual({ streaming: true });
-
-		expect(manager.configuration.garply.systemId).toEqual("user2");
-		expect(manager.configuration.garply.duration).toEqual((gameConfiguration.assets.garply as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.garply.loop).toEqual(false);
-		expect(manager.configuration.garply.hint).toEqual({ streaming: false });
 	});
 
 	it("rejects illegal configuration", () => {
@@ -231,18 +190,17 @@ describe("test AssetManager", () => {
 				"/foo/bar/"
 			);
 		}).toThrowError("AssertionError");
-		expect(() => {
-			return new Game(
-				{
-					width: 320,
-					height: 320,
-					fps: 120 /* out of (0-60] */,
-					assets: legalConf,
-					main: "mainScene"
-				},
-				"/foo/bar/"
-			);
-		}).toThrowError("AssertionError");
+
+		const audioLegalConf: { [id: string]: AudioAssetConfigurationBase } = {
+			corge: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "user",
+				duration: 91
+			}
+		};
+		expect(() => new Game({ width: 320, height: 320, assets: audioLegalConf, main: "mainScene" })).toThrowError("AssertionError");
 	});
 
 	it("loads/unloads an asset", done => {
