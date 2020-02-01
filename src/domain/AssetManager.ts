@@ -59,6 +59,33 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): Audi
 	return confMap;
 }
 
+function patternToFilter(pattern: string): (path: string) => boolean {
+	const patternSpecialsTable: { [pat: string]: string } = {
+		"\\*": "\\*",
+		"\\?": "\\?",
+		"*": "[^/]*",
+		"?": "[^/]",
+		"**/": "(?:(?:[^/]+/)*[^/]+/)?",
+		"": ""
+	};
+	const parserRe = /([^\*\\\?]*)(\\\*|\\\?|\?|\*(?!\*)|\*\*\/|$)/g;
+	//                (--- A ----)(------------- B --------------)
+	// A: パターンの特殊文字でない文字の塊。そのままマッチさせる(ためにエスケープして正規表現にする)
+	// B: パターンの特殊文字一つ(*, ** など)(かそのエスケープ)。patternSpecialsTable で対応する正規表現に変換
+
+	const regExpSpecialsRe = /[\\^$.*+?()[\]{}|]/g;
+	function escapeRegExp(s: string): string {
+		return s.replace(regExpSpecialsRe, "\\$&");
+	}
+
+	let code = "";
+	for (let match = parserRe.exec(pattern); match && match[0] !== ""; match = parserRe.exec(pattern)) {
+		code += escapeRegExp(match[1]) + patternSpecialsTable[match[2]];
+	}
+	const re = new RegExp("^" + code + "$");
+	return path => re.test(path);
+}
+
 /**
  * `Asset` を管理するクラス。
  *
@@ -79,6 +106,12 @@ export class AssetManager implements AssetLoadHandler {
 	 * コンストラクタに渡されたアセットの設定。(assets.json が入っていることが期待される)
 	 */
 	configuration: { [key: string]: any };
+
+	/**
+	 * require解決用の仮想パスからアセットIDを引くためのテーブル。
+	 * @private
+	 */
+	_virtualPathToIdTable: { [key: string]: string };
 
 	/**
 	 * 読み込み済みのアセット。
@@ -135,11 +168,19 @@ export class AssetManager implements AssetLoadHandler {
 		this.game = game;
 		this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 		this._assets = {};
+		this._virtualPathToIdTable = {};
 		this._liveAssetVirtualPathTable = {};
 		this._liveAssetPathTable = {};
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
 		this._refCounts = {};
 		this._loadings = {};
+
+		const assetIds = Object.keys(this.configuration);
+		for (let i = 0; i < assetIds.length; ++i) {
+			const assetId = assetIds[i];
+			const conf = this.configuration[assetId];
+			this._virtualPathToIdTable[conf.virtualPath] = assetId;
+		}
 	}
 
 	/**
@@ -190,7 +231,7 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * このインスタンスに与えられた `AssetConfigurationMap` のうち、グローバルアセットのIDをすべて返す。
+	 * グローバルアセットのIDをすべて返す。
 	 */
 	globalAssetIds(): string[] {
 		var ret: string[] = [];
@@ -198,6 +239,22 @@ export class AssetManager implements AssetLoadHandler {
 		for (var p in conf) {
 			if (!conf.hasOwnProperty(p)) continue;
 			if (conf[p].global) ret.push(p);
+		}
+		return ret;
+	}
+
+	resolvePatternsToAssetIds(patternOrFilters: (string | ((accessorPath: string) => boolean))[]): string[] {
+		if (patternOrFilters.length === 0) return [];
+		const vpaths = Object.keys(this._virtualPathToIdTable);
+		const ret: string[] = [];
+		for (let i = 0; i < patternOrFilters.length; ++i) {
+			const patternOrFilter = patternOrFilters[i];
+			const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
+			for (let j = 0; j < vpaths.length; ++j) {
+				const vpath = vpaths[j];
+				const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
+				if (filter(accessorPath)) ret.push(this._virtualPathToIdTable[vpath]);
+			}
 		}
 		return ret;
 	}
@@ -279,16 +336,35 @@ export class AssetManager implements AssetLoadHandler {
 		}
 	}
 
-	peekLiveAssetById(assetId: string): AssetLike | undefined {
-		return this._assets[assetId];
+	peekLiveAssetByAccessorPath(accessorPath: string, type: string): AssetLike {
+		if (accessorPath[0] !== "/")
+			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
+		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
+		const asset = this._liveAssetVirtualPathTable[vpath];
+		if (!asset || type !== asset.type)
+			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
+		return asset;
 	}
 
-	peekLiveAssetByVirtualPath(virtualPath: string): AssetLike | undefined {
-		return this._liveAssetVirtualPathTable[virtualPath];
+	peekLiveAssetById(assetId: string, type: string): AssetLike {
+		const asset = this._assets[assetId];
+		if (!asset || type !== asset.type)
+			throw ExceptionFactory.createAssertionError(`SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
+		return asset;
 	}
 
-	getAllLiveVirtualPaths(): string[] {
-		return Object.keys(this._liveAssetVirtualPathTable);
+	peekAllLiveAssetsByPattern(patternOrFilter: string | ((accessorPath: string) => boolean), type: string | null): AssetLike[] {
+		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
+		const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
+		let ret: AssetLike[] = [];
+		for (let i = 0; i < vpaths.length; ++i) {
+			const vpath = vpaths[i];
+			const asset = this._liveAssetVirtualPathTable[vpath];
+			if (type && asset.type !== type) continue;
+			const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
+			if (filter(accessorPath)) ret.push(asset);
+		}
+		return ret;
 	}
 
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
