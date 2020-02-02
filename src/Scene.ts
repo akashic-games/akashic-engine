@@ -343,6 +343,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * 歴史的経緯による `assets` との違いに注意。
 	 * `assets` は「このシーンの生成時に読み込んだアセット」に「アセットIDをキーにして」アクセスするテーブルである。
 	 * 他方この `asset` は `getImageById()`, `getAllTexts()` などのメソッドを持つオブジェクトである。
+	 * アセットIDだけでなくパスでのアクセスや、複数アセットの一括取得ができる点で異なる。
 	 */
 	asset: AssetAccessor;
 

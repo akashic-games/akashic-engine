@@ -59,6 +59,17 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): Audi
 	return confMap;
 }
 
+/**
+ * パスパターンを関数に変換する。
+ *
+ * パスパターンは、パス文字列、または0個以上の `**`, `*`, `?` を含むパス文字列である。
+ * (実装の単純化のため、いわゆる glob のうちよく使われそうなものだけをサポートしている。)
+ * 詳細は `AssetAccessor#getAllImages()` の仕様を参照のこと。
+ *
+ * 戻り値は、文字列一つを受け取り、パターンにマッチするか否かを返す関数。
+ *
+ * @param pattern パターン文字列
+ */
 function patternToFilter(pattern: string): (path: string) => boolean {
 	const parserRe = /([^\*\\\?]*)(\\\*|\\\?|\?|\*(?!\*)|\*\*\/|$)/g;
 	//                [----A-----][--------------B---------------]
@@ -234,7 +245,7 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * グローバルアセットのIDをすべて返す。
+	 * グローバルアセットのIDを全て返す。
 	 */
 	globalAssetIds(): string[] {
 		var ret: string[] = [];
@@ -246,6 +257,14 @@ export class AssetManager implements AssetLoadHandler {
 		return ret;
 	}
 
+	/**
+	 * パターンまたはフィルタに合致するパスを持つアセットIDを全て返す。
+	 *
+	 * 戻り値は読み込み済みでないアセットのIDを含むことに注意。
+	 * 読み込み済みのアセットにアクセスする場合は、 `peekAllLiveAssetsByPattern()` を利用すること。
+	 *
+	 * @param patternOrFilters パターンまたはフィルタ。仕様は `AssetAccessor#getAllImages()` を参照
+	 */
 	resolvePatternsToAssetIds(patternOrFilters: (string | ((accessorPath: string) => boolean))[]): string[] {
 		if (patternOrFilters.length === 0) return [];
 		const vpaths = Object.keys(this._virtualPathToIdTable);
@@ -339,6 +358,16 @@ export class AssetManager implements AssetLoadHandler {
 		}
 	}
 
+	/**
+	 * アクセッサパスで指定された読み込み済みのアセットを返す。
+	 *
+	 * ここでアクセッサパスとは、 `AssetAccessor` が使うパス
+	 * (game.jsonのディレクトリをルート (`/`) とする、 `/` 区切りの絶対パス形式の仮想パス)である。
+	 * これは `/` を除けばアセットの仮想パス (virtualPath) と同一である。
+	 *
+	 * @param accessorPath 取得するアセットのアクセッサパス
+	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
+	 */
 	peekLiveAssetByAccessorPath(accessorPath: string, type: string): AssetLike {
 		if (accessorPath[0] !== "/")
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
@@ -349,6 +378,12 @@ export class AssetManager implements AssetLoadHandler {
 		return asset;
 	}
 
+	/**
+	 * アセットIDで指定された読み込み済みのアセットを返す。
+	 *
+	 * @param assetId 取得するアセットのID
+	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
+	 */
 	peekLiveAssetById(assetId: string, type: string): AssetLike {
 		const asset = this._assets[assetId];
 		if (!asset || type !== asset.type)
@@ -356,6 +391,14 @@ export class AssetManager implements AssetLoadHandler {
 		return asset;
 	}
 
+	/**
+	 * パターンまたはフィルタにマッチするパスを持つ、指定されたタイプの全読み込み済みアセットを返す。
+	 *
+	 * パターンとフィルタについては `AssetAccessor#getAllImages()` の仕様を参照のこと。
+	 *
+	 * @param patternOrFilter 取得するアセットのパスパターンまたはフィルタ
+	 * @param type 取得するアセットのタイプ。
+	 */
 	peekAllLiveAssetsByPattern(patternOrFilter: string | ((accessorPath: string) => boolean), type: string | null): AssetLike[] {
 		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
 		const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
