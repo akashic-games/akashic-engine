@@ -60,18 +60,21 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): Audi
 }
 
 function patternToFilter(pattern: string): (path: string) => boolean {
+	const parserRe = /([^\*\\\?]*)(\\\*|\\\?|\?|\*(?!\*)|\*\*\/|$)/g;
+	//                [----A-----][--------------B---------------]
+	// A: パターンの特殊文字でない文字の塊。そのままマッチさせる(ためにエスケープして正規表現にする)
+	// B: パターンの特殊文字一つ(*, ** など)かそのエスケープ。patternSpecialsTable で対応する正規表現に変換
 	const patternSpecialsTable: { [pat: string]: string } = {
+		"": "", // 入力末尾で parserRe の B 部分が $ にマッチして空文字列になることに対応
 		"\\*": "\\*",
 		"\\?": "\\?",
 		"*": "[^/]*",
 		"?": "[^/]",
-		"**/": "(?:(?:[^/]+/)*[^/]+/)?",
-		"": ""
+		"**/": "(?:^/)?(?:[^/]+/)*"
+		//      [--C--][----D----]
+		// C: 行頭の `/` (行頭でなければないので ? つき)
+		// D: ディレクトリ一つ分(e.g. "foo/")が0回以上
 	};
-	const parserRe = /([^\*\\\?]*)(\\\*|\\\?|\?|\*(?!\*)|\*\*\/|$)/g;
-	//                (--- A ----)(------------- B --------------)
-	// A: パターンの特殊文字でない文字の塊。そのままマッチさせる(ためにエスケープして正規表現にする)
-	// B: パターンの特殊文字一つ(*, ** など)(かそのエスケープ)。patternSpecialsTable で対応する正規表現に変換
 
 	const regExpSpecialsRe = /[\\^$.*+?()[\]{}|]/g;
 	function escapeRegExp(s: string): string {

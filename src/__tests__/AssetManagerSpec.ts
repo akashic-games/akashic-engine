@@ -3,6 +3,9 @@ import {
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	GameConfiguration,
+	AssetLike,
+	ScriptAssetLike,
+	AudioAssetLike,
 	ImageAsset,
 	ImageAssetConfigurationBase
 } from "..";
@@ -540,5 +543,246 @@ describe("test AssetManager", () => {
 				}
 			}
 		);
+	});
+
+	describe("accessorPath", () => {
+		const gameConfiguration: GameConfiguration = {
+			width: 320,
+			height: 240,
+			fps: 30,
+			main: "./script/main.js",
+			assets: {
+				"id-script/main.js": {
+					type: "script",
+					path: "script/main.js",
+					virtualPath: "script/main.js",
+					global: true
+				},
+				"id-assets/stage01/bgm01": {
+					type: "audio",
+					path: "assets/stage01/bgm01",
+					virtualPath: "assets/stage01/bgm01",
+					systemId: "music",
+					duration: 10000
+				},
+				"id-assets/stage01/se01": {
+					type: "audio",
+					path: "assets/stage01/se01",
+					virtualPath: "assets/stage01/se01",
+					systemId: "sound",
+					duration: 10000
+				},
+				"id-assets/stage01/boss.png": {
+					type: "image",
+					path: "assets/stage01/boss.png",
+					virtualPath: "assets/stage01/boss.png",
+					width: 64,
+					height: 64
+				},
+				"id-assets/stage01/map.json": {
+					type: "text",
+					path: "assets/stage01/map.json",
+					virtualPath: "assets/stage01/map.json"
+				},
+				"id-assets/chara01/image.png": {
+					type: "image",
+					path: "assets/chara01/image.png",
+					virtualPath: "assets/chara01/image.png",
+					width: 32,
+					height: 32
+				}
+			}
+		};
+
+		it("can resolve patterns to asset IDs", () => {
+			const game = new Game(gameConfiguration);
+			const manager = game._assetManager;
+
+			// NOTE: 以下、全体的に戻り値の順序は規定しないので、実装依存のテストになっている点に注意
+			expect(manager.resolvePatternsToAssetIds(["/assets/**/*"])).toEqual([
+				"id-assets/stage01/bgm01",
+				"id-assets/stage01/se01",
+				"id-assets/stage01/boss.png",
+				"id-assets/stage01/map.json",
+				"id-assets/chara01/image.png"
+			]);
+		});
+
+		it("can resolve a filter to asset IDs", () => {
+			const game = new Game(gameConfiguration);
+			const manager = game._assetManager;
+			expect(manager.resolvePatternsToAssetIds([s => /\/stage\d+\//.test(s)])).toEqual([
+				"id-assets/stage01/bgm01",
+				"id-assets/stage01/se01",
+				"id-assets/stage01/boss.png",
+				"id-assets/stage01/map.json"
+			]);
+		});
+
+		it("can resolve patterns to asset IDs", () => {
+			const game = new Game(gameConfiguration);
+			const manager = game._assetManager;
+			expect(manager.resolvePatternsToAssetIds(["/assets/**/*"])).toEqual([
+				"id-assets/stage01/bgm01",
+				"id-assets/stage01/se01",
+				"id-assets/stage01/boss.png",
+				"id-assets/stage01/map.json",
+				"id-assets/chara01/image.png"
+			]);
+		});
+
+		it("can resolve multiple patterns/filters to asset IDs", () => {
+			const game = new Game(gameConfiguration);
+			const manager = game._assetManager;
+			expect(manager.resolvePatternsToAssetIds([
+				"**/*.js",
+				s => /\/bgm\d+$/.test(s)])
+			).toEqual([
+				"id-script/main.js",
+				"id-assets/stage01/bgm01"
+			]);
+		});
+
+		function setupAssetLoadedGame(
+			assetIds: string[],
+			fail: (arg: any) => void,
+			callback: (arg: { manager: AssetManager, game: Game }
+		) => void) {
+			const game = new Game(gameConfiguration);
+			const manager = game._assetManager;
+			let count = 0;
+			manager.requestAssets(assetIds, {
+				_onAssetLoad: () => {
+					if (++count < assetIds.length) return;
+					callback({ game, manager });
+				},
+				_onAssetError: (a, err, mgr) => {
+					fail("asset load error: should not fail");
+				}
+			});
+		}
+
+		it("can peek live assets by IDs", done => {
+			const assetIds = ["id-script/main.js", "id-assets/stage01/se01", "id-assets/chara01/image.png"];
+			setupAssetLoadedGame(assetIds, s => done.fail(s), ({ manager }) => {
+				// live でも type が合わなければエラー
+				expect(() => manager.peekLiveAssetById("id-script/main.js", "image")).toThrowError("AssertionError");
+				const mainjs = manager.peekLiveAssetById("id-script/main.js", "script") as ScriptAssetLike;
+				expect(mainjs.type).toBe("script");
+				expect(mainjs.path).toBe("script/main.js");
+				expect(typeof mainjs.execute).toBe("function");
+
+				// 読んでない (live でない) アセットはエラー
+				expect(() => manager.peekLiveAssetById("id-assets/stage01/bgm01", "text")).toThrowError("AssertionError");
+				expect(() => manager.peekLiveAssetById("id-assets/stage01/bgm01", "audio")).toThrowError("AssertionError");
+
+				expect(() => manager.peekLiveAssetById("id-assets/stage01/se01", "text")).toThrowError("AssertionError");
+				const se01 = manager.peekLiveAssetById("id-assets/stage01/se01", "audio") as AudioAssetLike;
+				expect(se01.type).toBe("audio");
+				expect(se01.path).toBe("assets/stage01/se01");
+				expect(se01.duration).toBe(10000);
+				done();
+			});
+		});
+
+		it("can peek live assets by accessorPath", done => {
+			const assetIds = ["id-script/main.js", "id-assets/stage01/se01", "id-assets/chara01/image.png"];
+			setupAssetLoadedGame(assetIds, s => done.fail(s), ({ manager }) => {
+				// live でも type が合わなければエラー
+				expect(() => manager.peekLiveAssetByAccessorPath("/script/main.js", "image")).toThrowError("AssertionError");
+				const mainjs = manager.peekLiveAssetByAccessorPath("/script/main.js", "script") as ScriptAssetLike;
+				expect(mainjs.type).toBe("script");
+				expect(mainjs.path).toBe("script/main.js");
+				expect(typeof mainjs.execute).toBe("function");
+
+				// 読んでない (live でない) アセットはエラー
+				expect(() => manager.peekLiveAssetByAccessorPath("/assets/stage01/bgm01", "text")).toThrowError("AssertionError");
+				expect(() => manager.peekLiveAssetByAccessorPath("/assets/stage01/bgm01", "audio")).toThrowError("AssertionError");
+
+				expect(() => manager.peekLiveAssetByAccessorPath("/assets/stage01/se01", "text")).toThrowError("AssertionError");
+				const se01 = manager.peekLiveAssetByAccessorPath("/assets/stage01/se01", "audio") as AudioAssetLike;
+				expect(se01.type).toBe("audio");
+				expect(se01.path).toBe("assets/stage01/se01");
+				expect(se01.duration).toBe(10000);
+
+				// "/" 始まりでないのはエラー
+				expect(() => manager.peekLiveAssetByAccessorPath("assets/stage01/se01", "audio")).toThrowError("AssertionError");
+				done();
+			});
+		});
+
+		function extractAssetProps(asset: AssetLike): { id: string, type: string, path: string } {
+			return { id: asset.id, type: asset.type, path: asset.path };
+		}
+
+		it("can peek live assets by a pattern", done => {
+			const assetIds = [
+				"id-script/main.js",
+				"id-assets/stage01/bgm01",
+				"id-assets/stage01/se01",
+				"id-assets/stage01/boss.png",
+				"id-assets/stage01/map.json",
+				"id-assets/chara01/image.png"
+			];
+			setupAssetLoadedGame(assetIds, s => done.fail(s), ({ manager }) => {
+				expect(manager.peekAllLiveAssetsByPattern("/script/main.js", "image")).toEqual([]);
+				const result0 = manager.peekAllLiveAssetsByPattern("/script/main.js", "script");
+				expect(result0.length).toBe(1);
+				expect(extractAssetProps(result0[0])).toEqual({ id: "id-script/main.js", type: "script", path: "script/main.js" });
+
+				const result1 = manager.peekAllLiveAssetsByPattern("/assets/stage01/*", null).map(extractAssetProps);
+				expect(result1.length).toEqual(4);
+				expect(result1[0]).toEqual({ id: "id-assets/stage01/bgm01", type: "audio", path: "assets/stage01/bgm01" });
+				expect(result1[1]).toEqual({ id: "id-assets/stage01/se01", type: "audio", path: "assets/stage01/se01" });
+				expect(result1[2]).toEqual({ id: "id-assets/stage01/boss.png", type: "image", path: "assets/stage01/boss.png" });
+				expect(result1[3]).toEqual({ id: "id-assets/stage01/map.json", type: "text", path: "assets/stage01/map.json" });
+
+				const result2 = manager.peekAllLiveAssetsByPattern("**/*", "audio").map(extractAssetProps);
+				expect(result2.length).toEqual(2);
+				expect(result2[0]).toEqual({ id: "id-assets/stage01/bgm01", type: "audio", path: "assets/stage01/bgm01" });
+				expect(result2[1]).toEqual({ id: "id-assets/stage01/se01", type: "audio", path: "assets/stage01/se01" });
+
+				const result3 = manager.peekAllLiveAssetsByPattern("/*/*/*.png", "image").map(extractAssetProps);
+				expect(result3.length).toEqual(2);
+				expect(result3[0]).toEqual({ id: "id-assets/stage01/boss.png", type: "image", path: "assets/stage01/boss.png" });
+				expect(result3[1]).toEqual({ id: "id-assets/chara01/image.png", type: "image", path: "assets/chara01/image.png" });
+				done();
+			});
+		});
+
+		it("can peek live assets by a filter", done => {
+			const assetIds = [
+				"id-script/main.js",
+				"id-assets/stage01/bgm01",
+				"id-assets/stage01/se01",
+				"id-assets/stage01/boss.png",
+				"id-assets/stage01/map.json",
+				"id-assets/chara01/image.png"
+			];
+			setupAssetLoadedGame(assetIds, s => done.fail(s), ({ manager }) => {
+				expect(manager.peekAllLiveAssetsByPattern("/script/main.js", "image")).toEqual([]);
+				const result0 = manager.peekAllLiveAssetsByPattern(s => (s === "/script/main.js"), "script");
+				expect(result0.length).toBe(1);
+				expect(extractAssetProps(result0[0])).toEqual({ id: "id-script/main.js", type: "script", path: "script/main.js" });
+
+				const result1 = manager.peekAllLiveAssetsByPattern(s => /^\/assets\/stage01\/.*$/.test(s), null).map(extractAssetProps);
+				expect(result1.length).toEqual(4);
+				expect(result1[0]).toEqual({ id: "id-assets/stage01/bgm01", type: "audio", path: "assets/stage01/bgm01" });
+				expect(result1[1]).toEqual({ id: "id-assets/stage01/se01", type: "audio", path: "assets/stage01/se01" });
+				expect(result1[2]).toEqual({ id: "id-assets/stage01/boss.png", type: "image", path: "assets/stage01/boss.png" });
+				expect(result1[3]).toEqual({ id: "id-assets/stage01/map.json", type: "text", path: "assets/stage01/map.json" });
+
+				const result2 = manager.peekAllLiveAssetsByPattern(() => true, "audio").map(extractAssetProps);
+				expect(result2.length).toEqual(2);
+				expect(result2[0]).toEqual({ id: "id-assets/stage01/bgm01", type: "audio", path: "assets/stage01/bgm01" });
+				expect(result2[1]).toEqual({ id: "id-assets/stage01/se01", type: "audio", path: "assets/stage01/se01" });
+
+				const result3 = manager.peekAllLiveAssetsByPattern(s => /\.png$/.test(s), "image").map(extractAssetProps);
+				expect(result3.length).toEqual(2);
+				expect(result3[0]).toEqual({ id: "id-assets/stage01/boss.png", type: "image", path: "assets/stage01/boss.png" });
+				expect(result3[1]).toEqual({ id: "id-assets/chara01/image.png", type: "image", path: "assets/chara01/image.png" });
+				done();
+			});
+		});
 	});
 });
