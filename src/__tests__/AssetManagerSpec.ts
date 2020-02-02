@@ -546,6 +546,7 @@ describe("test AssetManager", () => {
 	});
 
 	describe("accessorPath", () => {
+		// AssetManager のメソッドは配列の順序は保証しないので、このテストは全体的に実装依存になっていることに注意。
 		const gameConfiguration: GameConfiguration = {
 			width: 320,
 			height: 240,
@@ -598,7 +599,6 @@ describe("test AssetManager", () => {
 			const game = new Game(gameConfiguration);
 			const manager = game._assetManager;
 
-			// NOTE: 以下、全体的に戻り値の順序は規定しないので、実装依存のテストになっている点に注意
 			expect(manager.resolvePatternsToAssetIds(["/assets/**/*"])).toEqual([
 				"id-assets/stage01/bgm01",
 				"id-assets/stage01/se01",
@@ -646,8 +646,8 @@ describe("test AssetManager", () => {
 		function setupAssetLoadedGame(
 			assetIds: string[],
 			fail: (arg: any) => void,
-			callback: (arg: { manager: AssetManager, game: Game }
-		) => void) {
+			callback: (arg: { manager: AssetManager, game: Game }) => void
+		) {
 			const game = new Game(gameConfiguration);
 			const manager = game._assetManager;
 			let count = 0;

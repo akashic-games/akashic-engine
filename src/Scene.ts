@@ -1,5 +1,6 @@
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
+import { AssetAccessor } from "./domain/AssetAccessor";
 import { AssetManager } from "./domain/AssetManager";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
@@ -337,6 +338,15 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	assets: { [key: string]: AssetLike };
 
 	/**
+	 * このシーンで利用できるアセットへのアクセッサ。
+	 *
+	 * 歴史的経緯による `assets` との違いに注意。
+	 * `assets` は「このシーンの生成時に読み込んだアセット」に「アセットIDをキーにして」アクセスするテーブルである。
+	 * 他方この `asset` は `getImageById()`, `getAllTexts()` などのメソッドを持つオブジェクトである。
+	 */
+	asset: AssetAccessor;
+
+	/**
 	 * このシーンの属するゲーム。
 	 */
 	game: Game;
@@ -557,6 +567,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.loaded = new Trigger<Scene>();
 		this._ready = new Trigger<Scene>();
 		this.assets = {};
+		this.asset = new AssetAccessor(game._assetManager);
 
 		this._loaded = false;
 		this._prefetchRequested = false;

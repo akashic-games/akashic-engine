@@ -48,7 +48,7 @@ export class AssetAccessor {
 	}
 
 	getAllTexts(patternOrFilter?: string | ((path: string) => boolean)): TextAssetLike[] {
-		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "Text") as TextAssetLike[];
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "text") as TextAssetLike[];
 	}
 
 	getAllTextContents(patternOrFilter?: string | ((path: string) => boolean)): string[] {
