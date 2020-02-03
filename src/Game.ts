@@ -1213,13 +1213,13 @@ namespace g {
 			// deprecated の挙動: エントリポイントの指定がない場合
 			if (!this._main) {
 				if (!this._mainParameter.snapshot) {
-					if (!(<any>this.assets).mainScene)
+					if (!(this.assets as any).mainScene)
 						throw ExceptionFactory.createAssertionError("Game#_start: global asset 'mainScene' not found.");
 					var mainScene = g._require(this, "mainScene")();
 					this.pushScene(mainScene);
 					this._flushSceneChangeRequests();
 				} else {
-					if (!(<any>this.assets).snapshotLoader)
+					if (!(this.assets as any).snapshotLoader)
 						throw ExceptionFactory.createAssertionError("Game#_start: global asset 'snapshotLoader' not found.");
 					var loader = g._require(this, "snapshotLoader");
 					loader(this._mainParameter.snapshot);

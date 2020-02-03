@@ -710,7 +710,7 @@ namespace g {
 		 * @private
 		 */
 		_enableTouchPropagation(): void {
-			var p: E = <E>this.parent;
+			var p: E = this.parent as E;
 			while (p instanceof E && !p._hasTouchableChildren) {
 				p._hasTouchableChildren = true;
 				p = <E>p.parent;
@@ -721,7 +721,7 @@ namespace g {
 		 * @private
 		 */
 		_disableTouchPropagation(): void {
-			var p: E = <E>this.parent;
+			var p: E = this.parent as E;
 			while (p instanceof E && p._hasTouchableChildren) {
 				if (this._findTouchableChildren(p))
 					break;
