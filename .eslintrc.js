@@ -10,7 +10,6 @@ module.exports = {
     },
     "plugins": [
         "@typescript-eslint",
-        "@typescript-eslint/tslint"
     ],
     "rules": {
         "@typescript-eslint/class-name-casing": "error",
