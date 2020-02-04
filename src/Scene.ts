@@ -519,13 +519,10 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		}
 
 		local =
-			param.local === undefined
-				? LocalTickMode.NonLocal
-				: param.local === false
-				? LocalTickMode.NonLocal
-				: param.local === true
-				? LocalTickMode.FullLocal
-				: <LocalTickMode>param.local;
+			param.local === undefined ? LocalTickMode.NonLocal :
+			param.local === false ?	LocalTickMode.NonLocal :
+			param.local === true ? LocalTickMode.FullLocal :
+			<LocalTickMode>param.local;
 		tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
 		this.name = param.name;
 
