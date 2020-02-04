@@ -222,7 +222,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
 	 */
-	defaultAudioSystemId: string;
+	defaultAudioSystemId: "music" | "sound";
 
 	/**
 	 * スナップショット要求通知。

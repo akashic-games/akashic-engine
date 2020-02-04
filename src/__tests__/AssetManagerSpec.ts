@@ -190,17 +190,29 @@ describe("test AssetManager", () => {
 				"/foo/bar/"
 			);
 		}).toThrowError("AssertionError");
+		expect(() => {
+			return new Game(
+				{
+					width: 320,
+					height: 320,
+					fps: 120 /* out of (0-60] */,
+					assets: legalConf,
+					main: "mainScene"
+				},
+				"/foo/bar/"
+			);
+		}).toThrowError("AssertionError");
 
-		const audioLegalConf: { [id: string]: AudioAssetConfigurationBase } = {
+		const audioIllegalConf: { [id: string]: AudioAssetConfigurationBase } = {
 			corge: {
 				type: "audio",
 				path: "/path/to/a/file",
 				virtualPath: "path/to/a/file",
-				systemId: "user",
+				systemId: "user" as any, // `music` と `sound` 以外のsystemIdはエラーとなる
 				duration: 91
 			}
 		};
-		expect(() => new Game({ width: 320, height: 320, assets: audioLegalConf, main: "mainScene" })).toThrowError("AssertionError");
+		expect(() => new Game({ width: 320, height: 320, assets: audioIllegalConf, main: "mainScene" })).toThrowError("AssertionError");
 	});
 
 	it("loads/unloads an asset", done => {
