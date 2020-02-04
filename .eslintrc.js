@@ -10,7 +10,6 @@ module.exports = {
     },
     "plugins": [
         "@typescript-eslint",
-        "@typescript-eslint/tslint"
     ],
     "rules": {
         "@typescript-eslint/class-name-casing": "error",
@@ -145,20 +144,6 @@ module.exports = {
         "no-unused-labels": "error",
         "radix": "error",
         "spaced-comment": ["error", "always", { "markers": ["/"] }],
-        "@typescript-eslint/tslint/config": [
-            "error",
-            {
-                "rules": {
-                    "whitespace": [
-                        true,
-                        "check-branch",
-                        "check-decl",
-                        "check-operator",
-                        "check-separator",
-                        "check-type"
-                    ]
-                }
-            }
-        ]
+        "keyword-spacing": ["error"]
     }
 };

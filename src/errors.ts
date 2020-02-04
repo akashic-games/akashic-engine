@@ -62,7 +62,7 @@ namespace g {
 	export module ExceptionFactory {
 
 		export function createAssertionError(message: string, cause?: any): AssertionError {
-			var e: AssertionError = <AssertionError>new Error(message);
+			var e: AssertionError = (new Error(message) as AssertionError);
 			e.name = "AssertionError";
 			e.cause = cause;
 			return e;
@@ -86,7 +86,7 @@ namespace g {
 				}
 			}
 			message += ".";
-			var e: TypeMismatchError = <TypeMismatchError>new Error(message);
+			var e: TypeMismatchError = (new Error(message) as TypeMismatchError);
 			e.name = "TypeMismatchError";
 			e.cause = cause;
 			e.expected = expected;
@@ -96,7 +96,7 @@ namespace g {
 
 		export function createAssetLoadError(message: string, retriable: boolean = true,
 		                                     type: AssetLoadErrorType = AssetLoadErrorType.Unspecified, cause?: any): AssetLoadError {
-			var e: AssetLoadError = <AssetLoadError>new Error(message);
+			var e: AssetLoadError = (new Error(message) as AssetLoadError);
 			e.name = "AssetLoadError";
 			e.cause = cause;
 			e.retriable = retriable;
