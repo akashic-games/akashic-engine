@@ -202,7 +202,7 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onVolumeChanged(): void {
-		this.player.changeVolume(this._volume);
+		this.player._notifyVolumeChanged();
 	}
 
 	/**
@@ -336,7 +336,7 @@ export class SoundAudioSystem extends AudioSystem {
 	 */
 	_onVolumeChanged(): void {
 		for (var i = 0; i < this.players.length; ++i) {
-			this.players[i].changeVolume(this._volume);
+			this.players[i]._notifyVolumeChanged();
 		}
 	}
 }
