@@ -36,9 +36,10 @@
     "clean": "rimraf dist && rimraf lib",
     "test": "npm run test:jest && npm run lint && npm run textlint",
     "test:jest": "jest --config jest.config.js",
+    "lint": "npm run format && npm run lint:eslint && npm run textlint",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "lint": "eslint -c .eslintrc.js  src/*.ts  --parser-options \"project: './tsconfig.json'\"",
+    "lint:eslint": "eslint -c .eslintrc.js  src/*.ts  --parser-options \"project: './tsconfig.json'\"",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [
