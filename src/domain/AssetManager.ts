@@ -368,14 +368,14 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param accessorPath 取得するアセットのアクセッサパス
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
-	peekLiveAssetByAccessorPath(accessorPath: string, type: string): AssetLike {
+	peekLiveAssetByAccessorPath<T extends OneOfAssetLike>(accessorPath: string, type: string): T {
 		if (accessorPath[0] !== "/")
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
 		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
 		const asset = this._liveAssetVirtualPathTable[vpath];
 		if (!asset || type !== asset.type)
 			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
-		return asset;
+		return asset as T;
 	}
 
 	/**
@@ -384,31 +384,35 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetId 取得するアセットのID
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
-	peekLiveAssetById(assetId: string, type: string): AssetLike {
+	peekLiveAssetById<T extends OneOfAssetLike>(assetId: string, type: string): T {
 		const asset = this._assets[assetId];
 		if (!asset || type !== asset.type)
 			throw ExceptionFactory.createAssertionError(`SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
-		return asset;
+		return asset as T;
 	}
 
 	/**
 	 * パターンまたはフィルタにマッチするパスを持つ、指定されたタイプの全読み込み済みアセットを返す。
 	 *
+	 * 戻り値の要素の順序は保証されない。
 	 * パターンとフィルタについては `AssetAccessor#getAllImages()` の仕様を参照のこと。
 	 *
 	 * @param patternOrFilter 取得するアセットのパスパターンまたはフィルタ
-	 * @param type 取得するアセットのタイプ。
+	 * @param type 取得するアセットのタイプ。 null の場合、全てタイプとして扱われる。
 	 */
-	peekAllLiveAssetsByPattern(patternOrFilter: string | ((accessorPath: string) => boolean), type: string | null): AssetLike[] {
+	peekAllLiveAssetsByPattern<T extends OneOfAssetLike>(
+		patternOrFilter: string | ((accessorPath: string) => boolean),
+		type: string | null
+	): T[] {
 		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
 		const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
-		let ret: AssetLike[] = [];
+		let ret: T[] = [];
 		for (let i = 0; i < vpaths.length; ++i) {
 			const vpath = vpaths[i];
 			const asset = this._liveAssetVirtualPathTable[vpath];
 			if (type && asset.type !== type) continue;
 			const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
-			if (filter(accessorPath)) ret.push(asset);
+			if (filter(accessorPath)) ret.push(asset as T);
 		}
 		return ret;
 	}

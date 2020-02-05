@@ -149,32 +149,6 @@ export class AssetAccessor {
 	}
 
 	/**
-	 * 与えられたパターンまたはフィルタにマッチするパスを持つ、読み込み済みの全テキストアセットの内容を取得する。
-	 * 引数の仕様については `AssetAccessor#getAllImages()` の仕様を参照のこと。
-	 *
-	 * @param patternOrFilter 内容の文字列を取得するテキストアセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
-	 */
-	getAllTextContents(patternOrFilter?: string | ((path: string) => boolean)): string[] {
-		const assets = this.getAllTexts(patternOrFilter);
-		const ret: string[] = [];
-		for (let i = 0; i < assets.length; ++i) ret.push(assets[i].data);
-		return ret;
-	}
-
-	/**
-	 * 与えられたパターンまたはフィルタにマッチするパスを持つ、読み込み済みの全テキストアセットの内容を取得し、JSONとしてパースして返す。
-	 * 引数の仕様については `AssetAccessor#getAllImages()` の仕様を参照のこと。
-	 *
-	 * @param patternOrFilter 内容のJSONを取得するテキストアセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
-	 */
-	getAllJSONContents(patternOrFilter?: string | ((path: string) => boolean)): any[] {
-		const assets = this.getAllTexts(patternOrFilter);
-		const ret: string[] = [];
-		for (let i = 0; i < assets.length; ++i) ret.push(JSON.parse(assets[i].data));
-		return ret;
-	}
-
-	/**
 	 * アセットIDから読み込み済みの画像アセットを取得する。
 	 * 当該の画像アセットが読み込まれていない場合、エラー。
 	 *

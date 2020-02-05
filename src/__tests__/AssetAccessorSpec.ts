@@ -188,9 +188,6 @@ describe("test AssetAccessor", () => {
 					path: "assets/stage01/map.json"
 				}
 			]);
-
-			expect(accessor.getAllTextContents("/**/*")).toEqual([sampleJSONFileContent]);
-			expect(accessor.getAllJSONContents("**/stage01/*")).toEqual([JSON.parse(sampleJSONFileContent)]);
 			done();
 		});
 	});
