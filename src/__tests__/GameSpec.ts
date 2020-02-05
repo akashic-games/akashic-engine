@@ -88,7 +88,7 @@ describe("test Game", () => {
 	});
 
 	it("_loadAndStart", done => {
-		const assets: {[id: string]: AssetConfiguration} = {
+		const assets: { [id: string]: AssetConfiguration } = {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
@@ -114,7 +114,7 @@ describe("test Game", () => {
 	});
 
 	it("must fire 'loaded' of mainScene at age 0", done => {
-		const assets: {[id: string]: AssetConfiguration} = {
+		const assets: { [id: string]: AssetConfiguration } = {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
@@ -151,7 +151,7 @@ describe("test Game", () => {
 	});
 
 	it("_loadAndStart - with entry point", done => {
-		const assets: {[id: string]: AssetConfiguration} = {
+		const assets: { [id: string]: AssetConfiguration } = {
 			dummy: {
 				type: "script",
 				path: "/dummy/dummy.js", // パスはダミー
@@ -174,7 +174,7 @@ describe("test Game", () => {
 	});
 
 	it("_loadAndStart - after loaded", done => {
-		const assets: {[id: string]: AssetConfiguration} = {
+		const assets: { [id: string]: AssetConfiguration } = {
 			mainScene: {
 				type: "script",
 				path: "/script/mainScene.js",
@@ -246,7 +246,8 @@ describe("test Game", () => {
 	it("popScene - specified step", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		game._loaded.add(() => { // game.scenes テストのため _loaded を待つ必要がある
+		game._loaded.add(() => {
+			// game.scenes テストのため _loaded を待つ必要がある
 			// popSceneで指定したシーンまで戻る際に経過したシーンは全て削除
 			const scene = new Scene({ game: game, name: "SCENE1" });
 			const scene2 = new Scene({ game: game, name: "SCENE2" });
@@ -294,7 +295,7 @@ describe("test Game", () => {
 	});
 
 	it("tick", done => {
-		const assets: {[id: string]: AssetConfiguration} = {
+		const assets: { [id: string]: AssetConfiguration } = {
 			mainScene: {
 				// _loadAndStart() には mainScene が必要
 				type: "script",
@@ -817,7 +818,8 @@ describe("test Game", () => {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["/script/mainScene.js"] = "module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s);}";
+		game.resourceFactory.scriptContents["/script/mainScene.js"] =
+			"module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s);}";
 		expect(game.age).toBe(0);
 		expect(game.random).toBe(null);
 
@@ -858,7 +860,8 @@ describe("test Game", () => {
 				}
 			}
 		});
-		game.resourceFactory.scriptContents["./script/mainScene.js"] = "module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s); };";
+		game.resourceFactory.scriptContents["./script/mainScene.js"] =
+			"module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s); };";
 		expect(game.age).toBe(0);
 		expect(game.random).toBe(null);
 

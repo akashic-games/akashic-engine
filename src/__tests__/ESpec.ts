@@ -1206,7 +1206,7 @@ describe("test E", () => {
 			// e: [ 1, 0, 0, 1, 10, 0 ]
 			// p * p2 * p3 * e: [0.707107, 0.707107, -1.06066, 1.06066, 107.071, 121.213]
 			// ( p * p2 * p3 * e)-1: [0.707107, -0.471405, 0.707107, 0.471405, -161.421, -6.6666]
-			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5, anchorX: 1, anchorY: 1});
+			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5, anchorX: 1, anchorY: 1 });
 			p2 = new E({ scene: runtime.scene, angle: 45, anchorX: 0.5, anchorY: 0.5, parent: p });
 			p3 = new E({ scene: runtime.scene, x: 20, y: 20, scaleX: 2, scaleY: 3, parent: p2 });
 			e = new E({ scene: runtime.scene, parent: p3, x: 10, y: 0 });
@@ -1258,7 +1258,7 @@ describe("test E", () => {
 		it("can convert predictable values", () => {
 			const targetPoint = { x: 0, y: 0 };
 			// これらのマトリクスはかけると [1, 0, 0, 1, 0, 0] に近似した値となる
-			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5});
+			p = new E({ scene: runtime.scene, x: 100, y: 100, scaleX: 0.5, scaleY: 0.5 });
 			p2 = new E({ scene: runtime.scene, angle: 45, parent: p });
 			p3 = new E({ scene: runtime.scene, angle: -45, scaleX: 2, scaleY: 2, parent: p2 });
 			e = new E({ scene: runtime.scene, parent: p3, x: -100, y: -100 });

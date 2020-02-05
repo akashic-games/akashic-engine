@@ -45,7 +45,13 @@ describe("test XorshiftRandomGenerator", () => {
 	it("is distribution within expectation", () => {
 		// このテストは厳密な仕様記述ではなく、「10000回やればこれぐらいの範囲になるだろう」という期待値でしかないことに注意
 		const generator = new XorshiftRandomGenerator(1);
-		const testCases = [[-8, 8], [-8, -4], [-8, 0], [0, 8], [4, 8]];
+		const testCases = [
+			[-8, 8],
+			[-8, -4],
+			[-8, 0],
+			[0, 8],
+			[4, 8]
+		];
 		testCases.forEach(testCase => {
 			const resultMap: number[] = [];
 			for (let i = 0; i < 10000; i++) {
@@ -65,7 +71,13 @@ describe("test XorshiftRandomGenerator", () => {
 	it("is difference within expectation", () => {
 		// このテストは厳密な仕様記述ではなく、「10000回やればこれぐらいの分布になるだろう」という期待値でしかないことに注意
 		const cycle = 10000;
-		const testCases = [[-10, 10], [-26, -6], [-20, 0], [0, 20], [4, 24]];
+		const testCases = [
+			[-10, 10],
+			[-26, -6],
+			[-20, 0],
+			[0, 20],
+			[4, 24]
+		];
 		// 上記各テストケースの乱数範囲に対応したカイ2乗分布表で危険率0.01の値
 		const threshold = 37.5622;
 		for (let seed = 0; seed < 5; ++seed) {

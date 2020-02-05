@@ -24,7 +24,8 @@ module.exports = {
                     "parameters": "first"
                 },
                 "SwitchCase": 1,
-                "flatTernaryExpressions": true
+                "flatTernaryExpressions": true,
+                "ignoredNodes": ["ConditionalExpression"]
             }
         ],
         "@typescript-eslint/interface-name-prefix": "off",
