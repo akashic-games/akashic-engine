@@ -398,7 +398,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * パターンとフィルタについては `AssetAccessor#getAllImages()` の仕様を参照のこと。
 	 *
 	 * @param patternOrFilter 取得するアセットのパスパターンまたはフィルタ
-	 * @param type 取得するアセットのタイプ。 null の場合、全てタイプとして扱われる。
+	 * @param type 取得するアセットのタイプ。 null の場合、全てのタイプとして扱われる。
 	 */
 	peekAllLiveAssetsByPattern<T extends OneOfAssetLike>(
 		patternOrFilter: string | ((accessorPath: string) => boolean),
