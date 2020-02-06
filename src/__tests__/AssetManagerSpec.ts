@@ -191,7 +191,7 @@ describe("test AssetManager", () => {
 		} as any;
 		expect(() => new Game({ width: 320, height: 320, assets: illegalConf3, main: "mainScene" })).toThrowError("AssertionError");
 
-		const legalConf: {[id: string]: ImageAssetConfigurationBase} = {
+		const legalConf: { [id: string]: ImageAssetConfigurationBase } = {
 			foo: {
 				type: "image",
 				path: "/foo.png",

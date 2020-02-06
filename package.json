@@ -9,6 +9,9 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "eslint": "^6.6.0",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.0",
@@ -21,9 +24,6 @@
     "textlint-rule-no-mix-dearu-desumasu": "^4.0.0",
     "textlint-rule-prh": "^5.2.1",
     "ts-jest": "^24.1.0",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
     "typedoc": "^0.15.2",
     "typescript": "^3.7.2",
     "xorshift": "0.2.0"
@@ -36,8 +36,10 @@
     "clean": "rimraf dist && rimraf lib",
     "test": "npm run test:jest && npm run lint && npm run textlint",
     "test:jest": "jest --config jest.config.js",
+    "lint": "npm run format && npm run lint:eslint && npm run textlint",
+    "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "lint": "tslint -c tslint.json --project ./tsconfig.json --fix",
+    "lint:eslint": "eslint -c .eslintrc.js  src/*.ts",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [

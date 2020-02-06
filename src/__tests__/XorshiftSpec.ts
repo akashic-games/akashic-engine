@@ -1,6 +1,6 @@
 import { Xorshift } from "..";
 import { customMatchers } from "./helpers";
-const RefXorshift = require("xorshift").constructor; // tslint:disable-line: no-var-requires
+const RefXorshift = require("xorshift").constructor;
 
 expect.extend(customMatchers);
 
