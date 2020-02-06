@@ -39,7 +39,7 @@
     "lint": "npm run format && npm run lint:eslint && npm run textlint",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "lint:eslint": "eslint -c .eslintrc.js  src/*.ts  --parser-options \"project: './tsconfig.json'\"",
+    "lint:eslint": "eslint -c .eslintrc.js  src/*.ts",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [
