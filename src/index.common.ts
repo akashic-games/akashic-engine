@@ -17,6 +17,7 @@ export * from "./domain/entities/FrameSprite";
 export * from "./domain/entities/Label";
 export * from "./domain/entities/Pane";
 export * from "./domain/entities/Sprite";
+export * from "./domain/AssetAccessor";
 export * from "./domain/AssetManager";
 export * from "./domain/AssetManagerLoadHandler";
 export * from "./domain/AudioSystemManager";

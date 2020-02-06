@@ -1,5 +1,4 @@
 import { Font } from "../../domain/Font";
-import { Game } from "../../Game";
 import { GlyphLike } from "../../interfaces/GlyphLike";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { CompositeOperation } from "../../types/CompositeOperation";
@@ -131,11 +130,6 @@ export class Label extends CacheableE {
 
 	/**
 	 * @private
-	 */
-	_game: Game;
-
-	/**
-	 * @private
 	 * 最初の文字が描画の基準点から左にはみだす量。
 	 */
 	_overhangLeft: number;
@@ -161,7 +155,6 @@ export class Label extends CacheableE {
 		this.widthAutoAdjust = param.widthAutoAdjust != null ? param.widthAutoAdjust : true;
 		this.textColor = param.textColor;
 		this._textWidth = 0;
-		this._game = undefined;
 		this._overhangLeft = 0;
 		this._overhangRight = 0;
 		this._invalidateSelf();

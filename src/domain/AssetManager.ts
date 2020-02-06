@@ -20,16 +20,15 @@ import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 
+export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
+
 class AssetLoadingInfo {
-	asset: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
+	asset: OneOfAssetLike;
 	handlers: AssetManagerLoadHandler[];
 	errorCount: number;
 	loading: boolean;
 
-	constructor(
-		asset: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike,
-		handler: AssetManagerLoadHandler
-	) {
+	constructor(asset: OneOfAssetLike, handler: AssetManagerLoadHandler) {
 		this.asset = asset;
 		this.handlers = [handler];
 		this.errorCount = 0;
@@ -61,6 +60,47 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): Audi
 }
 
 /**
+ * パスパターンを関数に変換する。
+ *
+ * パスパターンは、パス文字列、または0個以上の `**`, `*`, `?` を含むパス文字列である。
+ * (実装の単純化のため、いわゆる glob のうちよく使われそうなものだけをサポートしている。)
+ * 詳細は `AssetAccessor#getAllImages()` の仕様を参照のこと。
+ *
+ * 戻り値は、文字列一つを受け取り、パターンにマッチするか否かを返す関数。
+ *
+ * @param pattern パターン文字列
+ */
+function patternToFilter(pattern: string): (path: string) => boolean {
+	const parserRe = /([^\*\\\?]*)(\\\*|\\\?|\?|\*(?!\*)|\*\*\/|$)/g;
+	//                [----A-----][--------------B---------------]
+	// A: パターンの特殊文字でない文字の塊。そのままマッチさせる(ためにエスケープして正規表現にする)
+	// B: パターンの特殊文字一つ(*, ** など)かそのエスケープ。patternSpecialsTable で対応する正規表現に変換
+	const patternSpecialsTable: { [pat: string]: string } = {
+		"": "", // 入力末尾で parserRe の B 部分が $ にマッチして空文字列になることに対応
+		"\\*": "\\*",
+		"\\?": "\\?",
+		"*": "[^/]*",
+		"?": "[^/]",
+		"**/": "(?:^/)?(?:[^/]+/)*"
+		//      [--C--][----D----]
+		// C: 行頭の `/` (行頭でなければないので ? つき)
+		// D: ディレクトリ一つ分(e.g. "foo/")が0回以上
+	};
+
+	const regExpSpecialsRe = /[\\^$.*+?()[\]{}|]/g;
+	function escapeRegExp(s: string): string {
+		return s.replace(regExpSpecialsRe, "\\$&");
+	}
+
+	let code = "";
+	for (let match = parserRe.exec(pattern); match && match[0] !== ""; match = parserRe.exec(pattern)) {
+		code += escapeRegExp(match[1]) + patternSpecialsTable[match[2]];
+	}
+	const re = new RegExp("^" + code + "$");
+	return path => re.test(path);
+}
+
+/**
  * `Asset` を管理するクラス。
  *
  * このクラスのインスタンスは `Game` に一つデフォルトで存在する(デフォルトアセットマネージャ)。
@@ -82,13 +122,17 @@ export class AssetManager implements AssetLoadHandler {
 	configuration: { [key: string]: any };
 
 	/**
+	 * require解決用の仮想パスからアセットIDを引くためのテーブル。
+	 * @private
+	 */
+	_virtualPathToIdTable: { [key: string]: string };
+
+	/**
 	 * 読み込み済みのアセット。
 	 * requestAssets() で読み込みをリクエストしたゲーム開発者はコールバックでアセットを受け取るので、この変数を参照する必要は通常ない
 	 * @private
 	 */
-	_assets: {
-		[key: string]: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
-	};
+	_assets: { [key: string]: OneOfAssetLike };
 
 	/**
 	 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
@@ -96,15 +140,13 @@ export class AssetManager implements AssetLoadHandler {
 	 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 	 * @private
 	 */
-	_liveAssetVirtualPathTable: {
-		[key: string]: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
-	};
+	_liveAssetVirtualPathTable: { [key: string]: OneOfAssetLike };
 
 	/**
 	 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
 	 * @private
 	 */
-	_liveAbsolutePathTable: { [path: string]: string };
+	_liveAssetPathTable: { [path: string]: string };
 
 	/**
 	 * requireの第一引数から対応する仮想パスを引くためのテーブル。
@@ -140,11 +182,19 @@ export class AssetManager implements AssetLoadHandler {
 		this.game = game;
 		this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 		this._assets = {};
+		this._virtualPathToIdTable = {};
 		this._liveAssetVirtualPathTable = {};
-		this._liveAbsolutePathTable = {};
+		this._liveAssetPathTable = {};
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
 		this._refCounts = {};
 		this._loadings = {};
+
+		const assetIds = Object.keys(this.configuration);
+		for (let i = 0; i < assetIds.length; ++i) {
+			const assetId = assetIds[i];
+			const conf = this.configuration[assetId];
+			this._virtualPathToIdTable[conf.virtualPath] = assetId;
+		}
 	}
 
 	/**
@@ -159,7 +209,7 @@ export class AssetManager implements AssetLoadHandler {
 		this.configuration = undefined;
 		this._assets = undefined;
 		this._liveAssetVirtualPathTable = undefined;
-		this._liveAbsolutePathTable = undefined;
+		this._liveAssetPathTable = undefined;
 		this._refCounts = undefined;
 		this._loadings = undefined;
 	}
@@ -195,7 +245,7 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * このインスタンスに与えられた `AssetConfigurationMap` のうち、グローバルアセットのIDをすべて返す。
+	 * グローバルアセットのIDを全て返す。
 	 */
 	globalAssetIds(): string[] {
 		var ret: string[] = [];
@@ -203,6 +253,30 @@ export class AssetManager implements AssetLoadHandler {
 		for (var p in conf) {
 			if (!conf.hasOwnProperty(p)) continue;
 			if (conf[p].global) ret.push(p);
+		}
+		return ret;
+	}
+
+	/**
+	 * パターンまたはフィルタに合致するパスを持つアセットIDを全て返す。
+	 *
+	 * 戻り値は読み込み済みでないアセットのIDを含むことに注意。
+	 * 読み込み済みのアセットにアクセスする場合は、 `peekAllLiveAssetsByPattern()` を利用すること。
+	 *
+	 * @param patternOrFilters パターンまたはフィルタ。仕様は `AssetAccessor#getAllImages()` を参照
+	 */
+	resolvePatternsToAssetIds(patternOrFilters: (string | ((accessorPath: string) => boolean))[]): string[] {
+		if (patternOrFilters.length === 0) return [];
+		const vpaths = Object.keys(this._virtualPathToIdTable);
+		const ret: string[] = [];
+		for (let i = 0; i < patternOrFilters.length; ++i) {
+			const patternOrFilter = patternOrFilters[i];
+			const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
+			for (let j = 0; j < vpaths.length; ++j) {
+				const vpath = vpaths[j];
+				const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
+				if (filter(accessorPath)) ret.push(this._virtualPathToIdTable[vpath]);
+			}
 		}
 		return ret;
 	}
@@ -284,6 +358,65 @@ export class AssetManager implements AssetLoadHandler {
 		}
 	}
 
+	/**
+	 * アクセッサパスで指定された読み込み済みのアセットを返す。
+	 *
+	 * ここでアクセッサパスとは、 `AssetAccessor` が使うパス
+	 * (game.jsonのディレクトリをルート (`/`) とする、 `/` 区切りの絶対パス形式の仮想パス)である。
+	 * これは `/` を除けばアセットの仮想パス (virtualPath) と同一である。
+	 *
+	 * @param accessorPath 取得するアセットのアクセッサパス
+	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
+	 */
+	peekLiveAssetByAccessorPath<T extends OneOfAssetLike>(accessorPath: string, type: string): T {
+		if (accessorPath[0] !== "/")
+			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
+		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
+		const asset = this._liveAssetVirtualPathTable[vpath];
+		if (!asset || type !== asset.type)
+			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
+		return asset as T;
+	}
+
+	/**
+	 * アセットIDで指定された読み込み済みのアセットを返す。
+	 *
+	 * @param assetId 取得するアセットのID
+	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
+	 */
+	peekLiveAssetById<T extends OneOfAssetLike>(assetId: string, type: string): T {
+		const asset = this._assets[assetId];
+		if (!asset || type !== asset.type)
+			throw ExceptionFactory.createAssertionError(`SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
+		return asset as T;
+	}
+
+	/**
+	 * パターンまたはフィルタにマッチするパスを持つ、指定されたタイプの全読み込み済みアセットを返す。
+	 *
+	 * 戻り値の要素の順序は保証されない。
+	 * パターンとフィルタについては `AssetAccessor#getAllImages()` の仕様を参照のこと。
+	 *
+	 * @param patternOrFilter 取得するアセットのパスパターンまたはフィルタ
+	 * @param type 取得するアセットのタイプ。 null の場合、全てのタイプとして扱われる。
+	 */
+	peekAllLiveAssetsByPattern<T extends OneOfAssetLike>(
+		patternOrFilter: string | ((accessorPath: string) => boolean),
+		type: string | null
+	): T[] {
+		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
+		const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
+		let ret: T[] = [];
+		for (let i = 0; i < vpaths.length; ++i) {
+			const vpath = vpaths[i];
+			const asset = this._liveAssetVirtualPathTable[vpath];
+			if (type && asset.type !== type) continue;
+			const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
+			if (filter(accessorPath)) ret.push(asset as T);
+		}
+		return ret;
+	}
+
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 		var ret: { [key: string]: AssetConfiguration } = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -336,9 +469,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createAssetFor(
-		idOrConf: string | DynamicAssetConfiguration
-	): AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike {
+	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAssetLike {
 		var id: string;
 		var uri: string;
 		var conf: AssetConfiguration | DynamicAssetConfiguration;
@@ -403,7 +534,7 @@ export class AssetManager implements AssetLoadHandler {
 			const virtualPath = this.configuration[assetId].virtualPath;
 			if (virtualPath && this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath))
 				delete this._liveAssetVirtualPathTable[virtualPath];
-			if (path && this._liveAbsolutePathTable.hasOwnProperty(path)) delete this._liveAbsolutePathTable[path];
+			if (path && this._liveAssetPathTable.hasOwnProperty(path)) delete this._liveAssetPathTable[path];
 		}
 	}
 
@@ -418,7 +549,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError): void {
+	_onAssetError(asset: OneOfAssetLike, error: AssetLoadError): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
@@ -437,7 +568,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_onAssetLoad(asset: AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike): void {
+	_onAssetLoad(asset: OneOfAssetLike): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
@@ -456,7 +587,7 @@ export class AssetManager implements AssetLoadHandler {
 				if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
 					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
 			}
-			if (!this._liveAbsolutePathTable.hasOwnProperty(asset.path)) this._liveAbsolutePathTable[asset.path] = virtualPath;
+			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = virtualPath;
 		}
 
 		var hs = loadingInfo.handlers;

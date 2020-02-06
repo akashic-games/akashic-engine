@@ -140,6 +140,8 @@ describe("test Scene", () => {
 			expect(scene.assets.foo).not.toBeUndefined();
 			expect(scene.assets.bar).toBeUndefined();
 			expect(scene.assets.baa).not.toBeUndefined();
+			expect(scene.asset.getImageById("foo").path).toBe("/path1.png");
+			expect(() => scene.asset.getImage("/unexistent.png")).toThrowError("AssertionError");
 			done();
 		});
 		scene._load();

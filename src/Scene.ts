@@ -1,5 +1,6 @@
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
+import { AssetAccessor } from "./domain/AssetAccessor";
 import { AssetManager } from "./domain/AssetManager";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
@@ -40,7 +41,12 @@ export interface SceneAssetHolderParameterObject {
 	/**
 	 * 読み込むアセット。
 	 */
-	assetIds: (string | DynamicAssetConfiguration)[];
+	assetIds?: (string | DynamicAssetConfiguration)[];
+
+	/**
+	 * 読み込むアセット。
+	 */
+	assetPaths?: string[];
 
 	/**
 	 * 読み込み完了の通知を受けるハンドラ
@@ -113,10 +119,14 @@ export class SceneAssetHolder {
 	_requested: boolean;
 
 	constructor(param: SceneAssetHolderParameterObject) {
-		this.waitingAssetsCount = param.assetIds.length;
+		const assetManager = param.assetManager;
+		const assetIds = param.assetIds ? param.assetIds.concat() : [];
+		assetIds.push.apply(assetIds, assetManager.resolvePatternsToAssetIds(param.assetPaths || []));
+
+		this.waitingAssetsCount = assetIds.length;
 		this._scene = param.scene;
-		this._assetManager = param.assetManager;
-		this._assetIds = param.assetIds;
+		this._assetManager = assetManager;
+		this._assetIds = assetIds;
 		this._assets = [];
 		this._handler = param.handler;
 		this._handlerOwner = param.handlerOwner || null;
@@ -207,10 +217,28 @@ export interface SceneParameterObject {
 
 	/**
 	 * このシーンで用いるアセットIDの配列。
-	 * なおアセットIDとは、 game.jsonのassetsオブジェクトに含まれるキー文字列である。
+	 *
+	 * アセットIDとは、 game.jsonのassetsオブジェクトの各プロパティのキー文字列である。
+	 * アセットIDでなくパスで指定したい場合は `assetPaths` を利用できる。両方指定してもよい。
+	 *
 	 * @default undefined
 	 */
 	assetIds?: (string | DynamicAssetConfiguration)[];
+
+	/**
+	 * このシーンで用いるアセットのファイルパスの配列。
+	 *
+	 * 各要素は `/` から始まる絶対パスでなければならない。
+	 * ここでルートディレクトリ `/` はgame.json のあるディレクトリを指す。
+	 * ただしオーディオアセットに限り、拡張子を含まないパスであること。
+	 * (e.g. `/image/character01.png`, `/audio/bgm01`)
+	 *
+	 * パスでなくアセットIDで指定したい場合は `assetIds` を利用できる。両方指定してもよい。
+	 * game.jsonのassetsに定義がないアセット(ダイナミックアセット)は指定できない。
+	 *
+	 * @default undefined
+	 */
+	assetPaths?: string[];
 
 	/**
 	 * このシーンで用いるストレージのキーを表す `StorageReadKey` の配列。
@@ -308,6 +336,16 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * keyはこのシーンの生成時、コンストラクタの第二引数 `assetIds` に渡された配列に含まれる文字列でなければならない。
 	 */
 	assets: { [key: string]: AssetLike };
+
+	/**
+	 * このシーンで利用できるアセットへのアクセッサ。
+	 *
+	 * 歴史的経緯による `assets` との違いに注意。
+	 * `assets` は「このシーンの生成時に読み込んだアセット」に「アセットIDをキーにして」アクセスするテーブルである。
+	 * 他方この `asset` は `getImageById()`, `getAllTexts()` などのメソッドを持つオブジェクトである。
+	 * アセットIDだけでなくパスでのアクセスや、複数アセットの一括取得ができる点で異なる。
+	 */
+	asset: AssetAccessor;
 
 	/**
 	 * このシーンの属するゲーム。
@@ -503,13 +541,17 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
 	constructor(param: SceneParameterObject) {
-		var game: Game;
-		var local: LocalTickMode;
-		var tickGenerationMode: TickGenerationMode;
-		var assetIds: (string | DynamicAssetConfiguration)[];
+		var game = param.game;
+		var local =
+			param.local === undefined
+				? LocalTickMode.NonLocal
+				: param.local === false
+				? LocalTickMode.NonLocal
+				: param.local === true
+				? LocalTickMode.FullLocal
+				: <LocalTickMode>param.local;
+		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
 
-		game = param.game;
-		assetIds = param.assetIds;
 		if (!param.storageKeys) {
 			this._storageLoader = undefined;
 			this.storageValues = undefined;
@@ -518,19 +560,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			this.storageValues = this._storageLoader._valueStore;
 		}
 
-		local =
-			param.local === undefined
-				? LocalTickMode.NonLocal
-				: param.local === false
-				? LocalTickMode.NonLocal
-				: param.local === true
-				? LocalTickMode.FullLocal
-				: <LocalTickMode>param.local;
-		tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
 		this.name = param.name;
-
-		if (!assetIds) assetIds = [];
-
 		this.game = game;
 		this.local = local;
 		this.tickGenerationMode = tickGenerationMode;
@@ -538,6 +568,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.loaded = new Trigger<Scene>();
 		this._ready = new Trigger<Scene>();
 		this.assets = {};
+		this.asset = new AssetAccessor(game._assetManager);
 
 		this._loaded = false;
 		this._prefetchRequested = false;
@@ -564,7 +595,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this._sceneAssetHolder = new SceneAssetHolder({
 			scene: this,
 			assetManager: this.game._assetManager,
-			assetIds: assetIds,
+			assetIds: param.assetIds,
+			assetPaths: param.assetPaths,
 			handler: this._onSceneAssetsLoad,
 			handlerOwner: this,
 			direct: true
