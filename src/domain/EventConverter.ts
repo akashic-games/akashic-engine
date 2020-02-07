@@ -145,7 +145,7 @@ export class EventConverter {
 		switch (e.type) {
 			case EventType.Join:
 			case EventType.Leave:
-				// game-driver は決して Join と Leave を生成しない
+				// akashic-engine は決して Join と Leave を生成しない
 				throw ExceptionFactory.createAssertionError("EventConverter#toPlaylogEvent: Invalid type: " + EventType[e.type]);
 			case EventType.Timestamp:
 				let ts = <TimestampEvent>e;
