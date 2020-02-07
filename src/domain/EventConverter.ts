@@ -152,9 +152,9 @@ export class EventConverter {
 				playerId = preservePlayer ? ts.player.id : this._playerId;
 				return [
 					pl.EventCode.Timestamp, // 0: イベントコード
-					ts.priority, // 1: 優先度
-					playerId, // 2: プレイヤーID
-					ts.timestamp // 3: タイムスタンプ
+					ts.priority, //            1: 優先度
+					playerId, //               2: プレイヤーID
+					ts.timestamp //            3: タイムスタンプ
 				];
 			case EventType.PointDown:
 				let pointDown = <PointDownEvent>e;
