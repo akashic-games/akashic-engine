@@ -448,6 +448,9 @@ export class AssetManager implements AssetLoadHandler {
 				if (conf.hint === undefined) {
 					conf.hint = audioSystemConf ? audioSystemConf.hint : {};
 				}
+				if (conf.systemId !== "music" && conf.systemId !== "sound") {
+					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong systemId given for the audio asset: " + p);
+				}
 			}
 			if (conf.type === "video") {
 				if (!conf.useRealSize) {

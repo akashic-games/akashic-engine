@@ -87,4 +87,10 @@ export interface AudioPlayerLike {
 	 * @private
 	 */
 	_changeMuted(muted: boolean): void;
+
+	/**
+	 * 音量の変更を通知する。
+	 * @private
+	 */
+	_notifyVolumeChanged(): void;
 }

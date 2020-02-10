@@ -12,9 +12,7 @@ import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { RandomGenerator } from "./domain/RandomGenerator";
 import { Storage } from "./domain/Storage";
-import { MusicAudioSystem, SoundAudioSystem } from "./implementations/AudioSystem";
 import { AssetLike } from "./interfaces/AssetLike";
-import { AudioSystemLike } from "./interfaces/AudioSystemLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
@@ -217,15 +215,14 @@ export abstract class Game implements Registrable<E> {
 	selfId: string;
 
 	/**
-	 * 本ゲームで利用可能なオーディオシステム群。デフォルトはmusicとsoundが登録されている。
-	 * SE・声・音楽等で分けたい場合、本プロパティにvoice等のAudioSystemを登録することで実現する。
+	 * 本ゲームで利用可能なオーディオシステム群。musicとsoundが登録されている。
 	 */
-	audio: { [key: string]: AudioSystemLike };
+	audio: AudioSystemManager;
 
 	/**
 	 * デフォルトで利用されるオーディオシステムのID。デフォルト値はsound。
 	 */
-	defaultAudioSystemId: string;
+	defaultAudioSystemId: "music" | "sound";
 
 	/**
 	 * スナップショット要求通知。
@@ -392,12 +389,6 @@ export abstract class Game implements Registrable<E> {
 	_moduleManager: ModuleManager;
 
 	/**
-	 * Game#audioの管理者。
-	 * @private
-	 */
-	_audioSystemManager: AudioSystemManager;
-
-	/**
 	 * 操作プラグインによる操作を通知するTrigger。
 	 * @private
 	 */
@@ -506,22 +497,7 @@ export abstract class Game implements Registrable<E> {
 		this.resourceFactory = resourceFactory;
 		this.selfId = selfId || undefined;
 		this.playId = undefined;
-
-		this._audioSystemManager = new AudioSystemManager();
-		this.audio = {
-			music: new MusicAudioSystem({
-				id: "music",
-				muted: this._audioSystemManager._muted,
-				resourceFactory: this.resourceFactory
-			}),
-			sound: new SoundAudioSystem({
-				id: "sound",
-				muted: this._audioSystemManager._muted,
-				resourceFactory: this.resourceFactory
-			})
-		};
-		// TODO: AudioSystemManager, AudioSystem関連のリファクタリングが行われるまでの一時的な対応とする
-		this._audioSystemManager.systems = this.audio;
+		this.audio = new AudioSystemManager(this.resourceFactory);
 
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
@@ -974,14 +950,14 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_setAudioPlaybackRate(playbackRate: number): void {
-		this._audioSystemManager._setPlaybackRate(playbackRate);
+		this.audio._setPlaybackRate(playbackRate);
 	}
 
 	/**
 	 * @private
 	 */
 	_setMuted(muted: boolean): void {
-		this._audioSystemManager._setMuted(muted);
+		this.audio._setMuted(muted);
 	}
 
 	/**
@@ -1016,7 +992,7 @@ export abstract class Game implements Registrable<E> {
 			if (param.randGen !== undefined) this.random = param.randGen;
 		}
 
-		this._audioSystemManager._reset();
+		this.audio._reset();
 		this._loaded.removeAll({ func: this._start, owner: this });
 		this.join.removeAll();
 		this.leave.removeAll();
@@ -1096,8 +1072,8 @@ export abstract class Game implements Registrable<E> {
 		this.loadingScene = undefined;
 		this.assetBase = "";
 		this.selfId = undefined;
-		var audioSystemIds = Object.keys(this.audio);
-		for (var i = 0; i < audioSystemIds.length; ++i) this.audio[audioSystemIds[i]].stopAll();
+		this.audio.music.stopAll();
+		this.audio.sound.stopAll();
 		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
 		this.snapshotRequest.destroy();
@@ -1126,7 +1102,7 @@ export abstract class Game implements Registrable<E> {
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
 		this._assetManager = undefined;
-		this._audioSystemManager = undefined;
+		this.audio = undefined;
 		this.operationPluginManager = undefined;
 		this._operationPluginOperated.destroy();
 		this._operationPluginOperated = undefined;

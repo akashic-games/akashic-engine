@@ -900,7 +900,7 @@ describe("test Game", () => {
 	it("controls audio volume", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		expect(game._audioSystemManager._muted).toBe(false);
+		expect(game.audio._muted).toBe(false);
 		expect(() => {
 			game._setAudioPlaybackRate(-0.5);
 		}).toThrowError("AssertionError");
@@ -910,7 +910,7 @@ describe("test Game", () => {
 
 		game._setMuted(true);
 		game._setMuted(true); // 同じ値を設定するパスのカバレッジ稼ぎ
-		expect(game._audioSystemManager._muted).toBe(true);
+		expect(game.audio._muted).toBe(true);
 		expect(game.audio.sound._muted).toBe(true);
 		expect(game.audio.music._muted).toBe(true);
 
@@ -921,7 +921,7 @@ describe("test Game", () => {
 
 		game._setAudioPlaybackRate(1.0);
 		game._setMuted(false);
-		expect(game._audioSystemManager._muted).toBe(false);
+		expect(game.audio._muted).toBe(false);
 		expect(game.audio.sound._muted).toBe(false);
 		expect(game.audio.music._muted).toBe(false);
 	});

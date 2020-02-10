@@ -146,7 +146,7 @@ export interface AudioAssetConfigurationBase extends AssetConfigurationBase {
 	/**
 	 * AudioAssetのsystem指定。
 	 */
-	systemId: string;
+	systemId: "music" | "sound";
 
 	/**
 	 * 再生時間。

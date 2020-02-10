@@ -1,21 +1,32 @@
+import { MusicAudioSystem, SoundAudioSystem } from "../implementations/AudioSystem";
 import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 
 /**
- * `Game#audio` の管理クラス。
+ * `AudioSystem` の管理クラス。
  *
  * 複数の `AudioSystem` に一括で必要な状態設定を行う。
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class AudioSystemManager {
 	/**
+	 * ループ再生可能な AudioSystem
+	 */
+	music: AudioSystemLike;
+
+	/**
+	 * 効果音を扱う AudioSystem
+	 */
+	sound: AudioSystemLike;
+
+	/**
 	 * @private
 	 */
 	_muted: boolean;
 
-	systems: { [key: string]: AudioSystemLike };
-
-	constructor() {
+	constructor(resourceFactory: ResourceFactoryLike) {
 		this._muted = false;
+		this._initializeAudioSystems(resourceFactory);
 	}
 
 	/**
@@ -23,10 +34,8 @@ export class AudioSystemManager {
 	 */
 	_reset(): void {
 		this._muted = false;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._reset();
-		}
+		this.music._reset();
+		this.sound._reset();
 	}
 
 	/**
@@ -36,19 +45,31 @@ export class AudioSystemManager {
 		if (this._muted === muted) return;
 
 		this._muted = muted;
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._setMuted(muted);
-		}
+		this.music._setMuted(muted);
+		this.sound._setMuted(muted);
 	}
 
 	/**
 	 * @private
 	 */
 	_setPlaybackRate(rate: number): void {
-		for (var id in this.systems) {
-			if (!this.systems.hasOwnProperty(id)) continue;
-			this.systems[id]._setPlaybackRate(rate);
-		}
+		this.music._setPlaybackRate(rate);
+		this.sound._setPlaybackRate(rate);
+	}
+
+	/**
+	 * @private
+	 */
+	_initializeAudioSystems(resourceFactory: ResourceFactoryLike): void {
+		this.music = new MusicAudioSystem({
+			id: "music",
+			muted: this._muted,
+			resourceFactory: resourceFactory
+		});
+		this.sound = new SoundAudioSystem({
+			id: "sound",
+			muted: this._muted,
+			resourceFactory: resourceFactory
+		});
 	}
 }
