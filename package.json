@@ -1,6 +1,6 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.0.0-beta.5",
+  "version": "3.0.0-beta.6",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
@@ -36,10 +36,10 @@
     "clean": "rimraf dist && rimraf lib",
     "test": "npm run test:jest && npm run lint && npm run textlint",
     "test:jest": "jest --config jest.config.js",
-    "lint": "npm run format && npm run lint:eslint && npm run textlint",
+    "lint": "npm run format && npm run eslint && npm run textlint",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "lint:eslint": "eslint -c .eslintrc.js  src/*.ts",
+    "eslint": "eslint -c .eslintrc.js \"src/*.ts\"",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [
