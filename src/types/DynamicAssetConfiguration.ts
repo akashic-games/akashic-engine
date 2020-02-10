@@ -91,7 +91,7 @@ export interface DynamicAudioAssetConfigurationBase extends DynamicAssetConfigur
 	/**
 	 * AudioAssetのsystem指定。
 	 */
-	systemId: string;
+	systemId: "music" | "sound";
 
 	/**
 	 * 再生時間。

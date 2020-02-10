@@ -1,18 +1,18 @@
 import { SurfaceAtlas } from "../commons/SurfaceAtlas";
-import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
-import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
-import { ImageAssetLike } from "../interfaces/ImageAssetLike";
+import { VideoSystem } from "../commons/VideoSystem";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { TextAssetLike } from "../interfaces/TextAssetLike";
-import { VideoAssetLike } from "../interfaces/VideoAssetLike";
-import { VideoSystemLike } from "../interfaces/VideoSystemLike";
 import { AudioAssetHint } from "../types/AssetConfiguration";
 import { FontFamily } from "../types/FontFamily";
 import { FontWeight } from "../types/FontWeight";
+import { AudioAsset } from "./AudioAsset";
+import { AudioPlayer } from "./AudioPlayer";
+import { AudioSystem } from "./AudioSystem";
+import { GlyphFactory } from "./GlyphFactory";
+import { ImageAsset } from "./ImageAsset";
+import { ScriptAsset } from "./ScriptAsset";
+import { Surface } from "./Surface";
+import { TextAsset } from "./TextAsset";
+import { VideoAsset } from "./VideoAsset";
 
 /**
  * リソースの生成を行うクラス。
@@ -22,32 +22,32 @@ import { FontWeight } from "../types/FontWeight";
  * 通常ゲーム開発者が呼び出す必要はない。
  */
 export abstract class ResourceFactory implements ResourceFactoryLike {
-	abstract createImageAsset(id: string, assetPath: string, width: number, height: number): ImageAssetLike;
+	abstract createImageAsset(id: string, assetPath: string, width: number, height: number): ImageAsset;
 
 	abstract createVideoAsset(
 		id: string,
 		assetPath: string,
 		width: number,
 		height: number,
-		system: VideoSystemLike,
+		system: VideoSystem,
 		loop: boolean,
 		useRealSize: boolean
-	): VideoAssetLike;
+	): VideoAsset;
 
 	abstract createAudioAsset(
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: AudioSystemLike,
+		system: AudioSystem,
 		loop: boolean,
 		hint: AudioAssetHint
-	): AudioAssetLike;
+	): AudioAsset;
 
-	abstract createTextAsset(id: string, assetPath: string): TextAssetLike;
+	abstract createTextAsset(id: string, assetPath: string): TextAsset;
 
-	abstract createAudioPlayer(system: AudioSystemLike): AudioPlayerLike;
+	abstract createAudioPlayer(system: AudioSystem): AudioPlayer;
 
-	abstract createScriptAsset(id: string, assetPath: string): ScriptAssetLike;
+	abstract createScriptAsset(id: string, assetPath: string): ScriptAsset;
 
 	/**
 	 * Surface を作成する。
@@ -56,7 +56,7 @@ export abstract class ResourceFactory implements ResourceFactoryLike {
 	 * @param width 幅(ピクセル、整数値)
 	 * @param height 高さ(ピクセル、整数値)
 	 */
-	abstract createSurface(width: number, height: number): SurfaceLike;
+	abstract createSurface(width: number, height: number): Surface;
 
 	/**
 	 * GlyphFactory を作成する。
@@ -80,7 +80,7 @@ export abstract class ResourceFactory implements ResourceFactoryLike {
 		strokeColor?: string,
 		strokeOnly?: boolean,
 		fontWeight?: FontWeight
-	): GlyphFactoryLike;
+	): GlyphFactory;
 
 	createSurfaceAtlas(width: number, height: number): SurfaceAtlas {
 		return new SurfaceAtlas(this.createSurface(width, height));

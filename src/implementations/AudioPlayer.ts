@@ -122,4 +122,14 @@ export class AudioPlayer implements AudioPlayerLike {
 	_changeMuted(muted: boolean): void {
 		this._muted = muted;
 	}
+
+	/**
+	 * 音量の変更を通知する。
+	 * @private
+	 */
+	_notifyVolumeChanged(): void {
+		// AudioPlayerの音量を AudioSystem の音量で上書きしていたため、最終音量が正常に計算できていなかった。
+		// 暫定対応として、 changeVolume() に AudioPlayer 自身の音量を渡す事により最終音量の計算を実行させる。
+		this.changeVolume(this.volume);
+	}
 }

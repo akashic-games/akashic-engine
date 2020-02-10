@@ -1,4 +1,3 @@
-import { MusicAudioSystem } from "..";
 import { AudioPlayer, customMatchers, Game, ResourceFactory } from "./helpers";
 
 expect.extend(customMatchers);
@@ -6,11 +5,7 @@ expect.extend(customMatchers);
 describe("test AudioPlayer", () => {
 	it("AudioSystem#volumeの入力値チェック", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = new MusicAudioSystem({
-			id: "music",
-			muted: game._audioSystemManager._muted,
-			resourceFactory: game.resourceFactory
-		});
+		const system = game.audio.music;
 		expect(() => {
 			system.volume = NaN!;
 		}).toThrowError();
@@ -39,11 +34,7 @@ describe("test AudioPlayer", () => {
 
 	it("AudioSystem#_destroyRequestedAssets", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
-		const system = new MusicAudioSystem({
-			id: "music",
-			muted: game._audioSystemManager._muted,
-			resourceFactory: game.resourceFactory
-		});
+		const system = game.audio.music;
 		const audio = new ResourceFactory().createAudioAsset("testId", "testAssetPath", 0, null, false, null);
 		system.requestDestroy(audio);
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
@@ -206,5 +197,27 @@ describe("test AudioPlayer", () => {
 		expect(player3._muted).toBeTruthy();
 		system._setPlaybackRate(1.0);
 		expect(player3._muted).toBeTruthy();
+	});
+
+	it("MusicAudioSystem#_onVolumeChanged", () => {
+		const game = new Game({ width: 320, height: 320, main: "" });
+		const system = game.audio.music;
+		const player = system.createPlayer() as AudioPlayer;
+		// systemのvolumeが変更されても、playerの音量は変わらない
+		player.changeVolume(0.2);
+		system.volume = 0.7;
+		expect(player.volume).toBe(0.2);
+		expect(system.volume).toBe(0.7);
+	});
+
+	it("SoundAudioSystem#_onVolumeChanged", () => {
+		const game = new Game({ width: 320, height: 320, main: "" });
+		const system = game.audio.sound;
+		const player = system.createPlayer() as AudioPlayer;
+		// systemのvolumeが変更されても、playerの音量は変わらない
+		player.changeVolume(0.3);
+		system.volume = 0.7;
+		expect(player.volume).toBe(0.3);
+		expect(system.volume).toBe(0.7);
 	});
 });

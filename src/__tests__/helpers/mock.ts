@@ -573,7 +573,7 @@ export class Game extends g.Game {
 
 	autoTickForInternalEvents: boolean;
 	resourceFactory: ResourceFactory;
-	audio: { [key: string]: AudioSystemLike };
+	audio: AudioSystemManager;
 
 	constructor(
 		gameConfiguration: g.GameConfiguration,
@@ -691,4 +691,9 @@ export class CacheableE extends g.CacheableE {
 
 export interface AudioSystemLike extends g.AudioSystemLike {
 	_destroyRequestedAssets: { [key: string]: g.AudioAssetLike };
+}
+
+export interface AudioSystemManager extends g.AudioSystemManager {
+	music: AudioSystemLike;
+	sound: AudioSystemLike;
 }
