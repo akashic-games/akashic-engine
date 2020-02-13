@@ -611,7 +611,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param isBubbling この関数をこのシーンの子の `modified()` から呼び出す場合、真を渡さなくてはならない。省略された場合、偽。
 	 */
 	modified(isBubbling?: boolean): void {
-		this.game.modified = true;
+		this.game.modified();
 	}
 
 	/**
