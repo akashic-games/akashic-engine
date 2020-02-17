@@ -544,7 +544,14 @@ export abstract class Game implements Registrable<E> {
 		this._main = gameConfiguration.main;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
-		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
+		this._assetManager = new AssetManager(
+			this.resourceFactory,
+			this.audio,
+			this.defaultAudioSystemId,
+			gameConfiguration.assets,
+			gameConfiguration.audio,
+			gameConfiguration.moduleMainScripts
+		);
 		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);

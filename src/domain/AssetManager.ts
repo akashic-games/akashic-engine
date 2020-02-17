@@ -1,9 +1,9 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { VideoSystem } from "../commons/VideoSystem";
-import { Game } from "../Game";
 import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { ImageAssetLike } from "../interfaces/ImageAssetLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
 import { TextAssetLike } from "../interfaces/TextAssetLike";
 import { VideoAssetLike } from "../interfaces/VideoAssetLike";
@@ -19,6 +19,7 @@ import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
 import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
+import { AudioSystemManager } from "./AudioSystemManager";
 
 export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
 
@@ -112,11 +113,6 @@ export class AssetManager implements AssetLoadHandler {
 	static MAX_ERROR_COUNT: number = 3;
 
 	/**
-	 * このインスタンスが属するゲーム。
-	 */
-	game: Game;
-
-	/**
 	 * コンストラクタに渡されたアセットの設定。(assets.json が入っていることが期待される)
 	 */
 	configuration: { [key: string]: any };
@@ -163,6 +159,21 @@ export class AssetManager implements AssetLoadHandler {
 	_refCounts: { [key: string]: number };
 
 	/**
+	 * 各種リソースのファクトリ。
+	 */
+	private _resourceFactory: ResourceFactoryLike;
+
+	/**
+	 * オーディオシステム群
+	 */
+	private _audio: AudioSystemManager;
+
+	/**
+	 * デフォルトで利用されるオーディオシステムのID。
+	 */
+	private _defaultAudioSystemId: "music" | "sound";
+
+	/**
 	 * 読み込み中のアセットの情報。
 	 */
 	private _loadings: { [key: string]: AssetLoadingInfo };
@@ -174,12 +185,16 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 	 */
 	constructor(
-		game: Game,
+		resourceFactory: ResourceFactoryLike,
+		audio: AudioSystemManager,
+		defaultAudioSystemId: "music" | "sound",
 		conf?: AssetConfigurationMap,
 		audioSystemConfMap?: AudioSystemConfigurationMap,
 		moduleMainScripts?: ModuleMainScriptsMap
 	) {
-		this.game = game;
+		this._resourceFactory = resourceFactory;
+		this._audio = audio;
+		this._defaultAudioSystemId = defaultAudioSystemId;
 		this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 		this._assets = {};
 		this._virtualPathToIdTable = {};
@@ -205,7 +220,6 @@ export class AssetManager implements AssetLoadHandler {
 		for (var i = 0; i < assetIds.length; ++i) {
 			this._releaseAsset(assetIds[i]);
 		}
-		this.game = undefined;
 		this.configuration = undefined;
 		this._assets = undefined;
 		this._liveAssetVirtualPathTable = undefined;
@@ -218,7 +232,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * このインスタンスが破棄済みであるかどうかを返す。
 	 */
 	destroyed(): boolean {
-		return this.game === undefined;
+		return this._assets === undefined;
 	}
 
 	/**
@@ -486,24 +500,31 @@ export class AssetManager implements AssetLoadHandler {
 			conf = dynConf;
 			uri = dynConf.uri;
 		}
-		var resourceFactory = this.game.resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 		switch (conf.type) {
 			case "image":
-				var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+				var asset = this._resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 				asset.initialize(<ImageAssetHint>conf.hint);
 				return asset;
 			case "audio":
-				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
+				var system = conf.systemId ? this._audio[conf.systemId] : this._audio[this._defaultAudioSystemId];
+				return this._resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
-				return resourceFactory.createTextAsset(id, uri);
+				return this._resourceFactory.createTextAsset(id, uri);
 			case "script":
-				return resourceFactory.createScriptAsset(id, uri);
+				return this._resourceFactory.createScriptAsset(id, uri);
 			case "video":
 				// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
 				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
-				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, new VideoSystem(), conf.loop, conf.useRealSize);
+				return this._resourceFactory.createVideoAsset(
+					id,
+					uri,
+					conf.width,
+					conf.height,
+					new VideoSystem(),
+					conf.loop,
+					conf.useRealSize
+				);
 			default:
 				throw ExceptionFactory.createAssertionError(
 					"AssertionError#_createAssetFor: unknown asset type " + (conf as AssetLike).type + " for asset ID: " + id

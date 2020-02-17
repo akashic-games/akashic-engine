@@ -82,8 +82,6 @@ describe("test AssetManager", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
 
-		expect(manager.game).toBe(game);
-
 		expect(manager.configuration.foo.path).toBe(gameConfiguration.assets.foo.path);
 		expect(manager.configuration.bar.path).toBe(gameConfiguration.assets.bar.path);
 		expect(manager.configuration.zoo.path).toBe(gameConfiguration.assets.zoo.path);
@@ -436,7 +434,7 @@ describe("test AssetManager", () => {
 
 	it("can be instanciated without configuration", () => {
 		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game);
+		const manager = new AssetManager(game.resourceFactory, game.audio, game.defaultAudioSystemId);
 		expect(manager.configuration).toEqual({});
 		expect(manager.destroyed()).toBe(false);
 
@@ -446,7 +444,7 @@ describe("test AssetManager", () => {
 
 	it("loads dynamically defined assets", done => {
 		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game);
+		const manager = new AssetManager(game.resourceFactory, game.audio, game.defaultAudioSystemId);
 		manager.requestAsset(
 			{
 				id: "testDynamicAsset",
@@ -491,7 +489,7 @@ describe("test AssetManager", () => {
 
 	it("releases assets when destroyed", done => {
 		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game);
+		const manager = new AssetManager(game.resourceFactory, game.audio, game.defaultAudioSystemId);
 		manager.requestAsset(
 			{
 				id: "testDynamicAsset",
