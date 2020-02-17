@@ -434,7 +434,7 @@ describe("test AssetManager", () => {
 
 	it("can be instanciated without configuration", () => {
 		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game.resourceFactory, game.audio, game.defaultAudioSystemId);
+		const manager = new AssetManager(game);
 		expect(manager.configuration).toEqual({});
 		expect(manager.destroyed()).toBe(false);
 
@@ -444,7 +444,7 @@ describe("test AssetManager", () => {
 
 	it("loads dynamically defined assets", done => {
 		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game.resourceFactory, game.audio, game.defaultAudioSystemId);
+		const manager = new AssetManager(game);
 		manager.requestAsset(
 			{
 				id: "testDynamicAsset",
@@ -489,7 +489,7 @@ describe("test AssetManager", () => {
 
 	it("releases assets when destroyed", done => {
 		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game.resourceFactory, game.audio, game.defaultAudioSystemId);
+		const manager = new AssetManager(game);
 		manager.requestAsset(
 			{
 				id: "testDynamicAsset",
