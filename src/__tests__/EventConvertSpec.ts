@@ -1,7 +1,7 @@
 import * as pl from "@akashic/playlog";
 import { Game, skeletonRuntime } from "./helpers";
 import { EventConverter } from "../domain/EventConverter";
-import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent } from "../domain/Event";
+import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent, PlayerInfoEvent } from "../domain/Event";
 import { Player } from "../types/Player";
 import { StorageRegion, StorageValueStore } from "../domain/Storage";
 import { FilledRect } from "../domain/entities/FilledRect";
@@ -111,5 +111,23 @@ describe("EventConverter", () => {
 		expect(() => {
 			self.toPlaylogEvent(leave2);
 		}).toThrow();
+
+		// PlayerInfo: Code, Priority, PlayerId, PlayerName, UserData
+		const pPlayerInfo: pl.PlayerInfoEvent = [
+			pl.EventCode.PlayerInfo,
+			EventPriority.System,
+			"dummyPlayerId",
+			"dummyPlayerName",
+			{ userData: "dummy" }
+		];
+		const playerInfo = new PlayerInfoEvent("dummyPlayerId", "dummyPlayerName", { userData: "dummy" }, EventPriority.System);
+		const playerInfo2 = self.toGameEvent(pPlayerInfo);
+		expect(playerInfo).toEqual(playerInfo2);
+
+		// PlayerInfoEvent 送信後にプレイヤー名が取得できていることを確認
+		const pdown: pl.PointDownEvent = [pl.EventCode.PointDown, EventPriority.System, "dummyPlayerId", 0, 110, 120];
+		const pointDown = self.toGameEvent(pdown) as PointDownEvent;
+		expect(pointDown.player.id).toBe("dummyPlayerId");
+		expect(pointDown.player.name).toBe("dummyPlayerName");
 	});
 });

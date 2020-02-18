@@ -6,7 +6,7 @@ import { AudioSystemManager } from "./domain/AudioSystemManager";
 import { Camera } from "./domain/Camera";
 import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E, PointSource } from "./domain/entities/E";
-import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent } from "./domain/Event";
+import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent } from "./domain/Event";
 import { LoadingScene } from "./domain/LoadingScene";
 import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
@@ -111,7 +111,7 @@ export interface GameResetParameterObject {
  *
  * 多くの機能を持つが、本クラスをゲーム開発者が利用するのは以下のようなケースである。
  * 1. Sceneの生成時、コンストラクタに引数として渡す
- * 2. Sceneに紐付かないイベント Game#join, Game#leave, Game#seed を処理する
+ * 2. Sceneに紐付かないイベント Game#join, Game#leave, Game#playerInfo, Game#seed を処理する
  * 3. 乱数を発生させるため、Game#randomにアクセスしRandomGeneratorを取得する
  * 4. ゲームのメタ情報を確認するため、Game#width, Game#height, Game#fpsにアクセスする
  * 5. グローバルアセットを取得するため、Game#assetsにアクセスする
@@ -151,6 +151,10 @@ export abstract class Game implements Registrable<E> {
 	 * プレイヤーがゲームから離脱したことを表すイベント。
 	 */
 	leave: Trigger<LeaveEvent>;
+	/**
+	 * 新しいプレイヤー情報が発生したことを示すイベント。
+	 */
+	playerInfo: Trigger<PlayerInfoEvent>;
 	/**
 	 * 新しい乱数シードが発生したことを示すイベント。
 	 */
@@ -506,14 +510,16 @@ export abstract class Game implements Registrable<E> {
 		this.assets = {};
 		this.surfaceAtlasSet = undefined;
 
-		// TODO: (GAMEDEV-666) この三つのイベントはGame自身がデフォルトのイベントハンドラを持って処理する必要があるかも
+		// TODO: (GAMEDEV-666) この4つのイベントはGame自身がデフォルトのイベントハンドラを持って処理する必要があるかも
 		this.join = new Trigger<JoinEvent>();
 		this.leave = new Trigger<LeaveEvent>();
+		this.playerInfo = new Trigger<PlayerInfoEvent>();
 		this.seed = new Trigger<SeedEvent>();
 
 		this._eventTriggerMap = {};
 		this._eventTriggerMap[EventType.Join] = this.join;
 		this._eventTriggerMap[EventType.Leave] = this.leave;
+		this._eventTriggerMap[EventType.PlayerInfo] = this.playerInfo;
 		this._eventTriggerMap[EventType.Seed] = this.seed;
 		this._eventTriggerMap[EventType.Message] = undefined;
 		this._eventTriggerMap[EventType.PointDown] = undefined;
@@ -1074,6 +1080,8 @@ export abstract class Game implements Registrable<E> {
 		this.leave = undefined;
 		this.seed.destroy();
 		this.seed = undefined;
+		this.playerInfo.destroy();
+		this.playerInfo = undefined;
 		this._modified = false;
 		this.age = 0;
 		this.assets = undefined; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。

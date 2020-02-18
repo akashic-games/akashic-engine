@@ -1,7 +1,6 @@
 import * as pl from "@akashic/playlog";
-import { Game } from "../Game";
 import { Player } from "../types/Player";
-import { Event, EventType, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, TimestampEvent } from "./Event";
+import { Event, EventType, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
 import { CommonOffset } from "../types/commons";
 import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import { StorageValueStore } from "./Storage";
@@ -9,13 +8,19 @@ import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
 import { EventIndex } from "../types/EventIndex";
 
+interface EventConverterParameterObejctGameLike {
+	db: { [idx: number]: E };
+	_localDb: { [id: number]: E };
+	_decodeOperationPluginOperation: (code: number, op: (number | string)[]) => any;
+}
+
 export interface EventConverterParameterObejct {
-	game: Game;
+	game: EventConverterParameterObejctGameLike;
 	playerId: string;
 }
 
 export class EventConverter {
-	_game: Game;
+	_game: EventConverterParameterObejctGameLike;
 	_playerId: string;
 	_playerTable: { [key: string]: Player };
 
@@ -69,6 +74,15 @@ export class EventConverter {
 			case pl.EventCode.Timestamp:
 				timestamp = pev[EventIndex.Timestamp.Timestamp];
 				return new TimestampEvent(timestamp, player, prio);
+
+			case pl.EventCode.PlayerInfo:
+				let playerName = pev[EventIndex.PlayerInfo.PlayerName];
+				let userData: any = pev[EventIndex.PlayerInfo.UserData];
+				this._playerTable[playerId] = {
+					id: playerId,
+					name: playerName
+				};
+				return new PlayerInfoEvent(playerId, playerName, userData, prio);
 
 			case pl.EventCode.Message:
 				local = pev[EventIndex.Message.Local];
@@ -155,6 +169,16 @@ export class EventConverter {
 					ts.priority, //            1: 優先度
 					playerId, //               2: プレイヤーID
 					ts.timestamp //            3: タイムスタンプ
+				];
+			case EventType.PlayerInfo:
+				let playerInfo = <PlayerInfoEvent>e;
+				playerId = preservePlayer ? playerInfo.playerId : this._playerId;
+				return [
+					pl.EventCode.PlayerInfo, // 0: イベントコード
+					playerInfo.priority, //     1: 優先度
+					playerId, //                2: プレイヤーID
+					playerInfo.playerName, //   3: プレイヤー名
+					playerInfo.userData //      4: ユーザデータ
 				];
 			case EventType.PointDown:
 				let pointDown = <PointDownEvent>e;

@@ -8,8 +8,8 @@ import { FilledRect } from "../domain/entities/FilledRect";
 describe("PointEventResolver", () => {
 	it("can be instantiated", () => {
 		const game = skeletonRuntime().game;
-		const resolver = new PointEventResolver({ game, playerId: game.selfId });
-		expect(resolver._game).toBe(game);
+		const resolver = new PointEventResolver({ resolver: game, playerId: game.selfId });
+		expect(resolver._resolver).toBe(game);
 		expect(resolver._playerId).toBe(game.selfId);
 	});
 
@@ -18,7 +18,7 @@ describe("PointEventResolver", () => {
 		const game = runtime.game;
 		const scene = runtime.scene;
 		const playerId = "dummyPlayerId";
-		const resolver = new PointEventResolver({ game, playerId });
+		const resolver = new PointEventResolver({ resolver: game, playerId });
 
 		const rect1 = new FilledRect({
 			scene,
@@ -95,7 +95,7 @@ describe("PointEventResolver", () => {
 		const game = runtime.game;
 		const scene = runtime.scene;
 		const playerId = "dummyPlayerId";
-		const resolver = new PointEventResolver({ game, playerId });
+		const resolver = new PointEventResolver({ resolver: game, playerId });
 
 		const rect1 = new FilledRect({
 			scene,
@@ -183,7 +183,7 @@ describe("PointEventResolver", () => {
 		const runtime = skeletonRuntime();
 		const game = runtime.game;
 		const playerId = "dummyPlayerId";
-		const resolver = new PointEventResolver({ game, playerId });
+		const resolver = new PointEventResolver({ resolver: game, playerId });
 
 		resolver.pointDown({
 			type: PlatformPointType.Down,

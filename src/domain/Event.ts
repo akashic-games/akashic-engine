@@ -25,6 +25,10 @@ export enum EventType {
 	 */
 	Timestamp,
 	/**
+	 * プレイヤー情報を表すイベント。
+	 */
+	PlayerInfo,
+	/**
 	 * 乱数生成器の生成を表すイベント。
 	 * この値は利用されていない。
 	 */
@@ -279,6 +283,25 @@ export class TimestampEvent implements Event {
 		this.priority = priority;
 		this.player = player;
 		this.timestamp = timestamp;
+	}
+}
+
+/**
+ * プレイヤー情報を表すイベント。
+ * PointInfoEvent#playerNameによってプレイヤー名を、PlayerInfoEvent#userData によってユーザ情報を取得できる。
+ */
+export class PlayerInfoEvent implements Event {
+	type: EventType = EventType.PlayerInfo;
+	priority: number;
+	playerId: string;
+	playerName: string;
+	userData: any;
+
+	constructor(playerId: string, playerName: string, userData?: any, priority?: number) {
+		this.priority = priority;
+		this.playerId = playerId;
+		this.playerName = playerName;
+		this.userData = userData;
 	}
 }
 

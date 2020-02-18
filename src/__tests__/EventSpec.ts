@@ -7,6 +7,7 @@ import {
 	PointDownEvent,
 	PointMoveEvent,
 	PointUpEvent,
+	PlayerInfoEvent,
 	SeedEvent,
 	TimestampEvent,
 	XorshiftRandomGenerator
@@ -88,6 +89,17 @@ describe("test Event", () => {
 		expect(timestampEvent.type).toBe(EventType.Timestamp);
 		expect(timestampEvent.priority).toBe(1);
 		expect(timestampEvent.timestamp).toBe(42);
+	});
+
+	it("初期化 - PlayerInfo", () => {
+		const player = { id: "3", name: "p" };
+		const userData = { hoge: "foo" };
+		const playerInfoEvent = new PlayerInfoEvent(player.id, player.name, userData, 1);
+		expect(playerInfoEvent.type).toBe(EventType.PlayerInfo);
+		expect(playerInfoEvent.priority).toBe(1);
+		expect(playerInfoEvent.userData).toEqual(userData);
+		expect(playerInfoEvent.playerId).toBe(player.id);
+		expect(playerInfoEvent.playerName).toBe(player.name);
 	});
 
 	it("初期化 - Seed", () => {
