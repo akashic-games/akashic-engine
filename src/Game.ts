@@ -156,10 +156,6 @@ export abstract class Game implements Registrable<E> {
 	 */
 	seed: Trigger<SeedEvent>;
 	/**
-	 * 画面更新が必要かのフラグ。
-	 */
-	modified: boolean;
-	/**
 	 * このコンテンツの累計経過時間。
 	 * 通常は `this.scene().local` が偽である状態で `tick()` の呼ばれた回数だが、シーン切り替え時等 `tick()` が呼ばれた時以外で加算される事もある。
 	 */
@@ -450,6 +446,12 @@ export abstract class Game implements Registrable<E> {
 	_runtimeValueBase: ScriptAssetRuntimeValueBase;
 
 	/**
+	 * 画面更新が必要か否かのフラグ。
+	 * @private
+	 */
+	_modified: boolean;
+
+	/**
 	 * 実行待ちのシーン遷移要求。
 	 */
 	private _sceneChangeRequests: SceneChangeRequest[];
@@ -458,7 +460,7 @@ export abstract class Game implements Registrable<E> {
 	 * 使用中のカメラ。
 	 *
 	 * `Game#draw()`, `Game#findPointSource()` のデフォルト値として使用される。
-	 * この値を変更した場合、変更を描画に反映するためには `Game#modified` に真を代入しなければならない。
+	 * この値を変更した場合、変更を描画に反映するためには `Game#modified()` を呼び出す必要がある。
 	 */
 	// focusingCameraが変更されても古いカメラをtargetCamerasに持つエンティティのEntityStateFlags.Modifiedを取りこぼすことが無いように、変更時にはrenderを呼べるようアクセサを使う
 	get focusingCamera(): Camera {
@@ -466,7 +468,7 @@ export abstract class Game implements Registrable<E> {
 	}
 	set focusingCamera(c: Camera) {
 		if (c === this._focusingCamera) return;
-		if (this.modified) this.render(this._focusingCamera);
+		if (this._modified) this.render(this._focusingCamera);
 		this._focusingCamera = c;
 	}
 
@@ -707,7 +709,7 @@ export abstract class Game implements Registrable<E> {
 			renderer.restore();
 			renderer.end();
 		}
-		this.modified = false;
+		this._modified = false;
 	}
 
 	/**
@@ -802,6 +804,13 @@ export abstract class Game implements Registrable<E> {
 		this._leaveGame();
 		this._isTerminated = true;
 		this._terminateGame();
+	}
+
+	/**
+	 * 画面更新が必要のフラグを設定する。
+	 */
+	modified(): void {
+		this._modified = true;
 	}
 
 	/**
@@ -1006,7 +1015,7 @@ export abstract class Game implements Registrable<E> {
 		this.db = {};
 		this._localDb = {};
 		this.events = [];
-		this.modified = true;
+		this._modified = true;
 		this.loadingScene = undefined;
 		this._focusingCamera = undefined;
 		this.snapshotRequest.removeAll();
@@ -1065,7 +1074,7 @@ export abstract class Game implements Registrable<E> {
 		this.leave = undefined;
 		this.seed.destroy();
 		this.seed = undefined;
-		this.modified = false;
+		this._modified = false;
 		this.age = 0;
 		this.assets = undefined; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
 		this.isLoaded = false;
@@ -1152,7 +1161,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_updateEventTriggers(scene: Scene): void {
-		this.modified = true;
+		this._modified = true;
 		if (!scene) {
 			this._eventTriggerMap[EventType.Message] = undefined;
 			this._eventTriggerMap[EventType.PointDown] = undefined;
@@ -1278,6 +1287,6 @@ export abstract class Game implements Registrable<E> {
 				this._fireSceneLoaded(scene);
 			}
 		}
-		this.modified = true;
+		this._modified = true;
 	}
 }
