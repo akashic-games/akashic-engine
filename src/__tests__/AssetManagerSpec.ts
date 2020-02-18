@@ -82,8 +82,6 @@ describe("test AssetManager", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
 
-		expect(manager.game).toBe(game);
-
 		expect(manager.configuration.foo.path).toBe(gameConfiguration.assets.foo.path);
 		expect(manager.configuration.bar.path).toBe(gameConfiguration.assets.bar.path);
 		expect(manager.configuration.zoo.path).toBe(gameConfiguration.assets.zoo.path);

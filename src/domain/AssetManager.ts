@@ -1,9 +1,9 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { VideoSystem } from "../commons/VideoSystem";
-import { Game } from "../Game";
 import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
 import { AudioAssetLike } from "../interfaces/AudioAssetLike";
 import { ImageAssetLike } from "../interfaces/ImageAssetLike";
+import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
 import { TextAssetLike } from "../interfaces/TextAssetLike";
 import { VideoAssetLike } from "../interfaces/VideoAssetLike";
@@ -19,8 +19,15 @@ import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
 import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
+import { AudioSystemManager } from "./AudioSystemManager";
 
 export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
+
+export interface AssetManagerParameterGameLike {
+	resourceFactory: ResourceFactoryLike;
+	audio: AudioSystemManager;
+	defaultAudioSystemId: "music" | "sound";
+}
 
 class AssetLoadingInfo {
 	asset: OneOfAssetLike;
@@ -112,11 +119,6 @@ export class AssetManager implements AssetLoadHandler {
 	static MAX_ERROR_COUNT: number = 3;
 
 	/**
-	 * このインスタンスが属するゲーム。
-	 */
-	game: Game;
-
-	/**
 	 * コンストラクタに渡されたアセットの設定。(assets.json が入っていることが期待される)
 	 */
 	configuration: { [key: string]: any };
@@ -163,6 +165,21 @@ export class AssetManager implements AssetLoadHandler {
 	_refCounts: { [key: string]: number };
 
 	/**
+	 * 各種リソースのファクトリ。
+	 */
+	private _resourceFactory: ResourceFactoryLike;
+
+	/**
+	 * オーディオシステム群
+	 */
+	private _audioSystemManager: AudioSystemManager;
+
+	/**
+	 * デフォルトで利用されるオーディオシステムのID。
+	 */
+	private _defaultAudioSystemId: "music" | "sound";
+
+	/**
 	 * 読み込み中のアセットの情報。
 	 */
 	private _loadings: { [key: string]: AssetLoadingInfo };
@@ -174,12 +191,14 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 	 */
 	constructor(
-		game: Game,
+		gameParams: AssetManagerParameterGameLike,
 		conf?: AssetConfigurationMap,
 		audioSystemConfMap?: AudioSystemConfigurationMap,
 		moduleMainScripts?: ModuleMainScriptsMap
 	) {
-		this.game = game;
+		this._resourceFactory = gameParams.resourceFactory;
+		this._audioSystemManager = gameParams.audio;
+		this._defaultAudioSystemId = gameParams.defaultAudioSystemId;
 		this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
 		this._assets = {};
 		this._virtualPathToIdTable = {};
@@ -205,7 +224,6 @@ export class AssetManager implements AssetLoadHandler {
 		for (var i = 0; i < assetIds.length; ++i) {
 			this._releaseAsset(assetIds[i]);
 		}
-		this.game = undefined;
 		this.configuration = undefined;
 		this._assets = undefined;
 		this._liveAssetVirtualPathTable = undefined;
@@ -218,7 +236,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * このインスタンスが破棄済みであるかどうかを返す。
 	 */
 	destroyed(): boolean {
-		return this.game === undefined;
+		return this._assets === undefined;
 	}
 
 	/**
@@ -486,7 +504,7 @@ export class AssetManager implements AssetLoadHandler {
 			conf = dynConf;
 			uri = dynConf.uri;
 		}
-		var resourceFactory = this.game.resourceFactory;
+		var resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 		switch (conf.type) {
 			case "image":
@@ -494,7 +512,7 @@ export class AssetManager implements AssetLoadHandler {
 				asset.initialize(<ImageAssetHint>conf.hint);
 				return asset;
 			case "audio":
-				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
+				var system = conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
 				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
