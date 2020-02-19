@@ -57,6 +57,9 @@ export class EventConverter {
 					id: playerId,
 					name: pev[EventIndex.Join.PlayerName]
 				};
+				if (this._playerTable[playerId] && this._playerTable[playerId].userData != null) {
+					player.userData = this._playerTable[playerId].userData;
+				}
 				this._playerTable[playerId] = player;
 
 				let store: StorageValueStore = undefined;
@@ -84,7 +87,8 @@ export class EventConverter {
 				let userData: any = pev[EventIndex.PlayerInfo.UserData];
 				this._playerTable[playerId] = {
 					id: playerId,
-					name: playerName
+					name: playerName,
+					userData
 				};
 				return new PlayerInfoEvent(playerId, playerName, userData, prio);
 

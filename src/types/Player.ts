@@ -4,4 +4,5 @@
 export interface Player {
 	id: string;
 	name?: string;
+	userData?: any;
 }
