@@ -510,7 +510,6 @@ export abstract class Game implements Registrable<E> {
 		this.assets = {};
 		this.surfaceAtlasSet = undefined;
 
-		// TODO: (GAMEDEV-666) この4つのイベントはGame自身がデフォルトのイベントハンドラを持って処理する必要があるかも
 		this.join = new Trigger<JoinEvent>();
 		this.leave = new Trigger<LeaveEvent>();
 		this.playerInfo = new Trigger<PlayerInfoEvent>();
