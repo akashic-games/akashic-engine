@@ -8,6 +8,7 @@ import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
 import { EventIndex } from "../types/EventIndex";
 
+// TODO: Game を意識しないインターフェース を検討する
 interface EventConverterParameterObejctGameLike {
 	db: { [idx: number]: E };
 	_localDb: { [id: number]: E };
