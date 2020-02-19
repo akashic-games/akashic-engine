@@ -1,8 +1,9 @@
 import * as pl from "@akashic/playlog";
 import { CommonOffset } from "../types/commons";
-import { Game } from "../Game";
 import { PlatformPointEvent } from "../types/PlatformPointEvent";
 import { EventPriority } from "../types/EventPriority";
+import { Camera } from "./Camera";
+import { PointSource } from "./entities/E";
 
 interface PointEventHolder {
 	targetId: number;
@@ -14,11 +15,15 @@ interface PointEventHolder {
 	//       pointUpをトリガに解放するので、pointUpを取り逃すとリークする(mapに溜まったままになってしまう)
 }
 
+export interface PointSourceResolver {
+	findPointSource(point: CommonOffset, camera?: Camera): PointSource;
+}
+
 export interface PointEventResolverParameterObject {
 	/**
-	 * この `PointEventResolver` がエンティティの解決などに用いる `Game` 。
+	 * この `PointEventResolver` がエンティティの解決などに用いる `PointSourceResolver` 。
 	 */
-	game: Game;
+	sourceResolver: PointSourceResolver;
 
 	/**
 	 * プレイヤーID
@@ -34,21 +39,23 @@ export interface PointEventResolverParameterObject {
  * それらの足りない情報を管理・追加して、PlatformPointEventをg.Eventに変換するクラス。
  * Platform実装はpointDown()なしでpointMove()を呼び出してくることも考えられるため、
  * Down -> Move -> Up の流れを保証する機能も持つ。
+ *
+ * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class PointEventResolver {
-	_game: Game;
+	_sourceResolver: PointSourceResolver;
 	_playerId: string;
 
 	// g.Eと関連した座標データ
 	private _pointEventMap: { [key: number]: PointEventHolder } = {};
 
 	constructor(param: PointEventResolverParameterObject) {
-		this._game = param.game;
+		this._sourceResolver = param.sourceResolver;
 		this._playerId = param.playerId;
 	}
 
 	pointDown(e: PlatformPointEvent): pl.PointDownEvent {
-		const source = this._game.findPointSource(e.offset);
+		const source = this._sourceResolver.findPointSource(e.offset);
 		const point = source.point ? source.point : e.offset;
 		const targetId = source.target ? source.target.id : null;
 

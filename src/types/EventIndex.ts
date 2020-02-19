@@ -52,6 +52,15 @@ export module EventIndex {
 		Local = 4
 	}
 
+	export const enum PlayerInfo {
+		Code = 0,
+		Priority = 1,
+		PlayerId = 2,
+		PlayerName = 3,
+		UserData = 4,
+		Local = 5
+	}
+
 	export const enum Message {
 		Code = 0,
 		Priority = 1,
