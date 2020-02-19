@@ -23,7 +23,7 @@ export interface PointEventResolverParameterObject {
 	/**
 	 * この `PointEventResolver` がエンティティの解決などに用いる `PointSourceResolver` 。
 	 */
-	resolver: PointSourceResolver;
+	sourceResolver: PointSourceResolver;
 
 	/**
 	 * プレイヤーID
@@ -43,19 +43,19 @@ export interface PointEventResolverParameterObject {
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class PointEventResolver {
-	_resolver: PointSourceResolver;
+	_sourceResolver: PointSourceResolver;
 	_playerId: string;
 
 	// g.Eと関連した座標データ
 	private _pointEventMap: { [key: number]: PointEventHolder } = {};
 
 	constructor(param: PointEventResolverParameterObject) {
-		this._resolver = param.resolver;
+		this._sourceResolver = param.sourceResolver;
 		this._playerId = param.playerId;
 	}
 
 	pointDown(e: PlatformPointEvent): pl.PointDownEvent {
-		const source = this._resolver.findPointSource(e.offset);
+		const source = this._sourceResolver.findPointSource(e.offset);
 		const point = source.point ? source.point : e.offset;
 		const targetId = source.target ? source.target.id : null;
 
