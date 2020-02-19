@@ -39,6 +39,8 @@ export interface PointEventResolverParameterObject {
  * それらの足りない情報を管理・追加して、PlatformPointEventをg.Eventに変換するクラス。
  * Platform実装はpointDown()なしでpointMove()を呼び出してくることも考えられるため、
  * Down -> Move -> Up の流れを保証する機能も持つ。
+ *
+ * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class PointEventResolver {
 	_resolver: PointSourceResolver;
