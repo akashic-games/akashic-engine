@@ -1,4 +1,5 @@
 import { Trigger } from "@akashic/trigger";
+import * as pl from "@akashic/playlog";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
 import { AssetManager } from "./domain/AssetManager";
@@ -7,11 +8,14 @@ import { Camera } from "./domain/Camera";
 import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E, PointSource } from "./domain/entities/E";
 import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent } from "./domain/Event";
+import { EventConverter } from "./domain/EventConverter";
 import { LoadingScene } from "./domain/LoadingScene";
 import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
+import { PointEventResolver } from "./domain/PointEventResolver";
 import { RandomGenerator } from "./domain/RandomGenerator";
 import { Storage } from "./domain/Storage";
+import { XorshiftRandomGenerator } from "./domain/XorshiftRandomGenerator";
 import { AssetLike } from "./interfaces/AssetLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
@@ -27,8 +31,6 @@ import { InternalOperationPluginInfo } from "./types/OperationPluginInfo";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
-
-import * as g from "./index.runtime";
 
 /**
  * シーン遷移要求のタイプ。
@@ -97,10 +99,48 @@ export interface GameResetParameterObject {
 	age?: number;
 
 	/**
-	 * `Game#random` に設定する値。
+	 * `Game#random` に設定するシード値。
 	 * 省略された場合、元の値が維持される。
 	 */
-	randGen?: RandomGenerator;
+	randSeed?: number;
+}
+
+/**
+ * `Game` のコンストラクタに渡すことができるパラメータ。
+ */
+export interface GameParameterObject {
+	/**
+	 * require("@akashic/akashic-engine") により得られる値。
+	 */
+	engineModule: any;
+
+	/**
+	 * この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
+	 */
+	configuration: GameConfiguration;
+
+	/**
+	 * この `Game` が用いる、リソースのファクトリ
+	 */
+	resourceFactory: ResourceFactoryLike;
+
+	/**
+	 * アセットのパスの基準となるディレクトリ。
+	 * @default ""
+	 */
+	assetBase?: string;
+
+	/**
+	 * このゲームを実行するユーザのID。
+	 * @default undefined
+	 */
+	selfId?: string;
+
+	/**
+	 * このゲームの操作プラグインに与えるviewの情報。
+	 * @default undefined
+	 */
+	operationPluginViewInfo?: OperationPluginViewInfo;
 }
 
 /**
@@ -139,10 +179,6 @@ export abstract class Game implements Registrable<E> {
 	 * このGameで利用可能な乱数生成機群。
 	 */
 	random: RandomGenerator;
-	/**
-	 * 処理待ちのイベント。
-	 */
-	events: Event[];
 	/**
 	 * プレイヤーがゲームに参加したことを表すイベント。
 	 */
@@ -385,8 +421,21 @@ export abstract class Game implements Registrable<E> {
 
 	/**
 	 * モジュールの管理者。
+	 * @private
 	 */
 	_moduleManager: ModuleManager;
+
+	/**
+	 * イベントコンバータ。
+	 * @private
+	 */
+	_eventConverter: EventConverter;
+
+	/**
+	 * ポイントイベントの解決モジュール。
+	 * @private
+	 */
+	_pointEventResolver: PointEventResolver;
 
 	/**
 	 * 操作プラグインによる操作を通知するTrigger。
@@ -472,26 +521,15 @@ export abstract class Game implements Registrable<E> {
 	}
 	set focusingCamera(c: Camera) {
 		if (c === this._focusingCamera) return;
-		if (this._modified) this.render(this._focusingCamera);
+		if (this._modified) this.render();
 		this._focusingCamera = c;
 	}
 
 	/**
 	 * `Game` のインスタンスを生成する。
-	 * @param gameConfiguration この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
-	 * @param resourceFactory この `Game` が用いる、リソースのファクトリ
-	 * @param assetBase アセットのパスの基準となるディレクトリ。省略された場合、空文字列
-	 * @param selfId このゲームを実行するユーザのID。省略された場合、`undefined`
-	 * @param operationPluginViewInfo このゲームの操作プラグインに与えるviewの情報
 	 */
-	constructor(
-		gameConfiguration: GameConfiguration,
-		resourceFactory: ResourceFactoryLike,
-		assetBase?: string,
-		selfId?: string,
-		operationPluginViewInfo?: OperationPluginViewInfo
-	) {
-		gameConfiguration = this._normalizeConfiguration(gameConfiguration);
+	constructor(param: GameParameterObject) {
+		const gameConfiguration = this._normalizeConfiguration(param.configuration);
 		this.fps = gameConfiguration.fps;
 		this.width = gameConfiguration.width;
 		this.height = gameConfiguration.height;
@@ -499,9 +537,9 @@ export abstract class Game implements Registrable<E> {
 		this.scenes = [];
 		this.random = null;
 		this.age = 0;
-		this.assetBase = assetBase || "";
-		this.resourceFactory = resourceFactory;
-		this.selfId = selfId || undefined;
+		this.assetBase = param.assetBase || "";
+		this.resourceFactory = param.resourceFactory;
+		this.selfId = param.selfId || undefined;
 		this.playId = undefined;
 		this.audio = new AudioSystemManager(this.resourceFactory);
 
@@ -539,9 +577,7 @@ export abstract class Game implements Registrable<E> {
 
 		this.external = {};
 
-		// FIXME: インスタンス生成時に直接 `Game` を代入している
-		g.setGame(Game);
-		this._runtimeValueBase = Object.create(g, {
+		this._runtimeValueBase = Object.create(param.engineModule, {
 			game: {
 				value: this,
 				enumerable: true
@@ -553,9 +589,11 @@ export abstract class Game implements Registrable<E> {
 		this._configuration = gameConfiguration;
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
+		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
+		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
-		this.operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
+		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo, operationPluginsField);
 		this._operationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this.operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
 
@@ -648,9 +686,10 @@ export abstract class Game implements Registrable<E> {
 	 * 戻り値は呼び出し前後でシーンが変わった(別のシーンに遷移した)場合、真。でなければ偽。
 	 * @param advanceAge 偽を与えた場合、`this.age` を進めない。
 	 * @param omittedTickCount タイムスタンプ待ちを省略する動作などにより、(前回の呼び出し以降に)省かれたローカルティックの数。省略された場合、 `0` 。
+	 * @param events ティックに含ませるイベント。省略された場合、 `undefined` 。
 	 */
-	tick(advanceAge: boolean, omittedTickCount?: number): boolean {
-		var scene: Scene = undefined;
+	tick(advanceAge: boolean, omittedTickCount?: number, events?: pl.Event[]): boolean {
+		let scene: Scene;
 
 		if (this._isTerminated) return false;
 
@@ -658,12 +697,11 @@ export abstract class Game implements Registrable<E> {
 		this.lastOmittedLocalTickCount = omittedTickCount || 0;
 		if (this.scenes.length) {
 			scene = this.scenes[this.scenes.length - 1];
-			if (this.events.length) {
-				var events = this.events;
-				this.events = [];
-				for (var i = 0; i < events.length; ++i) {
-					var trigger = this._eventTriggerMap[events[i].type];
-					if (trigger) trigger.fire(events[i]);
+			if (events && events.length) {
+				for (let i = 0; i < events.length; ++i) {
+					const event = this._eventConverter.toGameEvent(events[i]);
+					const trigger = this._eventTriggerMap[event.type];
+					if (trigger) trigger.fire(event);
 				}
 			}
 
@@ -683,15 +721,13 @@ export abstract class Game implements Registrable<E> {
 	 *
 	 * このゲームに紐づけられた `Renderer` (`this.renderers` に含まれるすべての `Renderer` で、この `Game` の描画を行う。
 	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
-	 *
-	 * @param camera 対象のカメラ。省略された場合 `Game.focusingCamera`
 	 */
-	render(camera?: Camera): void {
+	render(): void {
 		var scene = this.scene();
 		if (!scene) return;
 
-		if (!camera) camera = this.focusingCamera;
-		var renderers = this.renderers; // unsafe
+		const camera = this.focusingCamera;
+		const renderers = this.renderers; // unsafe
 
 		for (let i = 0; i < renderers.length; ++i) {
 			const renderer = renderers[i];
@@ -1003,7 +1039,7 @@ export abstract class Game implements Registrable<E> {
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
-			if (param.randGen !== undefined) this.random = param.randGen;
+			if (param.randSeed !== undefined) this.random = new XorshiftRandomGenerator(param.randSeed);
 		}
 
 		this.audio._reset();
@@ -1019,7 +1055,6 @@ export abstract class Game implements Registrable<E> {
 		this._cameraIdx = 0;
 		this.db = {};
 		this._localDb = {};
-		this.events = [];
 		this._modified = true;
 		this.loadingScene = undefined;
 		this._focusingCamera = undefined;
@@ -1072,7 +1107,6 @@ export abstract class Game implements Registrable<E> {
 		this.renderers = undefined;
 		this.scenes = undefined;
 		this.random = undefined;
-		this.events = undefined;
 		this.join.destroy();
 		this.join = undefined;
 		this.leave.destroy();
