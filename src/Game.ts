@@ -575,7 +575,7 @@ export abstract class Game implements Registrable<E> {
 			engineModule.setGame(Game);
 			console.warn(
 				"[deprecated] Game:This constructor is deprecated." +
-				" Refer to the API documentation and use Game(param: GameParameterObject) instead."
+					" Refer to the API documentation and use Game(param: GameParameterObject) instead."
 			);
 		}
 		this.fps = gameConfiguration.fps;
