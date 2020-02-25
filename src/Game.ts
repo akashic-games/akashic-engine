@@ -574,7 +574,8 @@ export abstract class Game implements Registrable<E> {
 			// FIXME: インスタンス生成時に直接 `Game` を代入している
 			engineModule.setGame(Game);
 			console.warn(
-				"[deprecated] Game:This constructor is deprecated. Refer to the API documentation and use Game(param: GameParameterObject) instead."
+				"[deprecated] Game:This constructor is deprecated." +
+				" Refer to the API documentation and use Game(param: GameParameterObject) instead."
 			);
 		}
 		this.fps = gameConfiguration.fps;
