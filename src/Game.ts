@@ -727,8 +727,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * この `Game` の時間経過とそれに伴う処理を行う。
 	 *
-	 * 現在の `Scene` に対して `Scene#update` をfireし、 `this.events` に設定されたイベントを処理する。
-	 * このメソッドの呼び出し後、 `this.events.length` は0である。
+	 * 現在の `Scene` に対して `Scene#update` をfireし、 `events` に設定されたイベントを処理する。
 	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
 	 *
 	 * 戻り値は呼び出し前後でシーンが変わった(別のシーンに遷移した)場合、真。でなければ偽。
