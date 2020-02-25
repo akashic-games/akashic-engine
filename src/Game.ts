@@ -32,6 +32,8 @@ import { InternalOperationPluginOperation } from "./types/OperationPluginOperati
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
 
+import * as g from "./index.runtime";
+
 /**
  * シーン遷移要求のタイプ。
  */
@@ -527,9 +529,54 @@ export abstract class Game implements Registrable<E> {
 
 	/**
 	 * `Game` のインスタンスを生成する。
+	 * @deprecated このコンストラクタは非推奨機能である。代わりに `GameParameterObject` を使うコンストラクタを用いるべきである。
+	 *
+	 * @param gameConfiguration この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
+	 * @param resourceFactory この `Game` が用いる、リソースのファクトリ
+	 * @param assetBase アセットのパスの基準となるディレクトリ。省略された場合、空文字列
+	 * @param selfId このゲームを実行するユーザのID。省略された場合、`undefined`
+	 * @param operationPluginViewInfo このゲームの操作プラグインに与えるviewの情報
 	 */
-	constructor(param: GameParameterObject) {
-		const gameConfiguration = this._normalizeConfiguration(param.configuration);
+	constructor(
+		paramOrConfg: GameConfiguration,
+		resourceFactory: ResourceFactoryLike,
+		assetBase?: string,
+		selfId?: string,
+		operationPluginViewInfo?: OperationPluginViewInfo
+	);
+
+	/**
+	 * `Game` のインスタンスを生成する。
+	 *
+	 * @param param この `Game` に指定するパラメータ
+	 */
+	constructor(param: GameParameterObject);
+
+	constructor(
+		paramOrConfg: GameParameterObject | GameConfiguration,
+		resourceFactory?: ResourceFactoryLike,
+		assetBase?: string,
+		selfId: string = "",
+		operationPluginViewInfo?: OperationPluginViewInfo
+	) {
+		let gameConfiguration: GameConfiguration;
+		let engineModule: any;
+		if ("resourceFactory" in paramOrConfg) {
+			gameConfiguration = this._normalizeConfiguration(paramOrConfg.configuration);
+			assetBase = paramOrConfg.assetBase || "";
+			resourceFactory = paramOrConfg.resourceFactory;
+			selfId = paramOrConfg.selfId;
+			operationPluginViewInfo = paramOrConfg.operationPluginViewInfo;
+			engineModule = paramOrConfg.engineModule;
+		} else {
+			gameConfiguration = this._normalizeConfiguration(paramOrConfg);
+			engineModule = g;
+			// FIXME: インスタンス生成時に直接 `Game` を代入している
+			engineModule.setGame(Game);
+			console.warn(
+				"[deprecated] Game:This constructor is deprecated. Refer to the API documentation and use Game(param: GameParameterObject) instead."
+			);
+		}
 		this.fps = gameConfiguration.fps;
 		this.width = gameConfiguration.width;
 		this.height = gameConfiguration.height;
@@ -537,9 +584,9 @@ export abstract class Game implements Registrable<E> {
 		this.scenes = [];
 		this.random = null;
 		this.age = 0;
-		this.assetBase = param.assetBase || "";
-		this.resourceFactory = param.resourceFactory;
-		this.selfId = param.selfId || undefined;
+		this.assetBase = assetBase;
+		this.resourceFactory = resourceFactory;
+		this.selfId = selfId;
 		this.playId = undefined;
 		this.audio = new AudioSystemManager(this.resourceFactory);
 
@@ -577,7 +624,7 @@ export abstract class Game implements Registrable<E> {
 
 		this.external = {};
 
-		this._runtimeValueBase = Object.create(param.engineModule, {
+		this._runtimeValueBase = Object.create(engineModule, {
 			game: {
 				value: this,
 				enumerable: true
@@ -593,7 +640,7 @@ export abstract class Game implements Registrable<E> {
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
-		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo, operationPluginsField);
+		this.operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
 		this._operationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this.operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
 
