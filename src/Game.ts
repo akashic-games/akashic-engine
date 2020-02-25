@@ -1199,6 +1199,8 @@ export abstract class Game implements Registrable<E> {
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
 		this._assetManager = undefined;
+		this._eventConverter = undefined;
+		this._pointEventResolver = undefined;
 		this.audio = undefined;
 		this.operationPluginManager = undefined;
 		this._operationPluginOperated.destroy();
