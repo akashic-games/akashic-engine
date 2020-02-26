@@ -640,8 +640,6 @@ export abstract class Game implements Registrable<E> {
 		this._configuration = gameConfiguration;
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
-		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
-		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 		this.operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
