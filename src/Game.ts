@@ -1107,6 +1107,8 @@ export abstract class Game implements Registrable<E> {
 		this._focusingCamera = undefined;
 		this.snapshotRequest.removeAll();
 		this._sceneChangeRequests = [];
+		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
+		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
 
 		this._isTerminated = false;
 		this.vars = {};

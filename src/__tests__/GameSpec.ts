@@ -9,6 +9,7 @@ import {
 	LoadingSceneParameterObject,
 	LocalTickMode,
 	MessageEvent,
+	PlatformPointType,
 	Scene,
 	SceneState,
 	ScriptAsset,
@@ -830,6 +831,11 @@ describe("test Game", () => {
 			game._flushSceneChangeRequests();
 
 			const randGen = new XorshiftRandomGenerator(10);
+			game._pointEventResolver.pointDown({
+				type: PlatformPointType.Down,
+				identifier: 0,
+				offset: { x: 0, y: 0 }
+			});
 			game._reset({
 				age: 3,
 				randSeed: 10
@@ -838,6 +844,12 @@ describe("test Game", () => {
 			expect(game.scene()).toBe(game._initialScene);
 			expect(game.age).toBe(3);
 			expect(game.random.generate()).toBe(randGen.generate());
+			// reset 前の PointDownEvent の情報が破棄されていることを確認
+			expect(game._pointEventResolver.pointUp({
+				type: PlatformPointType.Up,
+				identifier: 0,
+				offset: { x: 0, y: 0 }
+			})).toBeNull();
 			done();
 		});
 		game._loadAndStart();
