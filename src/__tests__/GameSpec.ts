@@ -845,11 +845,13 @@ describe("test Game", () => {
 			expect(game.age).toBe(3);
 			expect(game.random.generate()).toBe(randGen.generate());
 			// reset 前の PointDownEvent の情報が破棄されていることを確認
-			expect(game._pointEventResolver.pointUp({
-				type: PlatformPointType.Up,
-				identifier: 0,
-				offset: { x: 0, y: 0 }
-			})).toBeNull();
+			expect(
+				game._pointEventResolver.pointUp({
+					type: PlatformPointType.Up,
+					identifier: 0,
+					offset: { x: 0, y: 0 }
+				})
+			).toBeNull();
 			done();
 		});
 		game._loadAndStart();
