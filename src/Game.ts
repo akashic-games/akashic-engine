@@ -115,6 +115,7 @@ export interface GameParameterObject {
 	 * require("@akashic/akashic-engine") により得られる値。
 	 * この値はスクリプトアセットの実行時に `g` のグローバル変数の基底として利用される。
 	 * (モジュールの仕様上この値を `g.Game` 自身が生成するのが難しいため、外部から与えている)
+	 * TODO: 変数名の検討
 	 */
 	engineModule: any;
 
