@@ -387,7 +387,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			handlerOwner: this,
 			direct: true
 		});
-		this._sceneAssetHolder.loadedDefaultHandler.add(this.game._callSceneAssetHolderHandler, this.game);
+		this._sceneAssetHolder.loadHandler.add(this.game._callSceneAssetHolderHandler, this.game);
 		this._sceneAssetHolder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
 	}
 
@@ -699,7 +699,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			assetIds: assetIds,
 			handler: handler
 		});
-		holder.loadedDefaultHandler.add(this.game._callSceneAssetHolderHandler, this.game);
+		holder.loadHandler.add(this.game._callSceneAssetHolderHandler, this.game);
 		holder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
 		this._assetHolders.push(holder);
 		holder.request();

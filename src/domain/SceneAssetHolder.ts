@@ -89,7 +89,7 @@ export class SceneAssetHolder {
 	/**
 	 * 読み込み完了時に `_direct` が偽の場合にfireされる。
 	 */
-	loadedDefaultHandler: Trigger<SceneAssetHolder>;
+	loadHandler: Trigger<SceneAssetHolder>;
 
 	/**
 	 * 読み込み失敗時にゲームを終了させる場合にfireされる。
@@ -154,7 +154,7 @@ export class SceneAssetHolder {
 		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
 		this.assetLoadCompleted = new Trigger<AssetLike>();
 		this.loadFailedTerminatedGame = new Trigger<void>();
-		this.loadedDefaultHandler = new Trigger<SceneAssetHolder>();
+		this.loadHandler = new Trigger<SceneAssetHolder>();
 	}
 
 	request(): boolean {
@@ -178,7 +178,7 @@ export class SceneAssetHolder {
 		this.assetLoadFailed.destroy();
 		this.assetLoadCompleted.destroy();
 		this.loadFailedTerminatedGame.destroy();
-		this.loadedDefaultHandler.destroy();
+		this.loadHandler.destroy();
 	}
 
 	destroyed(): boolean {
@@ -227,7 +227,7 @@ export class SceneAssetHolder {
 		if (this._direct) {
 			this.callHandler();
 		} else {
-			this.loadedDefaultHandler.fire(this);
+			this.loadHandler.fire(this);
 		}
 	}
 }
