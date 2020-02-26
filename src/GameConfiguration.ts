@@ -192,6 +192,6 @@ namespace g {
 		 * 省略時または "default" を指定すると `DefaultLoadingScene` を表示する。
 		 * デフォルトローディングシーンを非表示にしたい場合は "none" を指定する。
 		 */
-		defaultLoadingScene?: "default" | "none";
+		defaultLoadingScene?: "default" | "compact" | "none";
 	}
 }

@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased Changes
+
+機能追加
+* game.json の`defaultLoadingScene` に `compact` を追加
+  * `compact` を指定した時、ローディング画面で小さなバーが右下の意表示されます。
+
 ## 2.6.1
 
 その他変更

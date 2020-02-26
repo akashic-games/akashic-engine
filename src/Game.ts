@@ -970,6 +970,9 @@ namespace g {
 				// Note: 何も描画しない実装として利用している
 				this._defaultLoadingScene = new LoadingScene({ game: this });
 				break;
+			case "compact":
+				this._defaultLoadingScene = new DefaultLoadingScene({ game: this, isCompact: true });
+				break;
 			default:
 				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
 				break;

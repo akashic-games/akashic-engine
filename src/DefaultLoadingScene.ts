@@ -8,6 +8,7 @@ namespace g {
 		 * このシーンが属する `Game` 。
 		 */
 		game: Game;
+		isCompact?: boolean;
 	}
 
 	/**
@@ -69,8 +70,11 @@ namespace g {
 		private _totalWaitingAssetCount: number;
 		private _gauge: FilledRect;
 		private _gaugeUpdateCount: number;
+		private _barX: number;
+		private _barY: number;
 		private _barWidth: number;
 		private _barHeight: number;
+		private _backOpacity: number;
 
 		/**
 		 * `DeafultLoadingScene` のインスタンスを生成する。
@@ -78,8 +82,11 @@ namespace g {
 		 */
 		constructor(param: DefaultLoadingSceneParameterObject) {
 			super({ game: param.game, name: "akashic:default-loading-scene" });
-			this._barWidth = Math.min(param.game.width, Math.max(100, param.game.width / 2));
+			this._barWidth = param.isCompact ? param.game.width / 4 : Math.min(param.game.width, Math.max(100, param.game.width / 2));
 			this._barHeight = 5;
+			this._barX = param.isCompact ? 0.95 * this.game.width - this._barWidth : (this.game.width - this._barWidth) / 2;
+			this._barY = param.isCompact ? 0.95 * this.game.height - this._barHeight : (this.game.height - this._barHeight) / 2
+			this._backOpacity = param.isCompact ? 0.2 : 0.8;
 			this._gauge = undefined;
 			this._gaugeUpdateCount = 0;
 			this._totalWaitingAssetCount = 0;
@@ -100,12 +107,12 @@ namespace g {
 						scene: this,
 						width: this.game.width,
 						height: this.game.height,
-						cssColor: "rgba(0, 0, 0, 0.8)",
+						cssColor: `rgba(0, 0, 0, ${this._backOpacity})`,
 						children: [
 							new FilledRect({
 								scene: this,
-								x: (this.game.width - this._barWidth) / 2,
-								y: (this.game.height - this._barHeight) / 2,
+								x: this._barX,
+								y: this._barY,
 								width: this._barWidth,
 								height: this._barHeight,
 								cssColor: "gray",
