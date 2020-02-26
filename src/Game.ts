@@ -14,6 +14,7 @@ import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { PointEventResolver } from "./domain/PointEventResolver";
 import { RandomGenerator } from "./domain/RandomGenerator";
+import { SceneAssetHolder } from "./domain/SceneAssetHolder";
 import { Storage } from "./domain/Storage";
 import { XorshiftRandomGenerator } from "./domain/XorshiftRandomGenerator";
 import { AssetLike } from "./interfaces/AssetLike";
@@ -21,7 +22,7 @@ import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
-import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
+import { Scene, SceneLoadState } from "./Scene";
 import { CommonOffset, CommonSize } from "./types/commons";
 import { EventFilter } from "./types/EventFilter";
 import { GameConfiguration } from "./types/GameConfiguration";
@@ -31,7 +32,6 @@ import { InternalOperationPluginInfo } from "./types/OperationPluginInfo";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
-
 import * as g from "./index.runtime";
 
 /**

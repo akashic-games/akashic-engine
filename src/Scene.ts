@@ -1,209 +1,24 @@
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetAccessor } from "./domain/AssetAccessor";
-import { AssetManager } from "./domain/AssetManager";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
 import { MessageEvent, OperationEvent } from "./domain/Event";
 import { Matrix } from "./domain/Matrix";
+import { SceneAssetHolder } from "./domain/SceneAssetHolder";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
-import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
 import { CommonOffset } from "./types/commons";
 import { Destroyable } from "./types/Destroyable";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
-import { AssetLoadError, StorageLoadError } from "./types/errors";
+import { StorageLoadError } from "./types/errors";
 import { LocalTickMode } from "./types/LocalTickMode";
 import { Registrable } from "./types/Registrable";
 import { TickGenerationMode } from "./types/TickGenerationMode";
-
-/**
- * SceneAssetHolder のコンストラクタに指定できるパラメータ。
- * 通常、ゲーム開発者が利用する必要はない。
- */
-export interface SceneAssetHolderParameterObject {
-	/**
-	 * 属するシーン。
-	 * このインスタンスが読み込んだアセットは、このシーンの `assets` から参照できる。
-	 * またこのシーンの破棄時に破棄される。
-	 */
-	scene: Scene;
-
-	/**
-	 * アセットの読み込みに利用するアセットマネージャ。
-	 */
-	assetManager: AssetManager;
-
-	/**
-	 * 読み込むアセット。
-	 */
-	assetIds?: (string | DynamicAssetConfiguration)[];
-
-	/**
-	 * 読み込むアセット。
-	 */
-	assetPaths?: string[];
-
-	/**
-	 * 読み込み完了の通知を受けるハンドラ
-	 */
-	handler: () => void;
-
-	/**
-	 * `handler` 呼び出し時、 `this` として使われる値。
-	 */
-	handlerOwner?: any;
-
-	/**
-	 * `handler` を直接呼ぶか。
-	 * 真である場合、 `handler` は読み込み完了後に直接呼び出される。
-	 * でなければ次の `Game#tick()` 呼び出し時点まで遅延される。
-	 * 省略された場合、偽。
-	 */
-	direct?: boolean;
-}
-
-/**
- * シーンのアセットの読み込みと破棄を管理するクラス。
- * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
- */
-export class SceneAssetHolder {
-	/**
-	 * 読み込みを待つ残りのアセット数。
-	 * この値は参照のためにのみ公開される。この値を外部から書き換えてはならない。
-	 */
-	waitingAssetsCount: number;
-
-	/**
-	 * @private
-	 */
-	_scene: Scene;
-
-	/**
-	 * @private
-	 */
-	_assetManager: AssetManager;
-
-	/**
-	 * @private
-	 */
-	_handler: () => void;
-
-	/**
-	 * @private
-	 */
-	_handlerOwner: any;
-
-	/**
-	 * @private
-	 */
-	_direct: boolean;
-
-	/**
-	 * @private
-	 */
-	_assetIds: (string | DynamicAssetConfiguration)[];
-
-	/**
-	 * @private
-	 */
-	_assets: AssetLike[];
-
-	/**
-	 * @private
-	 */
-	_requested: boolean;
-
-	constructor(param: SceneAssetHolderParameterObject) {
-		const assetManager = param.assetManager;
-		const assetIds = param.assetIds ? param.assetIds.concat() : [];
-		assetIds.push.apply(assetIds, assetManager.resolvePatternsToAssetIds(param.assetPaths || []));
-
-		this.waitingAssetsCount = assetIds.length;
-		this._scene = param.scene;
-		this._assetManager = assetManager;
-		this._assetIds = assetIds;
-		this._assets = [];
-		this._handler = param.handler;
-		this._handlerOwner = param.handlerOwner || null;
-		this._direct = !!param.direct;
-		this._requested = false;
-	}
-
-	request(): boolean {
-		if (this.waitingAssetsCount === 0) return false;
-		if (this._requested) return true;
-		this._requested = true;
-		this._assetManager.requestAssets(this._assetIds, this);
-		return true;
-	}
-
-	destroy(): void {
-		if (this._requested) {
-			this._assetManager.unrefAssets(this._assets);
-		}
-		this.waitingAssetsCount = 0;
-		this._scene = undefined;
-		this._assetIds = undefined;
-		this._handler = undefined;
-		this._requested = false;
-	}
-
-	destroyed(): boolean {
-		return !this._scene;
-	}
-
-	callHandler(): void {
-		this._handler.call(this._handlerOwner);
-	}
-
-	/**
-	 * @private
-	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError): void {
-		if (this.destroyed() || this._scene.destroyed()) return;
-		var failureInfo = {
-			asset: asset,
-			error: error,
-			cancelRetry: false
-		};
-		this._scene.assetLoadFailed.fire(failureInfo);
-		if (error.retriable && !failureInfo.cancelRetry) {
-			this._assetManager.retryLoad(asset);
-		} else {
-			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
-			if (this._assetManager.configuration[asset.id]) this._scene.game.terminateGame();
-		}
-		this._scene.assetLoadCompleted.fire(asset);
-	}
-
-	/**
-	 * @private
-	 */
-	_onAssetLoad(asset: AssetLike): void {
-		if (this.destroyed() || this._scene.destroyed()) return;
-
-		this._scene.assets[asset.id] = asset;
-		this._scene.assetLoaded.fire(asset);
-		this._scene.assetLoadCompleted.fire(asset);
-		this._assets.push(asset);
-
-		--this.waitingAssetsCount;
-		if (this.waitingAssetsCount < 0)
-			throw ExceptionFactory.createAssertionError("SceneAssetHolder#_onAssetLoad: broken waitingAssetsCount");
-		if (this.waitingAssetsCount > 0) return;
-
-		if (this._direct) {
-			this.callHandler();
-		} else {
-			this._scene.game._callSceneAssetHolderHandler(this);
-		}
-	}
-}
 
 /**
  * `Scene` のコンストラクタに渡すことができるパラメータ。
@@ -400,31 +215,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	loaded: Trigger<Scene>;
 
 	/**
-	 * アセット読み込み成功イベント。
-	 *
-	 * このシーンのアセットが一つ読み込まれる度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 */
-	assetLoaded: Trigger<AssetLike>;
-
-	/**
-	 * アセット読み込み失敗イベント。
-	 *
-	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
-	 */
-	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
-
-	/**
-	 * アセット読み込み完了イベント。
-	 *
-	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 */
-	assetLoadCompleted: Trigger<AssetLike>;
-
-	/**
 	 * シーンの状態。
 	 */
 	state: SceneState;
@@ -577,10 +367,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.update = new Trigger<void>();
 		this._timer = new TimerManager(this.update, this.game.fps);
 
-		this.assetLoaded = new Trigger<AssetLike>();
-		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
-		this.assetLoadCompleted = new Trigger<AssetLike>();
-
 		this.message = new Trigger<MessageEvent>();
 		this.pointDownCapture = new Trigger<PointDownEvent>();
 		this.pointMoveCapture = new Trigger<PointMoveEvent>();
@@ -593,7 +379,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 
 		this._assetHolders = [];
 		this._sceneAssetHolder = new SceneAssetHolder({
-			scene: this,
+			assets: this.assets,
 			assetManager: this.game._assetManager,
 			assetIds: param.assetIds,
 			assetPaths: param.assetPaths,
@@ -601,6 +387,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			handlerOwner: this,
 			direct: true
 		});
+		this._sceneAssetHolder.loadedHandler.add(this.game._callSceneAssetHolderHandler, this.game);
+		this._sceneAssetHolder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
 	}
 
 	/**
@@ -647,9 +435,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.pointUpCapture.destroy();
 		this.operation.destroy();
 		this.loaded.destroy();
-		this.assetLoaded.destroy();
-		this.assetLoadFailed.destroy();
-		this.assetLoadCompleted.destroy();
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
@@ -908,12 +693,14 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			throw ExceptionFactory.createAssertionError("Scene#requestAsset(): can be called after loaded.");
 		}
 
-		var holder = new SceneAssetHolder({
-			scene: this,
+		const holder = new SceneAssetHolder({
+			assets: this.assets,
 			assetManager: this.game._assetManager,
 			assetIds: assetIds,
 			handler: handler
 		});
+		holder.loadedHandler.add(this.game._callSceneAssetHolderHandler, this.game);
+		holder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
 		this._assetHolders.push(holder);
 		holder.request();
 	}
