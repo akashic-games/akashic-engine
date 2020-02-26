@@ -119,26 +119,6 @@ export class SceneAssetHolder {
 	/**
 	 * @private
 	 */
-	_indirectHandler: (assetHolder: SceneAssetHolder) => void;
-
-	/**
-	 * @private
-	 */
-	_indirectHandlerOwner: any;
-
-	/**
-	 * @private
-	 */
-	_terminateGameHandler: () => void;
-
-	/**
-	 * @private
-	 */
-	_terminateGameHandlerOwner: any;
-
-	/**
-	 * @private
-	 */
 	_direct: boolean;
 
 	/**
@@ -192,8 +172,6 @@ export class SceneAssetHolder {
 		this.waitingAssetsCount = 0;
 		this._assetIds = undefined;
 		this._handler = undefined;
-		this._indirectHandler = undefined;
-		this._terminateGameHandler = undefined;
 		this._requested = false;
 
 		this.assetLoaded.destroy();
