@@ -117,7 +117,6 @@ describe("test AssetManager", () => {
 	});
 
 	it("rejects illegal configuration", () => {
-		expect(() => new Game(undefined!)).toThrowError("AssertionError");
 		const illegalConf = {
 			foo: {
 				type: "image",

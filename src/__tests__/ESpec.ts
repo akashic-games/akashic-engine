@@ -1,4 +1,4 @@
-import { Camera2D, CompositeOperation, E, PlainMatrix, PointDownEvent, PointSource, Scene } from "..";
+import { Camera2D, CompositeOperation, E, PlainMatrix, PlatformPointType, PointDownEvent, PointSource, Scene } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -437,9 +437,14 @@ describe("test E", () => {
 		expect(runtime.scene.pointDownCapture.length > 0).toBe(false);
 
 		const operationTick = () => {
-			runtime.game.events.push(new PointDownEvent(1, e, { x: 0, y: 0 }, { id: "1" }));
-			runtime.game.tick(true);
+			const event = runtime.game._pointEventResolver.pointDown({
+				type: PlatformPointType.Down,
+				identifier: 1,
+				offset: { x: 0, y: 0 }
+			});
+			runtime.game.tick(true, 0, [event]);
 		};
+
 		let estate = false;
 		let esuccess = false;
 		e.pointDown.add(() => {
@@ -448,6 +453,8 @@ describe("test E", () => {
 		});
 		operationTick();
 		e.touchable = true;
+		e.width = 1;
+		e.height = 1;
 
 		estate = true;
 		operationTick();

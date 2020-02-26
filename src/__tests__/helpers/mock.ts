@@ -576,13 +576,13 @@ export class Game extends g.Game {
 	audio: AudioSystemManager;
 
 	constructor(
-		gameConfiguration: g.GameConfiguration,
+		configuration: g.GameConfiguration,
 		assetBase?: string,
 		selfId?: string,
 		operationPluginViewInfo?: g.OperationPluginViewInfo
 	) {
 		const resourceFactory = new ResourceFactory();
-		super(gameConfiguration, resourceFactory, assetBase, selfId, operationPluginViewInfo);
+		super({ engineModule: g, configuration, resourceFactory, assetBase, selfId, operationPluginViewInfo });
 		resourceFactory.init(this);
 		this.leftGame = false;
 		this.terminatedGame = false;

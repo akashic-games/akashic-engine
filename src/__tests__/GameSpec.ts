@@ -9,10 +9,10 @@ import {
 	LoadingSceneParameterObject,
 	LocalTickMode,
 	MessageEvent,
+	PlatformPointType,
 	Scene,
 	SceneState,
 	ScriptAsset,
-	SoundAudioSystem,
 	XorshiftRandomGenerator
 } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer } from "./helpers";
@@ -27,7 +27,6 @@ describe("test Game", () => {
 		expect(game.renderers.length).toBe(0);
 		expect(game.scenes.length).toBe(0);
 		expect(game.random).toBe(null);
-		expect(game.events.length).toBe(0);
 		expect(game._modified).toBe(true);
 		expect(game.external).toEqual({});
 		expect(game.age).toBe(0);
@@ -48,7 +47,6 @@ describe("test Game", () => {
 		expect(game.renderers).toBe(undefined);
 		expect(game.scenes).toBe(undefined);
 		expect(game.random).toBe(undefined);
-		expect(game.events).toBe(undefined);
 		expect(game._modified).toBe(false);
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
@@ -833,14 +831,27 @@ describe("test Game", () => {
 			game._flushSceneChangeRequests();
 
 			const randGen = new XorshiftRandomGenerator(10);
+			game._pointEventResolver.pointDown({
+				type: PlatformPointType.Down,
+				identifier: 0,
+				offset: { x: 0, y: 0 }
+			});
 			game._reset({
 				age: 3,
-				randGen: randGen
+				randSeed: 10
 			});
 
 			expect(game.scene()).toBe(game._initialScene);
 			expect(game.age).toBe(3);
-			expect(game.random).toBe(randGen);
+			expect(game.random.generate()).toBe(randGen.generate());
+			// reset 前の PointDownEvent の情報が破棄されていることを確認
+			expect(
+				game._pointEventResolver.pointUp({
+					type: PlatformPointType.Up,
+					identifier: 0,
+					offset: { x: 0, y: 0 }
+				})
+			).toBeNull();
 			done();
 		});
 		game._loadAndStart();
