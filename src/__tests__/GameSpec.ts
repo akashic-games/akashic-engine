@@ -837,7 +837,7 @@ describe("test Game", () => {
 
 			expect(game.scene()).toBe(game._initialScene);
 			expect(game.age).toBe(3);
-			expect(game.random.generate()).toBeCloseTo(randGen.generate(), 5);
+			expect(game.random.generate()).toBe(randGen.generate());
 			done();
 		});
 		game._loadAndStart();
