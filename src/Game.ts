@@ -529,7 +529,7 @@ export abstract class Game implements Registrable<E> {
 
 	/**
 	 * `Game` のインスタンスを生成する。
-	 * @deprecated このコンストラクタは非推奨機能である。代わりに `GameParameterObject` を使うコンストラクタを用いるべきである。
+	 * TODO: 優先度の高くないものの移行コストを考慮し、一旦現行の I/F を残している。game-driver 追従後に削除予定。
 	 *
 	 * @param gameConfiguration この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
 	 * @param resourceFactory この `Game` が用いる、リソースのファクトリ
