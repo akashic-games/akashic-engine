@@ -971,7 +971,7 @@ namespace g {
 				this._defaultLoadingScene = new LoadingScene({ game: this });
 				break;
 			case "compact":
-				this._defaultLoadingScene = new DefaultLoadingScene({ game: this, size: "small" });
+				this._defaultLoadingScene = new DefaultLoadingScene({ game: this, style: "compact" });
 				break;
 			default:
 				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });

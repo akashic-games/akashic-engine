@@ -8,7 +8,7 @@ namespace g {
 		 * このシーンが属する `Game` 。
 		 */
 		game: Game;
-		size?: "normal" | "small";
+		style?: "default" | "compact";
 	}
 
 	/**
@@ -70,11 +70,9 @@ namespace g {
 		private _totalWaitingAssetCount: number;
 		private _gauge: FilledRect;
 		private _gaugeUpdateCount: number;
-		private _barX: number;
-		private _barY: number;
 		private _barWidth: number;
 		private _barHeight: number;
-		private _backOpacity: number;
+		private _style: "default" | "compact";
 
 		/**
 		 * `DeafultLoadingScene` のインスタンスを生成する。
@@ -82,18 +80,14 @@ namespace g {
 		 */
 		constructor(param: DefaultLoadingSceneParameterObject) {
 			super({ game: param.game, name: "akashic:default-loading-scene" });
-			if (param.size === "small") {
-				this._barWidth = param.game.width / 4;
+			if (param.style === "compact") {
+				this._barWidth = this.game.width / 4;
 				this._barHeight = 5;
-				this._barX = 0.95 * this.game.width - this._barWidth;
-				this._barY = 0.95 * this.game.height - this._barHeight;
-				this._backOpacity = 0;
+				this._style = "compact";
 			} else {
-				this._barWidth = Math.min(param.game.width, Math.max(100, param.game.width / 2));
+				this._barWidth = Math.min(this.game.width, Math.max(100, this.game.width / 2));
 				this._barHeight = 5;
-				this._barX = (this.game.width - this._barWidth) / 2;
-				this._barY = (this.game.height - this._barHeight) / 2;
-				this._backOpacity = 0.8;
+				this._style = "default";
 			}
 			this._gauge = undefined;
 			this._gaugeUpdateCount = 0;
@@ -107,6 +101,19 @@ namespace g {
 		 * @private
 		 */
 		_onLoaded(): boolean {
+			let barX, barY, bgColor;
+			if (this._style === "compact") {
+				this._barWidth = this.game.width / 4; // 画面サイズが変動している可能性があるので再計算
+				const margin = Math.min(this.game.width, this.game.height) * 0.05;
+				barX = this.game.width - margin - this._barWidth;
+				barY = this.game.height - margin - this._barHeight;
+				bgColor = "transparent";
+			} else {
+				this._barWidth = Math.min(this.game.width, Math.max(100, this.game.width / 2));　// 画面サイズが変動している可能性があるので再計算
+				barX = (this.game.width - this._barWidth) / 2;
+				barY = (this.game.height - this._barHeight) / 2;
+				bgColor = "rgba(0, 0, 0, 0.8)";
+			}
 			var gauge: FilledRect;
 			this.append(new CameraCancellingE({
 				scene: this,
@@ -115,12 +122,12 @@ namespace g {
 						scene: this,
 						width: this.game.width,
 						height: this.game.height,
-						cssColor: `rgba(0, 0, 0, ${this._backOpacity})`,
+						cssColor: bgColor,
 						children: [
 							new FilledRect({
 								scene: this,
-								x: this._barX,
-								y: this._barY,
+								x: barX,
+								y: barY,
 								width: this._barWidth,
 								height: this._barHeight,
 								cssColor: "gray",
