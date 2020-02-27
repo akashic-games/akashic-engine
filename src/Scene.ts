@@ -12,6 +12,7 @@ import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
+import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
 import { CommonOffset } from "./types/commons";
 import { Destroyable } from "./types/Destroyable";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
@@ -295,6 +296,31 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	_loaded: boolean;
 
 	/**
+	 * アセット読み込み成功イベント。
+	 *
+	 * このシーンのアセットが一つ読み込まれる度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 */
+	assetLoaded: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み失敗イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
+	 */
+	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
+
+	/**
+	 * アセット読み込み完了イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 */
+	assetLoadCompleted: Trigger<AssetLike>;
+
+	/**
 	 * 先読みが要求されたか否か。
 	 * すなわち、 `prefetch()` が呼び出された後か否か。
 	 * @private
@@ -367,6 +393,10 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.update = new Trigger<void>();
 		this._timer = new TimerManager(this.update, this.game.fps);
 
+		this.assetLoaded = new Trigger<AssetLike>();
+		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
+		this.assetLoadCompleted = new Trigger<AssetLike>();
+
 		this.message = new Trigger<MessageEvent>();
 		this.pointDownCapture = new Trigger<PointDownEvent>();
 		this.pointMoveCapture = new Trigger<PointMoveEvent>();
@@ -379,15 +409,16 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 
 		this._assetHolders = [];
 		this._sceneAssetHolder = new SceneAssetHolder({
-			assets: this.assets,
 			assetManager: this.game._assetManager,
 			assetIds: param.assetIds,
 			assetPaths: param.assetPaths,
 			handler: this._onSceneAssetsLoad,
 			handlerOwner: this,
-			direct: true
+			direct: true,
+			assetLoadHandler: this
 		});
-		this._sceneAssetHolder.loadHandler.add(this.game._callSceneAssetHolderHandler, this.game);
+		this._sceneAssetHolder.loadSucceed.add(asset => { this.assets[asset.id] = asset; }, this);
+		this._sceneAssetHolder.loadCompleted.add(this.game._callSceneAssetHolderHandler, this.game);
 		this._sceneAssetHolder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
 	}
 
@@ -435,6 +466,9 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.pointUpCapture.destroy();
 		this.operation.destroy();
 		this.loaded.destroy();
+		this.assetLoaded.destroy();
+		this.assetLoadFailed.destroy();
+		this.assetLoadCompleted.destroy();
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
@@ -694,12 +728,13 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		}
 
 		const holder = new SceneAssetHolder({
-			assets: this.assets,
 			assetManager: this.game._assetManager,
 			assetIds: assetIds,
-			handler: handler
+			handler: handler,
+			assetLoadHandler: this
 		});
-		holder.loadHandler.add(this.game._callSceneAssetHolderHandler, this.game);
+		holder.loadSucceed.add(asset => { this.assets[asset.id] = asset }, this);
+		holder.loadCompleted.add(this.game._callSceneAssetHolderHandler, this.game);
 		holder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
 		this._assetHolders.push(holder);
 		holder.request();

@@ -49,9 +49,9 @@ describe("test Scene", () => {
 			name: "myScene"
 		});
 		expect(scene.game).toBe(game);
-		expect(scene._sceneAssetHolder.assetLoaded.length).toEqual(0);
-		expect(scene._sceneAssetHolder.assetLoadFailed.length).toEqual(0);
-		expect(scene._sceneAssetHolder.assetLoadCompleted.length).toEqual(0);
+		expect(scene.assetLoaded.length).toEqual(0);
+		expect(scene.assetLoadFailed.length).toEqual(0);
+		expect(scene.assetLoadCompleted.length).toEqual(0);
 		expect(scene.loaded.length).toEqual(0);
 		expect(scene.children).not.toBeFalsy();
 		expect(scene.children.length).toBe(0);
@@ -63,9 +63,9 @@ describe("test Scene", () => {
 
 		expect(scene.update instanceof Trigger).toBe(true);
 		expect(scene.loaded instanceof Trigger).toBe(true);
-		expect(scene._sceneAssetHolder.assetLoaded instanceof Trigger).toBe(true);
-		expect(scene._sceneAssetHolder.assetLoadFailed instanceof Trigger).toBe(true);
-		expect(scene._sceneAssetHolder.assetLoadCompleted instanceof Trigger).toBe(true);
+		expect(scene.assetLoaded instanceof Trigger).toBe(true);
+		expect(scene.assetLoadFailed instanceof Trigger).toBe(true);
+		expect(scene.assetLoadCompleted instanceof Trigger).toBe(true);
 		expect(scene.stateChanged instanceof Trigger).toBe(true);
 		expect(scene.message instanceof Trigger).toBe(true);
 		expect(scene.pointDownCapture instanceof Trigger).toBe(true);
@@ -721,13 +721,13 @@ describe("test Scene", () => {
 
 		let failureCount = 0;
 		let loadedCount = 0;
-		scene._sceneAssetHolder.assetLoaded.add(asset => {
+		scene.assetLoaded.add(asset => {
 			expect(asset instanceof Asset).toBe(true);
 			expect(asset.id).toBe("foo");
 			expect(failureCount).toBe(2);
 			++loadedCount;
 		});
-		scene._sceneAssetHolder.assetLoadFailed.add(failureInfo => {
+		scene.assetLoadFailed.add(failureInfo => {
 			expect(failureInfo.asset instanceof Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -783,10 +783,10 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene._sceneAssetHolder.assetLoaded.add(asset => {
+		scene.assetLoaded.add(asset => {
 			fail("should not be loaded");
 		});
-		scene._sceneAssetHolder.assetLoadFailed.add(failureInfo => {
+		scene.assetLoadFailed.add(failureInfo => {
 			expect(failureInfo.asset instanceof Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -821,10 +821,10 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene._sceneAssetHolder.assetLoaded.add(asset => {
+		scene.assetLoaded.add(asset => {
 			fail("should not be loaded");
 		});
-		scene._sceneAssetHolder.assetLoadFailed.add(failureInfo => {
+		scene.assetLoadFailed.add(failureInfo => {
 			expect(failureInfo.asset instanceof Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);

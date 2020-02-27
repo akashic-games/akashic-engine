@@ -374,7 +374,7 @@ describe("test Game", () => {
 				assetIds: ["foo"],
 				name: "scene1"
 			});
-			scene._sceneAssetHolder.assetLoaded.add(a => {
+			scene.assetLoaded.add(a => {
 				logs.push("SceneAssetLoaded");
 			});
 			scene.loaded.add(() => {
@@ -396,7 +396,7 @@ describe("test Game", () => {
 				}
 
 				const scene2 = new MockScene2({ game: game, assetIds: ["foo"] });
-				scene2._sceneAssetHolder.assetLoaded.add(a => {
+				scene2.assetLoaded.add(a => {
 					logs.push("Scene2AssetLoaded");
 				});
 				scene2.loaded.add(() => {
@@ -444,7 +444,7 @@ describe("test Game", () => {
 		class TestLoadingScene extends LoadingScene {
 			constructor(param: LoadingSceneParameterObject) {
 				super(param);
-				this._sceneAssetHolder.assetLoaded.add(() => {
+				this.assetLoaded.add(() => {
 					logs.push("LoadingSceneAssetLoaded");
 				});
 				this.loaded.add(() => {
@@ -472,7 +472,7 @@ describe("test Game", () => {
 			}
 
 			const scene = new MockScene1({ game: game, assetIds: ["zoo"] });
-			scene._sceneAssetHolder.assetLoaded.add(a => {
+			scene.assetLoaded.add(a => {
 				logs.push("SceneAssetLoaded");
 			});
 			scene.loaded.add(() => {
@@ -496,7 +496,7 @@ describe("test Game", () => {
 				}
 
 				const scene2 = new MockScene2({ game: game, assetIds: ["zoo"] });
-				scene2._sceneAssetHolder.assetLoaded.add(a => {
+				scene2.assetLoaded.add(a => {
 					logs.push("Scene2AssetLoaded");
 				});
 				scene2.loaded.add(() => {

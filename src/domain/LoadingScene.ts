@@ -124,7 +124,7 @@ export class LoadingScene extends Scene {
 	_clearTargetScene(): void {
 		if (!this._targetScene) return;
 		this._targetScene._ready.removeAll({ owner: this });
-		this._targetScene._sceneAssetHolder.assetLoaded.removeAll({ owner: this });
+		this._targetScene.assetLoaded.removeAll({ owner: this });
 		this._targetScene = undefined;
 	}
 
@@ -135,7 +135,7 @@ export class LoadingScene extends Scene {
 		this.targetReset.fire(this._targetScene);
 		if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
 			this._targetScene._ready.add(this._fireTriggerOnTargetReady, this);
-			this._targetScene._sceneAssetHolder.assetLoaded.add(this._fireTriggerOnTargetAssetLoad, this);
+			this._targetScene.assetLoaded.add(this._fireTriggerOnTargetAssetLoad, this);
 			this._targetScene._load();
 		} else {
 			this._fireTriggerOnTargetReady(this._targetScene);
