@@ -216,6 +216,31 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	loaded: Trigger<Scene>;
 
 	/**
+	 * アセット読み込み成功イベント。
+	 *
+	 * このシーンのアセットが一つ読み込まれる度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 */
+	assetLoaded: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み失敗イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
+	 */
+	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
+
+	/**
+	 * アセット読み込み完了イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 */
+	assetLoadCompleted: Trigger<AssetLike>;
+
+	/**
 	 * シーンの状態。
 	 */
 	state: SceneState;
@@ -294,31 +319,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_loaded: boolean;
-
-	/**
-	 * アセット読み込み成功イベント。
-	 *
-	 * このシーンのアセットが一つ読み込まれる度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 */
-	assetLoaded: Trigger<AssetLike>;
-
-	/**
-	 * アセット読み込み失敗イベント。
-	 *
-	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
-	 */
-	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
-
-	/**
-	 * アセット読み込み完了イベント。
-	 *
-	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 */
-	assetLoadCompleted: Trigger<AssetLike>;
 
 	/**
 	 * 先読みが要求されたか否か。
