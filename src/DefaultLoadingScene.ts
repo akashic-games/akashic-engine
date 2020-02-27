@@ -8,7 +8,7 @@ namespace g {
 		 * このシーンが属する `Game` 。
 		 */
 		game: Game;
-		isCompact?: boolean;
+		size?: "normal" | "small";
 	}
 
 	/**
@@ -82,11 +82,19 @@ namespace g {
 		 */
 		constructor(param: DefaultLoadingSceneParameterObject) {
 			super({ game: param.game, name: "akashic:default-loading-scene" });
-			this._barWidth = param.isCompact ? param.game.width / 4 : Math.min(param.game.width, Math.max(100, param.game.width / 2));
-			this._barHeight = 5;
-			this._barX = param.isCompact ? 0.95 * this.game.width - this._barWidth : (this.game.width - this._barWidth) / 2;
-			this._barY = param.isCompact ? 0.95 * this.game.height - this._barHeight : (this.game.height - this._barHeight) / 2
-			this._backOpacity = param.isCompact ? 0.2 : 0.8;
+			if (param.size === "small") {
+				this._barWidth = param.game.width / 4;
+				this._barHeight = 5;
+				this._barX = 0.95 * this.game.width - this._barWidth;
+				this._barY = 0.95 * this.game.height - this._barHeight;
+				this._backOpacity = 0;
+			} else {
+				this._barWidth = Math.min(param.game.width, Math.max(100, param.game.width / 2));
+				this._barHeight = 5;
+				this._barX = (this.game.width - this._barWidth) / 2;
+				this._barY = (this.game.height - this._barHeight) / 2;
+				this._backOpacity = 0.8;
+			}
 			this._gauge = undefined;
 			this._gaugeUpdateCount = 0;
 			this._totalWaitingAssetCount = 0;

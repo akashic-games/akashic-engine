@@ -4,7 +4,7 @@
 
 機能追加
 * game.json の`defaultLoadingScene` に `compact` を追加
-  * `compact` を指定した時、ローディング画面で小さなバーが右下の意表示されます。
+  * `compact` を指定した時、ローディング画面で小さなバーが右下に表示されます。
 
 ## 2.6.1
 
