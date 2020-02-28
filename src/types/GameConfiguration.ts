@@ -63,7 +63,10 @@ export interface GameConfiguration {
 	/**
 	 * デフォルトローディングシーンについての指定。
 	 * 省略時または "default" を指定すると `DefaultLoadingScene` を表示する。
+	 * "compact"を指定すると以下のようなローディングシーンを表示する。
+	 *   * 背景が透過
+	 *   * プログレスバーが画面中央ではなく右下の方に小さく表示される
 	 * デフォルトローディングシーンを非表示にしたい場合は "none" を指定する。
 	 */
-	defaultLoadingScene?: "default" | "none";
+	defaultLoadingScene?: "default" | "compact" | "none";
 }
