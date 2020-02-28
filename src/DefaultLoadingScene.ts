@@ -103,13 +103,11 @@ namespace g {
 		_onLoaded(): boolean {
 			let barX, barY, bgColor;
 			if (this._style === "compact") {
-				this._barWidth = this.game.width / 4; // 画面サイズが変動している可能性があるので再計算
 				const margin = Math.min(this.game.width, this.game.height) * 0.05;
 				barX = this.game.width - margin - this._barWidth;
 				barY = this.game.height - margin - this._barHeight;
 				bgColor = "transparent";
 			} else {
-				this._barWidth = Math.min(this.game.width, Math.max(100, this.game.width / 2));　// 画面サイズが変動している可能性があるので再計算
 				barX = (this.game.width - this._barWidth) / 2;
 				barY = (this.game.height - this._barHeight) / 2;
 				bgColor = "rgba(0, 0, 0, 0.8)";
