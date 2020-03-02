@@ -6,7 +6,7 @@ import { Camera2D } from "./domain/Camera2D";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
 import { MessageEvent, OperationEvent } from "./domain/Event";
 import { Matrix } from "./domain/Matrix";
-import { SceneAssetHolder } from "./domain/SceneAssetHolder";
+import { AsssetLoadHandler, SceneAssetHolder } from "./domain/SceneAssetHolder";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
@@ -137,7 +137,7 @@ export enum SceneLoadState {
 /**
  * シーンを表すクラス。
  */
-export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler {
+export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler, AsssetLoadHandler {
 	/**
 	 * このシーンの子エンティティ。
 	 *
@@ -396,6 +396,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.assetLoaded = new Trigger<AssetLike>();
 		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
 		this.assetLoadCompleted = new Trigger<AssetLike>();
+		this.assetLoaded.add(this._addAsset, this);
 
 		this.message = new Trigger<MessageEvent>();
 		this.pointDownCapture = new Trigger<PointDownEvent>();
@@ -417,11 +418,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			direct: true,
 			assetLoadHandler: this
 		});
-		this._sceneAssetHolder.loadSucceed.add(asset => {
-			this.assets[asset.id] = asset;
-		}, this);
 		this._sceneAssetHolder.loadCompleted.add(this.game._callSceneAssetHolderHandler, this.game);
-		this._sceneAssetHolder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
+		this._sceneAssetHolder.loadFailed.add(this.game.terminateGame, this.game);
 	}
 
 	/**
@@ -735,11 +733,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 			handler: handler,
 			assetLoadHandler: this
 		});
-		holder.loadSucceed.add(asset => {
-			this.assets[asset.id] = asset;
-		}, this);
 		holder.loadCompleted.add(this.game._callSceneAssetHolderHandler, this.game);
-		holder.loadFailedTerminatedGame.add(this.game.terminateGame, this.game);
+		holder.loadFailed.add(this.game.terminateGame, this.game);
 		this._assetHolders.push(holder);
 		holder.request();
 	}
@@ -836,5 +831,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	_fireLoaded(): void {
 		this.loaded.fire(this);
 		this._loadingState = SceneLoadState.LoadedFired;
+	}
+
+	/**
+	 * @private
+	 */
+	_addAsset(asset: AssetLike): void {
+		this.assets[asset.id] = asset;
 	}
 }

@@ -49,7 +49,7 @@ describe("test Scene", () => {
 			name: "myScene"
 		});
 		expect(scene.game).toBe(game);
-		expect(scene.assetLoaded.length).toEqual(0);
+		expect(scene.assetLoaded.length).toEqual(1);
 		expect(scene.assetLoadFailed.length).toEqual(0);
 		expect(scene.assetLoadCompleted.length).toEqual(0);
 		expect(scene.loaded.length).toEqual(0);

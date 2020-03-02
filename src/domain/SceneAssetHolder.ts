@@ -6,7 +6,7 @@ import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManager } from "./AssetManager";
 
-export interface AsssetLoadHandlerSceneLike {
+export interface AsssetLoadHandler {
 	assetLoaded: Trigger<AssetLike>;
 	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
 	assetLoadCompleted: Trigger<AssetLike>;
@@ -51,9 +51,9 @@ export interface SceneAssetHolderParameterObject {
 	direct?: boolean;
 
 	/**
-	 * `Asset` の読み込みまたは読み込み失敗を受け取る `Scene` のハンドラのインターフェース定義。
+	 * `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。
 	 */
-	assetLoadHandler: AsssetLoadHandlerSceneLike;
+	assetLoadHandler: AsssetLoadHandler;
 }
 
 /**
@@ -73,14 +73,9 @@ export class SceneAssetHolder {
 	loadCompleted: Trigger<SceneAssetHolder>;
 
 	/**
-	 * 読み込み失敗時にゲームを終了させる場合にfireされる。
+	 * 読み込み失敗時にfireされる。
 	 */
-	loadFailedTerminatedGame: Trigger<void>;
-
-	/**
-	 * 読み込み成功時にfireされる。
-	 */
-	loadSucceed: Trigger<AssetLike>;
+	loadFailed: Trigger<void>;
 
 	/**
 	 * @private
@@ -120,7 +115,7 @@ export class SceneAssetHolder {
 	/**
 	 * @private
 	 */
-	_assetLoadHandler: AsssetLoadHandlerSceneLike;
+	_assetLoadHandler: AsssetLoadHandler;
 
 	constructor(param: SceneAssetHolderParameterObject) {
 		const assetManager = param.assetManager;
@@ -135,9 +130,8 @@ export class SceneAssetHolder {
 		this._handlerOwner = param.handlerOwner || null;
 		this._direct = !!param.direct;
 		this._requested = false;
-		this.loadFailedTerminatedGame = new Trigger<void>();
+		this.loadFailed = new Trigger<void>();
 		this.loadCompleted = new Trigger<SceneAssetHolder>();
-		this.loadSucceed = new Trigger<AssetLike>();
 		this._assetLoadHandler = param.assetLoadHandler;
 	}
 
@@ -158,9 +152,8 @@ export class SceneAssetHolder {
 		this._handler = undefined;
 		this._requested = false;
 
-		this.loadFailedTerminatedGame.destroy();
+		this.loadFailed.destroy();
 		this.loadCompleted.destroy();
-		this.loadSucceed.destroy();
 	}
 
 	destroyed(): boolean {
@@ -186,7 +179,7 @@ export class SceneAssetHolder {
 			this._assetManager.retryLoad(asset);
 		} else {
 			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
-			if (this._assetManager.configuration[asset.id]) this.loadFailedTerminatedGame.fire();
+			if (this._assetManager.configuration[asset.id]) this.loadFailed.fire();
 		}
 		this._assetLoadHandler.assetLoadCompleted.fire(asset);
 	}
@@ -196,7 +189,6 @@ export class SceneAssetHolder {
 	 */
 	_onAssetLoad(asset: AssetLike): void {
 		if (this.destroyed()) return;
-		this.loadSucceed.fire(asset);
 		this._assetLoadHandler.assetLoaded.fire(asset);
 		this._assetLoadHandler.assetLoadCompleted.fire(asset);
 		this._assets.push(asset);
