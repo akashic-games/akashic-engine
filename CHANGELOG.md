@@ -15,6 +15,10 @@
 機能追加
  * `g.Game#popScene()`で popする回数をオプションで指定できるようにした
  * `g.E#localToGlobal()` と `g.E#globalToLocal()` を追加
+ * game.json の`defaultLoadingScene` に `compact` を追加
+  * `"compact"` を指定した時、ローディング画面が以下のように表示されます。
+    * 背景が透過になる
+    * プログレスバーが画面中央ではなく右下の方に小さく表示される
 
 ## 2.5.4
 機能追加

@@ -1122,6 +1122,9 @@ export abstract class Game implements Registrable<E> {
 				// Note: 何も描画しない実装として利用している
 				this._defaultLoadingScene = new LoadingScene({ game: this });
 				break;
+			case "compact":
+				this._defaultLoadingScene = new DefaultLoadingScene({ game: this, style: "compact" });
+				break;
 			default:
 				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
 				break;

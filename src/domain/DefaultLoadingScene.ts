@@ -18,6 +18,7 @@ export interface DefaultLoadingSceneParameterObject {
 	 * このシーンが属する `Game` 。
 	 */
 	game: Game;
+	style?: "default" | "compact";
 }
 
 /**
@@ -84,6 +85,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	private _gaugeUpdateCount: number;
 	private _barWidth: number;
 	private _barHeight: number;
+	private _style: "default" | "compact";
 
 	/**
 	 * `DeafultLoadingScene` のインスタンスを生成する。
@@ -91,8 +93,15 @@ export class DefaultLoadingScene extends LoadingScene {
 	 */
 	constructor(param: DefaultLoadingSceneParameterObject) {
 		super({ game: param.game, name: "akashic:default-loading-scene" });
-		this._barWidth = Math.min(param.game.width, Math.max(100, param.game.width / 2));
-		this._barHeight = 5;
+		if (param.style === "compact") {
+			this._barWidth = this.game.width / 4;
+			this._barHeight = 5;
+			this._style = "compact";
+		} else {
+			this._barWidth = Math.min(this.game.width, Math.max(100, this.game.width / 2));
+			this._barHeight = 5;
+			this._style = "default";
+		}
 		this._gauge = undefined;
 		this._gaugeUpdateCount = 0;
 		this._totalWaitingAssetCount = 0;
@@ -105,6 +114,17 @@ export class DefaultLoadingScene extends LoadingScene {
 	 * @private
 	 */
 	_onLoaded(): boolean {
+		let barX, barY, bgColor;
+		if (this._style === "compact") {
+			const margin = Math.min(this.game.width, this.game.height) * 0.05;
+			barX = this.game.width - margin - this._barWidth;
+			barY = this.game.height - margin - this._barHeight;
+			bgColor = "transparent";
+		} else {
+			barX = (this.game.width - this._barWidth) / 2;
+			barY = (this.game.height - this._barHeight) / 2;
+			bgColor = "rgba(0, 0, 0, 0.8)";
+		}
 		var gauge: FilledRect;
 		this.append(
 			new CameraCancellingE({
@@ -114,12 +134,12 @@ export class DefaultLoadingScene extends LoadingScene {
 						scene: this,
 						width: this.game.width,
 						height: this.game.height,
-						cssColor: "rgba(0, 0, 0, 0.8)",
+						cssColor: bgColor,
 						children: [
 							new FilledRect({
 								scene: this,
-								x: (this.game.width - this._barWidth) / 2,
-								y: (this.game.height - this._barHeight) / 2,
+								x: barX,
+								y: barY,
 								width: this._barWidth,
 								height: this._barHeight,
 								cssColor: "gray",
