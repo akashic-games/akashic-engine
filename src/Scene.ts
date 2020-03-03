@@ -487,6 +487,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		this.assetLoadFailed.destroy();
 		this.assetLoadCompleted.destroy();
 		this.assetLoadAborted.destroy();
+		this.assetHolderLoaded.destroy();
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
