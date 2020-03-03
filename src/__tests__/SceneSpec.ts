@@ -53,6 +53,7 @@ describe("test Scene", () => {
 		expect(scene.assetLoadFailed.length).toEqual(0);
 		expect(scene.assetLoadCompleted.length).toEqual(0);
 		expect(scene.assetLoadAborted.length).toEqual(1);
+		expect(scene.assetHolderLoaded.length).toEqual(1);
 		expect(scene.loaded.length).toEqual(0);
 		expect(scene.children).not.toBeFalsy();
 		expect(scene.children.length).toBe(0);
@@ -68,6 +69,7 @@ describe("test Scene", () => {
 		expect(scene.assetLoadFailed instanceof Trigger).toBe(true);
 		expect(scene.assetLoadCompleted instanceof Trigger).toBe(true);
 		expect(scene.assetLoadAborted instanceof Trigger).toBe(true);
+		expect(scene.assetHolderLoaded instanceof Trigger).toBe(true);
 		expect(scene.stateChanged instanceof Trigger).toBe(true);
 		expect(scene.message instanceof Trigger).toBe(true);
 		expect(scene.pointDownCapture instanceof Trigger).toBe(true);

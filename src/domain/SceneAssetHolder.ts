@@ -19,6 +19,7 @@ export interface AsssetLoadHandler {
 
 	/**
 	 * アセット読み込み完了イベント。
+	 * アセットの読み込みに失敗または成功する度にfireされる。
 	 */
 	assetLoadCompleted: Trigger<AssetLike>;
 
@@ -27,6 +28,11 @@ export interface AsssetLoadHandler {
 	 * アセットの読み込みの再試行が不可で、かつ game.json に定義されていなければ fire される。
 	 */
 	assetLoadAborted: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み完了イベント。
+	 */
+	assetHolderLoaded: Trigger<SceneAssetHolder>;
 }
 
 /**
@@ -85,11 +91,6 @@ export class SceneAssetHolder {
 	waitingAssetsCount: number;
 
 	/**
-	 * 読み込み完了時にfireされる。
-	 */
-	loadCompleted: Trigger<SceneAssetHolder>;
-
-	/**
 	 * @private
 	 */
 	_assetManager: AssetManager;
@@ -142,7 +143,6 @@ export class SceneAssetHolder {
 		this._handlerOwner = param.handlerOwner || null;
 		this._direct = !!param.direct;
 		this._requested = false;
-		this.loadCompleted = new Trigger<SceneAssetHolder>();
 		this._assetLoadHandler = param.assetLoadHandler;
 	}
 
@@ -162,7 +162,6 @@ export class SceneAssetHolder {
 		this._assetIds = undefined;
 		this._handler = undefined;
 		this._requested = false;
-		this.loadCompleted.destroy();
 	}
 
 	destroyed(): boolean {
@@ -211,6 +210,6 @@ export class SceneAssetHolder {
 			this.callHandler();
 		}
 
-		this.loadCompleted.fire(this);
+		this._assetLoadHandler.assetHolderLoaded.fire(this);
 	}
 }
