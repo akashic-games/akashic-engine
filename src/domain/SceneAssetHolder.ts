@@ -30,8 +30,9 @@ export interface AsssetLoadHandler {
 	assetLoadAborted: Trigger<AssetLike>;
 
 	/**
-	 * アセット読み込み完了イベント。
-	 * アセットの読み込み成功時のみ fire される。
+	 * アセットホルダー読み込み完了イベント。
+	 * g.Game#_callSceneAssetHolderHandler() に渡すために自身のインスタンスを発火させている。
+	 * assetLoaded と同様のタイミングで発火するが上記理由によりトリガーを分けている。
 	 */
 	assetHolderLoaded: Trigger<SceneAssetHolder>;
 }

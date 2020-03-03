@@ -243,15 +243,15 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	/**
 	 * アセット読み込み失敗時の中断イベント。
 	 *
-	 * このシーンのアセットが一つ読み込みに失敗しアセットの読み込みの再試行が不可能で、かつ game.json に定義されていなければ fire される。
+	 * このシーンのアセットが一つ読み込みに失敗しアセットの読み込みの再試行が不可の場合に fire される。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
 	assetLoadAborted: Trigger<AssetLike>;
 
 	/**
-	 * アセット読み込み完了イベント。
+	 * アセットホルダー読み込み完了イベント。
 	 *
-	 * このシーンのアセットが一つ読み込みに成功する度にfireされる。
+	 * このシーンのアセットホルダーが一つ読み込みに成功する度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
 	assetHolderLoaded: Trigger<SceneAssetHolder>;
