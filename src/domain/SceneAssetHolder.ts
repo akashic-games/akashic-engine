@@ -25,12 +25,13 @@ export interface AsssetLoadHandler {
 
 	/**
 	 * アセット読み込み失敗イベント。
-	 * アセットの読み込みの再試行が不可で、かつ game.json に定義されていなければ fire される。
+	 * アセットの読み込みの再試行が不可の場合に fire される。
 	 */
 	assetLoadAborted: Trigger<AssetLike>;
 
 	/**
 	 * アセット読み込み完了イベント。
+	 * アセットの読み込み成功時のみ fire される。
 	 */
 	assetHolderLoaded: Trigger<SceneAssetHolder>;
 }
@@ -186,8 +187,7 @@ export class SceneAssetHolder {
 		if (error.retriable && !failureInfo.cancelRetry) {
 			this._assetManager.retryLoad(asset);
 		} else {
-			// game.json に定義されていれば `assetLoadAborted` をfireする。それ以外 (DynamicAsset) では続行。
-			if (this._assetManager.configuration[asset.id]) this._assetLoadHandler.assetLoadAborted.fire(asset);
+			this._assetLoadHandler.assetLoadAborted.fire(asset);
 		}
 		this._assetLoadHandler.assetLoadCompleted.fire(asset);
 	}

@@ -415,8 +415,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		this.assetLoadAborted = new Trigger<AssetLike>();
 		this.assetHolderLoaded = new Trigger<SceneAssetHolder>();
 		this.assetLoaded.add(this._addAsset, this);
-		this.assetLoadAborted.add(this.game.terminateGame, this.game);
-		this.assetHolderLoaded.add(this.game._callSceneAssetHolderHandler, this.game);
+		this.assetLoadAborted.add(this._onAssetLoadAborted, this);
 
 		this.message = new Trigger<MessageEvent>();
 		this.pointDownCapture = new Trigger<PointDownEvent>();
@@ -752,6 +751,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 			handler: handler,
 			assetLoadHandler: this
 		});
+		this.assetHolderLoaded.add(this.game._callSceneAssetHolderHandler, this.game);
 		this._assetHolders.push(holder);
 		holder.request();
 	}
@@ -855,5 +855,13 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	 */
 	_addAsset(asset: AssetLike): void {
 		this.assets[asset.id] = asset;
+	}
+
+	/**
+	 * @private
+	 */
+	_onAssetLoadAborted(asset: AssetLike): void {
+		// game.json に定義されていれば `Game#terminateGame()` を呼び出す。それ以外 (DynamicAsset) では何もしない。
+		if (this.game._assetManager.configuration[asset.id]) this.game.terminateGame();
 	}
 }

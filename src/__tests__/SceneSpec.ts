@@ -53,7 +53,7 @@ describe("test Scene", () => {
 		expect(scene.assetLoadFailed.length).toEqual(0);
 		expect(scene.assetLoadCompleted.length).toEqual(0);
 		expect(scene.assetLoadAborted.length).toEqual(1);
-		expect(scene.assetHolderLoaded.length).toEqual(1);
+		expect(scene.assetHolderLoaded.length).toEqual(0);
 		expect(scene.loaded.length).toEqual(0);
 		expect(scene.children).not.toBeFalsy();
 		expect(scene.children.length).toBe(0);
