@@ -7,8 +7,19 @@ import { AssetLoadError } from "../types/errors";
 import { AssetManager } from "./AssetManager";
 
 export interface AsssetLoadHandler {
+	/**
+	 * アセット読み込み成功イベント。
+	 */
 	assetLoaded: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み失敗イベント。
+	 */
 	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
+
+	/**
+	 * アセット読み込み完了イベント。
+	 */
 	assetLoadCompleted: Trigger<AssetLike>;
 }
 
@@ -35,20 +46,12 @@ export interface SceneAssetHolderParameterObject {
 	/**
 	 * 読み込み完了の通知を受けるハンドラ
 	 */
-	handler: () => void;
+	handler?: () => void;
 
 	/**
 	 * `handler` 呼び出し時、 `this` として使われる値。
 	 */
 	handlerOwner?: any;
-
-	/**
-	 * `handler` を直接呼ぶか。
-	 * 真である場合、 `handler` は読み込み完了後に直接呼び出される。
-	 * でなければ次の `Game#tick()` 呼び出し時点まで遅延される。
-	 * 省略された場合、偽。
-	 */
-	direct?: boolean;
 
 	/**
 	 * `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。
@@ -68,7 +71,7 @@ export class SceneAssetHolder {
 	waitingAssetsCount: number;
 
 	/**
-	 * 読み込み完了時に `_direct` が偽の場合にfireされる。
+	 * 読み込み完了時にfireされる。
 	 */
 	loadCompleted: Trigger<SceneAssetHolder>;
 
@@ -91,11 +94,6 @@ export class SceneAssetHolder {
 	 * @private
 	 */
 	_handlerOwner: any;
-
-	/**
-	 * @private
-	 */
-	_direct: boolean;
 
 	/**
 	 * @private
@@ -128,7 +126,6 @@ export class SceneAssetHolder {
 		this._assets = [];
 		this._handler = param.handler;
 		this._handlerOwner = param.handlerOwner || null;
-		this._direct = !!param.direct;
 		this._requested = false;
 		this.loadFailed = new Trigger<void>();
 		this.loadCompleted = new Trigger<SceneAssetHolder>();
@@ -178,7 +175,7 @@ export class SceneAssetHolder {
 		if (error.retriable && !failureInfo.cancelRetry) {
 			this._assetManager.retryLoad(asset);
 		} else {
-			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
+			// game.json に定義されていれば `loadFailed` をfireする。それ以外 (DynamicAsset) では続行。
 			if (this._assetManager.configuration[asset.id]) this.loadFailed.fire();
 		}
 		this._assetLoadHandler.assetLoadCompleted.fire(asset);
@@ -198,10 +195,6 @@ export class SceneAssetHolder {
 			throw ExceptionFactory.createAssertionError("SceneAssetHolder#_onAssetLoad: broken waitingAssetsCount");
 		if (this.waitingAssetsCount > 0) return;
 
-		if (this._direct) {
-			this.callHandler();
-		} else {
-			this.loadCompleted.fire(this);
-		}
+		this.loadCompleted.fire(this);
 	}
 }

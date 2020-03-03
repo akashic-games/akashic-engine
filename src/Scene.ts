@@ -413,12 +413,9 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 			assetManager: this.game._assetManager,
 			assetIds: param.assetIds,
 			assetPaths: param.assetPaths,
-			handler: this._onSceneAssetsLoad,
-			handlerOwner: this,
-			direct: true,
 			assetLoadHandler: this
 		});
-		this._sceneAssetHolder.loadCompleted.add(this.game._callSceneAssetHolderHandler, this.game);
+		this._sceneAssetHolder.loadCompleted.add(this._onSceneAssetsLoad, this);
 		this._sceneAssetHolder.loadFailed.add(this.game.terminateGame, this.game);
 	}
 
