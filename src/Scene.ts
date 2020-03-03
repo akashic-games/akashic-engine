@@ -241,6 +241,14 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	assetLoadCompleted: Trigger<AssetLike>;
 
 	/**
+	 * アセット読み込み失敗時の中断イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗しアセットの読み込みの再試行が不可能で、かつ game.json に定義されていなければ fire される。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 */
+	assetLoadAborted: Trigger<AssetLike>;
+
+	/**
 	 * シーンの状態。
 	 */
 	state: SceneState;
@@ -396,7 +404,9 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		this.assetLoaded = new Trigger<AssetLike>();
 		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
 		this.assetLoadCompleted = new Trigger<AssetLike>();
+		this.assetLoadAborted = new Trigger<AssetLike>();
 		this.assetLoaded.add(this._addAsset, this);
+		this.assetLoadAborted.add(this.game.terminateGame, this.game);
 
 		this.message = new Trigger<MessageEvent>();
 		this.pointDownCapture = new Trigger<PointDownEvent>();
@@ -413,10 +423,11 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 			assetManager: this.game._assetManager,
 			assetIds: param.assetIds,
 			assetPaths: param.assetPaths,
+			handler: this._onSceneAssetsLoad,
+			handlerOwner: this,
+			direct: true,
 			assetLoadHandler: this
 		});
-		this._sceneAssetHolder.loadCompleted.add(this._onSceneAssetsLoad, this);
-		this._sceneAssetHolder.loadFailed.add(this.game.terminateGame, this.game);
 	}
 
 	/**
@@ -466,6 +477,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		this.assetLoaded.destroy();
 		this.assetLoadFailed.destroy();
 		this.assetLoadCompleted.destroy();
+		this.assetLoadAborted.destroy();
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
@@ -731,7 +743,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 			assetLoadHandler: this
 		});
 		holder.loadCompleted.add(this.game._callSceneAssetHolderHandler, this.game);
-		holder.loadFailed.add(this.game.terminateGame, this.game);
 		this._assetHolders.push(holder);
 		holder.request();
 	}
@@ -835,5 +846,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	 */
 	_addAsset(asset: AssetLike): void {
 		this.assets[asset.id] = asset;
+	}
+
+	/**
+	 * @private
+	 */
+	_onAssetLoadAborted(): void {
+		this.game.terminateGame();
 	}
 }

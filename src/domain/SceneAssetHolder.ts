@@ -21,6 +21,12 @@ export interface AsssetLoadHandler {
 	 * アセット読み込み完了イベント。
 	 */
 	assetLoadCompleted: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み失敗イベント。
+	 * アセットの読み込みの再試行が不可で、かつ game.json に定義されていなければ fire される。
+	 */
+	assetLoadAborted: Trigger<AssetLike>;
 }
 
 /**
@@ -54,6 +60,14 @@ export interface SceneAssetHolderParameterObject {
 	handlerOwner?: any;
 
 	/**
+	 * `handler` を直接呼ぶか。
+	 * 真である場合、 `handler` は読み込み完了後に直接呼び出される。
+	 * でなければ次の `Game#tick()` 呼び出し時点まで遅延される。
+	 * 省略された場合、偽。
+	 */
+	direct?: boolean;
+
+	/**
 	 * `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。
 	 */
 	assetLoadHandler: AsssetLoadHandler;
@@ -76,11 +90,6 @@ export class SceneAssetHolder {
 	loadCompleted: Trigger<SceneAssetHolder>;
 
 	/**
-	 * 読み込み失敗時にfireされる。
-	 */
-	loadFailed: Trigger<void>;
-
-	/**
 	 * @private
 	 */
 	_assetManager: AssetManager;
@@ -94,6 +103,11 @@ export class SceneAssetHolder {
 	 * @private
 	 */
 	_handlerOwner: any;
+
+	/**
+	 * @private
+	 */
+	_direct: boolean;
 
 	/**
 	 * @private
@@ -126,8 +140,8 @@ export class SceneAssetHolder {
 		this._assets = [];
 		this._handler = param.handler;
 		this._handlerOwner = param.handlerOwner || null;
+		this._direct = !!param.direct;
 		this._requested = false;
-		this.loadFailed = new Trigger<void>();
 		this.loadCompleted = new Trigger<SceneAssetHolder>();
 		this._assetLoadHandler = param.assetLoadHandler;
 	}
@@ -148,8 +162,6 @@ export class SceneAssetHolder {
 		this._assetIds = undefined;
 		this._handler = undefined;
 		this._requested = false;
-
-		this.loadFailed.destroy();
 		this.loadCompleted.destroy();
 	}
 
@@ -175,8 +187,8 @@ export class SceneAssetHolder {
 		if (error.retriable && !failureInfo.cancelRetry) {
 			this._assetManager.retryLoad(asset);
 		} else {
-			// game.json に定義されていれば `loadFailed` をfireする。それ以外 (DynamicAsset) では続行。
-			if (this._assetManager.configuration[asset.id]) this.loadFailed.fire();
+			// game.json に定義されていれば `assetLoadAborted` をfireする。それ以外 (DynamicAsset) では続行。
+			if (this._assetManager.configuration[asset.id]) this._assetLoadHandler.assetLoadAborted.fire(asset);
 		}
 		this._assetLoadHandler.assetLoadCompleted.fire(asset);
 	}
@@ -194,6 +206,10 @@ export class SceneAssetHolder {
 		if (this.waitingAssetsCount < 0)
 			throw ExceptionFactory.createAssertionError("SceneAssetHolder#_onAssetLoad: broken waitingAssetsCount");
 		if (this.waitingAssetsCount > 0) return;
+
+		if (this._direct) {
+			this.callHandler();
+		}
 
 		this.loadCompleted.fire(this);
 	}
