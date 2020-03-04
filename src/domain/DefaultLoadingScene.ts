@@ -166,14 +166,14 @@ export class DefaultLoadingScene extends LoadingScene {
 			this._gauge.width = 0;
 			this._gauge.modified();
 		}
-		this._totalWaitingAssetCount = targetScene._sceneAssetHolder.waitingAssetsCount;
+		this._totalWaitingAssetCount = targetScene._assetHolder.waitingAssetsCount;
 	}
 
 	/**
 	 * @private
 	 */
 	_onTargetAssetLoaded(asset: AssetLike): void {
-		var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
+		var waitingAssetsCount = this._targetScene._assetHolder.waitingAssetsCount;
 		this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
 		this._gauge.modified();
 	}

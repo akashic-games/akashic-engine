@@ -2,6 +2,7 @@ import { Trigger } from "@akashic/trigger";
 import * as pl from "@akashic/playlog";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
+import { AssetHolder } from "./domain/AssetHolder";
 import { AssetManager } from "./domain/AssetManager";
 import { AudioSystemManager } from "./domain/AudioSystemManager";
 import { Camera } from "./domain/Camera";
@@ -14,7 +15,6 @@ import { ModuleManager } from "./domain/ModuleManager";
 import { OperationPluginManager } from "./domain/OperationPluginManager";
 import { PointEventResolver } from "./domain/PointEventResolver";
 import { RandomGenerator } from "./domain/RandomGenerator";
-import { SceneAssetHolder } from "./domain/SceneAssetHolder";
 import { Storage } from "./domain/Storage";
 import { XorshiftRandomGenerator } from "./domain/XorshiftRandomGenerator";
 import { AssetLike } from "./interfaces/AssetLike";
@@ -61,7 +61,7 @@ const enum SceneChangeType {
 	 */
 	FireLoaded,
 	/**
-	 * SceneAssetHolderのハンドラを呼び出す。
+	 * AssetHolderのハンドラを呼び出す。
 	 */
 	CallAssetHolderHandler
 }
@@ -88,10 +88,10 @@ interface SceneChangeRequest {
 	preserveCurrent?: boolean;
 
 	/**
-	 * ハンドラを呼び出す `SceneAssetHolder` 。
+	 * ハンドラを呼び出す `AssetHolder` 。
 	 * `type` が `CallAssetHolderHandler` の時のみ存在。
 	 */
-	assetHolder?: SceneAssetHolder;
+	assetHolder?: AssetHolder;
 }
 
 export interface GameResetParameterObject {
@@ -1020,7 +1020,7 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * @private
 	 */
-	_callSceneAssetHolderHandler(assetHolder: SceneAssetHolder): void {
+	_callAssetHolderHandler(assetHolder: AssetHolder): void {
 		this._sceneChangeRequests.push({
 			type: SceneChangeType.CallAssetHolderHandler,
 			assetHolder: assetHolder

@@ -57,8 +57,8 @@ describe("test Scene", () => {
 		expect(scene.loaded.length).toEqual(0);
 		expect(scene.children).not.toBeFalsy();
 		expect(scene.children.length).toBe(0);
-		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(1);
+		expect(scene._assetHolder._assetIds).toEqual(["foo"]);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(1);
 		expect(scene.local).toBe(LocalTickMode.InterpolateLocal);
 		expect(scene.tickGenerationMode).toBe(TickGenerationMode.Manual);
 		expect(scene.name).toEqual("myScene");
@@ -293,7 +293,7 @@ describe("test Scene", () => {
 		setTimeout(() => {
 			scene.prefetch();
 			expect(scene._prefetchRequested).toBe(false); // _load() 後の呼び出しでは prefetch() の呼び出しを無視する
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2); // _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
+			expect(scene._assetHolder.waitingAssetsCount).toBe(2); // _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
 			game.resourceFactory.flushDelayedAssets();
 		}, 0);
 	});
@@ -387,14 +387,14 @@ describe("test Scene", () => {
 
 		scene._ready.add(() => {
 			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			done();
 		});
 
 		scene.prefetch(); // (a)
 		expect(scene._loaded).toBe(false);
 		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 		game.resourceFactory.flushDelayedAssets(); // (c)
 
 		setTimeout(() => {
@@ -422,13 +422,13 @@ describe("test Scene", () => {
 
 		scene._ready.add(() => {
 			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			done();
 		});
 
 		expect(scene._loaded).toBe(false);
 		expect(scene._prefetchRequested).toBe(false);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 		scene.prefetch(); // (a)
 		expect(scene._loaded).toBe(false);
 		expect(scene._prefetchRequested).toBe(true);
@@ -436,7 +436,7 @@ describe("test Scene", () => {
 		scene._load(); // (b)
 		expect(scene._loaded).toBe(true);
 		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2); // _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2); // _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
 		ready = true;
 		game.resourceFactory.flushDelayedAssets(); // (c)
 	});
@@ -475,14 +475,14 @@ describe("test Scene", () => {
 		let ready = false;
 		scene._ready.add(() => {
 			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			done();
 		});
 
 		scene.prefetch(); // (a)
 		expect(scene._loaded).toBe(false);
 		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 		game.resourceFactory.flushDelayedAssets(); // (c)
 
 		setTimeout(() => {
@@ -490,7 +490,7 @@ describe("test Scene", () => {
 			expect(scene._loaded).toBe(true);
 			expect(scene._prefetchRequested).toBe(true);
 
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			ready = true;
 			notifyStorageLoaded(values); // (d)
 		}, 0);
@@ -530,24 +530,24 @@ describe("test Scene", () => {
 
 		scene._ready.add(() => {
 			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			done();
 		});
 
 		scene.prefetch(); // (a)
 		expect(scene._loaded).toBe(false);
 		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 
 		scene._load(); // (b)
 		expect(scene._loaded).toBe(true);
 		expect(scene._prefetchRequested).toBe(true);
 
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 		game.resourceFactory.flushDelayedAssets(); // (c)
 
 		setTimeout(() => {
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			ready = true;
 			notifyStorageLoaded(values); // (d)
 		}, 0);
@@ -587,14 +587,14 @@ describe("test Scene", () => {
 		let ready = false;
 		scene._ready.add(() => {
 			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+			expect(scene._assetHolder.waitingAssetsCount).toBe(0);
 			done();
 		});
 
 		scene.prefetch(); // (a)
 		expect(scene._loaded).toBe(false);
 		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 
 		scene._load(); // (b)
 		expect(scene._loaded).toBe(true);
@@ -602,7 +602,7 @@ describe("test Scene", () => {
 
 		notifyStorageLoaded(values); // (d)
 
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
+		expect(scene._assetHolder.waitingAssetsCount).toBe(2);
 		ready = true;
 		game.resourceFactory.flushDelayedAssets(); // (c)
 	});

@@ -97,7 +97,7 @@ export class LoadingScene extends Scene {
 	 * アセットロード待ち対象シーンの残りのロード待ちアセット数を取得する。
 	 */
 	getTargetWaitingAssetsCount(): number {
-		return this._targetScene ? this._targetScene._sceneAssetHolder.waitingAssetsCount : 0;
+		return this._targetScene ? this._targetScene._assetHolder.waitingAssetsCount : 0;
 	}
 
 	/**

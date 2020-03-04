@@ -1,12 +1,12 @@
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetAccessor } from "./domain/AssetAccessor";
+import { AsssetLoadHandler, AssetHolder } from "./domain/AssetHolder";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
 import { MessageEvent, OperationEvent } from "./domain/Event";
 import { Matrix } from "./domain/Matrix";
-import { AsssetLoadHandler, SceneAssetHolder } from "./domain/SceneAssetHolder";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
@@ -254,7 +254,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	 * このシーンのアセットホルダーが一つ読み込みに成功する度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	assetHolderLoaded: Trigger<SceneAssetHolder>;
+	assetHolderLoaded: Trigger<AssetHolder>;
 
 	/**
 	 * シーンの状態。
@@ -360,13 +360,13 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	 * シーンのアセットの保持者。
 	 * @private
 	 */
-	_sceneAssetHolder: SceneAssetHolder;
+	_assetHolder: AssetHolder;
 
 	/**
 	 * `Scene#requestAssets()` で動的に要求されたアセットの保持者。
 	 * @private
 	 */
-	_assetHolders: SceneAssetHolder[];
+	_assetHolders: AssetHolder[];
 
 	/**
 	 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
@@ -413,7 +413,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
 		this.assetLoadCompleted = new Trigger<AssetLike>();
 		this.assetLoadAborted = new Trigger<AssetLike>();
-		this.assetHolderLoaded = new Trigger<SceneAssetHolder>();
+		this.assetHolderLoaded = new Trigger<AssetHolder>();
 		this.assetLoaded.add(this._addAsset, this);
 		this.assetLoadAborted.add(this._onAssetLoadAborted, this);
 
@@ -428,7 +428,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		this.stateChanged = new Trigger<SceneState>();
 
 		this._assetHolders = [];
-		this._sceneAssetHolder = new SceneAssetHolder({
+		this._assetHolder = new AssetHolder({
 			assetManager: this.game._assetManager,
 			assetIds: param.assetIds,
 			assetPaths: param.assetPaths,
@@ -492,7 +492,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
 		for (var i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();
-		this._sceneAssetHolder.destroy();
+		this._assetHolder.destroy();
 
 		this._storageLoader = undefined;
 
@@ -726,7 +726,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		}
 		if (this._prefetchRequested) return;
 		this._prefetchRequested = true;
-		this._sceneAssetHolder.request();
+		this._assetHolder.request();
 	}
 
 	/**
@@ -746,13 +746,13 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 			throw ExceptionFactory.createAssertionError("Scene#requestAsset(): can be called after loaded.");
 		}
 
-		const holder = new SceneAssetHolder({
+		const holder = new AssetHolder({
 			assetManager: this.game._assetManager,
 			assetIds: assetIds,
 			handler: handler,
 			assetLoadHandler: this
 		});
-		this.assetHolderLoaded.add(this.game._callSceneAssetHolderHandler, this.game);
+		this.assetHolderLoaded.add(this.game._callAssetHolderHandler, this.game);
 		this._assetHolders.push(holder);
 		holder.request();
 	}
@@ -777,7 +777,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	 * @private
 	 */
 	_needsLoading(): boolean {
-		return this._sceneAssetHolder.waitingAssetsCount > 0 || (this._storageLoader && !this._storageLoader._loaded);
+		return this._assetHolder.waitingAssetsCount > 0 || (this._storageLoader && !this._storageLoader._loaded);
 	}
 
 	/**
@@ -787,7 +787,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 		if (this._loaded) return;
 		this._loaded = true;
 
-		var needsWait = this._sceneAssetHolder.request();
+		var needsWait = this._assetHolder.request();
 		if (this._storageLoader) {
 			this._storageLoader._load(this);
 			needsWait = true;
@@ -823,7 +823,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler,
 	 * @private
 	 */
 	_onStorageLoaded(): void {
-		if (this._sceneAssetHolder.waitingAssetsCount === 0) this._notifySceneReady();
+		if (this._assetHolder.waitingAssetsCount === 0) this._notifySceneReady();
 	}
 
 	/**
