@@ -35,7 +35,7 @@ describe("test Game", () => {
 		expect(game.height).toBe(270);
 		expect(game.selfId).toBe("foo");
 		expect(game.playId).toBe(undefined);
-		expect(game.onSkipChanged).not.toBe(undefined);
+		expect(game.onSkipChange).not.toBe(undefined);
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
 	});
@@ -51,7 +51,7 @@ describe("test Game", () => {
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
 		expect(game.playId).toBe(undefined);
-		expect(game.onSkipChanged).toBe(undefined);
+		expect(game.onSkipChange).toBe(undefined);
 	});
 
 	it("global assets", done => {
@@ -403,7 +403,7 @@ describe("test Game", () => {
 					expect(logs).toEqual(["Scene2Load", "Scene2AssetLoaded", "TargetLoaded"]);
 
 					setTimeout(() => {
-						expect(game.loadingScene.onLoad.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.onLoad.length).toBe(1); // loadingSceneのonLoadハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -608,7 +608,7 @@ describe("test Game", () => {
 
 		let topIsLocal: LocalTickMode = undefined;
 		let sceneChangedCount = 0;
-		game._onSceneChanged.add(scene => {
+		game._onSceneChange.add(scene => {
 			sceneChangedCount++;
 			topIsLocal = scene.local;
 		});

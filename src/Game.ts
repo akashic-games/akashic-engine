@@ -364,7 +364,7 @@ export abstract class Game implements Registrable<E> {
 	 * 例えば多人数プレイされている時、それぞれの環境でfireされ方が異なりうる。
 	 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
 	 */
-	onSkipChanged: Trigger<boolean>;
+	onSkipChange: Trigger<boolean>;
 
 	/**
 	 * スキップ状態の変化時にfireされるTrigger。
@@ -434,14 +434,14 @@ export abstract class Game implements Registrable<E> {
 
 	/**
 	 * `this.scenes` の変化時にfireされるTrigger。
-	 * このTriggerはアセットロード(Scene#loadedのfire)を待たず、変化した時点で即fireされることに注意。
+	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
 	 * @private
 	 */
-	_onSceneChanged: Trigger<Scene>;
+	_onSceneChange: Trigger<Scene>;
 
 	/**
 	 * `this.scenes` の変化時にfireされるTrigger。
-	 * このTriggerはアセットロード(Scene#loadedのfire)を待たず、変化した時点で即fireされることに注意。
+	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
 	 * @private
 	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
@@ -698,9 +698,9 @@ export abstract class Game implements Registrable<E> {
 		this._eventTriggerMap[EventType.Operation] = undefined;
 
 		this.onResized = new Trigger<CommonSize>();
-		this.onSkipChanged = new Trigger<boolean>();
+		this.onSkipChange = new Trigger<boolean>();
 		this.resized = this.onResized;
-		this.skippingChanged = this.onSkipChanged;
+		this.skippingChanged = this.onSkipChange;
 
 		this.isLastTickLocal = true;
 		this.lastOmittedLocalTickCount = 0;
@@ -735,9 +735,9 @@ export abstract class Game implements Registrable<E> {
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
-		this._onSceneChanged = new Trigger<Scene>();
-		this._onSceneChanged.add(this._updateEventTriggers, this);
-		this._sceneChanged = this._onSceneChanged;
+		this._onSceneChange = new Trigger<Scene>();
+		this._onSceneChange.add(this._updateEventTriggers, this);
+		this._sceneChanged = this._onSceneChange;
 
 		this._initialScene = new Scene({
 			game: this,
@@ -1186,7 +1186,7 @@ export abstract class Game implements Registrable<E> {
 		this.onLeave.removeAll();
 		this.onSeed.removeAll();
 		this.onResized.removeAll();
-		this.onSkipChanged.removeAll();
+		this.onSkipChange.removeAll();
 
 		this._idx = 0;
 		this._localIdx = 0;
@@ -1286,14 +1286,14 @@ export abstract class Game implements Registrable<E> {
 		this.onResized.destroy();
 		this.onResized = undefined;
 		this.resized = undefined;
-		this.onSkipChanged.destroy();
-		this.onSkipChanged = undefined;
+		this.onSkipChange.destroy();
+		this.onSkipChange = undefined;
 		this.skippingChanged = undefined;
 		this._eventTriggerMap = undefined;
 		this._initialScene = undefined;
 		this._defaultLoadingScene = undefined;
-		this._onSceneChanged.destroy();
-		this._onSceneChanged = undefined;
+		this._onSceneChange.destroy();
+		this._onSceneChange = undefined;
 		this._sceneChanged = undefined;
 		this._onLoad.destroy();
 		this._onLoad = undefined;
@@ -1450,7 +1450,7 @@ export abstract class Game implements Registrable<E> {
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
-		if (fireSceneChanged) this._onSceneChanged.fire(this.scene());
+		if (fireSceneChanged) this._onSceneChange.fire(this.scene());
 	}
 
 	private _start(): void {
@@ -1478,7 +1478,7 @@ export abstract class Game implements Registrable<E> {
 			loadingScene.reset(scene);
 		} else {
 			// 読み込み待ちのアセットがなければその場で(loadingSceneに任せず)ロード、SceneReadyを発生させてからLoadingSceneEndを起こす。
-			this._onSceneChanged.fire(scene);
+			this._onSceneChange.fire(scene);
 			if (!scene._loaded) {
 				scene._load();
 				this._fireSceneLoaded(scene);
