@@ -158,8 +158,8 @@ export class MusicAudioSystem extends AudioSystem {
 	get player(): AudioPlayerLike {
 		if (!this._player) {
 			this._player = this._resourceFactory.createAudioPlayer(this);
-			this._player.played.add(this._onPlayerPlayed, this);
-			this._player.stopped.add(this._onPlayerStopped, this);
+			this._player.onPlay.add(this._onPlayerPlayed, this);
+			this._player.onStop.add(this._onPlayerStopped, this);
 		}
 		return this._player;
 	}
@@ -192,8 +192,8 @@ export class MusicAudioSystem extends AudioSystem {
 	_reset(): void {
 		super._reset();
 		if (this._player) {
-			this._player.played.remove({ owner: this, func: this._onPlayerPlayed });
-			this._player.stopped.remove({ owner: this, func: this._onPlayerStopped });
+			this._player.onPlay.remove({ owner: this, func: this._onPlayerPlayed });
+			this._player.onStop.remove({ owner: this, func: this._onPlayerStopped });
 		}
 		this._player = undefined;
 	}
@@ -251,8 +251,8 @@ export class SoundAudioSystem extends AudioSystem {
 		var player = this._resourceFactory.createAudioPlayer(this);
 		if (player.canHandleStopped()) this.players.push(player);
 
-		player.played.add(this._onPlayerPlayed, this);
-		player.stopped.add(this._onPlayerStopped, this);
+		player.onPlay.add(this._onPlayerPlayed, this);
+		player.onStop.add(this._onPlayerStopped, this);
 
 		return player;
 	}
@@ -279,8 +279,8 @@ export class SoundAudioSystem extends AudioSystem {
 		super._reset();
 		for (var i = 0; i < this.players.length; ++i) {
 			var player = this.players[i];
-			player.played.remove({ owner: this, func: this._onPlayerPlayed });
-			player.stopped.remove({ owner: this, func: this._onPlayerStopped });
+			player.onPlay.remove({ owner: this, func: this._onPlayerPlayed });
+			player.onStop.remove({ owner: this, func: this._onPlayerStopped });
 		}
 		this.players = [];
 	}
@@ -323,7 +323,7 @@ export class SoundAudioSystem extends AudioSystem {
 		var index = this.players.indexOf(e.player);
 		if (index < 0) return;
 
-		e.player.stopped.remove({ owner: this, func: this._onPlayerStopped });
+		e.player.onStop.remove({ owner: this, func: this._onPlayerStopped });
 		this.players.splice(index, 1);
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];

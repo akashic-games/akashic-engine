@@ -20,10 +20,22 @@ export class AudioPlayer implements AudioPlayerLike {
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。
 	 */
+	onPlay: Trigger<AudioPlayerEvent>;
+
+	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	played: Trigger<AudioPlayerEvent>;
 
 	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 */
+	onStop: Trigger<AudioPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	stopped: Trigger<AudioPlayerEvent>;
 
@@ -51,8 +63,10 @@ export class AudioPlayer implements AudioPlayerLike {
 	 * `AudioPlayer` のインスタンスを生成する。
 	 */
 	constructor(system: AudioSystemLike) {
-		this.played = new Trigger<AudioPlayerEvent>();
-		this.stopped = new Trigger<AudioPlayerEvent>();
+		this.onPlay = new Trigger<AudioPlayerEvent>();
+		this.played = this.onPlay;
+		this.onStop = new Trigger<AudioPlayerEvent>();
+		this.stopped = this.onStop;
 		this.currentAudio = undefined;
 		this.volume = system.volume;
 		this._muted = system._muted;
@@ -62,12 +76,12 @@ export class AudioPlayer implements AudioPlayerLike {
 	/**
 	 * `AudioAsset` を再生する。
 	 *
-	 * 再生後、 `this.played` がfireされる。
+	 * 再生後、 `this.onPlay` がfireされる。
 	 * @param audio 再生するオーディオアセット
 	 */
 	play(audio: AudioAssetLike): void {
 		this.currentAudio = audio;
-		this.played.fire({
+		this.onPlay.fire({
 			player: this,
 			audio: audio
 		});
@@ -76,14 +90,14 @@ export class AudioPlayer implements AudioPlayerLike {
 	/**
 	 * 再生を停止する。
 	 *
-	 * 停止後、 `this.stopped` がfireされる。
-	 * 再生中でない場合、何もしない(`stopped` もfireされない)。
+	 * 停止後、 `this.onStop` がfireされる。
+	 * 再生中でない場合、何もしない(`onStop` もfireされない)。
 	 */
 	stop(): void {
 		var audio = this.currentAudio;
 		if (!audio) return;
 		this.currentAudio = undefined;
-		this.stopped.fire({
+		this.onStop.fire({
 			player: this,
 			audio: audio
 		});

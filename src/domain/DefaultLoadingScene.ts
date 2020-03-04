@@ -105,9 +105,9 @@ export class DefaultLoadingScene extends LoadingScene {
 		this._gauge = undefined;
 		this._gaugeUpdateCount = 0;
 		this._totalWaitingAssetCount = 0;
-		this.loaded.add(this._onLoaded, this);
-		this.targetReset.add(this._onTargetReset, this);
-		this.targetAssetLoaded.add(this._onTargetAssetLoaded, this);
+		this.onLoad.add(this._onLoaded, this);
+		this.onTargetReset.add(this._onTargetReset, this);
+		this.onTargetAssetLoaded.add(this._onTargetAssetLoaded, this);
 	}
 
 	/**
@@ -157,7 +157,7 @@ export class DefaultLoadingScene extends LoadingScene {
 				]
 			})
 		);
-		gauge.update.add(this._onUpdateGuage, this);
+		gauge.onUpdate.add(this._onUpdateGuage, this);
 		this._gauge = gauge;
 		return true; // Trigger 登録を解除する
 	}

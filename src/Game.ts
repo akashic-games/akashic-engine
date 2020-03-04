@@ -187,17 +187,37 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * プレイヤーがゲームに参加したことを表すイベント。
 	 */
+	onJoin: Trigger<JoinEvent>;
+	/**
+	 * プレイヤーがゲームに参加したことを表すイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	join: Trigger<JoinEvent>;
 	/**
 	 * プレイヤーがゲームから離脱したことを表すイベント。
+	 */
+	onLeave: Trigger<LeaveEvent>;
+	/**
+	 * プレイヤーがゲームから離脱したことを表すイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	leave: Trigger<LeaveEvent>;
 	/**
 	 * 新しいプレイヤー情報が発生したことを示すイベント。
 	 */
+	onPlayerInfo: Trigger<PlayerInfoEvent>;
+	/**
+	 * 新しいプレイヤー情報が発生したことを示すイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	playerInfo: Trigger<PlayerInfoEvent>;
 	/**
 	 * 新しい乱数シードが発生したことを示すイベント。
+	 */
+	onSeed: Trigger<SeedEvent>;
+	/**
+	 * 新しい乱数シードが発生したことを示すイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	seed: Trigger<SeedEvent>;
 	/**
@@ -270,6 +290,14 @@ export abstract class Game implements Registrable<E> {
 	 * ゲーム開発者はこれをhandleして可能ならスナップショットを作成しGame#saveSnapshotを呼び出すべきである。
 	 */
 	// NOTE: このクラスはこのTriggerをfireしない。派生クラスがfireせねばならない。
+	onSnapshotRequest: Trigger<void>;
+
+	/**
+	 * スナップショット要求通知。
+	 * ゲーム開発者はこれをhandleして可能ならスナップショットを作成しGame#saveSnapshotを呼び出すべきである。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
+	// NOTE: このクラスはこのTriggerをfireしない。派生クラスがfireせねばならない。
 	snapshotRequest: Trigger<void>;
 
 	/**
@@ -318,6 +346,12 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * 画面サイズの変更時にfireされるTrigger。
 	 */
+	onResized: Trigger<CommonSize>;
+
+	/**
+	 * 画面サイズの変更時にfireされるTrigger。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	resized: Trigger<CommonSize>;
 
 	/**
@@ -329,6 +363,19 @@ export abstract class Game implements Registrable<E> {
 	 * この通知のfire頻度は、ゲームの実行状態などに依存して異なりうることに注意。
 	 * 例えば多人数プレイされている時、それぞれの環境でfireされ方が異なりうる。
 	 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
+	 */
+	onSkipChanged: Trigger<boolean>;
+
+	/**
+	 * スキップ状態の変化時にfireされるTrigger。
+	 *
+	 * スキップ状態に遷移する時に真、非スキップ状態に遷移する時に偽が与えられる。
+	 * この通知は、ゲーム開発者が「スキップ中の演出省略」などの最適化を行うために提供されている。
+	 *
+	 * この通知のfire頻度は、ゲームの実行状態などに依存して異なりうることに注意。
+	 * 例えば多人数プレイされている時、それぞれの環境でfireされ方が異なりうる。
+	 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	skippingChanged: Trigger<boolean>;
 
@@ -390,11 +437,26 @@ export abstract class Game implements Registrable<E> {
 	 * このTriggerはアセットロード(Scene#loadedのfire)を待たず、変化した時点で即fireされることに注意。
 	 * @private
 	 */
+	_onSceneChanged: Trigger<Scene>;
+
+	/**
+	 * `this.scenes` の変化時にfireされるTrigger。
+	 * このTriggerはアセットロード(Scene#loadedのfire)を待たず、変化した時点で即fireされることに注意。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	_sceneChanged: Trigger<Scene>;
 
 	/**
 	 * グローバルアセットの読み込み待ちハンドラ。
 	 * @private
+	 */
+	_onLoad: Trigger<Game>;
+
+	/**
+	 * グローバルアセットの読み込み待ちハンドラ。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	_loaded: Trigger<Game>;
 
@@ -403,6 +465,15 @@ export abstract class Game implements Registrable<E> {
 	 * エントリポイント実行後のシーン遷移直後にfireされる。
 	 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
 	 * @private
+	 */
+	_onStart: Trigger<void>;
+
+	/**
+	 * _start() 呼び出しから戻る直前を通知するTrigger。
+	 * エントリポイント実行後のシーン遷移直後にfireされる。
+	 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	_started: Trigger<void>;
 
@@ -445,6 +516,13 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * 操作プラグインによる操作を通知するTrigger。
 	 * @private
+	 */
+	_onOperationPluginOperated: Trigger<InternalOperationPluginOperation>;
+
+	/**
+	 * 操作プラグインによる操作を通知するTrigger。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	_operationPluginOperated: Trigger<InternalOperationPluginOperation>;
 
@@ -599,32 +677,42 @@ export abstract class Game implements Registrable<E> {
 		this.assets = {};
 		this.surfaceAtlasSet = undefined;
 
-		this.join = new Trigger<JoinEvent>();
-		this.leave = new Trigger<LeaveEvent>();
-		this.playerInfo = new Trigger<PlayerInfoEvent>();
-		this.seed = new Trigger<SeedEvent>();
+		this.onJoin = new Trigger<JoinEvent>();
+		this.onLeave = new Trigger<LeaveEvent>();
+		this.onPlayerInfo = new Trigger<PlayerInfoEvent>();
+		this.onSeed = new Trigger<SeedEvent>();
+		this.join = this.onJoin;
+		this.leave = this.onLeave;
+		this.playerInfo = this.onPlayerInfo;
+		this.seed = this.onSeed;
 
 		this._eventTriggerMap = {};
-		this._eventTriggerMap[EventType.Join] = this.join;
-		this._eventTriggerMap[EventType.Leave] = this.leave;
-		this._eventTriggerMap[EventType.PlayerInfo] = this.playerInfo;
-		this._eventTriggerMap[EventType.Seed] = this.seed;
+		this._eventTriggerMap[EventType.Join] = this.onJoin;
+		this._eventTriggerMap[EventType.Leave] = this.onLeave;
+		this._eventTriggerMap[EventType.PlayerInfo] = this.onPlayerInfo;
+		this._eventTriggerMap[EventType.Seed] = this.onSeed;
 		this._eventTriggerMap[EventType.Message] = undefined;
 		this._eventTriggerMap[EventType.PointDown] = undefined;
 		this._eventTriggerMap[EventType.PointMove] = undefined;
 		this._eventTriggerMap[EventType.PointUp] = undefined;
 		this._eventTriggerMap[EventType.Operation] = undefined;
 
-		this.resized = new Trigger<CommonSize>();
-		this.skippingChanged = new Trigger<boolean>();
+		this.onResized = new Trigger<CommonSize>();
+		this.onSkipChanged = new Trigger<boolean>();
+		this.resized = this.onResized;
+		this.skippingChanged = this.onSkipChanged;
 
 		this.isLastTickLocal = true;
 		this.lastOmittedLocalTickCount = 0;
 
-		this._loaded = new Trigger<Game>();
-		this._started = new Trigger<void>();
+		this._onLoad = new Trigger<Game>();
+		this._onStart = new Trigger<void>();
+		this._loaded = this._onLoad;
+		this._started = this._onStart;
+
 		this.isLoaded = false;
-		this.snapshotRequest = new Trigger<void>();
+		this.onSnapshotRequest = new Trigger<void>();
+		this.snapshotRequest = this.onSnapshotRequest;
 
 		this.external = {};
 
@@ -643,11 +731,13 @@ export abstract class Game implements Registrable<E> {
 
 		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
 		this.operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
-		this._operationPluginOperated = new Trigger<InternalOperationPluginOperation>();
-		this.operationPluginManager.operated.add(this._operationPluginOperated.fire, this._operationPluginOperated);
+		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();
+		this._operationPluginOperated = this._onOperationPluginOperated;
+		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
-		this._sceneChanged = new Trigger<Scene>();
-		this._sceneChanged.add(this._updateEventTriggers, this);
+		this._onSceneChanged = new Trigger<Scene>();
+		this._onSceneChanged.add(this._updateEventTriggers, this);
+		this._sceneChanged = this._onSceneChanged;
 
 		this._initialScene = new Scene({
 			game: this,
@@ -655,7 +745,7 @@ export abstract class Game implements Registrable<E> {
 			local: true,
 			name: "akashic:initial-scene"
 		});
-		this._initialScene.loaded.add(this._onInitialSceneLoaded, this);
+		this._initialScene.onLoad.add(this._onInitialSceneLoaded, this);
 
 		this._reset({ age: 0 });
 	}
@@ -753,7 +843,7 @@ export abstract class Game implements Registrable<E> {
 				}
 			}
 
-			scene.update.fire();
+			scene.onUpdate.fire();
 			if (advanceAge) ++this.age;
 		}
 
@@ -1091,12 +1181,12 @@ export abstract class Game implements Registrable<E> {
 		}
 
 		this.audio._reset();
-		this._loaded.removeAll({ func: this._start, owner: this });
-		this.join.removeAll();
-		this.leave.removeAll();
-		this.seed.removeAll();
-		this.resized.removeAll();
-		this.skippingChanged.removeAll();
+		this._onLoad.removeAll({ func: this._start, owner: this });
+		this.onJoin.removeAll();
+		this.onLeave.removeAll();
+		this.onSeed.removeAll();
+		this.onResized.removeAll();
+		this.onSkipChanged.removeAll();
 
 		this._idx = 0;
 		this._localIdx = 0;
@@ -1106,7 +1196,7 @@ export abstract class Game implements Registrable<E> {
 		this._modified = true;
 		this.loadingScene = undefined;
 		this._focusingCamera = undefined;
-		this.snapshotRequest.removeAll();
+		this.onSnapshotRequest.removeAll();
 		this._sceneChangeRequests = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
@@ -1160,13 +1250,17 @@ export abstract class Game implements Registrable<E> {
 		this.renderers = undefined;
 		this.scenes = undefined;
 		this.random = undefined;
-		this.join.destroy();
+		this.onJoin.destroy();
+		this.onJoin = undefined;
 		this.join = undefined;
-		this.leave.destroy();
+		this.onLeave.destroy();
+		this.onLeave = undefined;
 		this.leave = undefined;
-		this.seed.destroy();
+		this.onSeed.destroy();
+		this.onSeed = undefined;
 		this.seed = undefined;
-		this.playerInfo.destroy();
+		this.onPlayerInfo.destroy();
+		this.onPlayerInfo = undefined;
 		this.playerInfo = undefined;
 		this._modified = false;
 		this.age = 0;
@@ -1179,7 +1273,8 @@ export abstract class Game implements Registrable<E> {
 		this.audio.sound.stopAll();
 		this.audio = undefined;
 		this.defaultAudioSystemId = undefined;
-		this.snapshotRequest.destroy();
+		this.onSnapshotRequest.destroy();
+		this.onSnapshotRequest = undefined;
 		this.snapshotRequest = undefined;
 
 		// TODO より能動的にdestroy処理を入れるべきかもしれない
@@ -1188,18 +1283,23 @@ export abstract class Game implements Registrable<E> {
 
 		this.playId = undefined;
 		this.operationPlugins = undefined; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
-		this.resized.destroy();
+		this.onResized.destroy();
+		this.onResized = undefined;
 		this.resized = undefined;
-		this.skippingChanged.destroy();
+		this.onSkipChanged.destroy();
+		this.onSkipChanged = undefined;
 		this.skippingChanged = undefined;
 		this._eventTriggerMap = undefined;
 		this._initialScene = undefined;
 		this._defaultLoadingScene = undefined;
-		this._sceneChanged.destroy();
+		this._onSceneChanged.destroy();
+		this._onSceneChanged = undefined;
 		this._sceneChanged = undefined;
-		this._loaded.destroy();
+		this._onLoad.destroy();
+		this._onLoad = undefined;
 		this._loaded = undefined;
-		this._started.destroy();
+		this._onStart.destroy();
+		this._onStart = undefined;
 		this._started = undefined;
 		this._main = undefined;
 		this._mainParameter = undefined;
@@ -1209,7 +1309,8 @@ export abstract class Game implements Registrable<E> {
 		this._pointEventResolver = undefined;
 		this.audio = undefined;
 		this.operationPluginManager = undefined;
-		this._operationPluginOperated.destroy();
+		this._onOperationPluginOperated.destroy();
+		this._onOperationPluginOperated = undefined;
 		this._operationPluginOperated = undefined;
 		this._idx = 0;
 		this._localDb = {};
@@ -1234,7 +1335,7 @@ export abstract class Game implements Registrable<E> {
 	_loadAndStart(param?: GameMainParameterObject): void {
 		this._mainParameter = param || {};
 		if (!this.isLoaded) {
-			this._loaded.add(this._start, this);
+			this._onLoad.add(this._start, this);
 			this.pushScene(this._initialScene);
 			this._flushSceneChangeRequests();
 		} else {
@@ -1267,11 +1368,11 @@ export abstract class Game implements Registrable<E> {
 			return;
 		}
 
-		this._eventTriggerMap[EventType.Message] = scene.message;
-		this._eventTriggerMap[EventType.PointDown] = scene.pointDownCapture;
-		this._eventTriggerMap[EventType.PointMove] = scene.pointMoveCapture;
-		this._eventTriggerMap[EventType.PointUp] = scene.pointUpCapture;
-		this._eventTriggerMap[EventType.Operation] = scene.operation;
+		this._eventTriggerMap[EventType.Message] = scene.onMessage;
+		this._eventTriggerMap[EventType.PointDown] = scene.onPointDownCapture;
+		this._eventTriggerMap[EventType.PointMove] = scene.onPointMoveCapture;
+		this._eventTriggerMap[EventType.PointUp] = scene.onPointUpCapture;
+		this._eventTriggerMap[EventType.Operation] = scene.onOperation;
 		scene._activate();
 	}
 
@@ -1279,10 +1380,10 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_onInitialSceneLoaded(): void {
-		this._initialScene.loaded.remove(this._onInitialSceneLoaded, this);
+		this._initialScene.onLoad.remove(this._onInitialSceneLoaded, this);
 		this.assets = this._initialScene.assets;
 		this.isLoaded = true;
-		this._loaded.fire();
+		this._onLoad.fire();
 	}
 
 	/**
@@ -1349,7 +1450,7 @@ export abstract class Game implements Registrable<E> {
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
-		if (fireSceneChanged) this._sceneChanged.fire(this.scene());
+		if (fireSceneChanged) this._onSceneChanged.fire(this.scene());
 	}
 
 	private _start(): void {
@@ -1361,7 +1462,7 @@ export abstract class Game implements Registrable<E> {
 			throw ExceptionFactory.createAssertionError("Game#_start: Entry point '" + this._main + "' not found.");
 		mainFun(this._mainParameter);
 		this._flushSceneChangeRequests(); // シーン遷移を要求する可能性がある(というかまずする)
-		this._started.fire();
+		this._onStart.fire();
 	}
 
 	private _doPushScene(scene: Scene, loadingScene?: LoadingScene): void {
@@ -1377,7 +1478,7 @@ export abstract class Game implements Registrable<E> {
 			loadingScene.reset(scene);
 		} else {
 			// 読み込み待ちのアセットがなければその場で(loadingSceneに任せず)ロード、SceneReadyを発生させてからLoadingSceneEndを起こす。
-			this._sceneChanged.fire(scene);
+			this._onSceneChanged.fire(scene);
 			if (!scene._loaded) {
 				scene._load();
 				this._fireSceneLoaded(scene);

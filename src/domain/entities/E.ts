@@ -200,30 +200,51 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	_hasTouchableChildren: boolean;
 
-	private _update: Trigger<void>;
-	private _message: Trigger<MessageEvent>;
-	private _pointDown: Trigger<PointDownEvent>;
-	private _pointUp: Trigger<PointUpEvent>;
-	private _pointMove: Trigger<PointMoveEvent>;
+	private _onUpdate: Trigger<void>;
+	private _onMessage: Trigger<MessageEvent>;
+	private _onPointDown: Trigger<PointDownEvent>;
+	private _onPointUp: Trigger<PointUpEvent>;
+	private _onPointMove: Trigger<PointMoveEvent>;
 	private _touchable: boolean;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
-	get update(): Trigger<void> {
-		if (!this._update) this._update = new ChainTrigger<void>(this.scene.update);
-		return this._update;
+	get onUpdate(): Trigger<void> {
+		if (!this._onUpdate) this._onUpdate = new ChainTrigger<void>(this.scene.onUpdate);
+		return this._onUpdate;
 	}
 	// updateは代入する必要がないのでsetterを定義しない
+
+	/**
+	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
+	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
+	get update(): Trigger<void> {
+		if (!this._onUpdate) this._onUpdate = new ChainTrigger<void>(this.scene.onUpdate);
+		return this._onUpdate;
+	}
 
 	/**
 	 * このエンティティのmessageイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
+	get onMessage(): Trigger<MessageEvent> {
+		if (!this._onMessage) this._onMessage = new ChainTrigger<MessageEvent>(this.scene.onMessage);
+		return this._onMessage;
+	}
+	// messageは代入する必要がないのでsetterを定義しない
+
+	/**
+	 * このエンティティのmessageイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
+	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get message(): Trigger<MessageEvent> {
-		if (!this._message) this._message = new ChainTrigger<MessageEvent>(this.scene.message);
-		return this._message;
+		if (!this._onMessage) this._onMessage = new ChainTrigger<MessageEvent>(this.scene.onMessage);
+		return this._onMessage;
 	}
 	// messageは代入する必要がないのでsetterを定義しない
 
@@ -231,10 +252,22 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint downイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
+	get onPointDown(): Trigger<PointDownEvent> {
+		if (!this._onPointDown)
+			this._onPointDown = new ChainTrigger<PointDownEvent>(this.scene.onPointDownCapture, this._isTargetOperation, this);
+		return this._onPointDown;
+	}
+	// pointDownは代入する必要がないのでsetterを定義しない
+
+	/**
+	 * このエンティティのpoint downイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
+	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get pointDown(): Trigger<PointDownEvent> {
-		if (!this._pointDown)
-			this._pointDown = new ChainTrigger<PointDownEvent>(this.scene.pointDownCapture, this._isTargetOperation, this);
-		return this._pointDown;
+		if (!this._onPointDown)
+			this._onPointDown = new ChainTrigger<PointDownEvent>(this.scene.onPointDownCapture, this._isTargetOperation, this);
+		return this._onPointDown;
 	}
 	// pointDownは代入する必要がないのでsetterを定義しない
 
@@ -242,9 +275,20 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint upイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
+	get onPointUp(): Trigger<PointUpEvent> {
+		if (!this._onPointUp) this._onPointUp = new ChainTrigger<PointUpEvent>(this.scene.onPointUpCapture, this._isTargetOperation, this);
+		return this._onPointUp;
+	}
+	// pointUpは代入する必要がないのでsetterを定義しない
+
+	/**
+	 * このエンティティのpoint upイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
+	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get pointUp(): Trigger<PointUpEvent> {
-		if (!this._pointUp) this._pointUp = new ChainTrigger<PointUpEvent>(this.scene.pointUpCapture, this._isTargetOperation, this);
-		return this._pointUp;
+		if (!this._onPointUp) this._onPointUp = new ChainTrigger<PointUpEvent>(this.scene.onPointUpCapture, this._isTargetOperation, this);
+		return this._onPointUp;
 	}
 	// pointUpは代入する必要がないのでsetterを定義しない
 
@@ -252,10 +296,22 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 * このエンティティのpoint moveイベント。
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
+	get onPointMove(): Trigger<PointMoveEvent> {
+		if (!this._onPointMove)
+			this._onPointMove = new ChainTrigger<PointMoveEvent>(this.scene.onPointMoveCapture, this._isTargetOperation, this);
+		return this._onPointMove;
+	}
+	// pointMoveは代入する必要がないのでsetterを定義しない
+
+	/**
+	 * このエンティティのpoint moveイベント。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
+	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get pointMove(): Trigger<PointMoveEvent> {
-		if (!this._pointMove)
-			this._pointMove = new ChainTrigger<PointMoveEvent>(this.scene.pointMoveCapture, this._isTargetOperation, this);
-		return this._pointMove;
+		if (!this._onPointMove)
+			this._onPointMove = new ChainTrigger<PointMoveEvent>(this.scene.onPointMoveCapture, this._isTargetOperation, this);
+		return this._onPointMove;
 	}
 	// pointMoveは代入する必要がないのでsetterを定義しない
 
@@ -292,11 +348,11 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		this._touchable = false;
 		this.state = EntityStateFlags.None;
 		this._hasTouchableChildren = false;
-		this._update = undefined;
-		this._message = undefined;
-		this._pointDown = undefined;
-		this._pointMove = undefined;
-		this._pointUp = undefined;
+		this._onUpdate = undefined;
+		this._onMessage = undefined;
+		this._onPointDown = undefined;
+		this._onPointMove = undefined;
+		this._onPointUp = undefined;
 		this.tag = param.tag;
 		this.shaderProgram = param.shaderProgram;
 
@@ -476,25 +532,25 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		}
 
 		// この解放はstringとforeachを使って書きたいが、minifyする時は.アクセスの方がいいのでやむを得ない
-		if (this._update) {
-			this._update.destroy();
-			this._update = undefined;
+		if (this._onUpdate) {
+			this._onUpdate.destroy();
+			this._onUpdate = undefined;
 		}
-		if (this._message) {
-			this._message.destroy();
-			this._message = undefined;
+		if (this._onMessage) {
+			this._onMessage.destroy();
+			this._onMessage = undefined;
 		}
-		if (this._pointDown) {
-			this._pointDown.destroy();
-			this._pointDown = undefined;
+		if (this._onPointDown) {
+			this._onPointDown.destroy();
+			this._onPointDown = undefined;
 		}
-		if (this._pointMove) {
-			this._pointMove.destroy();
-			this._pointMove = undefined;
+		if (this._onPointMove) {
+			this._onPointMove.destroy();
+			this._onPointMove = undefined;
 		}
-		if (this._pointUp) {
-			this._pointUp.destroy();
-			this._pointUp = undefined;
+		if (this._onPointUp) {
+			this._onPointUp.destroy();
+			this._onPointUp = undefined;
 		}
 
 		this.scene.unregister(this);

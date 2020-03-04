@@ -21,10 +21,22 @@ export interface VideoPlayerLike {
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。
 	 */
+	onPlay: Trigger<VideoPlayerEvent>;
+
+	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	played: Trigger<VideoPlayerEvent>;
 
 	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 */
+	onStop: Trigger<VideoPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	stopped: Trigger<VideoPlayerEvent>;
 
@@ -45,7 +57,7 @@ export interface VideoPlayerLike {
 	/**
 	 * `VideoAsset` を再生する。
 	 *
-	 * 再生後、 `this.played` がfireされる。
+	 * 再生後、 `this.onPlay` がfireされる。
 	 * @param Video 再生するビデオアセット
 	 */
 	play(videoAsset: VideoAssetLike): void;
@@ -54,7 +66,7 @@ export interface VideoPlayerLike {
 	 * 再生を停止する。
 	 *
 	 * 再生中でない場合、何もしない。
-	 * 停止後、 `this.stopped` がfireされる。
+	 * 停止後、 `this.onStop` がfireされる。
 	 */
 	stop(): void;
 

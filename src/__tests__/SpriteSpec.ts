@@ -5,8 +5,8 @@ describe("test Sprite", () => {
 	let updated = false;
 
 	class MonitorSprite extends Sprite {
-		_onUpdate(): void {
-			super._onUpdate();
+		_onUpdated(): void {
+			super._onUpdated();
 			updated = true;
 		}
 	}
@@ -79,14 +79,14 @@ describe("test Sprite", () => {
 		expect(sprite._surface).toBe(surface);
 		expect(sprite._beforeSurface).toEqual(sprite._surface);
 
-		sprite.update.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
-		surface.animatingStarted.fire();
-		sprite.update.fire();
+		surface.onAnimationStart.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 		updated = false;
-		surface.animatingStopped.fire();
-		sprite.update.fire();
+		surface.onAnimationStop.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
 	});
 
@@ -110,7 +110,7 @@ describe("test Sprite", () => {
 		expect(sprite._surface).toBe(surface);
 		expect(sprite._beforeSurface).toEqual(sprite._surface);
 
-		sprite.update.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 	});
 
@@ -172,14 +172,14 @@ describe("test Sprite", () => {
 		expect(sprite._surface).toEqual(surface);
 		expect(sprite._beforeSurface).toEqual(sprite._surface);
 
-		sprite.update.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
-		surface.animatingStarted.fire();
-		sprite.update.fire();
+		surface.onAnimationStart.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 		updated = false;
-		surface.animatingStopped.fire();
-		sprite.update.fire();
+		surface.onAnimationStop.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
 	});
 
@@ -206,7 +206,7 @@ describe("test Sprite", () => {
 		expect(sprite._surface).toEqual(surface);
 		expect(sprite._beforeSurface).toEqual(sprite._surface);
 
-		sprite.update.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 	});
 
@@ -273,20 +273,20 @@ describe("test Sprite", () => {
 			src: surface1
 		});
 
-		surface1.animatingStarted.fire();
-		sprite.update.fire();
+		surface1.onAnimationStart.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 
 		sprite._surface = surface2;
 		sprite.invalidate();
 		updated = false;
 
-		surface1.animatingStarted.fire();
-		sprite.update.fire();
+		surface1.onAnimationStart.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
 
-		surface2.animatingStarted.fire();
-		sprite.update.fire();
+		surface2.onAnimationStart.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 	});
 
@@ -300,15 +300,15 @@ describe("test Sprite", () => {
 			src: surface1
 		});
 
-		surface1.animatingStarted.fire();
-		sprite.update.fire();
+		surface1.onAnimationStart.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 
 		sprite._surface = surface2;
 		sprite.invalidate();
 		updated = false;
 
-		sprite.update.fire();
+		sprite.onUpdate.fire();
 		expect(updated).toBe(true);
 	});
 

@@ -17,10 +17,22 @@ export class VideoPlayer implements VideoPlayerLike {
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。
 	 */
+	onPlay: Trigger<VideoPlayerEvent>;
+
+	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	played: Trigger<VideoPlayerEvent>;
 
 	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 */
+	onStop: Trigger<VideoPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	stopped: Trigger<VideoPlayerEvent>;
 
@@ -43,8 +55,10 @@ export class VideoPlayer implements VideoPlayerLike {
 	 */
 	constructor(loop?: boolean) {
 		this._loop = !!loop;
-		this.played = new Trigger<VideoPlayerEvent>();
-		this.stopped = new Trigger<VideoPlayerEvent>();
+		this.onPlay = new Trigger<VideoPlayerEvent>();
+		this.played = this.onPlay;
+		this.onStop = new Trigger<VideoPlayerEvent>();
+		this.stopped = this.onStop;
 		this.currentVideo = undefined;
 		this.volume = 1.0;
 	}
@@ -52,31 +66,31 @@ export class VideoPlayer implements VideoPlayerLike {
 	/**
 	 * `VideoAsset` を再生する。
 	 *
-	 * 再生後、 `this.played` がfireされる。
+	 * 再生後、 `this.onPlay` がfireされる。
 	 * @param Video 再生するビデオアセット
 	 */
 	play(videoAsset: VideoAssetLike): void {
 		this.currentVideo = videoAsset;
-		this.played.fire({
+		this.onPlay.fire({
 			player: this,
 			video: videoAsset
 		});
-		videoAsset.asSurface().animatingStarted.fire();
+		videoAsset.asSurface().onAnimationStart.fire();
 	}
 
 	/**
 	 * 再生を停止する。
 	 *
 	 * 再生中でない場合、何もしない。
-	 * 停止後、 `this.stopped` がfireされる。
+	 * 停止後、 `this.onStop` がfireされる。
 	 */
 	stop(): void {
 		var videoAsset = this.currentVideo;
-		this.stopped.fire({
+		this.onStop.fire({
 			player: this,
 			video: videoAsset
 		});
-		videoAsset.asSurface().animatingStopped.fire();
+		videoAsset.asSurface().onAnimationStop.fire();
 	}
 
 	/**

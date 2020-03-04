@@ -7,8 +7,8 @@ describe("test AudioPlayer", () => {
 		const system = game.audio.music;
 		const player = system.createPlayer();
 		expect(player.volume).toBe(system.volume);
-		expect(player.played.constructor).toBe(Trigger);
-		expect(player.stopped.constructor).toBe(Trigger);
+		expect(player.onPlay.constructor).toBe(Trigger);
+		expect(player.onStop.constructor).toBe(Trigger);
 		expect(player.currentAudio).toBeUndefined();
 	});
 
@@ -18,8 +18,8 @@ describe("test AudioPlayer", () => {
 		system.volume = 0.5;
 		const player = system.createPlayer();
 		expect(player.volume).toBe(system.volume);
-		expect(player.played.constructor).toBe(Trigger);
-		expect(player.stopped.constructor).toBe(Trigger);
+		expect(player.onPlay.constructor).toBe(Trigger);
+		expect(player.onStop.constructor).toBe(Trigger);
 		expect(player.currentAudio).toBeUndefined();
 	});
 });

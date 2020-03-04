@@ -106,6 +106,13 @@ export class FrameSprite extends Sprite {
 	 * アニメーション終了時にfireされるTrigger。
 	 * 本Triggerは loop: true の場合にのみfireされる。
 	 */
+	onFinish: Trigger<void>;
+
+	/**
+	 * アニメーション終了時にfireされるTrigger。
+	 * 本Triggerは loop: true の場合にのみfireされる。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	finished: Trigger<void>;
 
 	/**
@@ -148,7 +155,8 @@ export class FrameSprite extends Sprite {
 		this.interval = param.interval;
 		this._timer = undefined;
 		this.loop = param.loop != null ? param.loop : true;
-		this.finished = new Trigger<void>();
+		this.onFinish = new Trigger<void>();
+		this.finished = this.onFinish;
 		this._modifiedSelf();
 	}
 
@@ -161,7 +169,7 @@ export class FrameSprite extends Sprite {
 		if (this._timer) this._free();
 
 		this._timer = this.scene.createTimer(this.interval);
-		this._timer.elapsed.add(this._onElapsed, this);
+		this._timer.onElapsed.add(this._onElapsed, this);
 	}
 
 	/**
@@ -198,7 +206,7 @@ export class FrameSprite extends Sprite {
 				this.frameNumber = 0;
 			} else {
 				this.stop();
-				this.finished.fire();
+				this.onFinish.fire();
 			}
 		} else {
 			this.frameNumber++;
@@ -213,7 +221,7 @@ export class FrameSprite extends Sprite {
 	_free(): void {
 		if (!this._timer) return;
 
-		this._timer.elapsed.remove(this._onElapsed, this);
+		this._timer.onElapsed.remove(this._onElapsed, this);
 		if (this._timer.canDelete()) this.scene.deleteTimer(this._timer);
 
 		this._timer = undefined;

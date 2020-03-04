@@ -44,8 +44,8 @@ export module SurfaceUtil {
 	 */
 	export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: SurfaceLike): void {
 		if (surface.isDynamic) {
-			surface.animatingStarted.add(animatingHandler._onAnimatingStarted, animatingHandler);
-			surface.animatingStopped.add(animatingHandler._onAnimatingStopped, animatingHandler);
+			surface.onAnimationStart.add(animatingHandler._onAnimatingStarted, animatingHandler);
+			surface.onAnimationStop.add(animatingHandler._onAnimatingStopped, animatingHandler);
 			if (surface.isPlaying()) {
 				animatingHandler._onAnimatingStarted();
 			}
@@ -69,13 +69,13 @@ export module SurfaceUtil {
 		animatingHandler._onAnimatingStopped();
 
 		if (!beforeSurface.destroyed() && beforeSurface.isDynamic) {
-			beforeSurface.animatingStarted.remove(animatingHandler._onAnimatingStarted, animatingHandler);
-			beforeSurface.animatingStopped.remove(animatingHandler._onAnimatingStopped, animatingHandler);
+			beforeSurface.onAnimationStart.remove(animatingHandler._onAnimatingStarted, animatingHandler);
+			beforeSurface.onAnimationStop.remove(animatingHandler._onAnimatingStopped, animatingHandler);
 		}
 
 		if (afterSurface.isDynamic) {
-			afterSurface.animatingStarted.add(animatingHandler._onAnimatingStarted, animatingHandler);
-			afterSurface.animatingStopped.add(animatingHandler._onAnimatingStopped, animatingHandler);
+			afterSurface.onAnimationStart.add(animatingHandler._onAnimatingStarted, animatingHandler);
+			afterSurface.onAnimationStop.add(animatingHandler._onAnimatingStopped, animatingHandler);
 			if (afterSurface.isPlaying()) {
 				animatingHandler._onAnimatingStarted();
 			}

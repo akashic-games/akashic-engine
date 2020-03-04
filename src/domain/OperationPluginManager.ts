@@ -45,6 +45,11 @@ export class OperationPluginManager {
 	/**
 	 * 操作プラグインの操作を通知する `Trigger` 。
 	 */
+	onOperate: Trigger<InternalOperationPluginOperation>;
+	/**
+	 * 操作プラグインの操作を通知する `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	operated: Trigger<InternalOperationPluginOperation>;
 
 	/**
@@ -58,7 +63,8 @@ export class OperationPluginManager {
 	private _initialized: boolean;
 
 	constructor(game: Game, viewInfo: OperationPluginViewInfo, infos: InternalOperationPluginInfo[]) {
-		this.operated = new Trigger<InternalOperationPluginOperation>();
+		this.onOperate = new Trigger<InternalOperationPluginOperation>();
+		this.operated = this.onOperate;
 		this.plugins = {};
 		this._game = game;
 		this._viewInfo = viewInfo;
@@ -113,7 +119,8 @@ export class OperationPluginManager {
 
 	destroy(): void {
 		this.stopAll();
-		this.operated.destroy();
+		this.onOperate.destroy();
+		this.onOperate = undefined;
 		this.operated = undefined;
 		this.plugins = undefined;
 		this._game = undefined;
@@ -157,7 +164,7 @@ export class OperationPluginManager {
 		}
 		const plugin = new pluginClass(this._game, this._viewInfo, option);
 		this.plugins[code] = plugin;
-		const handler = new OperationHandler(code, this.operated, this.operated.fire);
+		const handler = new OperationHandler(code, this.onOperate, this.onOperate.fire);
 		plugin.operationTrigger.add(handler.onOperation, handler);
 		return plugin;
 	}

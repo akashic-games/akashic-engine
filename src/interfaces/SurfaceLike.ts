@@ -29,11 +29,25 @@ export interface SurfaceLike extends CommonSize, Destroyable {
 	 * アニメーション再生開始イベント。
 	 * isDynamicが偽の時undefined。
 	 */
+	onAnimationStart: Trigger<void>;
+
+	/**
+	 * アニメーション再生開始イベント。
+	 * isDynamicが偽の時undefined。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 */
 	animatingStarted: Trigger<void>;
 
 	/**
 	 * アニメーション再生停止イベント。
 	 * isDynamicが偽の時undefined。
+	 */
+	onAnimationStop: Trigger<void>;
+
+	/**
+	 * アニメーション再生停止イベント。
+	 * isDynamicが偽の時undefined。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	animatingStopped: Trigger<void>;
 
