@@ -107,7 +107,7 @@ export class DefaultLoadingScene extends LoadingScene {
 		this._totalWaitingAssetCount = 0;
 		this.onLoad.add(this._onLoaded, this);
 		this.onTargetReset.add(this._onTargetReset, this);
-		this.onTargetAssetLoaded.add(this._onTargetAssetLoaded, this);
+		this.onTargetAssetLoad.add(this._onTargetAssetLoaded, this);
 	}
 
 	/**

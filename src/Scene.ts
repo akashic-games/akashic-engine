@@ -392,12 +392,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	onUpdate: Trigger<void>;
 
 	/**
-	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	update: Trigger<void>;
-
-	/**
 	 * 読み込み完了イベント。
 	 *
 	 * このシーンの生成時に(コンストラクタで)指定されたすべてのアセットの読み込みが終了した後、一度だけfireされる。
@@ -406,30 +400,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	onLoad: Trigger<Scene>;
 
 	/**
-	 * 読み込み完了イベント。
-	 *
-	 * このシーンの生成時に(コンストラクタで)指定されたすべてのアセットの読み込みが終了した後、一度だけfireされる。
-	 * このシーンのアセットを利用するすべての処理は、このイベントのfire後に実行されなければならない。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	loaded: Trigger<Scene>;
-
-	/**
 	 * アセット読み込み成功イベント。
 	 *
 	 * このシーンのアセットが一つ読み込まれる度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
 	onAssetLoad: Trigger<AssetLike>;
-
-	/**
-	 * アセット読み込み成功イベント。
-	 *
-	 * このシーンのアセットが一つ読み込まれる度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	assetLoaded: Trigger<AssetLike>;
 
 	/**
 	 * アセット読み込み失敗イベント。
@@ -441,31 +417,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	onAssetLoadFailure: Trigger<AssetLoadFailureInfo>;
 
 	/**
-	 * アセット読み込み失敗イベント。
-	 *
-	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
-
-	/**
 	 * アセット読み込み完了イベント。
 	 *
 	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
 	onAssetLoadComplete: Trigger<AssetLike>;
-
-	/**
-	 * アセット読み込み完了イベント。
-	 *
-	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
-	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	assetLoadCompleted: Trigger<AssetLike>;
 
 	/**
 	 * シーンの状態。
@@ -479,22 +436,9 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	onStateChange: Trigger<SceneState>;
 
 	/**
-	 * シーンの状態変更イベント。
-	 * 状態が初期化直後の `Standby` 状態以外に変化するときfireされる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	stateChanged: Trigger<SceneState>;
-
-	/**
 	 * 汎用メッセージイベント。
 	 */
 	onMessage: Trigger<MessageEvent>;
-
-	/**
-	 * 汎用メッセージイベント。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	message: Trigger<MessageEvent>;
 
 	/**
 	 * シーン内でのpoint downイベント。
@@ -505,30 +449,12 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	onPointDownCapture: Trigger<PointDownEvent>;
 
 	/**
-	 * シーン内でのpoint downイベント。
-	 *
-	 * このイベントは `E#onPointDown` とは独立にfireされる。
-	 * すなわち、シーン内に同じ位置でのpoint downイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	pointDownCapture: Trigger<PointDownEvent>;
-
-	/**
 	 * シーン内でのpoint moveイベント。
 	 *
 	 * このイベントは `E#onPointMove` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint moveイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
 	 */
 	onPointMoveCapture: Trigger<PointMoveEvent>;
-
-	/**
-	 * シーン内でのpoint moveイベント。
-	 *
-	 * このイベントは `E#onPointMove` とは独立にfireされる。
-	 * すなわち、シーン内に同じ位置でのpoint moveイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	pointMoveCapture: Trigger<PointMoveEvent>;
 
 	/**
 	 * シーン内でのpoint upイベント。
@@ -539,29 +465,103 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	onPointUpCapture: Trigger<PointUpEvent>;
 
 	/**
-	 * シーン内でのpoint upイベント。
-	 *
-	 * このイベントは `E#onPointUp` とは独立にfireされる。
-	 * すなわち、シーン内に同じ位置でのpoint upイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	pointUpCapture: Trigger<PointUpEvent>;
-
-	/**
 	 * シーン内での操作イベント。
 	 */
 	onOperation: Trigger<OperationEvent>;
 
 	/**
-	 * シーン内での操作イベント。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	operation: Trigger<OperationEvent>;
-
-	/**
 	 * シーン内で利用可能なストレージの値を保持する `StorageValueStore`。
 	 */
 	storageValues: StorageValueStore;
+
+	/**
+	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onUpdate` を利用すること。
+	 */
+	update: Trigger<void>;
+
+	/**
+	 * 読み込み完了イベント。
+	 *
+	 * このシーンの生成時に(コンストラクタで)指定されたすべてのアセットの読み込みが終了した後、一度だけfireされる。
+	 * このシーンのアセットを利用するすべての処理は、このイベントのfire後に実行されなければならない。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onLoad` を利用すること。
+	 */
+	loaded: Trigger<Scene>;
+
+	/**
+	 * アセット読み込み成功イベント。
+	 *
+	 * このシーンのアセットが一つ読み込まれる度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoad` を利用すること。
+	 */
+	assetLoaded: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み失敗イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoadFailure` を利用すること。
+	 */
+	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
+
+	/**
+	 * アセット読み込み完了イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoadComplete` を利用すること。
+	 */
+	assetLoadCompleted: Trigger<AssetLike>;
+
+	/**
+	 * シーンの状態変更イベント。
+	 * 状態が初期化直後の `Standby` 状態以外に変化するときfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStateChange` を利用すること。
+	 */
+	stateChanged: Trigger<SceneState>;
+
+	/**
+	 * 汎用メッセージイベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onMessage` を利用すること。
+	 */
+	message: Trigger<MessageEvent>;
+
+	/**
+	 * シーン内でのpoint downイベント。
+	 *
+	 * このイベントは `E#onPointDown` とは独立にfireされる。
+	 * すなわち、シーン内に同じ位置でのpoint downイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPointDownCapture` を利用すること。
+	 */
+	pointDownCapture: Trigger<PointDownEvent>;
+
+	/**
+	 * シーン内でのpoint moveイベント。
+	 *
+	 * このイベントは `E#onPointMove` とは独立にfireされる。
+	 * すなわち、シーン内に同じ位置でのpoint moveイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPointMoveCapture` を利用すること。
+	 */
+	pointMoveCapture: Trigger<PointMoveEvent>;
+
+	/**
+	 * シーン内でのpoint upイベント。
+	 *
+	 * このイベントは `E#onPointUp` とは独立にfireされる。
+	 * すなわち、シーン内に同じ位置でのpoint upイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPointUpCapture` を利用すること。
+	 */
+	pointUpCapture: Trigger<PointUpEvent>;
+
+	/**
+	 * シーン内での操作イベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onOperation` を利用すること。
+	 */
+	operation: Trigger<OperationEvent>;
 
 	/**
 	 * @private
@@ -577,7 +577,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	/**
 	 * アセットとストレージの読み込みが終わったことを通知するTrigger。
 	 * @private
-	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onReady` を利用すること。
 	 */
 	_ready: Trigger<Scene>;
 

@@ -133,7 +133,7 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
-	_onUpdated(): void {
+	_onUpdate(): void {
 		this.modified();
 	}
 
@@ -141,8 +141,8 @@ export class Sprite extends E {
 	 * @private
 	 */
 	_onAnimatingStarted(): void {
-		if (!this.onUpdate.contains(this._onUpdated, this)) {
-			this.onUpdate.add(this._onUpdated, this);
+		if (!this.onUpdate.contains(this._onUpdate, this)) {
+			this.onUpdate.add(this._onUpdate, this);
 		}
 	}
 
@@ -151,7 +151,7 @@ export class Sprite extends E {
 	 */
 	_onAnimatingStopped(): void {
 		if (!this.destroyed()) {
-			this.onUpdate.remove(this._onUpdated, this);
+			this.onUpdate.remove(this._onUpdate, this);
 		}
 	}
 

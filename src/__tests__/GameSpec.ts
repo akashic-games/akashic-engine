@@ -553,7 +553,7 @@ describe("test Game", () => {
 			resetCount++;
 			expect(loadingScene.getTargetWaitingAssetsCount()).toBe(1); // 下記 const scene の assetIds: ["zoo"] しかこないので
 		}, loadingScene);
-		loadingScene.onTargetAssetLoaded.add(() => {
+		loadingScene.onTargetAssetLoad.add(() => {
 			invalidEndTrialCount++;
 			expect(() => {
 				loadingScene.end();

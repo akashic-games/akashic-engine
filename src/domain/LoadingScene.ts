@@ -35,31 +35,31 @@ export class LoadingScene extends Scene {
 	 */
 	onTargetReset: Trigger<Scene>;
 	/**
-	 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
-	 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	targetReset: Trigger<Scene>;
-	/**
 	 * ローディングシーンの読み込みが完了した時にfireされるTrigger。
 	 * `explicitEnd` に真を渡して生成した場合、ローディングシーンを終了するには
 	 * このTriggerのfire後に明示的に `end()` を呼び出す必要がある。
 	 */
 	onTargetReady: Trigger<Scene>;
 	/**
+	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
+	 */
+	onTargetAssetLoad: Trigger<AssetLike>;
+	/**
+	 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
+	 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetReset` を利用すること。
+	 */
+	targetReset: Trigger<Scene>;
+	/**
 	 * ローディングシーンの読み込みが完了した時にfireされるTrigger。
 	 * `explicitEnd` に真を渡して生成した場合、ローディングシーンを終了するには
 	 * このTriggerのfire後に明示的に `end()` を呼び出す必要がある。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetReady` を利用すること。
 	 */
 	targetReady: Trigger<Scene>;
 	/**
 	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
-	 */
-	onTargetAssetLoaded: Trigger<AssetLike>;
-	/**
-	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetAssetLoad` を利用すること。
 	 */
 	targetAssetLoaded: Trigger<AssetLike>;
 
@@ -81,11 +81,11 @@ export class LoadingScene extends Scene {
 		param.local = true; // LoadingScene は強制的にローカルにする
 		super(param);
 		this.onTargetReset = new Trigger<Scene>();
-		this.targetReset = this.onTargetReset;
 		this.onTargetReady = new Trigger<Scene>();
+		this.onTargetAssetLoad = new Trigger<AssetLike>();
+		this.targetReset = this.onTargetReset;
 		this.targetReady = this.onTargetReady;
-		this.onTargetAssetLoaded = new Trigger<AssetLike>();
-		this.targetAssetLoaded = this.onTargetAssetLoaded;
+		this.targetAssetLoaded = this.onTargetAssetLoad;
 		this._explicitEnd = !!param.explicitEnd;
 		this._targetScene = undefined;
 	}
@@ -167,7 +167,7 @@ export class LoadingScene extends Scene {
 	 * @private
 	 */
 	_fireTriggerOnTargetAssetLoad(asset: AssetLike): void {
-		this.onTargetAssetLoaded.fire(asset);
+		this.onTargetAssetLoad.fire(asset);
 	}
 
 	/**

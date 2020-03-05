@@ -20,21 +20,9 @@ export class VideoPlayer implements VideoPlayerLike {
 	onPlay: Trigger<VideoPlayerEvent>;
 
 	/**
-	 * `play()` が呼び出された時に通知される `Trigger` 。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	played: Trigger<VideoPlayerEvent>;
-
-	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
 	 */
 	onStop: Trigger<VideoPlayerEvent>;
-
-	/**
-	 * `stop()` が呼び出された時に通知される `Trigger` 。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	stopped: Trigger<VideoPlayerEvent>;
 
 	/**
 	 * 音量。
@@ -44,6 +32,18 @@ export class VideoPlayer implements VideoPlayerLike {
 	 * 音量を変更したい場合、  `changeVolume()` メソッドを用いること。
 	 */
 	volume: number;
+
+	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPlay` を利用すること。
+	 */
+	played: Trigger<VideoPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStop` を利用すること。
+	 */
+	stopped: Trigger<VideoPlayerEvent>;
 
 	/**
 	 * @private
@@ -56,8 +56,8 @@ export class VideoPlayer implements VideoPlayerLike {
 	constructor(loop?: boolean) {
 		this._loop = !!loop;
 		this.onPlay = new Trigger<VideoPlayerEvent>();
-		this.played = this.onPlay;
 		this.onStop = new Trigger<VideoPlayerEvent>();
+		this.played = this.onPlay;
 		this.stopped = this.onStop;
 		this.currentVideo = undefined;
 		this.volume = 1.0;

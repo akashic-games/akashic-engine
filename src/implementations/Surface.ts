@@ -37,22 +37,22 @@ export abstract class Surface implements SurfaceLike, CommonSize, Destroyable {
 	onAnimationStart: Trigger<void>;
 
 	/**
-	 * アニメーション再生開始イベント。
-	 * isDynamicが偽の時undefined。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	animatingStarted: Trigger<void>;
-
-	/**
 	 * アニメーション再生停止イベント。
 	 * isDynamicが偽の時undefined。
 	 */
 	onAnimationStop: Trigger<void>;
 
 	/**
+	 * アニメーション再生開始イベント。
+	 * isDynamicが偽の時undefined。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAnimationStart` を利用すること。
+	 */
+	animatingStarted: Trigger<void>;
+
+	/**
 	 * アニメーション再生停止イベント。
 	 * isDynamicが偽の時undefined。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAnimationStop` を利用すること。
 	 */
 	animatingStopped: Trigger<void>;
 
@@ -88,13 +88,13 @@ export abstract class Surface implements SurfaceLike, CommonSize, Destroyable {
 		this.isDynamic = isDynamic;
 		if (this.isDynamic) {
 			this.onAnimationStart = new Trigger<void>();
-			this.animatingStarted = this.onAnimationStart;
 			this.onAnimationStop = new Trigger<void>();
+			this.animatingStarted = this.onAnimationStart;
 			this.animatingStopped = this.onAnimationStop;
 		} else {
 			this.onAnimationStart = undefined;
-			this.animatingStarted = undefined;
 			this.onAnimationStop = undefined;
+			this.animatingStarted = undefined;
 			this.animatingStopped = undefined;
 		}
 	}

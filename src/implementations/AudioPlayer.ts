@@ -23,21 +23,9 @@ export class AudioPlayer implements AudioPlayerLike {
 	onPlay: Trigger<AudioPlayerEvent>;
 
 	/**
-	 * `play()` が呼び出された時に通知される `Trigger` 。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	played: Trigger<AudioPlayerEvent>;
-
-	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
 	 */
 	onStop: Trigger<AudioPlayerEvent>;
-
-	/**
-	 * `stop()` が呼び出された時に通知される `Trigger` 。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	stopped: Trigger<AudioPlayerEvent>;
 
 	/**
 	 * 音量。
@@ -47,6 +35,18 @@ export class AudioPlayer implements AudioPlayerLike {
 	 * 音量を変更したい場合、  `changeVolume()` メソッドを用いること。
 	 */
 	volume: number;
+
+	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPlay` を利用すること。
+	 */
+	played: Trigger<AudioPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStop` を利用すること。
+	 */
+	stopped: Trigger<AudioPlayerEvent>;
 
 	/**
 	 * ミュート中か否か。
@@ -64,8 +64,8 @@ export class AudioPlayer implements AudioPlayerLike {
 	 */
 	constructor(system: AudioSystemLike) {
 		this.onPlay = new Trigger<AudioPlayerEvent>();
-		this.played = this.onPlay;
 		this.onStop = new Trigger<AudioPlayerEvent>();
+		this.played = this.onPlay;
 		this.stopped = this.onStop;
 		this.currentAudio = undefined;
 		this.volume = system.volume;

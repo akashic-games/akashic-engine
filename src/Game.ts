@@ -189,37 +189,17 @@ export abstract class Game implements Registrable<E> {
 	 */
 	onJoin: Trigger<JoinEvent>;
 	/**
-	 * プレイヤーがゲームに参加したことを表すイベント。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	join: Trigger<JoinEvent>;
-	/**
 	 * プレイヤーがゲームから離脱したことを表すイベント。
 	 */
 	onLeave: Trigger<LeaveEvent>;
-	/**
-	 * プレイヤーがゲームから離脱したことを表すイベント。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	leave: Trigger<LeaveEvent>;
 	/**
 	 * 新しいプレイヤー情報が発生したことを示すイベント。
 	 */
 	onPlayerInfo: Trigger<PlayerInfoEvent>;
 	/**
-	 * 新しいプレイヤー情報が発生したことを示すイベント。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	playerInfo: Trigger<PlayerInfoEvent>;
-	/**
 	 * 新しい乱数シードが発生したことを示すイベント。
 	 */
 	onSeed: Trigger<SeedEvent>;
-	/**
-	 * 新しい乱数シードが発生したことを示すイベント。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	seed: Trigger<SeedEvent>;
 	/**
 	 * このコンテンツの累計経過時間。
 	 * 通常は `this.scene().local` が偽である状態で `tick()` の呼ばれた回数だが、シーン切り替え時等 `tick()` が呼ばれた時以外で加算される事もある。
@@ -293,14 +273,6 @@ export abstract class Game implements Registrable<E> {
 	onSnapshotRequest: Trigger<void>;
 
 	/**
-	 * スナップショット要求通知。
-	 * ゲーム開発者はこれをhandleして可能ならスナップショットを作成しGame#saveSnapshotを呼び出すべきである。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	// NOTE: このクラスはこのTriggerをfireしない。派生クラスがfireせねばならない。
-	snapshotRequest: Trigger<void>;
-
-	/**
 	 * 外部インターフェース。
 	 *
 	 * 実行環境によって、環境依存の値が設定される。
@@ -349,12 +321,6 @@ export abstract class Game implements Registrable<E> {
 	onResized: Trigger<CommonSize>;
 
 	/**
-	 * 画面サイズの変更時にfireされるTrigger。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	resized: Trigger<CommonSize>;
-
-	/**
 	 * スキップ状態の変化時にfireされるTrigger。
 	 *
 	 * スキップ状態に遷移する時に真、非スキップ状態に遷移する時に偽が与えられる。
@@ -365,19 +331,6 @@ export abstract class Game implements Registrable<E> {
 	 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
 	 */
 	onSkipChange: Trigger<boolean>;
-
-	/**
-	 * スキップ状態の変化時にfireされるTrigger。
-	 *
-	 * スキップ状態に遷移する時に真、非スキップ状態に遷移する時に偽が与えられる。
-	 * この通知は、ゲーム開発者が「スキップ中の演出省略」などの最適化を行うために提供されている。
-	 *
-	 * この通知のfire頻度は、ゲームの実行状態などに依存して異なりうることに注意。
-	 * 例えば多人数プレイされている時、それぞれの環境でfireされ方が異なりうる。
-	 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	skippingChanged: Trigger<boolean>;
 
 	/**
 	 * 直近の `update` の通知が、ローカルティックによるものか否か。
@@ -407,6 +360,57 @@ export abstract class Game implements Registrable<E> {
 	 * 操作プラグインの管理者。
 	 */
 	operationPluginManager: OperationPluginManager;
+
+	/**
+	 * プレイヤーがゲームに参加したことを表すイベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onJoin` を利用すること。
+	 */
+	join: Trigger<JoinEvent>;
+
+	/**
+	 * プレイヤーがゲームから離脱したことを表すイベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onLeave` を利用すること。
+	 */
+	leave: Trigger<LeaveEvent>;
+
+	/**
+	 * 新しいプレイヤー情報が発生したことを示すイベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPlayerInfo` を利用すること。
+	 */
+	playerInfo: Trigger<PlayerInfoEvent>;
+
+	/**
+	 * 新しい乱数シードが発生したことを示すイベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onSeed` を利用すること。
+	 */
+	seed: Trigger<SeedEvent>;
+
+	/**
+	 * スナップショット要求通知。
+	 * ゲーム開発者はこれをhandleして可能ならスナップショットを作成しGame#saveSnapshotを呼び出すべきである。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onSnapshotRequest` を利用すること。
+	 */
+	// NOTE: このクラスはこのTriggerをfireしない。派生クラスがfireせねばならない。
+	snapshotRequest: Trigger<void>;
+
+	/**
+	 * 画面サイズの変更時にfireされるTrigger。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onResized` を利用すること。
+	 */
+	resized: Trigger<CommonSize>;
+
+	/**
+	 * スキップ状態の変化時にfireされるTrigger。
+	 *
+	 * スキップ状態に遷移する時に真、非スキップ状態に遷移する時に偽が与えられる。
+	 * この通知は、ゲーム開発者が「スキップ中の演出省略」などの最適化を行うために提供されている。
+	 *
+	 * この通知のfire頻度は、ゲームの実行状態などに依存して異なりうることに注意。
+	 * 例えば多人数プレイされている時、それぞれの環境でfireされ方が異なりうる。
+	 * ゲーム開発者は、この通知に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onSkipChange` を利用すること。
+	 */
+	skippingChanged: Trigger<boolean>;
 
 	/**
 	 * イベントとTriggerのマップ。
@@ -440,25 +444,10 @@ export abstract class Game implements Registrable<E> {
 	_onSceneChange: Trigger<Scene>;
 
 	/**
-	 * `this.scenes` の変化時にfireされるTrigger。
-	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
-	 * @private
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	_sceneChanged: Trigger<Scene>;
-
-	/**
 	 * グローバルアセットの読み込み待ちハンドラ。
 	 * @private
 	 */
 	_onLoad: Trigger<Game>;
-
-	/**
-	 * グローバルアセットの読み込み待ちハンドラ。
-	 * @private
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	_loaded: Trigger<Game>;
 
 	/**
 	 * _start() 呼び出しから戻る直前を通知するTrigger。
@@ -467,15 +456,6 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_onStart: Trigger<void>;
-
-	/**
-	 * _start() 呼び出しから戻る直前を通知するTrigger。
-	 * エントリポイント実行後のシーン遷移直後にfireされる。
-	 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
-	 * @private
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	_started: Trigger<void>;
 
 	/**
 	 * エントリポイント(mainスクリプト)のパス。
@@ -518,13 +498,6 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_onOperationPluginOperated: Trigger<InternalOperationPluginOperation>;
-
-	/**
-	 * 操作プラグインによる操作を通知するTrigger。
-	 * @private
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 */
-	_operationPluginOperated: Trigger<InternalOperationPluginOperation>;
 
 	/**
 	 * `this.db` のlastInsertId。
@@ -586,6 +559,36 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_modified: boolean;
+
+	/**
+	 * グローバルアセットの読み込み待ちハンドラ。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onLoad` を利用すること。
+	 */
+	_loaded: Trigger<Game>;
+	/**
+	 * `this.scenes` の変化時にfireされるTrigger。
+	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onSceneChange` を利用すること。
+	 */
+	_sceneChanged: Trigger<Scene>;
+
+	/**
+	 * _start() 呼び出しから戻る直前を通知するTrigger。
+	 * エントリポイント実行後のシーン遷移直後にfireされる。
+	 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onStart` を利用すること。
+	 */
+	_started: Trigger<void>;
+
+	/**
+	 * 操作プラグインによる操作を通知するTrigger。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onOperationPluginOperated` を利用すること。
+	 */
+	_operationPluginOperated: Trigger<InternalOperationPluginOperation>;
 
 	/**
 	 * 実行待ちのシーン遷移要求。
@@ -1252,16 +1255,13 @@ export abstract class Game implements Registrable<E> {
 		this.random = undefined;
 		this.onJoin.destroy();
 		this.onJoin = undefined;
-		this.join = undefined;
 		this.onLeave.destroy();
 		this.onLeave = undefined;
-		this.leave = undefined;
 		this.onSeed.destroy();
 		this.onSeed = undefined;
-		this.seed = undefined;
 		this.onPlayerInfo.destroy();
 		this.onPlayerInfo = undefined;
-		this.playerInfo = undefined;
+
 		this._modified = false;
 		this.age = 0;
 		this.assets = undefined; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
@@ -1275,7 +1275,6 @@ export abstract class Game implements Registrable<E> {
 		this.defaultAudioSystemId = undefined;
 		this.onSnapshotRequest.destroy();
 		this.onSnapshotRequest = undefined;
-		this.snapshotRequest = undefined;
 
 		// TODO より能動的にdestroy処理を入れるべきかもしれない
 		this.resourceFactory = undefined;
@@ -1285,22 +1284,17 @@ export abstract class Game implements Registrable<E> {
 		this.operationPlugins = undefined; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
 		this.onResized.destroy();
 		this.onResized = undefined;
-		this.resized = undefined;
 		this.onSkipChange.destroy();
 		this.onSkipChange = undefined;
-		this.skippingChanged = undefined;
 		this._eventTriggerMap = undefined;
 		this._initialScene = undefined;
 		this._defaultLoadingScene = undefined;
 		this._onSceneChange.destroy();
 		this._onSceneChange = undefined;
-		this._sceneChanged = undefined;
 		this._onLoad.destroy();
 		this._onLoad = undefined;
-		this._loaded = undefined;
 		this._onStart.destroy();
 		this._onStart = undefined;
-		this._started = undefined;
 		this._main = undefined;
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
@@ -1311,7 +1305,6 @@ export abstract class Game implements Registrable<E> {
 		this.operationPluginManager = undefined;
 		this._onOperationPluginOperated.destroy();
 		this._onOperationPluginOperated = undefined;
-		this._operationPluginOperated = undefined;
 		this._idx = 0;
 		this._localDb = {};
 		this._localIdx = 0;
@@ -1322,6 +1315,18 @@ export abstract class Game implements Registrable<E> {
 		this._sceneChangeRequests = [];
 		this.surfaceAtlasSet.destroy();
 		this.surfaceAtlasSet = undefined;
+
+		this.join = undefined;
+		this.leave = undefined;
+		this.seed = undefined;
+		this.playerInfo = undefined;
+		this.snapshotRequest = undefined;
+		this.resized = undefined;
+		this.skippingChanged = undefined;
+		this._sceneChanged = undefined;
+		this._loaded = undefined;
+		this._started = undefined;
+		this._operationPluginOperated = undefined;
 	}
 
 	/**

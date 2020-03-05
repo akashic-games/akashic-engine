@@ -333,19 +333,19 @@ describe("test E", () => {
 		e.onPointUp.add(() => {
 			/* do nothing */
 		});
-		expect((e as any)._onMessage).toBeDefined();
-		expect((e as any)._onPointDown).toBeDefined();
-		expect((e as any)._onPointMove).toBeDefined();
-		expect((e as any)._onPointUp).toBeDefined();
+		expect((e as any)._message).toBeDefined();
+		expect((e as any)._pointDown).toBeDefined();
+		expect((e as any)._pointMove).toBeDefined();
+		expect((e as any)._pointUp).toBeDefined();
 
 		e.destroy();
 		expect(e.parent).toBe(undefined);
 		expect(e.destroyed()).toBe(true);
 		expect(e.children).toBe(undefined);
-		expect((e as any)._onMessage).toBeUndefined();
-		expect((e as any)._onPointDown).toBeUndefined();
-		expect((e as any)._onPointMove).toBeUndefined();
-		expect((e as any)._onPointUp).toBeUndefined();
+		expect((e as any)._message).toBeUndefined();
+		expect((e as any)._pointDown).toBeUndefined();
+		expect((e as any)._pointMove).toBeUndefined();
+		expect((e as any)._pointUp).toBeUndefined();
 	});
 
 	it("modified", () => {
@@ -379,14 +379,14 @@ describe("test E", () => {
 	});
 
 	it("update", () => {
-		expect((e as any)._onUpdate).toBeUndefined();
+		expect((e as any)._update).toBeUndefined();
 		expect(runtime.scene.onUpdate.length > 0).toBe(false);
 		runtime.game.tick(true);
 
 		// auto chain
 		expect(e.onUpdate).not.toBeUndefined();
-		expect((e as any)._onUpdate).not.toBeUndefined();
-		expect((e as any)._onUpdate.chain).not.toBeUndefined();
+		expect((e as any)._update).not.toBeUndefined();
+		expect((e as any)._update.chain).not.toBeUndefined();
 		expect(runtime.scene.onUpdate.length > 0).toBe(false);
 
 		runtime.game.tick(true);
@@ -429,11 +429,11 @@ describe("test E", () => {
 	});
 
 	it("operate", () => {
-		expect((e as any)._onPointDown).toBeUndefined();
+		expect((e as any)._pointDown).toBeUndefined();
 		expect(runtime.scene.onPointDownCapture.length > 0).toBe(false);
 		expect(e.onPointDown).not.toBeUndefined();
-		expect((e as any)._onPointDown).not.toBeUndefined();
-		expect((e as any)._onPointDown.chain).not.toBeUndefined();
+		expect((e as any)._pointDown).not.toBeUndefined();
+		expect((e as any)._pointDown.chain).not.toBeUndefined();
 		expect(runtime.scene.onPointDownCapture.length > 0).toBe(false);
 
 		const operationTick = () => {
@@ -759,11 +759,11 @@ describe("test E", () => {
 	it("get update", () => {
 		const e = new E({ scene: runtime.scene });
 
-		expect((e as any)._onUpdate).toBeUndefined();
+		expect((e as any)._update).toBeUndefined();
 
 		const u = e.onUpdate;
 
-		expect((e as any)._onUpdate).toBe(u);
+		expect((e as any)._update).toBe(u);
 		expect(e.onUpdate).toBe(u);
 
 		let firedFlg = false;
@@ -781,11 +781,11 @@ describe("test E", () => {
 	it("get message", () => {
 		const e = new E({ scene: runtime.scene });
 
-		expect((e as any)._onMessage).toBeUndefined();
+		expect((e as any)._message).toBeUndefined();
 
 		const m = e.onMessage;
 
-		expect((e as any)._onMessage).toBe(m);
+		expect((e as any)._message).toBe(m);
 		expect(e.onMessage).toBe(m);
 
 		let firedFlg = false;
@@ -803,11 +803,11 @@ describe("test E", () => {
 	it("get pointDown", () => {
 		const e = new E({ scene: runtime.scene });
 
-		expect((e as any)._onPointDown).toBeUndefined();
+		expect((e as any)._pointDown).toBeUndefined();
 
 		const p = e.onPointDown;
 
-		expect((e as any)._onPointDown).toBe(p);
+		expect((e as any)._pointDown).toBe(p);
 		expect(e.onPointDown).toBe(p);
 
 		let firedFlg = false;
@@ -825,11 +825,11 @@ describe("test E", () => {
 	it("get pointUp", () => {
 		const e = new E({ scene: runtime.scene });
 
-		expect((e as any)._onPointUp).toBeUndefined();
+		expect((e as any)._pointUp).toBeUndefined();
 
 		const p = e.onPointUp;
 
-		expect((e as any)._onPointUp).toBe(p);
+		expect((e as any)._pointUp).toBe(p);
 		expect(e.onPointUp).toBe(p);
 
 		let firedFlg = false;
@@ -847,11 +847,11 @@ describe("test E", () => {
 	it("get pointMove", () => {
 		const e = new E({ scene: runtime.scene });
 
-		expect((e as any)._onPointMove).toBeUndefined();
+		expect((e as any)._pointMove).toBeUndefined();
 
 		const p = e.onPointMove;
 
-		expect((e as any)._onPointMove).toBe(p);
+		expect((e as any)._pointMove).toBe(p);
 		expect(e.onPointMove).toBe(p);
 
 		let firedFlg = false;

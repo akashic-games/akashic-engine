@@ -48,7 +48,7 @@ export class OperationPluginManager {
 	onOperate: Trigger<InternalOperationPluginOperation>;
 	/**
 	 * 操作プラグインの操作を通知する `Trigger` 。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onOperate` を利用すること。
 	 */
 	operated: Trigger<InternalOperationPluginOperation>;
 

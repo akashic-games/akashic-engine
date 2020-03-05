@@ -7,7 +7,7 @@ describe("test Timer", () => {
 		const timer = new Timer(interval, 30);
 
 		expect(timer.interval).toEqual(interval);
-		expect(timer.onElapsed instanceof Trigger).toBe(true);
+		expect(timer.onElapse instanceof Trigger).toBe(true);
 		expect(timer._scaledElapsed).toEqual(0);
 		expect(timer._scaledInterval).toEqual(interval * 30);
 
@@ -15,7 +15,7 @@ describe("test Timer", () => {
 		const timer2 = new Timer(interval, 30);
 
 		expect(timer2.interval).toEqual(interval);
-		expect(timer2.onElapsed instanceof Trigger).toBe(true);
+		expect(timer2.onElapse instanceof Trigger).toBe(true);
 		expect(timer2._scaledElapsed).toEqual(0);
 		expect(timer2._scaledInterval).toEqual(interval * 30);
 
@@ -23,7 +23,7 @@ describe("test Timer", () => {
 		const timer3 = new Timer(interval, 30);
 
 		expect(timer3.interval).toEqual(interval);
-		expect(timer3.onElapsed instanceof Trigger).toBe(true);
+		expect(timer3.onElapse instanceof Trigger).toBe(true);
 		expect(timer3._scaledElapsed).toEqual(0);
 		expect(timer3._scaledInterval).toEqual(Math.round(interval * 30));
 	});
@@ -32,7 +32,7 @@ describe("test Timer", () => {
 		const interval = 1;
 		const timer = new Timer(interval, 30);
 		let firedCounter = 0;
-		timer.onElapsed.fire = () => {
+		timer.onElapse.fire = () => {
 			firedCounter++;
 		};
 		timer.tick();
@@ -55,7 +55,7 @@ describe("test Timer", () => {
 
 		expect(timer.canDelete()).toBe(true);
 
-		timer.onElapsed.add(() => {
+		timer.onElapse.add(() => {
 			/* do nothing */
 		});
 
@@ -66,7 +66,7 @@ describe("test Timer", () => {
 		const interval = 1;
 		const timer = new Timer(interval, 30);
 		let elapsedDestoyFlg = false;
-		timer.onElapsed.destroy = () => {
+		timer.onElapse.destroy = () => {
 			elapsedDestoyFlg = true;
 		};
 
@@ -76,7 +76,7 @@ describe("test Timer", () => {
 
 		expect(timer.destroyed()).toBe(true);
 		expect(timer.interval).toBeUndefined();
-		expect(timer.onElapsed).toBeUndefined();
+		expect(timer.onElapse).toBeUndefined();
 		expect(elapsedDestoyFlg).toBe(true);
 	});
 });

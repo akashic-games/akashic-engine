@@ -1025,23 +1025,23 @@ describe("test Scene", () => {
 		const timer = scene.createTimer(100);
 		expect(scene._timer._timers.length).toBe(1);
 		expect(scene._timer._timers[0]).toBe(timer);
-		timer.onElapsed.add(() => {
+		timer.onElapse.add(() => {
 			fail("invalid call");
 		}, undefined);
 		game.tick(true);
 		game.tick(true);
 		game.tick(true);
-		timer.onElapsed.removeAll({ owner: undefined });
+		timer.onElapse.removeAll({ owner: undefined });
 		expect(scene._timer._timers.length).toBe(1);
 		let success = false;
-		timer.onElapsed.add(() => {
+		timer.onElapse.add(() => {
 			success = true;
 		});
 		game.tick(true);
 		expect(success).toBe(true);
 
 		expect(timer.canDelete()).toBe(false);
-		timer.onElapsed.removeAll();
+		timer.onElapse.removeAll();
 		expect(timer.canDelete()).toBe(true);
 
 		scene.deleteTimer(timer);
