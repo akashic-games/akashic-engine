@@ -1,4 +1,3 @@
-import { Glyph } from "../commons/Glyph";
 import { GlyphArea, GlyphLike } from "../interfaces/GlyphLike";
 import { ImageAssetLike } from "../interfaces/ImageAssetLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
