@@ -97,6 +97,5 @@ describe("test BitmapFont", () => {
 		expect(obj.y).toBe(1);
 		expect(obj.width).toBe(20);
 		expect(obj.height).toBe(30);
-		expect(obj.renderingWidth(60)).toBe(40);
 	});
 });

@@ -4,28 +4,19 @@ import { skeletonRuntime, Surface } from "./helpers";
 describe("test SurfaceAtlasSet", () => {
 	let surfaceAtlasSet: SurfaceAtlasSet;
 	const createGlyphLike = (code: number, x: number, y: number, width: number, height: number): GlyphLike => {
-		const surface: undefined = undefined;
-		const _atlas: null = null;
-		const obj = {
+		return {
 			code,
 			x,
 			y,
 			width,
 			height,
-			surface,
+			surface: undefined,
 			offsetX: 0,
 			offsetY: 0,
 			advanceWidth: width,
 			isSurfaceValid: false,
-			_atlas,
-			renderingWidth: (fontSize: number): number => {
-				if (!obj.width || !obj.height) {
-					return 0;
-				}
-				return (fontSize / obj.height) * obj.width;
-			}
+			_atlas: null
 		};
-		return obj;
 	};
 
 	it("初期化", () => {

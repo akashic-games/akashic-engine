@@ -78,7 +78,7 @@ export class Glyph implements GlyphLike {
 	 */
 	isSurfaceValid: boolean;
 
-	_atlas: SurfaceAtlasLike;
+	_atlas: SurfaceAtlasLike | null;
 
 	/**
 	 * `Glyph` のインスタンスを生成する。

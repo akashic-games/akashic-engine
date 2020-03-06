@@ -78,9 +78,8 @@ export class BitmapFont extends Font {
 		var offsetY = g.offsetY || 0;
 		var advanceWidth = g.advanceWidth === undefined ? w : g.advanceWidth;
 		var surface = w === 0 || h === 0 ? undefined : this.surface;
-		var _atlas: null = null;
 
-		const obj = {
+		return {
 			code,
 			x: g.x,
 			y: g.y,
@@ -91,15 +90,8 @@ export class BitmapFont extends Font {
 			offsetY,
 			advanceWidth,
 			isSurfaceValid: true,
-			_atlas,
-			renderingWidth: (fontSize: number): number => {
-				if (!obj.width || !obj.height) {
-					return 0;
-				}
-				return (fontSize / obj.height) * obj.width;
-			}
+			_atlas: null
 		};
-		return obj;
 	}
 
 	/**
