@@ -158,8 +158,8 @@ export class MusicAudioSystem extends AudioSystem {
 	get player(): AudioPlayerLike {
 		if (!this._player) {
 			this._player = this._resourceFactory.createAudioPlayer(this);
-			this._player.onPlay.add(this._onPlayerPlayed, this);
-			this._player.onStop.add(this._onPlayerStopped, this);
+			this._player.onPlay.add(this._handlePlay, this);
+			this._player.onStop.add(this._handleStop, this);
 		}
 		return this._player;
 	}
@@ -192,8 +192,8 @@ export class MusicAudioSystem extends AudioSystem {
 	_reset(): void {
 		super._reset();
 		if (this._player) {
-			this._player.onPlay.remove({ owner: this, func: this._onPlayerPlayed });
-			this._player.onStop.remove({ owner: this, func: this._onPlayerStopped });
+			this._player.onPlay.remove({ owner: this, func: this._handlePlay });
+			this._player.onStop.remove({ owner: this, func: this._handleStop });
 		}
 		this._player = undefined;
 	}
@@ -223,7 +223,7 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlayerPlayed(e: AudioPlayerEvent): void {
+	_handlePlay(e: AudioPlayerEvent): void {
 		if (e.player !== this._player)
 			throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
 	}
@@ -231,7 +231,7 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlayerStopped(e: AudioPlayerEvent): void {
+	_handleStop(e: AudioPlayerEvent): void {
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];
 			e.audio.destroy();
@@ -251,8 +251,8 @@ export class SoundAudioSystem extends AudioSystem {
 		var player = this._resourceFactory.createAudioPlayer(this);
 		if (player.canHandleStopped()) this.players.push(player);
 
-		player.onPlay.add(this._onPlayerPlayed, this);
-		player.onStop.add(this._onPlayerStopped, this);
+		player.onPlay.add(this._handlePlay, this);
+		player.onStop.add(this._handleStop, this);
 
 		return player;
 	}
@@ -279,8 +279,8 @@ export class SoundAudioSystem extends AudioSystem {
 		super._reset();
 		for (var i = 0; i < this.players.length; ++i) {
 			var player = this.players[i];
-			player.onPlay.remove({ owner: this, func: this._onPlayerPlayed });
-			player.onStop.remove({ owner: this, func: this._onPlayerStopped });
+			player.onPlay.remove({ owner: this, func: this._handlePlay });
+			player.onStop.remove({ owner: this, func: this._handleStop });
 		}
 		this.players = [];
 	}
@@ -312,18 +312,18 @@ export class SoundAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onPlayerPlayed(e: AudioPlayerEvent): void {
+	_handlePlay(e: AudioPlayerEvent): void {
 		// do nothing
 	}
 
 	/**
 	 * @private
 	 */
-	_onPlayerStopped(e: AudioPlayerEvent): void {
+	_handleStop(e: AudioPlayerEvent): void {
 		var index = this.players.indexOf(e.player);
 		if (index < 0) return;
 
-		e.player.onStop.remove({ owner: this, func: this._onPlayerStopped });
+		e.player.onStop.remove({ owner: this, func: this._handleStop });
 		this.players.splice(index, 1);
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];

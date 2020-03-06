@@ -155,25 +155,25 @@ export class LoadingScene extends Scene {
 	_doReset(): void {
 		this.onTargetReset.fire(this._targetScene);
 		if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
-			this._targetScene._onReady.add(this._fireTriggerOnTargetReady, this);
-			this._targetScene.onAssetLoad.add(this._fireTriggerOnTargetAssetLoad, this);
+			this._targetScene._onReady.add(this._handleReady, this);
+			this._targetScene.onAssetLoad.add(this._handleAssetLoad, this);
 			this._targetScene._load();
 		} else {
-			this._fireTriggerOnTargetReady(this._targetScene);
+			this._handleReady(this._targetScene);
 		}
 	}
 
 	/**
 	 * @private
 	 */
-	_fireTriggerOnTargetAssetLoad(asset: AssetLike): void {
+	_handleAssetLoad(asset: AssetLike): void {
 		this.onTargetAssetLoad.fire(asset);
 	}
 
 	/**
 	 * @private
 	 */
-	_fireTriggerOnTargetReady(scene: Scene): void {
+	_handleReady(scene: Scene): void {
 		this.onTargetReady.fire(scene);
 		if (!this._explicitEnd) {
 			this.end();

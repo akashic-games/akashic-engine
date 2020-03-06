@@ -26,12 +26,12 @@ export module SurfaceUtil {
 		/**
 		 * @private
 		 */
-		_onAnimatingStarted: () => void;
+		_handleAnimationStart: () => void;
 
 		/**
 		 * @private
 		 */
-		_onAnimatingStopped: () => void;
+		_handleAnimationStop: () => void;
 	};
 
 	/**
@@ -44,10 +44,10 @@ export module SurfaceUtil {
 	 */
 	export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: SurfaceLike): void {
 		if (surface.isDynamic) {
-			surface.onAnimationStart.add(animatingHandler._onAnimatingStarted, animatingHandler);
-			surface.onAnimationStop.add(animatingHandler._onAnimatingStopped, animatingHandler);
+			surface.onAnimationStart.add(animatingHandler._handleAnimationStart, animatingHandler);
+			surface.onAnimationStop.add(animatingHandler._handleAnimationStop, animatingHandler);
 			if (surface.isPlaying()) {
-				animatingHandler._onAnimatingStarted();
+				animatingHandler._handleAnimationStart();
 			}
 		}
 	}
@@ -66,18 +66,18 @@ export module SurfaceUtil {
 		beforeSurface: SurfaceLike,
 		afterSurface: SurfaceLike
 	): void {
-		animatingHandler._onAnimatingStopped();
+		animatingHandler._handleAnimationStop();
 
 		if (!beforeSurface.destroyed() && beforeSurface.isDynamic) {
-			beforeSurface.onAnimationStart.remove(animatingHandler._onAnimatingStarted, animatingHandler);
-			beforeSurface.onAnimationStop.remove(animatingHandler._onAnimatingStopped, animatingHandler);
+			beforeSurface.onAnimationStart.remove(animatingHandler._handleAnimationStart, animatingHandler);
+			beforeSurface.onAnimationStop.remove(animatingHandler._handleAnimationStop, animatingHandler);
 		}
 
 		if (afterSurface.isDynamic) {
-			afterSurface.onAnimationStart.add(animatingHandler._onAnimatingStarted, animatingHandler);
-			afterSurface.onAnimationStop.add(animatingHandler._onAnimatingStopped, animatingHandler);
+			afterSurface.onAnimationStart.add(animatingHandler._handleAnimationStart, animatingHandler);
+			afterSurface.onAnimationStop.add(animatingHandler._handleAnimationStop, animatingHandler);
 			if (afterSurface.isPlaying()) {
-				animatingHandler._onAnimatingStarted();
+				animatingHandler._handleAnimationStart();
 			}
 		}
 	}

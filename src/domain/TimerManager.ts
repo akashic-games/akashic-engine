@@ -40,11 +40,11 @@ export class TimerIdentifier implements Destroyable {
 		this._handlerOwner = handlerOwner;
 		this._fired = fired;
 		this._firedOwner = firedOwner;
-		this._timer.onElapse.add(this._fire, this);
+		this._timer.onElapse.add(this._handleElapse, this);
 	}
 
 	destroy(): void {
-		this._timer.onElapse.remove(this._fire, this);
+		this._timer.onElapse.remove(this._handleElapse, this);
 		this._timer = undefined;
 		this._handler = undefined;
 		this._handlerOwner = undefined;
@@ -59,7 +59,7 @@ export class TimerIdentifier implements Destroyable {
 	/**
 	 * @private
 	 */
-	_fire(): void {
+	_handleElapse(): void {
 		this._handler.call(this._handlerOwner);
 		if (this._fired) {
 			this._fired.call(this._firedOwner, this);

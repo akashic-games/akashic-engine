@@ -200,8 +200,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	_hasTouchableChildren: boolean;
 
-	// TODO: ハンドラ側のrename作業が終わり次第、_onUpdateへ修正する
-	private _update: Trigger<void>;
+	private _onUpdate: Trigger<void>;
 	private _onMessage: Trigger<MessageEvent>;
 	private _onPointDown: Trigger<PointDownEvent>;
 	private _onPointUp: Trigger<PointUpEvent>;
@@ -213,8 +212,8 @@ export class E extends Object2D implements CommonArea, Destroyable {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get onUpdate(): Trigger<void> {
-		if (!this._update) this._update = new ChainTrigger<void>(this.scene.onUpdate);
-		return this._update;
+		if (!this._onUpdate) this._onUpdate = new ChainTrigger<void>(this.scene.onUpdate);
+		return this._onUpdate;
 	}
 	// onUpdateは代入する必要がないのでsetterを定義しない
 
@@ -343,7 +342,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		this._touchable = false;
 		this.state = EntityStateFlags.None;
 		this._hasTouchableChildren = false;
-		this._update = undefined;
+		this._onUpdate = undefined;
 		this._onMessage = undefined;
 		this._onPointDown = undefined;
 		this._onPointMove = undefined;
@@ -527,9 +526,9 @@ export class E extends Object2D implements CommonArea, Destroyable {
 		}
 
 		// この解放はstringとforeachを使って書きたいが、minifyする時は.アクセスの方がいいのでやむを得ない
-		if (this._update) {
-			this._update.destroy();
-			this._update = undefined;
+		if (this._onUpdate) {
+			this._onUpdate.destroy();
+			this._onUpdate = undefined;
 		}
 		if (this._onMessage) {
 			this._onMessage.destroy();
