@@ -1,8 +1,32 @@
-import { Glyph, SurfaceAtlas, SurfaceAtlasSet, SurfaceAtlasSetParameterObject } from "..";
+import { GlyphLike, SurfaceAtlas, SurfaceAtlasSet, SurfaceAtlasSetParameterObject } from "..";
 import { skeletonRuntime, Surface } from "./helpers";
 
 describe("test SurfaceAtlasSet", () => {
 	let surfaceAtlasSet: SurfaceAtlasSet;
+	const createGlyphLike = (code: number, x: number, y: number, width: number, height: number): GlyphLike => {
+		const surface: undefined = undefined;
+		const _atlas: null = null;
+		const obj = {
+			code,
+			x,
+			y,
+			width,
+			height,
+			surface,
+			offsetX: 0,
+			offsetY: 0,
+			advanceWidth: width,
+			isSurfaceValid: false,
+			_atlas,
+			renderingWidth: (fontSize: number): number => {
+				if (!obj.width || !obj.height) {
+					return 0;
+				}
+				return (fontSize / obj.height) * obj.width;
+			}
+		};
+		return obj;
+	};
 
 	it("初期化", () => {
 		const runtime = skeletonRuntime();
@@ -51,12 +75,12 @@ describe("test SurfaceAtlasSet", () => {
 
 	describe("addGlyph", () => {
 		it("追加対象のSurfaceに空き領域がない場合、nullが返る", () => {
-			const glyph = new Glyph(300, 0, 0, 10, 10);
+			const glyph = createGlyphLike(300, 0, 0, 10, 10);
 			const ret = surfaceAtlasSet.addGlyph(glyph);
 			expect(ret).toBeNull();
 		});
 		it("正常にグリフが追加された場合、追加したSurfaceAtlasが返る", () => {
-			const glyph = new Glyph(300, 0, 0, 1, 1);
+			const glyph = createGlyphLike(300, 0, 0, 1, 1);
 			glyph.surface = new Surface(1, 1);
 
 			const atlas = new SurfaceAtlas(new Surface(100, 100));
@@ -80,7 +104,7 @@ describe("test SurfaceAtlasSet", () => {
 		});
 		it("SurfaceAtlasの保持数が最大値の場合、削除処理が呼ばれる。", () => {
 			spyOn(surfaceAtlasSet, "_removeLeastFrequentlyUsedAtlas").and.callFake(() => {
-				const glyph = new Glyph(300, 0, 0, 10, 10);
+				const glyph = createGlyphLike(300, 0, 0, 10, 10);
 				const atlas = new SurfaceAtlas(new Surface(10, 10));
 				return { surfaceAtlases: [atlas], glyphs: [[glyph]] };
 			});

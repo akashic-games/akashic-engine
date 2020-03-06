@@ -2,35 +2,6 @@ import { BitmapFont, Glyph, SurfaceUtil } from "..";
 import { skeletonRuntime, Surface } from "./helpers";
 
 describe("test BitmapFont", () => {
-	it("初期化 - Glyph", () => {
-		const code = 300;
-		const x = 2;
-		const y = 2;
-		const width = 10;
-		const height = 12;
-		const glyph = new Glyph(code, x, y, width, height);
-		expect(glyph.code).toBe(code);
-		expect(glyph.x).toBe(x);
-		expect(glyph.y).toBe(y);
-		expect(glyph.width).toBe(width);
-		expect(glyph.height).toBe(height);
-	});
-
-	it("Glyph#renderingWidth", () => {
-		const code = 300;
-		const x = 2;
-		const y = 2;
-		const width = 10;
-		const height = 12;
-		const glyph = new Glyph(code, x, y, width, height);
-
-		glyph.width = 0;
-		expect(glyph.renderingWidth(24)).toBe(0);
-		glyph.width = 10;
-		glyph.height = 0;
-		expect(glyph.renderingWidth(24)).toBe(0);
-	});
-
 	it("初期化 - BitmapFont", () => {
 		// deprecatedなコンストラクタの動作確認を行う
 		const surface = new Surface(480, 480);
@@ -107,5 +78,25 @@ describe("test BitmapFont", () => {
 		expect(bmpFont.missingGlyph).toEqual(missingGlyph);
 		expect(bmpFont.defaultGlyphWidth).toEqual(20);
 		expect(bmpFont.defaultGlyphHeight).toEqual(30);
+	});
+
+	it("can create GlyphLike Object by glyphForCharacter", () => {
+		const surface = new Surface(480, 480);
+		const map = { "11": { x: 0, y: 1 } };
+		const missingGlyph = { x: 2, y: 3 };
+		const bmpFont = new BitmapFont({
+			src: surface,
+			map: map,
+			defaultGlyphWidth: 20,
+			defaultGlyphHeight: 30,
+			missingGlyph: missingGlyph
+		});
+		const obj = bmpFont.glyphForCharacter(11);
+		expect(obj.code).toBe(11);
+		expect(obj.x).toBe(0);
+		expect(obj.y).toBe(1);
+		expect(obj.width).toBe(20);
+		expect(obj.height).toBe(30);
+		expect(obj.renderingWidth(60)).toBe(40);
 	});
 });
