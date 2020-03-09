@@ -450,7 +450,7 @@ export abstract class Game implements Registrable<E> {
 	_onLoad: Trigger<Game>;
 
 	/**
-	 * _start() 呼び出しから戻る直前を通知するTrigger。
+	 * _handleLoad() 呼び出しから戻る直前を通知するTrigger。
 	 * エントリポイント実行後のシーン遷移直後にfireされる。
 	 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
 	 * @private
@@ -575,7 +575,7 @@ export abstract class Game implements Registrable<E> {
 	_sceneChanged: Trigger<Scene>;
 
 	/**
-	 * _start() 呼び出しから戻る直前を通知するTrigger。
+	 * _handleLoad() 呼び出しから戻る直前を通知するTrigger。
 	 * エントリポイント実行後のシーン遷移直後にfireされる。
 	 * このTriggerのfireは一度とは限らないことに注意。_loadAndStart()呼び出しの度に一度fireされる。
 	 * @private
@@ -748,7 +748,7 @@ export abstract class Game implements Registrable<E> {
 			local: true,
 			name: "akashic:initial-scene"
 		});
-		this._initialScene.onLoad.add(this._onInitialSceneLoaded, this);
+		this._initialScene.onLoad.add(this._handleInitialSceneLoad, this);
 
 		this._reset({ age: 0 });
 	}
@@ -1184,7 +1184,7 @@ export abstract class Game implements Registrable<E> {
 		}
 
 		this.audio._reset();
-		this._onLoad.removeAll({ func: this._start, owner: this });
+		this._onLoad.removeAll({ func: this._handleLoad, owner: this });
 		this.onJoin.removeAll();
 		this.onLeave.removeAll();
 		this.onSeed.removeAll();
@@ -1340,11 +1340,11 @@ export abstract class Game implements Registrable<E> {
 	_loadAndStart(param?: GameMainParameterObject): void {
 		this._mainParameter = param || {};
 		if (!this.isLoaded) {
-			this._onLoad.add(this._start, this);
+			this._onLoad.add(this._handleLoad, this);
 			this.pushScene(this._initialScene);
 			this._flushSceneChangeRequests();
 		} else {
-			this._start();
+			this._handleLoad();
 		}
 	}
 
@@ -1384,8 +1384,8 @@ export abstract class Game implements Registrable<E> {
 	/**
 	 * @private
 	 */
-	_onInitialSceneLoaded(): void {
-		this._initialScene.onLoad.remove(this._onInitialSceneLoaded, this);
+	_handleInitialSceneLoad(): void {
+		this._initialScene.onLoad.remove(this._handleInitialSceneLoad, this);
 		this.assets = this._initialScene.assets;
 		this.isLoaded = true;
 		this._onLoad.fire();
@@ -1458,13 +1458,13 @@ export abstract class Game implements Registrable<E> {
 		if (fireSceneChanged) this._onSceneChange.fire(this.scene());
 	}
 
-	private _start(): void {
+	private _handleLoad(): void {
 		this.operationPluginManager.initialize();
 		this.operationPlugins = this.operationPluginManager.plugins;
 
 		const mainFun = this._moduleManager._require(this._main);
 		if (!mainFun || typeof mainFun !== "function")
-			throw ExceptionFactory.createAssertionError("Game#_start: Entry point '" + this._main + "' not found.");
+			throw ExceptionFactory.createAssertionError("Game#_handleLoad: Entry point '" + this._main + "' not found.");
 		mainFun(this._mainParameter);
 		this._flushSceneChangeRequests(); // シーン遷移を要求する可能性がある(というかまずする)
 		this._onStart.fire();

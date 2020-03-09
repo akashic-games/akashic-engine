@@ -379,14 +379,14 @@ describe("test E", () => {
 	});
 
 	it("update", () => {
-		expect((e as any)._update).toBeUndefined();
+		expect((e as any)._onUpdate).toBeUndefined();
 		expect(runtime.scene.onUpdate.length > 0).toBe(false);
 		runtime.game.tick(true);
 
 		// auto chain
 		expect(e.onUpdate).not.toBeUndefined();
-		expect((e as any)._update).not.toBeUndefined();
-		expect((e as any)._update.chain).not.toBeUndefined();
+		expect((e as any)._onUpdate).not.toBeUndefined();
+		expect((e as any)._onUpdate.chain).not.toBeUndefined();
 		expect(runtime.scene.onUpdate.length > 0).toBe(false);
 
 		runtime.game.tick(true);
@@ -759,11 +759,11 @@ describe("test E", () => {
 	it("get update", () => {
 		const e = new E({ scene: runtime.scene });
 
-		expect((e as any)._update).toBeUndefined();
+		expect((e as any)._onUpdate).toBeUndefined();
 
 		const u = e.onUpdate;
 
-		expect((e as any)._update).toBe(u);
+		expect((e as any)._onUpdate).toBe(u);
 		expect(e.onUpdate).toBe(u);
 
 		let firedFlg = false;

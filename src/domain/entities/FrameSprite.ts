@@ -169,7 +169,7 @@ export class FrameSprite extends Sprite {
 		if (this._timer) this._free();
 
 		this._timer = this.scene.createTimer(this.interval);
-		this._timer.onElapse.add(this._onElapsed, this);
+		this._timer.onElapse.add(this._handleElapse, this);
 	}
 
 	/**
@@ -200,7 +200,7 @@ export class FrameSprite extends Sprite {
 	/**
 	 * @private
 	 */
-	_onElapsed(): void {
+	_handleElapse(): void {
 		if (this.frameNumber === this.frames.length - 1) {
 			if (this.loop) {
 				this.frameNumber = 0;
@@ -221,7 +221,7 @@ export class FrameSprite extends Sprite {
 	_free(): void {
 		if (!this._timer) return;
 
-		this._timer.onElapse.remove(this._onElapsed, this);
+		this._timer.onElapse.remove(this._handleElapse, this);
 		if (this._timer.canDelete()) this.scene.deleteTimer(this._timer);
 
 		this._timer = undefined;

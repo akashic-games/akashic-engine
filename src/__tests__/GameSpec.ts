@@ -883,12 +883,12 @@ describe("test Game", () => {
 		});
 
 		const loadScene = game._defaultLoadingScene;
-		expect(game._initialScene.onLoad.contains(game._onInitialSceneLoaded, game)).toBe(true);
+		expect(game._initialScene.onLoad.contains(game._handleInitialSceneLoad, game)).toBe(true);
 		expect(loadScene.onLoad.contains(loadScene._doReset, loadScene)).toBe(false);
 
 		game._loadAndStart();
 		expect(game.isLoaded).toBe(false); // _loadAndStartしたがまだ読み込みは終わっていない
-		expect(game._initialScene.onLoad.contains(game._onInitialSceneLoaded, game)).toBe(true);
+		expect(game._initialScene.onLoad.contains(game._handleInitialSceneLoad, game)).toBe(true);
 		expect(game.scenes.length).toBe(2);
 		expect(game.scenes[0]).toBe(game._initialScene);
 		expect(game.scenes[1]).toBe(loadScene);
@@ -898,7 +898,7 @@ describe("test Game", () => {
 		expect(loadScene2).not.toBe(loadScene);
 		expect(loadScene.destroyed()).toBe(true);
 		expect(game.isLoaded).toBe(false);
-		expect(game._initialScene.onLoad.contains(game._onInitialSceneLoaded, game)).toBe(true);
+		expect(game._initialScene.onLoad.contains(game._handleInitialSceneLoad, game)).toBe(true);
 		expect(loadScene2.onLoad.contains(loadScene2._doReset, loadScene2)).toBe(false);
 		expect(game.scenes.length).toBe(0);
 

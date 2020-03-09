@@ -133,25 +133,25 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
-	_onUpdate(): void {
+	_handleUpdate(): void {
 		this.modified();
 	}
 
 	/**
 	 * @private
 	 */
-	_onAnimatingStarted(): void {
-		if (!this.onUpdate.contains(this._onUpdate, this)) {
-			this.onUpdate.add(this._onUpdate, this);
+	_handleAnimationStart(): void {
+		if (!this.onUpdate.contains(this._handleUpdate, this)) {
+			this.onUpdate.add(this._handleUpdate, this);
 		}
 	}
 
 	/**
 	 * @private
 	 */
-	_onAnimatingStopped(): void {
+	_handleAnimationStop(): void {
 		if (!this.destroyed()) {
-			this.onUpdate.remove(this._onUpdate, this);
+			this.onUpdate.remove(this._handleUpdate, this);
 		}
 	}
 
@@ -194,8 +194,8 @@ export class Sprite extends E {
 			if (destroySurface) {
 				this._surface.destroy();
 			} else if (this._surface.isDynamic) {
-				this._surface.onAnimationStart.remove(this._onAnimatingStarted, this);
-				this._surface.onAnimationStop.remove(this._onAnimatingStopped, this);
+				this._surface.onAnimationStart.remove(this._handleAnimationStart, this);
+				this._surface.onAnimationStop.remove(this._handleAnimationStop, this);
 			}
 		}
 		this.src = undefined;

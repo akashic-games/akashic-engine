@@ -5,8 +5,8 @@ describe("test Sprite", () => {
 	let updated = false;
 
 	class MonitorSprite extends Sprite {
-		_onUpdate(): void {
-			super._onUpdate();
+		_handleUpdate(): void {
+			super._handleUpdate();
 			updated = true;
 		}
 	}
