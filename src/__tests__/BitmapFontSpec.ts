@@ -80,7 +80,7 @@ describe("test BitmapFont", () => {
 		expect(bmpFont.defaultGlyphHeight).toEqual(30);
 	});
 
-	it("can create GlyphLike Object by glyphForCharacter", () => {
+	it("can create Glyph by glyphForCharacter", () => {
 		const surface = new Surface(480, 480);
 		const map = { "11": { x: 0, y: 1 } };
 		const missingGlyph = { x: 2, y: 3 };
@@ -91,11 +91,11 @@ describe("test BitmapFont", () => {
 			defaultGlyphHeight: 30,
 			missingGlyph: missingGlyph
 		});
-		const obj = bmpFont.glyphForCharacter(11);
-		expect(obj.code).toBe(11);
-		expect(obj.x).toBe(0);
-		expect(obj.y).toBe(1);
-		expect(obj.width).toBe(20);
-		expect(obj.height).toBe(30);
+		const glyph = bmpFont.glyphForCharacter(11);
+		expect(glyph.code).toBe(11);
+		expect(glyph.x).toBe(0);
+		expect(glyph.y).toBe(1);
+		expect(glyph.width).toBe(20);
+		expect(glyph.height).toBe(30);
 	});
 });
