@@ -10,7 +10,7 @@ export interface SceneMode {
 /**
  * エンジンから呼び出される実装依存処理
  */
-export interface GameDriverProxyLike {
+export interface GameHandlerSet {
 	/**
 	 * ティックを発生させる。
 	 * @param events そのティックで追加で発生させるイベント

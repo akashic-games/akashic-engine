@@ -1,3 +1,3 @@
 export * from "./index.common";
 export * from "./Game";
-export * from "./GameDriverProxyLike";
+export * from "./GameHandlerSet";
