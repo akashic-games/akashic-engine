@@ -3,8 +3,8 @@ import { LocalTickMode } from "./types/LocalTickMode";
 import { TickGenerationMode } from "./types/TickGenerationMode";
 
 export interface SceneMode {
-	local?: boolean | LocalTickMode;
-	tickGenerationMode?: TickGenerationMode;
+	local: boolean | LocalTickMode;
+	tickGenerationMode: TickGenerationMode;
 }
 
 /**
