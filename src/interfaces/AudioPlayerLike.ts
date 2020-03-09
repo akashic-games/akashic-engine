@@ -23,12 +23,12 @@ export interface AudioPlayerLike {
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。
 	 */
-	played: Trigger<AudioPlayerEvent>;
+	onPlay: Trigger<AudioPlayerEvent>;
 
 	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
 	 */
-	stopped: Trigger<AudioPlayerEvent>;
+	onStop: Trigger<AudioPlayerEvent>;
 
 	/**
 	 * 音量。
@@ -40,6 +40,18 @@ export interface AudioPlayerLike {
 	volume: number;
 
 	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPlay` を利用すること。
+	 */
+	played: Trigger<AudioPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStop` を利用すること。
+	 */
+	stopped: Trigger<AudioPlayerEvent>;
+
+	/**
 	 * ミュート中か否か。
 	 * @private
 	 */
@@ -47,7 +59,7 @@ export interface AudioPlayerLike {
 	/**
 	 * `AudioAsset` を再生する。
 	 *
-	 * 再生後、 `this.played` がfireされる。
+	 * 再生後、 `this.onPlay` がfireされる。
 	 * @param audio 再生するオーディオアセット
 	 */
 	play(audio: AudioAssetLike): void;
@@ -55,8 +67,8 @@ export interface AudioPlayerLike {
 	/**
 	 * 再生を停止する。
 	 *
-	 * 停止後、 `this.stopped` がfireされる。
-	 * 再生中でない場合、何もしない(`stopped` もfireされない)。
+	 * 停止後、 `this.onStop` がfireされる。
+	 * 再生中でない場合、何もしない(`onStop` もfireされない)。
 	 */
 	stop(): void;
 

@@ -171,14 +171,14 @@ export class SceneAssetHolder {
 			error: error,
 			cancelRetry: false
 		};
-		this._scene.assetLoadFailed.fire(failureInfo);
+		this._scene.onAssetLoadFailure.fire(failureInfo);
 		if (error.retriable && !failureInfo.cancelRetry) {
 			this._assetManager.retryLoad(asset);
 		} else {
 			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
 			if (this._assetManager.configuration[asset.id]) this._scene.game.terminateGame();
 		}
-		this._scene.assetLoadCompleted.fire(asset);
+		this._scene.onAssetLoadComplete.fire(asset);
 	}
 
 	/**
@@ -188,8 +188,8 @@ export class SceneAssetHolder {
 		if (this.destroyed() || this._scene.destroyed()) return;
 
 		this._scene.assets[asset.id] = asset;
-		this._scene.assetLoaded.fire(asset);
-		this._scene.assetLoadCompleted.fire(asset);
+		this._scene.onAssetLoad.fire(asset);
+		this._scene.onAssetLoadComplete.fire(asset);
 		this._assets.push(asset);
 
 		--this.waitingAssetsCount;
@@ -252,7 +252,7 @@ export interface SceneParameterObject {
 	 * * `LocalTickMode.FullLocal` が与えられた場合、このシーンはローカルシーンと呼ばれる。
 	 *   ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。
 	 * * `LocalTickMode.NonLocal` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
-	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(updateがfireされる)。
+	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(onUpdateがfireされる)。
 	 *   ローカルティックを消化することはない。
 	 * * `LocalTickMode.InterpolateLocal` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
 	 *   ローカルティック補間シーンでは、非ローカルシーン同様にティックを消化するが、
@@ -356,7 +356,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンのローカルティック消化ポリシー。
 	 *
 	 * * `LocalTickMode.NonLocal` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
-	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(updateがfireされる)。
+	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(onUpdateがfireされる)。
 	 * * `LocalTickMode.FullLocal` が与えられた場合、このシーンはローカルシーンと呼ばれる。
 	 *   ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。
 	 * * `LocalTickMode.InterpolateLocal` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
@@ -389,7 +389,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
 	 */
-	update: Trigger<void>;
+	onUpdate: Trigger<void>;
 
 	/**
 	 * 読み込み完了イベント。
@@ -397,7 +397,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンの生成時に(コンストラクタで)指定されたすべてのアセットの読み込みが終了した後、一度だけfireされる。
 	 * このシーンのアセットを利用するすべての処理は、このイベントのfire後に実行されなければならない。
 	 */
-	loaded: Trigger<Scene>;
+	onLoad: Trigger<Scene>;
 
 	/**
 	 * アセット読み込み成功イベント。
@@ -405,7 +405,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンのアセットが一つ読み込まれる度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	assetLoaded: Trigger<AssetLike>;
+	onAssetLoad: Trigger<AssetLike>;
 
 	/**
 	 * アセット読み込み失敗イベント。
@@ -414,7 +414,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
 	 */
-	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
+	onAssetLoadFailure: Trigger<AssetLoadFailureInfo>;
 
 	/**
 	 * アセット読み込み完了イベント。
@@ -422,7 +422,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	assetLoadCompleted: Trigger<AssetLike>;
+	onAssetLoadComplete: Trigger<AssetLike>;
 
 	/**
 	 * シーンの状態。
@@ -433,46 +433,135 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * シーンの状態変更イベント。
 	 * 状態が初期化直後の `Standby` 状態以外に変化するときfireされる。
 	 */
+	onStateChange: Trigger<SceneState>;
+
+	/**
+	 * 汎用メッセージイベント。
+	 */
+	onMessage: Trigger<MessageEvent>;
+
+	/**
+	 * シーン内でのpoint downイベント。
+	 *
+	 * このイベントは `E#onPointDown` とは独立にfireされる。
+	 * すなわち、シーン内に同じ位置でのpoint downイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 */
+	onPointDownCapture: Trigger<PointDownEvent>;
+
+	/**
+	 * シーン内でのpoint moveイベント。
+	 *
+	 * このイベントは `E#onPointMove` とは独立にfireされる。
+	 * すなわち、シーン内に同じ位置でのpoint moveイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 */
+	onPointMoveCapture: Trigger<PointMoveEvent>;
+
+	/**
+	 * シーン内でのpoint upイベント。
+	 *
+	 * このイベントは `E#onPointUp` とは独立にfireされる。
+	 * すなわち、シーン内に同じ位置でのpoint upイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 */
+	onPointUpCapture: Trigger<PointUpEvent>;
+
+	/**
+	 * シーン内での操作イベント。
+	 */
+	onOperation: Trigger<OperationEvent>;
+
+	/**
+	 * シーン内で利用可能なストレージの値を保持する `StorageValueStore`。
+	 */
+	storageValues: StorageValueStore;
+
+	/**
+	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onUpdate` を利用すること。
+	 */
+	update: Trigger<void>;
+
+	/**
+	 * 読み込み完了イベント。
+	 *
+	 * このシーンの生成時に(コンストラクタで)指定されたすべてのアセットの読み込みが終了した後、一度だけfireされる。
+	 * このシーンのアセットを利用するすべての処理は、このイベントのfire後に実行されなければならない。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onLoad` を利用すること。
+	 */
+	loaded: Trigger<Scene>;
+
+	/**
+	 * アセット読み込み成功イベント。
+	 *
+	 * このシーンのアセットが一つ読み込まれる度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoad` を利用すること。
+	 */
+	assetLoaded: Trigger<AssetLike>;
+
+	/**
+	 * アセット読み込み失敗イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * このイベントをhandleする場合、ハンドラは `AssetLoadFailureInfo#cancelRetry` を真にすることでゲーム続行を断念することができる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoadFailure` を利用すること。
+	 */
+	assetLoadFailed: Trigger<AssetLoadFailureInfo>;
+
+	/**
+	 * アセット読み込み完了イベント。
+	 *
+	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
+	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoadComplete` を利用すること。
+	 */
+	assetLoadCompleted: Trigger<AssetLike>;
+
+	/**
+	 * シーンの状態変更イベント。
+	 * 状態が初期化直後の `Standby` 状態以外に変化するときfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStateChange` を利用すること。
+	 */
 	stateChanged: Trigger<SceneState>;
 
 	/**
 	 * 汎用メッセージイベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onMessage` を利用すること。
 	 */
 	message: Trigger<MessageEvent>;
 
 	/**
 	 * シーン内でのpoint downイベント。
 	 *
-	 * このイベントは `E#pointDown` とは独立にfireされる。
+	 * このイベントは `E#onPointDown` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint downイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPointDownCapture` を利用すること。
 	 */
 	pointDownCapture: Trigger<PointDownEvent>;
 
 	/**
 	 * シーン内でのpoint moveイベント。
 	 *
-	 * このイベントは `E#pointMove` とは独立にfireされる。
+	 * このイベントは `E#onPointMove` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint moveイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPointMoveCapture` を利用すること。
 	 */
 	pointMoveCapture: Trigger<PointMoveEvent>;
 
 	/**
 	 * シーン内でのpoint upイベント。
 	 *
-	 * このイベントは `E#pointUp` とは独立にfireされる。
+	 * このイベントは `E#onPointUp` とは独立にfireされる。
 	 * すなわち、シーン内に同じ位置でのpoint upイベントに反応する `E` がある場合もない場合もこのイベントはfireされる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPointUpCapture` を利用すること。
 	 */
 	pointUpCapture: Trigger<PointUpEvent>;
 
 	/**
 	 * シーン内での操作イベント。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onOperation` を利用すること。
 	 */
 	operation: Trigger<OperationEvent>;
-
-	/**
-	 * シーン内で利用可能なストレージの値を保持する `StorageValueStore`。
-	 */
-	storageValues: StorageValueStore;
 
 	/**
 	 * @private
@@ -483,22 +572,29 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * アセットとストレージの読み込みが終わったことを通知するTrigger。
 	 * @private
 	 */
+	_onReady: Trigger<Scene>;
+
+	/**
+	 * アセットとストレージの読み込みが終わったことを通知するTrigger。
+	 * @private
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onReady` を利用すること。
+	 */
 	_ready: Trigger<Scene>;
 
 	/**
 	 * 読み込みが開始されたか否か。
 	 * すなわち、 `_load()` が呼び出された後か否か。
 	 *
-	 * 歴史的経緯により、このフラグの意味は「読み込みが終わった後」でも「loadedがfireされた後」でもない点に注意。
+	 * 歴史的経緯により、このフラグの意味は「読み込みが終わった後」でも「onLoadがfireされた後」でもない点に注意。
 	 * なお前者「(アセットとストレージの)読み込みが終わった後」は `_loadingState === SceneLoadState.Ready` に与えられる。
 	 *
 	 * シーンの読み込みは概ね次の順で処理が進行する。
 	 * * `_loaded` が真になる
 	 * * 各種読み込みが完了する
 	 * * `_loadingState` が `SceneLoadState.Ready` になる
-	 * * `_ready` がfireされる
+	 * * `_onReady` がfireされる
 	 * * `_loadingState` が `SceneLoadState.ReadyFired` になる
-	 * * `loaded` がfireされる
+	 * * `onLoad` がfireされる
 	 * * `_loadingState` が `SceneLoadState.LoadedFired` になる
 	 * @private
 	 */
@@ -513,7 +609,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 
 	/**
 	 * アセットとストレージの読み込みが終わった後か否か。
-	 * 「 `loaded` がfireされた後」ではない点に注意。
+	 * 「 `onLoad` がfireされた後」ではない点に注意。
 	 * @private
 	 */
 	_loadingState: SceneLoadState;
@@ -565,8 +661,10 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.local = local;
 		this.tickGenerationMode = tickGenerationMode;
 
-		this.loaded = new Trigger<Scene>();
-		this._ready = new Trigger<Scene>();
+		this.onLoad = new Trigger<Scene>();
+		this.loaded = this.onLoad;
+		this._onReady = new Trigger<Scene>();
+		this._ready = this._onReady;
 		this.assets = {};
 		this.asset = new AssetAccessor(game._assetManager);
 
@@ -574,22 +672,32 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this._prefetchRequested = false;
 		this._loadingState = SceneLoadState.Initial;
 
-		this.update = new Trigger<void>();
-		this._timer = new TimerManager(this.update, this.game.fps);
+		this.onUpdate = new Trigger<void>();
+		this.update = this.onUpdate;
+		this._timer = new TimerManager(this.onUpdate, this.game.fps);
 
-		this.assetLoaded = new Trigger<AssetLike>();
-		this.assetLoadFailed = new Trigger<AssetLoadFailureInfo>();
-		this.assetLoadCompleted = new Trigger<AssetLike>();
+		this.onAssetLoad = new Trigger<AssetLike>();
+		this.onAssetLoadFailure = new Trigger<AssetLoadFailureInfo>();
+		this.onAssetLoadComplete = new Trigger<AssetLike>();
+		this.assetLoaded = this.onAssetLoad;
+		this.assetLoadFailed = this.onAssetLoadFailure;
+		this.assetLoadCompleted = this.onAssetLoadComplete;
 
-		this.message = new Trigger<MessageEvent>();
-		this.pointDownCapture = new Trigger<PointDownEvent>();
-		this.pointMoveCapture = new Trigger<PointMoveEvent>();
-		this.pointUpCapture = new Trigger<PointUpEvent>();
-		this.operation = new Trigger<OperationEvent>();
+		this.onMessage = new Trigger<MessageEvent>();
+		this.onPointDownCapture = new Trigger<PointDownEvent>();
+		this.onPointMoveCapture = new Trigger<PointMoveEvent>();
+		this.onPointUpCapture = new Trigger<PointUpEvent>();
+		this.onOperation = new Trigger<OperationEvent>();
+		this.message = this.onMessage;
+		this.pointDownCapture = this.onPointDownCapture;
+		this.pointMoveCapture = this.onPointMoveCapture;
+		this.pointUpCapture = this.onPointUpCapture;
+		this.operation = this.onOperation;
 
 		this.children = [];
 		this.state = SceneState.Standby;
-		this.stateChanged = new Trigger<SceneState>();
+		this.onStateChange = new Trigger<SceneState>();
+		this.stateChanged = this.onStateChange;
 
 		this._assetHolders = [];
 		this._sceneAssetHolder = new SceneAssetHolder({
@@ -617,8 +725,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	/**
 	 * このシーンを破棄する。
 	 *
-	 * 破棄処理の開始時に、このシーンの `stateChanged` が引数 `BeforeDestroyed` でfireされる。
-	 * 破棄処理の終了時に、このシーンの `stateChanged` が引数 `Destroyed` でfireされる。
+	 * 破棄処理の開始時に、このシーンの `onStateChange` が引数 `BeforeDestroyed` でfireされる。
+	 * 破棄処理の終了時に、このシーンの `onStateChange` が引数 `Destroyed` でfireされる。
 	 * このシーンに紐づいている全ての `E` と全てのTimerは破棄される。
 	 * `Scene#setInterval()`, `Scene#setTimeout()` に渡された関数は呼び出されなくなる。
 	 *
@@ -627,7 +735,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 */
 	destroy(): void {
 		this.state = SceneState.BeforeDestroyed;
-		this.stateChanged.fire(this.state);
+		this.onStateChange.fire(this.state);
 
 		// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
 		var gameDb = this.game.db;
@@ -640,16 +748,16 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		}
 
 		this._timer.destroy();
-		this.update.destroy();
-		this.message.destroy();
-		this.pointDownCapture.destroy();
-		this.pointMoveCapture.destroy();
-		this.pointUpCapture.destroy();
-		this.operation.destroy();
-		this.loaded.destroy();
-		this.assetLoaded.destroy();
-		this.assetLoadFailed.destroy();
-		this.assetLoadCompleted.destroy();
+		this.onUpdate.destroy();
+		this.onMessage.destroy();
+		this.onPointDownCapture.destroy();
+		this.onPointMoveCapture.destroy();
+		this.onPointUpCapture.destroy();
+		this.onOperation.destroy();
+		this.onLoad.destroy();
+		this.onAssetLoad.destroy();
+		this.onAssetLoadFailure.destroy();
+		this.onAssetLoadComplete.destroy();
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
@@ -661,8 +769,8 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		this.game = undefined;
 
 		this.state = SceneState.Destroyed;
-		this.stateChanged.fire(this.state);
-		this.stateChanged.destroy();
+		this.onStateChange.fire(this.state);
+		this.onStateChange.destroy();
 	}
 
 	/**
@@ -677,7 +785,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 *
 	 * 戻り値は作成されたTimerである。
 	 * 通常は `Scene#setInterval` を利用すればよく、ゲーム開発者がこのメソッドを呼び出す必要はない。
-	 * `Timer` はフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
+	 * `Timer` はフレーム経過処理(`Scene#onUpdate`)で実現される疑似的なタイマーである。実時間の影響は受けない。
 	 * @param interval Timerの実行間隔（ミリ秒）
 	 */
 	createTimer(interval: number): Timer {
@@ -697,7 +805,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 *
 	 * `interval` ミリ秒おきに `owner` を `this` として `handler` を呼び出す。
 	 * 戻り値は `Scene#clearInterval` の引数に指定して定期実行を解除するために使える値である。
-	 * このタイマーはフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
+	 * このタイマーはフレーム経過処理(`Scene#onUpdate`)で実現される疑似的なタイマーである。実時間の影響は受けない。
 	 * 関数は指定時間の経過直後ではなく、経過後最初のフレームで呼び出される。
 	 * @param handler 処理
 	 * @param interval 実行間隔(ミリ秒)
@@ -721,10 +829,10 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * `milliseconds` ミリ秒後(以降)に、一度だけ `owner` を `this` として `handler` を呼び出す。
 	 * 戻り値は `Scene#clearTimeout` の引数に指定して処理を削除するために使える値である。
 	 *
-	 * このタイマーはフレーム経過処理(`Scene#update`)で実現される疑似的なタイマーである。実時間の影響は受けない。
+	 * このタイマーはフレーム経過処理(`Scene#onUpdate`)で実現される疑似的なタイマーである。実時間の影響は受けない。
 	 * 関数は指定時間の経過直後ではなく、経過後最初のフレームで呼び出される。
 	 * (理想的なケースでは、30FPSなら50msのコールバックは66.6ms時点で呼び出される)
-	 * 時間経過に対して厳密な処理を行う必要があれば、自力で `Scene#update` 通知を処理すること。
+	 * 時間経過に対して厳密な処理を行う必要があれば、自力で `Scene#onUpdate` 通知を処理すること。
 	 *
 	 * @param handler 処理
 	 * @param milliseconds 時間(ミリ秒)
@@ -923,7 +1031,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 */
 	_activate(): void {
 		this.state = SceneState.Active;
-		this.stateChanged.fire(this.state);
+		this.onStateChange.fire(this.state);
 	}
 
 	/**
@@ -931,7 +1039,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 */
 	_deactivate(): void {
 		this.state = SceneState.Deactive;
-		this.stateChanged.fire(this.state);
+		this.onStateChange.fire(this.state);
 	}
 
 	/**
@@ -991,7 +1099,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_notifySceneReady(): void {
-		// 即座に `_ready` をfireすることはしない。tick()のタイミングで行うため、リクエストをgameに投げておく。
+		// 即座に `_onReady` をfireすることはしない。tick()のタイミングで行うため、リクエストをgameに投げておく。
 		this._loadingState = SceneLoadState.Ready;
 		this.game._fireSceneReady(this);
 	}
@@ -1000,7 +1108,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_fireReady(): void {
-		this._ready.fire(this);
+		this._onReady.fire(this);
 		this._loadingState = SceneLoadState.ReadyFired;
 	}
 
@@ -1008,7 +1116,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @private
 	 */
 	_fireLoaded(): void {
-		this.loaded.fire(this);
+		this.onLoad.fire(this);
 		this._loadingState = SceneLoadState.LoadedFired;
 	}
 }

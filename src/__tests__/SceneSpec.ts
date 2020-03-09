@@ -49,10 +49,10 @@ describe("test Scene", () => {
 			name: "myScene"
 		});
 		expect(scene.game).toBe(game);
-		expect(scene.assetLoaded.length).toEqual(0);
-		expect(scene.assetLoadFailed.length).toEqual(0);
-		expect(scene.assetLoadCompleted.length).toEqual(0);
-		expect(scene.loaded.length).toEqual(0);
+		expect(scene.onAssetLoad.length).toEqual(0);
+		expect(scene.onAssetLoadFailure.length).toEqual(0);
+		expect(scene.onAssetLoadComplete.length).toEqual(0);
+		expect(scene.onLoad.length).toEqual(0);
 		expect(scene.children).not.toBeFalsy();
 		expect(scene.children.length).toBe(0);
 		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
@@ -61,17 +61,17 @@ describe("test Scene", () => {
 		expect(scene.tickGenerationMode).toBe(TickGenerationMode.Manual);
 		expect(scene.name).toEqual("myScene");
 
-		expect(scene.update instanceof Trigger).toBe(true);
-		expect(scene.loaded instanceof Trigger).toBe(true);
-		expect(scene.assetLoaded instanceof Trigger).toBe(true);
-		expect(scene.assetLoadFailed instanceof Trigger).toBe(true);
-		expect(scene.assetLoadCompleted instanceof Trigger).toBe(true);
-		expect(scene.stateChanged instanceof Trigger).toBe(true);
-		expect(scene.message instanceof Trigger).toBe(true);
-		expect(scene.pointDownCapture instanceof Trigger).toBe(true);
-		expect(scene.pointMoveCapture instanceof Trigger).toBe(true);
-		expect(scene.pointUpCapture instanceof Trigger).toBe(true);
-		expect(scene.operation instanceof Trigger).toBe(true);
+		expect(scene.onUpdate instanceof Trigger).toBe(true);
+		expect(scene.onLoad instanceof Trigger).toBe(true);
+		expect(scene.onAssetLoad instanceof Trigger).toBe(true);
+		expect(scene.onAssetLoadFailure instanceof Trigger).toBe(true);
+		expect(scene.onAssetLoadComplete instanceof Trigger).toBe(true);
+		expect(scene.onStateChange instanceof Trigger).toBe(true);
+		expect(scene.onMessage instanceof Trigger).toBe(true);
+		expect(scene.onPointDownCapture instanceof Trigger).toBe(true);
+		expect(scene.onPointMoveCapture instanceof Trigger).toBe(true);
+		expect(scene.onPointUpCapture instanceof Trigger).toBe(true);
+		expect(scene.onOperation instanceof Trigger).toBe(true);
 	});
 
 	it("初期化 - Storage", () => {
@@ -136,7 +136,7 @@ describe("test Scene", () => {
 			name: "SceneToLoadAsset"
 		});
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene.assets.foo).not.toBeUndefined();
 			expect(scene.assets.bar).toBeUndefined();
 			expect(scene.assets.baa).not.toBeUndefined();
@@ -166,7 +166,7 @@ describe("test Scene", () => {
 		game.storage._registerLoad((keys, loader) => {
 			loader._onLoaded(values);
 		});
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene._storageLoader._loaded).toBe(true);
 			expect(scene.storageValues.get(0)).toBe(values[0]);
 			done();
@@ -190,7 +190,7 @@ describe("test Scene", () => {
 		game.storage._registerLoad((keys, loader) => {
 			loader._onLoaded(values);
 		});
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene._storageLoader._loaded).toBe(true);
 			expect(scene.serializeStorageValues()).toBeUndefined();
 			done();
@@ -224,7 +224,7 @@ describe("test Scene", () => {
 				loader._onLoaded(serializedValues);
 			}
 		});
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene._storageLoader._loaded).toBe(true);
 			expect(scene.serializeStorageValues()).toBe("myserialization1");
 			expect(scene.storageValues.get(0)).toBe(serializedValues[0]);
@@ -253,7 +253,7 @@ describe("test Scene", () => {
 			l._onLoaded(values);
 		});
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene._storageLoader).toBeDefined();
 			expect(scene.storageValues.get(0)).toBe(values[0]);
 			expect(scene.assets.foo).toBeDefined();
@@ -276,7 +276,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene._loaded).toBe(true);
 			expect(scene._prefetchRequested).toBe(false);
 			done();
@@ -307,7 +307,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			done();
 		});
 		scene.prefetch();
@@ -328,7 +328,7 @@ describe("test Scene", () => {
 		const scene = new Scene({ game: game });
 		game.resourceFactory.createsDelayedAsset = true;
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			done();
 		});
 		scene.prefetch();
@@ -381,7 +381,7 @@ describe("test Scene", () => {
 		game.resourceFactory.createsDelayedAsset = true;
 		let ready = false;
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -416,7 +416,7 @@ describe("test Scene", () => {
 		game.resourceFactory.createsDelayedAsset = true;
 		let ready = false;
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -469,7 +469,7 @@ describe("test Scene", () => {
 		});
 
 		let ready = false;
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -524,7 +524,7 @@ describe("test Scene", () => {
 		});
 		let ready = false;
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -581,7 +581,7 @@ describe("test Scene", () => {
 		});
 
 		let ready = false;
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(ready).toBe(true);
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			done();
@@ -611,7 +611,7 @@ describe("test Scene", () => {
 			assets: assetsConfiguration
 		});
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const scene = new Scene({
 				game: game,
 				assetIds: [
@@ -625,7 +625,7 @@ describe("test Scene", () => {
 					}
 				]
 			});
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				const foo = scene.assets.foo;
 				const dynamicImage = scene.assets.dynamicImage as ImageAsset;
 				expect(foo instanceof ImageAsset).toBe(true);
@@ -721,13 +721,13 @@ describe("test Scene", () => {
 
 		let failureCount = 0;
 		let loadedCount = 0;
-		scene.assetLoaded.add(asset => {
+		scene.onAssetLoad.add(asset => {
 			expect(asset instanceof Asset).toBe(true);
 			expect(asset.id).toBe("foo");
 			expect(failureCount).toBe(2);
 			++loadedCount;
 		});
-		scene.assetLoadFailed.add(failureInfo => {
+		scene.onAssetLoadFailure.add(failureInfo => {
 			expect(failureInfo.asset instanceof Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -736,7 +736,7 @@ describe("test Scene", () => {
 			expect(failureInfo.cancelRetry).toBe(false);
 			++failureCount;
 		});
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(failureCount).toBe(2);
 			expect(loadedCount).toBe(1);
 			expect(scene.assets.foo).not.toBeUndefined();
@@ -760,7 +760,7 @@ describe("test Scene", () => {
 			assetIds: ["foo"]
 		});
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			expect(scene.assets.foo).not.toBeUndefined();
 			done();
 		});
@@ -783,10 +783,10 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene.assetLoaded.add(asset => {
+		scene.onAssetLoad.add(asset => {
 			fail("should not be loaded");
 		});
-		scene.assetLoadFailed.add(failureInfo => {
+		scene.onAssetLoadFailure.add(failureInfo => {
 			expect(failureInfo.asset instanceof Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -799,7 +799,7 @@ describe("test Scene", () => {
 				done();
 			}
 		});
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			fail("should not fire loaded");
 		});
 
@@ -821,10 +821,10 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene.assetLoaded.add(asset => {
+		scene.onAssetLoad.add(asset => {
 			fail("should not be loaded");
 		});
-		scene.assetLoadFailed.add(failureInfo => {
+		scene.onAssetLoadFailure.add(failureInfo => {
 			expect(failureInfo.asset instanceof Asset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
@@ -839,7 +839,7 @@ describe("test Scene", () => {
 				done();
 			}, 0);
 		});
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			fail("should not fire loaded");
 		});
 
@@ -854,13 +854,13 @@ describe("test Scene", () => {
 			assetIds: ["foo"]
 		});
 
-		scene._ready.add(() => {
+		scene._onReady.add(() => {
 			const child = new Scene({
 				game: game,
 				assetIds: ["foo", "baa"]
 			});
 
-			child._ready.add(() => {
+			child._onReady.add(() => {
 				expect(scene.assets.foo).not.toBeUndefined();
 				expect(scene.assets.baa).toBeUndefined();
 				expect(scene.assets.zoo).toBeUndefined();
@@ -887,7 +887,7 @@ describe("test Scene", () => {
 		const stateChangeHandler = () => {
 			raisedEvent = true;
 		};
-		scene.stateChanged.add(stateChangeHandler);
+		scene.onStateChange.add(stateChangeHandler);
 
 		const sceneLoaded = () => {
 			expect(scene.state).toBe(SceneState.Active);
@@ -905,12 +905,12 @@ describe("test Scene", () => {
 		};
 		const steps = [
 			() => {
-				scene.loaded.add(sceneLoaded);
+				scene.onLoad.add(sceneLoaded);
 				game.pushScene(scene);
 			},
 			() => {
 				const scene2 = new Scene({ game: game });
-				scene2.loaded.add(scene2Loaded);
+				scene2.onLoad.add(scene2Loaded);
 				game.pushScene(scene2);
 			},
 			() => {
@@ -969,29 +969,29 @@ describe("test Scene", () => {
 		function makeScene(name: string): Scene {
 			const scene = new Scene({ game: game });
 			(scene as any)._testName = name;
-			scene.stateChanged.add(stateChangeHandler, scene);
+			scene.onStateChange.add(stateChangeHandler, scene);
 			return scene;
 		}
 
 		const steps = [
 			() => {
 				const scene1 = makeScene("S1");
-				scene1.loaded.add(nextStep);
+				scene1.onLoad.add(nextStep);
 				game.pushScene(scene1);
 			},
 			() => {
 				const scene2 = makeScene("S2");
-				scene2.loaded.add(nextStep);
+				scene2.onLoad.add(nextStep);
 				game.replaceScene(scene2);
 			},
 			() => {
 				const scene3 = makeScene("S3");
-				scene3.loaded.add(nextStep);
+				scene3.onLoad.add(nextStep);
 				game.pushScene(scene3);
 			},
 			() => {
 				const scene4 = makeScene("S4");
-				scene4.loaded.add(nextStep);
+				scene4.onLoad.add(nextStep);
 				game.replaceScene(scene4);
 			},
 			() => {
@@ -1025,23 +1025,23 @@ describe("test Scene", () => {
 		const timer = scene.createTimer(100);
 		expect(scene._timer._timers.length).toBe(1);
 		expect(scene._timer._timers[0]).toBe(timer);
-		timer.elapsed.add(() => {
+		timer.onElapse.add(() => {
 			fail("invalid call");
 		}, undefined);
 		game.tick(true);
 		game.tick(true);
 		game.tick(true);
-		timer.elapsed.removeAll({ owner: undefined });
+		timer.onElapse.removeAll({ owner: undefined });
 		expect(scene._timer._timers.length).toBe(1);
 		let success = false;
-		timer.elapsed.add(() => {
+		timer.onElapse.add(() => {
 			success = true;
 		});
 		game.tick(true);
 		expect(success).toBe(true);
 
 		expect(timer.canDelete()).toBe(false);
-		timer.elapsed.removeAll();
+		timer.onElapse.removeAll();
 		expect(timer.canDelete()).toBe(true);
 
 		scene.deleteTimer(timer);
@@ -1254,7 +1254,7 @@ describe("test Scene", () => {
 	it("isCurrentScene/gotoScene/end", done => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		const game = new Game({ width: 320, height: 320, main: "" });
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
 			const scene2 = new Scene({ game: game });
@@ -1288,7 +1288,7 @@ describe("test Scene", () => {
 	it("gotoScene - AssertionError", done => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		const game = new Game({ width: 320, height: 320, main: "" });
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
 			const scene2 = new Scene({ game: game });
@@ -1303,7 +1303,7 @@ describe("test Scene", () => {
 	it("end - AssertionError", done => {
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 		const game = new Game({ width: 320, height: 320, main: "" });
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
 			expect(() => {

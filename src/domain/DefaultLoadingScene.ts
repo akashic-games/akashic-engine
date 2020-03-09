@@ -105,15 +105,15 @@ export class DefaultLoadingScene extends LoadingScene {
 		this._gauge = undefined;
 		this._gaugeUpdateCount = 0;
 		this._totalWaitingAssetCount = 0;
-		this.loaded.add(this._onLoaded, this);
-		this.targetReset.add(this._onTargetReset, this);
-		this.targetAssetLoaded.add(this._onTargetAssetLoaded, this);
+		this.onLoad.add(this._handleLoad, this);
+		this.onTargetReset.add(this._handleTargetReset, this);
+		this.onTargetAssetLoad.add(this._handleTargetAssetLoad, this);
 	}
 
 	/**
 	 * @private
 	 */
-	_onLoaded(): boolean {
+	_handleLoad(): boolean {
 		let barX, barY, bgColor;
 		if (this._style === "compact") {
 			const margin = Math.min(this.game.width, this.game.height) * 0.05;
@@ -157,7 +157,7 @@ export class DefaultLoadingScene extends LoadingScene {
 				]
 			})
 		);
-		gauge.update.add(this._onUpdateGuage, this);
+		gauge.onUpdate.add(this._handleUpdate, this);
 		this._gauge = gauge;
 		return true; // Trigger 登録を解除する
 	}
@@ -165,7 +165,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	/**
 	 * @private
 	 */
-	_onUpdateGuage(): void {
+	_handleUpdate(): void {
 		var BLINK_RANGE = 50;
 		var BLINK_PER_SEC = 2 / 3;
 		++this._gaugeUpdateCount;
@@ -181,7 +181,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	/**
 	 * @private
 	 */
-	_onTargetReset(targetScene: Scene): void {
+	_handleTargetReset(targetScene: Scene): void {
 		if (this._gauge) {
 			this._gauge.width = 0;
 			this._gauge.modified();
@@ -192,7 +192,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	/**
 	 * @private
 	 */
-	_onTargetAssetLoaded(asset: AssetLike): void {
+	_handleTargetAssetLoad(asset: AssetLike): void {
 		var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
 		this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
 		this._gauge.modified();

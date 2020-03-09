@@ -17,6 +17,12 @@ export class Timer implements Destroyable {
 	/**
 	 * `this.interval` 経過時にfireされるTrigger。
 	 */
+	onElapse: Trigger<void>;
+
+	/**
+	 * `this.interval` 経過時にfireされるTrigger。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onElapse` を利用すること。
+	 */
 	elapsed: Trigger<void>;
 
 	/**
@@ -37,7 +43,8 @@ export class Timer implements Destroyable {
 		this.interval = interval;
 		// NOTE: intervalが浮動小数の場合があるため念のため四捨五入する
 		this._scaledInterval = Math.round(interval * fps);
-		this.elapsed = new Trigger<void>();
+		this.onElapse = new Trigger<void>();
+		this.elapsed = this.onElapse;
 		this._scaledElapsed = 0;
 	}
 
@@ -46,27 +53,28 @@ export class Timer implements Destroyable {
 		this._scaledElapsed += 1000;
 		while (this._scaledElapsed >= this._scaledInterval) {
 			// NOTE: this.elapsed.fire()内でdestroy()される可能性があるため、destroyed()を判定する
-			if (!this.elapsed) {
+			if (!this.onElapse) {
 				break;
 			}
-			this.elapsed.fire();
+			this.onElapse.fire();
 			this._scaledElapsed -= this._scaledInterval;
 		}
 	}
 
 	canDelete(): boolean {
-		return !this.elapsed || this.elapsed.length === 0;
+		return !this.onElapse || this.onElapse.length === 0;
 	}
 
 	destroy(): void {
 		this.interval = undefined;
-		this.elapsed.destroy();
+		this.onElapse.destroy();
+		this.onElapse = undefined;
 		this.elapsed = undefined;
 		this._scaledInterval = 0;
 		this._scaledElapsed = 0;
 	}
 
 	destroyed(): boolean {
-		return this.elapsed === undefined;
+		return this.onElapse === undefined;
 	}
 }

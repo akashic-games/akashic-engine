@@ -35,7 +35,7 @@ describe("test Game", () => {
 		expect(game.height).toBe(270);
 		expect(game.selfId).toBe("foo");
 		expect(game.playId).toBe(undefined);
-		expect(game.skippingChanged).not.toBe(undefined);
+		expect(game.onSkipChange).not.toBe(undefined);
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
 	});
@@ -51,7 +51,7 @@ describe("test Game", () => {
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
 		expect(game.playId).toBe(undefined);
-		expect(game.skippingChanged).toBe(undefined);
+		expect(game.onSkipChange).toBe(undefined);
 	});
 
 	it("global assets", done => {
@@ -76,7 +76,7 @@ describe("test Game", () => {
 			}
 		});
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			expect(game.assets.foo).not.toBe(undefined);
 			expect(game.assets.foo instanceof ImageAsset).toBe(true);
 			expect(game.assets).not.toHaveProperty("bar");
@@ -98,10 +98,10 @@ describe("test Game", () => {
 		const game = new Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" });
 
 		let loadedFired = false;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			loadedFired = true;
 		});
-		game._started.add(() => {
+		game._onStart.add(() => {
 			expect(loadedFired).toBe(true);
 			expect(game.assets.mainScene).not.toBe(undefined);
 			expect(game.assets.mainScene instanceof ScriptAsset).toBe(true);
@@ -137,7 +137,7 @@ describe("test Game", () => {
 		(game as any).__test__ = () => {
 			const scene = new Scene({ game: game });
 			expect(game.age).toBe(0);
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				expect(game.age).toBe(0);
 				testPass = true;
 			});
@@ -159,10 +159,10 @@ describe("test Game", () => {
 		};
 		const game = new Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" }, "/");
 		let loadedFired = false;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			loadedFired = true;
 		});
-		game._started.add(() => {
+		game._onStart.add(() => {
 			expect(loadedFired).toBe(true);
 			expect(game.assets.dummy).not.toBe(undefined);
 			expect(game.assets.dummy instanceof ScriptAsset).toBe(true);
@@ -189,9 +189,9 @@ describe("test Game", () => {
 			return new Scene({ game: game });
 		};
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const scene = new Scene({ game: game });
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				game._loadAndStart();
 			});
 			game.pushScene(scene);
@@ -206,7 +206,7 @@ describe("test Game", () => {
 	it("pushScene", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene = new Scene({ game: game });
 			game.pushScene(scene);
@@ -224,7 +224,7 @@ describe("test Game", () => {
 	it("popScene", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene = new Scene({ game: game, name: "SCENE1" });
 			const scene2 = new Scene({ game: game, name: "SCENE2" });
@@ -244,7 +244,7 @@ describe("test Game", () => {
 	it("popScene - specified step", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			// popSceneで指定したシーンまで戻る際に経過したシーンは全て削除
 			const scene = new Scene({ game: game, name: "SCENE1" });
@@ -279,7 +279,7 @@ describe("test Game", () => {
 	it("replaceScene", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene = new Scene({ game: game });
 			const scene2 = new Scene({ game: game });
@@ -303,7 +303,7 @@ describe("test Game", () => {
 			}
 		};
 		const game = new Game({ width: 320, height: 320, assets: assets, main: "./dummy/dummy.js" });
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const scene = new Scene({ game: game });
 			game.pushScene(scene);
 			expect(game.age).toBe(0);
@@ -345,10 +345,10 @@ describe("test Game", () => {
 		class TestLoadingScene extends LoadingScene {
 			constructor(param: LoadingSceneParameterObject) {
 				super(param);
-				this.loaded.add(() => {
+				this.onLoad.add(() => {
 					logs.push("LoadingSceneLoaded");
 				});
-				this.targetReady.add(() => {
+				this.onTargetReady.add(() => {
 					logs.push("TargetLoaded");
 				}, this);
 			}
@@ -359,7 +359,7 @@ describe("test Game", () => {
 			name: "testLoadingScene"
 		});
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			game.loadingScene = loadingScene;
 
 			class MockScene1 extends Scene {
@@ -374,10 +374,10 @@ describe("test Game", () => {
 				assetIds: ["foo"],
 				name: "scene1"
 			});
-			scene.assetLoaded.add(a => {
+			scene.onAssetLoad.add(a => {
 				logs.push("SceneAssetLoaded");
 			});
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				expect(logs).toEqual([
 					"LoadingSceneLoaded", // これ(LoagingSceneの読み込み完了)の後に
 					"SceneLoad", // 遷移先シーンの読み込みが開始されることが重要
@@ -396,14 +396,14 @@ describe("test Game", () => {
 				}
 
 				const scene2 = new MockScene2({ game: game, assetIds: ["foo"] });
-				scene2.assetLoaded.add(a => {
+				scene2.onAssetLoad.add(a => {
 					logs.push("Scene2AssetLoaded");
 				});
-				scene2.loaded.add(() => {
+				scene2.onLoad.add(() => {
 					expect(logs).toEqual(["Scene2Load", "Scene2AssetLoaded", "TargetLoaded"]);
 
 					setTimeout(() => {
-						expect(game.loadingScene.loaded.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.onLoad.length).toBe(1); // loadingSceneのonLoadハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -444,13 +444,13 @@ describe("test Game", () => {
 		class TestLoadingScene extends LoadingScene {
 			constructor(param: LoadingSceneParameterObject) {
 				super(param);
-				this.assetLoaded.add(() => {
+				this.onAssetLoad.add(() => {
 					logs.push("LoadingSceneAssetLoaded");
 				});
-				this.loaded.add(() => {
+				this.onLoad.add(() => {
 					logs.push("LoadingSceneLoaded");
 				});
-				this.targetReady.add(() => {
+				this.onTargetReady.add(() => {
 					logs.push("TargetLoaded");
 				}, this);
 			}
@@ -461,7 +461,7 @@ describe("test Game", () => {
 			assetIds: ["foo", "zoo"]
 		});
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			game.loadingScene = loadingScene;
 
 			class MockScene1 extends Scene {
@@ -472,10 +472,10 @@ describe("test Game", () => {
 			}
 
 			const scene = new MockScene1({ game: game, assetIds: ["zoo"] });
-			scene.assetLoaded.add(a => {
+			scene.onAssetLoad.add(a => {
 				logs.push("SceneAssetLoaded");
 			});
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				expect(logs).toEqual([
 					"LoadingSceneAssetLoaded",
 					"LoadingSceneAssetLoaded",
@@ -496,14 +496,14 @@ describe("test Game", () => {
 				}
 
 				const scene2 = new MockScene2({ game: game, assetIds: ["zoo"] });
-				scene2.assetLoaded.add(a => {
+				scene2.onAssetLoad.add(a => {
 					logs.push("Scene2AssetLoaded");
 				});
-				scene2.loaded.add(() => {
+				scene2.onLoad.add(() => {
 					expect(logs).toEqual(["Scene2Load", "Scene2AssetLoaded", "TargetLoaded"]);
 
 					setTimeout(() => {
-						expect(game.loadingScene.loaded.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
+						expect(game.loadingScene.onLoad.length).toBe(1); // loadingSceneのloadedハンドラが増えていかないことを確認
 						done();
 					}, 1);
 				});
@@ -549,27 +549,27 @@ describe("test Game", () => {
 			assetIds: ["foo", "zoo"],
 			explicitEnd: true
 		});
-		loadingScene.targetReset.add(() => {
+		loadingScene.onTargetReset.add(() => {
 			resetCount++;
 			expect(loadingScene.getTargetWaitingAssetsCount()).toBe(1); // 下記 const scene の assetIds: ["zoo"] しかこないので
 		}, loadingScene);
-		loadingScene.targetAssetLoaded.add(() => {
+		loadingScene.onTargetAssetLoad.add(() => {
 			invalidEndTrialCount++;
 			expect(() => {
 				loadingScene.end();
 			}).toThrow();
 		}, loadingScene);
-		loadingScene.targetReady.add(() => {
+		loadingScene.onTargetReady.add(() => {
 			setTimeout(() => {
 				asyncEndCalled = true;
 				loadingScene.end();
 			}, 10);
 		}, loadingScene);
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			game.loadingScene = loadingScene;
 			const scene = new Scene({ game: game, assetIds: ["zoo"] });
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				expect(asyncEndCalled).toBe(true);
 				expect(invalidEndTrialCount).toBe(1);
 				expect(resetCount).toBe(1);
@@ -608,11 +608,11 @@ describe("test Game", () => {
 
 		let topIsLocal: LocalTickMode = undefined;
 		let sceneChangedCount = 0;
-		game._sceneChanged.add(scene => {
+		game._onSceneChange.add(scene => {
 			sceneChangedCount++;
 			topIsLocal = scene.local;
 		});
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene = new Scene({ game: game });
 			const scene2 = new Scene({ game: game, assetIds: ["foo"] });
@@ -622,37 +622,37 @@ describe("test Game", () => {
 				local: true
 			});
 
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				expect(sceneChangedCount).toBe(2); // _initialScene と scene (いずれも loadingSceneなし) で 2
 				expect(topIsLocal).toBe(LocalTickMode.NonLocal);
 				expect(game.scenes).toEqual([game._initialScene, scene]);
-				expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene.pointDownCapture);
+				expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene.onPointDownCapture);
 
-				scene2.loaded.add(() => {
+				scene2.onLoad.add(() => {
 					expect(sceneChangedCount).toBe(4); // loadingScene が pop されて 1 増えたので 4
 					expect(topIsLocal).toBe(LocalTickMode.NonLocal);
 					expect(game.scenes).toEqual([game._initialScene, scene2]);
-					expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene2.pointDownCapture);
+					expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene2.onPointDownCapture);
 
-					scene3.loaded.add(() => {
+					scene3.onLoad.add(() => {
 						expect(sceneChangedCount).toBe(6);
 						expect(topIsLocal).toBe(LocalTickMode.FullLocal);
 						expect(game.scenes).toEqual([game._initialScene, scene2, scene3]);
-						expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene3.pointDownCapture);
+						expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene3.onPointDownCapture);
 
 						game.popScene();
 						game._flushSceneChangeRequests();
 						expect(sceneChangedCount).toBe(7);
 						expect(topIsLocal).toBe(LocalTickMode.NonLocal);
 						expect(game.scenes).toEqual([game._initialScene, scene2]);
-						expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene2.pointDownCapture);
+						expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene2.onPointDownCapture);
 
 						game.popScene();
 						game._flushSceneChangeRequests();
 						expect(sceneChangedCount).toBe(8);
 						expect(topIsLocal).toBe(LocalTickMode.FullLocal);
 						expect(game.scenes).toEqual([game._initialScene]);
-						expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._initialScene.pointDownCapture);
+						expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._initialScene.onPointDownCapture);
 						done();
 					});
 					game.pushScene(scene3);
@@ -660,19 +660,19 @@ describe("test Game", () => {
 					expect(sceneChangedCount).toBe(5);
 					expect(topIsLocal).toBe(LocalTickMode.FullLocal);
 					expect(game.scenes).toEqual([game._initialScene, scene2, scene3, game._defaultLoadingScene]);
-					expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._defaultLoadingScene.pointDownCapture);
+					expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._defaultLoadingScene.onPointDownCapture);
 				});
 				game.replaceScene(scene2);
 				game._flushSceneChangeRequests();
 				expect(sceneChangedCount).toBe(3); // scene2とloadingSceneが乗るが、scene2はまだ_sceneStackTopChangeCountをfireしてない
 				expect(topIsLocal).toBe(LocalTickMode.FullLocal); // loadingScene がトップなので local
 				expect(game.scenes).toEqual([game._initialScene, scene2, game._defaultLoadingScene]);
-				expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._defaultLoadingScene.pointDownCapture);
+				expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._defaultLoadingScene.onPointDownCapture);
 			});
 			expect(sceneChangedCount).toBe(1); // _initialScene (loadingSceneなし) が push された分で 1
 			expect(topIsLocal).toBe(LocalTickMode.FullLocal);
 			expect(game.scenes).toEqual([game._initialScene]);
-			expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._initialScene.pointDownCapture);
+			expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._initialScene.onPointDownCapture);
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
 		});
@@ -734,7 +734,7 @@ describe("test Game", () => {
 		const scene = new Scene({ game: game });
 
 		let count = 0;
-		scene.update.add(() => {
+		scene.onUpdate.add(() => {
 			++count;
 		});
 		game.pushScene(scene);
@@ -756,12 +756,12 @@ describe("test Game", () => {
 	it("no crash on Scene#destroy()", done => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const scene = new Scene({ game: game });
 			let timerFired = false;
 
-			scene.loaded.add(() => {
-				scene.update.add(() => {
+			scene.onLoad.add(() => {
+				scene.onUpdate.add(() => {
 					game.popScene();
 				});
 				scene.setInterval(() => {
@@ -769,7 +769,7 @@ describe("test Game", () => {
 					timerFired = true;
 				}, 1);
 
-				game._initialScene.stateChanged.add(state => {
+				game._initialScene.onStateChange.add(state => {
 					if (state === SceneState.Active) {
 						// ↑のpopScene()後、例外を投げずにシーン遷移してここに来れたらOK
 						expect(timerFired).toBe(true);
@@ -821,7 +821,7 @@ describe("test Game", () => {
 		expect(game.age).toBe(0);
 		expect(game.random).toBe(null);
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			expect(game.isLoaded).toBe(true);
 
 			const scene = new Scene({ game: game });
@@ -877,18 +877,18 @@ describe("test Game", () => {
 		expect(game.random).toBe(null);
 
 		let testDone = false;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			expect(testDone).toBe(true);
 			done();
 		});
 
 		const loadScene = game._defaultLoadingScene;
-		expect(game._initialScene.loaded.contains(game._onInitialSceneLoaded, game)).toBe(true);
-		expect(loadScene.loaded.contains(loadScene._doReset, loadScene)).toBe(false);
+		expect(game._initialScene.onLoad.contains(game._handleInitialSceneLoad, game)).toBe(true);
+		expect(loadScene.onLoad.contains(loadScene._doReset, loadScene)).toBe(false);
 
 		game._loadAndStart();
 		expect(game.isLoaded).toBe(false); // _loadAndStartしたがまだ読み込みは終わっていない
-		expect(game._initialScene.loaded.contains(game._onInitialSceneLoaded, game)).toBe(true);
+		expect(game._initialScene.onLoad.contains(game._handleInitialSceneLoad, game)).toBe(true);
 		expect(game.scenes.length).toBe(2);
 		expect(game.scenes[0]).toBe(game._initialScene);
 		expect(game.scenes[1]).toBe(loadScene);
@@ -898,8 +898,8 @@ describe("test Game", () => {
 		expect(loadScene2).not.toBe(loadScene);
 		expect(loadScene.destroyed()).toBe(true);
 		expect(game.isLoaded).toBe(false);
-		expect(game._initialScene.loaded.contains(game._onInitialSceneLoaded, game)).toBe(true);
-		expect(loadScene2.loaded.contains(loadScene2._doReset, loadScene2)).toBe(false);
+		expect(game._initialScene.onLoad.contains(game._handleInitialSceneLoad, game)).toBe(true);
+		expect(loadScene2.onLoad.contains(loadScene2._doReset, loadScene2)).toBe(false);
 		expect(game.scenes.length).toBe(0);
 
 		game._loadAndStart();

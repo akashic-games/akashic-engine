@@ -265,7 +265,7 @@ describe("test Module", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				id: "moduleid",
 				path,
@@ -297,7 +297,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		game.resourceFactory.scriptContents = scriptContents;
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const mod = manager._require("noPackageJson");
 			expect(mod.me).toBe("noPackageJson-index");
 			expect(mod.thisModule instanceof Module).toBe(true);
@@ -312,7 +312,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				id: "dummymod",
 				path,
@@ -376,7 +376,7 @@ describe("test Module", () => {
 				game: game,
 				assetIds: ["aNonGlobalAssetBar"]
 			});
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				let mod = module.require("aNonGlobalAssetBar");
 				expect(mod.me).toBe("script-bar");
 				expect(mod.thisModule instanceof Module).toBe(true);
@@ -416,7 +416,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = assetBase + "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scripts;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -452,7 +452,7 @@ describe("test Module", () => {
 				game: game,
 				assetIds: ["aNonGlobalAssetBar"]
 			});
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				let mod = module.require("aNonGlobalAssetBar");
 				expect(mod.me).toBe("script-bar");
 				expect(mod.thisModule.filename).toBe(assetBase + "/script/bar.js");
@@ -488,7 +488,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = assetBase + "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scripts;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -524,7 +524,7 @@ describe("test Module", () => {
 				game: game,
 				assetIds: ["aNonGlobalAssetBar"]
 			});
-			scene.loaded.add(() => {
+			scene.onLoad.add(() => {
 				let mod = module.require("aNonGlobalAssetBar");
 				expect(mod.me).toBe("script-bar");
 				expect(mod.thisModule.filename).toBe(assetBase + "/script/bar.js");
@@ -550,7 +550,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -620,7 +620,7 @@ describe("test Module", () => {
 		const path = assetBase + "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scripts;
 
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -662,7 +662,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -702,7 +702,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = "/script/realpath.js";
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -728,7 +728,7 @@ describe("test Module", () => {
 		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
 		game.random = new XorshiftRandomGenerator(1);
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -751,7 +751,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = "/script/dummypath.js";
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",
@@ -776,7 +776,7 @@ describe("test Module", () => {
 		const manager = game._moduleManager;
 		const path = "/cascaded/script.js";
 		game.resourceFactory.scriptContents = scriptContents;
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const module = new Module({
 				runtimeValueBase: game._runtimeValueBase,
 				id: "dummymod",

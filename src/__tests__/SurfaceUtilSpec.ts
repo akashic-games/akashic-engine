@@ -29,7 +29,7 @@ describe("test SurfaceUtil", () => {
 				}
 			}
 		});
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			expect(SurfaceUtil.asSurface(game.assets.foo as ImageAsset)).toEqual((game.assets.foo as ImageAsset).asSurface());
 			done();
 		});
