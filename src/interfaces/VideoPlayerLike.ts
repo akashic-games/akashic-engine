@@ -21,12 +21,12 @@ export interface VideoPlayerLike {
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。
 	 */
-	played: Trigger<VideoPlayerEvent>;
+	onPlay: Trigger<VideoPlayerEvent>;
 
 	/**
 	 * `stop()` が呼び出された時に通知される `Trigger` 。
 	 */
-	stopped: Trigger<VideoPlayerEvent>;
+	onStop: Trigger<VideoPlayerEvent>;
 
 	/**
 	 * 音量。
@@ -38,6 +38,18 @@ export interface VideoPlayerLike {
 	volume: number;
 
 	/**
+	 * `play()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onPlay` を利用すること。
+	 */
+	played: Trigger<VideoPlayerEvent>;
+
+	/**
+	 * `stop()` が呼び出された時に通知される `Trigger` 。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStop` を利用すること。
+	 */
+	stopped: Trigger<VideoPlayerEvent>;
+
+	/**
 	 * @private
 	 */
 	_loop: boolean;
@@ -45,7 +57,7 @@ export interface VideoPlayerLike {
 	/**
 	 * `VideoAsset` を再生する。
 	 *
-	 * 再生後、 `this.played` がfireされる。
+	 * 再生後、 `this.onPlay` がfireされる。
 	 * @param Video 再生するビデオアセット
 	 */
 	play(videoAsset: VideoAssetLike): void;
@@ -54,7 +66,7 @@ export interface VideoPlayerLike {
 	 * 再生を停止する。
 	 *
 	 * 再生中でない場合、何もしない。
-	 * 停止後、 `this.stopped` がfireされる。
+	 * 停止後、 `this.onStop` がfireされる。
 	 */
 	stop(): void;
 

@@ -196,7 +196,7 @@ describe("test FrameSprite", () => {
 			loop: true
 		});
 		let isFired = false;
-		sprite.finished.add(() => {
+		sprite.onFinish.add(() => {
 			isFired = true;
 		});
 		sprite.start();
@@ -232,7 +232,7 @@ describe("test FrameSprite", () => {
 			loop: false
 		});
 		let isFired = false;
-		sprite.finished.add(() => {
+		sprite.onFinish.add(() => {
 			isFired = true;
 		});
 		sprite.start();

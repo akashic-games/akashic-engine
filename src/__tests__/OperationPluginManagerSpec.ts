@@ -70,9 +70,9 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("初期化", done => {
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			expect(game.operationPluginManager).not.toBeFalsy();
-			expect(game.operationPluginManager.operated instanceof Trigger).toBe(true);
+			expect(game.operationPluginManager.onOperate instanceof Trigger).toBe(true);
 			expect(game.operationPluginManager.plugins).toEqual({});
 			done();
 		});
@@ -80,7 +80,7 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("initialize()", done => {
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const self = game.operationPluginManager;
 			expect((self as any)._initialized).toBe(false);
 			self.initialize();
@@ -98,12 +98,12 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("operated", done => {
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const self = game.operationPluginManager;
 			self.initialize();
 
 			const ops: InternalOperationPluginOperation[] = [];
-			self.operated.add(op => {
+			self.onOperate.add(op => {
 				ops.push(op);
 			});
 
@@ -122,7 +122,7 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("register", done => {
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const self = game.operationPluginManager;
 			self.initialize();
 
@@ -160,11 +160,11 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("destroy", done => {
-		game._loaded.add(() => {
+		game._onLoad.add(() => {
 			const self = game.operationPluginManager;
 			self.initialize();
 			self.destroy();
-			expect(self.operated).toBeFalsy();
+			expect(self.onOperate).toBeFalsy();
 			expect(self.plugins).toBeFalsy();
 			done();
 		});

@@ -33,15 +33,33 @@ export class LoadingScene extends Scene {
 	 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
 	 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
 	 */
-	targetReset: Trigger<Scene>;
+	onTargetReset: Trigger<Scene>;
 	/**
 	 * ローディングシーンの読み込みが完了した時にfireされるTrigger。
 	 * `explicitEnd` に真を渡して生成した場合、ローディングシーンを終了するには
 	 * このTriggerのfire後に明示的に `end()` を呼び出す必要がある。
 	 */
+	onTargetReady: Trigger<Scene>;
+	/**
+	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
+	 */
+	onTargetAssetLoad: Trigger<AssetLike>;
+	/**
+	 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
+	 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetReset` を利用すること。
+	 */
+	targetReset: Trigger<Scene>;
+	/**
+	 * ローディングシーンの読み込みが完了した時にfireされるTrigger。
+	 * `explicitEnd` に真を渡して生成した場合、ローディングシーンを終了するには
+	 * このTriggerのfire後に明示的に `end()` を呼び出す必要がある。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetReady` を利用すること。
+	 */
 	targetReady: Trigger<Scene>;
 	/**
 	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetAssetLoad` を利用すること。
 	 */
 	targetAssetLoaded: Trigger<AssetLike>;
 
@@ -62,9 +80,12 @@ export class LoadingScene extends Scene {
 	constructor(param: LoadingSceneParameterObject) {
 		param.local = true; // LoadingScene は強制的にローカルにする
 		super(param);
-		this.targetReset = new Trigger<Scene>();
-		this.targetReady = new Trigger<Scene>();
-		this.targetAssetLoaded = new Trigger<AssetLike>();
+		this.onTargetReset = new Trigger<Scene>();
+		this.onTargetReady = new Trigger<Scene>();
+		this.onTargetAssetLoad = new Trigger<AssetLike>();
+		this.targetReset = this.onTargetReset;
+		this.targetReady = this.onTargetReady;
+		this.targetAssetLoaded = this.onTargetAssetLoad;
 		this._explicitEnd = !!param.explicitEnd;
 		this._targetScene = undefined;
 	}
@@ -87,7 +108,7 @@ export class LoadingScene extends Scene {
 		this._clearTargetScene();
 		this._targetScene = targetScene;
 		if (this._loadingState < SceneLoadState.LoadedFired) {
-			this.loaded.addOnce(this._doReset, this);
+			this.onLoad.addOnce(this._doReset, this);
 		} else {
 			this._doReset();
 		}
@@ -123,8 +144,8 @@ export class LoadingScene extends Scene {
 	 */
 	_clearTargetScene(): void {
 		if (!this._targetScene) return;
-		this._targetScene._ready.removeAll({ owner: this });
-		this._targetScene.assetLoaded.removeAll({ owner: this });
+		this._targetScene._onReady.removeAll({ owner: this });
+		this._targetScene.onAssetLoad.removeAll({ owner: this });
 		this._targetScene = undefined;
 	}
 
@@ -132,28 +153,28 @@ export class LoadingScene extends Scene {
 	 * @private
 	 */
 	_doReset(): void {
-		this.targetReset.fire(this._targetScene);
+		this.onTargetReset.fire(this._targetScene);
 		if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
-			this._targetScene._ready.add(this._fireTriggerOnTargetReady, this);
-			this._targetScene.assetLoaded.add(this._fireTriggerOnTargetAssetLoad, this);
+			this._targetScene._onReady.add(this._handleReady, this);
+			this._targetScene.onAssetLoad.add(this._handleAssetLoad, this);
 			this._targetScene._load();
 		} else {
-			this._fireTriggerOnTargetReady(this._targetScene);
+			this._handleReady(this._targetScene);
 		}
 	}
 
 	/**
 	 * @private
 	 */
-	_fireTriggerOnTargetAssetLoad(asset: AssetLike): void {
-		this.targetAssetLoaded.fire(asset);
+	_handleAssetLoad(asset: AssetLike): void {
+		this.onTargetAssetLoad.fire(asset);
 	}
 
 	/**
 	 * @private
 	 */
-	_fireTriggerOnTargetReady(scene: Scene): void {
-		this.targetReady.fire(scene);
+	_handleReady(scene: Scene): void {
+		this.onTargetReady.fire(scene);
 		if (!this._explicitEnd) {
 			this.end();
 		}

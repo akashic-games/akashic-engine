@@ -115,10 +115,10 @@ describe("test AudioPlayer", () => {
 			stoppedCalled = 0;
 		}
 
-		player1.played.add(() => {
+		player1.onPlay.add(() => {
 			++playedCalled;
 		});
-		player1.stopped.add(() => {
+		player1.onStop.add(() => {
 			++stoppedCalled;
 		});
 
@@ -161,10 +161,10 @@ describe("test AudioPlayer", () => {
 			stoppedCalled = 0;
 		}
 
-		player1.played.add(() => {
+		player1.onPlay.add(() => {
 			++playedCalled;
 		});
-		player1.stopped.add(() => {
+		player1.onStop.add(() => {
 			++stoppedCalled;
 		});
 
@@ -183,7 +183,7 @@ describe("test AudioPlayer", () => {
 		// 再生速度が非等倍の状態で再生された場合、ミュートとなる
 		const player2 = system.createPlayer() as AudioPlayer;
 		resetCalledCount();
-		player2.played.add(() => {
+		player2.onPlay.add(() => {
 			++playedCalled;
 		});
 		player2.play(asset);
