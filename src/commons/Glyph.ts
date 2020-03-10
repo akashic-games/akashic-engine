@@ -4,6 +4,8 @@ import { SurfaceLike } from "../interfaces/SurfaceLike";
 
 /**
  * グリフ。
+ *
+ * @deprecated 非推奨である。将来的に削除される予定である。
  */
 export class Glyph implements GlyphLike {
 	/**
@@ -76,10 +78,11 @@ export class Glyph implements GlyphLike {
 	 */
 	isSurfaceValid: boolean;
 
-	_atlas: SurfaceAtlasLike;
+	_atlas: SurfaceAtlasLike | null;
 
 	/**
 	 * `Glyph` のインスタンスを生成する。
+	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
 	constructor(
 		code: number,

@@ -88,12 +88,5 @@ export interface GlyphLike {
 	 */
 	isSurfaceValid: boolean;
 
-	_atlas: SurfaceAtlasLike;
-
-	/**
-	 * グリフの描画上の幅を求める。
-	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
-	 * @param fontSize フォントサイズ
-	 */
-	renderingWidth(fontSize: number): number;
+	_atlas: SurfaceAtlasLike | null;
 }

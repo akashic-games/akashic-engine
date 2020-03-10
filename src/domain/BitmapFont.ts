@@ -1,4 +1,3 @@
-import { Glyph } from "../commons/Glyph";
 import { GlyphArea, GlyphLike } from "../interfaces/GlyphLike";
 import { ImageAssetLike } from "../interfaces/ImageAssetLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
@@ -80,7 +79,19 @@ export class BitmapFont extends Font {
 		var advanceWidth = g.advanceWidth === undefined ? w : g.advanceWidth;
 		var surface = w === 0 || h === 0 ? undefined : this.surface;
 
-		return new Glyph(code, g.x, g.y, w, h, offsetX, offsetY, advanceWidth, surface, true);
+		return {
+			code,
+			x: g.x,
+			y: g.y,
+			width: w,
+			height: h,
+			surface,
+			offsetX,
+			offsetY,
+			advanceWidth,
+			isSurfaceValid: true,
+			_atlas: null
+		};
 	}
 
 	/**
