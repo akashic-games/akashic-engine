@@ -803,7 +803,7 @@ export class Game implements Registrable<E> {
 	 * 現在のシーンを返す。
 	 * ない場合、 `undefined` を返す。
 	 */
-	scene(): Scene {
+	scene(): Scene | undefined {
 		if (!this.scenes.length) return undefined;
 		return this.scenes[this.scenes.length - 1];
 	}
