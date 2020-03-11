@@ -103,7 +103,6 @@ export interface GameResetParameterObject {
 	/**
 	 * `Game#random` に設定するシード値。
 	 * 省略された場合、元の値が維持される。
-	 * @deprecated 削除予定
 	 */
 	randSeed?: number;
 
@@ -1195,7 +1194,11 @@ export class Game implements Registrable<E> {
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
-			if (param.randGenSer !== undefined) this.random = XorshiftRandomGenerator.deserialize(param.randGenSer);
+			if (param.randGenSer !== undefined) {
+				this.random = XorshiftRandomGenerator.deserialize(param.randGenSer);
+			} else if (param.randSeed !== undefined) {
+				this.random = new XorshiftRandomGenerator(param.randSeed);
+			}
 		}
 
 		this.audio._reset();
