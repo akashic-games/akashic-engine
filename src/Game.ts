@@ -728,7 +728,6 @@ export class Game implements Registrable<E> {
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
 		this._onSceneChange = new Trigger<Scene>();
-		this._onSceneChange.add(this._updateEventTriggers, this);
 		this._onSceneChange.add(this._handleSceneChanged, this);
 		this._sceneChanged = this._onSceneChange;
 
@@ -1419,6 +1418,7 @@ export class Game implements Registrable<E> {
 	}
 
 	_handleSceneChanged(scene?: Scene): void {
+		this._updateEventTriggers(scene);
 		const local = scene ? scene.local : LocalTickMode.FullLocal;
 		const tickGenerationMode = scene ? scene.tickGenerationMode : TickGenerationMode.ByClock;
 		if (this.lastLocalTickMode === local && this.lastTickGenerationMode === tickGenerationMode) {
