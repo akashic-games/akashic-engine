@@ -13,6 +13,7 @@ import {
 	Scene,
 	SceneState,
 	ScriptAsset,
+	TickGenerationMode,
 	XorshiftRandomGenerator
 } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer } from "./helpers";
@@ -723,12 +724,6 @@ describe("test Game", () => {
 		expect(game._localDb[e2.id]).toBeUndefined();
 	});
 
-	it("leaveGame", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
-		game.leaveGame();
-		expect(game.leftGame).toBe(true);
-	});
-
 	it("terminateGame", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });
@@ -790,9 +785,9 @@ describe("test Game", () => {
 		const ev2 = new MessageEvent("foo");
 		game.raiseEvent(ev);
 		game.raiseEvent(ev2);
-		expect(game.raisedEvents.length).toBe(2);
-		expect(game.raisedEvents[0]).toBe(ev);
-		expect(game.raisedEvents[1]).toBe(ev2);
+		expect(game.handlerSet.raisedEvents.length).toBe(2);
+		expect(game.handlerSet.raisedEvents[0]).toEqual([32, undefined, undefined, "data", false]);
+		expect(game.handlerSet.raisedEvents[1]).toEqual([32, undefined, undefined, "foo", false]);
 	});
 
 	it("vars", () => {
@@ -824,13 +819,41 @@ describe("test Game", () => {
 		game._onLoad.add(() => {
 			expect(game.isLoaded).toBe(true);
 
-			const scene = new Scene({ game: game });
-			const scene2 = new Scene({ game: game });
+			const scene = new Scene({
+				game,
+				local: LocalTickMode.InterpolateLocal,
+				tickGenerationMode: TickGenerationMode.Manual
+			});
+			const scene2 = new Scene({
+				game,
+				local: LocalTickMode.InterpolateLocal,
+				tickGenerationMode: TickGenerationMode.ByClock
+			});
+			const scene3 = new Scene({
+				game,
+				local: LocalTickMode.InterpolateLocal,
+				tickGenerationMode: TickGenerationMode.ByClock
+			}); // same scene mode as scene2
 			game.pushScene(scene);
 			game.pushScene(scene2);
+			game.pushScene(scene3);
 			game._flushSceneChangeRequests();
 
-			const randGen = new XorshiftRandomGenerator(10);
+			expect(game.handlerSet.modeHistry.length).toBe(3);
+			expect(game.handlerSet.modeHistry[0]).toEqual({
+				local: LocalTickMode.FullLocal,
+				tickGenerationMode: TickGenerationMode.ByClock
+			}); // initial scene
+			expect(game.handlerSet.modeHistry[1]).toEqual({
+				local: LocalTickMode.InterpolateLocal,
+				tickGenerationMode: TickGenerationMode.Manual
+			}); // scene1
+			expect(game.handlerSet.modeHistry[2]).toEqual({
+				local: LocalTickMode.InterpolateLocal,
+				tickGenerationMode: TickGenerationMode.ByClock
+			}); // scene2
+
+			const randGen1 = new XorshiftRandomGenerator(10);
 			game._pointEventResolver.pointDown({
 				type: PlatformPointType.Down,
 				identifier: 0,
@@ -838,12 +861,14 @@ describe("test Game", () => {
 			});
 			game._reset({
 				age: 3,
-				randSeed: 10
+				randSeed: 10,
+				randGenSer: randGen1.serialize()
 			});
 
 			expect(game.scene()).toBe(game._initialScene);
 			expect(game.age).toBe(3);
-			expect(game.random.generate()).toBe(randGen.generate());
+			const randGen2 = XorshiftRandomGenerator.deserialize(randGen1.serialize());
+			expect(game.random.generate()).toBe(randGen2.generate());
 			// reset 前の PointDownEvent の情報が破棄されていることを確認
 			expect(
 				game._pointEventResolver.pointUp({

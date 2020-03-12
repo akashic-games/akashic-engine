@@ -1,6 +1,7 @@
 export * from "@akashic/trigger";
 
 export * from "./Scene";
+export * from "./Game";
 
 export * from "./commons/ExceptionFactory";
 export * from "./commons/Glyph";

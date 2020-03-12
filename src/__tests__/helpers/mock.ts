@@ -1,3 +1,4 @@
+import * as pl from "@akashic/playlog";
 import * as g from "../..";
 
 declare global {
@@ -565,14 +566,49 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 }
 
-export class Game extends g.Game {
-	leftGame: boolean;
-	terminatedGame: boolean;
-	raisedEvents: g.Event[];
-	raisedTicks: g.Event[][];
+export class GameHandlerSet implements g.GameHandlerSet {
+	raisedEvents: pl.Event[] = [];
+	raisedTicks: pl.Event[][] = [];
+	eventFilters: ((events: pl.Event[]) => pl.Event[])[] = [];
+	modeHistry: g.SceneMode[] = [];
 
+	raiseTick(events?: pl.Event[]): void {
+		this.raisedTicks.push(events);
+	}
+	raiseEvent(event: pl.Event): void {
+		this.raisedEvents.push(event);
+	}
+	addEventFilter(func: (pevs: pl.Event[]) => pl.Event[], _handleEmpty?: boolean): void {
+		this.eventFilters.push(func);
+	}
+	removeEventFilter(func: (pevs: pl.Event[]) => pl.Event[]): void {
+		this.eventFilters = this.eventFilters.filter(f => f !== func);
+	}
+	removeAllEventFilters(): void {
+		this.eventFilters = [];
+	}
+	changeSceneMode(mode: g.SceneMode): void {
+		this.modeHistry.push(mode);
+	}
+	shouldSaveSnapshot(): boolean {
+		return false;
+	}
+	saveSnapshot(_frame: number, _snapshot: any, _randGenSer: any, _timestamp?: number): void {
+		// do nothing
+	}
+	getInstanceType(): "active" | "passive" {
+		return "passive";
+	}
+	getCurrentTime(): number {
+		return 0;
+	}
+}
+
+export class Game extends g.Game {
+	terminatedGame: boolean;
 	autoTickForInternalEvents: boolean;
 	resourceFactory: ResourceFactory;
+	handlerSet: GameHandlerSet;
 	audio: AudioSystemManager;
 
 	constructor(
@@ -582,12 +618,10 @@ export class Game extends g.Game {
 		operationPluginViewInfo?: g.OperationPluginViewInfo
 	) {
 		const resourceFactory = new ResourceFactory();
-		super({ engineModule: g, configuration, resourceFactory, assetBase, selfId, operationPluginViewInfo });
+		const handlerSet = new GameHandlerSet();
+		super({ engineModule: g, configuration, resourceFactory, handlerSet, assetBase, selfId, operationPluginViewInfo });
 		resourceFactory.init(this);
-		this.leftGame = false;
 		this.terminatedGame = false;
-		this.raisedEvents = [];
-		this.raisedTicks = [];
 		this.autoTickForInternalEvents = true;
 	}
 
@@ -617,44 +651,8 @@ export class Game extends g.Game {
 		}
 	}
 
-	_leaveGame(): void {
-		this.leftGame = true;
-	}
-
 	_terminateGame(): void {
 		this.terminatedGame = true;
-	}
-
-	raiseEvent(e: g.Event): void {
-		this.raisedEvents.push(e);
-	}
-
-	raiseTick(es?: g.Event[]): void {
-		this.raisedTicks.push(es);
-	}
-
-	shouldSaveSnapshot(): boolean {
-		return false;
-	}
-
-	saveSnapshot(snapshot: any, timestamp?: number): void {
-		throw new Error("not implemented");
-	}
-
-	getCurrentTime(): number {
-		return 0;
-	}
-
-	addEventFilter(filter: g.EventFilter): void {
-		throw new Error("not implemented");
-	}
-
-	removeEventFilter(filter: g.EventFilter): void {
-		throw new Error("not implemented");
-	}
-
-	isActiveInstance(): boolean {
-		return false;
 	}
 }
 

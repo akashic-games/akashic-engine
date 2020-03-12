@@ -835,7 +835,7 @@ describe("test Scene", () => {
 
 			failureInfo.cancelRetry = true;
 			setTimeout(() => {
-				expect(game.leftGame).toBe(true);
+				expect(game.terminatedGame).toBe(true);
 				done();
 			}, 0);
 		});
