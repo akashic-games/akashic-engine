@@ -1419,17 +1419,16 @@ export class Game implements Registrable<E> {
 	}
 
 	_handleSceneChanged(scene?: Scene): void {
-		if (scene === undefined) {
+		const local = scene ? scene.local : LocalTickMode.FullLocal;
+		const tickGenerationMode = scene ? scene.tickGenerationMode : TickGenerationMode.ByClock;
+		if (this.lastLocalTickMode === local && this.lastTickGenerationMode === tickGenerationMode) {
 			return;
 		}
-		if (this.lastLocalTickMode === scene.local && this.lastTickGenerationMode === scene.tickGenerationMode) {
-			return;
-		}
-		this.lastLocalTickMode = scene.local;
-		this.lastTickGenerationMode = scene.tickGenerationMode;
+		this.lastLocalTickMode = local;
+		this.lastTickGenerationMode = tickGenerationMode;
 		this.handlerSet.changeSceneMode({
-			local: scene.local,
-			tickGenerationMode: scene.tickGenerationMode
+			local,
+			tickGenerationMode
 		});
 	}
 
