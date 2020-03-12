@@ -1,10 +1,10 @@
 import * as pl from "@akashic/playlog";
-import { LocalTickMode } from "./types/LocalTickMode";
-import { TickGenerationMode } from "./types/TickGenerationMode";
+import { LocalTickModeString } from "./types/LocalTickMode";
+import { TickGenerationModeString } from "./types/TickGenerationMode";
 
 export interface SceneMode {
-	local: LocalTickMode;
-	tickGenerationMode: TickGenerationMode;
+	local: LocalTickModeString;
+	tickGenerationMode: TickGenerationModeString;
 }
 
 /**

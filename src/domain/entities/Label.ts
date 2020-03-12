@@ -1,8 +1,7 @@
 import { Font } from "../../domain/Font";
 import { GlyphLike } from "../../interfaces/GlyphLike";
 import { RendererLike } from "../../interfaces/RendererLike";
-import { CompositeOperation } from "../../types/CompositeOperation";
-import { TextAlign } from "../../types/TextAlign";
+import { TextAlignString } from "../../types/TextAlign";
 import { Util } from "../Util";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 
@@ -34,10 +33,10 @@ export interface LabelParameterObject extends CacheableEParameterObject {
 
 	/**
 	 * 文字列の描画位置。
-	 * `TextAlign.Left` 以外にする場合、 `widthAutoAdjust` を `false` にすべきである。(`widthAutoAdjust` の項を参照)
-	 * @default TextAlign.Left
+	 * `"left"` 以外にする場合、 `widthAutoAdjust` を `false` にすべきである。(`widthAutoAdjust` の項を参照)
+	 * @default "left"
 	 */
-	textAlign?: TextAlign;
+	textAlign?: TextAlignString;
 
 	/**
 	 * このラベルの最大幅。
@@ -47,7 +46,7 @@ export interface LabelParameterObject extends CacheableEParameterObject {
 
 	/**
 	 * `width` プロパティを `this.text` の描画に必要な幅で自動的に更新するかを表す。
-	 * `textAlign` を `TextAlign.Left` 以外にする場合、この値は `false` にすべきである。
+	 * `textAlign` を `"left"` 以外にする場合、この値は `false` にすべきである。
 	 * (`textAlign` は `width` を元に描画位置を調整するため、 `true` の場合左寄せで右寄せでも描画結果が変わらなくなる)
 	 * @default true
 	 */
@@ -81,11 +80,11 @@ export class Label extends CacheableE {
 
 	/**
 	 * 文字列の描画位置。
-	 * 初期値は `TextAlign.Left` である。
-	 * `TextAlign.Left` 以外にする場合、 `widthAutoAdjust` を `false` にすべきである。(`widthAutoAdjust` の項を参照)
+	 * 初期値は `"left"` である。
+	 * `"left"` 以外にする場合、 `widthAutoAdjust` を `false` にすべきである。(`widthAutoAdjust` の項を参照)
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
-	textAlign: TextAlign;
+	textAlign: TextAlignString;
 
 	/**
 	 * キャッシュされたグリフ情報。
@@ -109,7 +108,7 @@ export class Label extends CacheableE {
 	/**
 	 * `width` プロパティを `this.text` の描画に必要な幅で自動的に更新するかを表す。
 	 * 初期値は `true` である。
-	 * `textAlign` を `TextAlign.Left` 以外にする場合、この値は `false` にすべきである。
+	 * `textAlign` を `"left"` 以外にする場合、この値は `false` にすべきである。
 	 * (`textAlign` は `width` を元に描画位置を調整するため、 `true` の場合左寄せで右寄せでも描画結果が変わらなくなる)
 	 *
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
@@ -148,7 +147,7 @@ export class Label extends CacheableE {
 		super(param);
 		this.text = param.text;
 		this.font = param.font;
-		this.textAlign = param.textAlign != null ? param.textAlign : TextAlign.Left;
+		this.textAlign = param.textAlign != null ? param.textAlign : "left";
 		this.glyphs = new Array(param.text.length);
 		this.fontSize = param.fontSize;
 		this.maxWidth = param.maxWidth;
@@ -164,12 +163,12 @@ export class Label extends CacheableE {
 	 * `width` と `textAlign` を設定し、 `widthAutoAdjust` を `false` に設定する。
 	 *
 	 * このメソッドは `this.textAlign` を設定するためのユーティリティである。
-	 * `textAlign` を `TextAlign.Left` 以外に設定する場合には、通常 `width` や `widthAutoAdjust` も設定する必要があるため、それらをまとめて行う。
+	 * `textAlign` を `"left"` 以外に設定する場合には、通常 `width` や `widthAutoAdjust` も設定する必要があるため、それらをまとめて行う。
 	 * このメソッドの呼び出し後、 `this.invalidate()` を呼び出す必要がある。
 	 * @param width 幅
 	 * @param textAlign テキストの描画位置
 	 */
-	aligning(width: number, textAlign: TextAlign): void {
+	aligning(width: number, textAlign: TextAlignString): void {
 		this.width = width;
 		this.widthAutoAdjust = false;
 		this.textAlign = textAlign;
@@ -191,10 +190,10 @@ export class Label extends CacheableE {
 		// glyphのはみ出し量に応じて、描画先のX座標を調整する。
 		var destOffsetX;
 		switch (this.textAlign) {
-			case TextAlign.Center:
+			case "center":
 				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
 				break;
-			case TextAlign.Right:
+			case "right":
 				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
 				break;
 			default:
@@ -221,10 +220,10 @@ export class Label extends CacheableE {
 		var scale = this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
 		var offsetX = 0;
 		switch (this.textAlign) {
-			case TextAlign.Center:
+			case "center":
 				offsetX = this.width / 2 - ((this._textWidth + this._overhangLeft) / 2) * scale;
 				break;
-			case TextAlign.Right:
+			case "right":
 				offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
 				break;
 			default:
@@ -266,7 +265,7 @@ export class Label extends CacheableE {
 
 		renderer.save();
 		if (this.textColor) {
-			renderer.setCompositeOperation(CompositeOperation.SourceAtop);
+			renderer.setCompositeOperation("sourceAtop");
 			renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
 		}
 		renderer.restore();

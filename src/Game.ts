@@ -7,7 +7,7 @@ import { AudioSystemManager } from "./domain/AudioSystemManager";
 import { Camera } from "./domain/Camera";
 import { DefaultLoadingScene } from "./domain/DefaultLoadingScene";
 import { E, PointSource } from "./domain/entities/E";
-import { Event, EventType, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent } from "./domain/Event";
+import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent } from "./domain/Event";
 import { EventConverter } from "./domain/EventConverter";
 import { LoadingScene } from "./domain/LoadingScene";
 import { ModuleManager } from "./domain/ModuleManager";
@@ -21,7 +21,7 @@ import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
-import { Scene, SceneAssetHolder, SceneLoadState } from "./Scene";
+import { Scene, SceneAssetHolder } from "./Scene";
 import { CommonOffset, CommonSize } from "./types/commons";
 import { EventFilter } from "./types/EventFilter";
 import { GameConfiguration } from "./types/GameConfiguration";
@@ -416,7 +416,7 @@ export abstract class Game implements Registrable<E> {
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
-	_eventTriggerMap: { [key: number]: Trigger<Event> };
+	_eventTriggerMap: { [key: string]: Trigger<Event> };
 
 	/**
 	 * グローバルアセットを読み込むための初期シーン。必ずシーンスタックの一番下に存在する。これをpopScene()することはできない。
@@ -690,15 +690,15 @@ export abstract class Game implements Registrable<E> {
 		this.seed = this.onSeed;
 
 		this._eventTriggerMap = {};
-		this._eventTriggerMap[EventType.Join] = this.onJoin;
-		this._eventTriggerMap[EventType.Leave] = this.onLeave;
-		this._eventTriggerMap[EventType.PlayerInfo] = this.onPlayerInfo;
-		this._eventTriggerMap[EventType.Seed] = this.onSeed;
-		this._eventTriggerMap[EventType.Message] = undefined;
-		this._eventTriggerMap[EventType.PointDown] = undefined;
-		this._eventTriggerMap[EventType.PointMove] = undefined;
-		this._eventTriggerMap[EventType.PointUp] = undefined;
-		this._eventTriggerMap[EventType.Operation] = undefined;
+		this._eventTriggerMap.join = this.onJoin;
+		this._eventTriggerMap.leave = this.onLeave;
+		this._eventTriggerMap.playerInfo = this.onPlayerInfo;
+		this._eventTriggerMap.seed = this.onSeed;
+		this._eventTriggerMap.message = undefined;
+		this._eventTriggerMap.pointDown = undefined;
+		this._eventTriggerMap.pointMove = undefined;
+		this._eventTriggerMap.pointUp = undefined;
+		this._eventTriggerMap.operation = undefined;
 
 		this.onResized = new Trigger<CommonSize>();
 		this.onSkipChange = new Trigger<boolean>();
@@ -758,8 +758,8 @@ export abstract class Game implements Registrable<E> {
 	 *
 	 * このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
 	 * 実際のシーン遷移は次のフレームまでに(次のupdateのfireまでに)行われる。
-	 * このメソッドの呼び出しにより、現在のシーンの `stateChanged` が引数 `SceneState.Deactive` でfireされる。
-	 * その後 `scene.stateChanged` が引数 `SceneState.Active` でfireされる。
+	 * このメソッドの呼び出しにより、現在のシーンの `stateChanged` が引数 `"deactive"` でfireされる。
+	 * その後 `scene.stateChanged` が引数 `"active"` でfireされる。
 	 * @param scene 遷移後のシーン
 	 */
 	pushScene(scene: Scene): void {
@@ -776,8 +776,8 @@ export abstract class Game implements Registrable<E> {
 	 * このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
 	 * 実際のシーン遷移は次のフレームまでに(次のupdateのfireまでに)行われる。
 	 * 引数 `preserveCurrent` が偽の場合、このメソッドの呼び出しにより現在のシーンは破棄される。
-	 * またその時 `stateChanged` が引数 `SceneState.Destroyed` でfireされる。
-	 * その後 `scene.stateChanged` が引数 `SceneState.Active` でfireされる。
+	 * またその時 `stateChanged` が引数 `"destroyed"` でfireされる。
+	 * その後 `scene.stateChanged` が引数 `"active"` でfireされる。
 	 *
 	 * @param scene 遷移後のシーン
 	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
@@ -796,8 +796,8 @@ export abstract class Game implements Registrable<E> {
 	 * このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
 	 * 実際のシーン遷移は次のフレームまでに(次のupdateのfireまでに)行われる。
 	 * 引数 `preserve` が偽の場合、このメソッドの呼び出しにより取り除かれたシーンは全て破棄される。
-	 * またその時 `stateChanged` が引数 `SceneState.Destroyed` でfireされる。
-	 * その後一つ前のシーンの `stateChanged` が引数 `SceneState.Active` でfireされる。
+	 * またその時 `stateChanged` が引数 `"destroyed"` でfireされる。
+	 * その後一つ前のシーンの `stateChanged` が引数 `"active"` でfireされる。
 	 * また、step数がスタックされているシーンの数以上の場合、例外が投げられる。
 	 *
 	 * @param preserve 真の場合、シーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
@@ -1008,7 +1008,7 @@ export abstract class Game implements Registrable<E> {
 	 * ティックを発生させる。
 	 *
 	 * ゲーム開発者は、このメソッドを呼び出すことで、エンジンに時間経過を要求することができる。
-	 * 現在のシーンのティック生成モード `Scene#tickGenerationMode` が `TickGenerationMode.Manual` でない場合、エラー。
+	 * 現在のシーンのティック生成モード `Scene#tickGenerationMode` が `"manual"` でない場合、エラー。
 	 *
 	 * @param events そのティックで追加で発生させるイベント
 	 */
@@ -1101,7 +1101,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_fireSceneLoaded(scene: Scene): void {
-		if (scene._loadingState < SceneLoadState.LoadedFired) {
+		if (scene._loadingState !== "loadedFired") {
 			this._sceneChangeRequests.push({
 				type: SceneChangeType.FireLoaded,
 				scene: scene
@@ -1365,19 +1365,19 @@ export abstract class Game implements Registrable<E> {
 	_updateEventTriggers(scene: Scene): void {
 		this._modified = true;
 		if (!scene) {
-			this._eventTriggerMap[EventType.Message] = undefined;
-			this._eventTriggerMap[EventType.PointDown] = undefined;
-			this._eventTriggerMap[EventType.PointMove] = undefined;
-			this._eventTriggerMap[EventType.PointUp] = undefined;
-			this._eventTriggerMap[EventType.Operation] = undefined;
+			this._eventTriggerMap.message = undefined;
+			this._eventTriggerMap.pointDown = undefined;
+			this._eventTriggerMap.pointMove = undefined;
+			this._eventTriggerMap.pointUp = undefined;
+			this._eventTriggerMap.operation = undefined;
 			return;
 		}
 
-		this._eventTriggerMap[EventType.Message] = scene.onMessage;
-		this._eventTriggerMap[EventType.PointDown] = scene.onPointDownCapture;
-		this._eventTriggerMap[EventType.PointMove] = scene.onPointMoveCapture;
-		this._eventTriggerMap[EventType.PointUp] = scene.onPointUpCapture;
-		this._eventTriggerMap[EventType.Operation] = scene.onOperation;
+		this._eventTriggerMap.message = scene.onMessage;
+		this._eventTriggerMap.pointDown = scene.onPointDownCapture;
+		this._eventTriggerMap.pointMove = scene.onPointMoveCapture;
+		this._eventTriggerMap.pointUp = scene.onPointUpCapture;
+		this._eventTriggerMap.operation = scene.onOperation;
 		scene._activate();
 	}
 
@@ -1474,7 +1474,7 @@ export abstract class Game implements Registrable<E> {
 		if (!loadingScene) loadingScene = this.loadingScene || this._defaultLoadingScene;
 		this.scenes.push(scene);
 
-		if (scene._needsLoading() && scene._loadingState < SceneLoadState.LoadedFired) {
+		if (scene._needsLoading() && scene._loadingState !== "loadedFired") {
 			if (this._defaultLoadingScene._needsLoading())
 				throw ExceptionFactory.createAssertionError(
 					"Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages."

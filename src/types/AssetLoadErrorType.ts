@@ -3,6 +3,8 @@
  *
  * この値はあくまでもエラーメッセージ出力のための補助情報であり、
  * 網羅性・厳密性を追求したものではないことに注意。
+ *
+ * @deprecated 非推奨である。将来的に削除される。代わりに `AssetLoadErrorTypeString` を利用すること。
  */
 export enum AssetLoadErrorType {
 	/**
@@ -26,3 +28,5 @@ export enum AssetLoadErrorType {
 	 */
 	ServerError
 }
+
+export type AssetLoadErrorTypeString = "unspecified" | "retryLimitExceeded" | "networkError" | "clientError" | "serverError";

@@ -284,7 +284,7 @@ Akashic Engine の機能はグローバル変数 `g` を通して利用できま
 |`scaleX`            |数値                          |横方向の拡大率。              |任意 (初期値: `1`)|
 |`scaleY`            |数値                          |縦方向の拡大率。              |任意 (初期値: `1`)|
 |`angle`             |数値                          |回転角度(度)。回転軸は矩形の中央。|任意 (初期値: `0`)|
-|`compositeOperation`|`g.CompositeOperation` の定数 |描画時の既存部分との合成方法。|任意 (初期値: `SourceOver`)|
+|`compositeOperation`|`g.CompositeOperationString` |描画時の既存部分との合成方法。|任意 (初期値: `"sourceOver"`)|
 |`children`          |エンティティの配列            |子エンティティ。              |任意 (初期値: `[]`)|
 |`hidden`            |真理値                        |非表示にするかどうか。        |任意 (初期値: `false`)|
 |`touchable`         |真理値                        |ポイントイベントに反応するかどうか。|任意 (初期値: `false`)|
@@ -1002,14 +1002,14 @@ Akashic Engine で文字列を表示するには、フォントとラベルが�
 ダイナミックフォントは以下のコードで生成できます。
 
 ```javascript
-var font = new g.DynamicFont(g.FontFamily.Serif, 15, g.game);
+var font = new g.DynamicFont("serif", 15, g.game);
 ```
 
 第一引数はフォントの種類で以下のいずれかの値を指定します。
 
-* `g.FontFamily.SansSerif`: サンセリフ体・ゴシック体のフォント。
-* `g.FontFamily.Serif`: セリフ体・明朝体のフォント。
-* `g.FontFamily.Monospace`: 等幅フォント。
+* `"sansSerif"`: サンセリフ体・ゴシック体のフォント。
+* `"serif"`: セリフ体・明朝体のフォント。
+* `"monospace"`: 等幅フォント。
 
 第二引数は文字の大きさ、第三引数には `g.game` を渡します。
 
@@ -1040,7 +1040,7 @@ var label = new g.Label({
 function main() {
   var scene = new g.Scene({game: g.game});
   scene.loaded.add(function () {
-    var font = new g.DynamicFont(g.FontFamily.SansSerif, 15, g.game);
+    var font = new g.DynamicFont("sansSerif", 15, g.game);
     var label = new g.Label({
       scene: scene,
       font: font,
@@ -1092,7 +1092,7 @@ label.invalidate();
 function main() {
   var scene = new g.Scene({game: g.game});
   scene.loaded.add(function () {
-    var font = new g.DynamicFont(g.FontFamily.SansSerif, 15, g.game);
+    var font = new g.DynamicFont("sansSerif", 15, g.game);
 	var count = 0;
     var label = new g.Label({
       scene: scene,

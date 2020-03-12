@@ -1,7 +1,6 @@
 import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
 import { GlyphLike } from "../interfaces/GlyphLike";
-import { FontFamily } from "../types/FontFamily";
-import { FontWeight } from "../types/FontWeight";
+import { FontWeightString } from "../types/FontWeight";
 
 /**
  * グリフファクトリ。
@@ -16,7 +15,7 @@ export abstract class GlyphFactory implements GlyphFactoryLike {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	fontFamily: FontFamily | string | (FontFamily | string)[];
+	fontFamily: string | string[];
 
 	/**
 	 * フォントサイズ。
@@ -44,7 +43,7 @@ export abstract class GlyphFactory implements GlyphFactoryLike {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	fontWeight: FontWeight;
+	fontWeight: FontWeightString;
 
 	/**
 	 * 輪郭幅。
@@ -70,7 +69,7 @@ export abstract class GlyphFactory implements GlyphFactoryLike {
 	/**
 	 * `GlyphFactory` を生成する。
 	 *
-	 * @param fontFamily フォントファミリ。g.FontFamilyの定義する定数、フォント名、またはそれらの配列
+	 * @param fontFamily フォントファミリ。フォント名、またはそれらの配列
 	 * @param fontSize フォントサイズ
 	 * @param baselineHeight ベースラインの高さ
 	 * @param strokeWidth 輪郭幅
@@ -79,14 +78,14 @@ export abstract class GlyphFactory implements GlyphFactoryLike {
 	 * @param fontWeight フォントウェイト
 	 */
 	constructor(
-		fontFamily: FontFamily | string | (FontFamily | string)[],
+		fontFamily: string | string[],
 		fontSize: number,
 		baselineHeight: number = fontSize,
 		fontColor: string = "black",
 		strokeWidth: number = 0,
 		strokeColor: string = "black",
 		strokeOnly: boolean = false,
-		fontWeight: FontWeight = FontWeight.Normal
+		fontWeight: FontWeightString = "normal"
 	) {
 		this.fontFamily = fontFamily;
 		this.fontSize = fontSize;

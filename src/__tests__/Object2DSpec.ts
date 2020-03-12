@@ -1,4 +1,4 @@
-import { CompositeOperation, Object2D, PlainMatrix } from "..";
+import { Object2D, PlainMatrix } from "..";
 import { customMatchers } from "./helpers";
 
 expect.extend(customMatchers);
@@ -49,7 +49,7 @@ describe("test Object2D", () => {
 			scaleX: 0.4,
 			scaleY: 1.2,
 			angle: 10,
-			compositeOperation: CompositeOperation.SourceAtop,
+			compositeOperation: "sourceAtop",
 			anchorX: 0,
 			anchorY: 1
 		});
@@ -61,7 +61,7 @@ describe("test Object2D", () => {
 		expect(e.scaleX).toEqual(0.4);
 		expect(e.scaleY).toEqual(1.2);
 		expect(e.angle).toEqual(10);
-		expect(e.compositeOperation).toEqual(CompositeOperation.SourceAtop);
+		expect(e.compositeOperation).toEqual("sourceAtop");
 		expect(e.anchorX).toBe(0);
 		expect(e.anchorY).toBe(1);
 		expect(e._matrix).toBeUndefined();

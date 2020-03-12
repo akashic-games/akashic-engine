@@ -1,4 +1,4 @@
-import { AssetLoadErrorType } from "./AssetLoadErrorType";
+import { AssetLoadErrorTypeString } from "./AssetLoadErrorType";
 
 /**
  * アサーションエラー。
@@ -52,7 +52,7 @@ export interface AssetLoadError extends Error {
 	 * この値はあくまでも `message` (内容がアセットの実装依存) の補助情報である。
 	 * 読み込み再試行の可否は `retriable` によって判断すべきである。
 	 */
-	type: AssetLoadErrorType;
+	type: AssetLoadErrorTypeString;
 }
 
 /*

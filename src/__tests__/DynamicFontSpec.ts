@@ -1,4 +1,4 @@
-import { DynamicFont, FontFamily, FontWeight, SurfaceAtlasSet } from "..";
+import { DynamicFont, SurfaceAtlasSet } from "..";
 import { skeletonRuntime } from "./helpers";
 
 describe("test DynamicFont", () => {
@@ -7,19 +7,19 @@ describe("test DynamicFont", () => {
 
 		const font = new DynamicFont({
 			game: runtime.game,
-			fontFamily: FontFamily.SansSerif,
+			fontFamily: "sansSerif",
 			size: 20,
 			hint: {},
 			fontColor: "white",
-			fontWeight: FontWeight.Bold,
+			fontWeight: "bold",
 			strokeWidth: 1,
 			strokeColor: "red",
 			strokeOnly: true
 		});
-		expect(font.fontFamily).toBe(FontFamily.SansSerif);
+		expect(font.fontFamily).toBe("sansSerif");
 		expect(font.size).toBe(20);
 		expect(font.fontColor).toBe("white");
-		expect(font.fontWeight).toBe(FontWeight.Bold);
+		expect(font.fontWeight).toBe("bold");
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);
@@ -35,7 +35,7 @@ describe("test DynamicFont", () => {
 
 		const font = new DynamicFont({
 			game: runtime.game,
-			fontFamily: FontFamily.SansSerif,
+			fontFamily: "sansSerif",
 			size: 20,
 			hint: {
 				initialAtlasWidth: 1000,
@@ -45,15 +45,15 @@ describe("test DynamicFont", () => {
 				maxAtlasNum: 5
 			},
 			fontColor: "white",
-			fontWeight: FontWeight.Bold,
+			fontWeight: "bold",
 			strokeWidth: 1,
 			strokeColor: "red",
 			strokeOnly: true
 		});
-		expect(font.fontFamily).toBe(FontFamily.SansSerif);
+		expect(font.fontFamily).toBe("sansSerif");
 		expect(font.size).toBe(20);
 		expect(font.fontColor).toBe("white");
-		expect(font.fontWeight).toBe(FontWeight.Bold);
+		expect(font.fontWeight).toBe("bold");
 		expect(font.strokeWidth).toBe(1);
 		expect(font.strokeColor).toBe("red");
 		expect(font.strokeOnly).toBe(true);

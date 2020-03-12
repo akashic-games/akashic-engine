@@ -1,17 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import {
-	Asset,
-	AssetConfiguration,
-	AssetManager,
-	AudioAsset,
-	E,
-	ImageAsset,
-	LocalTickMode,
-	Scene,
-	SceneState,
-	StorageRegion,
-	TickGenerationMode
-} from "..";
+import { Asset, AssetConfiguration, AssetManager, AudioAsset, E, ImageAsset, Scene, SceneStateString, StorageRegion } from "..";
 import { customMatchers, Game, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -44,8 +32,8 @@ describe("test Scene", () => {
 		const scene = new Scene({
 			game: game,
 			assetIds: ["foo"],
-			local: LocalTickMode.InterpolateLocal,
-			tickGenerationMode: TickGenerationMode.Manual,
+			local: "interpolateLocal",
+			tickGenerationMode: "manual",
 			name: "myScene"
 		});
 		expect(scene.game).toBe(game);
@@ -57,8 +45,8 @@ describe("test Scene", () => {
 		expect(scene.children.length).toBe(0);
 		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
 		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(1);
-		expect(scene.local).toBe(LocalTickMode.InterpolateLocal);
-		expect(scene.tickGenerationMode).toBe(TickGenerationMode.Manual);
+		expect(scene.local).toBe("interpolateLocal");
+		expect(scene.tickGenerationMode).toBe("manual");
 		expect(scene.name).toEqual("myScene");
 
 		expect(scene.onUpdate instanceof Trigger).toBe(true);
@@ -890,14 +878,14 @@ describe("test Scene", () => {
 		scene.onStateChange.add(stateChangeHandler);
 
 		const sceneLoaded = () => {
-			expect(scene.state).toBe(SceneState.Active);
+			expect(scene.state).toBe("active");
 			expect(raisedEvent).toBe(true);
 			raisedEvent = false;
 
 			nextStep();
 		};
 		const scene2Loaded = () => {
-			expect(scene.state).toBe(SceneState.Deactive);
+			expect(scene.state).toBe("deactive");
 			expect(raisedEvent).toBe(true);
 			raisedEvent = false;
 
@@ -918,7 +906,7 @@ describe("test Scene", () => {
 				nextStep();
 			},
 			() => {
-				expect(scene.state).toBe(SceneState.Active);
+				expect(scene.state).toBe("active");
 				expect(raisedEvent).toBe(true);
 				raisedEvent = false;
 				nextStep();
@@ -928,7 +916,7 @@ describe("test Scene", () => {
 				nextStep();
 			},
 			() => {
-				expect(scene.state).toBe(SceneState.Destroyed);
+				expect(scene.state).toBe("destroyed");
 				expect(raisedEvent).toBe(true);
 				done();
 			}
@@ -941,30 +929,30 @@ describe("test Scene", () => {
 			}, 0);
 		};
 
-		expect(scene.state).toBe(SceneState.Standby);
+		expect(scene.state).toBe("standby");
 		nextStep();
 	});
 
 	it("state - change order and count", done => {
 		const expected = [
-			["S1", "Active"],
-			["S1", "BeforeDestroyed"],
-			["S1", "Destroyed"],
-			["S2", "Active"],
-			["S2", "Deactive"],
-			["S3", "Active"],
-			["S3", "BeforeDestroyed"],
-			["S3", "Destroyed"],
-			["S4", "Active"],
-			["S4", "BeforeDestroyed"],
-			["S4", "Destroyed"],
-			["S2", "Active"],
-			["S2", "BeforeDestroyed"],
-			["S2", "Destroyed"]
+			["S1", "active"],
+			["S1", "beforeDestroyed"],
+			["S1", "destroyed"],
+			["S2", "active"],
+			["S2", "deactive"],
+			["S3", "active"],
+			["S3", "beforeDestroyed"],
+			["S3", "destroyed"],
+			["S4", "active"],
+			["S4", "beforeDestroyed"],
+			["S4", "destroyed"],
+			["S2", "active"],
+			["S2", "beforeDestroyed"],
+			["S2", "destroyed"]
 		];
 		const actual: [string, string][] = [];
-		function stateChangeHandler(state: SceneState): void {
-			actual.push([this._testName, SceneState[state]]);
+		function stateChangeHandler(state: SceneStateString): void {
+			actual.push([this._testName, state]);
 		}
 		function makeScene(name: string): Scene {
 			const scene = new Scene({ game: game });

@@ -4,8 +4,7 @@ import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
 import { GlyphArea, GlyphLike } from "../interfaces/GlyphLike";
 import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
-import { FontFamily } from "../types/FontFamily";
-import { FontWeight } from "../types/FontWeight";
+import { FontWeightString } from "../types/FontWeight";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Util } from "./Util";
@@ -26,9 +25,9 @@ export interface DynamicFontParameterObject {
 	/**
 	 * フォントファミリ。
 	 *
-	 * g.FontFamilyの定義する定数、フォント名、またはそれらの配列で指定する。
+	 * フォント名、またはそれらの配列で指定する。
 	 */
-	fontFamily: FontFamily | string | (FontFamily | string)[];
+	fontFamily: string | string[];
 
 	/**
 	 * フォントサイズ。
@@ -50,9 +49,9 @@ export interface DynamicFontParameterObject {
 
 	/**
 	 * フォントウェイト。
-	 * @default FontWeight.Normal
+	 * @default "normal"
 	 */
-	fontWeight?: FontWeight;
+	fontWeight?: FontWeightString;
 
 	/**
 	 * 輪郭幅。
@@ -106,7 +105,7 @@ export class DynamicFont extends Font {
 	 *
 	 * このプロパティは読み出し専用である。
 	 */
-	fontFamily: FontFamily | string | (FontFamily | string)[];
+	fontFamily: string | string[];
 
 	/**
 	 * フォントサイズ。
@@ -126,9 +125,9 @@ export class DynamicFont extends Font {
 
 	/**
 	 * フォントウェイト。
-	 * @default FontWeight.Normal
+	 * @default "normal"
 	 */
-	fontWeight: FontWeight;
+	fontWeight: FontWeightString;
 
 	/**
 	 * 輪郭幅。
@@ -191,7 +190,7 @@ export class DynamicFont extends Font {
 		this.size = param.size;
 		this.hint = param.hint != null ? param.hint : {};
 		this.fontColor = param.fontColor != null ? param.fontColor : "black";
-		this.fontWeight = param.fontWeight != null ? param.fontWeight : FontWeight.Normal;
+		this.fontWeight = param.fontWeight != null ? param.fontWeight : "normal";
 		this.strokeWidth = param.strokeWidth != null ? param.strokeWidth : 0;
 		this.strokeColor = param.strokeColor != null ? param.strokeColor : "black";
 		this.strokeOnly = param.strokeOnly != null ? param.strokeOnly : false;

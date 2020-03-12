@@ -1,7 +1,7 @@
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { AssetLike } from "../interfaces/AssetLike";
-import { Scene, SceneLoadState, SceneParameterObject } from "../Scene";
+import { Scene, SceneParameterObject } from "../Scene";
 
 export interface LoadingSceneParameterObject extends SceneParameterObject {
 	/**
@@ -107,7 +107,7 @@ export class LoadingScene extends Scene {
 	reset(targetScene: Scene): void {
 		this._clearTargetScene();
 		this._targetScene = targetScene;
-		if (this._loadingState < SceneLoadState.LoadedFired) {
+		if (this._loadingState !== "loadedFired") {
 			this.onLoad.addOnce(this._doReset, this);
 		} else {
 			this._doReset();
@@ -128,8 +128,8 @@ export class LoadingScene extends Scene {
 	 * このメソッドが呼び出される時、 `targetReady` がfireされた後でなければならない。
 	 */
 	end(): void {
-		if (!this._targetScene || this._targetScene._loadingState < SceneLoadState.Ready) {
-			var state = this._targetScene ? SceneLoadState[this._targetScene._loadingState] : "(no scene)";
+		if (!this._targetScene || this._targetScene._loadingState === "initial") {
+			var state = this._targetScene ? this._targetScene._loadingState : "(no scene)";
 			var msg = "LoadingScene#end(): the target scene is in invalid state: " + state;
 			throw ExceptionFactory.createAssertionError(msg);
 		}
@@ -154,7 +154,7 @@ export class LoadingScene extends Scene {
 	 */
 	_doReset(): void {
 		this.onTargetReset.fire(this._targetScene);
-		if (this._targetScene._loadingState < SceneLoadState.ReadyFired) {
+		if (this._targetScene._loadingState === "initial" || this._targetScene._loadingState === "ready") {
 			this._targetScene._onReady.add(this._handleReady, this);
 			this._targetScene.onAssetLoad.add(this._handleAssetLoad, this);
 			this._targetScene._load();

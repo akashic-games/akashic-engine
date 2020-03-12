@@ -2,9 +2,12 @@ import { CommonOffset } from "../types/commons";
 import { Player } from "../types/Player";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";
+import { Util } from "./Util";
 
 /**
  * イベントの種別。
+ *
+ * @deprecated 非推奨である。将来的に削除される。代わりに `EventTypeString` を利用すること。
  */
 export enum EventType {
 	/**
@@ -55,6 +58,26 @@ export enum EventType {
 	Operation
 }
 
+export type EventTypeString =
+	| "unknown"
+	| "join"
+	| "leave"
+	| "timestamp"
+	| "playerInfo"
+	| "seed"
+	| "pointDown"
+	| "pointMove"
+	| "pointUp"
+	| "message"
+	| "operation";
+
+/**
+ * EventTypeを対応する文字列に変換する
+ */
+export const toEventTypeString = (eventType: EventType): string => {
+	return Util.toLowerCamel(EventType[eventType]);
+};
+
 /**
  * イベントを表すインターフェース。
  */
@@ -62,7 +85,7 @@ export interface Event {
 	/**
 	 * イベントの種別。
 	 */
-	type: EventType;
+	type: EventTypeString;
 	/**
 	 * イベントの優先度。
 	 * 非常に多くのイベントが発生した場合、この値の低いイベントは、高いイベントよりも優先的に破棄・遅延される。
@@ -108,7 +131,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
 	/**
 	 * 本クラスはどのtypeにも属さない。
 	 */
-	type: EventType;
+	type: EventTypeString;
 	priority: number;
 	local: boolean;
 	player: Player;
@@ -130,7 +153,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
  * ポインティング操作の開始を表すイベントの基底クラス。
  */
 export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventType = EventType.PointDown;
+	type: EventTypeString = "pointDown";
 
 	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
 		super(pointerId, target, point, player, local, priority);
@@ -146,7 +169,7 @@ export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T>
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
 export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventType = EventType.PointUp;
+	type: EventTypeString = "pointUp";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -178,7 +201,7 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
 export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventType = EventType.PointMove;
+	type: EventTypeString = "pointMove";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -203,7 +226,7 @@ export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T>
  * MessageEvent#dataによってメッセージ内容を取得出来る。
  */
 export class MessageEvent implements Event {
-	type: EventType = EventType.Message;
+	type: EventTypeString = "message";
 	priority: number;
 	local: boolean;
 	player: Player;
@@ -222,7 +245,7 @@ export class MessageEvent implements Event {
  * プラグインを識別する `OperationEvent#code` と、プラグインごとの内容 `OperationEvent#data` を持つ。
  */
 export class OperationEvent implements Event {
-	type: EventType = EventType.Operation;
+	type: EventTypeString = "operation";
 	priority: number;
 	local: boolean;
 	player: Player;
@@ -243,7 +266,7 @@ export class OperationEvent implements Event {
  * JoinEvent#playerによって、参加したプレイヤーを取得出来る。
  */
 export class JoinEvent implements Event {
-	type: EventType = EventType.Join;
+	type: EventTypeString = "join";
 	priority: number;
 	player: Player;
 	storageValues: StorageValueStore;
@@ -260,7 +283,7 @@ export class JoinEvent implements Event {
  * LeaveEvent#playerによって、離脱したプレイヤーを取得出来る。
  */
 export class LeaveEvent implements Event {
-	type: EventType = EventType.Leave;
+	type: EventTypeString = "leave";
 	priority: number;
 	player: Player;
 
@@ -274,7 +297,7 @@ export class LeaveEvent implements Event {
  * タイムスタンプを表すイベント。
  */
 export class TimestampEvent implements Event {
-	type: EventType = EventType.Timestamp;
+	type: EventTypeString = "timestamp";
 	priority: number;
 	player: Player;
 	timestamp: number;
@@ -291,7 +314,7 @@ export class TimestampEvent implements Event {
  * PointInfoEvent#playerNameによってプレイヤー名を、PlayerInfoEvent#userData によってユーザ情報を取得できる。
  */
 export class PlayerInfoEvent implements Event {
-	type: EventType = EventType.PlayerInfo;
+	type: EventTypeString = "playerInfo";
 	priority: number;
 	playerId: string;
 	playerName: string;
@@ -310,7 +333,7 @@ export class PlayerInfoEvent implements Event {
  * SeedEvent#generatorによって、本イベントで発生したRandomGeneratorを取得出来る。
  */
 export class SeedEvent implements Event {
-	type: EventType = EventType.Seed;
+	type: EventTypeString = "seed";
 	priority: number;
 	generator: RandomGenerator;
 

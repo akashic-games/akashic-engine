@@ -2,16 +2,14 @@ import {
 	AssetConfiguration,
 	Camera2D,
 	E,
-	EventType,
 	GameConfiguration,
 	ImageAsset,
 	LoadingScene,
 	LoadingSceneParameterObject,
-	LocalTickMode,
+	LocalTickModeString,
 	MessageEvent,
 	PlatformPointType,
 	Scene,
-	SceneState,
 	ScriptAsset,
 	XorshiftRandomGenerator
 } from "..";
@@ -308,7 +306,7 @@ describe("test Game", () => {
 			game.pushScene(scene);
 			expect(game.age).toBe(0);
 			expect(game.classicTick()).toBe(true);
-			expect(game.scene().local).toBe(LocalTickMode.NonLocal);
+			expect(game.scene().local).toBe("nonLocal");
 			expect(game.classicTick()).toBe(false);
 			expect(game.age).toBe(1);
 			expect(game.tick(false, 3)).toBe(false);
@@ -606,7 +604,7 @@ describe("test Game", () => {
 		};
 		const game = new Game(gameConfiguration);
 
-		let topIsLocal: LocalTickMode = undefined;
+		let topIsLocal: LocalTickModeString = undefined;
 		let sceneChangedCount = 0;
 		game._onSceneChange.add(scene => {
 			sceneChangedCount++;
@@ -624,55 +622,55 @@ describe("test Game", () => {
 
 			scene.onLoad.add(() => {
 				expect(sceneChangedCount).toBe(2); // _initialScene と scene (いずれも loadingSceneなし) で 2
-				expect(topIsLocal).toBe(LocalTickMode.NonLocal);
+				expect(topIsLocal).toBe("nonLocal");
 				expect(game.scenes).toEqual([game._initialScene, scene]);
-				expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene.onPointDownCapture);
+				expect(game._eventTriggerMap["pointDown"]).toBe(scene.onPointDownCapture);
 
 				scene2.onLoad.add(() => {
 					expect(sceneChangedCount).toBe(4); // loadingScene が pop されて 1 増えたので 4
-					expect(topIsLocal).toBe(LocalTickMode.NonLocal);
+					expect(topIsLocal).toBe("nonLocal");
 					expect(game.scenes).toEqual([game._initialScene, scene2]);
-					expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene2.onPointDownCapture);
+					expect(game._eventTriggerMap["pointDown"]).toBe(scene2.onPointDownCapture);
 
 					scene3.onLoad.add(() => {
 						expect(sceneChangedCount).toBe(6);
-						expect(topIsLocal).toBe(LocalTickMode.FullLocal);
+						expect(topIsLocal).toBe("fullLocal");
 						expect(game.scenes).toEqual([game._initialScene, scene2, scene3]);
-						expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene3.onPointDownCapture);
+						expect(game._eventTriggerMap["pointDown"]).toBe(scene3.onPointDownCapture);
 
 						game.popScene();
 						game._flushSceneChangeRequests();
 						expect(sceneChangedCount).toBe(7);
-						expect(topIsLocal).toBe(LocalTickMode.NonLocal);
+						expect(topIsLocal).toBe("nonLocal");
 						expect(game.scenes).toEqual([game._initialScene, scene2]);
-						expect(game._eventTriggerMap[EventType.PointDown]).toBe(scene2.onPointDownCapture);
+						expect(game._eventTriggerMap["pointDown"]).toBe(scene2.onPointDownCapture);
 
 						game.popScene();
 						game._flushSceneChangeRequests();
 						expect(sceneChangedCount).toBe(8);
-						expect(topIsLocal).toBe(LocalTickMode.FullLocal);
+						expect(topIsLocal).toBe("fullLocal");
 						expect(game.scenes).toEqual([game._initialScene]);
-						expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._initialScene.onPointDownCapture);
+						expect(game._eventTriggerMap["pointDown"]).toBe(game._initialScene.onPointDownCapture);
 						done();
 					});
 					game.pushScene(scene3);
 					game._flushSceneChangeRequests();
 					expect(sceneChangedCount).toBe(5);
-					expect(topIsLocal).toBe(LocalTickMode.FullLocal);
+					expect(topIsLocal).toBe("fullLocal");
 					expect(game.scenes).toEqual([game._initialScene, scene2, scene3, game._defaultLoadingScene]);
-					expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._defaultLoadingScene.onPointDownCapture);
+					expect(game._eventTriggerMap["pointDown"]).toBe(game._defaultLoadingScene.onPointDownCapture);
 				});
 				game.replaceScene(scene2);
 				game._flushSceneChangeRequests();
 				expect(sceneChangedCount).toBe(3); // scene2とloadingSceneが乗るが、scene2はまだ_sceneStackTopChangeCountをfireしてない
-				expect(topIsLocal).toBe(LocalTickMode.FullLocal); // loadingScene がトップなので local
+				expect(topIsLocal).toBe("fullLocal"); // loadingScene がトップなので local
 				expect(game.scenes).toEqual([game._initialScene, scene2, game._defaultLoadingScene]);
-				expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._defaultLoadingScene.onPointDownCapture);
+				expect(game._eventTriggerMap["pointDown"]).toBe(game._defaultLoadingScene.onPointDownCapture);
 			});
 			expect(sceneChangedCount).toBe(1); // _initialScene (loadingSceneなし) が push された分で 1
-			expect(topIsLocal).toBe(LocalTickMode.FullLocal);
+			expect(topIsLocal).toBe("fullLocal");
 			expect(game.scenes).toEqual([game._initialScene]);
-			expect(game._eventTriggerMap[EventType.PointDown]).toBe(game._initialScene.onPointDownCapture);
+			expect(game._eventTriggerMap["pointDown"]).toBe(game._initialScene.onPointDownCapture);
 			game.pushScene(scene);
 			game._flushSceneChangeRequests();
 		});
@@ -770,7 +768,7 @@ describe("test Game", () => {
 				}, 1);
 
 				game._initialScene.onStateChange.add(state => {
-					if (state === SceneState.Active) {
+					if (state === "active") {
 						// ↑のpopScene()後、例外を投げずにシーン遷移してここに来れたらOK
 						expect(timerFired).toBe(true);
 						done();

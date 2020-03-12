@@ -1,5 +1,4 @@
-import { FontFamily } from "../types/FontFamily";
-import { FontWeight } from "../types/FontWeight";
+import { FontWeightString } from "../types/FontWeight";
 import { GlyphLike } from "./GlyphLike";
 
 /**
@@ -15,7 +14,7 @@ export interface GlyphFactoryLike {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	fontFamily: FontFamily | string | (FontFamily | string)[];
+	fontFamily: string | string[];
 
 	/**
 	 * フォントサイズ。
@@ -43,7 +42,7 @@ export interface GlyphFactoryLike {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	fontWeight: FontWeight;
+	fontWeight: FontWeightString;
 
 	/**
 	 * 輪郭幅。

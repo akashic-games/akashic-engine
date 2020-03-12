@@ -60,4 +60,12 @@ export module Util {
 
 		return code;
 	}
+
+	/**
+	 * UpperCamelな文字列をLowerCamelな文字列に変換
+	 * @deprecated Enumをunionな文字列に変換する用途で用意したものなので、コンテンツ内での利用は非推奨である。
+	 */
+	export function toLowerCamel(s: string): string {
+		return s[0].toLowerCase() + s.slice(1);
+	}
 }

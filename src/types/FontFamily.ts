@@ -1,3 +1,5 @@
+import { Util } from "../domain/Util";
+
 /**
  * 文字列描画のフォントファミリ。
  * 現バージョンのakashic-engineの `SystemLabel` 及び `DynamicFont` において、この値の指定は参考値に過ぎない。
@@ -17,3 +19,9 @@ export enum FontFamily {
 	 */
 	Monospace
 }
+
+export type FontFamilyString = "sansSerif" | "serif" | "monospace";
+
+export const toFontFamilyString = (family: FontFamily): string => {
+	return Util.toLowerCamel(FontFamily[family]);
+};

@@ -16,7 +16,6 @@ import { Scene } from "../../Scene";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
 import { Destroyable } from "../../types/Destroyable";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
-import { LocalTickMode } from "../../types/LocalTickMode";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
 
@@ -352,7 +351,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 		// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
 		// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
-		this.local = param.scene.local !== LocalTickMode.NonLocal || !!param.local;
+		this.local = param.scene.local !== "nonLocal" || !!param.local;
 
 		if (param.children) {
 			for (var i = 0; i < param.children.length; ++i) this.append(param.children[i]);

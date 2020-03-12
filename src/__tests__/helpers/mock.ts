@@ -99,7 +99,7 @@ export class Renderer extends g.Renderer {
 		});
 	}
 
-	setCompositeOperation(operation: g.CompositeOperation): void {
+	setCompositeOperation(operation: g.CompositeOperationString): void {
 		this.methodCallHistoryWithParams.push({
 			methodName: "setCompositeOperation",
 			params: {
@@ -437,14 +437,14 @@ export class AudioPlayer extends g.AudioPlayer {
 
 export class GlyphFactory extends g.GlyphFactory {
 	constructor(
-		fontFamily: g.FontFamily | string | string[],
+		fontFamily: string | string[],
 		fontSize: number,
 		baselineHeight?: number,
 		fontColor?: string,
 		strokeWidth?: number,
 		strokeColor?: string,
 		strokeOnly?: boolean,
-		fontWeight?: g.FontWeight
+		fontWeight?: g.FontWeightString
 	) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
@@ -541,14 +541,14 @@ export class ResourceFactory extends g.ResourceFactory {
 	}
 
 	createGlyphFactory(
-		fontFamily: g.FontFamily,
+		fontFamily: g.FontFamilyString,
 		fontSize: number,
 		baselineHeight?: number,
 		fontColor?: string,
 		strokeWidth?: number,
 		strokeColor?: string,
 		strokeOnly?: boolean,
-		fontWeight?: g.FontWeight
+		fontWeight?: g.FontWeightString
 	): g.GlyphFactory {
 		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
@@ -593,7 +593,7 @@ export class Game extends g.Game {
 
 	// 引数がなかった当時の tick の挙動を再現するメソッド。
 	classicTick(): boolean {
-		const advance = this.scene() && this.scene().local !== g.LocalTickMode.FullLocal;
+		const advance = this.scene() && this.scene().local !== "fullLocal";
 		return this.tick(advance);
 	}
 

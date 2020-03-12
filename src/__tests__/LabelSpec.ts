@@ -1,4 +1,4 @@
-import { BitmapFont, CompositeOperation, GlyphArea, Label, TextAlign } from "..";
+import { BitmapFont, GlyphArea, Label } from "..";
 import { Renderer, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Label", () => {
@@ -22,7 +22,7 @@ describe("test Label", () => {
 			text: "a",
 			font: bmpfont,
 			fontSize: 10,
-			textAlign: TextAlign.Center,
+			textAlign: "center",
 			maxWidth: 100,
 			widthAutoAdjust: false,
 			width: 50,
@@ -33,7 +33,7 @@ describe("test Label", () => {
 		expect(label.text).toEqual("a");
 		expect(label.font).toBe(bmpfont);
 		expect(label.fontSize).toBe(10);
-		expect(label.textAlign).toBe(TextAlign.Center);
+		expect(label.textAlign).toBe("center");
 		expect(label.maxWidth).toBe(100);
 		expect(label.widthAutoAdjust).toBe(false);
 		expect(label.width).toBe(50);
@@ -81,10 +81,10 @@ describe("test Label", () => {
 			text: "a",
 			font: bmpfont,
 			fontSize: 0,
-			textAlign: 0,
+			textAlign: "left",
 			maxWidth: 100
 		});
-		expect(label.textAlign).toBe(0);
+		expect(label.textAlign).toBe("left");
 		expect(label.widthAutoAdjust).toBe(true);
 		expect(label.width).toBe(0);
 		expect(label.height).toBe(0);
@@ -127,7 +127,7 @@ describe("test Label", () => {
 			text: "a",
 			font: bmpfont,
 			fontSize: 10,
-			textAlign: TextAlign.Center,
+			textAlign: "center",
 			maxWidth: 100,
 			widthAutoAdjust: false,
 			width: 50,
@@ -162,16 +162,16 @@ describe("test Label", () => {
 			text: "a",
 			font: bmpfont,
 			fontSize: 10,
-			textAlign: TextAlign.Center,
+			textAlign: "center",
 			maxWidth: 100,
 			widthAutoAdjust: false,
 			width: 50,
 			height: 20
 		});
-		label.aligning(100, TextAlign.Center);
+		label.aligning(100, "center");
 		expect(label.width).toBe(100);
 		expect(label.widthAutoAdjust).toBe(false);
-		expect(label.textAlign).toBe(TextAlign.Center);
+		expect(label.textAlign).toBe("center");
 	});
 	it("キャッシュのテスト", () => {
 		const runtime = skeletonRuntime();
@@ -260,7 +260,7 @@ describe("test Label", () => {
 
 		expect(cr.methodCallParamsHistory("setCompositeOperation").length).toBe(1);
 		expect(cr.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
-			operation: CompositeOperation.SourceAtop
+			operation: "sourceAtop"
 		});
 
 		expect(cr.methodCallParamsHistory("fillRect").length).toBe(1);

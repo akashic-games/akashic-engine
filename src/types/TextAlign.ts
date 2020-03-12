@@ -1,5 +1,8 @@
+import { Util } from "../domain/Util";
+
 /**
  * テキストの描画位置。
+ * @deprecated 非推奨である。将来的に削除される。代わりに `TextAlignString` を利用すること。
  */
 export enum TextAlign {
 	/**
@@ -15,3 +18,10 @@ export enum TextAlign {
 	 */
 	Right
 }
+
+export type TextAlignString = "left" | "center" | "right";
+
+/** TextAlignを対応する文字列に変換する */
+export const toTextAlignString = (textAlign: TextAlign): string => {
+	return Util.toLowerCamel(TextAlign[textAlign]);
+};

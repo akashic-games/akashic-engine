@@ -1,4 +1,4 @@
-import { Camera2D, CompositeOperation, E, PlainMatrix, PlatformPointType, PointDownEvent, PointSource, Scene } from "..";
+import { Camera2D, E, PlainMatrix, PlatformPointType, PointDownEvent, PointSource, Scene } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -1062,12 +1062,12 @@ describe("test E", () => {
 		const r = new Renderer();
 		e.render(r);
 		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
-		e.compositeOperation = CompositeOperation.SourceAtop;
+		e.compositeOperation = "sourceAtop";
 		r.clearMethodCallHistory();
 		e.render(r);
 		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
-			operation: CompositeOperation.SourceAtop
+			operation: "sourceAtop"
 		});
 		e.compositeOperation = undefined;
 		r.clearMethodCallHistory();

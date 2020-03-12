@@ -1,6 +1,8 @@
 /**
  * 時間経過の契機(ティック)をどのように生成するか。
  * ただしローカルティック(ローカルシーンの間などの「各プレイヤー間で独立な時間経過処理」)はこのモードの影響を受けない。
+ *
+ * @deprecated 非推奨である。将来的に削除される。代わりに `TickGenerationModeString` を利用すること。
  */
 export enum TickGenerationMode {
 	/**
@@ -14,3 +16,5 @@ export enum TickGenerationMode {
 	 */
 	Manual
 }
+
+export type TickGenerationModeString = "byClock" | "manual";

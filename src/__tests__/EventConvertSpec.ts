@@ -3,7 +3,7 @@ import { Game, skeletonRuntime } from "./helpers";
 import { EventConverter } from "../domain/EventConverter";
 import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent, PlayerInfoEvent } from "../domain/Event";
 import { Player } from "../types/Player";
-import { StorageRegion, StorageValueStore } from "../domain/Storage";
+import { StorageValueStore, StorageRegion } from "../domain/Storage";
 import { FilledRect } from "../domain/entities/FilledRect";
 import { PointDownEvent, PointMoveEvent, PointUpEvent } from "../domain/entities/E";
 import { EventPriority } from "../types/EventPriority";

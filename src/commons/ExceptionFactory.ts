@@ -1,4 +1,4 @@
-import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
+import { AssetLoadErrorTypeString } from "../types/AssetLoadErrorType";
 import { AssertionError, AssetLoadError, TypeMismatchError } from "../types/errors";
 
 /**
@@ -41,7 +41,7 @@ export module ExceptionFactory {
 	export function createAssetLoadError(
 		message: string,
 		retriable: boolean = true,
-		type: AssetLoadErrorType = AssetLoadErrorType.Unspecified,
+		type: AssetLoadErrorTypeString = "unspecified",
 		cause?: any
 	): AssetLoadError {
 		var e: AssetLoadError = <AssetLoadError>new Error(message);

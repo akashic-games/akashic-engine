@@ -34,11 +34,11 @@
 
 ```javascript
 var green = new g.FilledRect({scene: scene, x: 50, width: 100, height: 100, cssColor: "green"});
-green.compositeOperation = g.CompositeOperation.SourceOver;
+green.compositeOperation = "sourceOver";
 var red = new g.FilledRect({scene: scene, y: 20, width: 100, height: 100, cssColor: "red"});
-red.compositeOperation = g.CompositeOperation.SourceOver;
+red.compositeOperation = "sourceOver";
 var blue = new g.FilledRect({scene: scene, x: 75, y: 50, width: 100, height: 100, cssColor: "blue"});
-blue.compositeOperation = g.CompositeOperation.SourceOver;
+blue.compositeOperation = "sourceOver";
 scene.append(green);
 scene.append(red);
 scene.append(blue);
@@ -54,8 +54,8 @@ scene.append(blue);
 
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.SourceAtop;
-blue.compositeOperation = g.CompositeOperation.SourceAtop;
+red.compositeOperation = "sourceAtop";
+blue.compositeOperation = "sourceAtop";
 ```
 
 ## <a name="Lighter"></a> Lighter
@@ -68,8 +68,8 @@ blue.compositeOperation = g.CompositeOperation.SourceAtop;
 
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.Lighter;
-blue.compositeOperation = g.CompositeOperation.Lighter;
+red.compositeOperation = "lighter";
+blue.compositeOperation = "lighter";
 ```
 
 
@@ -81,8 +81,8 @@ blue.compositeOperation = g.CompositeOperation.Lighter;
 ![copy](images/copy.png)
 
 ```javascript
-blue.compositeOperation = g.CompositeOperation.SourceOver;
-character.compositeOperation = g.CompositeOperation.Copy;
+blue.compositeOperation = "sourceOver";
+character.compositeOperation = "copy";
 ```
 
 
@@ -97,7 +97,7 @@ character.compositeOperation = g.CompositeOperation.Copy;
 ![ExperimentalSourceIn](images/experimental-source-in.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.ExperimentalSourceIn;
+red.compositeOperation = "experimentalSourceIn";
 ```
 
 
@@ -112,7 +112,7 @@ red.compositeOperation = g.CompositeOperation.ExperimentalSourceIn;
 ![ExperimentalSourceOut](images/experimental-source-out.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.ExperimentalSourceOut;
+red.compositeOperation = "experimentalSourceOut";
 ```
 
 
@@ -127,7 +127,7 @@ red.compositeOperation = g.CompositeOperation.ExperimentalSourceOut;
 ![ExperimentalDestinationAtop](images/experimental-destination-atop.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.ExperimentalDestinationAtop;
+red.compositeOperation = "experimentalDestinationAtop";
 ```
 
 
@@ -142,7 +142,7 @@ red.compositeOperation = g.CompositeOperation.ExperimentalDestinationAtop;
 ![ExperimentalDestinationIn](images/experimental-destination-in.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.ExperimentalDestinationIn;
+red.compositeOperation = "experimentalDestinationIn";
 ```
 
 
@@ -155,7 +155,7 @@ red.compositeOperation = g.CompositeOperation.ExperimentalDestinationIn;
 ![DestinationOut](images/destination-out.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.DestinationOut;
+red.compositeOperation = "destinationOut";
 ```
 
 
@@ -168,7 +168,7 @@ red.compositeOperation = g.CompositeOperation.DestinationOut;
 ![DestinationOver](images/destination-over.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.DestinationOver;
+red.compositeOperation = "destinationOver";
 ```
 
 
@@ -181,7 +181,7 @@ red.compositeOperation = g.CompositeOperation.DestinationOver;
 ![Xor](images/xor.png)
 
 ```javascript
-red.compositeOperation = g.CompositeOperation.Xor;
+red.compositeOperation = "xor";
 ```
 
 
@@ -219,8 +219,8 @@ scene.append(blue);
 単純に、
 
 ```
-red.compositeOperation = g.CompositeOperation.SourceOver;
-blue.compositeOperation = g.CompositeOperation.SourceOver;
+red.compositeOperation = "sourceOver";
+blue.compositeOperation = "sourceOver";
 ```
 
 としても、合成対象に背景が含まれてしまうので、赤色と青色の `FilledRect` はそのまま描画されます。
@@ -239,9 +239,9 @@ blue.compositeOperation = g.CompositeOperation.SourceOver;
 var bg = new g.FilledRect({scene: scene, width: game.width, height: game.height, cssColor: "lightgray"});
 var green = new g.FilledRect({scene: scene, x: 50, width: 100, height: 100, cssColor: "green"});
 var red = new g.FilledRect({scene: scene, y: 20, width: 100, height: 100, cssColor: "red"});
-red.compositeOperation = g.CompositeOperation.SourceAtop;
+red.compositeOperation = "sourceAtop";
 var blue = new g.FilledRect({scene: scene, x: 75, y: 50, width: 100, height: 100, cssColor: "blue"});
-blue.compositeOperation = g.CompositeOperation.SourceAtop;
+blue.compositeOperation = "sourceAtop";
 var pane = new g.Pane({scene: scene, width: 175, height: 150});
 pane.append(green);
 pane.append(red);
