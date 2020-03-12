@@ -2,7 +2,7 @@
 
 ## <a name="これは"></a> これは
 
-`E#compositeOpration` の利用方法を記述したドキュメントです。
+`E#compositeOperation` の利用方法を記述したドキュメントです。
 対象バージョンはakashic-engine@1.1.6以降です。
 
 ## <a name="compositeOperationとは"></a> compositeOperationとは
@@ -11,17 +11,17 @@
 
 以下の値を指定可能です。
 
-- `CompositeOpration.SourceOver`
-- `CompositeOpration.SourceAtop`
-- `CompositeOpration.Lighter`
-- `CompositeOpration.Copy`
-- `CompositeOpration.ExperimentalSourceIn`
-- `CompositeOpration.ExperimentalSourceOut`
-- `CompositeOpration.ExperimentalDestinationAtop`
-- `CompositeOpration.ExperimentalDestinationIn`
-- `CompositeOpration.DestinationOut`
-- `CompositeOpration.DestinationOver`
-- `CompositeOpration.Xor`
+- `"sourceOver"`
+- `"sourceAtop"`
+- `"lighter"`
+- `"copy"`
+- `"experimentalSourceIn"`
+- `"experimentalSourceOut"`
+- `"experimentalDestinationAtop"`
+- `"experimentalDestinationIn"`
+- `"destinationOut"`
+- `"destinationOver"`
+- `"xor"`
 - 未指定（`undefined`）
 
 ## <a name="SourceOver"></a> SouceOver
@@ -48,7 +48,7 @@ scene.append(blue);
 
 先に描画された領域と重なった部分のみを描画します。
 
-以下の例では、赤色と青色の `FilledRect` に `SourceAtop` 指定し、緑色の `FilledRect` と重なった部分だけ描画する例です。
+以下の例では、赤色と青色の `FilledRect` に `"sourceAtop"` 指定し、緑色の `FilledRect` と重なった部分だけ描画する例です。
 
 ![source-atop](images/source-atop.png)
 
@@ -62,7 +62,7 @@ blue.compositeOperation = "sourceAtop";
 
 先に描画された領域と重なった部分の色を加算して描画します。
 
-以下の例では、赤色と青色の `FilledRect` に `Lighter` 指定したものです。
+以下の例では、赤色と青色の `FilledRect` に `"lighter"` 指定したものです。
 
 ![lighter](images/lighter.png)
 
@@ -90,7 +90,7 @@ character.compositeOperation = "copy";
 
  先に描画された領域と重なった部分に描画を行い、それ以外の部分を透明にします。
 
- 以下の例では、赤色の `FilledRect` に `ExperimentalSourceIn` を指定し、描画先となる青色の `FilledRect` と重なった部分だけ描画する例です。
+ 以下の例では、赤色の `FilledRect` に `"experimentalSourceIn"` を指定し、描画先となる青色の `FilledRect` と重なった部分だけ描画する例です。
 
  環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
@@ -105,7 +105,7 @@ red.compositeOperation = "experimentalSourceIn";
 
 先に描画された領域と重なっていない部分に描画を行い、それ以外の部分を透明にします。
 
-以下の例では、赤色の `FilledRect` に `ExperimentalSourceOut` を指定し、描画先となる青色の `FilledRect` と重なっていない部分を描画する例です。
+以下の例では、赤色の `FilledRect` に `"experimentalSourceOut"` を指定し、描画先となる青色の `FilledRect` と重なっていない部分を描画する例です。
 
 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
@@ -120,7 +120,7 @@ red.compositeOperation = "experimentalSourceOut";
 
 描画する領域だけを表示し、先に描画された領域と重なった部分は描画先を表示します。
 
-以下の例では、赤色の `FilledRect` に `ExperimentalDestinationAtop` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示する例です。
+以下の例では、赤色の `FilledRect` に `"experimentalDestinationAtop"` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示する例です。
 
 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
@@ -135,7 +135,7 @@ red.compositeOperation = "experimentalDestinationAtop";
 
 先に描画された領域と重なった部分に描画を行い、それ以外の部分を透明にします。
 
-以下の例では、赤色の `FilledRect` に `ExperimentalDestinationIn` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示し、それ以外の部分を透明にする例です。
+以下の例では、赤色の `FilledRect` に `"experimentalDestinationIn"` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示し、それ以外の部分を透明にする例です。
 
 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
@@ -150,7 +150,7 @@ red.compositeOperation = "experimentalDestinationIn";
 
 描画する領域を透明にします。
 
-以下の例では、赤色の `FilledRect` に `DestinationOut` を指定し、描画する領域を透明にする例です。
+以下の例では、赤色の `FilledRect` に `"destinationOut"` を指定し、描画する領域を透明にする例です。
 
 ![DestinationOut](images/destination-out.png)
 
@@ -163,7 +163,7 @@ red.compositeOperation = "destinationOut";
 
 先に描画された領域の下に描画します。
 
-以下の例では、赤色の `FilledRect` に `DestinationOver` を指定し、描画先となる青色の `FilledRect` の下に描画する例です。
+以下の例では、赤色の `FilledRect` に `"destinationOver"` を指定し、描画先となる青色の `FilledRect` の下に描画する例です。
 
 ![DestinationOver](images/destination-over.png)
 
@@ -176,7 +176,7 @@ red.compositeOperation = "destinationOver";
 
 先に描画された領域と重なった部分のみ透明にします。
 
-以下の例では、赤色の `FilledRect` に `Xor` を指定し、描画先となる青色の `FilledRect` と重なった部分のみ透明にする例です。
+以下の例では、赤色の `FilledRect` に `"xor"` を指定し、描画先となる青色の `FilledRect` と重なった部分のみ透明にする例です。
 
 ![Xor](images/xor.png)
 

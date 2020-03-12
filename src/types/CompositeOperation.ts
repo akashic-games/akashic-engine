@@ -68,6 +68,7 @@ export type CompositeOperationString =
 	| "destinationOver"
 	| "xor";
 
+/** CompositeOperationを対応する文字列に変換する */
 export const toCompositeOperationString = (operation: CompositeOperation): string => {
 	return Util.toLowerCamel(CompositeOperation[operation]);
 };

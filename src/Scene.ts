@@ -263,7 +263,7 @@ export interface SceneParameterObject {
 	 * ローカルシーンは特にアセットロード中のような、他プレイヤーと同期すべきでないシーンのために存在する機能である。
 	 *
 	 * `LocalTickModeString` の代わりに `boolean` を与えることもできる。
-	 * 偽は `"nonLocal"` 、 真は `FullLocal` と解釈される。
+	 * 偽は `"nonLocal"` 、 真は `"fullLocal"` と解釈される。
 	 * @default "nonLocal"
 	 */
 	local?: boolean | LocalTickModeString;

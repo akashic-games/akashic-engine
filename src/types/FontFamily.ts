@@ -4,6 +4,7 @@ import { Util } from "../domain/Util";
  * 文字列描画のフォントファミリ。
  * 現バージョンのakashic-engineの `SystemLabel` 及び `DynamicFont` において、この値の指定は参考値に過ぎない。
  * そのため、 それらにおいて 'fontFamily` プロパティを指定した際、実行環境によっては無視される事がありえる。
+ * @deprecated 非推奨である。将来的に削除される。代わりに `FontFamilyString` を利用すること。
  */
 export enum FontFamily {
 	/**
@@ -22,6 +23,7 @@ export enum FontFamily {
 
 export type FontFamilyString = "sansSerif" | "serif" | "monospace";
 
+/** FontFamilyを対応する文字列に変換する */
 export const toFontFamilyString = (family: FontFamily): string => {
 	return Util.toLowerCamel(FontFamily[family]);
 };
