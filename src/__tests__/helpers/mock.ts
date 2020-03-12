@@ -605,7 +605,6 @@ export class GameHandlerSet implements g.GameHandlerSet {
 }
 
 export class Game extends g.Game {
-	leftGame: boolean;
 	terminatedGame: boolean;
 	autoTickForInternalEvents: boolean;
 	resourceFactory: ResourceFactory;
@@ -622,7 +621,6 @@ export class Game extends g.Game {
 		const handlerSet = new GameHandlerSet();
 		super({ engineModule: g, configuration, resourceFactory, handlerSet, assetBase, selfId, operationPluginViewInfo });
 		resourceFactory.init(this);
-		this.leftGame = false;
 		this.terminatedGame = false;
 		this.autoTickForInternalEvents = true;
 	}
@@ -651,10 +649,6 @@ export class Game extends g.Game {
 				this.classicTick();
 			}, 0);
 		}
-	}
-
-	leaveGame(): void {
-		this.leftGame = true;
 	}
 
 	_terminateGame(): void {

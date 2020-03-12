@@ -724,12 +724,6 @@ describe("test Game", () => {
 		expect(game._localDb[e2.id]).toBeUndefined();
 	});
 
-	it("leaveGame", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
-		game.leaveGame();
-		expect(game.leftGame).toBe(true);
-	});
-
 	it("terminateGame", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game });

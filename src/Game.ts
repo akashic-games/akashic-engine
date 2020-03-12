@@ -955,16 +955,6 @@ export class Game implements Registrable<E> {
 	}
 
 	/**
-	 * このゲームを離脱する。
-	 *
-	 * 多人数プレイの場合、他のクライアントでは `Game#leave` イベントがfireされる。
-	 * このメソッドの呼び出し後、このクライアントの操作要求は送信されない。
-	 */
-	leaveGame(): void {
-		// do nothiong
-	}
-
-	/**
 	 * このゲームを終了する。
 	 *
 	 * エンジンに対して続行の断念を通知する。
@@ -972,7 +962,6 @@ export class Game implements Registrable<E> {
 	 * またこのクライアントのゲーム実行は行われない(updateを含むイベントのfireはおきない)。
 	 */
 	terminateGame(): void {
-		this.leaveGame();
 		this._isTerminated = true;
 		this._terminateGame();
 	}
