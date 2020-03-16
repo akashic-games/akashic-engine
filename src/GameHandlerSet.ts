@@ -39,6 +39,11 @@ export interface GameHandlerSet {
 	removeEventFilter(func: (pevs: pl.Event[]) => pl.Event[]): void;
 
 	/**
+	 * 全てのイベントフィルタを削除する
+	 */
+	removeAllEventFilters(): void;
+
+	/**
 	 * g.Scene のモード変更を通知する
 	 * @param mode
 	 */

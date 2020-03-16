@@ -16,6 +16,7 @@ import { PointEventResolver } from "./domain/PointEventResolver";
 import { RandomGenerator } from "./domain/RandomGenerator";
 import { Storage } from "./domain/Storage";
 import { XorshiftRandomGenerator } from "./domain/XorshiftRandomGenerator";
+import { GameHandlerSet } from "./GameHandlerSet";
 import { AssetLike } from "./interfaces/AssetLike";
 import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
@@ -26,13 +27,12 @@ import { CommonOffset, CommonSize } from "./types/commons";
 import { EventFilter } from "./types/EventFilter";
 import { GameConfiguration } from "./types/GameConfiguration";
 import { GameMainParameterObject } from "./types/GameMainParameterObject";
+import { LocalTickModeString } from "./types/LocalTickMode";
 import { OperationPlugin } from "./types/OperationPlugin";
-import { InternalOperationPluginInfo } from "./types/OperationPluginInfo";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
 import { Registrable } from "./types/Registrable";
-
-import * as g from "./index.runtime";
+import { TickGenerationModeString } from "./types/TickGenerationMode";
 
 /**
  * シーン遷移要求のタイプ。
@@ -105,6 +105,12 @@ export interface GameResetParameterObject {
 	 * 省略された場合、元の値が維持される。
 	 */
 	randSeed?: number;
+
+	/**
+	 * 乱数生成器のシリアリゼーション。
+	 * 省略された場合、元の値が維持される。
+	 */
+	randGenSer?: any;
 }
 
 /**
@@ -128,6 +134,11 @@ export interface GameParameterObject {
 	 * この `Game` が用いる、リソースのファクトリ
 	 */
 	resourceFactory: ResourceFactoryLike;
+
+	/**
+	 * この `Game` が用いるハンドラセット
+	 */
+	handlerSet: GameHandlerSet;
 
 	/**
 	 * アセットのパスの基準となるディレクトリ。
@@ -167,7 +178,7 @@ export interface GameParameterObject {
  * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
  * 11.操作プラグインを直接制御するため、Game#operationPluginManagerにアクセスする
  */
-export abstract class Game implements Registrable<E> {
+export class Game implements Registrable<E> {
 	/**
 	 * このコンテンツに関連付けられるエンティティ。(ローカルなエンティティを除く)
 	 */
@@ -287,6 +298,11 @@ export abstract class Game implements Registrable<E> {
 	resourceFactory: ResourceFactoryLike;
 
 	/**
+	 * ハンドラセット。
+	 */
+	handlerSet: GameHandlerSet;
+
+	/**
 	 * ストレージ。
 	 */
 	storage: Storage;
@@ -350,6 +366,20 @@ export abstract class Game implements Registrable<E> {
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
 	lastOmittedLocalTickCount: number;
+
+	/**
+	 * 直近の `Scene#local` の値。
+	 *
+	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+	 */
+	lastLocalTickMode: LocalTickModeString | null;
+
+	/**
+	 * 直近の `Scene#tickGenerationMode` の値。
+	 *
+	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+	 */
+	lastTickGenerationMode: TickGenerationModeString | null;
 
 	/**
 	 * ゲーム全体で共有するサーフェスアトラス。
@@ -441,7 +471,7 @@ export abstract class Game implements Registrable<E> {
 	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
 	 * @private
 	 */
-	_onSceneChange: Trigger<Scene>;
+	_onSceneChange: Trigger<Scene | undefined>;
 
 	/**
 	 * グローバルアセットの読み込み待ちハンドラ。
@@ -572,7 +602,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `_onSceneChange` を利用すること。
 	 */
-	_sceneChanged: Trigger<Scene>;
+	_sceneChanged: Trigger<Scene | undefined>;
 
 	/**
 	 * _handleLoad() 呼び出しから戻る直前を通知するTrigger。
@@ -613,55 +643,11 @@ export abstract class Game implements Registrable<E> {
 
 	/**
 	 * `Game` のインスタンスを生成する。
-	 * TODO: 優先度の高くないものの移行コストを考慮し、一旦現行の I/F を残している。game-driver 追従後に削除予定。
-	 *
-	 * @param gameConfiguration この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
-	 * @param resourceFactory この `Game` が用いる、リソースのファクトリ
-	 * @param assetBase アセットのパスの基準となるディレクトリ。省略された場合、空文字列
-	 * @param selfId このゲームを実行するユーザのID。省略された場合、`undefined`
-	 * @param operationPluginViewInfo このゲームの操作プラグインに与えるviewの情報
-	 */
-	constructor(
-		paramOrConfg: GameConfiguration,
-		resourceFactory: ResourceFactoryLike,
-		assetBase?: string,
-		selfId?: string,
-		operationPluginViewInfo?: OperationPluginViewInfo
-	);
-
-	/**
-	 * `Game` のインスタンスを生成する。
 	 *
 	 * @param param この `Game` に指定するパラメータ
 	 */
-	constructor(param: GameParameterObject);
-
-	constructor(
-		paramOrConfg: GameParameterObject | GameConfiguration,
-		resourceFactory?: ResourceFactoryLike,
-		assetBase?: string,
-		selfId: string = "",
-		operationPluginViewInfo?: OperationPluginViewInfo
-	) {
-		let gameConfiguration: GameConfiguration;
-		let engineModule: any;
-		if ("resourceFactory" in paramOrConfg) {
-			gameConfiguration = this._normalizeConfiguration(paramOrConfg.configuration);
-			assetBase = paramOrConfg.assetBase || "";
-			resourceFactory = paramOrConfg.resourceFactory;
-			selfId = paramOrConfg.selfId;
-			operationPluginViewInfo = paramOrConfg.operationPluginViewInfo;
-			engineModule = paramOrConfg.engineModule;
-		} else {
-			gameConfiguration = this._normalizeConfiguration(paramOrConfg);
-			engineModule = g;
-			// FIXME: インスタンス生成時に直接 `Game` を代入している
-			engineModule.setGame(Game);
-			console.warn(
-				"[deprecated] Game:This constructor is deprecated." +
-					" Refer to the API documentation and use Game(param: GameParameterObject) instead."
-			);
-		}
+	constructor(param: GameParameterObject) {
+		const gameConfiguration = this._normalizeConfiguration(param.configuration);
 		this.fps = gameConfiguration.fps;
 		this.width = gameConfiguration.width;
 		this.height = gameConfiguration.height;
@@ -669,9 +655,10 @@ export abstract class Game implements Registrable<E> {
 		this.scenes = [];
 		this.random = null;
 		this.age = 0;
-		this.assetBase = assetBase;
-		this.resourceFactory = resourceFactory;
-		this.selfId = selfId;
+		this.assetBase = param.assetBase || "";
+		this.resourceFactory = param.resourceFactory;
+		this.handlerSet = param.handlerSet;
+		this.selfId = param.selfId;
 		this.playId = undefined;
 		this.audio = new AudioSystemManager(this.resourceFactory);
 
@@ -707,6 +694,8 @@ export abstract class Game implements Registrable<E> {
 
 		this.isLastTickLocal = true;
 		this.lastOmittedLocalTickCount = 0;
+		this.lastLocalTickMode = null;
+		this.lastTickGenerationMode = null;
 
 		this._onLoad = new Trigger<Game>();
 		this._onStart = new Trigger<void>();
@@ -719,7 +708,7 @@ export abstract class Game implements Registrable<E> {
 
 		this.external = {};
 
-		this._runtimeValueBase = Object.create(engineModule, {
+		this._runtimeValueBase = Object.create(param.engineModule, {
 			game: {
 				value: this,
 				enumerable: true
@@ -732,14 +721,14 @@ export abstract class Game implements Registrable<E> {
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
 
-		var operationPluginsField = <InternalOperationPluginInfo[]>(gameConfiguration.operationPlugins || []);
-		this.operationPluginManager = new OperationPluginManager(this, operationPluginViewInfo, operationPluginsField);
+		const operationPluginsField = gameConfiguration.operationPlugins || [];
+		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo, operationPluginsField);
 		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
 		this._onSceneChange = new Trigger<Scene>();
-		this._onSceneChange.add(this._updateEventTriggers, this);
+		this._onSceneChange.add(this._handleSceneChanged, this);
 		this._sceneChanged = this._onSceneChange;
 
 		this._initialScene = new Scene({
@@ -813,7 +802,7 @@ export abstract class Game implements Registrable<E> {
 	 * 現在のシーンを返す。
 	 * ない場合、 `undefined` を返す。
 	 */
-	scene(): Scene {
+	scene(): Scene | undefined {
 		if (!this.scenes.length) return undefined;
 		return this.scenes[this.scenes.length - 1];
 	}
@@ -966,16 +955,6 @@ export abstract class Game implements Registrable<E> {
 	}
 
 	/**
-	 * このゲームを離脱する。
-	 *
-	 * 多人数プレイの場合、他のクライアントでは `Game#leave` イベントがfireされる。
-	 * このメソッドの呼び出し後、このクライアントの操作要求は送信されない。
-	 */
-	leaveGame(): void {
-		this._leaveGame();
-	}
-
-	/**
 	 * このゲームを終了する。
 	 *
 	 * エンジンに対して続行の断念を通知する。
@@ -983,7 +962,6 @@ export abstract class Game implements Registrable<E> {
 	 * またこのクライアントのゲーム実行は行われない(updateを含むイベントのfireはおきない)。
 	 */
 	terminateGame(): void {
-		this._leaveGame();
 		this._isTerminated = true;
 		this._terminateGame();
 	}
@@ -1002,7 +980,9 @@ export abstract class Game implements Registrable<E> {
 	 *
 	 * @param e 発生させるイベント
 	 */
-	abstract raiseEvent(e: Event): void;
+	raiseEvent(e: Event): void {
+		this.handlerSet.raiseEvent(this._eventConverter.toPlaylogEvent(e));
+	}
 
 	/**
 	 * ティックを発生させる。
@@ -1012,7 +992,17 @@ export abstract class Game implements Registrable<E> {
 	 *
 	 * @param events そのティックで追加で発生させるイベント
 	 */
-	abstract raiseTick(events?: Event[]): void;
+	raiseTick(events?: Event[]): void {
+		if (events == null || !events.length) {
+			this.handlerSet.raiseTick();
+			return;
+		}
+		const plEvents: pl.Event[] = [];
+		for (let i = 0; i < events.length; i++) {
+			plEvents.push(this._eventConverter.toPlaylogEvent(events[i]));
+		}
+		this.handlerSet.raiseTick(plEvents);
+	}
 
 	/**
 	 * イベントフィルタを追加する。
@@ -1027,14 +1017,18 @@ export abstract class Game implements Registrable<E> {
 	 * @param filter 追加するイベントフィルタ
 	 * @param handleEmpty イベントが存在しない場合でも定期的にフィルタを呼び出すか否か。省略された場合、偽。
 	 */
-	abstract addEventFilter(filter: EventFilter, handleEmpty?: boolean): void;
+	addEventFilter(filter: EventFilter, handleEmpty?: boolean): void {
+		this.handlerSet.addEventFilter(filter, handleEmpty);
+	}
 
 	/**
 	 * イベントフィルタを削除する。
 	 *
 	 * @param filter 削除するイベントフィルタ
 	 */
-	abstract removeEventFilter(filter: EventFilter): void;
+	removeEventFilter(filter: EventFilter): void {
+		this.handlerSet.removeEventFilter(filter);
+	}
 
 	/**
 	 * このインスタンスにおいてスナップショットの保存を行うべきかを返す。
@@ -1048,7 +1042,9 @@ export abstract class Game implements Registrable<E> {
 	 * スナップショット保存に対応するゲームは、このメソッドが真を返す時にのみ `Game#saveSnapshot()` を呼び出すべきである。
 	 * 戻り値は、スナップショットの保存を行うべきであれば真、でなければ偽である。
 	 */
-	abstract shouldSaveSnapshot(): boolean;
+	shouldSaveSnapshot(): boolean {
+		return this.handlerSet.shouldSaveSnapshot();
+	}
 
 	/**
 	 * スナップショットを保存する。
@@ -1069,7 +1065,9 @@ export abstract class Game implements Registrable<E> {
 	 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 	 */
-	abstract saveSnapshot(snapshot: any, timestamp?: number): void;
+	saveSnapshot(snapshot: any, timestamp?: number): void {
+		this.handlerSet.saveSnapshot(this.age, snapshot, this.random.serialize(), timestamp);
+	}
 
 	/**
 	 * 現在時刻を取得する。
@@ -1077,7 +1075,9 @@ export abstract class Game implements Registrable<E> {
 	 * 値は1970-01-01T00:00:00Zからのミリ秒での経過時刻である。
 	 * `Date.now()` と異なり、この値は消化されたティックの数から算出される擬似的な時刻である。
 	 */
-	abstract getCurrentTime(): number;
+	getCurrentTime(): number {
+		return this.handlerSet.getCurrentTime();
+	}
 
 	/**
 	 * このインスタンスがアクティブインスタンスであるかどうか返す。
@@ -1085,7 +1085,9 @@ export abstract class Game implements Registrable<E> {
 	 * ゲーム開発者は、この値の真偽に起因する処理で、ゲームのローカルな実行状態を変更してはならず、
 	 * `raiseEvent()` などによって、グローバルな状態を更新する必要がある。
 	 */
-	abstract isActiveInstance(): boolean;
+	isActiveInstance(): boolean {
+		return this.handlerSet.getInstanceType() === "active";
+	}
 
 	/**
 	 * @private
@@ -1180,7 +1182,11 @@ export abstract class Game implements Registrable<E> {
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
-			if (param.randSeed !== undefined) this.random = new XorshiftRandomGenerator(param.randSeed);
+			if (param.randGenSer !== undefined) {
+				this.random = XorshiftRandomGenerator.deserialize(param.randGenSer);
+			} else if (param.randSeed !== undefined) {
+				this.random = new XorshiftRandomGenerator(param.randSeed);
+			}
 		}
 
 		this.audio._reset();
@@ -1190,6 +1196,7 @@ export abstract class Game implements Registrable<E> {
 		this.onSeed.removeAll();
 		this.onResized.removeAll();
 		this.onSkipChange.removeAll();
+		this.handlerSet.removeAllEventFilters();
 
 		this._idx = 0;
 		this._localIdx = 0;
@@ -1199,6 +1206,8 @@ export abstract class Game implements Registrable<E> {
 		this._modified = true;
 		this.loadingScene = undefined;
 		this._focusingCamera = undefined;
+		this.lastLocalTickMode = null;
+		this.lastTickGenerationMode = null;
 		this.onSnapshotRequest.removeAll();
 		this._sceneChangeRequests = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
@@ -1275,6 +1284,7 @@ export abstract class Game implements Registrable<E> {
 		this.defaultAudioSystemId = undefined;
 		this.onSnapshotRequest.destroy();
 		this.onSnapshotRequest = undefined;
+		this.handlerSet = undefined;
 
 		// TODO より能動的にdestroy処理を入れるべきかもしれない
 		this.resourceFactory = undefined;
@@ -1391,10 +1401,25 @@ export abstract class Game implements Registrable<E> {
 		this._onLoad.fire();
 	}
 
-	/**
-	 * @private
-	 */
-	abstract _leaveGame(): void;
+	_handleOperationPluginOperated(op: InternalOperationPluginOperation): void {
+		const pev = this._eventConverter.makePlaylogOperationEvent(op);
+		this.handlerSet.raiseEvent(pev);
+	}
+
+	_handleSceneChanged(scene?: Scene): void {
+		this._updateEventTriggers(scene);
+		const local = scene ? scene.local : "full-local";
+		const tickGenerationMode = scene ? scene.tickGenerationMode : "by-clock";
+		if (this.lastLocalTickMode === local && this.lastTickGenerationMode === tickGenerationMode) {
+			return;
+		}
+		this.lastLocalTickMode = local;
+		this.lastTickGenerationMode = tickGenerationMode;
+		this.handlerSet.changeSceneMode({
+			local,
+			tickGenerationMode
+		});
+	}
 
 	/**
 	 * @private
