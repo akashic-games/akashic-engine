@@ -11,16 +11,16 @@
 
 以下の値を指定可能です。
 
-- `"sourceOver"`
-- `"sourceAtop"`
+- `"source-over"`
+- `"source-atop"`
 - `"lighter"`
 - `"copy"`
-- `"experimentalSourceIn"`
-- `"experimentalSourceOut"`
-- `"experimentalDestinationAtop"`
-- `"experimentalDestinationIn"`
-- `"destinationOut"`
-- `"destinationOver"`
+- `"experimental-source-in"`
+- `"experimental-source-out"`
+- `"experimental-destination-atop"`
+- `"experimental-destination-in"`
+- `"destination-out"`
+- `"destination-over"`
 - `"xor"`
 - 未指定（`undefined`）
 
@@ -34,11 +34,11 @@
 
 ```javascript
 var green = new g.FilledRect({scene: scene, x: 50, width: 100, height: 100, cssColor: "green"});
-green.compositeOperation = "sourceOver";
+green.compositeOperation = "source-over";
 var red = new g.FilledRect({scene: scene, y: 20, width: 100, height: 100, cssColor: "red"});
-red.compositeOperation = "sourceOver";
+red.compositeOperation = "source-over";
 var blue = new g.FilledRect({scene: scene, x: 75, y: 50, width: 100, height: 100, cssColor: "blue"});
-blue.compositeOperation = "sourceOver";
+blue.compositeOperation = "source-over";
 scene.append(green);
 scene.append(red);
 scene.append(blue);
@@ -48,14 +48,14 @@ scene.append(blue);
 
 先に描画された領域と重なった部分のみを描画します。
 
-以下の例では、赤色と青色の `FilledRect` に `"sourceAtop"` 指定し、緑色の `FilledRect` と重なった部分だけ描画する例です。
+以下の例では、赤色と青色の `FilledRect` に `"source-atop"` 指定し、緑色の `FilledRect` と重なった部分だけ描画する例です。
 
 ![source-atop](images/source-atop.png)
 
 
 ```javascript
-red.compositeOperation = "sourceAtop";
-blue.compositeOperation = "sourceAtop";
+red.compositeOperation = "source-atop";
+blue.compositeOperation = "source-atop";
 ```
 
 ## <a name="Lighter"></a> Lighter
@@ -81,7 +81,7 @@ blue.compositeOperation = "lighter";
 ![copy](images/copy.png)
 
 ```javascript
-blue.compositeOperation = "sourceOver";
+blue.compositeOperation = "source-over";
 character.compositeOperation = "copy";
 ```
 
@@ -90,14 +90,14 @@ character.compositeOperation = "copy";
 
  先に描画された領域と重なった部分に描画を行い、それ以外の部分を透明にします。
 
- 以下の例では、赤色の `FilledRect` に `"experimentalSourceIn"` を指定し、描画先となる青色の `FilledRect` と重なった部分だけ描画する例です。
+ 以下の例では、赤色の `FilledRect` に `"experimental-source-in"` を指定し、描画先となる青色の `FilledRect` と重なった部分だけ描画する例です。
 
  環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
 ![ExperimentalSourceIn](images/experimental-source-in.png)
 
 ```javascript
-red.compositeOperation = "experimentalSourceIn";
+red.compositeOperation = "experimental-source-in";
 ```
 
 
@@ -105,14 +105,14 @@ red.compositeOperation = "experimentalSourceIn";
 
 先に描画された領域と重なっていない部分に描画を行い、それ以外の部分を透明にします。
 
-以下の例では、赤色の `FilledRect` に `"experimentalSourceOut"` を指定し、描画先となる青色の `FilledRect` と重なっていない部分を描画する例です。
+以下の例では、赤色の `FilledRect` に `"experimental-source-out"` を指定し、描画先となる青色の `FilledRect` と重なっていない部分を描画する例です。
 
 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
 ![ExperimentalSourceOut](images/experimental-source-out.png)
 
 ```javascript
-red.compositeOperation = "experimentalSourceOut";
+red.compositeOperation = "experimental-source-out";
 ```
 
 
@@ -120,14 +120,14 @@ red.compositeOperation = "experimentalSourceOut";
 
 描画する領域だけを表示し、先に描画された領域と重なった部分は描画先を表示します。
 
-以下の例では、赤色の `FilledRect` に `"experimentalDestinationAtop"` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示する例です。
+以下の例では、赤色の `FilledRect` に `"experimental-destination-atop"` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示する例です。
 
 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
 ![ExperimentalDestinationAtop](images/experimental-destination-atop.png)
 
 ```javascript
-red.compositeOperation = "experimentalDestinationAtop";
+red.compositeOperation = "experimental-destination-atop";
 ```
 
 
@@ -135,14 +135,14 @@ red.compositeOperation = "experimentalDestinationAtop";
 
 先に描画された領域と重なった部分に描画を行い、それ以外の部分を透明にします。
 
-以下の例では、赤色の `FilledRect` に `"experimentalDestinationIn"` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示し、それ以外の部分を透明にする例です。
+以下の例では、赤色の `FilledRect` に `"experimental-destination-in"` を指定し、描画先となる青色の `FilledRect` と重なった部分は青色を表示し、それ以外の部分を透明にする例です。
 
 環境により、描画結果が大きく異なる可能性があるため、試験的導入となります。
 
 ![ExperimentalDestinationIn](images/experimental-destination-in.png)
 
 ```javascript
-red.compositeOperation = "experimentalDestinationIn";
+red.compositeOperation = "experimental-destination-in";
 ```
 
 
@@ -150,12 +150,12 @@ red.compositeOperation = "experimentalDestinationIn";
 
 描画する領域を透明にします。
 
-以下の例では、赤色の `FilledRect` に `"destinationOut"` を指定し、描画する領域を透明にする例です。
+以下の例では、赤色の `FilledRect` に `"destination-out"` を指定し、描画する領域を透明にする例です。
 
 ![DestinationOut](images/destination-out.png)
 
 ```javascript
-red.compositeOperation = "destinationOut";
+red.compositeOperation = "destination-out";
 ```
 
 
@@ -163,12 +163,12 @@ red.compositeOperation = "destinationOut";
 
 先に描画された領域の下に描画します。
 
-以下の例では、赤色の `FilledRect` に `"destinationOver"` を指定し、描画先となる青色の `FilledRect` の下に描画する例です。
+以下の例では、赤色の `FilledRect` に `"destination-over"` を指定し、描画先となる青色の `FilledRect` の下に描画する例です。
 
 ![DestinationOver](images/destination-over.png)
 
 ```javascript
-red.compositeOperation = "destinationOver";
+red.compositeOperation = "destination-over";
 ```
 
 
@@ -219,8 +219,8 @@ scene.append(blue);
 単純に、
 
 ```
-red.compositeOperation = "sourceOver";
-blue.compositeOperation = "sourceOver";
+red.compositeOperation = "source-over";
+blue.compositeOperation = "source-over";
 ```
 
 としても、合成対象に背景が含まれてしまうので、赤色と青色の `FilledRect` はそのまま描画されます。
@@ -239,9 +239,9 @@ blue.compositeOperation = "sourceOver";
 var bg = new g.FilledRect({scene: scene, width: game.width, height: game.height, cssColor: "lightgray"});
 var green = new g.FilledRect({scene: scene, x: 50, width: 100, height: 100, cssColor: "green"});
 var red = new g.FilledRect({scene: scene, y: 20, width: 100, height: 100, cssColor: "red"});
-red.compositeOperation = "sourceAtop";
+red.compositeOperation = "source-atop";
 var blue = new g.FilledRect({scene: scene, x: 75, y: 50, width: 100, height: 100, cssColor: "blue"});
-blue.compositeOperation = "sourceAtop";
+blue.compositeOperation = "source-atop";
 var pane = new g.Pane({scene: scene, width: 175, height: 150});
 pane.append(green);
 pane.append(red);

@@ -2,81 +2,34 @@ import { CommonOffset } from "../types/commons";
 import { Player } from "../types/Player";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";
-import { Util } from "./Util";
 
 /**
  * イベントの種別。
  *
- * @deprecated 非推奨である。将来的に削除される。代わりに `EventTypeString` を利用すること。
+ * - "unknown": 不明なイベント。ゲーム開発者はこの値を利用してはならない。
+ * - "join": プレイヤーの参加を表すイベント。
+ * - "leave": プレイヤーの離脱を表すイベント。
+ * - "timestamp": タイムスタンプを表すイベント。
+ * - "player-info": プレイヤー情報を表すイベント。
+ * - "seed": 乱数生成器の生成を表すイベント。この値は利用されていない。
+ * - "point-down": ポイントダウンイベント。
+ * - "point-move": ポイントムーブイベント。
+ * - "point-up": ポイントアップイベント。
+ * - "message": 汎用的なメッセージを表すイベント。
+ * - "operation": 操作プラグインが通知する操作を表すイベント。
  */
-export enum EventType {
-	/**
-	 * 不明なイベント。
-	 * ゲーム開発者はこの値を利用してはならない。
-	 */
-	Unknown,
-	/**
-	 * プレイヤーの参加を表すイベント。
-	 */
-	Join,
-	/**
-	 * プレイヤーの離脱を表すイベント。
-	 */
-	Leave,
-	/**
-	 * タイムスタンプを表すイベント。
-	 */
-	Timestamp,
-	/**
-	 * プレイヤー情報を表すイベント。
-	 */
-	PlayerInfo,
-	/**
-	 * 乱数生成器の生成を表すイベント。
-	 * この値は利用されていない。
-	 */
-	Seed,
-	/**
-	 * ポイントダウンイベント。
-	 */
-	PointDown,
-	/**
-	 * ポイントムーブイベント。
-	 */
-	PointMove,
-	/**
-	 * ポイントアップイベント。
-	 */
-	PointUp,
-	/**
-	 * 汎用的なメッセージを表すイベント。
-	 */
-	Message,
-	/**
-	 * 操作プラグインが通知する操作を表すイベント。
-	 */
-	Operation
-}
-
 export type EventTypeString =
 	| "unknown"
 	| "join"
 	| "leave"
 	| "timestamp"
-	| "playerInfo"
+	| "player-info"
 	| "seed"
-	| "pointDown"
-	| "pointMove"
-	| "pointUp"
+	| "point-down"
+	| "point-move"
+	| "point-up"
 	| "message"
 	| "operation";
-
-/**
- * EventTypeを対応する文字列に変換する
- */
-export const toEventTypeString = (eventType: EventType): string => {
-	return Util.toLowerCamel(EventType[eventType]);
-};
 
 /**
  * イベントを表すインターフェース。
@@ -153,7 +106,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
  * ポインティング操作の開始を表すイベントの基底クラス。
  */
 export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventTypeString = "pointDown";
+	type: EventTypeString = "point-down";
 
 	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
 		super(pointerId, target, point, player, local, priority);
@@ -169,7 +122,7 @@ export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T>
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
 export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventTypeString = "pointUp";
+	type: EventTypeString = "point-up";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -201,7 +154,7 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
 export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventTypeString = "pointMove";
+	type: EventTypeString = "point-move";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -314,7 +267,7 @@ export class TimestampEvent implements Event {
  * PointInfoEvent#playerNameによってプレイヤー名を、PlayerInfoEvent#userData によってユーザ情報を取得できる。
  */
 export class PlayerInfoEvent implements Event {
-	type: EventTypeString = "playerInfo";
+	type: EventTypeString = "player-info";
 	priority: number;
 	playerId: string;
 	playerName: string;

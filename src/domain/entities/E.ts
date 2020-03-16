@@ -351,7 +351,7 @@ export class E extends Object2D implements CommonArea, Destroyable {
 
 		// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
 		// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
-		this.local = param.scene.local !== "nonLocal" || !!param.local;
+		this.local = param.scene.local !== "non-local" || !!param.local;
 
 		if (param.children) {
 			for (var i = 0; i < param.children.length; ++i) this.append(param.children[i]);

@@ -593,7 +593,7 @@ export class Game extends g.Game {
 
 	// 引数がなかった当時の tick の挙動を再現するメソッド。
 	classicTick(): boolean {
-		const advance = this.scene() && this.scene().local !== "fullLocal";
+		const advance = this.scene() && this.scene().local !== "full-local";
 		return this.tick(advance);
 	}
 

@@ -17,7 +17,7 @@ describe("test Event", () => {
 		const point = { x: 1, y: 2 };
 		const player = { id: "3", name: "p" };
 		const pointDownEvent = new PointDownEvent(1, null, point, player, false, 2);
-		expect(pointDownEvent.type).toBe("pointDown");
+		expect(pointDownEvent.type).toBe("point-down");
 		expect(pointDownEvent.priority).toBe(2);
 		expect(pointDownEvent.local).toBe(false);
 		expect(pointDownEvent.point).toBe(point);
@@ -31,7 +31,7 @@ describe("test Event", () => {
 		const pointAfter = { x: 0, y: 4 };
 		const player = { id: "3", name: "p" };
 		const pointUpEvent = new PointUpEvent(1, null, point, pointAfter, point, player, false, 2);
-		expect(pointUpEvent.type).toBe("pointUp");
+		expect(pointUpEvent.type).toBe("point-up");
 		expect(pointUpEvent.priority).toBe(2);
 		expect(pointUpEvent.local).toBe(false);
 		expect(pointUpEvent.point).toBe(point);
@@ -47,7 +47,7 @@ describe("test Event", () => {
 		const pointAfter = { x: 0, y: 4 };
 		const player = { id: "3", name: "p" };
 		const pointMoveEvent = new PointMoveEvent(1, null, point, pointAfter, point, player, false, 2);
-		expect(pointMoveEvent.type).toBe("pointMove");
+		expect(pointMoveEvent.type).toBe("point-move");
 		expect(pointMoveEvent.priority).toBe(2);
 		expect(pointMoveEvent.local).toBe(false);
 		expect(pointMoveEvent.point).toBe(point);
@@ -94,7 +94,7 @@ describe("test Event", () => {
 		const player = { id: "3", name: "p" };
 		const userData = { hoge: "foo" };
 		const playerInfoEvent = new PlayerInfoEvent(player.id, player.name, userData, 1);
-		expect(playerInfoEvent.type).toBe("playerInfo");
+		expect(playerInfoEvent.type).toBe("player-info");
 		expect(playerInfoEvent.priority).toBe(1);
 		expect(playerInfoEvent.userData).toEqual(userData);
 		expect(playerInfoEvent.playerId).toBe(player.id);

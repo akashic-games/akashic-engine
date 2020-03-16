@@ -260,7 +260,7 @@ describe("test Label", () => {
 
 		expect(cr.methodCallParamsHistory("setCompositeOperation").length).toBe(1);
 		expect(cr.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
-			operation: "sourceAtop"
+			operation: "source-atop"
 		});
 
 		expect(cr.methodCallParamsHistory("fillRect").length).toBe(1);

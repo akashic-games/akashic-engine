@@ -265,7 +265,7 @@ export class Label extends CacheableE {
 
 		renderer.save();
 		if (this.textColor) {
-			renderer.setCompositeOperation("sourceAtop");
+			renderer.setCompositeOperation("source-atop");
 			renderer.fillRect(0, 0, this._textWidth, this.height, this.textColor);
 		}
 		renderer.restore();

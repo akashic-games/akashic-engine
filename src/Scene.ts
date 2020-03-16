@@ -250,12 +250,12 @@ export interface SceneParameterObject {
 	/**
 	 * このシーンのローカルティック消化ポリシー。
 	 *
-	 * * `"fullLocal"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
+	 * * `"full-local"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
 	 *   ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。
-	 * * `"nonLocal"` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
+	 * * `"non-local"` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
 	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(onUpdateがfireされる)。
 	 *   ローカルティックを消化することはない。
-	 * * `"interpolateLocal"` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
+	 * * `"interpolate-local"` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
 	 *   ローカルティック補間シーンでは、非ローカルシーン同様にティックを消化するが、
 	 *   消化すべき非ローカルティックがない場合にローカルティックが補間され消化される。
 	 *
@@ -263,8 +263,8 @@ export interface SceneParameterObject {
 	 * ローカルシーンは特にアセットロード中のような、他プレイヤーと同期すべきでないシーンのために存在する機能である。
 	 *
 	 * `LocalTickModeString` の代わりに `boolean` を与えることもできる。
-	 * 偽は `"nonLocal"` 、 真は `"fullLocal"` と解釈される。
-	 * @default "nonLocal"
+	 * 偽は `"non-local"` 、 真は `"full-local"` と解釈される。
+	 * @default "non-local"
 	 */
 	local?: boolean | LocalTickModeString;
 
@@ -287,7 +287,7 @@ export interface SceneParameterObject {
 	/**
 	 * 時間経過の契機(ティック)をどのように生成するか。
 	 *
-	 * 省略された場合、 `"byClock"` 。
+	 * 省略された場合、 `"by-clock"` 。
 	 * `Manual` を指定した場合、 `Game#raiseTick()` を呼び出さない限りティックが生成されない(時間経過しない)。
 	 * ただしローカルティック(ローカルシーンの間などの「各プレイヤー間で独立な時間経過処理」)はこの値の影響を受けない。
 	 * またこのシーンへの遷移直後、一度だけこの値に関わらずティックが生成される。
@@ -298,42 +298,15 @@ export interface SceneParameterObject {
 /**
  * そのSceneの状態を表す列挙子。
  *
- * - Destroyed: すでに破棄されているシーンで、再利用が不可能になっている状態を表す
- * - Standby: 初期化された状態のシーンで、シーンスタックへ追加されることを待っている状態を表す
- * - Active: シーンスタックの一番上にいるシーンで、ゲームのカレントシーンとして活性化されている状態を表す
- * - Deactive: シーンスタックにいるが一番上ではないシーンで、裏側で非活性状態になっていることを表す
- * - BeforeDestroyed: これから破棄されるシーンで、再利用が不可能になっている状態を表す
- *
- * @deprecated 非推奨である。将来的に削除される。代わりに `SceneStateString` を利用すること。
+ * - "destroyed": すでに破棄されているシーンで、再利用が不可能になっている状態を表す
+ * - "standby": 初期化された状態のシーンで、シーンスタックへ追加されることを待っている状態を表す
+ * - "active": シーンスタックの一番上にいるシーンで、ゲームのカレントシーンとして活性化されている状態を表す
+ * - "deactive": シーンスタックにいるが一番上ではないシーンで、裏側で非活性状態になっていることを表す
+ * - "before-destroyed": これから破棄されるシーンで、再利用が不可能になっている状態を表す
  */
-export enum SceneState {
-	Destroyed,
-	Standby,
-	Active,
-	Deactive,
-	BeforeDestroyed
-}
+export type SceneStateString = "destroyed" | "standby" | "active" | "deactive" | "before-destroyed";
 
-export type SceneStateString = "destroyed" | "standby" | "active" | "deactive" | "beforeDestroyed";
-
-/**
- * SceneStateを対応する文字列に変換する
- */
-export const toSceneStateString = (sceneState: SceneState): string => {
-	return Util.toLowerCamel(SceneState[sceneState]);
-};
-
-/**
- * @deprecated 非推奨である。将来的に削除される。代わりに `SceneLoadStateString` を利用すること。
- */
-export enum SceneLoadState {
-	Initial = 0,
-	Ready = 1,
-	ReadyFired = 2,
-	LoadedFired = 3
-}
-
-export type SceneLoadStateString = "initial" | "ready" | "readyFired" | "loadedFired";
+export type SceneLoadStateString = "initial" | "ready" | "ready-fired" | "loaded-fired";
 
 /**
  * シーンを表すクラス。
@@ -372,11 +345,11 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	/**
 	 * このシーンのローカルティック消化ポリシー。
 	 *
-	 * * `"nonLocal"` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
+	 * * `"non-local"` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
 	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(onUpdateがfireされる)。
-	 * * `"fullLocal"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
+	 * * `"full-local"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
 	 *   ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。
-	 * * `"interpolateLocal"` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
+	 * * `"interpolate-local"` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
 	 *   ローカルティック補間シーンは、非ローカルシーン同様にティックを消化するが、
 	 *   消化すべき非ローカルティックがない場合にローカルティックが補間され消化される。
 	 *
@@ -603,16 +576,16 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * すなわち、 `_load()` が呼び出された後か否か。
 	 *
 	 * 歴史的経緯により、このフラグの意味は「読み込みが終わった後」でも「onLoadがfireされた後」でもない点に注意。
-	 * なお前者「(アセットとストレージの)読み込みが終わった後」は `_loadingState === ready` に与えられる。
+	 * なお前者「(アセットとストレージの)読み込みが終わった後」は `_loadingState === "ready"` に与えられる。
 	 *
 	 * シーンの読み込みは概ね次の順で処理が進行する。
 	 * * `_loaded` が真になる
 	 * * 各種読み込みが完了する
-	 * * `_loadingState` が `ready` になる
+	 * * `_loadingState` が `"ready"` になる
 	 * * `_onReady` がfireされる
-	 * * `_loadingState` が `readyFired` になる
+	 * * `_loadingState` が `"ready-fired"` になる
 	 * * `onLoad` がfireされる
-	 * * `_loadingState` が `loadedFired` になる
+	 * * `_loadingState` が `"loaded-fired"` になる
 	 * @private
 	 */
 	_loaded: boolean;
@@ -657,13 +630,13 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 		var game = param.game;
 		var local =
 			param.local === undefined
-				? "nonLocal"
+				? "non-local"
 				: param.local === false
-				? "nonLocal"
+				? "non-local"
 				: param.local === true
-				? "fullLocal"
+				? "full-local"
 				: (param.local as LocalTickModeString);
-		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "byClock";
+		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
 
 		if (!param.storageKeys) {
 			this._storageLoader = undefined;
@@ -742,7 +715,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	/**
 	 * このシーンを破棄する。
 	 *
-	 * 破棄処理の開始時に、このシーンの `onStateChange` が引数 `"beforeDestroyed"` でfireされる。
+	 * 破棄処理の開始時に、このシーンの `onStateChange` が引数 `"before-destroyed"` でfireされる。
 	 * 破棄処理の終了時に、このシーンの `onStateChange` が引数 `"destroyed"` でfireされる。
 	 * このシーンに紐づいている全ての `E` と全てのTimerは破棄される。
 	 * `Scene#setInterval()`, `Scene#setTimeout()` に渡された関数は呼び出されなくなる。
@@ -751,7 +724,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
 	destroy(): void {
-		this.state = "beforeDestroyed";
+		this.state = "before-destroyed";
 		this.onStateChange.fire(this.state);
 
 		// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
@@ -981,7 +954,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
 	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
-		var mayConsumeLocalTick = this.local !== "nonLocal";
+		var mayConsumeLocalTick = this.local !== "non-local";
 		var children = this.children;
 		var m: Matrix = undefined;
 		if (camera && camera instanceof Camera2D) m = camera.getMatrix();
@@ -1126,7 +1099,7 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 */
 	_fireReady(): void {
 		this._onReady.fire(this);
-		this._loadingState = "readyFired";
+		this._loadingState = "ready-fired";
 	}
 
 	/**
@@ -1134,6 +1107,6 @@ export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler 
 	 */
 	_fireLoaded(): void {
 		this.onLoad.fire(this);
-		this._loadingState = "loadedFired";
+		this._loadingState = "loaded-fired";
 	}
 }

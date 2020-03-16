@@ -1062,12 +1062,12 @@ describe("test E", () => {
 		const r = new Renderer();
 		e.render(r);
 		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
-		e.compositeOperation = "sourceAtop";
+		e.compositeOperation = "source-atop";
 		r.clearMethodCallHistory();
 		e.render(r);
 		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
-			operation: "sourceAtop"
+			operation: "source-atop"
 		});
 		e.compositeOperation = undefined;
 		r.clearMethodCallHistory();

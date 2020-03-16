@@ -4,29 +4,11 @@
  * この値はあくまでもエラーメッセージ出力のための補助情報であり、
  * 網羅性・厳密性を追求したものではないことに注意。
  *
- * @deprecated 非推奨である。将来的に削除される。代わりに `AssetLoadErrorTypeString` を利用すること。
+ * - "unspecified": 明示されていない(以下のいずれかかもしれないし、そうでないかもしれない)。
+ * - "retry-limit-exceeded": エンジンの再試行回数上限設定値を超えた。
+ * - "network-error": ネットワークエラー。タイムアウトなど。
+ * - "client-error": リクエストに問題があるエラー。HTTP 4XX など。
+ * - "server-error": サーバ側のエラー。HTTP 5XX など。
+ *
  */
-export enum AssetLoadErrorType {
-	/**
-	 * 明示されていない(以下のいずれかかもしれないし、そうでないかもしれない)。
-	 */
-	Unspecified,
-	/**
-	 * エンジンの再試行回数上限設定値を超えた。
-	 */
-	RetryLimitExceeded,
-	/**
-	 * ネットワークエラー。タイムアウトなど。
-	 */
-	NetworkError,
-	/**
-	 * リクエストに問題があるエラー。HTTP 4XX など。
-	 */
-	ClientError,
-	/**
-	 * サーバ側のエラー。HTTP 5XX など。
-	 */
-	ServerError
-}
-
-export type AssetLoadErrorTypeString = "unspecified" | "retryLimitExceeded" | "networkError" | "clientError" | "serverError";
+export type AssetLoadErrorTypeString = "unspecified" | "retry-limit-exceeded" | "network-error" | "client-error" | "server-error";

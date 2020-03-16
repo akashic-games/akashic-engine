@@ -178,7 +178,7 @@ export class EventConverter {
 					playerId, //               2: プレイヤーID
 					ts.timestamp //            3: タイムスタンプ
 				];
-			case "playerInfo":
+			case "player-info":
 				let playerInfo = <PlayerInfoEvent>e;
 				playerId = preservePlayer ? playerInfo.playerId : this._playerId;
 				return [
@@ -188,7 +188,7 @@ export class EventConverter {
 					playerInfo.playerName, //   3: プレイヤー名
 					playerInfo.userData //      4: ユーザデータ
 				];
-			case "pointDown":
+			case "point-down":
 				let pointDown = <PointDownEvent>e;
 				targetId = pointDown.target ? pointDown.target.id : null;
 				playerId = preservePlayer ? pointDown.player.id : this._playerId;
@@ -202,7 +202,7 @@ export class EventConverter {
 					targetId, //               6?: エンティティID
 					!!pointDown.local //       7?: 直前のポイントムーブイベントからのY座標の差
 				];
-			case "pointMove":
+			case "point-move":
 				let pointMove = <PointMoveEvent>e;
 				targetId = pointMove.target ? pointMove.target.id : null;
 				playerId = preservePlayer ? pointMove.player.id : this._playerId;
@@ -220,7 +220,7 @@ export class EventConverter {
 					targetId, //               10?: エンティティID
 					!!pointMove.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
-			case "pointUp":
+			case "point-up":
 				let pointUp = <PointUpEvent>e;
 				targetId = pointUp.target ? pointUp.target.id : null;
 				playerId = preservePlayer ? pointUp.player.id : this._playerId;

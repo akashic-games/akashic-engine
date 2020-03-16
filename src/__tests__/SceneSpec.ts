@@ -32,7 +32,7 @@ describe("test Scene", () => {
 		const scene = new Scene({
 			game: game,
 			assetIds: ["foo"],
-			local: "interpolateLocal",
+			local: "interpolate-local",
 			tickGenerationMode: "manual",
 			name: "myScene"
 		});
@@ -45,7 +45,7 @@ describe("test Scene", () => {
 		expect(scene.children.length).toBe(0);
 		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
 		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(1);
-		expect(scene.local).toBe("interpolateLocal");
+		expect(scene.local).toBe("interpolate-local");
 		expect(scene.tickGenerationMode).toBe("manual");
 		expect(scene.name).toEqual("myScene");
 
@@ -936,18 +936,18 @@ describe("test Scene", () => {
 	it("state - change order and count", done => {
 		const expected = [
 			["S1", "active"],
-			["S1", "beforeDestroyed"],
+			["S1", "before-destroyed"],
 			["S1", "destroyed"],
 			["S2", "active"],
 			["S2", "deactive"],
 			["S3", "active"],
-			["S3", "beforeDestroyed"],
+			["S3", "before-destroyed"],
 			["S3", "destroyed"],
 			["S4", "active"],
-			["S4", "beforeDestroyed"],
+			["S4", "before-destroyed"],
 			["S4", "destroyed"],
 			["S2", "active"],
-			["S2", "beforeDestroyed"],
+			["S2", "before-destroyed"],
 			["S2", "destroyed"]
 		];
 		const actual: [string, string][] = [];

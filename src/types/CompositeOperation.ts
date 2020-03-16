@@ -1,5 +1,3 @@
-import { Util } from "../domain/Util";
-
 /**
  * 描画時の合成方法。
  * @deprecated 非推奨である。将来的に削除される。代わりに `CompositeOperationString` を利用すること。
@@ -56,19 +54,14 @@ export enum CompositeOperation {
 }
 
 export type CompositeOperationString =
-	| "sourceOver"
-	| "sourceAtop"
+	| "source-over"
+	| "source-atop"
 	| "lighter"
 	| "copy"
-	| "experimentalSourceIn"
-	| "experimentalSourceOut"
-	| "experimentalDestinationAtop"
-	| "experimentalDestinationIn"
-	| "destinationOut"
-	| "destinationOver"
+	| "experimental-source-in"
+	| "experimental-source-out"
+	| "experimental-destination-atop"
+	| "experimental-destination-in"
+	| "destination-out"
+	| "destination-over"
 	| "xor";
-
-/** CompositeOperationを対応する文字列に変換する */
-export const toCompositeOperationString = (operation: CompositeOperation): string => {
-	return Util.toLowerCamel(CompositeOperation[operation]);
-};

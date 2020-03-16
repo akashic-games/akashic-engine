@@ -49,7 +49,7 @@ describe("test Object2D", () => {
 			scaleX: 0.4,
 			scaleY: 1.2,
 			angle: 10,
-			compositeOperation: "sourceAtop",
+			compositeOperation: "source-atop",
 			anchorX: 0,
 			anchorY: 1
 		});
@@ -61,7 +61,7 @@ describe("test Object2D", () => {
 		expect(e.scaleX).toEqual(0.4);
 		expect(e.scaleY).toEqual(1.2);
 		expect(e.angle).toEqual(10);
-		expect(e.compositeOperation).toEqual("sourceAtop");
+		expect(e.compositeOperation).toEqual("source-atop");
 		expect(e.anchorX).toBe(0);
 		expect(e.anchorY).toBe(1);
 		expect(e._matrix).toBeUndefined();

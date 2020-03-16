@@ -7,7 +7,7 @@ describe("test DynamicFont", () => {
 
 		const font = new DynamicFont({
 			game: runtime.game,
-			fontFamily: "sansSerif",
+			fontFamily: "sans-serif",
 			size: 20,
 			hint: {},
 			fontColor: "white",
@@ -16,7 +16,7 @@ describe("test DynamicFont", () => {
 			strokeColor: "red",
 			strokeOnly: true
 		});
-		expect(font.fontFamily).toBe("sansSerif");
+		expect(font.fontFamily).toBe("sans-serif");
 		expect(font.size).toBe(20);
 		expect(font.fontColor).toBe("white");
 		expect(font.fontWeight).toBe("bold");
@@ -35,7 +35,7 @@ describe("test DynamicFont", () => {
 
 		const font = new DynamicFont({
 			game: runtime.game,
-			fontFamily: "sansSerif",
+			fontFamily: "sans-serif",
 			size: 20,
 			hint: {
 				initialAtlasWidth: 1000,
@@ -50,7 +50,7 @@ describe("test DynamicFont", () => {
 			strokeColor: "red",
 			strokeOnly: true
 		});
-		expect(font.fontFamily).toBe("sansSerif");
+		expect(font.fontFamily).toBe("sans-serif");
 		expect(font.size).toBe(20);
 		expect(font.fontColor).toBe("white");
 		expect(font.fontWeight).toBe("bold");

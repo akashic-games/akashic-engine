@@ -1,4 +1,10 @@
 import { CommonArea, CommonOffset } from "../types/commons";
+import { CompositeOperation, CompositeOperationString } from "../types/CompositeOperation";
+import { FontFamily, FontFamilyString } from "../types/FontFamily";
+import { FontWeight, FontWeightString } from "../types/FontWeight";
+import { LocalTickMode, LocalTickModeString } from "../types/LocalTickMode";
+import { TextAlign, TextAlignString } from "../types/TextAlign";
+import { TextBaseline, TextBaselineString } from "../types/TextBaseline";
 
 /**
  * ユーティリティ。
@@ -61,11 +67,38 @@ export module Util {
 		return code;
 	}
 
-	/**
-	 * UpperCamelな文字列をLowerCamelな文字列に変換
-	 * @deprecated Enumをunionな文字列に変換する用途で用意したものなので、コンテンツ内での利用は非推奨である。
-	 */
-	export function toLowerCamel(s: string): string {
-		return s[0].toLowerCase() + s.slice(1);
+	/** CompositeOperationを対応する文字列に変換する */
+	export const stringOfCompositeOperation = (operation: CompositeOperation): CompositeOperationString => {
+		return toSnakeCase(CompositeOperation[operation]) as CompositeOperationString;
+	};
+
+	/** FontFamilyを対応する文字列に変換する */
+	export const stringOfFontFamilyString = (family: FontFamily): FontFamilyString => {
+		return toSnakeCase(FontFamily[family]) as FontFamilyString;
+	};
+
+	/** FontWeightを対応する文字列に変換する */
+	export const stringOfFontWeightString = (weight: FontWeight): FontWeightString => {
+		return toSnakeCase(FontWeight[weight]) as FontWeightString;
+	};
+
+	/** LocalTickModeを対応する文字列に変換する */
+	export const stringOfLocalTickModeString = (mode: LocalTickMode): LocalTickModeString => {
+		return toSnakeCase(LocalTickMode[mode]) as LocalTickModeString;
+	};
+
+	/** TextAlignを対応する文字列に変換する */
+	export const stringOfTextAlignString = (textAlign: TextAlign): TextAlignString => {
+		return toSnakeCase(TextAlign[textAlign]) as TextAlignString;
+	};
+
+	/** TextBaselineを対応する文字列に変換する */
+	export const stringOfTextBaselineString = (textBaseline: TextBaseline): TextBaselineString => {
+		return toSnakeCase(TextBaseline[textBaseline]) as TextBaselineString;
+	};
+
+	// UpperCamelな文字列をsnake-caseな文字列に変換
+	function toSnakeCase(s: string): string {
+		return s[0].toLowerCase() + s.slice(1).replace(/[A-Z]/g, (c: string) => "-" + c.toLowerCase());
 	}
 }

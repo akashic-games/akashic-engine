@@ -90,7 +90,7 @@ module.exports = {
         }],
         "camelcase": "off",
         "curly": "off",
-        "dot-notation": "error",
+        "dot-notation": "off",
         "eol-last": "error",
         "eqeqeq": [
             "error",

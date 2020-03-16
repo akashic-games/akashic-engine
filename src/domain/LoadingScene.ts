@@ -107,7 +107,7 @@ export class LoadingScene extends Scene {
 	reset(targetScene: Scene): void {
 		this._clearTargetScene();
 		this._targetScene = targetScene;
-		if (this._loadingState !== "loadedFired") {
+		if (this._loadingState !== "loaded-fired") {
 			this.onLoad.addOnce(this._doReset, this);
 		} else {
 			this._doReset();

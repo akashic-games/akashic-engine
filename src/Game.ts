@@ -690,15 +690,15 @@ export abstract class Game implements Registrable<E> {
 		this.seed = this.onSeed;
 
 		this._eventTriggerMap = {};
-		this._eventTriggerMap.join = this.onJoin;
-		this._eventTriggerMap.leave = this.onLeave;
-		this._eventTriggerMap.playerInfo = this.onPlayerInfo;
-		this._eventTriggerMap.seed = this.onSeed;
-		this._eventTriggerMap.message = undefined;
-		this._eventTriggerMap.pointDown = undefined;
-		this._eventTriggerMap.pointMove = undefined;
-		this._eventTriggerMap.pointUp = undefined;
-		this._eventTriggerMap.operation = undefined;
+		this._eventTriggerMap["join"] = this.onJoin;
+		this._eventTriggerMap["leave"] = this.onLeave;
+		this._eventTriggerMap["player-info"] = this.onPlayerInfo;
+		this._eventTriggerMap["seed"] = this.onSeed;
+		this._eventTriggerMap["message"] = undefined;
+		this._eventTriggerMap["point-down"] = undefined;
+		this._eventTriggerMap["point-move"] = undefined;
+		this._eventTriggerMap["point-up"] = undefined;
+		this._eventTriggerMap["operation"] = undefined;
 
 		this.onResized = new Trigger<CommonSize>();
 		this.onSkipChange = new Trigger<boolean>();
@@ -1101,7 +1101,7 @@ export abstract class Game implements Registrable<E> {
 	 * @private
 	 */
 	_fireSceneLoaded(scene: Scene): void {
-		if (scene._loadingState !== "loadedFired") {
+		if (scene._loadingState !== "loaded-fired") {
 			this._sceneChangeRequests.push({
 				type: SceneChangeType.FireLoaded,
 				scene: scene
@@ -1365,19 +1365,19 @@ export abstract class Game implements Registrable<E> {
 	_updateEventTriggers(scene: Scene): void {
 		this._modified = true;
 		if (!scene) {
-			this._eventTriggerMap.message = undefined;
-			this._eventTriggerMap.pointDown = undefined;
-			this._eventTriggerMap.pointMove = undefined;
-			this._eventTriggerMap.pointUp = undefined;
-			this._eventTriggerMap.operation = undefined;
+			this._eventTriggerMap["message"] = undefined;
+			this._eventTriggerMap["point-down"] = undefined;
+			this._eventTriggerMap["point-move"] = undefined;
+			this._eventTriggerMap["point-up"] = undefined;
+			this._eventTriggerMap["operation"] = undefined;
 			return;
 		}
 
-		this._eventTriggerMap.message = scene.onMessage;
-		this._eventTriggerMap.pointDown = scene.onPointDownCapture;
-		this._eventTriggerMap.pointMove = scene.onPointMoveCapture;
-		this._eventTriggerMap.pointUp = scene.onPointUpCapture;
-		this._eventTriggerMap.operation = scene.onOperation;
+		this._eventTriggerMap["message"] = scene.onMessage;
+		this._eventTriggerMap["point-down"] = scene.onPointDownCapture;
+		this._eventTriggerMap["point-move"] = scene.onPointMoveCapture;
+		this._eventTriggerMap["point-up"] = scene.onPointUpCapture;
+		this._eventTriggerMap["operation"] = scene.onOperation;
 		scene._activate();
 	}
 
@@ -1474,7 +1474,7 @@ export abstract class Game implements Registrable<E> {
 		if (!loadingScene) loadingScene = this.loadingScene || this._defaultLoadingScene;
 		this.scenes.push(scene);
 
-		if (scene._needsLoading() && scene._loadingState !== "loadedFired") {
+		if (scene._needsLoading() && scene._loadingState !== "loaded-fired") {
 			if (this._defaultLoadingScene._needsLoading())
 				throw ExceptionFactory.createAssertionError(
 					"Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages."
