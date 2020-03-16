@@ -101,4 +101,9 @@ export interface SurfaceAtlasSetLike {
 	 * オブジェクトを破棄する。
 	 */
 	destroy(): void;
+
+	/**
+	 * 破棄されたオブジェクトかどうかを判定する。
+	 */
+	destroyed(): boolean;
 }
