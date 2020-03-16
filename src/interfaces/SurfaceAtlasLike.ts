@@ -1,5 +1,4 @@
 import { CommonSize } from "../types/commons";
-import { Destroyable } from "../types/Destroyable";
 import { SurfaceAtlasSlotLike } from "./SurfaceAtlasSlotLike";
 import { SurfaceLike } from "./SurfaceLike";
 
@@ -8,7 +7,7 @@ import { SurfaceLike } from "./SurfaceLike";
  *
  * 与えられたサーフェスの指定された領域をコピーし一枚のサーフェスにまとめる。
  */
-export interface SurfaceAtlasLike extends Destroyable {
+export interface SurfaceAtlasLike {
 	/**
 	 * @private
 	 */
@@ -34,4 +33,14 @@ export interface SurfaceAtlasLike extends Destroyable {
 	 * サーフェスアトラスの大きさを取得する。
 	 */
 	getAtlasUsedSize(): CommonSize;
+
+	/**
+	 * オブジェクトを破棄する。
+	 */
+	destroy(): void;
+
+	/**
+	 * 破棄されたオブジェクトかどうかを判定する。
+	 */
+	destroyed(): boolean;
 }

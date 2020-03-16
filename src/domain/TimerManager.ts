@@ -1,6 +1,5 @@
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { Destroyable } from "../types/Destroyable";
 import { Timer } from "./Timer";
 
 /**
@@ -8,7 +7,7 @@ import { Timer } from "./Timer";
  * ゲーム開発者が本クラスのインスタンスを直接生成することはなく、
  * 本クラスの機能を直接利用することはない。
  */
-export class TimerIdentifier implements Destroyable {
+export class TimerIdentifier {
 	/**
 	 * @private
 	 */
@@ -71,7 +70,7 @@ export class TimerIdentifier implements Destroyable {
  * Timerを管理する機構を提供する。
  * ゲーム開発者が本クラスを利用する事はない。
  */
-export class TimerManager implements Destroyable {
+export class TimerManager {
 	_timers: Timer[];
 	_trigger: Trigger<void>;
 	_identifiers: TimerIdentifier[];

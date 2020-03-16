@@ -1,5 +1,4 @@
 import { Trigger } from "@akashic/trigger";
-import { Destroyable } from "../types/Destroyable";
 import { AssetLoadError } from "../types/errors";
 
 /**
@@ -28,7 +27,7 @@ export interface AssetLoadHandler {
  * game.jsonによって定義された内容をもとに暗黙的に生成されたインスタンスを、
  * Scene#assets、またはGame#assetsによって取得して利用する。
  */
-export interface AssetLike extends Destroyable {
+export interface AssetLike {
 	id: string;
 	type: string;
 	path: string;
@@ -49,6 +48,16 @@ export interface AssetLike extends Destroyable {
 	 * 本メソッドは `true` を返し、適切なタイミングで `Asset` が解放されるよう制御する必要がある。
 	 */
 	inUse(): boolean;
+
+	/**
+	 * オブジェクトを破棄する。
+	 */
+	destroy(): void;
+
+	/**
+	 * 破棄されたオブジェクトかどうかを判定する。
+	 */
+	destroyed(): boolean;
 
 	/**
 	 * アセットの読み込みを行う。

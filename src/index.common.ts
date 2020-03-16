@@ -95,7 +95,6 @@ export * from "./types/AssetConfiguration";
 export * from "./types/AssetLoadErrorType";
 export * from "./types/commons";
 export * from "./types/CompositeOperation";
-export * from "./types/Destroyable";
 export * from "./types/DynamicAssetConfiguration";
 export * from "./types/EntityStateFlags";
 export * from "./types/errors";

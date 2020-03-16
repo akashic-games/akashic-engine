@@ -14,7 +14,6 @@ import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
 import { CommonOffset } from "./types/commons";
-import { Destroyable } from "./types/Destroyable";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
 import { AssetLoadError, StorageLoadError } from "./types/errors";
 import { LocalTickMode } from "./types/LocalTickMode";
@@ -321,7 +320,7 @@ export enum SceneLoadState {
 /**
  * シーンを表すクラス。
  */
-export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler {
+export class Scene implements Registrable<E>, StorageLoaderHandler {
 	/**
 	 * このシーンの子エンティティ。
 	 *
