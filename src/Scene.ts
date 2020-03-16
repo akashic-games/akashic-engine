@@ -17,7 +17,6 @@ import { CommonOffset } from "./types/commons";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
 import { AssetLoadError, StorageLoadError } from "./types/errors";
 import { LocalTickMode } from "./types/LocalTickMode";
-import { Registrable } from "./types/Registrable";
 import { TickGenerationMode } from "./types/TickGenerationMode";
 
 /**
@@ -320,7 +319,7 @@ export enum SceneLoadState {
 /**
  * シーンを表すクラス。
  */
-export class Scene implements Registrable<E>, StorageLoaderHandler {
+export class Scene implements StorageLoaderHandler {
 	/**
 	 * このシーンの子エンティティ。
 	 *

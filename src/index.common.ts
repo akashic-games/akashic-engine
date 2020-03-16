@@ -115,7 +115,6 @@ export * from "./types/OperationPluginView";
 export * from "./types/OperationPluginViewInfo";
 export * from "./types/PlatformPointEvent";
 export * from "./types/Player";
-export * from "./types/Registrable";
 export * from "./types/ShaderUniform";
 export * from "./types/TextAlign";
 export * from "./types/TextBaseline";

@@ -31,7 +31,6 @@ import { LocalTickMode } from "./types/LocalTickMode";
 import { OperationPlugin } from "./types/OperationPlugin";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
-import { Registrable } from "./types/Registrable";
 import { TickGenerationMode } from "./types/TickGenerationMode";
 
 /**
@@ -178,7 +177,7 @@ export interface GameParameterObject {
  * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
  * 11.操作プラグインを直接制御するため、Game#operationPluginManagerにアクセスする
  */
-export class Game implements Registrable<E> {
+export class Game {
 	/**
 	 * このコンテンツに関連付けられるエンティティ。(ローカルなエンティティを除く)
 	 */
