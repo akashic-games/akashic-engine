@@ -1,6 +1,6 @@
 import { GlyphLike } from "../interfaces/GlyphLike";
 import { Destroyable } from "../types/Destroyable";
-import { TextMetrix } from "../types/TextMetrix";
+import { TextMetrics } from "../types/TextMetrix";
 import { Util } from "./Util";
 
 /**
@@ -32,7 +32,7 @@ export abstract class Font implements Destroyable {
 	 *
 	 * @param text 文字列
 	 */
-	measureText(text: string): TextMetrix {
+	measureText(text: string): TextMetrics {
 		let width = 0;
 		let actualBoundingBoxLeft = 0;
 		let actualBoundingBoxRight = 0;
