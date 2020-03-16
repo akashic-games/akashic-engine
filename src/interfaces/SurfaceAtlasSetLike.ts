@@ -98,12 +98,12 @@ export interface SurfaceAtlasSetLike {
 	addGlyph(glyph: GlyphLike): SurfaceAtlasLike;
 
 	/**
-	 * オブジェクトを破棄する。
+	 * このサーフェスアトラスの破棄を行う。
 	 */
 	destroy(): void;
 
 	/**
-	 * 破棄されたオブジェクトかどうかを判定する。
+	 * このサーフェスアトラスが破棄済みであるかどうかを判定する。
 	 */
 	destroyed(): boolean;
 }

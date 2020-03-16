@@ -50,12 +50,12 @@ export interface AssetLike {
 	inUse(): boolean;
 
 	/**
-	 * オブジェクトを破棄する。
+	 * このアセットのリソースの破棄を行う。
 	 */
 	destroy(): void;
 
 	/**
-	 * 破棄されたオブジェクトかどうかを判定する。
+	 * このアセットのリソースが破棄済みであるかどうかを判定する。
 	 */
 	destroyed(): boolean;
 

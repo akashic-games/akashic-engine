@@ -68,12 +68,12 @@ export interface SurfaceLike extends CommonSize {
 	isPlaying(): boolean;
 
 	/**
-	 * オブジェクトを破棄する。
+	 * このSurfaceの破棄を行う。
 	 */
 	destroy(): void;
 
 	/**
-	 * 破棄されたオブジェクトかどうかを判定する。
+	 * このSurfaceが破棄済みであるかどうかを判定する。
 	 */
 	destroyed(): boolean;
 }
