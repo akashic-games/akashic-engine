@@ -20,7 +20,6 @@ import { AssetLoadError, StorageLoadError } from "./types/errors";
 import { LocalTickModeString } from "./types/LocalTickMode";
 import { Registrable } from "./types/Registrable";
 import { TickGenerationModeString } from "./types/TickGenerationMode";
-import { Util } from "./domain/Util";
 
 /**
  * SceneAssetHolder のコンストラクタに指定できるパラメータ。
