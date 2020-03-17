@@ -1,6 +1,6 @@
 import { GlyphLike } from "../interfaces/GlyphLike";
 import { Destroyable } from "../types/Destroyable";
-import { TextMetrics } from "../types/TextMetrix";
+import { TextMetrics } from "../types/TextMetrics";
 import { Util } from "./Util";
 
 /**
