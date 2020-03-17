@@ -8,13 +8,17 @@ export interface ErrorLike extends Error {
  * アサーションエラー。
  * エンジンが想定しない状態に陥った場合にthrowされる。メソッドの引数が正しくない場合などもこのエラーがthrowされる。
  */
-export interface AssertionError extends ErrorLike {}
+export interface AssertionError extends ErrorLike {
+	name: "AssertionError";
+}
 
 /**
  * 型ミスマッチエラー。
  * 期待されるものと異なる型の値が与えられた場合にthrowされる。
  */
 export interface TypeMismatchError extends ErrorLike {
+	name: "TypeMismatchError";
+
 	/**
 	 * 期待される型情報。
 	 */
@@ -35,6 +39,8 @@ export interface TypeMismatchError extends ErrorLike {
  * 読み込みの再試行が可能かどうかは `retriable` で判断すべきである。
  */
 export interface AssetLoadError extends ErrorLike {
+	name: "AssetLoadError";
+
 	/**
 	 * 再試行できるエラーかどうか。
 	 *
@@ -57,4 +63,6 @@ export interface AssetLoadError extends ErrorLike {
  * ストレージエラー。
  * `StorageLoader#_load()` が失敗した時、`StorageLoadHandler#_onStorageLoadError` に渡される。
  */
-export interface StorageLoadError extends ErrorLike {}
+export interface StorageLoadError extends ErrorLike {
+	name: "StorageLoadError";
+}
