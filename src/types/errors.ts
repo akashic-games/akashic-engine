@@ -1,6 +1,9 @@
 import { AssetLoadErrorType } from "./AssetLoadErrorType";
 
-export interface ErrorLike extends Error {
+export interface ErrorLike {
+	name: string;
+	message: string;
+	stack?: string;
 	cause?: any;
 }
 
