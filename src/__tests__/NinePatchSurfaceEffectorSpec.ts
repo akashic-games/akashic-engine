@@ -1,7 +1,7 @@
 import { NinePatchSurfaceEffector, Game } from "..";
 import { skeletonRuntime } from "./helpers";
 
-declare const g: { game: Game };
+declare let g: { game: Game };
 
 // NOTE: NinePatchSurfaceEffectorは非推奨でありいずれ削除される。
 describe("test NinePatchSurfaceEffector", () => {
@@ -17,15 +17,6 @@ describe("test NinePatchSurfaceEffector", () => {
 		expect(ninePatch.borderWidth).toMatchObject({ top: 4, bottom: 4, left: 4, right: 4 });
 	});
 
-	it("初期化- game省略, g.gameがない場合エラーとなる", () => {
-		try {
-			new NinePatchSurfaceEffector(5);
-		} catch (e) {
-			expect(e.message).toBe("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
-			expect(e.name).toEqual("AssertionError");
-		}
-	});
-
 	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
 		const runtime = skeletonRuntime();
 		g.game = runtime.game;
@@ -38,5 +29,18 @@ describe("test NinePatchSurfaceEffector", () => {
 		g.game = runtime.game;
 		const ninePatch = new NinePatchSurfaceEffector();
 		expect(ninePatch.borderWidth).toMatchObject({ top: 4, bottom: 4, left: 4, right: 4 });
+	});
+
+	it("初期化- game省略, g.gameがない場合エラーとなる", () => {
+		delete g.game;
+		try {
+			new NinePatchSurfaceEffector(5);
+		} catch (e) {
+			expect(e.message).toBe("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+			expect(e.name).toEqual("AssertionError");
+		}
+
+		g = undefined;
+		expect(() => new NinePatchSurfaceEffector(5)).toThrow("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
 	});
 });

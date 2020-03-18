@@ -77,7 +77,7 @@ export class LoadingScene extends Scene {
 	 * `LoadingScene` のインスタンスを生成する。
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
-	constructor(param: LoadingSceneParameterObject) {
+	constructor(param: LoadingSceneParameterObject = {}) {
 		param.local = true; // LoadingScene は強制的にローカルにする
 		super(param);
 		this.onTargetReset = new Trigger<Scene>();
