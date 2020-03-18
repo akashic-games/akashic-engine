@@ -1,12 +1,11 @@
 import { GlyphLike } from "../interfaces/GlyphLike";
-import { Destroyable } from "../types/Destroyable";
 import { TextMetrics } from "../types/TextMetrics";
 import { Util } from "./Util";
 
 /**
  * フォント。
  */
-export abstract class Font implements Destroyable {
+export abstract class Font {
 	/**
 	 * フォントサイズ。
 	 *

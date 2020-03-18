@@ -1,5 +1,4 @@
 import { Trigger } from "@akashic/trigger";
-import { Destroyable } from "../types/Destroyable";
 
 /**
  * 一定時間で繰り返される処理を表すタイマー。
@@ -7,7 +6,7 @@ import { Destroyable } from "../types/Destroyable";
  * ゲーム開発者が本クラスのインスタンスを直接生成することはなく、
  * 通常はScene#setTimeout、Scene#setIntervalによって間接的に利用する。
  */
-export class Timer implements Destroyable {
+export class Timer {
 	/**
 	 * 実行間隔（ミリ秒）。
 	 * この値は参照のみに利用され、直接値を変更することはできない。

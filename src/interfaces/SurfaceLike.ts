@@ -1,12 +1,11 @@
 import { Trigger } from "@akashic/trigger";
 import { CommonSize } from "../types/commons";
-import { Destroyable } from "../types/Destroyable";
 import { RendererLike } from "./RendererLike";
 
 /**
  * 描画領域を表すインターフェース。
  */
-export interface SurfaceLike extends CommonSize, Destroyable {
+export interface SurfaceLike extends CommonSize {
 	/**
 	 * 描画領域の幅。
 	 * この値を直接書き換えてはならない。
@@ -67,4 +66,14 @@ export interface SurfaceLike extends CommonSize, Destroyable {
 	 * このSurfaceが動画を再生中であるかどうかを判定する。
 	 */
 	isPlaying(): boolean;
+
+	/**
+	 * このSurfaceの破棄を行う。
+	 */
+	destroy(): void;
+
+	/**
+	 * このSurfaceが破棄済みであるかどうかを判定する。
+	 */
+	destroyed(): boolean;
 }

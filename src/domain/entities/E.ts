@@ -14,7 +14,6 @@ import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
 import { Scene } from "../../Scene";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
-import { Destroyable } from "../../types/Destroyable";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { LocalTickMode } from "../../types/LocalTickMode";
 import { Camera } from "../Camera";
@@ -136,7 +135,7 @@ export interface EParameterObject extends Object2DParameterObject {
  * akashic-engineに描画される全てのエンティティを表す基底クラス。
  * 本クラス単体に描画処理にはなく、直接利用する場合はchildrenを利用したコンテナとして程度で利用される。
  */
-export class E extends Object2D implements CommonArea, Destroyable {
+export class E extends Object2D implements CommonArea {
 	/**
 	 * このエンティティに割り振られる `Game` 単位で一意のID。(ただし `local` が真である場合を除く)
 	 */

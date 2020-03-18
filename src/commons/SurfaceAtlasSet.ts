@@ -3,7 +3,6 @@ import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasLike } from "../interfaces/SurfaceAtlasLike";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
 import { CommonSize } from "../types/commons";
-import { Destroyable } from "../types/Destroyable";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
@@ -46,7 +45,7 @@ export interface SurfaceAtlasSetParameterObject {
 /**
  * DynamicFontで使用される、SurfaceAtlasを管理する。
  */
-export class SurfaceAtlasSet implements SurfaceAtlasSetLike, Destroyable {
+export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	/**
 	 * SurfaceAtlas最大保持数初期値
 	 */
