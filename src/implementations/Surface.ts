@@ -3,7 +3,6 @@ import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { RendererLike } from "../interfaces/RendererLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { CommonSize } from "../types/commons";
-import { Destroyable } from "../types/Destroyable";
 
 /**
  * 描画領域を表すクラス。
@@ -11,7 +10,7 @@ import { Destroyable } from "../types/Destroyable";
  * このクラスのインスタンスは、エンジンによって暗黙に生成される。
  * ゲーム開発者はこのクラスのインスタンスを明示的に生成する必要はなく、またできない。
  */
-export abstract class Surface implements SurfaceLike, CommonSize, Destroyable {
+export abstract class Surface implements SurfaceLike, CommonSize {
 	/**
 	 * 描画領域の幅。
 	 * この値を直接書き換えてはならない。

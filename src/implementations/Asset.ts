@@ -1,6 +1,5 @@
 import { Trigger } from "@akashic/trigger";
 import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
-import { Destroyable } from "../types/Destroyable";
 
 /**
  * 各種リソースを表すクラス。
@@ -8,7 +7,7 @@ import { Destroyable } from "../types/Destroyable";
  * game.jsonによって定義された内容をもとに暗黙的に生成されたインスタンスを、
  * Scene#assets、またはGame#assetsによって取得して利用する。
  */
-export abstract class Asset implements AssetLike, Destroyable {
+export abstract class Asset implements AssetLike {
 	type: string;
 	id: string;
 	path: string;

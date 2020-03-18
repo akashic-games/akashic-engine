@@ -1,5 +1,4 @@
 import { CommonSize } from "../types/commons";
-import { Destroyable } from "../types/Destroyable";
 import { GlyphLike } from "./GlyphLike";
 import { SurfaceAtlasLike } from "./SurfaceAtlasLike";
 
@@ -39,7 +38,7 @@ export interface SurfaceAtlasSetHint {
 /**
  * DynamicFontで使用される、SurfaceAtlasを管理する。
  */
-export interface SurfaceAtlasSetLike extends Destroyable {
+export interface SurfaceAtlasSetLike {
 	/**
 	 * サーフェスアトラスを追加する。
 	 *
@@ -97,4 +96,14 @@ export interface SurfaceAtlasSetLike extends Destroyable {
 	 * @param glyph グリフ
 	 */
 	addGlyph(glyph: GlyphLike): SurfaceAtlasLike;
+
+	/**
+	 * このサーフェスアトラスの破棄を行う。
+	 */
+	destroy(): void;
+
+	/**
+	 * このサーフェスアトラスが破棄済みであるかどうかを判定する。
+	 */
+	destroyed(): boolean;
 }
