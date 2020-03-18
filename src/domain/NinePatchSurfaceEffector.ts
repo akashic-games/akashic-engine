@@ -1,6 +1,7 @@
 import { Game } from "../Game";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { CommonRect } from "../types/commons";
+import { getGameInAssetContext } from "./GameInAssetContext";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
 
@@ -12,7 +13,7 @@ import { SurfaceUtil } from "./SurfaceUtil";
  * また左右の「枠」を横に引き延ばすことなく画像を任意サイズに拡大・縮小できる。
  * ゲームにおけるメッセージウィンドウやダイアログの表現に利用することを想定している。
  *
- * @deprecated 非推奨である。将来的に削除される予定である。
+ * @deprecated 非推奨である。将来的に削除される。代わりに `SurfaceUtil#drawNinePatch()` を利用すること。
  */
 export class NinePatchSurfaceEffector implements SurfaceEffector {
 	game: Game;
@@ -30,12 +31,12 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 
 	/**
 	 * `NinePatchSurfaceEffector` のインスタンスを生成する。
-	 * @deprecated 非推奨である。将来的に削除される予定である。
-	 * @param game このインスタンスが属する `Game`
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `SurfaceUtil#drawNinePatch()` を利用すること。
 	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
+	 * @param game このインスタンスが属する `Game`。ゲーム開発者が指定する必要はない。
 	 */
-	constructor(game: Game, borderWidth: CommonRect | number = 4) {
-		this.game = game;
+	constructor(borderWidth: CommonRect | number = 4, game?: Game) {
+		this.game = game || getGameInAssetContext();
 		if (typeof borderWidth === "number") {
 			this.borderWidth = {
 				top: borderWidth,

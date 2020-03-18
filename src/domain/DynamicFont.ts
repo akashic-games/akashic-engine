@@ -8,6 +8,7 @@ import { FontFamily } from "../types/FontFamily";
 import { FontWeight } from "../types/FontWeight";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
+import { getGameInAssetContext } from "./GameInAssetContext";
 import { Util } from "./Util";
 
 /**
@@ -20,8 +21,9 @@ import { Util } from "./Util";
 export interface DynamicFontParameterObject {
 	/**
 	 * ゲームインスタンス。
+	 * ゲーム開発者が指定する必要はない。
 	 */
-	game: Game;
+	game?: Game;
 
 	/**
 	 * フォントファミリ。
@@ -195,7 +197,8 @@ export class DynamicFont extends Font {
 		this.strokeWidth = param.strokeWidth != null ? param.strokeWidth : 0;
 		this.strokeColor = param.strokeColor != null ? param.strokeColor : "black";
 		this.strokeOnly = param.strokeOnly != null ? param.strokeOnly : false;
-		this._resourceFactory = param.game.resourceFactory;
+		const game = param.game || getGameInAssetContext();
+		this._resourceFactory = game.resourceFactory;
 		this._glyphFactory = this._resourceFactory.createGlyphFactory(
 			this.fontFamily,
 			this.size,
@@ -217,11 +220,11 @@ export class DynamicFont extends Font {
 		} else if (!!param.hint) {
 			this._isSurfaceAtlasSetOwner = true;
 			this._atlasSet = new SurfaceAtlasSet({
-				resourceFactory: param.game.resourceFactory,
+				resourceFactory: game.resourceFactory,
 				hint: this.hint
 			});
 		} else {
-			this._atlasSet = param.game.surfaceAtlasSet;
+			this._atlasSet = game.surfaceAtlasSet;
 		}
 
 		this._atlasSet.addAtlas();
