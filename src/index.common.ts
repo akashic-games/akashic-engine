@@ -118,5 +118,5 @@ export * from "./types/Player";
 export * from "./types/ShaderUniform";
 export * from "./types/TextAlign";
 export * from "./types/TextBaseline";
-export * from "./types/TextMetrix";
+export * from "./types/TextMetrics";
 export * from "./types/TickGenerationMode";

@@ -1,5 +1,5 @@
 import { GlyphLike } from "../interfaces/GlyphLike";
-import { TextMetrix } from "../types/TextMetrix";
+import { TextMetrics } from "../types/TextMetrics";
 import { Util } from "./Util";
 
 /**
@@ -31,7 +31,7 @@ export abstract class Font {
 	 *
 	 * @param text 文字列
 	 */
-	measureText(text: string): TextMetrix {
+	measureText(text: string): TextMetrics {
 		let width = 0;
 		let actualBoundingBoxLeft = 0;
 		let actualBoundingBoxRight = 0;

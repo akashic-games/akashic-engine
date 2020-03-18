@@ -1,19 +1,26 @@
 import { AssetLoadErrorType } from "./AssetLoadErrorType";
 
+export interface ErrorLike {
+	name: string;
+	message: string;
+	stack?: string;
+	cause?: any;
+}
+
 /**
  * アサーションエラー。
  * エンジンが想定しない状態に陥った場合にthrowされる。メソッドの引数が正しくない場合などもこのエラーがthrowされる。
  */
-export interface AssertionError extends Error {
-	cause?: any;
+export interface AssertionError extends ErrorLike {
+	name: "AssertionError";
 }
 
 /**
  * 型ミスマッチエラー。
  * 期待されるものと異なる型の値が与えられた場合にthrowされる。
  */
-export interface TypeMismatchError extends Error {
-	cause?: any;
+export interface TypeMismatchError extends ErrorLike {
+	name: "TypeMismatchError";
 
 	/**
 	 * 期待される型情報。
@@ -34,8 +41,8 @@ export interface TypeMismatchError extends Error {
  * ただし特に `message` の内容はアセットの実装に依存するため、 `message` の値で処理を変更してはならない。
  * 読み込みの再試行が可能かどうかは `retriable` で判断すべきである。
  */
-export interface AssetLoadError extends Error {
-	cause?: any;
+export interface AssetLoadError extends ErrorLike {
+	name: "AssetLoadError";
 
 	/**
 	 * 再試行できるエラーかどうか。
@@ -59,6 +66,6 @@ export interface AssetLoadError extends Error {
  * ストレージエラー。
  * `StorageLoader#_load()` が失敗した時、`StorageLoadHandler#_onStorageLoadError` に渡される。
  */
-export interface StorageLoadError extends Error {
-	cause?: any;
+export interface StorageLoadError extends ErrorLike {
+	name: "StorageLoadError";
 }
