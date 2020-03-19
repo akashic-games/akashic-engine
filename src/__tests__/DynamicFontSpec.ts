@@ -118,12 +118,12 @@ describe("test DynamicFont", () => {
 		try {
 			new DynamicFont(param);
 		} catch (e) {
-			expect(e.message).toBe("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+			expect(e.message).toBe("getGameInAssetContext(): Not in ScriptAsset.");
 			expect(e.name).toEqual("AssertionError");
 		}
 
 		g = undefined;
-		expect(() => new DynamicFont(param)).toThrow("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+		expect(() => new DynamicFont(param)).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 
 	describe("destroy", () => {

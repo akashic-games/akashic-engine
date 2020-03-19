@@ -47,11 +47,11 @@ describe("test DefaultLoadingScene", () => {
 		try {
 			new DefaultLoadingScene();
 		} catch (e) {
-			expect(e.message).toBe("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+			expect(e.message).toBe("getGameInAssetContext(): Not in ScriptAsset.");
 			expect(e.name).toEqual("AssertionError");
 		}
 
 		g = undefined;
-		expect(() => new DefaultLoadingScene()).toThrow("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+		expect(() => new DefaultLoadingScene()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 });

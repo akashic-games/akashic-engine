@@ -212,6 +212,7 @@ export interface SceneParameterObject {
 	/**
 	 * このシーンの属するゲーム。
 	 * ゲーム開発者が指定する必要はない。
+	 * @default g.game
 	 */
 	game?: Game;
 

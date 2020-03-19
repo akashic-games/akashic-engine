@@ -165,12 +165,12 @@ describe("test AssetManager", () => {
 		try {
 			new AssetManager();
 		} catch (e) {
-			expect(e.message).toBe("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+			expect(e.message).toBe("getGameInAssetContext(): Not in ScriptAsset.");
 			expect(e.name).toEqual("AssertionError");
 		}
 
 		g = undefined;
-		expect(() => new AssetManager()).toThrow("GameInAssetContexts#getGameInAssetContext: Not in ScriptAsset.");
+		expect(() => new AssetManager()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 
 	it("rejects illegal configuration", () => {

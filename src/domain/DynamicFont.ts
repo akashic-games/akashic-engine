@@ -22,6 +22,7 @@ export interface DynamicFontParameterObject {
 	/**
 	 * ゲームインスタンス。
 	 * ゲーム開発者が指定する必要はない。
+	 * @default g.game
 	 */
 	game?: Game;
 

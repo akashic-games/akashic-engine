@@ -32,10 +32,10 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 	/**
 	 * `NinePatchSurfaceEffector` のインスタンスを生成する。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `SurfaceUtil#drawNinePatch()` を利用すること。
-	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 	 * @param game このインスタンスが属する `Game`。ゲーム開発者が指定する必要はない。
+	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 	 */
-	constructor(borderWidth: CommonRect | number = 4, game?: Game) {
+	constructor(game: Game | null, borderWidth: CommonRect | number = 4) {
 		this.game = game || getGameInAssetContext();
 		if (typeof borderWidth === "number") {
 			this.borderWidth = {

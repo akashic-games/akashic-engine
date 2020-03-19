@@ -188,8 +188,10 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * `AssetManager` のインスタンスを生成する。
 	 *
-	 * @param game このインスタンスが属するゲーム。ゲーム開発者が指定する必要はない。
+	 * @param gameParams このインスタンスが属するゲーム。ゲーム開発者が指定する必要はない。
 	 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
+	 * @param audioSystemConfMap このアセットマネージャに与えるオーディオシステムの宣言。
+	 * @param moduleMainScripts このアセットマネージャに与える require() 解決用のエントリポイント。
 	 */
 	constructor(
 		gameParams?: AssetManagerParameterGameLike,
