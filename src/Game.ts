@@ -31,6 +31,7 @@ import { LocalTickMode } from "./types/LocalTickMode";
 import { OperationPlugin } from "./types/OperationPlugin";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
+import { PlatformPointEvent, PlatformPointType } from "./types/PlatformPointEvent";
 import { TickGenerationMode } from "./types/TickGenerationMode";
 
 /**
@@ -880,6 +881,23 @@ export class Game {
 			renderer.end();
 		}
 		this._modified = false;
+	}
+
+	/**
+	 * 対象のポイントイベントのターゲットエンティティ(`PointTarget#target`)を解決し、それを補完した playlog.Event を返す。
+	 * Down -> Move -> Up とは異なる順番で呼び出された場合 `null` を返す。
+	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
+	 * @param e プラットフォームのポイントイベント
+	 */
+	resolvePointEvent(e: PlatformPointEvent): pl.Event | null {
+		switch (e.type) {
+		case PlatformPointType.Down:
+			return this._pointEventResolver.pointDown(e);
+		case PlatformPointType.Move:
+			return this._pointEventResolver.pointMove(e);
+		case PlatformPointType.Up:
+			return this._pointEventResolver.pointUp(e);
+		}
 	}
 
 	/**

@@ -81,7 +81,7 @@ export class PointEventResolver {
 		return ret;
 	}
 
-	pointMove(e: PlatformPointEvent): pl.PointMoveEvent {
+	pointMove(e: PlatformPointEvent): pl.PointMoveEvent | null {
 		const holder = this._pointEventMap[e.identifier];
 		if (!holder) return null;
 		var prev = { x: 0, y: 0 };
@@ -104,7 +104,7 @@ export class PointEventResolver {
 		return ret;
 	}
 
-	pointUp(e: PlatformPointEvent): pl.PointUpEvent {
+	pointUp(e: PlatformPointEvent): pl.PointUpEvent | null {
 		const holder = this._pointEventMap[e.identifier];
 		if (!holder) return null;
 		const prev = { x: 0, y: 0 };
