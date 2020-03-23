@@ -1,9 +1,14 @@
 import { DynamicFont, FontFamily, FontWeight, Game, SurfaceAtlasSet } from "..";
 import { skeletonRuntime } from "./helpers";
 
-declare let g: { game: Game };
-
 describe("test DynamicFont", () => {
+	beforeEach(() => {
+		global.g = undefined;
+	});
+	afterAll(() => {
+		global.g = undefined;
+	});
+
 	it("初期化", () => {
 		const runtime = skeletonRuntime();
 
@@ -99,7 +104,7 @@ describe("test DynamicFont", () => {
 
 	it("初期化 - ParameterObjectのgame省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
 		const runtime = skeletonRuntime();
-		g.game = runtime.game;
+		global.g = { game: runtime.game };
 		const param = {
 			fontFamily: FontFamily.SansSerif,
 			size: 20
@@ -110,7 +115,7 @@ describe("test DynamicFont", () => {
 	});
 
 	it("初期化 - ParameterObjectのgame省略, g.gameがない場合エラーとなる", () => {
-		delete g.game;
+		global.g = { game: undefined };
 		const param = {
 			fontFamily: FontFamily.SansSerif,
 			size: 20
@@ -122,7 +127,7 @@ describe("test DynamicFont", () => {
 			expect(e.name).toEqual("AssertionError");
 		}
 
-		g = undefined;
+		global.g = undefined;
 		expect(() => new DynamicFont(param)).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 

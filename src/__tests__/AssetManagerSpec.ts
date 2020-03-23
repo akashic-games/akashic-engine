@@ -13,8 +13,6 @@ import { customMatchers, Game, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 
-declare let g: { game: Game };
-
 describe("test AssetManager", () => {
 	const gameConfiguration: GameConfiguration = {
 		width: 320,
@@ -80,6 +78,13 @@ describe("test AssetManager", () => {
 		}
 	};
 
+	beforeEach(() => {
+		global.g = undefined;
+	});
+	afterAll(() => {
+		global.g = undefined;
+	});
+
 	it("初期化", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
@@ -119,7 +124,7 @@ describe("test AssetManager", () => {
 	});
 
 	it("初期化- 全て省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		g.game = new Game(gameConfiguration, "/");
+		global.g = { game: new Game(gameConfiguration, "/") };
 		const manager = new AssetManager();
 		expect(manager.configuration).toMatchObject({});
 		expect(Object.keys(manager._assets).length).toEqual(0);
@@ -130,7 +135,7 @@ describe("test AssetManager", () => {
 	});
 
 	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		g.game = new Game(gameConfiguration, "/");
+		global.g = { game: new Game(gameConfiguration, "/") };
 		const manager = new AssetManager(undefined, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		expect(manager.configuration).toMatchObject({});
 		expect(Object.keys(manager._assets).length).toEqual(0);
@@ -161,7 +166,7 @@ describe("test AssetManager", () => {
 	});
 
 	it("初期化- game省略, g もしくは g.game がない場合エラーとなる", () => {
-		delete g.game;
+		global.g = { game: undefined };
 		try {
 			new AssetManager();
 		} catch (e) {
@@ -169,7 +174,7 @@ describe("test AssetManager", () => {
 			expect(e.name).toEqual("AssertionError");
 		}
 
-		g = undefined;
+		global.g = undefined;
 		expect(() => new AssetManager()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 

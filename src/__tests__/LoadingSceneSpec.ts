@@ -1,9 +1,14 @@
 import { LoadingScene } from "..";
 import { Game } from "./helpers";
 
-declare let g: { game: Game };
-
 describe("test LoadingScene", () => {
+	beforeEach(() => {
+		global.g = undefined;
+	});
+	afterAll(() => {
+		global.g = undefined;
+	});
+
 	it("初期化", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const loadingScene = new LoadingScene({ game: game });
@@ -12,14 +17,14 @@ describe("test LoadingScene", () => {
 	});
 
 	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		g.game = new Game({ width: 320, height: 320, main: "" });
+		global.g = { game: new Game({ width: 320, height: 320, main: "" }) };
 		const loadingScene = new LoadingScene();
 		expect(loadingScene.local).toBeTruthy();
-		expect(loadingScene.game).toBe(g.game);
+		expect(loadingScene.game).toBe(global.g.game);
 	});
 
 	it("初期化- game省略, g もしくは g.game がない場合エラーとなる", () => {
-		delete g.game;
+		global.g = { game: undefined };
 		try {
 			new LoadingScene();
 		} catch (e) {
@@ -27,7 +32,7 @@ describe("test LoadingScene", () => {
 			expect(e.name).toEqual("AssertionError");
 		}
 
-		g = undefined;
+		global.g = undefined;
 		expect(() => new LoadingScene()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 });

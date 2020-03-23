@@ -16,8 +16,6 @@ import { customMatchers, Game, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 
-declare let g: { game: Game };
-
 describe("test Scene", () => {
 	const assetsConfiguration: { [path: string]: AssetConfiguration } = {
 		foo: {
@@ -40,6 +38,13 @@ describe("test Scene", () => {
 		height: 320,
 		main: "",
 		assets: assetsConfiguration
+	});
+
+	beforeEach(() => {
+		global.g = undefined;
+	});
+	afterAll(() => {
+		global.g = undefined;
 	});
 
 	it("初期化 - SceneParameterObject", () => {
@@ -77,14 +82,14 @@ describe("test Scene", () => {
 	});
 
 	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		g.game = game;
+		global.g = { game: game };
 		const scene = new Scene({
 			assetIds: ["foo"],
 			local: LocalTickMode.InterpolateLocal,
 			tickGenerationMode: TickGenerationMode.Manual,
 			name: "myScene"
 		});
-		expect(scene.game).toBe(g.game);
+		expect(scene.game).toBe(global.g.game);
 		expect(scene.onAssetLoad.length).toEqual(0);
 		expect(scene.onAssetLoadFailure.length).toEqual(0);
 		expect(scene.onAssetLoadComplete.length).toEqual(0);
@@ -99,8 +104,9 @@ describe("test Scene", () => {
 	});
 
 	it("初期化- 全て省略", () => {
+		global.g = { game: game };
 		const scene = new Scene();
-		expect(scene.game).toBe(g.game);
+		expect(scene.game).toBe(global.g.game);
 		expect(scene.onAssetLoad.length).toEqual(0);
 		expect(scene.onAssetLoadFailure.length).toEqual(0);
 		expect(scene.onAssetLoadComplete.length).toEqual(0);
@@ -115,7 +121,7 @@ describe("test Scene", () => {
 	});
 
 	it("初期化- game省略, g もしくは g.gameがない場合エラーとなる", () => {
-		delete g.game;
+		global.g = { game: undefined };
 		try {
 			new Scene({
 				assetIds: ["foo"],
@@ -128,7 +134,7 @@ describe("test Scene", () => {
 			expect(e.name).toEqual("AssertionError");
 		}
 
-		g = undefined;
+		global.g = undefined;
 		expect(() => new Scene()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 
