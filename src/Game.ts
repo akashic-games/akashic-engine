@@ -850,10 +850,13 @@ export class Game {
 	 * このGameを描画する。
 	 *
 	 * このゲームに紐づけられた `Renderer` (`this.renderers` に含まれるすべての `Renderer` で、この `Game` の描画を行う。
+	 * 描画内容に変更がない場合、描画処理がスキップされる点に注意。強制的に描画をする場合は `this.modified()` を呼ぶこと。
 	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
 	 */
 	render(): void {
-		var scene = this.scene();
+		if (!this._modified) return;
+
+		const scene = this.scene();
 		if (!scene) return;
 
 		const camera = this.focusingCamera;
@@ -870,7 +873,7 @@ export class Game {
 				camera._applyTransformToRenderer(renderer);
 			}
 
-			var children = scene.children;
+			const children = scene.children;
 			for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
 
 			if (camera) {
