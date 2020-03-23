@@ -8,7 +8,7 @@ import { FontFamily } from "../types/FontFamily";
 import { FontWeight } from "../types/FontWeight";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
-import { getGameInAssetContext } from "./GameInAssetContext";
+import { getGameInAssetContext } from "./getGameInAssetContext";
 import { Util } from "./Util";
 
 /**

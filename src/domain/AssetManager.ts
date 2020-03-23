@@ -20,7 +20,7 @@ import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
-import { getGameInAssetContext } from "./GameInAssetContext";
+import { getGameInAssetContext } from "./getGameInAssetContext";
 
 export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
 

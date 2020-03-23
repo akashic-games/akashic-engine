@@ -1,7 +1,7 @@
 import { Game } from "../Game";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
 import { CommonRect } from "../types/commons";
-import { getGameInAssetContext } from "./GameInAssetContext";
+import { getGameInAssetContext } from "./getGameInAssetContext";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
 

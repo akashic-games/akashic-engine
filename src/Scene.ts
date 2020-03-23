@@ -6,7 +6,7 @@ import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
 import { MessageEvent, OperationEvent } from "./domain/Event";
-import { getGameInAssetContext } from "./domain/GameInAssetContext";
+import { getGameInAssetContext } from "./domain/getGameInAssetContext";
 import { Matrix } from "./domain/Matrix";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
