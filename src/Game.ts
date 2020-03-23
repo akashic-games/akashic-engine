@@ -894,12 +894,12 @@ export class Game {
 	 */
 	resolvePointEvent(e: PlatformPointEvent): pl.Event | null {
 		switch (e.type) {
-		case PlatformPointType.Down:
-			return this._pointEventResolver.pointDown(e);
-		case PlatformPointType.Move:
-			return this._pointEventResolver.pointMove(e);
-		case PlatformPointType.Up:
-			return this._pointEventResolver.pointUp(e);
+			case PlatformPointType.Down:
+				return this._pointEventResolver.pointDown(e);
+			case PlatformPointType.Move:
+				return this._pointEventResolver.pointMove(e);
+			case PlatformPointType.Up:
+				return this._pointEventResolver.pointUp(e);
 		}
 	}
 
