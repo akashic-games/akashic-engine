@@ -31,6 +31,7 @@ import { LocalTickMode } from "./types/LocalTickMode";
 import { OperationPlugin } from "./types/OperationPlugin";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
+import { PlatformPointEvent, PlatformPointType } from "./types/PlatformPointEvent";
 import { TickGenerationMode } from "./types/TickGenerationMode";
 
 /**
@@ -849,10 +850,13 @@ export class Game {
 	 * このGameを描画する。
 	 *
 	 * このゲームに紐づけられた `Renderer` (`this.renderers` に含まれるすべての `Renderer` で、この `Game` の描画を行う。
+	 * 描画内容に変更がない場合、描画処理がスキップされる点に注意。強制的に描画をする場合は `this.modified()` を呼ぶこと。
 	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
 	 */
 	render(): void {
-		var scene = this.scene();
+		if (!this._modified) return;
+
+		const scene = this.scene();
 		if (!scene) return;
 
 		const camera = this.focusingCamera;
@@ -869,7 +873,7 @@ export class Game {
 				camera._applyTransformToRenderer(renderer);
 			}
 
-			var children = scene.children;
+			const children = scene.children;
 			for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
 
 			if (camera) {
@@ -880,6 +884,23 @@ export class Game {
 			renderer.end();
 		}
 		this._modified = false;
+	}
+
+	/**
+	 * 対象のポイントイベントのターゲットエンティティ(`PointTarget#target`)を解決し、それを補完した playlog.Event を返す。
+	 * Down -> Move -> Up とは異なる順番で呼び出された場合 `null` を返す。
+	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
+	 * @param e プラットフォームのポイントイベント
+	 */
+	resolvePointEvent(e: PlatformPointEvent): pl.Event | null {
+		switch (e.type) {
+			case PlatformPointType.Down:
+				return this._pointEventResolver.pointDown(e);
+			case PlatformPointType.Move:
+				return this._pointEventResolver.pointMove(e);
+			case PlatformPointType.Up:
+				return this._pointEventResolver.pointUp(e);
+		}
 	}
 
 	/**
