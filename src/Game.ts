@@ -292,6 +292,15 @@ namespace g {
 		surfaceAtlasSet: SurfaceAtlasSet;
 
 		/**
+		 * ゲームが早送りに状態にあるかどうか。
+		 *
+		 * スキップ状態であれば真、非スキップ状態であれば偽である。
+		 * ゲーム開発者は、この値に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
+		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+		 */
+		isSkipping: boolean;
+
+		/**
 		 * イベントとTriggerのマップ。
 		 * @private
 		 */
@@ -475,6 +484,7 @@ namespace g {
 			this.resourceFactory = resourceFactory;
 			this.selfId = selfId || undefined;
 			this.playId = undefined;
+			this.isSkipping = false;
 
 			this._audioSystemManager = new AudioSystemManager(this);
 			this.audio = {
@@ -944,6 +954,10 @@ namespace g {
 			this.seed.removeAll();
 			this.resized.removeAll();
 			this.skippingChanged.removeAll();
+
+			this.skippingChanged.add((isSkipping) => {
+				this.isSkipping = isSkipping;
+			});
 
 			this._idx = 0;
 			this._localIdx = 0;
