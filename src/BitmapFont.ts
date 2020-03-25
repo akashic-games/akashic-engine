@@ -1,4 +1,20 @@
 namespace g {
+
+	/**
+	 * BitmapFont のデータを格納したテキストアセット (JSON) を JSON.parse したオブジェクト
+	 */
+	export interface BitmapFontGlyphData {
+		map: {[key: string]: GlyphArea},
+		width: number,
+		height: number,
+		missingGlyph: GlyphArea
+	}
+
+	/**
+	 * BitmapFont の生成に必要なデータセット
+	 */
+	export type BitmapFontGlyphInfo = TextAsset | BitmapFontGlyphData;
+
 	/**
 	 * `BitmapFont` のコンストラクタに渡すことができるパラメータ。
 	 * 各メンバの詳細は `BitmapFont` の同名メンバの説明を参照すること。
@@ -10,19 +26,25 @@ namespace g {
 		src: Surface|Asset;
 
 		/**
+		 * BitmapFont の生成に必要なデータセット。
+		 * glyphInfo が与えられる場合、 BitmapFontParameterObject の map defaultGlyphWidth defaultGlyphHeight missingGlyph は参照されない。
+		 */
+		glyphInfo?: BitmapFontGlyphInfo;
+
+		/**
 		 * 各文字から画像上の位置・サイズなどを特定する情報。コードポイントから `GlyphArea` への写像。
 		 */
-		map: {[key: string]: GlyphArea};
+		map?: {[key: string]: GlyphArea};
 
 		/**
 		 * `map` で指定を省略した文字に使われる、デフォルトの文字の幅。
 		 */
-		defaultGlyphWidth: number;
+		defaultGlyphWidth?: number;
 
 		/**
 		 * `map` で指定を省略した文字に使われる、デフォルトの文字の高さ
 		 */
-		defaultGlyphHeight: number;
+		defaultGlyphHeight?: number;
 
 		/**
 		 * `map` に存在しないコードポイントの代わりに表示するべき文字の `GlyphArea` 。
@@ -49,11 +71,21 @@ namespace g {
 		constructor(param: BitmapFontParameterObject) {
 			super();
 			this.surface = Util.asSurface(param.src);
-			this.map = param.map;
-			this.defaultGlyphWidth = param.defaultGlyphWidth;
-			this.defaultGlyphHeight = param.defaultGlyphHeight;
-			this.missingGlyph = param.missingGlyph;
-			this.size = param.defaultGlyphHeight;
+
+			let glyphInfo: BitmapFontGlyphData;
+			if (param.glyphInfo) {
+				if ((param.glyphInfo as BitmapFontGlyphData).map) {
+					glyphInfo = param.glyphInfo as BitmapFontGlyphData;
+				} else {
+					glyphInfo = JSON.parse((param.glyphInfo as g.TextAsset).data);
+				}
+			}
+
+			this.map = glyphInfo ? glyphInfo.map : param.map;
+			this.defaultGlyphWidth = glyphInfo ? glyphInfo.width : param.defaultGlyphWidth;
+			this.defaultGlyphHeight = glyphInfo ? glyphInfo.height : param.defaultGlyphHeight;
+			this.missingGlyph = glyphInfo ? glyphInfo.missingGlyph : param.missingGlyph;
+			this.size = glyphInfo ? glyphInfo.height : param.defaultGlyphHeight;
 		}
 
 		/**

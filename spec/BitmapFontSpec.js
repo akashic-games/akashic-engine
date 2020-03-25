@@ -114,4 +114,51 @@ describe("test BitmapFont", function() {
 		expect(bmpFont.defaultGlyphWidth).toEqual(20);
 		expect(bmpFont.defaultGlyphHeight).toEqual(30);
 	});
+
+	it("初期化 - ParamterObject given glyphData", function() {
+		var surface = new g.Surface(480, 480);
+		var map = {"37564": {"x": 0, "y": 1}};
+		var missingGlyph = {"x": 2, "y": 3};
+
+		var glyphInfo = {
+			map: map,
+			width: 20,
+			height: 30,
+			missingGlyph: missingGlyph
+		};
+
+		var bmpFont = new g.BitmapFont({
+			src: surface,
+			glyphInfo: glyphInfo
+		});
+		expect(bmpFont.surface).toEqual(surface);
+		expect(bmpFont.map).toEqual(map);
+		expect(bmpFont.missingGlyph).toEqual(missingGlyph);
+		expect(bmpFont.defaultGlyphWidth).toEqual(20);
+		expect(bmpFont.defaultGlyphHeight).toEqual(30);
+	});
+
+	it("初期化 - ParamterObject given glyphData(TextAsset)", function() {
+		var surface = new g.Surface(480, 480);
+		var map = {"37564": {"x": 0, "y": 1}};
+		var missingGlyph = {"x": 2, "y": 3};
+
+		var mockTextAsset = new g.TextAsset("mockId", "mockPath");
+		mockTextAsset.data = JSON.stringify({
+			"map": map,
+			"width": 20,
+			"height": 30,
+			"missingGlyph": missingGlyph
+		});
+
+		var bmpFont = new g.BitmapFont({
+			src: surface,
+			glyphInfo: mockTextAsset
+		});
+		expect(bmpFont.surface).toEqual(surface);
+		expect(bmpFont.map).toEqual(map);
+		expect(bmpFont.missingGlyph).toEqual(missingGlyph);
+		expect(bmpFont.defaultGlyphWidth).toEqual(20);
+		expect(bmpFont.defaultGlyphHeight).toEqual(30);
+	});
 });
