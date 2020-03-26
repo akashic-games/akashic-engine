@@ -9,9 +9,9 @@ import {
 	PointUpEventBase
 } from "../../domain/Event";
 import { Matrix, PlainMatrix } from "../../domain/Matrix";
-import { Game } from "../../Game";
 import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
+import { RuntimeGame } from "../../RuntimeGame";
 import { Scene } from "../../Scene";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
@@ -437,7 +437,7 @@ export class E extends Object2D implements CommonArea {
 	/**
 	 * このエンティティが属する `Game` を返す。
 	 */
-	game(): Game {
+	game(): RuntimeGame {
 		return this.scene.game;
 	}
 

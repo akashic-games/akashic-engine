@@ -878,7 +878,7 @@ describe("test Scene", () => {
 	it("modified", () => {
 		const scene = new Scene({ game: game });
 		scene.modified();
-		expect(scene.game._modified).toEqual(true);
+		expect((scene.game as Game)._modified).toEqual(true);
 	});
 
 	it("state", done => {

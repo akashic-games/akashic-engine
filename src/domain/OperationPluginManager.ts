@@ -1,5 +1,6 @@
 import { Trigger } from "@akashic/trigger";
-import { Game } from "../Game";
+import { InternalGame } from "../InternalGame";
+import { RuntimeGame } from "../RuntimeGame";
 import { OperationPlugin } from "../types/OperationPlugin";
 import { InternalOperationPluginInfo } from "../types/OperationPluginInfo";
 import { InternalOperationPluginOperation, OperationPluginOperation } from "../types/OperationPluginOperation";
@@ -57,16 +58,16 @@ export class OperationPluginManager {
 	 */
 	plugins: { [key: number]: OperationPlugin };
 
-	private _game: Game;
+	private _game: InternalGame;
 	private _viewInfo: OperationPluginViewInfo;
 	private _infos: InternalOperationPluginInfo[];
 	private _initialized: boolean;
 
-	constructor(game: Game, viewInfo: OperationPluginViewInfo, infos: InternalOperationPluginInfo[]) {
+	constructor(game: RuntimeGame, viewInfo: OperationPluginViewInfo, infos: InternalOperationPluginInfo[]) {
 		this.onOperate = new Trigger<InternalOperationPluginOperation>();
 		this.operated = this.onOperate;
 		this.plugins = {};
-		this._game = game;
+		this._game = game as InternalGame;
 		this._viewInfo = viewInfo;
 		this._infos = infos;
 		this._initialized = false;

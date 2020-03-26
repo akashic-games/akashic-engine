@@ -1,5 +1,6 @@
-import { Game } from "../Game";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
+import { InternalGame } from "../InternalGame";
+import { RuntimeGame } from "../RuntimeGame";
 import { CommonRect } from "../types/commons";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
@@ -15,7 +16,7 @@ import { SurfaceUtil } from "./SurfaceUtil";
  * @deprecated 非推奨である。将来的に削除される予定である。
  */
 export class NinePatchSurfaceEffector implements SurfaceEffector {
-	game: Game;
+	game: InternalGame;
 	borderWidth: CommonRect;
 
 	/**
@@ -34,8 +35,8 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 	 * @param game このインスタンスが属する `Game`
 	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 	 */
-	constructor(game: Game, borderWidth: CommonRect | number = 4) {
-		this.game = game;
+	constructor(game: RuntimeGame, borderWidth: CommonRect | number = 4) {
+		this.game = game as InternalGame;
 		if (typeof borderWidth === "number") {
 			this.borderWidth = {
 				top: borderWidth,

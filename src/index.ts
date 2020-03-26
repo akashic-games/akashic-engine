@@ -1,3 +1,7 @@
 export * from "./index.common";
+export * from "./RuntimeGame";
+
+// NOTE: 以下の型定義はコンテンツから参照する必要がない
 export * from "./Game";
-export * from "./GameHandlerSet"; // NOTE: コンテンツから参照する必要はない
+export * from "./GameHandlerSet";
+export * from "./InternalGame";

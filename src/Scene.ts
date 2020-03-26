@@ -10,9 +10,10 @@ import { Matrix } from "./domain/Matrix";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
-import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
+import { InternalGame } from "./InternalGame";
+import { RuntimeGame } from "./RuntimeGame";
 import { CommonOffset } from "./types/commons";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
 import { AssetLoadError, StorageLoadError } from "./types/errors";
@@ -211,7 +212,7 @@ export interface SceneParameterObject {
 	/**
 	 * このシーンの属するゲーム。
 	 */
-	game: Game;
+	game: RuntimeGame;
 
 	/**
 	 * このシーンで用いるアセットIDの配列。
@@ -348,7 +349,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * このシーンの属するゲーム。
 	 */
-	game: Game;
+	game: InternalGame;
 
 	/**
 	 * このシーンのローカルティック消化ポリシー。
@@ -655,7 +656,7 @@ export class Scene implements StorageLoaderHandler {
 		}
 
 		this.name = param.name;
-		this.game = game;
+		this.game = game as InternalGame;
 		this.local = local;
 		this.tickGenerationMode = tickGenerationMode;
 
@@ -664,7 +665,7 @@ export class Scene implements StorageLoaderHandler {
 		this._onReady = new Trigger<Scene>();
 		this._ready = this._onReady;
 		this.assets = {};
-		this.asset = new AssetAccessor(game._assetManager);
+		this.asset = new AssetAccessor(this.game._assetManager);
 
 		this._loaded = false;
 		this._prefetchRequested = false;

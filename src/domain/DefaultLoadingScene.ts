@@ -1,6 +1,7 @@
-import { Game } from "../Game";
 import { AssetLike } from "../interfaces/AssetLike";
 import { RendererLike } from "../interfaces/RendererLike";
+import { InternalGame } from "../InternalGame";
+import { RuntimeGame } from "../RuntimeGame";
 import { Scene } from "../Scene";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
@@ -17,7 +18,7 @@ export interface DefaultLoadingSceneParameterObject {
 	/**
 	 * このシーンが属する `Game` 。
 	 */
-	game: Game;
+	game: RuntimeGame;
 	style?: "default" | "compact";
 }
 
@@ -92,7 +93,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
 	constructor(param: DefaultLoadingSceneParameterObject) {
-		super({ game: param.game, name: "akashic:default-loading-scene" });
+		super({ game: param.game as InternalGame, name: "akashic:default-loading-scene" });
 		if (param.style === "compact") {
 			this._barWidth = this.game.width / 4;
 			this._barHeight = 5;
