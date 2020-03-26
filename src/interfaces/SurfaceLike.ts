@@ -37,20 +37,6 @@ export interface SurfaceLike extends CommonSize {
 	onAnimationStop: Trigger<void>;
 
 	/**
-	 * アニメーション再生開始イベント。
-	 * isDynamicが偽の時undefined。
-	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAnimationStart` を利用すること。
-	 */
-	animatingStarted: Trigger<void>;
-
-	/**
-	 * アニメーション再生停止イベント。
-	 * isDynamicが偽の時undefined。
-	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAnimationStop` を利用すること。
-	 */
-	animatingStopped: Trigger<void>;
-
-	/**
 	 * 描画可能な実体。
 	 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
 	 * @private
