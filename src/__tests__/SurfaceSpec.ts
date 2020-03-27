@@ -12,8 +12,6 @@ describe("test Surface", () => {
 		expect(surface.width).toBe(width);
 		expect(surface.height).toBe(height);
 		expect(surface.isDynamic).toBe(false);
-		expect(surface.onAnimationStart).toBeUndefined();
-		expect(surface.onAnimationStop).toBeUndefined();
 	});
 
 	it("初期化 - enable drawable", () => {
@@ -25,8 +23,6 @@ describe("test Surface", () => {
 		expect(surface.height).toBe(height);
 		expect(surface._drawable).toBe(true);
 		expect(surface.isDynamic).toBe(false);
-		expect(surface.onAnimationStart).toBeUndefined();
-		expect(surface.onAnimationStop).toBeUndefined();
 	});
 
 	it("初期化 - invalid params", () => {
@@ -45,7 +41,5 @@ describe("test Surface", () => {
 		expect(surface.height).toBe(height);
 		expect(surface._drawable).toBe(drawable);
 		expect(surface.isDynamic).toBe(isDynamic);
-		expect(surface.onAnimationStop.constructor).toBe(Trigger);
-		expect(surface.onAnimationStop.constructor).toBe(Trigger);
 	});
 });

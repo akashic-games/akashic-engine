@@ -25,18 +25,6 @@ export interface SurfaceLike extends CommonSize {
 	isDynamic: boolean;
 
 	/**
-	 * アニメーション再生開始イベント。
-	 * isDynamicが偽の時undefined。
-	 */
-	onAnimationStart: Trigger<void>;
-
-	/**
-	 * アニメーション再生停止イベント。
-	 * isDynamicが偽の時undefined。
-	 */
-	onAnimationStop: Trigger<void>;
-
-	/**
 	 * 描画可能な実体。
 	 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
 	 * @private

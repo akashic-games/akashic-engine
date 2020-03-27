@@ -43,12 +43,8 @@ export module SurfaceUtil {
 	 * @param surface サーフェス
 	 */
 	export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: SurfaceLike): void {
-		if (surface.isDynamic) {
-			surface.onAnimationStart.add(animatingHandler._handleAnimationStart, animatingHandler);
-			surface.onAnimationStop.add(animatingHandler._handleAnimationStop, animatingHandler);
-			if (surface.isPlaying()) {
-				animatingHandler._handleAnimationStart();
-			}
+		if (surface.isDynamic && surface.isPlaying()) {
+			animatingHandler._handleAnimationStart();
 		}
 	}
 
@@ -68,17 +64,8 @@ export module SurfaceUtil {
 	): void {
 		animatingHandler._handleAnimationStop();
 
-		if (!beforeSurface.destroyed() && beforeSurface.isDynamic) {
-			beforeSurface.onAnimationStart.remove(animatingHandler._handleAnimationStart, animatingHandler);
-			beforeSurface.onAnimationStop.remove(animatingHandler._handleAnimationStop, animatingHandler);
-		}
-
-		if (afterSurface.isDynamic) {
-			afterSurface.onAnimationStart.add(animatingHandler._handleAnimationStart, animatingHandler);
-			afterSurface.onAnimationStop.add(animatingHandler._handleAnimationStop, animatingHandler);
-			if (afterSurface.isPlaying()) {
-				animatingHandler._handleAnimationStart();
-			}
+		if (afterSurface.isDynamic && afterSurface.isPlaying()) {
+			animatingHandler._handleAnimationStart();
 		}
 	}
 

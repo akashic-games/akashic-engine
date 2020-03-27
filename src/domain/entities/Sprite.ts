@@ -190,13 +190,8 @@ export class Sprite extends E {
 	 * @param destroySurface trueを指定した場合、このエンティティが抱える `Surface` も合わせて破棄する
 	 */
 	destroy(destroySurface?: boolean): void {
-		if (this._surface && !this._surface.destroyed()) {
-			if (destroySurface) {
-				this._surface.destroy();
-			} else if (this._surface.isDynamic) {
-				this._surface.onAnimationStart.remove(this._handleAnimationStart, this);
-				this._surface.onAnimationStop.remove(this._handleAnimationStop, this);
-			}
+		if (this._surface && !this._surface.destroyed() && destroySurface) {
+			this._surface.destroy();
 		}
 		this.src = undefined;
 		this._beforeSrc = undefined;

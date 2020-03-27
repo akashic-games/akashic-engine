@@ -81,13 +81,6 @@ describe("test Sprite", () => {
 
 		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
-		surface.onAnimationStart.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
-		updated = false;
-		surface.onAnimationStop.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(false);
 	});
 
 	it("初期化 - 動画サーフェス(再生中)", () => {
@@ -171,16 +164,6 @@ describe("test Sprite", () => {
 		expect(sprite.srcY).toEqual(2);
 		expect(sprite._surface).toEqual(surface);
 		expect(sprite._beforeSurface).toEqual(sprite._surface);
-
-		sprite.onUpdate.fire();
-		expect(updated).toBe(false);
-		surface.onAnimationStart.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
-		updated = false;
-		surface.onAnimationStop.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(false);
 	});
 
 	it("初期化 - ParameterObject, 動画サーフェス(再生中)", () => {
@@ -273,21 +256,14 @@ describe("test Sprite", () => {
 			src: surface1
 		});
 
-		surface1.onAnimationStart.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
-
-		sprite._surface = surface2;
-		sprite.invalidate();
-		updated = false;
-
-		surface1.onAnimationStart.fire();
 		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
 
-		surface2.onAnimationStart.fire();
+		sprite._surface = surface2;
+		sprite.invalidate();
+
 		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
+		expect(updated).toBe(false);
 	});
 
 	it("再生中の動画サーフェスへの切り替え", () => {
@@ -300,13 +276,11 @@ describe("test Sprite", () => {
 			src: surface1
 		});
 
-		surface1.onAnimationStart.fire();
 		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
+		expect(updated).toBe(false);
 
 		sprite._surface = surface2;
 		sprite.invalidate();
-		updated = false;
 
 		sprite.onUpdate.fire();
 		expect(updated).toBe(true);

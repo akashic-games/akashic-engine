@@ -75,7 +75,6 @@ export class VideoPlayer implements VideoPlayerLike {
 			player: this,
 			video: videoAsset
 		});
-		videoAsset.asSurface().onAnimationStart.fire();
 	}
 
 	/**
@@ -90,7 +89,6 @@ export class VideoPlayer implements VideoPlayerLike {
 			player: this,
 			video: videoAsset
 		});
-		videoAsset.asSurface().onAnimationStop.fire();
 	}
 
 	/**
