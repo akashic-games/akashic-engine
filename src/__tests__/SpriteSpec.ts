@@ -64,7 +64,7 @@ describe("test Sprite", () => {
 	it("初期化 - 動画サーフェス", () => {
 		const runtime = skeletonRuntime();
 
-		const surface = new Surface(16, 32, {}, true);
+		const surface = new Surface(16, 32, {});
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface
@@ -86,9 +86,8 @@ describe("test Sprite", () => {
 	it("初期化 - 動画サーフェス(再生中)", () => {
 		const runtime = skeletonRuntime();
 
-		const surface = new Surface(16, 32, { isPlaying: true }, true);
+		const surface = new Surface(16, 32, { isPlaying: true });
 		expect(surface.isPlaying()).toBe(true);
-		expect(surface.isDynamic).toBe(true);
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface
@@ -144,7 +143,7 @@ describe("test Sprite", () => {
 
 	it("初期化 - ParameterObject, 動画サーフェス", () => {
 		const runtime = skeletonRuntime();
-		const surface = new Surface(16, 32, {}, true);
+		const surface = new Surface(16, 32, {});
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -168,7 +167,7 @@ describe("test Sprite", () => {
 
 	it("初期化 - ParameterObject, 動画サーフェス(再生中)", () => {
 		const runtime = skeletonRuntime();
-		const surface = new Surface(16, 32, { isPlaying: true }, true);
+		const surface = new Surface(16, 32, { isPlaying: true });
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -249,8 +248,8 @@ describe("test Sprite", () => {
 	it("停止中の動画サーフェスへの切り替え", () => {
 		const runtime = skeletonRuntime();
 
-		const surface1 = new Surface(16, 32, { isPlaying: false }, true);
-		const surface2 = new Surface(16, 32, { isPlaying: false }, true);
+		const surface1 = new Surface(16, 32, { isPlaying: false });
+		const surface2 = new Surface(16, 32, { isPlaying: false });
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface1
@@ -269,8 +268,8 @@ describe("test Sprite", () => {
 	it("再生中の動画サーフェスへの切り替え", () => {
 		const runtime = skeletonRuntime();
 
-		const surface1 = new Surface(16, 32, { isPlaying: false }, true);
-		const surface2 = new Surface(16, 32, { isPlaying: true }, true);
+		const surface1 = new Surface(16, 32, { isPlaying: false });
+		const surface2 = new Surface(16, 32, { isPlaying: true });
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface1

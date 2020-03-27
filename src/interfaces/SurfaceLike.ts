@@ -19,12 +19,6 @@ export interface SurfaceLike extends CommonSize {
 	height: number;
 
 	/**
-	 * 本Surfaceの画像が動画であるかを示す値。真の時、動画。
-	 * この値は参照のみに利用され、変更してはならない。
-	 */
-	isDynamic: boolean;
-
-	/**
 	 * 描画可能な実体。
 	 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
 	 * @private

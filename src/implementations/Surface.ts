@@ -24,12 +24,6 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 	height: number;
 
 	/**
-	 * 本Surfaceの画像が動画であるかを示す値。真の時、動画。
-	 * この値は参照のみに利用され、変更してはならない。
-	 */
-	isDynamic: boolean;
-
-	/**
 	 * 描画可能な実体。
 	 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
 	 * @private
@@ -47,9 +41,8 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 	 * @param width 描画領域の幅（整数値でなければならない）
 	 * @param height 描画領域の高さ（整数値でなければならない）
 	 * @param drawable 描画可能な実体。省略された場合、 `undefined`
-	 * @param isDynamic drawableが動画であることを示す値。動画である時、真を渡さなくてはならない。省略された場合、偽。
 	 */
-	constructor(width: number, height: number, drawable?: any, isDynamic: boolean = false) {
+	constructor(width: number, height: number, drawable?: any) {
 		if (width % 1 !== 0 || height % 1 !== 0) {
 			throw ExceptionFactory.createAssertionError("Surface#constructor: width and height must be integers");
 		}
@@ -58,7 +51,6 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 		this.height = height;
 		this._drawable = drawable;
 		// this._destroyedは破棄時に一度だけ代入する特殊なフィールドなため、コンストラクタで初期値を代入しない
-		this.isDynamic = isDynamic;
 	}
 
 	/**

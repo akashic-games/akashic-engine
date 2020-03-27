@@ -187,8 +187,8 @@ export class Renderer extends g.Renderer {
 export class Surface extends g.Surface {
 	createdRenderer: g.Renderer;
 
-	constructor(width: number, height: number, drawable?: any, isDynamic: boolean = false) {
-		super(width, height, drawable, isDynamic);
+	constructor(width: number, height: number, drawable?: any) {
+		super(width, height, drawable);
 	}
 
 	renderer(): g.Renderer {
@@ -200,7 +200,7 @@ export class Surface extends g.Surface {
 
 	isPlaying(): boolean {
 		// mock.Surfaceに与えるdrawableの再生状態はdrawable.isPlayingプロパティで与える
-		return !!(this.isDynamic && this._drawable && this._drawable.isPlaying);
+		return !!(this._drawable && this._drawable.isPlaying);
 	}
 }
 

@@ -43,7 +43,7 @@ export module SurfaceUtil {
 	 * @param surface サーフェス
 	 */
 	export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: SurfaceLike): void {
-		if (surface.isDynamic && surface.isPlaying()) {
+		if (surface.isPlaying()) {
 			animatingHandler._handleAnimationStart();
 		}
 	}
@@ -64,7 +64,7 @@ export module SurfaceUtil {
 	): void {
 		animatingHandler._handleAnimationStop();
 
-		if (afterSurface.isDynamic && afterSurface.isPlaying()) {
+		if (afterSurface.isPlaying()) {
 			animatingHandler._handleAnimationStart();
 		}
 	}
