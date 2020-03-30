@@ -40,6 +40,13 @@ describe("test Scene", () => {
 		assets: assetsConfiguration
 	});
 
+	beforeEach(() => {
+		global.g = undefined;
+	});
+	afterAll(() => {
+		global.g = undefined;
+	});
+
 	it("初期化 - SceneParameterObject", () => {
 		const scene = new Scene({
 			game: game,
@@ -72,6 +79,63 @@ describe("test Scene", () => {
 		expect(scene.onPointMoveCapture instanceof Trigger).toBe(true);
 		expect(scene.onPointUpCapture instanceof Trigger).toBe(true);
 		expect(scene.onOperation instanceof Trigger).toBe(true);
+	});
+
+	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
+		global.g = { game: game };
+		const scene = new Scene({
+			assetIds: ["foo"],
+			local: LocalTickMode.InterpolateLocal,
+			tickGenerationMode: TickGenerationMode.Manual,
+			name: "myScene"
+		});
+		expect(scene.game).toBe(global.g.game);
+		expect(scene.onAssetLoad.length).toEqual(0);
+		expect(scene.onAssetLoadFailure.length).toEqual(0);
+		expect(scene.onAssetLoadComplete.length).toEqual(0);
+		expect(scene.onLoad.length).toEqual(0);
+		expect(scene.children).not.toBeFalsy();
+		expect(scene.children.length).toBe(0);
+		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
+		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(1);
+		expect(scene.local).toBe(LocalTickMode.InterpolateLocal);
+		expect(scene.tickGenerationMode).toBe(TickGenerationMode.Manual);
+		expect(scene.name).toBe("myScene");
+	});
+
+	it("初期化- 全て省略", () => {
+		global.g = { game: game };
+		const scene = new Scene();
+		expect(scene.game).toBe(global.g.game);
+		expect(scene.onAssetLoad.length).toEqual(0);
+		expect(scene.onAssetLoadFailure.length).toEqual(0);
+		expect(scene.onAssetLoadComplete.length).toEqual(0);
+		expect(scene.onLoad.length).toEqual(0);
+		expect(scene.children).not.toBeFalsy();
+		expect(scene.children.length).toBe(0);
+		expect(scene._sceneAssetHolder._assetIds).toEqual([]);
+		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
+		expect(scene.local).toBe(LocalTickMode.NonLocal);
+		expect(scene.tickGenerationMode).toBe(TickGenerationMode.ByClock);
+		expect(scene.name).toEqual(undefined);
+	});
+
+	it("初期化- game省略, g もしくは g.gameがない場合エラーとなる", () => {
+		global.g = { game: undefined };
+		try {
+			new Scene({
+				assetIds: ["foo"],
+				local: LocalTickMode.InterpolateLocal,
+				tickGenerationMode: TickGenerationMode.Manual,
+				name: "myScene"
+			});
+		} catch (e) {
+			expect(e.message).toBe("getGameInAssetContext(): Not in ScriptAsset.");
+			expect(e.name).toEqual("AssertionError");
+		}
+
+		global.g = undefined;
+		expect(() => new Scene()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 
 	it("初期化 - Storage", () => {

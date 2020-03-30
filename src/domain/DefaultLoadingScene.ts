@@ -16,8 +16,10 @@ import { Object2D } from "./Object2D";
 export interface DefaultLoadingSceneParameterObject {
 	/**
 	 * このシーンが属する `Game` 。
+	 * ゲーム開発者が指定する必要はない。
+	 * @default g.game
 	 */
-	game: Game;
+	game?: Game;
 	style?: "default" | "compact";
 }
 
@@ -91,7 +93,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	 * `DeafultLoadingScene` のインスタンスを生成する。
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
-	constructor(param: DefaultLoadingSceneParameterObject) {
+	constructor(param: DefaultLoadingSceneParameterObject = {}) {
 		super({ game: param.game, name: "akashic:default-loading-scene" });
 		if (param.style === "compact") {
 			this._barWidth = this.game.width / 4;

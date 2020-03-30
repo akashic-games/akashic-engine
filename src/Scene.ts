@@ -6,6 +6,7 @@ import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
 import { MessageEvent, OperationEvent } from "./domain/Event";
+import { getGameInAssetContext } from "./domain/getGameInAssetContext";
 import { Matrix } from "./domain/Matrix";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./domain/Storage";
 import { Timer } from "./domain/Timer";
@@ -210,8 +211,10 @@ export class SceneAssetHolder {
 export interface SceneParameterObject {
 	/**
 	 * このシーンの属するゲーム。
+	 * ゲーム開発者が指定する必要はない。
+	 * @default g.game
 	 */
-	game: Game;
+	game?: Game;
 
 	/**
 	 * このシーンで用いるアセットIDの配列。
@@ -634,8 +637,8 @@ export class Scene implements StorageLoaderHandler {
 	 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
-	constructor(param: SceneParameterObject) {
-		var game = param.game;
+	constructor(param: SceneParameterObject = {}) {
+		var game = param.game || getGameInAssetContext();
 		var local =
 			param.local === undefined
 				? LocalTickMode.NonLocal

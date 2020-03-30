@@ -4,7 +4,7 @@ import * as g from "../..";
 declare global {
 	namespace NodeJS {
 		interface Global {
-			g: typeof g;
+			g: typeof g | { game: Game };
 		}
 	}
 }

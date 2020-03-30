@@ -1,7 +1,14 @@
-import { DynamicFont, FontFamily, FontWeight, SurfaceAtlasSet } from "..";
+import { DynamicFont, FontFamily, FontWeight, Game, SurfaceAtlasSet } from "..";
 import { skeletonRuntime } from "./helpers";
 
 describe("test DynamicFont", () => {
+	beforeEach(() => {
+		global.g = undefined;
+	});
+	afterAll(() => {
+		global.g = undefined;
+	});
+
 	it("初期化", () => {
 		const runtime = skeletonRuntime();
 
@@ -93,6 +100,35 @@ describe("test DynamicFont", () => {
 		const font = new DynamicFont(param);
 		expect(font.fontFamily).toBe(param.fontFamily);
 		expect(font.size).toBe(font.size);
+	});
+
+	it("初期化 - ParameterObjectのgame省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
+		const runtime = skeletonRuntime();
+		global.g = { game: runtime.game };
+		const param = {
+			fontFamily: FontFamily.SansSerif,
+			size: 20
+		};
+		const font = new DynamicFont(param);
+		expect(font.fontFamily).toBe(param.fontFamily);
+		expect(font.size).toBe(param.size);
+	});
+
+	it("初期化 - ParameterObjectのgame省略, g.gameがない場合エラーとなる", () => {
+		global.g = { game: undefined };
+		const param = {
+			fontFamily: FontFamily.SansSerif,
+			size: 20
+		};
+		try {
+			new DynamicFont(param);
+		} catch (e) {
+			expect(e.message).toBe("getGameInAssetContext(): Not in ScriptAsset.");
+			expect(e.name).toEqual("AssertionError");
+		}
+
+		global.g = undefined;
+		expect(() => new DynamicFont(param)).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 
 	describe("destroy", () => {
