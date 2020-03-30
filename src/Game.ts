@@ -955,7 +955,8 @@ namespace g {
 			this.resized.removeAll();
 			this.skippingChanged.removeAll();
 
-			this.skippingChanged.add(this._skippingChangedTriggers, this);
+			this.isSkipping = false;
+			this.skippingChanged.add(this._handleSkippingChanged, this);
 
 			this._idx = 0;
 			this._localIdx = 0;
@@ -1208,7 +1209,7 @@ namespace g {
 			} while (this._sceneChangeRequests.length > 0); // flush中に追加される限りflushを続行する
 		}
 
-		_skippingChangedTriggers(isSkipping: boolean): void {
+		_handleSkippingChanged(isSkipping: boolean): void {
 			this.isSkipping = isSkipping;
 		}
 
