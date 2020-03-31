@@ -104,13 +104,13 @@ export class FrameSprite extends Sprite {
 
 	/**
 	 * アニメーション終了時にfireされるTrigger。
-	 * 本Triggerは loop: true の場合にのみfireされる。
+	 * 本Triggerは loop: false の場合にのみfireされる。
 	 */
 	onFinish: Trigger<void>;
 
 	/**
 	 * アニメーション終了時にfireされるTrigger。
-	 * 本Triggerは loop: true の場合にのみfireされる。
+	 * 本Triggerは loop: false の場合にのみfireされる。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onFinish` を利用すること。
 	 */
 	finished: Trigger<void>;
