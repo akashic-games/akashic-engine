@@ -64,7 +64,7 @@ describe("test Sprite", () => {
 	it("初期化 - 動画サーフェス", () => {
 		const runtime = skeletonRuntime();
 
-		const surface = new Surface(16, 32, {}, true);
+		const surface = new Surface(16, 32, {});
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface
@@ -81,21 +81,13 @@ describe("test Sprite", () => {
 
 		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
-		surface.onAnimationStart.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
-		updated = false;
-		surface.onAnimationStop.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(false);
 	});
 
 	it("初期化 - 動画サーフェス(再生中)", () => {
 		const runtime = skeletonRuntime();
 
-		const surface = new Surface(16, 32, { isPlaying: true }, true);
+		const surface = new Surface(16, 32, { isPlaying: true });
 		expect(surface.isPlaying()).toBe(true);
-		expect(surface.isDynamic).toBe(true);
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface
@@ -151,7 +143,7 @@ describe("test Sprite", () => {
 
 	it("初期化 - ParameterObject, 動画サーフェス", () => {
 		const runtime = skeletonRuntime();
-		const surface = new Surface(16, 32, {}, true);
+		const surface = new Surface(16, 32, {});
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -171,21 +163,11 @@ describe("test Sprite", () => {
 		expect(sprite.srcY).toEqual(2);
 		expect(sprite._surface).toEqual(surface);
 		expect(sprite._beforeSurface).toEqual(sprite._surface);
-
-		sprite.onUpdate.fire();
-		expect(updated).toBe(false);
-		surface.onAnimationStart.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
-		updated = false;
-		surface.onAnimationStop.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(false);
 	});
 
 	it("初期化 - ParameterObject, 動画サーフェス(再生中)", () => {
 		const runtime = skeletonRuntime();
-		const surface = new Surface(16, 32, { isPlaying: true }, true);
+		const surface = new Surface(16, 32, { isPlaying: true });
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface,
@@ -266,47 +248,38 @@ describe("test Sprite", () => {
 	it("停止中の動画サーフェスへの切り替え", () => {
 		const runtime = skeletonRuntime();
 
-		const surface1 = new Surface(16, 32, { isPlaying: false }, true);
-		const surface2 = new Surface(16, 32, { isPlaying: false }, true);
+		const surface1 = new Surface(16, 32, { isPlaying: false });
+		const surface2 = new Surface(16, 32, { isPlaying: false });
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface1
 		});
 
-		surface1.onAnimationStart.fire();
-		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
-
-		sprite._surface = surface2;
-		sprite.invalidate();
-		updated = false;
-
-		surface1.onAnimationStart.fire();
 		sprite.onUpdate.fire();
 		expect(updated).toBe(false);
 
-		surface2.onAnimationStart.fire();
+		sprite._surface = surface2;
+		sprite.invalidate();
+
 		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
+		expect(updated).toBe(false);
 	});
 
 	it("再生中の動画サーフェスへの切り替え", () => {
 		const runtime = skeletonRuntime();
 
-		const surface1 = new Surface(16, 32, { isPlaying: false }, true);
-		const surface2 = new Surface(16, 32, { isPlaying: true }, true);
+		const surface1 = new Surface(16, 32, { isPlaying: false });
+		const surface2 = new Surface(16, 32, { isPlaying: true });
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: surface1
 		});
 
-		surface1.onAnimationStart.fire();
 		sprite.onUpdate.fire();
-		expect(updated).toBe(true);
+		expect(updated).toBe(false);
 
 		sprite._surface = surface2;
 		sprite.invalidate();
-		updated = false;
 
 		sprite.onUpdate.fire();
 		expect(updated).toBe(true);

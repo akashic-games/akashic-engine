@@ -24,38 +24,6 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 	height: number;
 
 	/**
-	 * 本Surfaceの画像が動画であるかを示す値。真の時、動画。
-	 * この値は参照のみに利用され、変更してはならない。
-	 */
-	isDynamic: boolean;
-
-	/**
-	 * アニメーション再生開始イベント。
-	 * isDynamicが偽の時undefined。
-	 */
-	onAnimationStart: Trigger<void>;
-
-	/**
-	 * アニメーション再生停止イベント。
-	 * isDynamicが偽の時undefined。
-	 */
-	onAnimationStop: Trigger<void>;
-
-	/**
-	 * アニメーション再生開始イベント。
-	 * isDynamicが偽の時undefined。
-	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAnimationStart` を利用すること。
-	 */
-	animatingStarted: Trigger<void>;
-
-	/**
-	 * アニメーション再生停止イベント。
-	 * isDynamicが偽の時undefined。
-	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAnimationStop` を利用すること。
-	 */
-	animatingStopped: Trigger<void>;
-
-	/**
 	 * 描画可能な実体。
 	 * 具体的には renderer().drawImage() の実装が描画対象として利用できる値。
 	 * @private
@@ -73,9 +41,8 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 	 * @param width 描画領域の幅（整数値でなければならない）
 	 * @param height 描画領域の高さ（整数値でなければならない）
 	 * @param drawable 描画可能な実体。省略された場合、 `undefined`
-	 * @param isDynamic drawableが動画であることを示す値。動画である時、真を渡さなくてはならない。省略された場合、偽。
 	 */
-	constructor(width: number, height: number, drawable?: any, isDynamic: boolean = false) {
+	constructor(width: number, height: number, drawable?: any) {
 		if (width % 1 !== 0 || height % 1 !== 0) {
 			throw ExceptionFactory.createAssertionError("Surface#constructor: width and height must be integers");
 		}
@@ -84,18 +51,6 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 		this.height = height;
 		this._drawable = drawable;
 		// this._destroyedは破棄時に一度だけ代入する特殊なフィールドなため、コンストラクタで初期値を代入しない
-		this.isDynamic = isDynamic;
-		if (this.isDynamic) {
-			this.onAnimationStart = new Trigger<void>();
-			this.onAnimationStop = new Trigger<void>();
-			this.animatingStarted = this.onAnimationStart;
-			this.animatingStopped = this.onAnimationStop;
-		} else {
-			this.onAnimationStart = undefined;
-			this.onAnimationStop = undefined;
-			this.animatingStarted = undefined;
-			this.animatingStopped = undefined;
-		}
 	}
 
 	/**
@@ -113,12 +68,6 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 	 * 以後、このSurfaceを利用することは出来なくなる。
 	 */
 	destroy(): void {
-		if (this.onAnimationStart) {
-			this.onAnimationStart.destroy();
-		}
-		if (this.onAnimationStop) {
-			this.onAnimationStop.destroy();
-		}
 		this._destroyed = true;
 	}
 
