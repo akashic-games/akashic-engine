@@ -3,17 +3,12 @@ namespace g {
 	/**
 	 * BitmapFont のデータを格納したテキストアセット (JSON) を JSON.parse したオブジェクト
 	 */
-	export interface BitmapFontGlyphData {
+	export interface BitmapFontGlyphInfo {
 		map: {[key: string]: GlyphArea},
 		width: number,
 		height: number,
 		missingGlyph: GlyphArea
 	}
-
-	/**
-	 * BitmapFont の生成に必要なデータセット
-	 */
-	export type BitmapFontGlyphInfo = TextAsset | BitmapFontGlyphData;
 
 	/**
 	 * `BitmapFont` のコンストラクタに渡すことができるパラメータ。
@@ -27,7 +22,7 @@ namespace g {
 
 		/**
 		 * BitmapFont の生成に必要なデータセット。
-		 * glyphInfo が与えられる場合、 BitmapFontParameterObject の map defaultGlyphWidth defaultGlyphHeight missingGlyph は参照されない。
+		 * glyphInfo が与えられる場合、 BitmapFontParameterObject の map, defaultGlyphWidth, defaultGlyphHeight, missingGlyph は参照されない。
 		 */
 		glyphInfo?: BitmapFontGlyphInfo;
 
@@ -72,20 +67,19 @@ namespace g {
 			super();
 			this.surface = Util.asSurface(param.src);
 
-			let glyphInfo: BitmapFontGlyphData;
 			if (param.glyphInfo) {
-				if ((param.glyphInfo as BitmapFontGlyphData).map) {
-					glyphInfo = param.glyphInfo as BitmapFontGlyphData;
-				} else {
-					glyphInfo = JSON.parse((param.glyphInfo as g.TextAsset).data);
-				}
+				this.map = param.glyphInfo.map;
+				this.defaultGlyphWidth = param.glyphInfo.width;
+				this.defaultGlyphHeight = param.glyphInfo.height;
+				this.missingGlyph = param.glyphInfo.missingGlyph;
+				this.size = param.glyphInfo.height;
+			} else {
+				this.map = param.map;
+				this.defaultGlyphWidth = param.defaultGlyphWidth;
+				this.defaultGlyphHeight = param.defaultGlyphHeight;
+				this.missingGlyph = param.missingGlyph;
+				this.size = param.defaultGlyphHeight;
 			}
-
-			this.map = glyphInfo ? glyphInfo.map : param.map;
-			this.defaultGlyphWidth = glyphInfo ? glyphInfo.width : param.defaultGlyphWidth;
-			this.defaultGlyphHeight = glyphInfo ? glyphInfo.height : param.defaultGlyphHeight;
-			this.missingGlyph = glyphInfo ? glyphInfo.missingGlyph : param.missingGlyph;
-			this.size = glyphInfo ? glyphInfo.height : param.defaultGlyphHeight;
 		}
 
 		/**
