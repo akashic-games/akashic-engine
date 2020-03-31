@@ -5,6 +5,16 @@ import { Font } from "./Font";
 import { SurfaceUtil } from "./SurfaceUtil";
 
 /**
+ * BitmapFont のデータを格納したテキストアセット (JSON) を JSON.parse したオブジェクト
+ */
+export interface BitmapFontGlyphInfo {
+	map: {[key: string]: GlyphArea},
+	width: number,
+	height: number,
+	missingGlyph: GlyphArea
+}
+
+/**
  * `BitmapFont` のコンストラクタに渡すことができるパラメータ。
  * 各メンバの詳細は `BitmapFont` の同名メンバの説明を参照すること。
  */
@@ -15,19 +25,25 @@ export interface BitmapFontParameterObject {
 	src: SurfaceLike | ImageAssetLike;
 
 	/**
+	 * BitmapFont の生成に必要なデータセット。
+	 * glyphInfo が与えられる場合、 BitmapFontParameterObject の map, defaultGlyphWidth, defaultGlyphHeight, missingGlyph は参照されない。
+	 */
+	glyphInfo?: BitmapFontGlyphInfo;
+
+	/**
 	 * 各文字から画像上の位置・サイズなどを特定する情報。コードポイントから `GlyphArea` への写像。
 	 */
-	map: { [key: string]: GlyphArea };
+	map?: { [key: string]: GlyphArea };
 
 	/**
 	 * `map` で指定を省略した文字に使われる、デフォルトの文字の幅。
 	 */
-	defaultGlyphWidth: number;
+	defaultGlyphWidth?: number;
 
 	/**
 	 * `map` で指定を省略した文字に使われる、デフォルトの文字の高さ
 	 */
-	defaultGlyphHeight: number;
+	defaultGlyphHeight?: number;
 
 	/**
 	 * `map` に存在しないコードポイントの代わりに表示するべき文字の `GlyphArea` 。
@@ -54,11 +70,20 @@ export class BitmapFont extends Font {
 	constructor(param: BitmapFontParameterObject) {
 		super();
 		this.surface = SurfaceUtil.asSurface(param.src);
-		this.map = param.map;
-		this.defaultGlyphWidth = param.defaultGlyphWidth;
-		this.defaultGlyphHeight = param.defaultGlyphHeight;
-		this.missingGlyph = param.missingGlyph;
-		this.size = param.defaultGlyphHeight;
+
+		if (param.glyphInfo) {
+			this.map = param.glyphInfo.map;
+			this.defaultGlyphWidth = param.glyphInfo.width;
+			this.defaultGlyphHeight = param.glyphInfo.height;
+			this.missingGlyph = param.glyphInfo.missingGlyph;
+			this.size = param.glyphInfo.height;
+		} else {
+			this.map = param.map;
+			this.defaultGlyphWidth = param.defaultGlyphWidth;
+			this.defaultGlyphHeight = param.defaultGlyphHeight;
+			this.missingGlyph = param.missingGlyph;
+			this.size = param.defaultGlyphHeight;
+		}
 	}
 
 	/**
