@@ -1208,7 +1208,7 @@ export class Game {
 		this.handlerSet.removeAllEventFilters();
 
 		this.isSkipping = false;
-		this.skippingChanged.add(this._handleSkippingChanged, this);
+		this.onSkipChange.add(this._handleSkipChange, this);
 
 		this._idx = 0;
 		this._localIdx = 0;
@@ -1487,7 +1487,7 @@ export class Game {
 		} while (this._sceneChangeRequests.length > 0); // flush中に追加される限りflushを続行する
 	}
 
-	_handleSkippingChanged(isSkipping: boolean): void {
+	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
 	}
 
