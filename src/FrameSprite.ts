@@ -99,7 +99,7 @@ namespace g {
 
 		/**
 		 * アニメーション終了時にfireされるTrigger。
-		 * 本Triggerは loop: true の場合にのみfireされる。
+		 * 本Triggerは loop: false の場合にのみfireされる。
 		 */
 		finished: Trigger<void>;
 
