@@ -443,6 +443,15 @@ export class Game {
 	skippingChanged: Trigger<boolean>;
 
 	/**
+	 * ゲームが早送りに状態にあるかどうか。
+	 *
+	 * スキップ状態であれば真、非スキップ状態であれば偽である。
+	 * ゲーム開発者は、この値に起因する処理で、ゲームのグローバルな実行状態を変化させてはならない。
+	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+	 */
+	isSkipping: boolean;
+
+	/**
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
@@ -660,6 +669,7 @@ export class Game {
 		this.handlerSet = param.handlerSet;
 		this.selfId = param.selfId;
 		this.playId = undefined;
+		this.isSkipping = false;
 		this.audio = new AudioSystemManager(this.resourceFactory);
 
 		this.defaultAudioSystemId = "sound";
@@ -1218,6 +1228,9 @@ export class Game {
 		this.onSkipChange.removeAll();
 		this.handlerSet.removeAllEventFilters();
 
+		this.isSkipping = false;
+		this.onSkipChange.add(this._handleSkipChange, this);
+
 		this._idx = 0;
 		this._localIdx = 0;
 		this._cameraIdx = 0;
@@ -1493,6 +1506,10 @@ export class Game {
 				}
 			}
 		} while (this._sceneChangeRequests.length > 0); // flush中に追加される限りflushを続行する
+	}
+
+	_handleSkipChange(isSkipping: boolean): void {
+		this.isSkipping = isSkipping;
 	}
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
