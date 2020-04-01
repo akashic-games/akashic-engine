@@ -5,7 +5,7 @@ import { Font } from "./Font";
 import { SurfaceUtil } from "./SurfaceUtil";
 
 /**
- * BitmapFont のデータを格納したテキストアセット (JSON) を JSON.parse したオブジェクト
+ * BitmapFont の初期化に必要なパラメータのセット
  */
 export interface BitmapFontGlyphInfo {
 	map: {[key: string]: GlyphArea},
