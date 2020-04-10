@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.6.3
+
+不具合修正
+ * `g.Scene#requestAssets()` を利用するコンテンツで、リセット時に `g.SceenAssetHolder#callHandler()` が例外を起こすことがある問題を修正
+
 ## 2.6.2
 
 機能追加
