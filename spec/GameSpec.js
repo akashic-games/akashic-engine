@@ -701,6 +701,46 @@ describe("test Game", function() {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("no crash on Game#_flushSceneChangeRequests() while waiting Scene#requestAssets()", function (done) {
+		var game = new mock.Game({ width: 320, height: 320 });
+
+		game._loaded.add(function () {
+			var scene = new g.Scene({game: game});
+			scene.loaded.add(function () {
+				scene.requestAssets([
+					{
+						id: "zooAudio",
+						type: "audio",
+						duration: 450,
+						uri: "http://dummy.unused.example/zoo",
+					}
+				], function () {
+					done.fail("never reach");
+				});
+
+				function waitAndTest() {
+					// requestAssets() の callback が呼ばれる直前まで待つ
+					if (game._sceneChangeRequests.length === 0) {
+						setTimeout(waitAndTest, 10);
+						return;
+					}
+					// なんらかの契機でこのタイミングで scene が破棄されると、
+					// (直接こんな処理が書かれることはまずないはずだが……)
+					scene.destroy();
+					// 破棄された scene の requestAssets() のコールバックを呼ぼうとしてエラーになる問題があった
+					game._flushSceneChangeRequests();
+					// 何事もなくここにたどり着ければ OK 。
+					done();
+				}
+				waitAndTest();
+			});
+			game.pushScene(scene);
+			game._flushSceneChangeRequests();
+			game.classicTick();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("raiseEvent", function () {
 		var game = new mock.Game({ width: 320, height: 320 });
 		var ev = new g.MessageEvent("data");

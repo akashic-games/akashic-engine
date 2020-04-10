@@ -1199,7 +1199,8 @@ namespace g {
 							req.scene._fireLoaded();
 						break;
 					case SceneChangeType.CallAssetHolderHandler:
-						req.assetHolder.callHandler();
+						if (!req.assetHolder.destroyed())
+							req.assetHolder.callHandler();
 						break;
 					default:
 						throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
