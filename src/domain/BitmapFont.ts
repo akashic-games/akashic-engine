@@ -8,10 +8,10 @@ import { SurfaceUtil } from "./SurfaceUtil";
  * BitmapFont の初期化に必要なパラメータのセット
  */
 export interface BitmapFontGlyphInfo {
-	map: {[key: string]: GlyphArea},
-	width: number,
-	height: number,
-	missingGlyph: GlyphArea
+	map: { [key: string]: GlyphArea };
+	width: number;
+	height: number;
+	missingGlyph: GlyphArea;
 }
 
 /**

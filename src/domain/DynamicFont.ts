@@ -6,6 +6,7 @@ import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
 import { FontFamily } from "../types/FontFamily";
 import { FontWeight } from "../types/FontWeight";
+import { FontWeightString } from "../types/FontWeightString";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { getGameInAssetContext } from "./getGameInAssetContext";
@@ -29,7 +30,12 @@ export interface DynamicFontParameterObject {
 	/**
 	 * フォントファミリ。
 	 *
-	 * g.FontFamilyの定義する定数、フォント名、またはそれらの配列で指定する。
+	 * フォント名、またはそれらの配列で指定する。
+	 * フォント名として指定できる値は環境に依存する。
+	 * 少なくとも `"sans-serif"`, `"serif"`, `"monospace"` (それぞれサンセリフ体、セリフ体、等幅の字体) は有効な値である。
+	 * `g.FontFamily` を指定することは非推奨である。代わりに上記文字列を利用すること。
+	 *
+	 * この値は参考値である。環境によっては無視される可能性がある。
 	 */
 	fontFamily: FontFamily | string | (FontFamily | string)[];
 
@@ -53,9 +59,10 @@ export interface DynamicFontParameterObject {
 
 	/**
 	 * フォントウェイト。
-	 * @default FontWeight.Normal
+	 * `g.FontWeight` を指定することは非推奨である。代わりに `g.FontWeightString` を利用すること。
+	 * @default g.FontWeight.Normal
 	 */
-	fontWeight?: FontWeight;
+	fontWeight?: FontWeight | FontWeightString;
 
 	/**
 	 * 輪郭幅。
@@ -107,41 +114,53 @@ export class DynamicFont extends Font {
 	/**
 	 * フォントファミリ。
 	 *
-	 * このプロパティは読み出し専用である。
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
 	fontFamily: FontFamily | string | (FontFamily | string)[];
 
 	/**
 	 * フォントサイズ。
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
 	size: number;
 
 	/**
 	 * ヒント。
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
 	hint: DynamicFontHint;
 
 	/**
 	 * フォント色。CSS Colorで指定する。
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 * @default "black"
 	 */
 	fontColor: string;
 
 	/**
 	 * フォントウェイト。
-	 * @default FontWeight.Normal
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
+	 * @default g.FontWeight.Normal
 	 */
-	fontWeight: FontWeight;
+	fontWeight: FontWeight | FontWeightString;
 
 	/**
 	 * 輪郭幅。
 	 * 0 以上の数値でなければならない。 0 を指定した場合、輪郭は描画されない。
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 * @default 0
 	 */
 	strokeWidth: number;
 
 	/**
 	 * 輪郭色。CSS Colorで指定する。
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 * @default "black"
 	 */
 	strokeColor: string;
@@ -150,6 +169,8 @@ export class DynamicFont extends Font {
 	 * 文字の輪郭のみを描画するか切り替える。
 	 * `true` を指定した場合、輪郭のみ描画される。
 	 * `false` を指定した場合、文字と輪郭が描画される。
+	 *
+	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 * @default false
 	 */
 	strokeOnly: boolean;
@@ -200,15 +221,35 @@ export class DynamicFont extends Font {
 		this.strokeOnly = param.strokeOnly != null ? param.strokeOnly : false;
 		const game = param.game || getGameInAssetContext();
 		this._resourceFactory = game.resourceFactory;
+
+		const ff = this.fontFamily;
+		let realFontFamily: string | string[];
+		if (typeof ff === "string") {
+			realFontFamily = ff;
+		} else if (Array.isArray(ff)) {
+			const arr: string[] = [];
+			for (let i = 0; i < ff.length; ++i) {
+				const ffi = ff[i];
+				arr.push(typeof ffi === "string" ? ffi : Util.enumToSnakeCase<FontFamily, string>(FontFamily, ffi));
+			}
+			realFontFamily = arr;
+		} else {
+			const arr: string[] = [];
+			arr.push(typeof ff === "string" ? ff : Util.enumToSnakeCase<FontFamily, string>(FontFamily, ff));
+			realFontFamily = arr;
+		}
+		const weight = this.fontWeight;
+		const realFontWeight = typeof weight === "string" ? weight : Util.enumToSnakeCase<FontWeight, FontWeightString>(FontWeight, weight);
+
 		this._glyphFactory = this._resourceFactory.createGlyphFactory(
-			this.fontFamily,
+			realFontFamily,
 			this.size,
 			this.hint.baselineHeight,
 			this.fontColor,
 			this.strokeWidth,
 			this.strokeColor,
 			this.strokeOnly,
-			this.fontWeight
+			realFontWeight
 		);
 		this._glyphs = {};
 		this._destroyed = false;

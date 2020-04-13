@@ -17,8 +17,8 @@ import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
 import { CommonOffset } from "./types/commons";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
 import { AssetLoadError, StorageLoadError } from "./types/errors";
-import { LocalTickMode } from "./types/LocalTickMode";
-import { TickGenerationMode } from "./types/TickGenerationMode";
+import { LocalTickModeString } from "./types/LocalTickModeString";
+import { TickGenerationModeString } from "./types/TickGenerationModeString";
 
 /**
  * SceneAssetHolder のコンストラクタに指定できるパラメータ。
@@ -250,23 +250,23 @@ export interface SceneParameterObject {
 	/**
 	 * このシーンのローカルティック消化ポリシー。
 	 *
-	 * * `LocalTickMode.FullLocal` が与えられた場合、このシーンはローカルシーンと呼ばれる。
+	 * * `"full-local"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
 	 *   ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。
-	 * * `LocalTickMode.NonLocal` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
+	 * * `"non-local"` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
 	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(onUpdateがfireされる)。
 	 *   ローカルティックを消化することはない。
-	 * * `LocalTickMode.InterpolateLocal` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
+	 * * `"interpolate-local"` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
 	 *   ローカルティック補間シーンでは、非ローカルシーン同様にティックを消化するが、
 	 *   消化すべき非ローカルティックがない場合にローカルティックが補間され消化される。
 	 *
 	 * ローカルシーンに属するエンティティは、すべてローカルである(強制的にローカルエンティティとして生成される)。
 	 * ローカルシーンは特にアセットロード中のような、他プレイヤーと同期すべきでないシーンのために存在する機能である。
 	 *
-	 * `LocalTickMode` の代わりに `boolean` を与えることもできる。
-	 * 偽は `LocalTickMode.NonLocal` 、 真は `FullLocal` と解釈される。
-	 * @default LocalTickMode.NonLocal
+	 * `LocalTickModeString` の代わりに `boolean` を与えることもできる。
+	 * 偽は `"non-local"` 、 真は `"full-local"` と解釈される。
+	 * @default "non-local"
 	 */
-	local?: boolean | LocalTickMode;
+	local?: boolean | LocalTickModeString;
 
 	/**
 	 * このシーンの識別用の名前。
@@ -287,37 +287,26 @@ export interface SceneParameterObject {
 	/**
 	 * 時間経過の契機(ティック)をどのように生成するか。
 	 *
-	 * 省略された場合、 `TickGenerationMode.ByClock` 。
+	 * 省略された場合、 `"by-clock"` 。
 	 * `Manual` を指定した場合、 `Game#raiseTick()` を呼び出さない限りティックが生成されない(時間経過しない)。
 	 * ただしローカルティック(ローカルシーンの間などの「各プレイヤー間で独立な時間経過処理」)はこの値の影響を受けない。
 	 * またこのシーンへの遷移直後、一度だけこの値に関わらずティックが生成される。
 	 */
-	tickGenerationMode?: TickGenerationMode;
+	tickGenerationMode?: TickGenerationModeString;
 }
 
 /**
  * そのSceneの状態を表す列挙子。
  *
- * - Destroyed: すでに破棄されているシーンで、再利用が不可能になっている状態を表す
- * - Standby: 初期化された状態のシーンで、シーンスタックへ追加されることを待っている状態を表す
- * - Active: シーンスタックの一番上にいるシーンで、ゲームのカレントシーンとして活性化されている状態を表す
- * - Deactive: シーンスタックにいるが一番上ではないシーンで、裏側で非活性状態になっていることを表す
- * - BeforeDestroyed: これから破棄されるシーンで、再利用が不可能になっている状態を表す
+ * - "destroyed": すでに破棄されているシーンで、再利用が不可能になっている状態を表す
+ * - "standby": 初期化された状態のシーンで、シーンスタックへ追加されることを待っている状態を表す
+ * - "active": シーンスタックの一番上にいるシーンで、ゲームのカレントシーンとして活性化されている状態を表す
+ * - "deactive": シーンスタックにいるが一番上ではないシーンで、裏側で非活性状態になっていることを表す
+ * - "before-destroyed": これから破棄されるシーンで、再利用が不可能になっている状態を表す
  */
-export enum SceneState {
-	Destroyed,
-	Standby,
-	Active,
-	Deactive,
-	BeforeDestroyed
-}
+export type SceneStateString = "destroyed" | "standby" | "active" | "deactive" | "before-destroyed";
 
-export enum SceneLoadState {
-	Initial = 0,
-	Ready = 1,
-	ReadyFired = 2,
-	LoadedFired = 3
-}
+export type SceneLoadStateString = "initial" | "ready" | "ready-fired" | "loaded-fired";
 
 /**
  * シーンを表すクラス。
@@ -356,11 +345,11 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * このシーンのローカルティック消化ポリシー。
 	 *
-	 * * `LocalTickMode.NonLocal` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
+	 * * `"non-local"` が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
 	 *   非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(onUpdateがfireされる)。
-	 * * `LocalTickMode.FullLocal` が与えられた場合、このシーンはローカルシーンと呼ばれる。
+	 * * `"full-local"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
 	 *   ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。
-	 * * `LocalTickMode.InterpolateLocal` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
+	 * * `"interpolate-local"` が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
 	 *   ローカルティック補間シーンは、非ローカルシーン同様にティックを消化するが、
 	 *   消化すべき非ローカルティックがない場合にローカルティックが補間され消化される。
 	 *
@@ -370,17 +359,17 @@ export class Scene implements StorageLoaderHandler {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	local: LocalTickMode;
+	local: LocalTickModeString;
 
 	/**
 	 * 時間経過の契機(ティック)をどのように生成するか。
-	 * `Manual` の場合、 `Game#raiseTick()` を呼び出さない限りティックが生成されない(時間経過しない)。
+	 * `"manual"` の場合、 `Game#raiseTick()` を呼び出さない限りティックが生成されない(時間経過しない)。
 	 * ただしローカルティック(ローカルシーンの間などの「各プレイヤー間で独立な時間経過処理」)はこの値の影響を受けない。
 	 * またこのシーンへの遷移直後、一度だけこの値に関わらずティックが生成される。
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	tickGenerationMode: TickGenerationMode;
+	tickGenerationMode: TickGenerationModeString;
 
 	/**
 	 * シーンの識別用の名前。
@@ -428,13 +417,13 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * シーンの状態。
 	 */
-	state: SceneState;
+	state: SceneStateString;
 
 	/**
 	 * シーンの状態変更イベント。
-	 * 状態が初期化直後の `Standby` 状態以外に変化するときfireされる。
+	 * 状態が初期化直後の `"standby"` 状態以外に変化するときfireされる。
 	 */
-	onStateChange: Trigger<SceneState>;
+	onStateChange: Trigger<SceneStateString>;
 
 	/**
 	 * 汎用メッセージイベント。
@@ -519,13 +508,6 @@ export class Scene implements StorageLoaderHandler {
 	assetLoadCompleted: Trigger<AssetLike>;
 
 	/**
-	 * シーンの状態変更イベント。
-	 * 状態が初期化直後の `Standby` 状態以外に変化するときfireされる。
-	 * @deprecated 非推奨である。将来的に削除される。代わりに `onStateChange` を利用すること。
-	 */
-	stateChanged: Trigger<SceneState>;
-
-	/**
 	 * 汎用メッセージイベント。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onMessage` を利用すること。
 	 */
@@ -587,16 +569,16 @@ export class Scene implements StorageLoaderHandler {
 	 * すなわち、 `_load()` が呼び出された後か否か。
 	 *
 	 * 歴史的経緯により、このフラグの意味は「読み込みが終わった後」でも「onLoadがfireされた後」でもない点に注意。
-	 * なお前者「(アセットとストレージの)読み込みが終わった後」は `_loadingState === SceneLoadState.Ready` に与えられる。
+	 * なお前者「(アセットとストレージの)読み込みが終わった後」は `_loadingState === "ready"` に与えられる。
 	 *
 	 * シーンの読み込みは概ね次の順で処理が進行する。
 	 * * `_loaded` が真になる
 	 * * 各種読み込みが完了する
-	 * * `_loadingState` が `SceneLoadState.Ready` になる
+	 * * `_loadingState` が `"ready"` になる
 	 * * `_onReady` がfireされる
-	 * * `_loadingState` が `SceneLoadState.ReadyFired` になる
+	 * * `_loadingState` が `"ready-fired"` になる
 	 * * `onLoad` がfireされる
-	 * * `_loadingState` が `SceneLoadState.LoadedFired` になる
+	 * * `_loadingState` が `"loaded-fired"` になる
 	 * @private
 	 */
 	_loaded: boolean;
@@ -613,7 +595,7 @@ export class Scene implements StorageLoaderHandler {
 	 * 「 `onLoad` がfireされた後」ではない点に注意。
 	 * @private
 	 */
-	_loadingState: SceneLoadState;
+	_loadingState: SceneLoadStateString;
 
 	/**
 	 * タイマー。通常は本変数直接ではなく、createTimer/deleteTimer/setInterval/clearInterval等の機構を利用する。
@@ -641,13 +623,13 @@ export class Scene implements StorageLoaderHandler {
 		var game = param.game || getGameInAssetContext();
 		var local =
 			param.local === undefined
-				? LocalTickMode.NonLocal
+				? "non-local"
 				: param.local === false
-				? LocalTickMode.NonLocal
+				? "non-local"
 				: param.local === true
-				? LocalTickMode.FullLocal
-				: <LocalTickMode>param.local;
-		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
+				? "full-local"
+				: <LocalTickModeString>param.local;
+		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
 
 		if (!param.storageKeys) {
 			this._storageLoader = undefined;
@@ -671,7 +653,7 @@ export class Scene implements StorageLoaderHandler {
 
 		this._loaded = false;
 		this._prefetchRequested = false;
-		this._loadingState = SceneLoadState.Initial;
+		this._loadingState = "initial";
 
 		this.onUpdate = new Trigger<void>();
 		this.update = this.onUpdate;
@@ -696,9 +678,8 @@ export class Scene implements StorageLoaderHandler {
 		this.operation = this.onOperation;
 
 		this.children = [];
-		this.state = SceneState.Standby;
-		this.onStateChange = new Trigger<SceneState>();
-		this.stateChanged = this.onStateChange;
+		this.state = "standby";
+		this.onStateChange = new Trigger<SceneStateString>();
 
 		this._assetHolders = [];
 		this._sceneAssetHolder = new SceneAssetHolder({
@@ -735,7 +716,7 @@ export class Scene implements StorageLoaderHandler {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
 	destroy(): void {
-		this.state = SceneState.BeforeDestroyed;
+		this.state = "before-destroyed";
 		this.onStateChange.fire(this.state);
 
 		// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
@@ -769,7 +750,7 @@ export class Scene implements StorageLoaderHandler {
 
 		this.game = undefined;
 
-		this.state = SceneState.Destroyed;
+		this.state = "destroyed";
 		this.onStateChange.fire(this.state);
 		this.onStateChange.destroy();
 	}
@@ -965,7 +946,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
 	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
-		var mayConsumeLocalTick = this.local !== LocalTickMode.NonLocal;
+		var mayConsumeLocalTick = this.local !== "non-local";
 		var children = this.children;
 		var m: Matrix = undefined;
 		if (camera && camera instanceof Camera2D) m = camera.getMatrix();
@@ -1011,7 +992,7 @@ export class Scene implements StorageLoaderHandler {
 	}
 
 	requestAssets(assetIds: (string | DynamicAssetConfiguration)[], handler: () => void): void {
-		if (this._loadingState < SceneLoadState.ReadyFired) {
+		if (this._loadingState !== "ready-fired" && this._loadingState !== "loaded-fired") {
 			// このメソッドは読み込み完了前には呼び出せない。これは実装上の制限である。
 			// やろうと思えば _load() で読み込む対象として加えることができる。が、その場合 `handler` を呼び出す方法が単純でないので対応を見送る。
 			throw ExceptionFactory.createAssertionError("Scene#requestAsset(): can be called after loaded.");
@@ -1031,7 +1012,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @private
 	 */
 	_activate(): void {
-		this.state = SceneState.Active;
+		this.state = "active";
 		this.onStateChange.fire(this.state);
 	}
 
@@ -1039,7 +1020,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @private
 	 */
 	_deactivate(): void {
-		this.state = SceneState.Deactive;
+		this.state = "deactive";
 		this.onStateChange.fire(this.state);
 	}
 
@@ -1101,7 +1082,7 @@ export class Scene implements StorageLoaderHandler {
 	 */
 	_notifySceneReady(): void {
 		// 即座に `_onReady` をfireすることはしない。tick()のタイミングで行うため、リクエストをgameに投げておく。
-		this._loadingState = SceneLoadState.Ready;
+		this._loadingState = "ready";
 		this.game._fireSceneReady(this);
 	}
 
@@ -1110,7 +1091,7 @@ export class Scene implements StorageLoaderHandler {
 	 */
 	_fireReady(): void {
 		this._onReady.fire(this);
-		this._loadingState = SceneLoadState.ReadyFired;
+		this._loadingState = "ready-fired";
 	}
 
 	/**
@@ -1118,6 +1099,6 @@ export class Scene implements StorageLoaderHandler {
 	 */
 	_fireLoaded(): void {
 		this.onLoad.fire(this);
-		this._loadingState = SceneLoadState.LoadedFired;
+		this._loadingState = "loaded-fired";
 	}
 }

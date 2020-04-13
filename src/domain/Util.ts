@@ -60,4 +60,13 @@ export module Util {
 
 		return code;
 	}
+
+	/**
+	 * enum の値の文字列を snake-case に変換した文字列を返す。
+	 * @deprecated 非推奨である。非推奨の機能との互換性確保のために作られたメソッドである。ゲーム開発者が使用すべきではない。
+	 */
+	export function enumToSnakeCase<T extends number, U extends string>(enumDef: { [key: number]: string }, val: T): U {
+		const s = enumDef[val];
+		return (s[0].toLowerCase() + s.slice(1).replace(/[A-Z]/g, (c: string) => "-" + c.toLowerCase())) as U;
+	}
 }

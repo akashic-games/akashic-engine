@@ -1,5 +1,6 @@
 /**
  * 描画時の合成方法。
+ * @deprecated 非推奨である。将来的に削除される。代わりに `CompositeOperationString` を利用すること。
  */
 export enum CompositeOperation {
 	/**

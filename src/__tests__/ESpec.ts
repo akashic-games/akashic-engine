@@ -1057,18 +1057,28 @@ describe("test E", () => {
 		expect(e2._isTargetOperation(null)).toBe(false);
 	});
 
-	it("render - compositeOperation", () => {
+	it("render - compositeOperationString", () => {
 		const e = new E({ scene: runtime.scene });
 		const r = new Renderer();
 		e.render(r);
 		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
+
+		e.compositeOperation = "xor";
+		r.clearMethodCallHistory();
+		e.render(r);
+		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
+		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
+			operation: "xor"
+		});
+
 		e.compositeOperation = CompositeOperation.SourceAtop;
 		r.clearMethodCallHistory();
 		e.render(r);
 		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
-			operation: CompositeOperation.SourceAtop
+			operation: "source-atop"
 		});
+
 		e.compositeOperation = undefined;
 		r.clearMethodCallHistory();
 		e.render(r);

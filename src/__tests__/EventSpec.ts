@@ -1,5 +1,4 @@
 import {
-	EventType,
 	JoinEvent,
 	LeaveEvent,
 	MessageEvent,
@@ -18,7 +17,7 @@ describe("test Event", () => {
 		const point = { x: 1, y: 2 };
 		const player = { id: "3", name: "p" };
 		const pointDownEvent = new PointDownEvent(1, null, point, player, false, 2);
-		expect(pointDownEvent.type).toBe(EventType.PointDown);
+		expect(pointDownEvent.type).toBe("point-down");
 		expect(pointDownEvent.priority).toBe(2);
 		expect(pointDownEvent.local).toBe(false);
 		expect(pointDownEvent.point).toBe(point);
@@ -32,7 +31,7 @@ describe("test Event", () => {
 		const pointAfter = { x: 0, y: 4 };
 		const player = { id: "3", name: "p" };
 		const pointUpEvent = new PointUpEvent(1, null, point, pointAfter, point, player, false, 2);
-		expect(pointUpEvent.type).toBe(EventType.PointUp);
+		expect(pointUpEvent.type).toBe("point-up");
 		expect(pointUpEvent.priority).toBe(2);
 		expect(pointUpEvent.local).toBe(false);
 		expect(pointUpEvent.point).toBe(point);
@@ -48,7 +47,7 @@ describe("test Event", () => {
 		const pointAfter = { x: 0, y: 4 };
 		const player = { id: "3", name: "p" };
 		const pointMoveEvent = new PointMoveEvent(1, null, point, pointAfter, point, player, false, 2);
-		expect(pointMoveEvent.type).toBe(EventType.PointMove);
+		expect(pointMoveEvent.type).toBe("point-move");
 		expect(pointMoveEvent.priority).toBe(2);
 		expect(pointMoveEvent.local).toBe(false);
 		expect(pointMoveEvent.point).toBe(point);
@@ -63,7 +62,7 @@ describe("test Event", () => {
 		const player = { id: "3", name: "p" };
 		const data = { hoge: "foo" };
 		const messageEvent = new MessageEvent(data, player, true, 1);
-		expect(messageEvent.type).toBe(EventType.Message);
+		expect(messageEvent.type).toBe("message");
 		expect(messageEvent.priority).toBe(1);
 		expect(messageEvent.local).toBe(true);
 		expect(messageEvent.data).toEqual(data);
@@ -72,21 +71,21 @@ describe("test Event", () => {
 	it("初期化 - Join", () => {
 		const player = { id: "3", name: "p" };
 		const joinEvent = new JoinEvent(player, undefined, 1);
-		expect(joinEvent.type).toBe(EventType.Join);
+		expect(joinEvent.type).toBe("join");
 		expect(joinEvent.priority).toBe(1);
 	});
 
 	it("初期化 - Leave", () => {
 		const player = { id: "3", name: "p" };
 		const leaveEvent = new LeaveEvent(player, 1);
-		expect(leaveEvent.type).toBe(EventType.Leave);
+		expect(leaveEvent.type).toBe("leave");
 		expect(leaveEvent.priority).toBe(1);
 	});
 
 	it("初期化 - Timestamp", () => {
 		const player = { id: "3", name: "p" };
 		const timestampEvent = new TimestampEvent(42, player, 1);
-		expect(timestampEvent.type).toBe(EventType.Timestamp);
+		expect(timestampEvent.type).toBe("timestamp");
 		expect(timestampEvent.priority).toBe(1);
 		expect(timestampEvent.timestamp).toBe(42);
 	});
@@ -95,7 +94,7 @@ describe("test Event", () => {
 		const player = { id: "3", name: "p" };
 		const userData = { hoge: "foo" };
 		const playerInfoEvent = new PlayerInfoEvent(player.id, player.name, userData, 1);
-		expect(playerInfoEvent.type).toBe(EventType.PlayerInfo);
+		expect(playerInfoEvent.type).toBe("player-info");
 		expect(playerInfoEvent.priority).toBe(1);
 		expect(playerInfoEvent.userData).toEqual(userData);
 		expect(playerInfoEvent.playerId).toBe(player.id);
@@ -105,7 +104,7 @@ describe("test Event", () => {
 	it("初期化 - Seed", () => {
 		const generator = new XorshiftRandomGenerator(42);
 		const seedEvent = new SeedEvent(generator, 1);
-		expect(seedEvent.type).toBe(EventType.Seed);
+		expect(seedEvent.type).toBe("seed");
 		expect(seedEvent.priority).toBe(1);
 		expect(seedEvent.generator).toEqual(generator);
 	});
@@ -115,7 +114,7 @@ describe("test Event", () => {
 		const player = { id: "3", name: "p" };
 		const data = { point: point, target: undefined as any };
 		const event = new OperationEvent(10, data, player, false, 2);
-		expect(event.type).toBe(EventType.Operation);
+		expect(event.type).toBe("operation");
 		expect(event.priority).toBe(2);
 		expect(event.local).toBe(false);
 		expect(event.player).toBe(player);

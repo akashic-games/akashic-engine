@@ -1,6 +1,6 @@
 import * as pl from "@akashic/playlog";
 import { Player } from "../types/Player";
-import { Event, EventType, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
+import { Event, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
 import { CommonOffset } from "../types/commons";
 import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import { StorageValueStore } from "./Storage";
@@ -165,11 +165,11 @@ export class EventConverter {
 		let targetId: number;
 		let playerId: string;
 		switch (e.type) {
-			case EventType.Join:
-			case EventType.Leave:
+			case "join":
+			case "leave":
 				// akashic-engine は決して Join と Leave を生成しない
-				throw ExceptionFactory.createAssertionError("EventConverter#toPlaylogEvent: Invalid type: " + EventType[e.type]);
-			case EventType.Timestamp:
+				throw ExceptionFactory.createAssertionError("EventConverter#toPlaylogEvent: Invalid type: " + e.type);
+			case "timestamp":
 				let ts = <TimestampEvent>e;
 				playerId = preservePlayer ? ts.player.id : this._playerId;
 				return [
@@ -178,7 +178,7 @@ export class EventConverter {
 					playerId, //               2: プレイヤーID
 					ts.timestamp //            3: タイムスタンプ
 				];
-			case EventType.PlayerInfo:
+			case "player-info":
 				let playerInfo = <PlayerInfoEvent>e;
 				playerId = preservePlayer ? playerInfo.playerId : this._playerId;
 				return [
@@ -188,7 +188,7 @@ export class EventConverter {
 					playerInfo.playerName, //   3: プレイヤー名
 					playerInfo.userData //      4: ユーザデータ
 				];
-			case EventType.PointDown:
+			case "point-down":
 				let pointDown = <PointDownEvent>e;
 				targetId = pointDown.target ? pointDown.target.id : null;
 				playerId = preservePlayer ? pointDown.player.id : this._playerId;
@@ -202,7 +202,7 @@ export class EventConverter {
 					targetId, //               6?: エンティティID
 					!!pointDown.local //       7?: 直前のポイントムーブイベントからのY座標の差
 				];
-			case EventType.PointMove:
+			case "point-move":
 				let pointMove = <PointMoveEvent>e;
 				targetId = pointMove.target ? pointMove.target.id : null;
 				playerId = preservePlayer ? pointMove.player.id : this._playerId;
@@ -220,7 +220,7 @@ export class EventConverter {
 					targetId, //               10?: エンティティID
 					!!pointMove.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
-			case EventType.PointUp:
+			case "point-up":
 				let pointUp = <PointUpEvent>e;
 				targetId = pointUp.target ? pointUp.target.id : null;
 				playerId = preservePlayer ? pointUp.player.id : this._playerId;
@@ -238,7 +238,7 @@ export class EventConverter {
 					targetId, //             10?: エンティティID
 					!!pointUp.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
-			case EventType.Message:
+			case "message":
 				let message = <MessageEvent>e;
 				playerId = preservePlayer ? message.player.id : this._playerId;
 				return [
@@ -248,7 +248,7 @@ export class EventConverter {
 					message.data, //         3: 汎用的なデータ
 					!!message.local //       4?: ローカル
 				];
-			case EventType.Operation:
+			case "operation":
 				let op = <OperationEvent>e;
 				playerId = preservePlayer ? op.player.id : this._playerId;
 				return [

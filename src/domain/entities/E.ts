@@ -14,10 +14,12 @@ import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
 import { Scene } from "../../Scene";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
+import { CompositeOperation } from "../../types/CompositeOperation";
+import { CompositeOperationString } from "../../types/CompositeOperationString";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
-import { LocalTickMode } from "../../types/LocalTickMode";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
+import { Util } from "../Util";
 
 /**
  * ポインティングソースによって対象となるエンティティを表すインターフェース。
@@ -351,7 +353,7 @@ export class E extends Object2D implements CommonArea {
 
 		// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
 		// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
-		this.local = param.scene.local !== LocalTickMode.NonLocal || !!param.local;
+		this.local = param.scene.local !== "non-local" || !!param.local;
 
 		if (param.children) {
 			for (var i = 0; i < param.children.length; ++i) this.append(param.children[i]);
@@ -403,7 +405,12 @@ export class E extends Object2D implements CommonArea {
 
 		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
-		if (this.compositeOperation !== undefined) renderer.setCompositeOperation(this.compositeOperation);
+		let op = this.compositeOperation;
+		if (op !== undefined) {
+			const realOp =
+				typeof op === "string" ? op : Util.enumToSnakeCase<CompositeOperation, CompositeOperationString>(CompositeOperation, op);
+			renderer.setCompositeOperation(realOp);
+		}
 
 		if (this.shaderProgram !== undefined && renderer.isSupportedShaderProgram()) renderer.setShaderProgram(this.shaderProgram);
 
