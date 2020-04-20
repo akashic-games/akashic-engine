@@ -1,12 +1,12 @@
 import * as pl from "@akashic/playlog";
-import { Player } from "../types/Player";
-import { Event, EventType, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
-import { CommonOffset } from "../types/commons";
-import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
-import { StorageValueStore } from "./Storage";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
+import { CommonOffset } from "../types/commons";
 import { EventIndex } from "../types/EventIndex";
+import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
+import { Player } from "../types/Player";
+import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
+import { Event, EventType, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
+import { StorageValueStore } from "./Storage";
 
 // TODO: Game を意識しないインターフェース を検討する
 interface EventConverterParameterObejctGameLike {
