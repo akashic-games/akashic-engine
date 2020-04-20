@@ -135,7 +135,7 @@ export class LoadingScene extends Scene {
 		}
 
 		this.game.popScene(true);
-		this.game._fireSceneLoaded(this._targetScene);
+		this.game._pushPostTickTask(this._targetScene._fireLoaded, this._targetScene);
 		this._clearTargetScene();
 	}
 

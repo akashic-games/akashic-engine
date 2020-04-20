@@ -19,190 +19,9 @@ import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
 import { AssetLoadError, StorageLoadError } from "./types/errors";
 import { LocalTickModeString } from "./types/LocalTickModeString";
 import { TickGenerationModeString } from "./types/TickGenerationModeString";
+import { AssetHolder } from "./AssetHolder";
 
-/**
- * SceneAssetHolder のコンストラクタに指定できるパラメータ。
- * 通常、ゲーム開発者が利用する必要はない。
- */
-export interface SceneAssetHolderParameterObject {
-	/**
-	 * 属するシーン。
-	 * このインスタンスが読み込んだアセットは、このシーンの `assets` から参照できる。
-	 * またこのシーンの破棄時に破棄される。
-	 */
-	scene: Scene;
-
-	/**
-	 * アセットの読み込みに利用するアセットマネージャ。
-	 */
-	assetManager: AssetManager;
-
-	/**
-	 * 読み込むアセット。
-	 */
-	assetIds?: (string | DynamicAssetConfiguration)[];
-
-	/**
-	 * 読み込むアセット。
-	 */
-	assetPaths?: string[];
-
-	/**
-	 * 読み込み完了の通知を受けるハンドラ
-	 */
-	handler: () => void;
-
-	/**
-	 * `handler` 呼び出し時、 `this` として使われる値。
-	 */
-	handlerOwner?: any;
-
-	/**
-	 * `handler` を直接呼ぶか。
-	 * 真である場合、 `handler` は読み込み完了後に直接呼び出される。
-	 * でなければ次の `Game#tick()` 呼び出し時点まで遅延される。
-	 * 省略された場合、偽。
-	 */
-	direct?: boolean;
-}
-
-/**
- * シーンのアセットの読み込みと破棄を管理するクラス。
- * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
- */
-export class SceneAssetHolder {
-	/**
-	 * 読み込みを待つ残りのアセット数。
-	 * この値は参照のためにのみ公開される。この値を外部から書き換えてはならない。
-	 */
-	waitingAssetsCount: number;
-
-	/**
-	 * @private
-	 */
-	_scene: Scene;
-
-	/**
-	 * @private
-	 */
-	_assetManager: AssetManager;
-
-	/**
-	 * @private
-	 */
-	_handler: () => void;
-
-	/**
-	 * @private
-	 */
-	_handlerOwner: any;
-
-	/**
-	 * @private
-	 */
-	_direct: boolean;
-
-	/**
-	 * @private
-	 */
-	_assetIds: (string | DynamicAssetConfiguration)[];
-
-	/**
-	 * @private
-	 */
-	_assets: AssetLike[];
-
-	/**
-	 * @private
-	 */
-	_requested: boolean;
-
-	constructor(param: SceneAssetHolderParameterObject) {
-		const assetManager = param.assetManager;
-		const assetIds = param.assetIds ? param.assetIds.concat() : [];
-		assetIds.push.apply(assetIds, assetManager.resolvePatternsToAssetIds(param.assetPaths || []));
-
-		this.waitingAssetsCount = assetIds.length;
-		this._scene = param.scene;
-		this._assetManager = assetManager;
-		this._assetIds = assetIds;
-		this._assets = [];
-		this._handler = param.handler;
-		this._handlerOwner = param.handlerOwner || null;
-		this._direct = !!param.direct;
-		this._requested = false;
-	}
-
-	request(): boolean {
-		if (this.waitingAssetsCount === 0) return false;
-		if (this._requested) return true;
-		this._requested = true;
-		this._assetManager.requestAssets(this._assetIds, this);
-		return true;
-	}
-
-	destroy(): void {
-		if (this._requested) {
-			this._assetManager.unrefAssets(this._assets);
-		}
-		this.waitingAssetsCount = 0;
-		this._scene = undefined;
-		this._assetIds = undefined;
-		this._handler = undefined;
-		this._requested = false;
-	}
-
-	destroyed(): boolean {
-		return !this._scene;
-	}
-
-	callHandler(): void {
-		this._handler.call(this._handlerOwner);
-	}
-
-	/**
-	 * @private
-	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError): void {
-		if (this.destroyed() || this._scene.destroyed()) return;
-		var failureInfo = {
-			asset: asset,
-			error: error,
-			cancelRetry: false
-		};
-		this._scene.onAssetLoadFailure.fire(failureInfo);
-		if (error.retriable && !failureInfo.cancelRetry) {
-			this._assetManager.retryLoad(asset);
-		} else {
-			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
-			if (this._assetManager.configuration[asset.id]) this._scene.game.terminateGame();
-		}
-		this._scene.onAssetLoadComplete.fire(asset);
-	}
-
-	/**
-	 * @private
-	 */
-	_onAssetLoad(asset: AssetLike): void {
-		if (this.destroyed() || this._scene.destroyed()) return;
-
-		this._scene.assets[asset.id] = asset;
-		this._scene.onAssetLoad.fire(asset);
-		this._scene.onAssetLoadComplete.fire(asset);
-		this._assets.push(asset);
-
-		--this.waitingAssetsCount;
-		if (this.waitingAssetsCount < 0)
-			throw ExceptionFactory.createAssertionError("SceneAssetHolder#_onAssetLoad: broken waitingAssetsCount");
-		if (this.waitingAssetsCount > 0) return;
-
-		if (this._direct) {
-			this.callHandler();
-		} else {
-			this._scene.game._callSceneAssetHolderHandler(this);
-		}
-	}
-}
+export type SceneRequestAssetHandler = () => void;
 
 /**
  * `Scene` のコンストラクタに渡すことができるパラメータ。
@@ -607,13 +426,13 @@ export class Scene implements StorageLoaderHandler {
 	 * シーンのアセットの保持者。
 	 * @private
 	 */
-	_sceneAssetHolder: SceneAssetHolder;
+	_sceneAssetHolder: AssetHolder<SceneRequestAssetHandler>;
 
 	/**
 	 * `Scene#requestAssets()` で動的に要求されたアセットの保持者。
 	 * @private
 	 */
-	_assetHolders: SceneAssetHolder[];
+	_assetHolders: AssetHolder<SceneRequestAssetHandler>[];
 
 	/**
 	 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
@@ -682,14 +501,17 @@ export class Scene implements StorageLoaderHandler {
 		this.onStateChange = new Trigger<SceneStateString>();
 
 		this._assetHolders = [];
-		this._sceneAssetHolder = new SceneAssetHolder({
-			scene: this,
+		this._sceneAssetHolder = new AssetHolder<SceneRequestAssetHandler>({
 			assetManager: this.game._assetManager,
 			assetIds: param.assetIds,
 			assetPaths: param.assetPaths,
-			handler: this._onSceneAssetsLoad,
-			handlerOwner: this,
-			direct: true
+			handlerSet: {
+				owner: this,
+				handleLoad: this._handleSceneAssetLoad,
+				handleLoadFailure: this._handleSceneAssetLoadFailure,
+				handleFinish: this._handleSceneAssetLoadFinish
+			},
+			userData: null
 		});
 	}
 
@@ -991,18 +813,23 @@ export class Scene implements StorageLoaderHandler {
 		return this._storageLoader._valueStoreSerialization;
 	}
 
-	requestAssets(assetIds: (string | DynamicAssetConfiguration)[], handler: () => void): void {
+	requestAssets(assetIds: (string | DynamicAssetConfiguration)[], handler: SceneRequestAssetHandler): void {
 		if (this._loadingState !== "ready-fired" && this._loadingState !== "loaded-fired") {
 			// このメソッドは読み込み完了前には呼び出せない。これは実装上の制限である。
 			// やろうと思えば _load() で読み込む対象として加えることができる。が、その場合 `handler` を呼び出す方法が単純でないので対応を見送る。
 			throw ExceptionFactory.createAssertionError("Scene#requestAsset(): can be called after loaded.");
 		}
 
-		var holder = new SceneAssetHolder({
-			scene: this,
+		var holder = new AssetHolder<SceneRequestAssetHandler>({
 			assetManager: this.game._assetManager,
 			assetIds: assetIds,
-			handler: handler
+			handlerSet: {
+				owner: this,
+				handleLoad: this._handleSceneAssetLoad,
+				handleLoadFailure: this._handleSceneAssetLoadFailure,
+				handleFinish: this._handleSceneAssetLoadFinish
+			},
+			userData: handler
 		});
 		this._assetHolders.push(holder);
 		holder.request();
@@ -1049,7 +876,35 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * @private
 	 */
-	_onSceneAssetsLoad(): void {
+	_handleSceneAssetLoad(asset: AssetLike): void {
+		this.assets[asset.id] = asset;
+		this.onAssetLoad.fire(asset);
+		this.onAssetLoadComplete.fire(asset);
+	}
+
+	/**
+	 * @private
+	 */
+	_handleSceneAssetLoadFailure(failureInfo: AssetLoadFailureInfo): void {
+		this.onAssetLoadFailure.fire(failureInfo);
+		this.onAssetLoadComplete.fire(failureInfo.asset);
+	}
+
+	/**
+	 * @private
+	 */
+	_handleSceneAssetLoadFinish(holder: AssetHolder<SceneRequestAssetHandler>, succeed: boolean): void {
+		if (!succeed) {
+			this.game.terminateGame();
+			return;
+		}
+
+		// 動的アセット (`requestAssets()` 由来) の場合
+		if (holder.userData) {
+			this.game._pushPostTickTask(holder.userData, null);
+			return;
+		}
+
 		if (!this._loaded) {
 			// prefetch() で開始されたアセット読み込みを完了したが、_load() がまだ呼ばれていない。
 			// _notifySceneReady() は _load() 呼び出し後まで遅延する。
@@ -1083,13 +938,14 @@ export class Scene implements StorageLoaderHandler {
 	_notifySceneReady(): void {
 		// 即座に `_onReady` をfireすることはしない。tick()のタイミングで行うため、リクエストをgameに投げておく。
 		this._loadingState = "ready";
-		this.game._fireSceneReady(this);
+		this.game._pushPostTickTask(this._fireReady, this);
 	}
 
 	/**
 	 * @private
 	 */
 	_fireReady(): void {
+		if (this.destroyed()) return;
 		this._onReady.fire(this);
 		this._loadingState = "ready-fired";
 	}
@@ -1098,6 +954,8 @@ export class Scene implements StorageLoaderHandler {
 	 * @private
 	 */
 	_fireLoaded(): void {
+		if (this.destroyed()) return;
+		if (this._loadingState === "loaded-fired") return;
 		this.onLoad.fire(this);
 		this._loadingState = "loaded-fired";
 	}

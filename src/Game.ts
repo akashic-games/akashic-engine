@@ -22,7 +22,7 @@ import { RendererLike } from "./interfaces/RendererLike";
 import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
 import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
-import { Scene, SceneAssetHolder } from "./Scene";
+import { Scene } from "./Scene";
 import { CommonOffset, CommonSize } from "./types/commons";
 import { EventFilter } from "./types/EventFilter";
 import { GameConfiguration } from "./types/GameConfiguration";
@@ -52,17 +52,9 @@ const enum SceneChangeType {
 	Pop,
 
 	/**
-	 * シーンの_readyをfireする。
+	 * 任意の関数を呼び出す。
 	 */
-	FireReady,
-	/**
-	 * シーンのloadedをfireする。
-	 */
-	FireLoaded,
-	/**
-	 * SceneAssetHolderのハンドラを呼び出す。
-	 */
-	CallAssetHolderHandler
+	Call
 }
 
 /**
@@ -76,7 +68,7 @@ interface SceneChangeRequest {
 
 	/**
 	 * 遷移先になるシーン。
-	 * `type` が `Push`, `Replace`, `FireReady` または `FireLoaded` の時のみ存在。
+	 * `type` が `Push` または `Replace` の時のみ存在。
 	 */
 	scene?: Scene;
 
@@ -87,10 +79,16 @@ interface SceneChangeRequest {
 	preserveCurrent?: boolean;
 
 	/**
-	 * ハンドラを呼び出す `SceneAssetHolder` 。
-	 * `type` が `CallAssetHolderHandler` の時のみ存在。
+	 * 呼び出す関数。
+	 * `type` が `Call` の時のみ存在。
 	 */
-	assetHolder?: SceneAssetHolder;
+	fun?: Function;
+
+	/**
+	 * `fun` の `this` として使う値。
+	 * `type` が `Call` の時のみ存在。
+	 */
+	owner?: any;
 }
 
 export interface GameResetParameterObject {
@@ -1120,35 +1118,11 @@ export class Game {
 		return this.handlerSet.getInstanceType() === "active";
 	}
 
-	/**
-	 * @private
-	 */
-	_fireSceneReady(scene: Scene): void {
+	_pushPostTickTask<T>(fun: () => void, owner: any): void {
 		this._sceneChangeRequests.push({
-			type: SceneChangeType.FireReady,
-			scene: scene
-		});
-	}
-
-	/**
-	 * @private
-	 */
-	_fireSceneLoaded(scene: Scene): void {
-		if (scene._loadingState !== "loaded-fired") {
-			this._sceneChangeRequests.push({
-				type: SceneChangeType.FireLoaded,
-				scene: scene
-			});
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_callSceneAssetHolderHandler(assetHolder: SceneAssetHolder): void {
-		this._sceneChangeRequests.push({
-			type: SceneChangeType.CallAssetHolderHandler,
-			assetHolder: assetHolder
+			type: SceneChangeType.Call,
+			fun,
+			owner
 		});
 	}
 
@@ -1493,14 +1467,8 @@ export class Game {
 					case SceneChangeType.Pop:
 						this._doPopScene(req.preserveCurrent, true);
 						break;
-					case SceneChangeType.FireReady:
-						if (!req.scene.destroyed()) req.scene._fireReady();
-						break;
-					case SceneChangeType.FireLoaded:
-						if (!req.scene.destroyed()) req.scene._fireLoaded();
-						break;
-					case SceneChangeType.CallAssetHolderHandler:
-						req.assetHolder.callHandler();
+					case SceneChangeType.Call:
+						req.fun.call(req.owner);
 						break;
 					default:
 						throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
@@ -1549,7 +1517,7 @@ export class Game {
 			this._onSceneChange.fire(scene);
 			if (!scene._loaded) {
 				scene._load();
-				this._fireSceneLoaded(scene);
+				this._pushPostTickTask(scene._fireLoaded, scene);
 			}
 		}
 		this._modified = true;
