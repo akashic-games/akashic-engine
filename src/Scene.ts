@@ -829,7 +829,10 @@ export class Scene implements StorageLoaderHandler {
 				handleLoadFailure: this._handleSceneAssetLoadFailure,
 				handleFinish: this._handleSceneAssetLoadFinish
 			},
-			userData: handler
+			userData: () => {
+				// 不要なクロージャは避けたいが生存チェックのため不可避
+				if (!this.destroyed()) handler();
+			}
 		});
 		this._assetHolders.push(holder);
 		holder.request();
