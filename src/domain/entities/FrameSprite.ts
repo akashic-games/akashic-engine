@@ -238,7 +238,7 @@ export class FrameSprite extends Sprite {
 		this._lastUsedIndex = frame;
 	}
 
-	private _modifiedSelf(isBubbling?: boolean): void {
+	private _modifiedSelf(_isBubbling?: boolean): void {
 		if (this._lastUsedIndex !== this.frames[this.frameNumber]) this._changeFrame();
 	}
 }

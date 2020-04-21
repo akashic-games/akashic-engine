@@ -90,8 +90,9 @@ module.exports = {
             "allowTypedFunctionExpressions": true
         }],
         "@typescript-eslint/no-unused-vars": [ "error", {
-             "vars": "all",
-             "args": "none"
+            "vars": "all",
+            "args": "all",
+            "argsIgnorePattern": "^_"
         }],
         "camelcase": "off",
         "curly": "off",

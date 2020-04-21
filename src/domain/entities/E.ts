@@ -429,7 +429,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param renderer 描画先に対するRenderer
 	 * @param camera 対象のカメラ
 	 */
-	renderSelf(renderer: RendererLike, camera?: Camera): boolean {
+	renderSelf(_renderer: RendererLike, _camera?: Camera): boolean {
 		// nothing to do
 		return true;
 	}
@@ -568,7 +568,7 @@ export class E extends Object2D implements CommonArea {
 	 * 描画キャッシュの無効化も必要な場合は、このメソッドではなくそちらを呼び出す必要がある。
 	 * @param isBubbling 通常ゲーム開発者が指定する必要はない。この変更通知が、(このエンティティ自身のみならず)子孫の変更の通知を含む場合、真を渡さなければならない。省略された場合、偽。
 	 */
-	modified(isBubbling?: boolean): void {
+	modified(_isBubbling?: boolean): void {
 		// _matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
 		if (this._matrix) this._matrix._modified = true;
 
@@ -602,7 +602,7 @@ export class E extends Object2D implements CommonArea {
 	 *
 	 * @param point このエンティティ（`this`）の位置を基準とした相対座標
 	 */
-	shouldFindChildrenByPoint(point: CommonOffset): boolean {
+	shouldFindChildrenByPoint(_point: CommonOffset): boolean {
 		// nothing to do
 		return true;
 	}
