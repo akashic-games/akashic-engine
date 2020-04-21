@@ -453,7 +453,7 @@ export class Game {
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
-	_eventTriggerMap: { [key in EventTypeString]?: Trigger<Event> | undefined };
+	_eventTriggerMap: { [key in EventTypeString]?: Trigger<Event> };
 
 	/**
 	 * グローバルアセットを読み込むための初期シーン。必ずシーンスタックの一番下に存在する。これをpopScene()することはできない。

@@ -447,7 +447,7 @@ export class Scene implements StorageLoaderHandler {
 				? "non-local"
 				: param.local === true
 				? "full-local"
-				: <LocalTickModeString>param.local;
+				: param.local;
 		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
 
 		if (!param.storageKeys) {

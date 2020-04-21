@@ -407,9 +407,7 @@ export class E extends Object2D implements CommonArea {
 
 		let op = this.compositeOperation;
 		if (op !== undefined) {
-			const realOp =
-				typeof op === "string" ? op : Util.enumToSnakeCase<CompositeOperation, CompositeOperationString>(CompositeOperation, op);
-			renderer.setCompositeOperation(realOp);
+			renderer.setCompositeOperation(typeof op === "string" ? op : Util.compositeOperationStringTable[op]);
 		}
 
 		if (this.shaderProgram !== undefined && renderer.isSupportedShaderProgram()) renderer.setShaderProgram(this.shaderProgram);
