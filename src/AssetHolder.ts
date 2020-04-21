@@ -62,14 +62,6 @@ export interface AssetHolderParameterObject<UserData> {
 	 */
 	handlerSet: AssetHolderHandlerSet<UserData>;
 
-	// /**
-	//  * `handler` を直接呼ぶか。
-	//  * 真である場合、 `handler` は読み込み完了後に直接呼び出される。
-	//  * でなければ次の `Game#tick()` 呼び出し時点まで遅延される。
-	//  * 省略された場合、偽。
-	//  */
-	// direct?: boolean;
-
 	/**
 	 * このインスタンスに紐づけるユーザ定義データ。
 	 */
@@ -190,8 +182,8 @@ export class AssetHolder<UserData> {
 		this._assets.push(asset);
 
 		--this.waitingAssetsCount;
-		if (this.waitingAssetsCount < 0) throw ExceptionFactory.createAssertionError("AssetHolder#_onAssetLoad: broken waitingAssetsCount");
 		if (this.waitingAssetsCount > 0) return;
+		if (this.waitingAssetsCount < 0) throw ExceptionFactory.createAssertionError("AssetHolder#_onAssetLoad: broken waitingAssetsCount");
 
 		hs.handleFinish.call(hs.owner, this, true);
 	}
