@@ -12,6 +12,7 @@
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
     "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.2",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
@@ -39,7 +40,7 @@
     "lint": "npm run format && npm run eslint && npm run textlint",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "eslint": "eslint -c .eslintrc.js \"src/*.ts\"",
+    "eslint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix --ignore-pattern \"src/__tests__/**/*.ts\"",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [
