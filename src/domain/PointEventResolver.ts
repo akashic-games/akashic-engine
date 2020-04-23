@@ -1,7 +1,7 @@
 import * as pl from "@akashic/playlog";
 import { CommonOffset } from "../types/commons";
-import { PlatformPointEvent } from "../types/PlatformPointEvent";
 import { EventPriority } from "../types/EventPriority";
+import { PlatformPointEvent } from "../types/PlatformPointEvent";
 import { Camera } from "./Camera";
 import { PointSource } from "./entities/E";
 

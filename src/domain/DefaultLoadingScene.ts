@@ -194,7 +194,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	/**
 	 * @private
 	 */
-	_handleTargetAssetLoad(asset: AssetLike): void {
+	_handleTargetAssetLoad(_asset: AssetLike): void {
 		var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
 		this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
 		this._gauge.modified();

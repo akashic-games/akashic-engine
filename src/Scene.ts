@@ -700,7 +700,7 @@ export class Scene implements StorageLoaderHandler {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param isBubbling この関数をこのシーンの子の `modified()` から呼び出す場合、真を渡さなくてはならない。省略された場合、偽。
 	 */
-	modified(isBubbling?: boolean): void {
+	modified(_isBubbling?: boolean): void {
 		this.game.modified();
 	}
 
@@ -1066,7 +1066,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * @private
 	 */
-	_onStorageLoadError(error: StorageLoadError): void {
+	_onStorageLoadError(_error: StorageLoadError): void {
 		this.game.terminateGame();
 	}
 

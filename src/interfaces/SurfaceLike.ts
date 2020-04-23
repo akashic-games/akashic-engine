@@ -1,4 +1,3 @@
-import { Trigger } from "@akashic/trigger";
 import { CommonSize } from "../types/commons";
 import { RendererLike } from "./RendererLike";
 

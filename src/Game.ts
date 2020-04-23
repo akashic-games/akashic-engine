@@ -1,5 +1,5 @@
-import { Trigger } from "@akashic/trigger";
 import * as pl from "@akashic/playlog";
+import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { SurfaceAtlasSet } from "./commons/SurfaceAtlasSet";
 import { AssetManager } from "./domain/AssetManager";

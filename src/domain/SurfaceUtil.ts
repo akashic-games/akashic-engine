@@ -59,7 +59,7 @@ export module SurfaceUtil {
 	 */
 	export function migrateAnimatingHandler(
 		animatingHandler: AnimatingHandler,
-		beforeSurface: SurfaceLike,
+		_beforeSurface: SurfaceLike,
 		afterSurface: SurfaceLike
 	): void {
 		animatingHandler._handleAnimationStop();
