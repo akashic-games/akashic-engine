@@ -1,7 +1,7 @@
 import { Trigger } from "@akashic/trigger";
+import { AssetHolder } from "./AssetHolder";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetAccessor } from "./domain/AssetAccessor";
-import { AssetManager } from "./domain/AssetManager";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./domain/entities/E";
@@ -16,10 +16,9 @@ import { AssetLike } from "./interfaces/AssetLike";
 import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
 import { CommonOffset } from "./types/commons";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
-import { AssetLoadError, StorageLoadError } from "./types/errors";
+import { StorageLoadError } from "./types/errors";
 import { LocalTickModeString } from "./types/LocalTickModeString";
 import { TickGenerationModeString } from "./types/TickGenerationModeString";
-import { AssetHolder } from "./AssetHolder";
 
 export type SceneRequestAssetHandler = () => void;
 

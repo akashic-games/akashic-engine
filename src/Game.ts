@@ -37,19 +37,19 @@ import { TickGenerationModeString } from "./types/TickGenerationModeString";
 /**
  * シーン遷移要求のタイプ。
  */
-const enum SceneChangeType {
+const enum PostTickTaskType {
 	/**
 	 * シーンスタックのトップにシーンを追加する。
 	 */
-	Push,
+	PushScene,
 	/**
 	 * シーンスタックから直近のシーンを削除し、シーンを追加する。
 	 */
-	Replace,
+	ReplaceScene,
 	/**
 	 * シーンスタックから直近のシーンを削除する。
 	 */
-	Pop,
+	PopScene,
 
 	/**
 	 * 任意の関数を呼び出す。
@@ -60,11 +60,11 @@ const enum SceneChangeType {
 /**
  * シーン遷移要求。
  */
-interface SceneChangeRequest {
+interface PostTickTask {
 	/**
 	 * 遷移の種類。
 	 */
-	type: SceneChangeType;
+	type: PostTickTaskType;
 
 	/**
 	 * 遷移先になるシーン。
@@ -630,7 +630,7 @@ export class Game {
 	/**
 	 * 実行待ちのシーン遷移要求。
 	 */
-	private _sceneChangeRequests: SceneChangeRequest[];
+	private _postTickTasks: PostTickTask[];
 
 	/**
 	 * 使用中のカメラ。
@@ -761,8 +761,8 @@ export class Game {
 	 * @param scene 遷移後のシーン
 	 */
 	pushScene(scene: Scene): void {
-		this._sceneChangeRequests.push({
-			type: SceneChangeType.Push,
+		this._postTickTasks.push({
+			type: PostTickTaskType.PushScene,
 			scene: scene
 		});
 	}
@@ -781,8 +781,8 @@ export class Game {
 	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
 	 */
 	replaceScene(scene: Scene, preserveCurrent?: boolean): void {
-		this._sceneChangeRequests.push({
-			type: SceneChangeType.Replace,
+		this._postTickTasks.push({
+			type: PostTickTaskType.ReplaceScene,
 			scene: scene,
 			preserveCurrent: preserveCurrent
 		});
@@ -803,7 +803,7 @@ export class Game {
 	 */
 	popScene(preserve?: boolean, step: number = 1): void {
 		for (let i = 0; i < step; i++) {
-			this._sceneChangeRequests.push({ type: SceneChangeType.Pop, preserveCurrent: preserve });
+			this._postTickTasks.push({ type: PostTickTaskType.PopScene, preserveCurrent: preserve });
 		}
 	}
 
@@ -848,8 +848,8 @@ export class Game {
 			if (advanceAge) ++this.age;
 		}
 
-		if (this._sceneChangeRequests.length) {
-			this._flushSceneChangeRequests();
+		if (this._postTickTasks.length) {
+			this._flushPostTickTasks();
 			return scene !== this.scenes[this.scenes.length - 1];
 		}
 		return false;
@@ -1118,9 +1118,9 @@ export class Game {
 		return this.handlerSet.getInstanceType() === "active";
 	}
 
-	_pushPostTickTask<T>(fun: () => void, owner: any): void {
-		this._sceneChangeRequests.push({
-			type: SceneChangeType.Call,
+	_pushPostTickTask(fun: () => void, owner: any): void {
+		this._postTickTasks.push({
+			type: PostTickTaskType.Call,
 			fun,
 			owner
 		});
@@ -1177,7 +1177,7 @@ export class Game {
 		if (this.scene()) {
 			while (this.scene() !== this._initialScene) {
 				this.popScene();
-				this._flushSceneChangeRequests();
+				this._flushPostTickTasks();
 			}
 			if (!this.isLoaded) {
 				// _initialSceneの読み込みが終わっていない: _initialScene自体は使い回すので単にpopする。
@@ -1217,7 +1217,7 @@ export class Game {
 		this.lastLocalTickMode = null;
 		this.lastTickGenerationMode = null;
 		this.onSnapshotRequest.removeAll();
-		this._sceneChangeRequests = [];
+		this._postTickTasks = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
 
@@ -1254,7 +1254,7 @@ export class Game {
 		if (this.scene()) {
 			while (this.scene() !== this._initialScene) {
 				this.popScene();
-				this._flushSceneChangeRequests();
+				this._flushPostTickTasks();
 			}
 		}
 		this._initialScene.destroy();
@@ -1330,7 +1330,7 @@ export class Game {
 		this._isTerminated = true;
 		this._focusingCamera = undefined;
 		this._configuration = undefined;
-		this._sceneChangeRequests = [];
+		this._postTickTasks = [];
 		this.surfaceAtlasSet.destroy();
 		this.surfaceAtlasSet = undefined;
 
@@ -1360,7 +1360,7 @@ export class Game {
 		if (!this.isLoaded) {
 			this._onLoad.add(this._handleLoad, this);
 			this.pushScene(this._initialScene);
-			this._flushSceneChangeRequests();
+			this._flushPostTickTasks();
 		} else {
 			this._handleLoad();
 		}
@@ -1374,7 +1374,7 @@ export class Game {
 	_startLoadingGlobalAssets(): void {
 		if (this.isLoaded) throw ExceptionFactory.createAssertionError("Game#_startLoadingGlobalAssets: already loaded.");
 		this.pushScene(this._initialScene);
-		this._flushSceneChangeRequests();
+		this._flushPostTickTasks();
 	}
 
 	/**
@@ -1445,36 +1445,36 @@ export class Game {
 	 * シーン追加がゲーム開発者の記述によらない (`tick()` の外側である) ため、それぞれの箇所で明示的にこのメソッドを呼び出す。
 	 * @private
 	 */
-	_flushSceneChangeRequests(): void {
+	_flushPostTickTasks(): void {
 		do {
-			var reqs = this._sceneChangeRequests;
-			this._sceneChangeRequests = [];
+			var reqs = this._postTickTasks;
+			this._postTickTasks = [];
 			for (var i = 0; i < reqs.length; ++i) {
 				var req = reqs[i];
 				switch (req.type) {
-					case SceneChangeType.Push:
+					case PostTickTaskType.PushScene:
 						var oldScene = this.scene();
 						if (oldScene) {
 							oldScene._deactivate();
 						}
 						this._doPushScene(req.scene);
 						break;
-					case SceneChangeType.Replace:
+					case PostTickTaskType.ReplaceScene:
 						// Note: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false);
 						this._doPushScene(req.scene);
 						break;
-					case SceneChangeType.Pop:
+					case PostTickTaskType.PopScene:
 						this._doPopScene(req.preserveCurrent, true);
 						break;
-					case SceneChangeType.Call:
+					case PostTickTaskType.Call:
 						req.fun.call(req.owner);
 						break;
 					default:
-						throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
+						throw ExceptionFactory.createAssertionError("Game#_flushPostTickTasks: unknown scene change request.");
 				}
 			}
-		} while (this._sceneChangeRequests.length > 0); // flush中に追加される限りflushを続行する
+		} while (this._postTickTasks.length > 0); // flush中に追加される限りflushを続行する
 	}
 
 	_handleSkipChange(isSkipping: boolean): void {
@@ -1497,7 +1497,7 @@ export class Game {
 		if (!mainFun || typeof mainFun !== "function")
 			throw ExceptionFactory.createAssertionError("Game#_handleLoad: Entry point '" + this._main + "' not found.");
 		mainFun(this._mainParameter);
-		this._flushSceneChangeRequests(); // シーン遷移を要求する可能性がある(というかまずする)
+		this._flushPostTickTasks(); // シーン遷移を要求する可能性がある(というかまずする)
 		this._onStart.fire();
 	}
 

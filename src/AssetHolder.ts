@@ -1,7 +1,5 @@
-import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetManager } from "./domain/AssetManager";
-import { Game } from "./Game";
 import { AssetLike } from "./interfaces/AssetLike";
 import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
