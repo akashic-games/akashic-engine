@@ -1,4 +1,3 @@
-import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
 import { AssertionError, AssetLoadError, TypeMismatchError } from "../types/errors";
 
 /**
@@ -7,7 +6,7 @@ import { AssertionError, AssetLoadError, TypeMismatchError } from "../types/erro
  */
 export module ExceptionFactory {
 	export function createAssertionError(message: string, cause?: any): AssertionError {
-		var e: AssertionError = <AssertionError>new Error(message);
+		var e: AssertionError = <AssertionError> new Error(message);
 		e.name = "AssertionError";
 		e.cause = cause;
 		return e;
@@ -30,7 +29,7 @@ export module ExceptionFactory {
 			}
 		}
 		message += ".";
-		var e: TypeMismatchError = <TypeMismatchError>new Error(message);
+		var e: TypeMismatchError = <TypeMismatchError> new Error(message);
 		e.name = "TypeMismatchError";
 		e.cause = cause;
 		e.expected = expected;
@@ -41,10 +40,10 @@ export module ExceptionFactory {
 	export function createAssetLoadError(
 		message: string,
 		retriable: boolean = true,
-		type: unknown = null, // 歴史的経緯により残っている値。利用していない。
+		_type: unknown = null, // 歴史的経緯により残っている値。利用していない。
 		cause?: any
 	): AssetLoadError {
-		var e: AssetLoadError = <AssetLoadError>new Error(message);
+		var e: AssetLoadError = <AssetLoadError> new Error(message);
 		e.name = "AssetLoadError";
 		e.cause = cause;
 		e.retriable = retriable;

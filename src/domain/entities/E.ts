@@ -14,8 +14,6 @@ import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
 import { Scene } from "../../Scene";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
-import { CompositeOperation } from "../../types/CompositeOperation";
-import { CompositeOperationString } from "../../types/CompositeOperationString";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
@@ -434,7 +432,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param renderer 描画先に対するRenderer
 	 * @param camera 対象のカメラ
 	 */
-	renderSelf(renderer: RendererLike, camera?: Camera): boolean {
+	renderSelf(_renderer: RendererLike, _camera?: Camera): boolean {
 		// nothing to do
 		return true;
 	}
@@ -573,7 +571,7 @@ export class E extends Object2D implements CommonArea {
 	 * 描画キャッシュの無効化も必要な場合は、このメソッドではなくそちらを呼び出す必要がある。
 	 * @param isBubbling 通常ゲーム開発者が指定する必要はない。この変更通知が、(このエンティティ自身のみならず)子孫の変更の通知を含む場合、真を渡さなければならない。省略された場合、偽。
 	 */
-	modified(isBubbling?: boolean): void {
+	modified(_isBubbling?: boolean): void {
 		// _matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
 		if (this._matrix) this._matrix._modified = true;
 
@@ -607,7 +605,7 @@ export class E extends Object2D implements CommonArea {
 	 *
 	 * @param point このエンティティ（`this`）の位置を基準とした相対座標
 	 */
-	shouldFindChildrenByPoint(point: CommonOffset): boolean {
+	shouldFindChildrenByPoint(_point: CommonOffset): boolean {
 		// nothing to do
 		return true;
 	}
@@ -784,7 +782,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_enableTouchPropagation(): void {
-		var p: E = <E>this.parent;
+		var p: E = <E> this.parent;
 		while (p instanceof E && !p._hasTouchableChildren) {
 			p._hasTouchableChildren = true;
 			p = <E>p.parent;
@@ -795,7 +793,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_disableTouchPropagation(): void {
-		var p: E = <E>this.parent;
+		var p: E = <E> this.parent;
 		while (p instanceof E && p._hasTouchableChildren) {
 			if (this._findTouchableChildren(p)) break;
 			p._hasTouchableChildren = false;

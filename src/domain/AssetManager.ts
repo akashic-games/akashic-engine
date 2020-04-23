@@ -15,7 +15,6 @@ import {
 	ImageAssetHint,
 	ModuleMainScriptsMap
 } from "../types/AssetConfiguration";
-import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
 import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";

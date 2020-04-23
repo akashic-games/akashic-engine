@@ -312,7 +312,7 @@ export class SoundAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_handlePlay(e: AudioPlayerEvent): void {
+	_handlePlay(_e: AudioPlayerEvent): void {
 		// do nothing
 	}
 

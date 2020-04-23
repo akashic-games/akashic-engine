@@ -10,6 +10,7 @@ module.exports = {
     },
     "plugins": [
         "@typescript-eslint",
+        "import"
     ],
     "rules": {
         "@typescript-eslint/class-name-casing": "error",
@@ -34,7 +35,7 @@ module.exports = {
             {
                 "multiline": {
                     "delimiter": "semi",
-                    "requireLast": false
+                    "requireLast": true
                 },
                 "singleline": {
                     "delimiter": "semi",
@@ -54,7 +55,7 @@ module.exports = {
                 }
             }
         ],
-        "@typescript-eslint/member-ordering": ["error", 
+        "@typescript-eslint/member-ordering": ["error",
             {
                 "default": [
                     "public-static-field",
@@ -87,6 +88,11 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": ["error", {
             "allowExpressions": true,
             "allowTypedFunctionExpressions": true
+        }],
+        "@typescript-eslint/no-unused-vars": ["error", {
+            "vars": "all",
+            "args": "all",
+            "argsIgnorePattern": "^_"
         }],
         "camelcase": "off",
         "curly": "off",
@@ -147,6 +153,12 @@ module.exports = {
         "no-unused-labels": "error",
         "radix": "error",
         "spaced-comment": ["error", "always", { "markers": ["/"] }],
-        "keyword-spacing": ["error"]
+        "keyword-spacing": ["error"],
+        "import/order": ["error", {
+            "alphabetize": {
+                "order": "asc",
+                "caseInsensitive": true
+            }
+        }]
     }
 };
