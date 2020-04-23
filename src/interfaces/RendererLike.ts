@@ -1,4 +1,4 @@
-import { CompositeOperation } from "../types/CompositeOperation";
+import { CompositeOperationString } from "../types/CompositeOperationString";
 import { ImageData } from "../types/ImageData";
 import { ShaderProgramLike } from "./ShaderProgramLike";
 import { SurfaceLike } from "./SurfaceLike";
@@ -59,7 +59,7 @@ export interface RendererLike {
 
 	fillRect(x: number, y: number, width: number, height: number, cssColor: string): void;
 
-	setCompositeOperation(operation: CompositeOperation): void;
+	setCompositeOperation(operation: CompositeOperationString): void;
 
 	setTransform(matrix: number[]): void;
 

@@ -1,5 +1,3 @@
-import { AssetLoadErrorType } from "./AssetLoadErrorType";
-
 export interface ErrorLike {
 	name: string;
 	message: string;
@@ -51,15 +49,6 @@ export interface AssetLoadError extends ErrorLike {
 	 * 通常の場合 (`Scene` 経由で読み込んだ場合)、読み込み失敗回数が再試行回数上限 `AssetManager.MAX_ERROR_COUNT` を超えた際にも偽になる。
 	 */
 	retriable: boolean;
-
-	/**
-	 * エラーの種別。
-	 *
-	 * ダンプやエラーメッセージ出力のためのエラー種別情報。
-	 * この値はあくまでも `message` (内容がアセットの実装依存) の補助情報である。
-	 * 読み込み再試行の可否は `retriable` によって判断すべきである。
-	 */
-	type: AssetLoadErrorType;
 }
 
 /*

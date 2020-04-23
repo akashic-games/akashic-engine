@@ -1,4 +1,3 @@
-import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
 import { AssertionError, AssetLoadError, TypeMismatchError } from "../types/errors";
 
 /**
@@ -41,14 +40,13 @@ export module ExceptionFactory {
 	export function createAssetLoadError(
 		message: string,
 		retriable: boolean = true,
-		type: AssetLoadErrorType = AssetLoadErrorType.Unspecified,
+		_type: unknown = null, // 歴史的経緯により残っている値。利用していない。
 		cause?: any
 	): AssetLoadError {
 		var e: AssetLoadError = <AssetLoadError> new Error(message);
 		e.name = "AssetLoadError";
 		e.cause = cause;
 		e.retriable = retriable;
-		e.type = type;
 		return e;
 	}
 }

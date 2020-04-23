@@ -5,55 +5,31 @@ import { StorageValueStore } from "./Storage";
 
 /**
  * イベントの種別。
+ *
+ * - `"unknown"`: 不明なイベント。ゲーム開発者はこの値を利用してはならない。
+ * - `"join"`: プレイヤーの参加を表すイベント。
+ * - `"leave"`: プレイヤーの離脱を表すイベント。
+ * - `"timestamp"`: タイムスタンプを表すイベント。
+ * - `"player-info"`: プレイヤー情報を表すイベント。
+ * - `"seed"`: 乱数生成器の生成を表すイベント。この値は現在利用されていない。
+ * - `"point-down"`: ポイントダウンイベント。
+ * - `"point-move"`: ポイントムーブイベント。
+ * - `"point-up"`: ポイントアップイベント。
+ * - `"message"`: 汎用的なメッセージを表すイベント。
+ * - `"operation"`: 操作プラグインが通知する操作を表すイベント。
  */
-export enum EventType {
-	/**
-	 * 不明なイベント。
-	 * ゲーム開発者はこの値を利用してはならない。
-	 */
-	Unknown,
-	/**
-	 * プレイヤーの参加を表すイベント。
-	 */
-	Join,
-	/**
-	 * プレイヤーの離脱を表すイベント。
-	 */
-	Leave,
-	/**
-	 * タイムスタンプを表すイベント。
-	 */
-	Timestamp,
-	/**
-	 * プレイヤー情報を表すイベント。
-	 */
-	PlayerInfo,
-	/**
-	 * 乱数生成器の生成を表すイベント。
-	 * この値は利用されていない。
-	 */
-	Seed,
-	/**
-	 * ポイントダウンイベント。
-	 */
-	PointDown,
-	/**
-	 * ポイントムーブイベント。
-	 */
-	PointMove,
-	/**
-	 * ポイントアップイベント。
-	 */
-	PointUp,
-	/**
-	 * 汎用的なメッセージを表すイベント。
-	 */
-	Message,
-	/**
-	 * 操作プラグインが通知する操作を表すイベント。
-	 */
-	Operation
-}
+export type EventTypeString =
+	| "unknown"
+	| "join"
+	| "leave"
+	| "timestamp"
+	| "player-info"
+	| "seed"
+	| "point-down"
+	| "point-move"
+	| "point-up"
+	| "message"
+	| "operation";
 
 /**
  * イベントを表すインターフェース。
@@ -62,7 +38,7 @@ export interface Event {
 	/**
 	 * イベントの種別。
 	 */
-	type: EventType;
+	type: EventTypeString;
 	/**
 	 * イベントの優先度。
 	 * 非常に多くのイベントが発生した場合、この値の低いイベントは、高いイベントよりも優先的に破棄・遅延される。
@@ -108,7 +84,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
 	/**
 	 * 本クラスはどのtypeにも属さない。
 	 */
-	type: EventType;
+	type: "point-down" | "point-move" | "point-up";
 	priority: number;
 	local: boolean;
 	player: Player;
@@ -130,7 +106,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
  * ポインティング操作の開始を表すイベントの基底クラス。
  */
 export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventType = EventType.PointDown;
+	type: "point-down" = "point-down";
 
 	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
 		super(pointerId, target, point, player, local, priority);
@@ -146,7 +122,7 @@ export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T>
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
 export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventType = EventType.PointUp;
+	type: "point-up" = "point-up";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -178,7 +154,7 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
 export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: EventType = EventType.PointMove;
+	type: "point-move" = "point-move";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -203,7 +179,7 @@ export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T>
  * MessageEvent#dataによってメッセージ内容を取得出来る。
  */
 export class MessageEvent implements Event {
-	type: EventType = EventType.Message;
+	type: "message" = "message";
 	priority: number;
 	local: boolean;
 	player: Player;
@@ -222,7 +198,7 @@ export class MessageEvent implements Event {
  * プラグインを識別する `OperationEvent#code` と、プラグインごとの内容 `OperationEvent#data` を持つ。
  */
 export class OperationEvent implements Event {
-	type: EventType = EventType.Operation;
+	type: "operation" = "operation";
 	priority: number;
 	local: boolean;
 	player: Player;
@@ -243,7 +219,7 @@ export class OperationEvent implements Event {
  * JoinEvent#playerによって、参加したプレイヤーを取得出来る。
  */
 export class JoinEvent implements Event {
-	type: EventType = EventType.Join;
+	type: "join" = "join";
 	priority: number;
 	player: Player;
 	storageValues: StorageValueStore;
@@ -260,7 +236,7 @@ export class JoinEvent implements Event {
  * LeaveEvent#playerによって、離脱したプレイヤーを取得出来る。
  */
 export class LeaveEvent implements Event {
-	type: EventType = EventType.Leave;
+	type: "leave" = "leave";
 	priority: number;
 	player: Player;
 
@@ -274,7 +250,7 @@ export class LeaveEvent implements Event {
  * タイムスタンプを表すイベント。
  */
 export class TimestampEvent implements Event {
-	type: EventType = EventType.Timestamp;
+	type: "timestamp" = "timestamp";
 	priority: number;
 	player: Player;
 	timestamp: number;
@@ -291,7 +267,7 @@ export class TimestampEvent implements Event {
  * PointInfoEvent#playerNameによってプレイヤー名を、PlayerInfoEvent#userData によってユーザ情報を取得できる。
  */
 export class PlayerInfoEvent implements Event {
-	type: EventType = EventType.PlayerInfo;
+	type: "player-info" = "player-info";
 	priority: number;
 	playerId: string;
 	playerName: string;
@@ -310,7 +286,7 @@ export class PlayerInfoEvent implements Event {
  * SeedEvent#generatorによって、本イベントで発生したRandomGeneratorを取得出来る。
  */
 export class SeedEvent implements Event {
-	type: EventType = EventType.Seed;
+	type: "seed" = "seed";
 	priority: number;
 	generator: RandomGenerator;
 

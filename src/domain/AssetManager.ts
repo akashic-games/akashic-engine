@@ -15,7 +15,6 @@ import {
 	ImageAssetHint,
 	ModuleMainScriptsMap
 } from "../types/AssetConfiguration";
-import { AssetLoadErrorType } from "../types/AssetLoadErrorType";
 import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
 import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
@@ -584,7 +583,7 @@ export class AssetManager implements AssetLoadHandler {
 		++loadingInfo.errorCount;
 
 		if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT && error.retriable) {
-			error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, AssetLoadErrorType.RetryLimitExceeded, error);
+			error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, null, error);
 		}
 		if (!error.retriable) delete this._loadings[asset.id];
 		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetError(asset, error, this.retryLoad.bind(this));

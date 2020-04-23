@@ -1,7 +1,7 @@
 import { RendererLike } from "../interfaces/RendererLike";
 import { ShaderProgramLike } from "../interfaces/ShaderProgramLike";
 import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { CompositeOperation } from "../types/CompositeOperation";
+import { CompositeOperationString } from "../types/CompositeOperationString";
 import { ImageData } from "../types/ImageData";
 
 /**
@@ -62,7 +62,7 @@ export abstract class Renderer implements RendererLike {
 
 	abstract fillRect(x: number, y: number, width: number, height: number, cssColor: string): void;
 
-	abstract setCompositeOperation(operation: CompositeOperation): void;
+	abstract setCompositeOperation(operation: CompositeOperationString): void;
 
 	abstract setTransform(matrix: number[]): void;
 

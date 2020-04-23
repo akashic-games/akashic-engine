@@ -1,6 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { CommonArea, CommonOffset, CommonSize } from "../types/commons";
 import { CompositeOperation } from "../types/CompositeOperation";
+import { CompositeOperationString } from "../types/CompositeOperationString";
 import { Matrix, PlainMatrix } from "./Matrix";
 
 /**
@@ -60,9 +61,10 @@ export interface Object2DParameterObject {
 	/**
 	 * 描画時の合成方法を指定する。
 	 * 省略された場合、合成方法を指定しない（親の合成方法を利用する）。
+	 * なお `CompositeOperation` での指定は非推奨である。 `CompositeOperationString` を利用すること。
 	 * @default undefined
 	 */
-	compositeOperation?: CompositeOperation;
+	compositeOperation?: CompositeOperation | CompositeOperationString;
 
 	/**
 	 * オブジェクトのアンカーの横位置。アンカーについては以下の通り。
@@ -147,7 +149,7 @@ export class Object2D implements CommonArea {
 	 * 初期値は `undefined` となり、合成方法を指定しないことを意味する。
 	 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 */
-	compositeOperation: CompositeOperation;
+	compositeOperation: CompositeOperation | CompositeOperationString;
 
 	/**
 	 * オブジェクトのアンカーの横位置。アンカーについては以下の通り。

@@ -1,4 +1,6 @@
 import { CommonArea, CommonOffset } from "../types/commons";
+import { CompositeOperation as CompOp } from "../types/CompositeOperation";
+import { CompositeOperationString } from "../types/CompositeOperationString";
 
 /**
  * ユーティリティ。
@@ -60,4 +62,32 @@ export module Util {
 
 		return code;
 	}
+
+	/**
+	 * enum の値の文字列を snake-case に変換した文字列を返す。
+	 * @deprecated 非推奨である。非推奨の機能との互換性確保のために存在する。ゲーム開発者が使用すべきではない。
+	 */
+	export function enumToSnakeCase<T extends number, U extends string>(enumDef: { [key: number]: string }, val: T): U {
+		const s = enumDef[val];
+		return (s[0].toLowerCase() + s.slice(1).replace(/[A-Z]/g, (c: string) => "-" + c.toLowerCase())) as U;
+	}
+
+	/**
+	 * CompositeOperation を CompositeOperationString に読み替えるテーブル。
+	 * @deprecated 非推奨である。非推奨の機能との互換性のために存在する。ゲーム開発者が使用すべきではない。
+	 */
+	// enumToSnakeCase() で代用できるが、 CompositeOperation の変換は複数回実行されうるので専用のテーブルを作っている。
+	export const compositeOperationStringTable: { [K in CompOp]: CompositeOperationString } = {
+		[CompOp.SourceOver]: "source-over",
+		[CompOp.SourceAtop]: "source-atop",
+		[CompOp.Lighter]: "lighter",
+		[CompOp.Copy]: "copy",
+		[CompOp.ExperimentalSourceIn]: "experimental-source-in",
+		[CompOp.ExperimentalSourceOut]: "experimental-source-out",
+		[CompOp.ExperimentalDestinationAtop]: "experimental-destination-atop",
+		[CompOp.ExperimentalDestinationIn]: "experimental-destination-in",
+		[CompOp.DestinationOut]: "destination-out",
+		[CompOp.DestinationOver]: "destination-over",
+		[CompOp.Xor]: "xor"
+	};
 }
