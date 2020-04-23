@@ -14,8 +14,6 @@ import { RendererLike } from "../../interfaces/RendererLike";
 import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
 import { Scene } from "../../Scene";
 import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
-import { CompositeOperation } from "../../types/CompositeOperation";
-import { CompositeOperationString } from "../../types/CompositeOperationString";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";
