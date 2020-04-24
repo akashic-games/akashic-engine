@@ -35,7 +35,7 @@ import { PlatformPointEvent, PlatformPointType } from "./types/PlatformPointEven
 import { TickGenerationModeString } from "./types/TickGenerationModeString";
 
 /**
- * シーン遷移要求のタイプ。
+ * post-tick タスクのタイプ。
  */
 const enum PostTickTaskType {
 	/**
@@ -58,7 +58,9 @@ const enum PostTickTaskType {
 }
 
 /**
- * シーン遷移要求。
+ * post-tick タスク。
+ *
+ * tick 消化タイミングに同期して行われるタスクを表す。
  */
 interface PostTickTask {
 	/**
@@ -628,7 +630,7 @@ export class Game {
 	_operationPluginOperated: Trigger<InternalOperationPluginOperation>;
 
 	/**
-	 * 実行待ちのシーン遷移要求。
+	 * 実行待ちの post-tick タスク。
 	 */
 	private _postTickTasks: PostTickTask[];
 
@@ -755,7 +757,7 @@ export class Game {
 	 * シーンスタックへのシーンの追加と、そのシーンへの遷移を要求する。
 	 *
 	 * このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
-	 * 実際のシーン遷移は次のフレームまでに(次のupdateのfireまでに)行われる。
+	 * 実際のシーン遷移は現在のフレームの終わり(Scene#update の fire 後) まで遅延される。
 	 * このメソッドの呼び出しにより、現在のシーンの `stateChanged` が引数 `"deactive"` でfireされる。
 	 * その後 `scene.stateChanged` が引数 `"active"` でfireされる。
 	 * @param scene 遷移後のシーン
@@ -772,7 +774,7 @@ export class Game {
 	 *
 	 * 現在のシーンをシーンスタックから取り除き、指定のシーンを追加することを要求する。
 	 * このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
-	 * 実際のシーン遷移は次のフレームまでに(次のupdateのfireまでに)行われる。
+	 * 実際のシーン遷移は現在のフレームの終わり(Scene#update の fire 後) まで遅延される。
 	 * 引数 `preserveCurrent` が偽の場合、このメソッドの呼び出しにより現在のシーンは破棄される。
 	 * またその時 `stateChanged` が引数 `"destroyed"` でfireされる。
 	 * その後 `scene.stateChanged` が引数 `"active"` でfireされる。
@@ -1437,9 +1439,9 @@ export class Game {
 	}
 
 	/**
-	 * 要求されたシーン遷移を実行する。
+	 * post-tick タスクを実行する。
 	 *
-	 * `pushScene()` 、 `replaceScene()` や `popScene()` によって要求されたシーン遷移を実行する。
+	 * `pushScene()` などのシーン遷移や `_pushPostTickTask()` によって要求された post-tick タスクを実行する。
 	 * 通常このメソッドは、毎フレーム一度、フレームの最後に呼び出されることを期待する (`Game#tick()` がこの呼び出しを行う)。
 	 * ただしゲーム開始時 (グローバルアセット読み込み・スナップショットローダ起動後またはmainScene実行開始時) に関しては、
 	 * シーン追加がゲーム開発者の記述によらない (`tick()` の外側である) ため、それぞれの箇所で明示的にこのメソッドを呼び出す。
@@ -1471,7 +1473,7 @@ export class Game {
 						req.fun.call(req.owner);
 						break;
 					default:
-						throw ExceptionFactory.createAssertionError("Game#_flushPostTickTasks: unknown scene change request.");
+						throw ExceptionFactory.createAssertionError("Game#_flushPostTickTasks: unknown post-tick task type.");
 				}
 			}
 		} while (this._postTickTasks.length > 0); // flush中に追加される限りflushを続行する
