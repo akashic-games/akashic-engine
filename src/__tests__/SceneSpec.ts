@@ -713,7 +713,7 @@ describe("test Scene", () => {
 						expect(zoo.destroyed()).toBe(false);
 
 						game.popScene();
-						game._flushSceneChangeRequests();
+						game._flushPostTickTasks();
 						expect(foo.destroyed()).toBe(true);
 						expect(dynamicImage.destroyed()).toBe(true);
 						expect(baa.destroyed()).toBe(true);
@@ -723,16 +723,16 @@ describe("test Scene", () => {
 				);
 
 				// Scene#requestAssets() のハンドラ呼び出しは Game#tick() に同期しており、実ロードの完了後に tick() が来るまで遅延される。
-				// テスト上は tick() を呼び出さないので、 _flushSceneChangeRequests() を呼び続けることで模擬する。
+				// テスト上は tick() を呼び出さないので、 _flushPostTickTasks() を呼び続けることで模擬する。
 				function flushUntilLoaded(): void {
 					if (loaded) return;
-					game._flushSceneChangeRequests();
+					game._flushPostTickTasks();
 					setTimeout(flushUntilLoaded, 10);
 				}
 				flushUntilLoaded();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -989,7 +989,7 @@ describe("test Scene", () => {
 		const nextStep = () => {
 			setTimeout(() => {
 				steps[++stepIndex]();
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 			}, 0);
 		};
 
@@ -1063,7 +1063,7 @@ describe("test Scene", () => {
 		const nextStep = () => {
 			setTimeout(() => {
 				steps[++stepIndex]();
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 			}, 0);
 		};
 
@@ -1125,7 +1125,7 @@ describe("test Scene", () => {
 		let success2 = false;
 		let state2 = false;
 		game.pushScene(scene2);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		state1 = false;
 		const holder2 = scene2.setInterval(() => {
 			if (!state2) fail("fail2");
@@ -1247,7 +1247,7 @@ describe("test Scene", () => {
 
 		const scene2 = new Scene({ game: game });
 		game.pushScene(scene2);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		scene2.setInterval(() => {
 			if (!state2) fail("fail2");
 		}, 50);
@@ -1260,13 +1260,13 @@ describe("test Scene", () => {
 		expect(scene2._timer._timers.length).toBe(1);
 
 		game.popScene();
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		expect(scene1._timer._timers.length).toBe(1);
 		expect(scene2._timer._timers).toBeUndefined();
 
 		const scene3 = new Scene({ game: game });
 		game.replaceScene(scene3);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		expect(scene1._timer._timers).toBeUndefined();
 	});
 
@@ -1313,24 +1313,24 @@ describe("test Scene", () => {
 			const scene3 = new Scene({ game: game });
 
 			game.pushScene(scene1);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(scene1.isCurrentScene()).toBe(true);
 			expect(scene2.isCurrentScene()).toBe(false);
 			expect(scene3.isCurrentScene()).toBe(false);
 
 			scene1.gotoScene(scene2, true); // push scene2
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(scene1.isCurrentScene()).toBe(false);
 			expect(scene2.isCurrentScene()).toBe(true);
 			expect(scene3.isCurrentScene()).toBe(false);
 
 			scene2.end();
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(scene1.isCurrentScene()).toBe(true);
 			expect(scene3.isCurrentScene()).toBe(false);
 
 			scene1.gotoScene(scene3, false); // replace scene1 to scene3
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(scene3.isCurrentScene()).toBe(true);
 			done();
 		});

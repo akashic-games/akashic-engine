@@ -631,21 +631,10 @@ export class Game extends g.Game {
 		return this.tick(advance);
 	}
 
-	_fireSceneReady(scene: g.Scene): void {
-		super._fireSceneReady(scene);
+	_pushPostTickTask<T>(fun: () => void, owner: any): void {
+		super._pushPostTickTask(fun, owner);
 		if (this.autoTickForInternalEvents) {
 			setTimeout(() => {
-				if (scene.destroyed()) return; // 同期的にsceneを破棄してしまうテストのためにチェック
-				this.classicTick();
-			}, 0);
-		}
-	}
-
-	_fireSceneLoaded(scene: g.Scene): void {
-		super._fireSceneLoaded(scene);
-		if (this.autoTickForInternalEvents) {
-			setTimeout(() => {
-				if (scene.destroyed()) return; // 同期的にsceneを破棄してしまうテストのためにチェック
 				this.classicTick();
 			}, 0);
 		}

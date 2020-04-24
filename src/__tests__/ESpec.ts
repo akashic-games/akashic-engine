@@ -405,14 +405,14 @@ describe("test E", () => {
 
 		const scene2 = new Scene({ game: runtime.game });
 		runtime.game.pushScene(scene2);
-		runtime.game._flushSceneChangeRequests();
+		runtime.game._flushPostTickTasks();
 		estate = false;
 		runtime.game.tick(true);
 		runtime.game.tick(true);
 		runtime.game.tick(true);
 
 		runtime.game.popScene();
-		runtime.game._flushSceneChangeRequests();
+		runtime.game._flushPostTickTasks();
 		estate = true;
 		esuccess = false;
 		runtime.game.tick(true);
@@ -420,7 +420,7 @@ describe("test E", () => {
 
 		const scene3 = new Scene({ game: runtime.game });
 		runtime.game.replaceScene(scene3);
-		runtime.game._flushSceneChangeRequests();
+		runtime.game._flushPostTickTasks();
 		estate = false;
 
 		expect(scene3.onUpdate.length > 0).toBe(false);
@@ -462,21 +462,21 @@ describe("test E", () => {
 
 		const scene2 = new Scene({ game: runtime.game });
 		runtime.game.pushScene(scene2);
-		runtime.game._flushSceneChangeRequests();
+		runtime.game._flushPostTickTasks();
 		estate = false;
 		operationTick();
 		operationTick();
 		operationTick();
 
 		runtime.game.popScene();
-		runtime.game._flushSceneChangeRequests();
+		runtime.game._flushPostTickTasks();
 		estate = true;
 		esuccess = false;
 		operationTick();
 		expect(esuccess).toBe(true);
 
 		runtime.game.replaceScene(new Scene({ game: runtime.game }));
-		runtime.game._flushSceneChangeRequests();
+		runtime.game._flushPostTickTasks();
 		estate = false;
 
 		expect(runtime.scene.onPointDownCapture.destroyed()).toBe(true);
@@ -721,7 +721,7 @@ describe("test E", () => {
 		const game = new Game({ width: 320, height: 320, main: "" });
 		const scene = new Scene({ game: game, local: true });
 		game.pushScene(scene);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 
 		const e = new E({
 			scene: scene,

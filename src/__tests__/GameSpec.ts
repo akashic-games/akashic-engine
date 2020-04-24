@@ -194,7 +194,7 @@ describe("test Game", () => {
 				game._loadAndStart();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(() => {
 				game._startLoadingGlobalAssets();
 			}).toThrowError("AssertionError");
@@ -209,11 +209,11 @@ describe("test Game", () => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene = new Scene({ game: game });
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene, scene]);
 			const scene2 = new Scene({ game: game });
 			game.pushScene(scene2);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene, scene, scene2]);
 			done();
 		});
@@ -230,10 +230,10 @@ describe("test Game", () => {
 			game.pushScene(scene);
 			game.pushScene(scene2);
 			game.popScene();
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene, scene]);
 			game.popScene();
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene]);
 			done();
 		});
@@ -253,7 +253,7 @@ describe("test Game", () => {
 			game.pushScene(scene2);
 			game.pushScene(scene3);
 			game.popScene(false, 2);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene, scene]);
 			expect(scene.destroyed()).toBe(false);
 			expect(scene2.destroyed()).toBe(true);
@@ -265,7 +265,7 @@ describe("test Game", () => {
 			game.pushScene(scene2Alpha);
 			game.pushScene(scene3Beta);
 			game.popScene(true, 3);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene]);
 			expect(scene.destroyed()).toBe(false);
 			expect(scene2Alpha.destroyed()).toBe(false);
@@ -284,7 +284,7 @@ describe("test Game", () => {
 			const scene2 = new Scene({ game: game });
 			game.pushScene(scene);
 			game.replaceScene(scene2);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			expect(game.scenes).toEqual([game._initialScene, scene2]);
 			done();
 		});
@@ -407,10 +407,10 @@ describe("test Game", () => {
 					}, 1);
 				});
 				game.pushScene(scene2);
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -507,10 +507,10 @@ describe("test Game", () => {
 					}, 1);
 				});
 				game.pushScene(scene2);
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -575,7 +575,7 @@ describe("test Game", () => {
 				done();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -640,14 +640,14 @@ describe("test Game", () => {
 						expect(game._eventTriggerMap["point-down"]).toBe(scene3.onPointDownCapture);
 
 						game.popScene();
-						game._flushSceneChangeRequests();
+						game._flushPostTickTasks();
 						expect(sceneChangedCount).toBe(7);
 						expect(topIsLocal).toBe("non-local");
 						expect(game.scenes).toEqual([game._initialScene, scene2]);
 						expect(game._eventTriggerMap["point-down"]).toBe(scene2.onPointDownCapture);
 
 						game.popScene();
-						game._flushSceneChangeRequests();
+						game._flushPostTickTasks();
 						expect(sceneChangedCount).toBe(8);
 						expect(topIsLocal).toBe("full-local");
 						expect(game.scenes).toEqual([game._initialScene]);
@@ -655,14 +655,14 @@ describe("test Game", () => {
 						done();
 					});
 					game.pushScene(scene3);
-					game._flushSceneChangeRequests();
+					game._flushPostTickTasks();
 					expect(sceneChangedCount).toBe(5);
 					expect(topIsLocal).toBe("full-local");
 					expect(game.scenes).toEqual([game._initialScene, scene2, scene3, game._defaultLoadingScene]);
 					expect(game._eventTriggerMap["point-down"]).toBe(game._defaultLoadingScene.onPointDownCapture);
 				});
 				game.replaceScene(scene2);
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 				expect(sceneChangedCount).toBe(3); // scene2とloadingSceneが乗るが、scene2はまだ_sceneStackTopChangeCountをfireしてない
 				expect(topIsLocal).toBe("full-local"); // loadingScene がトップなので local
 				expect(game.scenes).toEqual([game._initialScene, scene2, game._defaultLoadingScene]);
@@ -673,7 +673,7 @@ describe("test Game", () => {
 			expect(game.scenes).toEqual([game._initialScene]);
 			expect(game._eventTriggerMap["point-down"]).toBe(game._initialScene.onPointDownCapture);
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -683,10 +683,10 @@ describe("test Game", () => {
 		const scene = new Scene({ game: game });
 		const scene2 = new Scene({ game: game });
 		game.pushScene(scene);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		expect(game.scene()).toBe(scene);
 		game.replaceScene(scene2);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		expect(game.scene()).toBe(scene2);
 	});
 
@@ -731,7 +731,7 @@ describe("test Game", () => {
 			++count;
 		});
 		game.pushScene(scene);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 
 		game.classicTick();
 		expect(count).toBe(1);
@@ -771,7 +771,7 @@ describe("test Game", () => {
 				});
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 			game.classicTick();
 		});
 		game._startLoadingGlobalAssets();
@@ -835,7 +835,7 @@ describe("test Game", () => {
 			game.pushScene(scene);
 			game.pushScene(scene2);
 			game.pushScene(scene3);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 
 			expect(game.handlerSet.modeHistry.length).toBe(3);
 			expect(game.handlerSet.modeHistry[0]).toEqual({
@@ -966,7 +966,7 @@ describe("test Game", () => {
 		game.renderers.push(r);
 		const scene = new Scene({ game: game });
 		game.pushScene(scene);
-		game._flushSceneChangeRequests();
+		game._flushPostTickTasks();
 		const e = new E({ scene: scene });
 		scene.append(e);
 		expect(e.state).toBe(0);

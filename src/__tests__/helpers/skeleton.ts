@@ -11,7 +11,7 @@ export function skeletonRuntime(gameConfiguration?: GameConfiguration): Runtime 
 	const game = new Game(gameConfiguration);
 	const scene = new Scene({ game });
 	game.pushScene(scene);
-	game._flushSceneChangeRequests();
+	game._flushPostTickTasks();
 	return {
 		game: game,
 		scene: scene

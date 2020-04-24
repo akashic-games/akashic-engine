@@ -389,14 +389,14 @@ describe("test Module", () => {
 				expect(mod.me).toBe("script-bar");
 
 				game.popScene();
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 				expect(() => {
 					module.require("aNonGlobalAssetBar");
 				}).toThrowError("AssertionError");
 				done();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -461,14 +461,14 @@ describe("test Module", () => {
 				expect(mod.me).toBe("script-bar");
 
 				game.popScene();
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 				expect(() => {
 					module.require("aNonGlobalAssetBar");
 				}).toThrowError("AssertionError");
 				done();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -533,14 +533,14 @@ describe("test Module", () => {
 				expect(mod.me).toBe("script-bar");
 
 				game.popScene();
-				game._flushSceneChangeRequests();
+				game._flushPostTickTasks();
 				expect(() => {
 					module.require("aNonGlobalAssetBar");
 				}).toThrowError("AssertionError");
 				done();
 			});
 			game.pushScene(scene);
-			game._flushSceneChangeRequests();
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
