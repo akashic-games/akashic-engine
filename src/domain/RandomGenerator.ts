@@ -12,6 +12,9 @@ export abstract class RandomGenerator {
 		this.seed = seed;
 	}
 
+	/**
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `RandomGenerator#generate()` を利用すること。
+	 */
 	abstract get(min: number, max: number): number;
 
 	abstract generate(): number;

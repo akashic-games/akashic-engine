@@ -20,26 +20,26 @@ describe("test XorshiftRandomGenerator", () => {
 
 		const generator = new XorshiftRandomGenerator(42);
 
-		for (let i = 0; i < 10; ++i) generator.get(0, 10000);
+		for (let i = 0; i < 10; ++i) generator.generate();
 
 		const copy1 = XorshiftRandomGenerator.deserialize(generator.serialize());
-		expect(copy1.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy1.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy1.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy1.get(0, 10000)).toBe(generator.get(0, 10000));
+		expect(copy1.generate()).toBe(generator.generate());
+		expect(copy1.generate()).toBe(generator.generate());
+		expect(copy1.generate()).toBe(generator.generate());
+		expect(copy1.generate()).toBe(generator.generate());
 
 		const copy2 = XorshiftRandomGenerator.deserialize(copy1.serialize());
-		expect(copy2.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy2.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy2.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy2.get(0, 10000)).toBe(generator.get(0, 10000));
+		expect(copy2.generate()).toBe(generator.generate());
+		expect(copy2.generate()).toBe(generator.generate());
+		expect(copy2.generate()).toBe(generator.generate());
+		expect(copy2.generate()).toBe(generator.generate());
 
 		const ser = generator.serialize();
 		const copy3 = XorshiftRandomGenerator.deserialize(JSON.parse(JSON.stringify(ser)));
-		expect(copy3.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy3.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy3.get(0, 10000)).toBe(generator.get(0, 10000));
-		expect(copy3.get(0, 10000)).toBe(generator.get(0, 10000));
+		expect(copy3.generate()).toBe(generator.generate());
+		expect(copy3.generate()).toBe(generator.generate());
+		expect(copy3.generate()).toBe(generator.generate());
+		expect(copy3.generate()).toBe(generator.generate());
 	});
 
 	it("is distribution within expectation", () => {
@@ -55,7 +55,8 @@ describe("test XorshiftRandomGenerator", () => {
 		testCases.forEach(testCase => {
 			const resultMap: number[] = [];
 			for (let i = 0; i < 10000; i++) {
-				resultMap.push(generator.get(testCase[0], testCase[1]));
+				const value = Math.floor(generator.generate() * (testCase[1] - testCase[0] + 1) + testCase[0]);
+				resultMap.push(value);
 			}
 			let sum = 0;
 			resultMap.forEach(v => {
@@ -85,7 +86,8 @@ describe("test XorshiftRandomGenerator", () => {
 				const generator = new XorshiftRandomGenerator(seed);
 				const resultMap = new Array(testCase[1] - testCase[0] + 1);
 				for (let i = 0; i < cycle; i++) {
-					const num = generator.get(testCase[0], testCase[1]) + (0 - testCase[0]);
+					const value = Math.floor(generator.generate() * (testCase[1] - testCase[0] + 1) + testCase[0]);
+					const num = value + (0 - testCase[0]);
 					if (!resultMap[num]) resultMap[num] = 0;
 					++resultMap[num];
 				}
