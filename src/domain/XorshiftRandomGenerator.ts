@@ -25,6 +25,9 @@ export class XorshiftRandomGenerator extends RandomGenerator {
 		}
 	}
 
+	/**
+	 * @deprecated 非推奨である。将来的に削除される。代わりに `XorshiftRandomGenerator#generate()` を利用すること。
+	 */
 	get(min: number, max: number): number {
 		return this._xorshift.nextInt(min, max + 1);
 	}

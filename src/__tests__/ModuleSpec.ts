@@ -256,7 +256,7 @@ describe("test Module", () => {
 		"/script/cache1.js":
 			"module.exports = { v1: require('randomnumber'), v2: require('randomnumber'), cache2: require('./cache2.js') };",
 		"/script/cache2.js": "module.exports = { v1: require('randomnumber'), v2: require('randomnumber') };",
-		"/node_modules/randomnumber/index.js": "module.exports = g.game.random.get(0, 1000000);"
+		"/node_modules/randomnumber/index.js": "module.exports = g.game.random.generate();"
 	};
 
 	it("初期化", done => {
