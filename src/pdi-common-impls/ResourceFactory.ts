@@ -1,4 +1,3 @@
-import { VideoSystem } from "../domain/VideoSystem";
 import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
 import { FontWeightString } from "../pdi-types/FontWeightString";
 import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
@@ -12,6 +11,7 @@ import { Surface } from "./Surface";
 import { SurfaceAtlas } from "./SurfaceAtlas";
 import { TextAsset } from "./TextAsset";
 import { VideoAsset } from "./VideoAsset";
+import { VideoSystem } from "./VideoSystem";
 
 /**
  * リソースの生成を行うクラス。

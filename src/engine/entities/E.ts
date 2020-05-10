@@ -1,20 +1,13 @@
 import { ChainTrigger, Trigger } from "@akashic/trigger";
-import {
-	MessageEvent,
-	PointDownEventBase,
-	PointEventBase,
-	PointMoveEventBase,
-	PointSourceBase,
-	PointUpEventBase
-} from "../../domain/Event";
-import { Matrix, PlainMatrix } from "../../domain/Matrix";
 import { ExceptionFactory } from "../../pdi-common-impls/ExceptionFactory";
 import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { ShaderProgramLike } from "../../pdi-types/ShaderProgramLike";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
+import { MessageEvent, PointDownEventBase, PointEventBase, PointMoveEventBase, PointSourceBase, PointUpEventBase } from "../Event";
 import { Game } from "../Game";
+import { Matrix, PlainMatrix } from "../Matrix";
 import { Object2D, Object2DParameterObject } from "../Object2D";
 import { Scene } from "../Scene";
 import { Util } from "../Util";

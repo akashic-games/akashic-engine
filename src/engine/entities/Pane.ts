@@ -1,12 +1,12 @@
-import { Matrix } from "../../domain/Matrix";
-import { SurfaceUtil } from "../../domain/SurfaceUtil";
 import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
 import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { SurfaceLike } from "../../pdi-types/SurfaceLike";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
+import { Matrix } from "../Matrix";
 import { SurfaceEffector } from "../SurfaceEffector";
+import { SurfaceUtil } from "../SurfaceUtil";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 
 /**

@@ -1,6 +1,6 @@
-import { Font } from "../../domain/Font";
 import { GlyphLike } from "../../pdi-types/GlyphLike";
 import { RendererLike } from "../../pdi-types/RendererLike";
+import { Font } from "../Font";
 import { TextAlign } from "../TextAlign";
 import { TextAlignString } from "../TextAlignString";
 import { Util } from "../Util";

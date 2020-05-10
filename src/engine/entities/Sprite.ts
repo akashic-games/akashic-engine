@@ -1,9 +1,9 @@
-import { Matrix, PlainMatrix } from "../../domain/Matrix";
-import { SurfaceUtil } from "../../domain/SurfaceUtil";
 import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { SurfaceLike } from "../../pdi-types/SurfaceLike";
 import { Camera } from "../Camera";
+import { Matrix, PlainMatrix } from "../Matrix";
+import { SurfaceUtil } from "../SurfaceUtil";
 import { E, EParameterObject } from "./E";
 
 /**
