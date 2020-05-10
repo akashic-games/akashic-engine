@@ -1,8 +1,8 @@
 import { CommonSize } from "../../pdi-types/commons";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { SurfaceLike } from "../../pdi-types/SurfaceLike";
-import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
+import { EntityStateFlags } from "../EntityStateFlags";
 import { E, EParameterObject } from "./E";
 
 /**

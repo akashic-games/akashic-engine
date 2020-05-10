@@ -1,4 +1,3 @@
-import { Game } from "../Game";
 import { FontFamily } from "../pdi-types/FontFamily";
 import { FontWeight } from "../pdi-types/FontWeight";
 import { FontWeightString } from "../pdi-types/FontWeightString";
@@ -7,6 +6,7 @@ import { GlyphArea, GlyphLike } from "../pdi-types/GlyphLike";
 import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
+import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";

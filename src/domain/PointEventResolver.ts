@@ -1,9 +1,9 @@
 import * as pl from "@akashic/playlog";
 import { CommonOffset } from "../pdi-types/commons";
 import { PlatformPointEvent } from "../pdi-types/PlatformPointEvent";
-import { EventPriority } from "../types/EventPriority";
 import { Camera } from "./Camera";
 import { PointSource } from "./entities/E";
+import { EventPriority } from "./EventPriority";
 
 interface PointEventHolder {
 	targetId: number;

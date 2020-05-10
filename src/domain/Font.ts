@@ -1,5 +1,5 @@
 import { GlyphLike } from "../pdi-types/GlyphLike";
-import { TextMetrics } from "../types/TextMetrics";
+import { TextMetrics } from "./TextMetrics";
 import { Util } from "./Util";
 
 /**

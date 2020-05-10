@@ -4,8 +4,8 @@ import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
 import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { SurfaceLike } from "../../pdi-types/SurfaceLike";
-import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
+import { EntityStateFlags } from "../EntityStateFlags";
 import { SurfaceEffector } from "../SurfaceEffector";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
 

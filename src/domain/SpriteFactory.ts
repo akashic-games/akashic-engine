@@ -1,8 +1,8 @@
 import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
-import { Scene } from "../Scene";
 import { Camera } from "./Camera";
 import { E } from "./entities/E";
 import { Sprite } from "./entities/Sprite";
+import { Scene } from "./Scene";
 
 export class SpriteFactory {
 	/**

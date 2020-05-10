@@ -1,5 +1,5 @@
 import { CommonOffset } from "../pdi-types/commons";
-import { Player } from "../types/Player";
+import { Player } from "./Player";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";
 

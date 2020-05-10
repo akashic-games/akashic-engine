@@ -9,10 +9,10 @@ import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
 import { TextAssetLike } from "../pdi-types/TextAssetLike";
 import { VideoAssetLike } from "../pdi-types/VideoAssetLike";
-import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "../types/AssetConfiguration";
-import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
+import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
+import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { VideoSystem } from "./VideoSystem";
 

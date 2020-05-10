@@ -1,11 +1,11 @@
 import * as pl from "@akashic/playlog";
 import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { CommonOffset } from "../pdi-types/commons";
-import { EventIndex } from "../types/EventIndex";
-import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
-import { Player } from "../types/Player";
 import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import { Event, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
+import { EventIndex } from "./EventIndex";
+import { InternalOperationPluginOperation } from "./OperationPluginOperation";
+import { Player } from "./Player";
 import { StorageValueStore } from "./Storage";
 
 // TODO: Game を意識しないインターフェース を検討する

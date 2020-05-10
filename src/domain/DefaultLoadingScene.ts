@@ -1,13 +1,13 @@
-import { Game } from "../Game";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { RendererLike } from "../pdi-types/RendererLike";
-import { Scene } from "../Scene";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import { E, EParameterObject } from "./entities/E";
 import { FilledRect } from "./entities/FilledRect";
+import { Game } from "./Game";
 import { LoadingScene } from "./LoadingScene";
 import { Object2D } from "./Object2D";
+import { Scene } from "./Scene";
 
 /**
  * `DeafultLoadingScene` のコンストラクタに渡すことができるパラメータ。
