@@ -1,4 +1,4 @@
-import { CommonArea } from "../types/commons";
+import { CommonArea } from "./commons";
 
 /**
  * SurfaceAtlasの空き領域管理インタフェース。

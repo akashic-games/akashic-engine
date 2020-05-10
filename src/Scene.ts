@@ -12,11 +12,11 @@ import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore,
 import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
-import { AssetLike } from "./interfaces/AssetLike";
-import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
-import { CommonOffset } from "./types/commons";
+import { AssetLike } from "./pdi-types/AssetLike";
+import { AssetLoadFailureInfo } from "./pdi-types/AssetLoadFailureInfo";
+import { CommonOffset } from "./pdi-types/commons";
+import { StorageLoadError } from "./pdi-types/errors";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
-import { StorageLoadError } from "./types/errors";
 import { LocalTickModeString } from "./types/LocalTickModeString";
 import { TickGenerationModeString } from "./types/TickGenerationModeString";
 

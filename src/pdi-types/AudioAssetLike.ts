@@ -1,5 +1,5 @@
-import { AudioAssetHint } from "../types/AssetConfiguration";
 import { AssetLike } from "./AssetLike";
+import { AudioAssetHint } from "./AudioAssetHint";
 import { AudioPlayerLike } from "./AudioPlayerLike";
 import { AudioSystemLike } from "./AudioSystemLike";
 

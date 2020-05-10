@@ -1,7 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { CommonArea, CommonOffset, CommonSize } from "../types/commons";
-import { CompositeOperation } from "../types/CompositeOperation";
-import { CompositeOperationString } from "../types/CompositeOperationString";
+import { CommonArea, CommonOffset, CommonSize } from "../pdi-types/commons";
+import { CompositeOperation } from "../pdi-types/CompositeOperation";
+import { CompositeOperationString } from "../pdi-types/CompositeOperationString";
 import { Matrix, PlainMatrix } from "./Matrix";
 
 /**

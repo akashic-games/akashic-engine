@@ -1,4 +1,4 @@
-import { SurfaceAtlasSlotLike } from "../interfaces/SurfaceAtlasSlotLike";
+import { SurfaceAtlasSlotLike } from "../pdi-types/SurfaceAtlasSlotLike";
 
 /**
  * SurfaceAtlasの空き領域管理クラス。

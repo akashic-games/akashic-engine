@@ -1,12 +1,12 @@
 import { SurfaceAtlasSet } from "../commons/SurfaceAtlasSet";
 import { Game } from "../Game";
-import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
-import { GlyphArea, GlyphLike } from "../interfaces/GlyphLike";
-import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
-import { FontFamily } from "../types/FontFamily";
-import { FontWeight } from "../types/FontWeight";
-import { FontWeightString } from "../types/FontWeightString";
+import { FontFamily } from "../pdi-types/FontFamily";
+import { FontWeight } from "../pdi-types/FontWeight";
+import { FontWeightString } from "../pdi-types/FontWeightString";
+import { GlyphFactoryLike } from "../pdi-types/GlyphFactoryLike";
+import { GlyphArea, GlyphLike } from "../pdi-types/GlyphLike";
+import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { getGameInAssetContext } from "./getGameInAssetContext";

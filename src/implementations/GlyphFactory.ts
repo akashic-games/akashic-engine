@@ -1,6 +1,6 @@
-import { GlyphFactoryLike } from "../interfaces/GlyphFactoryLike";
-import { GlyphLike } from "../interfaces/GlyphLike";
-import { FontWeightString } from "../types/FontWeightString";
+import { FontWeightString } from "../pdi-types/FontWeightString";
+import { GlyphFactoryLike } from "../pdi-types/GlyphFactoryLike";
+import { GlyphLike } from "../pdi-types/GlyphLike";
 
 /**
  * グリフファクトリ。

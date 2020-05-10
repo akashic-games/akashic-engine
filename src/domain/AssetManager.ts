@@ -1,22 +1,17 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { VideoSystem } from "../commons/VideoSystem";
-import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
-import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { ImageAssetLike } from "../interfaces/ImageAssetLike";
-import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { TextAssetLike } from "../interfaces/TextAssetLike";
-import { VideoAssetLike } from "../interfaces/VideoAssetLike";
-import {
-	AssetConfiguration,
-	AssetConfigurationMap,
-	AudioAssetHint,
-	AudioSystemConfigurationMap,
-	ImageAssetHint,
-	ModuleMainScriptsMap
-} from "../types/AssetConfiguration";
+import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
+import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
+import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
+import { AssetLoadError } from "../pdi-types/errors";
+import { ImageAssetHint } from "../pdi-types/ImageAssetHint";
+import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
+import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
+import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
+import { TextAssetLike } from "../pdi-types/TextAssetLike";
+import { VideoAssetLike } from "../pdi-types/VideoAssetLike";
+import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "../types/AssetConfiguration";
 import { DynamicAssetConfiguration } from "../types/DynamicAssetConfiguration";
-import { AssetLoadError } from "../types/errors";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { getGameInAssetContext } from "./getGameInAssetContext";

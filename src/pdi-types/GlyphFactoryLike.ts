@@ -1,4 +1,4 @@
-import { FontWeightString } from "../types/FontWeightString";
+import { FontWeightString } from "./FontWeightString";
 import { GlyphLike } from "./GlyphLike";
 
 /**

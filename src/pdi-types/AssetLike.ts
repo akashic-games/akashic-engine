@@ -1,5 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import { AssetLoadError } from "../types/errors";
+import { AssetLoadError } from "./errors";
 
 /**
  * `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。

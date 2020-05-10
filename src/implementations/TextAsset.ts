@@ -1,4 +1,4 @@
-import { TextAssetLike } from "../interfaces/TextAssetLike";
+import { TextAssetLike } from "../pdi-types/TextAssetLike";
 import { Asset } from "./Asset";
 
 /**

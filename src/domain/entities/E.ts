@@ -10,10 +10,10 @@ import {
 } from "../../domain/Event";
 import { Matrix, PlainMatrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
-import { RendererLike } from "../../interfaces/RendererLike";
-import { ShaderProgramLike } from "../../interfaces/ShaderProgramLike";
+import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
+import { RendererLike } from "../../pdi-types/RendererLike";
+import { ShaderProgramLike } from "../../pdi-types/ShaderProgramLike";
 import { Scene } from "../../Scene";
-import { CommonArea, CommonOffset, CommonRect } from "../../types/commons";
 import { EntityStateFlags } from "../../types/EntityStateFlags";
 import { Camera } from "../Camera";
 import { Object2D, Object2DParameterObject } from "../Object2D";

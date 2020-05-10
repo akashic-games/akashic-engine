@@ -1,7 +1,7 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { ImageAssetLike } from "../interfaces/ImageAssetLike";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { CommonArea, CommonOffset, CommonRect } from "../types/commons";
+import { CommonArea, CommonOffset, CommonRect } from "../pdi-types/commons";
+import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 
 export module SurfaceUtil {
 	/**

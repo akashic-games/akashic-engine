@@ -1,6 +1,6 @@
 import { Game } from "../Game";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { CommonRect } from "../types/commons";
+import { CommonRect } from "../pdi-types/commons";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";

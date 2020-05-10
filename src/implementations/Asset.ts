@@ -1,5 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import { AssetLike, AssetLoadHandler } from "../interfaces/AssetLike";
+import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
 
 /**
  * 各種リソースを表すクラス。

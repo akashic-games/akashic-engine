@@ -1,6 +1,6 @@
-import { CommonSize } from "../types/commons";
-import { GlyphLike } from "./GlyphLike";
-import { SurfaceAtlasLike } from "./SurfaceAtlasLike";
+import { CommonSize } from "../pdi-types/commons";
+import { GlyphLike } from "../pdi-types/GlyphLike";
+import { SurfaceAtlasLike } from "../pdi-types/SurfaceAtlasLike";
 
 /**
  * SurfaceAtlasが効率よく動作するためのヒント。

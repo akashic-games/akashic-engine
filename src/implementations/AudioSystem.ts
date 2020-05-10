@@ -1,8 +1,8 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
-import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
+import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
+import { AudioPlayerEvent, AudioPlayerLike } from "../pdi-types/AudioPlayerLike";
+import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
+import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 
 export interface AudioSystemParameterObject {
 	/**

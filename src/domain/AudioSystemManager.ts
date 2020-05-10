@@ -1,6 +1,6 @@
 import { MusicAudioSystem, SoundAudioSystem } from "../implementations/AudioSystem";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
-import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
+import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
+import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 
 /**
  * `AudioSystem` の管理クラス。

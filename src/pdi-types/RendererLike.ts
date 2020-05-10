@@ -1,5 +1,5 @@
-import { CompositeOperationString } from "../types/CompositeOperationString";
-import { ImageData } from "../types/ImageData";
+import { CompositeOperationString } from "./CompositeOperationString";
+import { ImageData } from "./ImageData";
 import { ShaderProgramLike } from "./ShaderProgramLike";
 import { SurfaceLike } from "./SurfaceLike";
 

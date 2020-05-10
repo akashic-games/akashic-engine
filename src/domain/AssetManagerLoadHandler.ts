@@ -1,5 +1,5 @@
-import { AssetLike } from "../interfaces/AssetLike";
-import { AssetLoadError } from "../types/errors";
+import { AssetLike } from "../pdi-types/AssetLike";
+import { AssetLoadError } from "../pdi-types/errors";
 
 /**
  * `AssetManager` から `Asset` の読み込みまたは読み込み失敗を受け取るハンドラのインターフェース定義。

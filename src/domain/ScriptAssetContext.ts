@@ -1,5 +1,5 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
+import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
 import { Module } from "./Module";
 import { RequireCacheable } from "./RequireCacheable";
 

@@ -1,6 +1,6 @@
-import { GlyphArea, GlyphLike } from "../interfaces/GlyphLike";
-import { ImageAssetLike } from "../interfaces/ImageAssetLike";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
+import { GlyphArea, GlyphLike } from "../pdi-types/GlyphLike";
+import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { Font } from "./Font";
 import { SurfaceUtil } from "./SurfaceUtil";
 

@@ -1,8 +1,8 @@
-import { RendererLike } from "../interfaces/RendererLike";
-import { ShaderProgramLike } from "../interfaces/ShaderProgramLike";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { CompositeOperationString } from "../types/CompositeOperationString";
-import { ImageData } from "../types/ImageData";
+import { CompositeOperationString } from "../pdi-types/CompositeOperationString";
+import { ImageData } from "../pdi-types/ImageData";
+import { RendererLike } from "../pdi-types/RendererLike";
+import { ShaderProgramLike } from "../pdi-types/ShaderProgramLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 
 /**
  * ゲームの描画を行うクラス。

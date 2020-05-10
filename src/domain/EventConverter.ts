@@ -1,6 +1,6 @@
 import * as pl from "@akashic/playlog";
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { CommonOffset } from "../types/commons";
+import { CommonOffset } from "../pdi-types/commons";
 import { EventIndex } from "../types/EventIndex";
 import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
 import { Player } from "../types/Player";

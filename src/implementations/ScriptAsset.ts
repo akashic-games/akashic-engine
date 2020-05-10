@@ -1,5 +1,5 @@
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { ScriptAssetRuntimeValue } from "../interfaces/ScriptAssetRuntimeValue";
+import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
+import { ScriptAssetRuntimeValue } from "../pdi-types/ScriptAssetRuntimeValue";
 import { Asset } from "./Asset";
 
 /**

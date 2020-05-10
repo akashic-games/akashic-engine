@@ -1,7 +1,7 @@
 import { Trigger } from "@akashic/trigger";
-import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { AudioPlayerEvent, AudioPlayerLike } from "../interfaces/AudioPlayerLike";
-import { AudioSystemLike } from "../interfaces/AudioSystemLike";
+import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
+import { AudioPlayerEvent, AudioPlayerLike } from "../pdi-types/AudioPlayerLike";
+import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
 
 /**
  * サウンド再生を行うクラス。

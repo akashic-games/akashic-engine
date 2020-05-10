@@ -1,4 +1,4 @@
-import { CommonSize } from "../types/commons";
+import { CommonSize } from "./commons";
 import { RendererLike } from "./RendererLike";
 
 /**

@@ -1,8 +1,8 @@
 import { SurfaceAtlas } from "../commons/SurfaceAtlas";
 import { VideoSystem } from "../commons/VideoSystem";
-import { ResourceFactoryLike } from "../interfaces/ResourceFactoryLike";
-import { AudioAssetHint } from "../types/AssetConfiguration";
-import { FontWeightString } from "../types/FontWeightString";
+import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
+import { FontWeightString } from "../pdi-types/FontWeightString";
+import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { AudioAsset } from "./AudioAsset";
 import { AudioPlayer } from "./AudioPlayer";
 import { AudioSystem } from "./AudioSystem";

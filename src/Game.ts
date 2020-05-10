@@ -17,13 +17,14 @@ import { RandomGenerator } from "./domain/RandomGenerator";
 import { Storage } from "./domain/Storage";
 import { XorshiftRandomGenerator } from "./domain/XorshiftRandomGenerator";
 import { GameHandlerSet } from "./GameHandlerSet";
-import { AssetLike } from "./interfaces/AssetLike";
-import { RendererLike } from "./interfaces/RendererLike";
-import { ResourceFactoryLike } from "./interfaces/ResourceFactoryLike";
-import { ScriptAssetRuntimeValueBase } from "./interfaces/ScriptAssetRuntimeValue";
 import { SurfaceAtlasSetLike } from "./interfaces/SurfaceAtlasSetLike";
+import { AssetLike } from "./pdi-types/AssetLike";
+import { CommonOffset, CommonSize } from "./pdi-types/commons";
+import { PlatformPointEvent, PlatformPointType } from "./pdi-types/PlatformPointEvent";
+import { RendererLike } from "./pdi-types/RendererLike";
+import { ResourceFactoryLike } from "./pdi-types/ResourceFactoryLike";
+import { ScriptAssetRuntimeValueBase } from "./pdi-types/ScriptAssetRuntimeValue";
 import { Scene } from "./Scene";
-import { CommonOffset, CommonSize } from "./types/commons";
 import { EventFilter } from "./types/EventFilter";
 import { GameConfiguration } from "./types/GameConfiguration";
 import { GameMainParameterObject } from "./types/GameMainParameterObject";
@@ -31,7 +32,6 @@ import { LocalTickModeString } from "./types/LocalTickModeString";
 import { OperationPlugin } from "./types/OperationPlugin";
 import { InternalOperationPluginOperation } from "./types/OperationPluginOperation";
 import { OperationPluginViewInfo } from "./types/OperationPluginViewInfo";
-import { PlatformPointEvent, PlatformPointType } from "./types/PlatformPointEvent";
 import { TickGenerationModeString } from "./types/TickGenerationModeString";
 
 /**

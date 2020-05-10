@@ -1,4 +1,4 @@
-import { CommonSize } from "../types/commons";
+import { CommonSize } from "./commons";
 import { SurfaceAtlasSlotLike } from "./SurfaceAtlasSlotLike";
 import { SurfaceLike } from "./SurfaceLike";
 

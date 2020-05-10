@@ -1,6 +1,6 @@
 import { Game } from "../Game";
-import { AssetLike } from "../interfaces/AssetLike";
-import { RendererLike } from "../interfaces/RendererLike";
+import { AssetLike } from "../pdi-types/AssetLike";
+import { RendererLike } from "../pdi-types/RendererLike";
 import { Scene } from "../Scene";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";

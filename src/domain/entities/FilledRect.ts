@@ -1,5 +1,5 @@
 import { ExceptionFactory } from "../../commons/ExceptionFactory";
-import { RendererLike } from "../../interfaces/RendererLike";
+import { RendererLike } from "../../pdi-types/RendererLike";
 import { E, EParameterObject } from "./E";
 
 /**

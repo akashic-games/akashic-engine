@@ -1,4 +1,4 @@
-import { RendererLike } from "../interfaces/RendererLike";
+import { RendererLike } from "../pdi-types/RendererLike";
 
 /**
  * カメラを表すインターフェース。

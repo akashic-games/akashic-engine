@@ -1,4 +1,4 @@
-import { AssertionError, AssetLoadError, TypeMismatchError } from "../types/errors";
+import { AssertionError, AssetLoadError, TypeMismatchError } from "../pdi-types/errors";
 
 /**
  * 例外生成ファクトリ。

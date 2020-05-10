@@ -1,4 +1,4 @@
-import { CommonArea } from "../types/commons";
+import { CommonArea } from "../pdi-types/commons";
 import { Util } from "./Util";
 
 /**

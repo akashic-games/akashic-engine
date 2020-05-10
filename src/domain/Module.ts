@@ -1,5 +1,5 @@
-import { ModuleLike } from "../interfaces/ModuleLike";
-import { ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "../interfaces/ScriptAssetRuntimeValue";
+import { ModuleLike } from "../pdi-types/ModuleLike";
+import { ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";
 import { PathUtil } from "./PathUtil";
 
 export interface ModuleParameterObject {

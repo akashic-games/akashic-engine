@@ -1,5 +1,5 @@
-import { ShaderProgramLike } from "../interfaces/ShaderProgramLike";
-import { ShaderUniform } from "../types/ShaderUniform";
+import { ShaderProgramLike } from "../pdi-types/ShaderProgramLike";
+import { ShaderUniform } from "../pdi-types/ShaderUniform";
 
 /**
  * `ShaderProgram` のコンストラクタに渡すことができるパラメータ。

@@ -1,4 +1,4 @@
-import { CommonOffset } from "../types/commons";
+import { CommonOffset } from "../pdi-types/commons";
 
 /**
  * 変換行列を表すインターフェース。

@@ -1,7 +1,7 @@
-import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { VideoAssetLike } from "../interfaces/VideoAssetLike";
-import { VideoPlayerLike } from "../interfaces/VideoPlayerLike";
-import { VideoSystemLike } from "../interfaces/VideoSystemLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
+import { VideoAssetLike } from "../pdi-types/VideoAssetLike";
+import { VideoPlayerLike } from "../pdi-types/VideoPlayerLike";
+import { VideoSystemLike } from "../pdi-types/VideoSystemLike";
 import { Asset } from "./Asset";
 
 /**

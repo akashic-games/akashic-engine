@@ -1,4 +1,4 @@
-import { StorageLoadError } from "../types/errors";
+import { StorageLoadError } from "../pdi-types/errors";
 
 // TODO: (GAMEDEV-1549) コメント整理
 /**

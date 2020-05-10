@@ -1,4 +1,4 @@
-import { SurfaceLike } from "../interfaces/SurfaceLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 
 /**
  * `Surface` に対して様々な表現によって書き込む事が出来ることを表すインターフェース。

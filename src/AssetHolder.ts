@@ -1,9 +1,9 @@
 import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetManager } from "./domain/AssetManager";
-import { AssetLike } from "./interfaces/AssetLike";
-import { AssetLoadFailureInfo } from "./interfaces/AssetLoadFailureInfo";
+import { AssetLike } from "./pdi-types/AssetLike";
+import { AssetLoadFailureInfo } from "./pdi-types/AssetLoadFailureInfo";
+import { AssetLoadError } from "./pdi-types/errors";
 import { DynamicAssetConfiguration } from "./types/DynamicAssetConfiguration";
-import { AssetLoadError } from "./types/errors";
 
 export interface DestroyedCheckable {
 	destroyed(): boolean;

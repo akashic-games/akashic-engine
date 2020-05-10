@@ -1,4 +1,4 @@
-import { VideoSystemLike } from "../interfaces/VideoSystemLike";
+import { VideoSystemLike } from "../pdi-types/VideoSystemLike";
 
 /**
  * 将来 VideoPlayerインスタンスの一元管理（ボリューム設定などAudioSystemと似た役割）

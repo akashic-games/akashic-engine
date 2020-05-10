@@ -1,4 +1,4 @@
-import { RendererLike } from "../interfaces/RendererLike";
+import { RendererLike } from "../pdi-types/RendererLike";
 import { Camera } from "./Camera";
 import { Object2D, Object2DParameterObject } from "./Object2D";
 

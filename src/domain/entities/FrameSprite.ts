@@ -1,7 +1,7 @@
 import { Trigger } from "@akashic/trigger";
 import { Timer } from "../../domain/Timer";
-import { ImageAssetLike } from "../../interfaces/ImageAssetLike";
-import { SurfaceLike } from "../../interfaces/SurfaceLike";
+import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
+import { SurfaceLike } from "../../pdi-types/SurfaceLike";
 import { Sprite, SpriteParameterObject } from "./Sprite";
 
 /**

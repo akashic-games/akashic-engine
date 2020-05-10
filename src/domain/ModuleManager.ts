@@ -1,8 +1,8 @@
 import { ExceptionFactory } from "../commons/ExceptionFactory";
-import { AssetLike } from "../interfaces/AssetLike";
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { ScriptAssetRuntimeValueBase } from "../interfaces/ScriptAssetRuntimeValue";
-import { TextAssetLike } from "../interfaces/TextAssetLike";
+import { AssetLike } from "../pdi-types/AssetLike";
+import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
+import { ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";
+import { TextAssetLike } from "../pdi-types/TextAssetLike";
 import { AssetManager } from "./AssetManager";
 import { Module } from "./Module";
 import { PathUtil } from "./PathUtil";

@@ -1,6 +1,6 @@
-import { GlyphLike } from "../interfaces/GlyphLike";
-import { SurfaceAtlasLike } from "../interfaces/SurfaceAtlasLike";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
+import { GlyphLike } from "../pdi-types/GlyphLike";
+import { SurfaceAtlasLike } from "../pdi-types/SurfaceAtlasLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 
 /**
  * グリフ。

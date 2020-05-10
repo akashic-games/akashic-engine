@@ -1,7 +1,7 @@
-import { SurfaceAtlasLike } from "../interfaces/SurfaceAtlasLike";
-import { SurfaceAtlasSlotLike } from "../interfaces/SurfaceAtlasSlotLike";
-import { SurfaceLike } from "../interfaces/SurfaceLike";
-import { CommonSize } from "../types/commons";
+import { CommonSize } from "../pdi-types/commons";
+import { SurfaceAtlasLike } from "../pdi-types/SurfaceAtlasLike";
+import { SurfaceAtlasSlotLike } from "../pdi-types/SurfaceAtlasSlotLike";
+import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { SurfaceAtlasSlot } from "./SurfaceAtrasSlot";
 
 function getSurfaceAtlasSlot(slot: SurfaceAtlasSlotLike, width: number, height: number): SurfaceAtlasSlotLike {

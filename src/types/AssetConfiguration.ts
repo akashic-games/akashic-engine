@@ -1,16 +1,5 @@
-/**
- * AudioSystemの設定を表すインターフェース。
- */
-export interface AudioAssetHint {
-	streaming?: boolean;
-}
-
-/**
- * ImageAssetの設定を表すインターフェース。
- */
-export interface ImageAssetHint {
-	untainted?: boolean;
-}
+import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
+import { ImageAssetHint } from "../pdi-types/ImageAssetHint";
 
 /**
  * アセット宣言

@@ -1,7 +1,7 @@
-import { AudioAssetLike } from "../interfaces/AudioAssetLike";
-import { ImageAssetLike } from "../interfaces/ImageAssetLike";
-import { ScriptAssetLike } from "../interfaces/ScriptAssetLike";
-import { TextAssetLike } from "../interfaces/TextAssetLike";
+import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
+import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
+import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
+import { TextAssetLike } from "../pdi-types/TextAssetLike";
 import { AssetManager } from "./AssetManager";
 
 /**
