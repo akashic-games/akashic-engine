@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../commons/ExceptionFactory";
+import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
 import { ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";

@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../commons/ExceptionFactory";
+import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 
 /**
  * パスユーティリティ。

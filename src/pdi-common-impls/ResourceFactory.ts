@@ -1,5 +1,4 @@
-import { SurfaceAtlas } from "../commons/SurfaceAtlas";
-import { VideoSystem } from "../commons/VideoSystem";
+import { VideoSystem } from "../domain/VideoSystem";
 import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
 import { FontWeightString } from "../pdi-types/FontWeightString";
 import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
@@ -10,6 +9,7 @@ import { GlyphFactory } from "./GlyphFactory";
 import { ImageAsset } from "./ImageAsset";
 import { ScriptAsset } from "./ScriptAsset";
 import { Surface } from "./Surface";
+import { SurfaceAtlas } from "./SurfaceAtlas";
 import { TextAsset } from "./TextAsset";
 import { VideoAsset } from "./VideoAsset";
 

@@ -1,8 +1,8 @@
-import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
 import { CommonSize } from "../pdi-types/commons";
 import { GlyphLike } from "../pdi-types/GlyphLike";
 import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { SurfaceAtlasLike } from "../pdi-types/SurfaceAtlasLike";
+import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));

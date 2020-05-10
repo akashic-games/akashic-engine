@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../../commons/ExceptionFactory";
+import { ExceptionFactory } from "../../pdi-common-impls/ExceptionFactory";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { E, EParameterObject } from "./E";
 

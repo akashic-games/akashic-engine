@@ -1,5 +1,5 @@
-import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetManager } from "./domain/AssetManager";
+import { ExceptionFactory } from "./pdi-common-impls/ExceptionFactory";
 import { AssetLike } from "./pdi-types/AssetLike";
 import { AssetLoadFailureInfo } from "./pdi-types/AssetLoadFailureInfo";
 import { AssetLoadError } from "./pdi-types/errors";

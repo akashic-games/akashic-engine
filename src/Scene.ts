@@ -1,6 +1,5 @@
 import { Trigger } from "@akashic/trigger";
 import { AssetHolder } from "./AssetHolder";
-import { ExceptionFactory } from "./commons/ExceptionFactory";
 import { AssetAccessor } from "./domain/AssetAccessor";
 import { Camera } from "./domain/Camera";
 import { Camera2D } from "./domain/Camera2D";
@@ -12,6 +11,7 @@ import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore,
 import { Timer } from "./domain/Timer";
 import { TimerIdentifier, TimerManager } from "./domain/TimerManager";
 import { Game } from "./Game";
+import { ExceptionFactory } from "./pdi-common-impls/ExceptionFactory";
 import { AssetLike } from "./pdi-types/AssetLike";
 import { AssetLoadFailureInfo } from "./pdi-types/AssetLoadFailureInfo";
 import { CommonOffset } from "./pdi-types/commons";

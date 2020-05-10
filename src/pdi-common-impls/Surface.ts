@@ -1,7 +1,7 @@
-import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { CommonSize } from "../pdi-types/commons";
 import { RendererLike } from "../pdi-types/RendererLike";
 import { SurfaceLike } from "../pdi-types/SurfaceLike";
+import { ExceptionFactory } from "./ExceptionFactory";
 
 /**
  * 描画領域を表すクラス。

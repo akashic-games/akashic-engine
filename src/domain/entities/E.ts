@@ -1,5 +1,4 @@
 import { ChainTrigger, Trigger } from "@akashic/trigger";
-import { ExceptionFactory } from "../../commons/ExceptionFactory";
 import {
 	MessageEvent,
 	PointDownEventBase,
@@ -10,6 +9,7 @@ import {
 } from "../../domain/Event";
 import { Matrix, PlainMatrix } from "../../domain/Matrix";
 import { Game } from "../../Game";
+import { ExceptionFactory } from "../../pdi-common-impls/ExceptionFactory";
 import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { ShaderProgramLike } from "../../pdi-types/ShaderProgramLike";

@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../commons/ExceptionFactory";
+import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { CommonArea, CommonOffset, CommonSize } from "../pdi-types/commons";
 import { CompositeOperation } from "../pdi-types/CompositeOperation";
 import { CompositeOperationString } from "../pdi-types/CompositeOperationString";

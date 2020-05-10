@@ -1,6 +1,4 @@
-import { SurfaceAtlasSet } from "../commons/SurfaceAtlasSet";
 import { Game } from "../Game";
-import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "../interfaces/SurfaceAtlasSetLike";
 import { FontFamily } from "../pdi-types/FontFamily";
 import { FontWeight } from "../pdi-types/FontWeight";
 import { FontWeightString } from "../pdi-types/FontWeightString";
@@ -10,6 +8,8 @@ import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { getGameInAssetContext } from "./getGameInAssetContext";
+import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
+import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";
 import { Util } from "./Util";
 
 /**

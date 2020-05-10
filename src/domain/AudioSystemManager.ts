@@ -1,4 +1,4 @@
-import { MusicAudioSystem, SoundAudioSystem } from "../implementations/AudioSystem";
+import { MusicAudioSystem, SoundAudioSystem } from "../pdi-common-impls/AudioSystem";
 import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
 import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 

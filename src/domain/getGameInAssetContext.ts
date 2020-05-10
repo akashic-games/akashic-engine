@@ -1,5 +1,5 @@
-import { ExceptionFactory } from "../commons/ExceptionFactory";
 import { Game } from "../Game";
+import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 
 declare const g: { game: Game };
 

@@ -1,5 +1,5 @@
 import * as pl from "@akashic/playlog";
-import { ExceptionFactory } from "../commons/ExceptionFactory";
+import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { CommonOffset } from "../pdi-types/commons";
 import { EventIndex } from "../types/EventIndex";
 import { InternalOperationPluginOperation } from "../types/OperationPluginOperation";
