@@ -1,26 +1,90 @@
 # ChangeLog
 
-## Unreleased Changes
-* Utilにあった関数の配置(場合によっては関数名も変更)を以下のように変更します。
-  * g.Util.createSpriteFromE => g.SpriteFactory.createSpriteFromE
-  * g.Util.createSpriteFromScene => g.SpriteFactory.createSpriteFromScene
-  * g.Util.asSurface => g.SurfaceUtil.asSurface
-  * g.Util.AnimatingHandler => g.SurfaceUtil.AnimatingHandler
-  * g.Util.setupAnimatingHandler=> g.SurfaceUtil.setupAnimatingHandler
-  * g.Util.migrateAnimatingHandler=> g.SurfaceUtil.migrateAnimatingHandler
-  * g.Util.findAssetByPathAsFile => g._findAssetByPathAsFile (Module.tsに配置)
-  * g.Util.findAssetByPathDirectory => g._findAssetByPathDirectory (Module.tsに配置)
-  * g.Util.createMatrixは削除
+## 3.0.0-beta.18
+
+仕様変更
+ * `g.TickGenerationMode` を廃止。代替型 `g.TickGenerationModeString` を追加
+ * `g.LocalTickMode` を廃止。代替型 `g.LocalTickModeString` を追加
+ * `g.SceneState` を廃止。代替型 `g.SceneStateString` を追加
+ * `g.CompositeOperaiton` を非推奨に。代替型 `g.CompositeOperationModeString` を追加
+その他
+ * `g.TextAlign` を非推奨に。代替型 `g.TextAlginString` を追加
+ * `g.FontWeight` を非推奨に。代替型 `g.FontWeightString` を追加
+ * `g.FontFamily` を非推奨に
+ * `g.RandomGenerator#get()` を非推奨に
+ * 内部クラス `SceneAssetHolder` の依存関係を整理。 `AsssetHolder` に改名
+ * リポジトリのディレクトリ構造を変更
+ * eslint のルールを調整
+
+### ゲーム開発者への影響
+
+ * enum `g.TickGenerationMode` を廃止
+    * 利用している場合、代わりに `g.TickGenerationModeString` (`"by-clock" | "manual"`) を利用してください。
+    * `g.Scene#tickGenerationMode` の型が `g.TickGenerationModeString` になります。
+ * enum `g.LocalTickMode` を廃止
+    * 利用している場合、代わりに `g.LocalTickModeString` (`"full-local" | "non-local" | "interpolate-local"`) を利用してください。
+    * `g.Scene#local` の型が `g.LocalTickModeString` になります。
+    * これにより、 `g.Scene#local` が boolean だった当時 (v1 系) のコードとは互換性がなくなります。
+ * enum `g.SceneState` を廃止
+    * `g.Scene#state` の型, `g.Scene#onStateChange` の通知する型が `g.SceneStateString` (`"destroyed" | "standby" | "active" | "deactive" | "before-destroyed"`) になります。
+
+### 非推奨機能の追加
+
+ * `g.RandomGenerator#get()` を非推奨に
+    * `g.RandomGenerator#generate()` を利用してください。
+    * `get(min, max)` は `min` 以上 `max` 以下の整数を、 `generate()` は `0` 以上 `1` 未満の実数を返すので変換が必要です。
+    * `min`, `max` が整数で `min < max` であれば、
+      `g.game.random.get(min, max)` は `min + Math.floor(g.game.random.generate() * (max + 1 - min))` と等価です。
+ * 各種 enum を非推奨に
+    * `g.CompositeOperation`: 代わりに `g.CompositeOperationString` (`"source-over" | "destination-in" | ... | "xor"`) を利用してください
+    * `g.TextAlign`: 代わりに `g.TextAlignString` (`"left" | "center" | "right"`) を利用してください。
+    * `g.FontWeight`: 代わりに `g.FontWeightString` (`"normal" | "bold"`) を利用してください。
+    * `g.FontFamily`: 代わりに `"serif" | "sans-serif" | "monospace"" を利用してください。
+       (`g.FontFamily` を指定できる箇所は、以前から任意のフォント名 (string) を動作保証なしで受け取っていたため、型として `g.FontFamilyString` は追加されません。)
+    * これに伴う互換性維持のため、一部の型が変化します。
+       * `g.E#compositeOperation`: `g.CompositeOperation | g.CompositeOperationString` になります (指定値をそのまま反映)。将来的には `g.CompositeOperationString` に一本化します。
+       * `g.Label#textAlign`: `g.TextAlign | g.TextAlignString` になります (指定値をそのまま反映)。将来的には `g.TextAlignString` に一本化します。
+       * `g.Label#fontWeight`: g.FontWeight | g.FontWeightString になります (指定値をそのまま反映)。将来的には `g.FontWeightString` に一本化します。
+       * `g.DynamicFont#fontFamily` の型は変化しません (`g.FontFamily` を含め、引き続き指定値をそのまま反映)。将来的には `string | string[]` に一本化します。
+
+### エンジン開発者への影響
+
+* `g.AssetLoadErrorType` を非推奨に
+   * `g.ExceptionFactory.createAssertionError()` の引数の一つでしたが、事実上参照されていませんでした。代わりに `null` を渡してください
+   * (そもそも `g.AssetErrorLike` など interface を整理したため、本当はもはや `g.ExceptionFactory` を参照する必要もありません)
+* `g.Renderer#setCompositeOperation()` の引数を変更
+   * enum `g.CompositeOperation` に代えて `g.CompositeOperationString` (`"source-over" | "destination-in" | ... | "xor"`) が渡されるようになります
+   * 対応する変更:
+      *  対応する interface `g.RendererLike` も同様に変わります。(利用されていないはずです)
+* `g.ResourceFactory#createGlyphFactory()` の引数型を変更
+   * 第一引数 `fontFamily` の型から `g.FontFamily` がなくなり `string | string[]` に単純化されます
+      * ただしこの string において `"serif" | "sans-serif" | "monospace"` はサポートされる必要があります
+   * 第八引数 `fontWeight` の型が `g.FontWeightString` (`"normal" | "bold"`) に変わります
+   * 対応する変更:
+      * `g.GlyphFactory` のコンストラクタ引数が同様に変更されます
+      * プロパティ `g.GlyphFactory#fontFamily`, `fontWeight` が同様に変更されます
+      *  対応する interface `g.GlyphFactoryLike` も同様に変わります。(利用されていないはずです)
+
+## 3.0.0-beta.1 - 17 (一部)
 
 機能追加
- * `g.Game#popScene()`で popする回数をオプションで指定できるようにした
+ * `g.Game#popScene()`で popする数を指定できるように
  * `g.E#localToGlobal()` と `g.E#globalToLocal()` を追加
  * game.json の`defaultLoadingScene` に `compact` を追加
-  * `"compact"` を指定した時、ローディング画面が以下のように表示されます。
-    * 背景が透過になる
-    * プログレスバーが画面中央ではなく右下の方に小さく表示される
+    * `"compact"` を指定した時、ローディング画面が以下のように表示されます。
+       * 背景が透過になる
+       * プログレスバーが画面中央ではなく右下の方に小さく表示される
+
+### ゲーム開発者への影響
+
+ * `g.Util` の一部関数を移動しました。利用している場合、追従が必要です。
+    * `createSpriteFromE()`: `g.SpriteFactory.createSpriteFromE()` を利用してください。
+    * `createSpriteFromScene()`: `g.SpriteFactory.createSpriteFromScene()` を利用してください。
+    * `asSurface()`: `g.SurfaceUtil.asSurface()` を利用してください。
+    * `createMatrix()`: 廃止されました。 `new g.PlainMatrix()` を利用してください。
 
 ## 2.5.4
+
 機能追加
  * `g.Object2D#anchorX` と `g.Object2D#anchorY` を追加
 
@@ -36,10 +100,11 @@
  * `g.Font#measureText()` を追加
 
 ### ゲーム開発者への影響
+
  * `g.Font` がインタフェースから抽象クラスに変更されました。
-  * `g.Font` の実装クラスが存在する場合、 `g.Font` を継承する必要があります。
+    * `g.Font` の実装クラスが存在する場合、 `g.Font` を継承する必要があります。
  * `g.Font#measureText()` が追加されました。
-  * `g.Font` の実装クラスが存在する場合、 追加されたメソッドに対する処理を実装する必要があります。
+    * `g.Font` の実装クラスが存在する場合、 追加されたメソッドに対する処理を実装する必要があります。
 
 ## 2.5.2
 
@@ -64,14 +129,17 @@
     * ゲーム開発者は、コンテンツ内で使用している `Math.random()` をこのメソッドに適切に置き換えることで、ロジックに変更を加えずにAkashic対応することができます。
 
 ## 2.5.0
+
 その他変更
  * `g.game.getCurrentTime()` の戻り値が整数になるよう変更
 
 ## 2.4.15
+
 その他変更
  * `g.E` を継承したクラスで無限ループが発生しないよう変更
 
 ## 2.4.14
+
  * `ImageAsset#hint: ImageAssetHint` `ImageAsset#initialize()` を追加
 
 ## 2.4.13
@@ -80,6 +148,7 @@
  * 早送り中は効果音(g.SoundAudioSystem)をいっさい鳴らさないように修正。
 
 ## 2.4.12
+
 * 内部で使用しているテストフレームワークの変更
 
 ## 2.4.11
@@ -209,10 +278,12 @@
 * ドキュメント生成方法の変更
 
 ## 2.3.4
+
 不具合修正
 * `g.Renderer#draw()` で `save()` `restore()` するように
 
 ### ゲーム開発者への影響
+
 * `g.Renderer#draw()` で `save()` `restore()` するように
   * 長時間ゲームを続行した時に描画位置がずれることがある問題を修正します。
 
@@ -587,6 +658,7 @@
  * TypeScript2.1.6でコンパイルするように修正
 
 ### ゲーム開発者への影響
+
  * `g.DynamicFont` のコンストラクタ引数に `DynamicFontParameterObject` が渡せるように
  * `g.DynamicFont` でフォントウェイトが指定可能に
     * ゲーム開発者は `g.DynamicFontParameterObject#fontWeight` を指定することでフォントウェイトを変更することができます。
@@ -595,20 +667,24 @@
     * ゲーム開発者は2.1.6以降のバージョンのTypeScriptを利用する必要があります。
 
 ### 非推奨機能の変更
+
  * `g.DynamicFont` の既存のコンストラクタを非推奨に。
     * 利用中のユーザは `DynamicFontParameterObject` を渡すようにしてください。
  * `g.BitmapFont` の既存のコンストラクタを非推奨に。
     * 利用中のユーザは `BitmapFontParameterObject` を渡すようにしてください。
 
 ### 内部実装の変更
+
  * `g.ResourceFactory#createGlyphFactory()` の引数が追加
     * `g.ResourceFactory` の実装者は引数に応じた `g.GlyphFactory` の実装を返す必要があります。追加される引数は順に次のとおりです。
         * フォントウェイト(`fontWeight: FontWeight`)
 
 ### ゲーム開発者への影響
+
 なし
 
 ### エンジン開発者への影響
+
 * `GameConfiguration` の `globalScripts` を `asset` に変換する責務をエンジンユーザへ移動しました。
   * `globalScripts` を 通常のアッセット定義に変換したうえで `Game` オブジェクトを作成してください。
 * `AssetConfiguration` に `virtualPath?: string` が追加されました。
