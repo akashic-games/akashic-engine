@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.19
+
+不具合修正
+ * 3.0.0-beta.18 で `index.runtime.d.ts` が壊れていた問題を修正
+
 ## 3.0.0-beta.18
 
 仕様変更
