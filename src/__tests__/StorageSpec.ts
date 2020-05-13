@@ -63,7 +63,7 @@ describe("test Storage", () => {
 	it("_registerWrite", () => {
 		const storage = new Storage();
 		let writeCalled = false;
-		const writeMethod = function(_k: StorageKey, _v: StorageValue, _o: StorageWriteOption): void {
+		const writeMethod = function(): void {
 			writeCalled = true;
 			expect(this).toBe(storage);
 		};
@@ -283,7 +283,7 @@ describe("test Storage", () => {
 		];
 		const storage = new Storage();
 		const loader = storage._createLoader(keys);
-		storage._registerLoad((_k: StorageKey[], _l: StorageLoader) => {
+		storage._registerLoad(() => {
 			if (goError) {
 				loader._onError(undefined);
 			} else {

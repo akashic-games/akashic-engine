@@ -507,7 +507,6 @@ describe("test Scene", () => {
 				userId: "456"
 			}
 		];
-		const values = [{ data: "apple" }];
 		const scene = new Scene({
 			game: game,
 			storageKeys: keys,
@@ -515,7 +514,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (..._args: any[]): void => {
+		let notifyStorageLoaded = (): void => {
 			fail("storage load not started");
 		};
 		game.storage._registerLoad((_k, l) => {
@@ -542,7 +541,7 @@ describe("test Scene", () => {
 
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			ready = true;
-			notifyStorageLoaded(values); // (d)
+			notifyStorageLoaded(); // (d)
 		}, 0);
 	});
 
@@ -562,7 +561,6 @@ describe("test Scene", () => {
 				userId: "456"
 			}
 		];
-		const values = [[{ data: "apple" }]];
 		const scene = new Scene({
 			game: game,
 			storageKeys: keys,
@@ -570,7 +568,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (..._args: any[]): void => {
+		let notifyStorageLoaded = (): void => {
 			fail("storage load not started");
 		};
 		game.storage._registerLoad((_k, l) => {
@@ -599,7 +597,7 @@ describe("test Scene", () => {
 		setTimeout(() => {
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			ready = true;
-			notifyStorageLoaded(values); // (d)
+			notifyStorageLoaded(); // (d)
 		}, 0);
 	});
 
@@ -619,7 +617,6 @@ describe("test Scene", () => {
 				userId: "456"
 			}
 		];
-		const values = [{ data: "apple" }];
 		const scene = new Scene({
 			game: game,
 			storageKeys: keys,
@@ -627,7 +624,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (..._args: any[]): void => {
+		let notifyStorageLoaded = (): void => {
 			fail("storage load not started");
 		};
 		game.storage._registerLoad((_k, l) => {
@@ -650,7 +647,7 @@ describe("test Scene", () => {
 		expect(scene._loaded).toBe(true);
 		expect(scene._prefetchRequested).toBe(true);
 
-		notifyStorageLoaded(values); // (d)
+		notifyStorageLoaded(); // (d)
 
 		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
 		ready = true;
@@ -837,7 +834,7 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene.onAssetLoad.add(_asset => {
+		scene.onAssetLoad.add(() => {
 			fail("should not be loaded");
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {
@@ -875,7 +872,7 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene.onAssetLoad.add(_asset => {
+		scene.onAssetLoad.add(() => {
 			fail("should not be loaded");
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {

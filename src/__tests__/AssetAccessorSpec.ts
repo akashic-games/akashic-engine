@@ -77,7 +77,7 @@ describe("test AssetAccessor", () => {
 				if (++count < assetIds.length) return;
 				callback(accessor);
 			},
-			_onAssetError: (_a, _err, _mgr) => {
+			_onAssetError: () => {
 				fail("asset load error: should not fail");
 			}
 		});

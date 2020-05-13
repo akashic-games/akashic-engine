@@ -290,7 +290,7 @@ describe("test AssetManager", () => {
 				expect(a.destroyed()).toBe(true);
 				done();
 			},
-			_onAssetError: (_a, _err, _mgr) => {
+			_onAssetError: () => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -308,7 +308,7 @@ describe("test AssetManager", () => {
 				expect(a.hint).toEqual({ untainted: true });
 				done();
 			},
-			_onAssetError: (_a, _err, _mgr) => {
+			_onAssetError: () => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -367,7 +367,7 @@ describe("test AssetManager", () => {
 					done();
 				}
 			},
-			_onAssetError: (_a, _err, _mgr) => {
+			_onAssetError: () => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -377,7 +377,7 @@ describe("test AssetManager", () => {
 			_onAssetLoad: _a => {
 				manager.requestAssets(innerAssets, handlerInner);
 			},
-			_onAssetError: (_a, _err, _mgr) => {
+			_onAssetError: () => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -682,7 +682,7 @@ describe("test AssetManager", () => {
 					if (++count < assetIds.length) return;
 					callback({ game, manager });
 				},
-				_onAssetError: (_a, _err, _mgr) => {
+				_onAssetError: () => {
 					fail("asset load error: should not fail");
 				}
 			});
