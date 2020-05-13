@@ -374,7 +374,7 @@ describe("test AssetManager", () => {
 		};
 
 		const handlerOuter: AssetManagerLoadHandler = {
-			_onAssetLoad: _a => {
+			_onAssetLoad: () => {
 				manager.requestAssets(innerAssets, handlerInner);
 			},
 			_onAssetError: () => {
@@ -421,7 +421,7 @@ describe("test AssetManager", () => {
 		const failureCounts: { [id: string]: number } = {};
 		let gaveUpCount = 0;
 		const handler: AssetManagerLoadHandler = {
-			_onAssetLoad: _a => {
+			_onAssetLoad: () => {
 				fail("should not succeed to load");
 				done();
 			},
@@ -461,7 +461,7 @@ describe("test AssetManager", () => {
 		const failureCounts: { [id: string]: number } = {};
 		let gaveUpCount = 0;
 		const handler: AssetManagerLoadHandler = {
-			_onAssetLoad: _a => {
+			_onAssetLoad: () => {
 				fail("should not succeed to load");
 				done();
 			},

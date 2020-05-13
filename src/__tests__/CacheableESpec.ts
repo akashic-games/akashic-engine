@@ -48,7 +48,7 @@ describe("test CacheableE", () => {
 		const cam2 = new Camera2D({});
 
 		let called = false;
-		ce.renderCache = (_r, _c) => {
+		ce.renderCache = () => {
 			called = true;
 		};
 

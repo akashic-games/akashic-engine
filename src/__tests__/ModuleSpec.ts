@@ -827,7 +827,7 @@ describe("test Module", () => {
 			_onAssetError: e => {
 				throw e;
 			},
-			_onAssetLoad: _a => {
+			_onAssetLoad: () => {
 				try {
 					expect(manager._findAssetByPathAsDirectory("foo", liveAssetPathTable)).toBe(liveAssetPathTable["foo/root.js"]);
 					expect(manager._findAssetByPathAsDirectory("bar", liveAssetPathTable)).toBe(liveAssetPathTable["bar/index.js"]);

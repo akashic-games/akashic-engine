@@ -372,7 +372,7 @@ describe("test Game", () => {
 				assetIds: ["foo"],
 				name: "scene1"
 			});
-			scene.onAssetLoad.add(_a => {
+			scene.onAssetLoad.add(() => {
 				logs.push("SceneAssetLoaded");
 			});
 			scene.onLoad.add(() => {
@@ -394,7 +394,7 @@ describe("test Game", () => {
 				}
 
 				const scene2 = new MockScene2({ game: game, assetIds: ["foo"] });
-				scene2.onAssetLoad.add(_a => {
+				scene2.onAssetLoad.add(() => {
 					logs.push("Scene2AssetLoaded");
 				});
 				scene2.onLoad.add(() => {
@@ -470,7 +470,7 @@ describe("test Game", () => {
 			}
 
 			const scene = new MockScene1({ game: game, assetIds: ["zoo"] });
-			scene.onAssetLoad.add(_a => {
+			scene.onAssetLoad.add(() => {
 				logs.push("SceneAssetLoaded");
 			});
 			scene.onLoad.add(() => {
@@ -494,7 +494,7 @@ describe("test Game", () => {
 				}
 
 				const scene2 = new MockScene2({ game: game, assetIds: ["zoo"] });
-				scene2.onAssetLoad.add(_a => {
+				scene2.onAssetLoad.add(() => {
 					logs.push("Scene2AssetLoaded");
 				});
 				scene2.onLoad.add(() => {
