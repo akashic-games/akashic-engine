@@ -215,7 +215,7 @@ describe("test Scene", () => {
 			name: "SceneLoadsStorage"
 		});
 
-		game.storage._registerLoad((keys, loader) => {
+		game.storage._registerLoad((_keys, loader) => {
 			loader._onLoaded(values);
 		});
 		scene._onReady.add(() => {
@@ -239,7 +239,7 @@ describe("test Scene", () => {
 
 		const scene = new Scene({ game: game, storageKeys: keys });
 
-		game.storage._registerLoad((keys, loader) => {
+		game.storage._registerLoad((_keys, loader) => {
 			loader._onLoaded(values);
 		});
 		scene._onReady.add(() => {
@@ -268,7 +268,7 @@ describe("test Scene", () => {
 			storageValuesSerialization: "myserialization1"
 		});
 
-		game.storage._registerLoad((keys, loader) => {
+		game.storage._registerLoad((_keys, loader) => {
 			if (!loader._valueStoreSerialization) {
 				loader._onLoaded(values);
 			} else {
@@ -301,7 +301,7 @@ describe("test Scene", () => {
 			assetIds: ["foo", "baa"]
 		});
 
-		game.storage._registerLoad((k, l) => {
+		game.storage._registerLoad((_k, l) => {
 			l._onLoaded(values);
 		});
 
@@ -340,8 +340,10 @@ describe("test Scene", () => {
 
 		setTimeout(() => {
 			scene.prefetch();
-			expect(scene._prefetchRequested).toBe(false); // _load() 後の呼び出しでは prefetch() の呼び出しを無視する
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2); // _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
+			// _load() 後の呼び出しでは prefetch() の呼び出しを無視する
+			expect(scene._prefetchRequested).toBe(false);
+			// _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
+			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
 			game.resourceFactory.flushDelayedAssets();
 		}, 0);
 	});
@@ -513,10 +515,10 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (...args: any[]) => {
+		let notifyStorageLoaded = (..._args: any[]): void => {
 			fail("storage load not started");
 		};
-		game.storage._registerLoad((k, l) => {
+		game.storage._registerLoad((_k, l) => {
 			notifyStorageLoaded = l._onLoaded.bind(l);
 		});
 
@@ -568,10 +570,10 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (...args: any[]) => {
+		let notifyStorageLoaded = (..._args: any[]): void => {
 			fail("storage load not started");
 		};
-		game.storage._registerLoad((k, l) => {
+		game.storage._registerLoad((_k, l) => {
 			notifyStorageLoaded = l._onLoaded.bind(l);
 		});
 		let ready = false;
@@ -625,10 +627,10 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (...args: any[]) => {
+		let notifyStorageLoaded = (..._args: any[]): void => {
 			fail("storage load not started");
 		};
-		game.storage._registerLoad((k, l) => {
+		game.storage._registerLoad((_k, l) => {
 			notifyStorageLoaded = l._onLoaded.bind(l);
 		});
 
@@ -835,7 +837,7 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene.onAssetLoad.add(asset => {
+		scene.onAssetLoad.add(_asset => {
 			fail("should not be loaded");
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {
@@ -873,7 +875,7 @@ describe("test Scene", () => {
 		});
 
 		let failureCount = 0;
-		scene.onAssetLoad.add(asset => {
+		scene.onAssetLoad.add(_asset => {
 			fail("should not be loaded");
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {
@@ -936,19 +938,19 @@ describe("test Scene", () => {
 	it("state", done => {
 		const scene = new Scene({ game: game });
 		let raisedEvent = false;
-		const stateChangeHandler = () => {
+		const stateChangeHandler = (): void => {
 			raisedEvent = true;
 		};
 		scene.onStateChange.add(stateChangeHandler);
 
-		const sceneLoaded = () => {
+		const sceneLoaded = (): void => {
 			expect(scene.state).toBe("active");
 			expect(raisedEvent).toBe(true);
 			raisedEvent = false;
 
 			nextStep();
 		};
-		const scene2Loaded = () => {
+		const scene2Loaded = (): void => {
 			expect(scene.state).toBe("deactive");
 			expect(raisedEvent).toBe(true);
 			raisedEvent = false;
@@ -986,7 +988,7 @@ describe("test Scene", () => {
 			}
 		];
 		let stepIndex = -1;
-		const nextStep = () => {
+		const nextStep = (): void => {
 			setTimeout(() => {
 				steps[++stepIndex]();
 				game._flushPostTickTasks();
@@ -1060,7 +1062,7 @@ describe("test Scene", () => {
 			}
 		];
 		let stepIndex = -1;
-		const nextStep = () => {
+		const nextStep = (): void => {
 			setTimeout(() => {
 				steps[++stepIndex]();
 				game._flushPostTickTasks();
@@ -1162,7 +1164,7 @@ describe("test Scene", () => {
 		let success1 = false;
 
 		expect(scene1._timer._timers.length).toBe(0);
-		const holder1 = scene1.setTimeout(() => {
+		scene1.setTimeout(() => {
 			if (!state1) fail("fail1");
 			success1 = true;
 		}, 100);
@@ -1304,7 +1306,6 @@ describe("test Scene", () => {
 	});
 
 	it("isCurrentScene/gotoScene/end", done => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
 		const game = new Game({ width: 320, height: 320, main: "" });
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -1338,7 +1339,6 @@ describe("test Scene", () => {
 	});
 
 	it("gotoScene - AssertionError", done => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
 		const game = new Game({ width: 320, height: 320, main: "" });
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -1353,7 +1353,6 @@ describe("test Scene", () => {
 	});
 
 	it("end - AssertionError", done => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
 		const game = new Game({ width: 320, height: 320, main: "" });
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある

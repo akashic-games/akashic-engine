@@ -290,7 +290,7 @@ describe("test AssetManager", () => {
 				expect(a.destroyed()).toBe(true);
 				done();
 			},
-			_onAssetError: (a, err, mgr) => {
+			_onAssetError: (_a, _err, _mgr) => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -308,7 +308,7 @@ describe("test AssetManager", () => {
 				expect(a.hint).toEqual({ untainted: true });
 				done();
 			},
-			_onAssetError: (a, err, mgr) => {
+			_onAssetError: (_a, _err, _mgr) => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -367,17 +367,17 @@ describe("test AssetManager", () => {
 					done();
 				}
 			},
-			_onAssetError: (a, err, mgr) => {
+			_onAssetError: (_a, _err, _mgr) => {
 				fail("asset load error: should not fail");
 				done();
 			}
 		};
 
 		const handlerOuter: AssetManagerLoadHandler = {
-			_onAssetLoad: a => {
+			_onAssetLoad: _a => {
 				manager.requestAssets(innerAssets, handlerInner);
 			},
-			_onAssetError: (a, err, mgr) => {
+			_onAssetError: (_a, _err, _mgr) => {
 				fail("asset load error: should not fail");
 				done();
 			}
@@ -401,7 +401,7 @@ describe("test AssetManager", () => {
 					done();
 				}
 			},
-			_onAssetError: (a, err, callback) => {
+			_onAssetError: (a, _err, callback) => {
 				if (!failureCounts.hasOwnProperty(a.id)) failureCounts[a.id] = 0;
 				++failureCounts[a.id];
 				callback(a);
@@ -421,7 +421,7 @@ describe("test AssetManager", () => {
 		const failureCounts: { [id: string]: number } = {};
 		let gaveUpCount = 0;
 		const handler: AssetManagerLoadHandler = {
-			_onAssetLoad: a => {
+			_onAssetLoad: _a => {
 				fail("should not succeed to load");
 				done();
 			},
@@ -461,7 +461,7 @@ describe("test AssetManager", () => {
 		const failureCounts: { [id: string]: number } = {};
 		let gaveUpCount = 0;
 		const handler: AssetManagerLoadHandler = {
-			_onAssetLoad: a => {
+			_onAssetLoad: _a => {
 				fail("should not succeed to load");
 				done();
 			},
@@ -673,7 +673,7 @@ describe("test AssetManager", () => {
 			assetIds: string[],
 			fail: (arg: any) => void,
 			callback: (arg: { manager: AssetManager; game: Game }) => void
-		) {
+		): void {
 			const game = new Game(gameConfiguration);
 			const manager = game._assetManager;
 			let count = 0;
@@ -682,7 +682,7 @@ describe("test AssetManager", () => {
 					if (++count < assetIds.length) return;
 					callback({ game, manager });
 				},
-				_onAssetError: (a, err, mgr) => {
+				_onAssetError: (_a, _err, _mgr) => {
 					fail("asset load error: should not fail");
 				}
 			});

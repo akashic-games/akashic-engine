@@ -159,15 +159,15 @@ export class Renderer extends g.Renderer {
 		});
 	}
 
-	setTransform(matrix: number[]): void {
+	setTransform(_matrix: number[]): void {
 		throw new Error("not implemented");
 	}
 
-	setOpacity(opacity: number): void {
+	setOpacity(_opacity: number): void {
 		throw new Error("not implemented");
 	}
 
-	setShaderProgram(shaderProgram: g.ShaderProgram): void {
+	setShaderProgram(_shaderProgram: g.ShaderProgram): void {
 		// do nothing
 	}
 
@@ -179,7 +179,7 @@ export class Renderer extends g.Renderer {
 		return null;
 	}
 
-	_putImageData(imageData: g.ImageData): void {
+	_putImageData(_imageData: g.ImageData): void {
 		// do noting.
 	}
 }
@@ -290,12 +290,12 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 		}
 	}
 
-	_onAssetError(asset: g.Asset, error: g.AssetLoadError): void {
+	_onAssetError(_asset: g.Asset, _error: g.AssetLoadError): void {
 		this._isError = true;
 		this._loadingResult = arguments;
 		this._flushDelayed();
 	}
-	_onAssetLoad(asset: g.Asset): void {
+	_onAssetLoad(_asset: g.Asset): void {
 		this._isError = false;
 		this._loadingResult = arguments;
 		this._flushDelayed();
@@ -351,8 +351,8 @@ export class TextAsset extends g.TextAsset {
 	_load(loader: g.AssetLoadHandler): void {
 		if (this._failureController.tryLoad(this, loader)) {
 			setTimeout(() => {
-				if ((<ResourceFactory>this.game.resourceFactory).scriptContents.hasOwnProperty(this.path)) {
-					this.data = (<ResourceFactory>this.game.resourceFactory).scriptContents[this.path];
+				if ((<ResourceFactory> this.game.resourceFactory).scriptContents.hasOwnProperty(this.path)) {
+					this.data = (<ResourceFactory> this.game.resourceFactory).scriptContents[this.path];
 				} else {
 					this.data = "";
 				}
@@ -381,7 +381,7 @@ export class ScriptAsset extends g.ScriptAsset {
 	}
 
 	execute(env: g.ScriptAssetRuntimeValue): any {
-		if (!(<ResourceFactory>this.game.resourceFactory).scriptContents.hasOwnProperty(env.module.filename)) {
+		if (!(<ResourceFactory> this.game.resourceFactory).scriptContents.hasOwnProperty(env.module.filename)) {
 			// 特にスクリプトの内容指定がないケース:
 			// ScriptAssetは任意の値を返してよいが、シーンを記述したスクリプトは
 			// シーンを返す関数を返すことを期待するのでここでは関数を返しておく
@@ -391,7 +391,7 @@ export class ScriptAsset extends g.ScriptAsset {
 		} else {
 			const prefix = "(function(exports, require, module, __filename, __dirname) {";
 			const suffix = "})(g.module.exports, g.module.require, g.module, g.filename, g.dirname);";
-			const content = (<ResourceFactory>this.game.resourceFactory).scriptContents[env.module.filename];
+			const content = (<ResourceFactory> this.game.resourceFactory).scriptContents[env.module.filename];
 			const f = new Function("g", prefix + content + suffix);
 			f(env);
 			return env.module.exports;
@@ -449,7 +449,7 @@ export class GlyphFactory extends g.GlyphFactory {
 	) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
-	create(code: number): g.Glyph {
+	create(_code: number): g.Glyph {
 		return <g.Glyph>undefined;
 	}
 }
@@ -554,13 +554,13 @@ export class ResourceFactory extends g.ResourceFactory {
 		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
 	createVideoAsset(
-		id: string,
-		assetPath: string,
-		width: number,
-		height: number,
-		system: g.VideoSystem,
-		loop: boolean,
-		useRealSize: boolean
+		_id: string,
+		_assetPath: string,
+		_width: number,
+		_height: number,
+		_system: g.VideoSystem,
+		_loop: boolean,
+		_useRealSize: boolean
 	): g.VideoAsset {
 		return <g.VideoAsset>undefined;
 	}
@@ -671,7 +671,7 @@ export enum EntityStateFlags {
 }
 
 export class CacheableE extends g.CacheableE {
-	renderCache(renderer: Renderer, camera: g.Camera2D): void {
+	renderCache(_renderer: Renderer, _camera: g.Camera2D): void {
 		// do nothing
 	}
 }

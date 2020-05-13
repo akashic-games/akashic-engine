@@ -1,4 +1,3 @@
-import { Trigger } from "@akashic/trigger";
 import { customMatchers, Surface } from "./helpers";
 
 expect.extend(customMatchers);

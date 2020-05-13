@@ -13,7 +13,7 @@ describe("test Trigger", () => {
 
 	it("addOnce", () => {
 		let counter = 0;
-		const mockHandle = () => {
+		const mockHandle = (): boolean => {
 			counter++;
 			return true;
 		};
@@ -25,7 +25,7 @@ describe("test Trigger", () => {
 
 	it("remove", () => {
 		let counter = 0;
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			counter++;
 		};
 		trigger.add(mockHandle);
@@ -38,7 +38,7 @@ describe("test Trigger", () => {
 
 	it("add", () => {
 		const owner = {};
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			/* do nothing */
 		};
 		trigger.add({ owner: owner, func: mockHandle, name: "name" });
@@ -75,13 +75,13 @@ describe("test Trigger", () => {
 	});
 
 	it("contains", () => {
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			/* do nothing */
 		};
-		const mockHandle2 = () => {
+		const mockHandle2 = (): void => {
 			/* do nothing */
 		};
-		const mockHandle3 = () => {
+		const mockHandle3 = (): void => {
 			/* do nothing */
 		};
 
@@ -101,13 +101,13 @@ describe("test Trigger", () => {
 	});
 
 	it("remove", () => {
-		const mockHandle1 = () => {
+		const mockHandle1 = (): void => {
 			/* do nothing */
 		};
-		const mockHandle2 = () => {
+		const mockHandle2 = (): void => {
 			/* do nothing */
 		};
-		const mockHandle3 = () => {
+		const mockHandle3 = (): void => {
 			/* do nothing */
 		};
 		trigger.add(mockHandle1);
@@ -123,13 +123,13 @@ describe("test Trigger", () => {
 	});
 
 	it("removeAll by owner", () => {
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			/* do nothing */
 		};
-		const mockHandle2 = () => {
+		const mockHandle2 = (): void => {
 			/* do nothing */
 		};
-		const mockHandle3 = () => {
+		const mockHandle3 = (): void => {
 			/* do nothing */
 		};
 
@@ -160,7 +160,7 @@ describe("test Trigger", () => {
 
 	it("removeAll by name", () => {
 		const owner = {};
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			/* do nothing */
 		};
 		trigger.add({ owner: owner, func: mockHandle, name: "name1" });
@@ -179,13 +179,13 @@ describe("test Trigger", () => {
 	});
 
 	it("removeAll by handler", () => {
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			/* do nothing */
 		};
-		const mockHandle2 = () => {
+		const mockHandle2 = (): void => {
 			/* do nothing */
 		};
-		const mockHandle3 = () => {
+		const mockHandle3 = (): void => {
 			/* do nothing */
 		};
 
@@ -244,7 +244,7 @@ describe("test Trigger", () => {
 
 	it("can stop fire, if handler was destroyed", () => {
 		let counter = 0;
-		const mockHandle = () => {
+		const mockHandle = (): void => {
 			counter++;
 		};
 		trigger.add(mockHandle);

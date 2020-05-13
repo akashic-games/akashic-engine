@@ -65,7 +65,7 @@ describe("test AssetAccessor", () => {
 		"id-assets/chara01/image.png"
 	];
 
-	function setupAssetAccessor(assetIds: string[], fail: (arg: any) => void, callback: (accessor: AssetAccessor) => void) {
+	function setupAssetAccessor(assetIds: string[], fail: (arg: any) => void, callback: (accessor: AssetAccessor) => void): void {
 		const game = new Game(gameConfiguration);
 		(game.resourceFactory as ResourceFactory).scriptContents["assets/stage01/map.json"] = sampleJSONFileContent;
 
@@ -77,7 +77,7 @@ describe("test AssetAccessor", () => {
 				if (++count < assetIds.length) return;
 				callback(accessor);
 			},
-			_onAssetError: (a, err, mgr) => {
+			_onAssetError: (_a, _err, _mgr) => {
 				fail("asset load error: should not fail");
 			}
 		});
