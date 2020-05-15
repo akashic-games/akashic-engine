@@ -514,7 +514,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (): void => {
+		let notifyStorageLoaded = (_value: any): void => {
 			fail("storage load not started");
 		};
 		game.storage._registerLoad((_k, l) => {
@@ -541,7 +541,7 @@ describe("test Scene", () => {
 
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			ready = true;
-			notifyStorageLoaded(); // (d)
+			notifyStorageLoaded(["dummy"]); // (d)
 		}, 0);
 	});
 
@@ -568,7 +568,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (): void => {
+		let notifyStorageLoaded = (_values: any[]): void => {
 			fail("storage load not started");
 		};
 		game.storage._registerLoad((_k, l) => {
@@ -597,7 +597,7 @@ describe("test Scene", () => {
 		setTimeout(() => {
 			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
 			ready = true;
-			notifyStorageLoaded(); // (d)
+			notifyStorageLoaded(["dummy"]); // (d)
 		}, 0);
 	});
 
@@ -624,7 +624,7 @@ describe("test Scene", () => {
 		});
 		game.resourceFactory.createsDelayedAsset = true;
 
-		let notifyStorageLoaded = (): void => {
+		let notifyStorageLoaded = (_values: any): void => {
 			fail("storage load not started");
 		};
 		game.storage._registerLoad((_k, l) => {
@@ -647,7 +647,7 @@ describe("test Scene", () => {
 		expect(scene._loaded).toBe(true);
 		expect(scene._prefetchRequested).toBe(true);
 
-		notifyStorageLoaded(); // (d)
+		notifyStorageLoaded(["dummy"]); // (d)
 
 		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
 		ready = true;
@@ -1014,7 +1014,7 @@ describe("test Scene", () => {
 			["S2", "destroyed"]
 		];
 		const actual: [string, string][] = [];
-		function stateChangeHandler(state: SceneStateString): void {
+		function stateChangeHandler(this: any, state: SceneStateString): void {
 			actual.push([this._testName, state]);
 		}
 		function makeScene(name: string): Scene {
@@ -1189,7 +1189,7 @@ describe("test Scene", () => {
 		const owner = {};
 		let callCount = 0;
 		scene.setTimeout(
-			function(): void {
+			function(this: any): void {
 				expect(this).toBe(owner);
 				callCount++;
 			},
@@ -1276,7 +1276,7 @@ describe("test Scene", () => {
 		const owner = {};
 		let callCount = 0;
 		scene.setInterval(
-			function(): void {
+			function(this: any): void {
 				expect(this).toBe(owner);
 				callCount++;
 			},

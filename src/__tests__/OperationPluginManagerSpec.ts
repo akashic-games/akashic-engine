@@ -64,7 +64,7 @@ describe("test OperationPluginManager", () => {
 				case "/script/op-plugin-unsupported.js":
 					return TestOperationPluginUnsupported;
 				default:
-					return require_original.call(manager, game, path, currentModule);
+					return require_original.call(manager, path, currentModule);
 			}
 		};
 	});
