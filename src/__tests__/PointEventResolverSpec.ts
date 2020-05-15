@@ -1,9 +1,9 @@
 import * as pl from "@akashic/playlog";
-import { skeletonRuntime } from "./helpers";
+import { FilledRect } from "../engine/entities/FilledRect";
+import { EventPriority } from "../engine/EventPriority";
 import { PointEventResolver } from "../engine/PointEventResolver";
 import { PlatformPointType } from "../pdi-types/PlatformPointEvent";
-import { EventPriority } from "../engine/EventPriority";
-import { FilledRect } from "../engine/entities/FilledRect";
+import { skeletonRuntime } from "./helpers";
 
 describe("PointEventResolver", () => {
 	it("can be instantiated", () => {

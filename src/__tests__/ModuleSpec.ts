@@ -15,7 +15,7 @@ describe("test Module", () => {
 		return objectMap(gameConfiguration, (k: any, v: any): any => {
 			switch (k) {
 				case "assets":
-					return objectMap(v, (k: any, asset: any) => {
+					return objectMap(v, (_k: any, asset: any) => {
 						return objectMap(asset, (k: any, v: any) => (k === "path" ? pathConverter(v) : v));
 					});
 				case "main":
@@ -201,10 +201,10 @@ describe("test Module", () => {
 		"/cascaded/script.js": "module.exports = { me: 'script-cascaded', thisModule: module }",
 		"/node_modules/noPackageJson/index.js": "module.exports = { me: 'noPackageJson-index', thisModule: module };",
 		"/node_modules/noDefaultIndex/root.js": "exports.me = 'noDefaultIndex-root'; exports.thisModule = module; ",
-		"/node_modules/noDefaultIndex/package.json": '{ "main": "root.js" }',
-		"/node_modules/wrongPackageJsonMain/package.json": '{ "main": "__not_exists__.js" }',
+		"/node_modules/noDefaultIndex/package.json": "{ \"main\": \"root.js\" }",
+		"/node_modules/wrongPackageJsonMain/package.json": "{ \"main\": \"__not_exists__.js\" }",
 		"/node_modules/wrongPackageJsonMain/index.js": "module.exports = { me: 'wrongPackageJsonMain-index', thisModule: module };",
-		"/node_modules/wrongPackageJsonMain/aJsonFile.json": '{ "aJsonFile": "aValue" }',
+		"/node_modules/wrongPackageJsonMain/aJsonFile.json": "{ 'aJsonFile': 'aValue' }",
 		"/node_modules/noPackageJsonModule/real_hoge.js": "module.exports = { me: 'noPackageJsonModule', thisModule: module }",
 		"/node_modules/noPackageJsonModule/real_fuga.js": "module.exports = { me: 'dummy'}",
 
@@ -821,13 +821,13 @@ describe("test Module", () => {
 		};
 		const manager = game._moduleManager;
 		game.resourceFactory.scriptContents = {
-			"foo/package.json": '{ "main": "root.js" }'
+			"foo/package.json": "{ \"main\": \"root.js\" }"
 		};
 		pkgJsonAsset._load({
 			_onAssetError: e => {
 				throw e;
 			},
-			_onAssetLoad: a => {
+			_onAssetLoad: () => {
 				try {
 					expect(manager._findAssetByPathAsDirectory("foo", liveAssetPathTable)).toBe(liveAssetPathTable["foo/root.js"]);
 					expect(manager._findAssetByPathAsDirectory("bar", liveAssetPathTable)).toBe(liveAssetPathTable["bar/index.js"]);

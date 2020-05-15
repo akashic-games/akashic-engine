@@ -1,4 +1,4 @@
-import { DynamicFont, Game, SurfaceAtlasSet } from "..";
+import { DynamicFont, SurfaceAtlasSet } from "..";
 import { skeletonRuntime } from "./helpers";
 
 describe("test DynamicFont", () => {

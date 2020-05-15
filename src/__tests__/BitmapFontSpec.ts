@@ -1,4 +1,4 @@
-import { BitmapFont, Glyph, SurfaceUtil } from "..";
+import { BitmapFont, SurfaceUtil } from "..";
 import { skeletonRuntime, Surface } from "./helpers";
 
 describe("test BitmapFont", () => {

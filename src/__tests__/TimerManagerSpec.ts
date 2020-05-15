@@ -130,7 +130,7 @@ describe("test TimerManager", () => {
 		const parent = new Object();
 		let passedOwner = null;
 		let count = 0;
-		const timeout = m.setTimeout(
+		m.setTimeout(
 			function(): void {
 				count++;
 				passedOwner = this;
@@ -154,7 +154,7 @@ describe("test TimerManager", () => {
 
 		const parent = new Object();
 		let count = 0;
-		const timeout = m.setInterval(
+		m.setInterval(
 			() => {
 				count++;
 			},
@@ -169,10 +169,9 @@ describe("test TimerManager", () => {
 		const m = new TimerManager(trigger, 30);
 
 		const parent = new Object();
-		let count = 0;
-		const timeout = m.setTimeout(
+		m.setTimeout(
 			() => {
-				count++;
+				/* do nothing */
 			},
 			1000,
 			parent
@@ -189,7 +188,7 @@ describe("test TimerManager", () => {
 
 		let count1 = 0;
 		let count2 = 0;
-		const timeout1 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count1++;
 		}, 1000);
 		expect(m._identifiers.length).toEqual(1);
@@ -197,7 +196,7 @@ describe("test TimerManager", () => {
 		expect(m._identifiers.length).toEqual(0);
 		expect(count1).toBe(1);
 
-		const timeout2 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count2++;
 		}, 1000);
 		expect(m._identifiers.length).toEqual(1);
@@ -216,10 +215,10 @@ describe("test TimerManager", () => {
 
 		let count1 = 0;
 		let count2 = 0;
-		const timeout1 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count1++;
 		}, 1000);
-		const timeout2 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count2++;
 		}, 1000);
 		expect(m._identifiers.length).toEqual(2);
@@ -240,13 +239,13 @@ describe("test TimerManager", () => {
 
 		let count1 = 0;
 		let count2 = 0;
-		const timeout1 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count1++;
 		}, 500);
 		loopFire(5); // 500ms
 		expect(count1).toBe(1);
 
-		const timeout2 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count2++;
 		}, 1000);
 		loopFire(10); // 1500ms
@@ -262,10 +261,10 @@ describe("test TimerManager", () => {
 
 		let count1 = 0;
 		let count2 = 0;
-		const timeout1 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count1++;
 		}, 500);
-		const timeout2 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count2++;
 		}, 1000);
 		loopFire(5); // 500ms
@@ -281,7 +280,7 @@ describe("test TimerManager", () => {
 		const m = new TimerManager(trigger, 10);
 
 		let count = 0;
-		const timeout = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count++;
 		}, 0);
 
@@ -342,7 +341,7 @@ describe("test TimerManager", () => {
 		const timeout1 = m.setTimeout(() => {
 			count1++;
 		}, 500);
-		const timeout2 = m.setTimeout(() => {
+		m.setTimeout(() => {
 			count2++;
 		}, 500);
 		loopFire(3); // 300ms
@@ -370,7 +369,7 @@ describe("test TimerManager", () => {
 		const parent = new Object();
 		let passedOwner = null;
 		let count = 0;
-		const interval = m.setInterval(
+		m.setInterval(
 			function(): void {
 				count++;
 				passedOwner = this;
@@ -397,10 +396,10 @@ describe("test TimerManager", () => {
 
 		let count1 = 0;
 		let count2 = 0;
-		const interval1 = m.setInterval(() => {
+		m.setInterval(() => {
 			count1++;
 		}, 500);
-		const interval2 = m.setInterval(() => {
+		m.setInterval(() => {
 			count2++;
 		}, 500);
 		loopFire(4); // 400ms
@@ -426,10 +425,10 @@ describe("test TimerManager", () => {
 
 		let count1 = 0;
 		let count2 = 0;
-		const timeout1 = m.setInterval(() => {
+		m.setInterval(() => {
 			count1++;
 		}, 500);
-		const timeout2 = m.setInterval(() => {
+		m.setInterval(() => {
 			count2++;
 		}, 1000);
 		loopFire(5); // 500ms
@@ -451,7 +450,7 @@ describe("test TimerManager", () => {
 		const m = new TimerManager(trigger, 10);
 
 		let count = 0;
-		const interval = m.setInterval(() => {
+		m.setInterval(() => {
 			count++;
 		}, 0);
 		loopFire(10); // 1000ms

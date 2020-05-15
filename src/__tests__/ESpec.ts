@@ -268,7 +268,6 @@ describe("test E", () => {
 
 	it("remove - AssertionError", () => {
 		const e2 = new E({ scene: runtime.scene });
-		const e3 = new E({ scene: runtime.scene });
 		e.append(e2);
 		e2.remove();
 		e2.destroy();
@@ -436,7 +435,7 @@ describe("test E", () => {
 		expect((e as any)._onPointDown.chain).not.toBeUndefined();
 		expect(runtime.scene.onPointDownCapture.length > 0).toBe(false);
 
-		const operationTick = () => {
+		const operationTick = (): void => {
 			const event = runtime.game._pointEventResolver.pointDown({
 				type: PlatformPointType.Down,
 				identifier: 1,

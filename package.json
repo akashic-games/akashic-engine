@@ -40,7 +40,7 @@
     "lint": "npm run format && npm run eslint && npm run textlint",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "eslint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix --ignore-pattern \"src/__tests__/**/*.ts\"",
+    "eslint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix",
     "doc": "typedoc --out doc/html/ --mode file"
   },
   "files": [

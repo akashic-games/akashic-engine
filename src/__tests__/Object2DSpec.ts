@@ -94,8 +94,6 @@ describe("test Object2D", () => {
 	});
 
 	it("moveTo", () => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
-
 		e.moveTo(1, 1);
 		expect(e.x).toEqual(1);
 		expect(e.y).toEqual(1);
@@ -113,8 +111,6 @@ describe("test Object2D", () => {
 	});
 
 	it("moveTo - AssertionError", () => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
-
 		const pos = { x: 1, y: 1 };
 		expect(() => {
 			e.moveTo(-1, pos as any);
@@ -152,8 +148,6 @@ describe("test Object2D", () => {
 	});
 
 	it("resizeTo", () => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
-
 		e.resizeTo(100, 100);
 		expect(e.width).toEqual(100);
 		expect(e.height).toEqual(100);
@@ -171,8 +165,6 @@ describe("test Object2D", () => {
 	});
 
 	it("resizeTo - AssertionError", () => {
-		jasmine.addMatchers(require("./helpers/customMatchers"));
-
 		const size = { width: 100, height: 100 };
 		expect(() => {
 			e.resizeTo(100, size as any);

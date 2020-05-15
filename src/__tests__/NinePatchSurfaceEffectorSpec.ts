@@ -1,4 +1,4 @@
-import { NinePatchSurfaceEffector, Game } from "..";
+import { NinePatchSurfaceEffector } from "..";
 import { skeletonRuntime } from "./helpers";
 
 // NOTE: NinePatchSurfaceEffectorは非推奨でありいずれ削除される。
