@@ -218,7 +218,7 @@ describe("test Trigger", () => {
 	it("fire", () => {
 		let counter = 0;
 		let that: any;
-		const mockHandle = function(param: boolean): boolean {
+		const mockHandle = function(this: any, param: boolean): boolean {
 			counter++;
 			that = this;
 			return !!param;

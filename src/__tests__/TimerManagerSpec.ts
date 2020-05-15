@@ -131,7 +131,7 @@ describe("test TimerManager", () => {
 		let passedOwner = null;
 		let count = 0;
 		m.setTimeout(
-			function(): void {
+			function(this: any): void {
 				count++;
 				passedOwner = this;
 			},
@@ -370,7 +370,7 @@ describe("test TimerManager", () => {
 		let passedOwner = null;
 		let count = 0;
 		m.setInterval(
-			function(): void {
+			function(this: any): void {
 				count++;
 				passedOwner = this;
 			},
