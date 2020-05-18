@@ -1,5 +1,13 @@
 # ChangeLog
 
+## Unreleased changes
+
+機能追加
+ * `g.Game#onSceneChange` を追加
+
+### ゲーム開発者への影響
+ * `g.Game#onSceneChange` を追加
+
 ## 3.0.0-beta.19
 
 不具合修正
