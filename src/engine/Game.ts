@@ -484,8 +484,7 @@ export class Game {
 	/**
 	 * `this.onSceneChange` と同様に `this.scenes` の変化時にfireされるTrigger。
 	 * `this.onSceneChange` との相違点は以下の通りである。
-	 * * 内部でのみ使用される Trigger なので、ゲーム開発者が直接利用すべきではない
-	 * * Game#_reset() 時に removeAll() されない (登録内容がリセットされず、残っている)
+	 * * `this.reset()` 時に removeAll() されない
 	 * @private
 	 */
 	_onSceneChange: Trigger<Scene | undefined>;
@@ -1496,13 +1495,14 @@ export class Game {
 	}
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
-		var scene = this.scenes.pop();
+		const scene = this.scenes.pop();
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
 		if (fireSceneChanged) {
-			this.onSceneChange.fire(this.scene());
-			this._onSceneChange.fire(this.scene());
+			const scene = this.scene();
+			this.onSceneChange.fire(scene);
+			this._onSceneChange.fire(scene);
 		}
 	}
 
