@@ -37,7 +37,7 @@
     "minify:node": "uglifyjs -o ./lib/main.node.min.js --compress --mangle -- lib/main.node.js",
     "minify:browser": "uglifyjs lib/main.js -o ./lib/main.min.js",
     "lint": "eslint -c .eslintrc.js  src/*.ts  --parser-options \"project: './tsconfig.json'\"",
-    "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts"
+    "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts --gaID UA-162208211-1"
   },
   "files": [
     "lib",
