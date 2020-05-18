@@ -70,17 +70,27 @@ export interface Object2DParameterObject {
 	 * オブジェクトのアンカーの横位置。アンカーについては以下の通り。
 	 * * アンカーとして設定した箇所がこのオブジェクトの基点 (位置、拡縮・回転の基点) となる。
 	 * * 単位は相対値 (左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1) ) である。
-	 * @default 0
+	 * 初期値は `0` である。
+	 *
+	 * NOTE: `anchorX` または `anchorY` のどちらかを明示的に `null` に指定した場合、
+	 * このオブジェクトのアンカーは前バージョンと同様の挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) となる。
+	 * これは前バージョンとの後方互換性のために存在する。
+	 * * @default 0
 	 */
-	anchorX?: number;
+	anchorX?: number | null;
 
 	/**
 	 * オブジェクトのアンカーの縦位置。アンカーについては以下の通り。
 	 * * アンカーとして設定した箇所がこのオブジェクトの基点 (位置、拡縮・回転の基点) となる。
 	 * * 単位は相対値 (左上端が (0, 0) 中央が (0.5, 0,5) 右下端が (1,1) ) である。
-	 * @default 0
+	 * 初期値は `0` である。
+	 *
+	 * NOTE: `anchorX` または `anchorY` のどちらを明示的に `null` に指定した場合、
+	 * このオブジェクトのアンカーは前バージョンと同様の挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) となる。
+	 * これは前バージョンとの後方互換性のために存在する。
+	 * * @default 0
 	 */
-	anchorY?: number;
+	anchorY?: number | null;
 }
 
 /**
@@ -223,8 +233,8 @@ export class Object2D implements CommonArea {
 			this.scaleY = param.scaleY != null ? param.scaleY : 1;
 			this.angle = param.angle || 0;
 			this.compositeOperation = param.compositeOperation;
-			this.anchorX = param.anchorX || 0;
-			this.anchorY = param.anchorY || 0;
+			this.anchorX = param.anchorX === undefined ? 0 : param.anchorX;
+			this.anchorY = param.anchorY === undefined ? 0 : param.anchorY;
 			this._matrix = undefined;
 		}
 	}
