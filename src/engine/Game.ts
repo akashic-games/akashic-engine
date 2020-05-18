@@ -483,8 +483,7 @@ export class Game {
 
 	/**
 	 * `this.onSceneChange` と同様に `this.scenes` の変化時にfireされるTrigger。
-	 * `this.onSceneChange` との相違点は以下の通りである。
-	 * * `this.reset()` 時に removeAll() されない
+	 * `this.onSceneChange` との相違点は `this.reset()` 時に removeAll() されないことである。
 	 * @private
 	 */
 	_onSceneChange: Trigger<Scene | undefined>;
@@ -1500,9 +1499,9 @@ export class Game {
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
 		if (fireSceneChanged) {
-			const scene = this.scene();
-			this.onSceneChange.fire(scene);
-			this._onSceneChange.fire(scene);
+			const nextScene = this.scene();
+			this.onSceneChange.fire(nextScene);
+			this._onSceneChange.fire(nextScene);
 		}
 	}
 

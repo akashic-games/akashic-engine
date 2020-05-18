@@ -896,8 +896,9 @@ describe("test Game", () => {
 					offset: { x: 0, y: 0 }
 				})
 			).toBeNull();
+			// reset で Game#onSceneChange は removeAll() されるが、Game#_onSceneChange は removeAll() されないことを確認
 			expect(game.onSceneChange.length).toBe(0);
-			expect(game._onSceneChange.length).not.toBe(1);
+			expect(game._onSceneChange.length).not.toBe(0);
 			done();
 		});
 		game._loadAndStart();
