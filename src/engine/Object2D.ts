@@ -73,7 +73,7 @@ export interface Object2DParameterObject {
 	 * 初期値は `0` である。
 	 *
 	 * NOTE: `anchorX` または `anchorY` のどちらかを明示的に `null` に指定した場合、
-	 * このオブジェクトのアンカーは前バージョンと同様の挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) となる。
+	 * このオブジェクトのアンカーは前バージョン(v2.x.x 以前)のデフォルトの挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) と同様になる。
 	 * これは前バージョンとの後方互換性のために存在する。
 	 * * @default 0
 	 */
@@ -86,7 +86,7 @@ export interface Object2DParameterObject {
 	 * 初期値は `0` である。
 	 *
 	 * NOTE: `anchorX` または `anchorY` のどちらを明示的に `null` に指定した場合、
-	 * このオブジェクトのアンカーは前バージョンと同様の挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) となる。
+	 * このオブジェクトのアンカーは前バージョン(v2.x.x 以前)のデフォルトの挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) と同様になる。
 	 * これは前バージョンとの後方互換性のために存在する。
 	 * * @default 0
 	 */
@@ -169,7 +169,7 @@ export class Object2D implements CommonArea {
 	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 *
 	 * NOTE: `anchorX` または `anchorY` のどちらを明示的に `null` に指定した場合、
-	 * このオブジェクトのアンカーは前バージョンと同様の挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) となる。
+	 * このオブジェクトのアンカーは前バージョン(v2.x.x 以前)のデフォルトの挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) と同様になる。
 	 * これは前バージョンとの後方互換性のために存在する。
 	 */
 	anchorX: number | null;
@@ -182,7 +182,7 @@ export class Object2D implements CommonArea {
 	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 *
 	 * NOTE: `anchorX` または `anchorY` のどちらを明示的に `null` に指定した場合、
-	 * このオブジェクトのアンカーは前バージョンと同様の挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) となる。
+	* このオブジェクトのアンカーは前バージョン(v2.x.x 以前)のデフォルトの挙動 (位置 `x`, `y` は左上端を基準に、拡大・縮小・回転の基点は中央を基準に決定) と同様になる。
 	 * これは前バージョンとの後方互換性のために存在する。
 	 */
 	anchorY: number | null;
@@ -233,6 +233,7 @@ export class Object2D implements CommonArea {
 			this.scaleY = param.scaleY != null ? param.scaleY : 1;
 			this.angle = param.angle || 0;
 			this.compositeOperation = param.compositeOperation;
+			// `null` に後方互換性のための意味を持たせているので、 `=== undefined` で比較する
 			this.anchorX = param.anchorX === undefined ? 0 : param.anchorX;
 			this.anchorY = param.anchorY === undefined ? 0 : param.anchorY;
 			this._matrix = undefined;
