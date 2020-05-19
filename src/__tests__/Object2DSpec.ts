@@ -91,6 +91,22 @@ describe("test Object2D", () => {
 		expect(e.anchorX).toBe(0);
 		expect(e.anchorY).toBe(1);
 		expect(e._matrix).toBeUndefined();
+
+		e = new Object2D({
+			x: 1,
+			y: 2,
+			width: 3,
+			height: 4,
+			opacity: 0.2,
+			scaleX: 0.4,
+			scaleY: 1.2,
+			angle: 10,
+			compositeOperation: "source-atop",
+			anchorX: null,
+			anchorY: null
+		});
+		expect(e.anchorX).toBeNull();
+		expect(e.anchorY).toBeNull();
 	});
 
 	it("moveTo", () => {

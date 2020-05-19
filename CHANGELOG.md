@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.20
+
+不具合修正
+ * `E` の生成時に `anchorX`, `anchorY` に `null` を指定できない問題を修正
+
 ## 3.0.0-beta.19
 
 不具合修正
