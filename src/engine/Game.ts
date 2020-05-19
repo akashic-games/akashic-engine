@@ -392,6 +392,12 @@ export class Game {
 	operationPluginManager: OperationPluginManager;
 
 	/**
+	 * `this.scenes` の変化時にfireされるTrigger。
+	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
+	 */
+	onSceneChange: Trigger<Scene | undefined>;
+
+	/**
 	 * プレイヤーがゲームに参加したことを表すイベント。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onJoin` を利用すること。
 	 */
@@ -476,8 +482,8 @@ export class Game {
 	_defaultLoadingScene: LoadingScene;
 
 	/**
-	 * `this.scenes` の変化時にfireされるTrigger。
-	 * このTriggerはアセットロード(Scene#onLoadのfire)を待たず、変化した時点で即fireされることに注意。
+	 * `this.onSceneChange` と同様に `this.scenes` の変化時にfireされるTrigger。
+	 * `this.onSceneChange` との相違点は `this.reset()` 時に removeAll() されないことである。
 	 * @private
 	 */
 	_onSceneChange: Trigger<Scene | undefined>;
@@ -738,6 +744,7 @@ export class Game {
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
+		this.onSceneChange = new Trigger<Scene>();
 		this._onSceneChange = new Trigger<Scene>();
 		this._onSceneChange.add(this._handleSceneChanged, this);
 		this._sceneChanged = this._onSceneChange;
@@ -1203,6 +1210,7 @@ export class Game {
 		this.onSeed.removeAll();
 		this.onResized.removeAll();
 		this.onSkipChange.removeAll();
+		this.onSceneChange.removeAll();
 		this.handlerSet.removeAllEventFilters();
 
 		this.isSkipping = false;
@@ -1309,6 +1317,8 @@ export class Game {
 		this._eventTriggerMap = undefined;
 		this._initialScene = undefined;
 		this._defaultLoadingScene = undefined;
+		this.onSceneChange.destroy();
+		this.onSceneChange = undefined;
 		this._onSceneChange.destroy();
 		this._onSceneChange = undefined;
 		this._onLoad.destroy();
@@ -1484,11 +1494,15 @@ export class Game {
 	}
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
-		var scene = this.scenes.pop();
+		const scene = this.scenes.pop();
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
-		if (fireSceneChanged) this._onSceneChange.fire(this.scene());
+		if (fireSceneChanged) {
+			const nextScene = this.scene();
+			this.onSceneChange.fire(nextScene);
+			this._onSceneChange.fire(nextScene);
+		}
 	}
 
 	private _handleLoad(): void {
@@ -1515,8 +1529,9 @@ export class Game {
 			this._doPushScene(loadingScene, this._defaultLoadingScene);
 			loadingScene.reset(scene);
 		} else {
-			// 読み込み待ちのアセットがなければその場で(loadingSceneに任せず)ロード、SceneReadyを発生させてからLoadingSceneEndを起こす。
+			this.onSceneChange.fire(scene);
 			this._onSceneChange.fire(scene);
+			// 読み込み待ちのアセットがなければその場で(loadingSceneに任せず)ロード、SceneReadyを発生させてからLoadingSceneEndを起こす。
 			if (!scene._loaded) {
 				scene._load();
 				this._pushPostTickTask(scene._fireLoaded, scene);
