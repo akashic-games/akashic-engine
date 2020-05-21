@@ -113,6 +113,8 @@ export interface GameResetParameterObject {
 	randGenSer?: any;
 }
 
+export type GameMainFunction = (g: any, args: GameMainParameterObject) => void;
+
 /**
  * `Game` のコンストラクタに渡すことができるパラメータ。
  */
@@ -157,6 +159,13 @@ export interface GameParameterObject {
 	 * @default undefined
 	 */
 	operationPluginViewInfo?: OperationPluginViewInfo;
+
+	/**
+	 * エントリポイントの関数。
+	 * この値が指定された場合 `GameConfiguration#main` の値は無視される。
+	 * @default undefined
+	 */
+	mainFunc?: GameMainFunction;
 }
 
 /**
@@ -509,6 +518,11 @@ export class Game {
 	_main: string;
 
 	/**
+	 * エントリポイントの関数。
+	 */
+	_mainFunc: GameMainFunction | undefined;
+
+	/**
 	 * _loadAndStart() に渡された、エントリポイント(mainスクリプト)に渡す引数。
 	 * @private
 	 */
@@ -733,6 +747,7 @@ export class Game {
 		});
 
 		this._main = gameConfiguration.main;
+		this._mainFunc = param.mainFunc;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
@@ -1326,6 +1341,7 @@ export class Game {
 		this._onStart.destroy();
 		this._onStart = undefined;
 		this._main = undefined;
+		this._mainFunc = undefined;
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
 		this._assetManager = undefined;
@@ -1509,10 +1525,16 @@ export class Game {
 		this.operationPluginManager.initialize();
 		this.operationPlugins = this.operationPluginManager.plugins;
 
-		const mainFun = this._moduleManager._require(this._main);
-		if (!mainFun || typeof mainFun !== "function")
-			throw ExceptionFactory.createAssertionError("Game#_handleLoad: Entry point '" + this._main + "' not found.");
-		mainFun(this._mainParameter);
+		if (this._mainFunc) {
+			this._mainFunc(this._runtimeValueBase, this._mainParameter);
+		} else if (this._main) {
+			const mainFun = this._moduleManager._require(this._main);
+			if (!mainFun || typeof mainFun !== "function")
+				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: Entry point ${this._main} not found.`);
+			mainFun(this._mainParameter);
+		} else {
+			throw ExceptionFactory.createAssertionError("Game#_handleLoad: does not have an entry point");
+		}
 		this._flushPostTickTasks(); // シーン遷移を要求する可能性がある(というかまずする)
 		this._onStart.fire();
 	}

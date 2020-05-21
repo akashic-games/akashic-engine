@@ -173,6 +173,18 @@ describe("test Game", () => {
 		game._loadAndStart({ args: "arg-value" });
 	});
 
+	it("_loadAndStart - with mainFunc", done => {
+		const mainFunc = (g: any, args: any): void => {
+			expect(g).toBeDefined();
+			expect(g.Game).toBeDefined();
+			expect(g.Scene).toBeDefined();
+			expect(args).toEqual({ args: "arg-value" });
+			done();
+		};
+		const game = new Game({ width: 320, height: 320, main: "dummy" }, "/", undefined, undefined, mainFunc);
+		game._loadAndStart({ args: "arg-value" });
+	});
+
 	it("_loadAndStart - after loaded", done => {
 		const assets: { [id: string]: AssetConfiguration } = {
 			mainScene: {

@@ -615,11 +615,12 @@ export class Game extends g.Game {
 		configuration: g.GameConfiguration,
 		assetBase?: string,
 		selfId?: string,
-		operationPluginViewInfo?: g.OperationPluginViewInfo
+		operationPluginViewInfo?: g.OperationPluginViewInfo,
+		mainFunc?: g.GameMainFunction
 	) {
 		const resourceFactory = new ResourceFactory();
 		const handlerSet = new GameHandlerSet();
-		super({ engineModule: g, configuration, resourceFactory, handlerSet, assetBase, selfId, operationPluginViewInfo });
+		super({ engineModule: g, configuration, resourceFactory, handlerSet, assetBase, selfId, operationPluginViewInfo, mainFunc });
 		resourceFactory.init(this);
 		this.terminatedGame = false;
 		this.autoTickForInternalEvents = true;
