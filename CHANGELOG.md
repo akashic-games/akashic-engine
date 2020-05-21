@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.22
+
+機能追加
+ * `GameParameterObject#mainFunc` を追加
+
 ## 3.0.0-beta.21
 
 機能追加
