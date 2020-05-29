@@ -11,8 +11,8 @@ import { AssetManager } from "./AssetManager";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { Camera } from "./Camera";
 import { DefaultLoadingScene } from "./DefaultLoadingScene";
-import { E, PointSource } from "./entities/E";
-import { Event, EventTypeString, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent } from "./Event";
+import { E, PointSource, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
+import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent, OperationEvent } from "./Event";
 import { EventConverter } from "./EventConverter";
 import { EventFilter } from "./EventFilter";
 import { GameConfiguration } from "./GameConfiguration";
@@ -111,6 +111,18 @@ export interface GameResetParameterObject {
 	 * 省略された場合、元の値が維持される。
 	 */
 	randGenSer?: any;
+}
+
+export interface EventTriggerMap {
+	join: Trigger<JoinEvent>;
+	leave: Trigger<LeaveEvent>;
+	"player-info": Trigger<PlayerInfoEvent>;
+	seed: Trigger<SeedEvent>;
+	message: Trigger<MessageEvent>;
+	"point-down": Trigger<PointDownEvent>;
+	"point-move": Trigger<PointMoveEvent>;
+	"point-up": Trigger<PointUpEvent>;
+	operation: Trigger<OperationEvent>;
 }
 
 export type GameMainFunction = (g: any, args: GameMainParameterObject) => void;
@@ -470,7 +482,7 @@ export class Game {
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
-	_eventTriggerMap: { [key in EventTypeString]?: Trigger<Event> };
+	_eventTriggerMap: EventTriggerMap;
 
 	/**
 	 * グローバルアセットを読み込むための初期シーン。必ずシーンスタックの一番下に存在する。これをpopScene()することはできない。
@@ -863,7 +875,12 @@ export class Game {
 			if (events && events.length) {
 				for (let i = 0; i < events.length; ++i) {
 					const event = this._eventConverter.toGameEvent(events[i]);
+					if (event.type === "unknown" || event.type === "timestamp") {
+						console.warn(`Game#tick(): ignored unsupported event: ${event.type}`);
+						continue;
+					}
 					const trigger = this._eventTriggerMap[event.type];
+					// @ts-ignore 処理の高速化のため以下の箇所のみ型の厳格なチェックをなくす
 					if (trigger) trigger.fire(event);
 				}
 			}

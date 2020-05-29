@@ -8,7 +8,7 @@
     "alwaysStrict": true,
     "strictNullChecks": false,
     "strictBindCallApply": true,
-    "strictFunctionTypes": false,
+    "strictFunctionTypes": true,
     "strictPropertyInitialization": false,
     "declaration": true,
     "outDir": "lib",
