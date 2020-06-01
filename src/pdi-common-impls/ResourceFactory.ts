@@ -1,9 +1,10 @@
 import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
+import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
 import { FontWeightString } from "../pdi-types/FontWeightString";
 import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
+import { VideoSystemLike } from "../pdi-types/VideoSystemLike";
 import { AudioAsset } from "./AudioAsset";
 import { AudioPlayer } from "./AudioPlayer";
-import { AudioSystem } from "./AudioSystem";
 import { GlyphFactory } from "./GlyphFactory";
 import { ImageAsset } from "./ImageAsset";
 import { ScriptAsset } from "./ScriptAsset";
@@ -11,7 +12,6 @@ import { Surface } from "./Surface";
 import { SurfaceAtlas } from "./SurfaceAtlas";
 import { TextAsset } from "./TextAsset";
 import { VideoAsset } from "./VideoAsset";
-import { VideoSystem } from "./VideoSystem";
 
 /**
  * リソースの生成を行うクラス。
@@ -28,7 +28,7 @@ export abstract class ResourceFactory implements ResourceFactoryLike {
 		assetPath: string,
 		width: number,
 		height: number,
-		system: VideoSystem,
+		system: VideoSystemLike,
 		loop: boolean,
 		useRealSize: boolean
 	): VideoAsset;
@@ -37,14 +37,14 @@ export abstract class ResourceFactory implements ResourceFactoryLike {
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: AudioSystem,
+		system: AudioSystemLike,
 		loop: boolean,
 		hint: AudioAssetHint
 	): AudioAsset;
 
 	abstract createTextAsset(id: string, assetPath: string): TextAsset;
 
-	abstract createAudioPlayer(system: AudioSystem): AudioPlayer;
+	abstract createAudioPlayer(system: AudioSystemLike): AudioPlayer;
 
 	abstract createScriptAsset(id: string, assetPath: string): ScriptAsset;
 
