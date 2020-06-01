@@ -608,7 +608,7 @@ export class E extends Object2D implements CommonArea {
 	 * 自身と自身の子孫の中で、その座標に反応する `PointSource` を返す。
 	 *
 	 * 戻り値は、対象が見つかった場合、 `target` に見つかったエンティティを持つ `PointSource` である。
-	 * 対象が見つからなかった場合、 `null` である。戻り値が `null` でない場合、その `target` プロパティは次を満たす:
+	 * 対象が見つからなかった場合、 `undefined` である。戻り値が `undefined` でない場合、その `target` プロパティは次を満たす:
 	 * - このエンティティ(`this`) またはその子孫である
 	 * - `E#touchable` が真である
 	 *
