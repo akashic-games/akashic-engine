@@ -687,7 +687,7 @@ export class E extends Object2D implements CommonArea {
 	/**
 	 * このEの包含矩形を計算する。
 	 */
-	calculateBoundingRect(): CommonRect | null {
+	calculateBoundingRect(): CommonRect | undefined {
 		return this._calculateBoundingRect(undefined);
 	}
 
@@ -720,14 +720,14 @@ export class E extends Object2D implements CommonArea {
 	/**
 	 * @private
 	 */
-	_calculateBoundingRect(m?: Matrix): CommonRect | null {
+	_calculateBoundingRect(m?: Matrix): CommonRect | undefined {
 		var matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);
 		}
 
 		if (!this.visible()) {
-			return null;
+			return undefined;
 		}
 
 		var thisBoundingRect: CommonRect = {
@@ -806,7 +806,7 @@ export class E extends Object2D implements CommonArea {
 		return false;
 	}
 
-	private _findTouchableChildren(e: E): E | null {
+	private _findTouchableChildren(e: E): E | undefined {
 		if (e.children) {
 			for (var i = 0; i < e.children.length; ++i) {
 				if (e.children[i].touchable) return e.children[i];
@@ -814,6 +814,6 @@ export class E extends Object2D implements CommonArea {
 				if (tmp) return tmp;
 			}
 		}
-		return null;
+		return undefined;
 	}
 }
