@@ -114,6 +114,8 @@ export interface GameResetParameterObject {
 }
 
 export interface EventTriggerMap {
+	unknown: undefined;
+	timestamp: undefined;
 	join: Trigger<JoinEvent>;
 	leave: Trigger<LeaveEvent>;
 	"player-info": Trigger<PlayerInfoEvent>;
@@ -719,6 +721,8 @@ export class Game {
 		this.seed = this.onSeed;
 
 		this._eventTriggerMap = {
+			unknown: undefined,
+			timestamp: undefined,
 			join: this.onJoin,
 			leave: this.onLeave,
 			"player-info": this.onPlayerInfo,
@@ -875,10 +879,6 @@ export class Game {
 			if (events && events.length) {
 				for (let i = 0; i < events.length; ++i) {
 					const event = this._eventConverter.toGameEvent(events[i]);
-					if (event.type === "unknown" || event.type === "timestamp") {
-						console.warn(`Game#tick(): ignored unsupported event: ${event.type}`);
-						continue;
-					}
 					const trigger = this._eventTriggerMap[event.type];
 					// @ts-ignore 処理の高速化のため以下の箇所のみ型の厳格なチェックをなくす
 					if (trigger) trigger.fire(event);
