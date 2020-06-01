@@ -16,7 +16,7 @@ export interface VideoPlayerLike {
 	 * 再生中のビデオアセット。
 	 * 再生中のものがない場合、 `undefined` 。
 	 */
-	currentVideo: VideoAssetLike;
+	currentVideo: VideoAssetLike | undefined;
 
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。

@@ -1389,7 +1389,7 @@ export class Game {
 		this._sceneChanged = undefined;
 		this._loaded = undefined;
 		this._started = undefined;
-		this._operationPluginOperated = undefined;
+		this._operationPluginOperated = undefined!;
 	}
 
 	/**

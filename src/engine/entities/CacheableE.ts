@@ -34,19 +34,19 @@ export abstract class CacheableE extends E {
 	 * このエンティティの内部キャッシュ。
 	 * @private
 	 */
-	_cache: SurfaceLike;
+	_cache: SurfaceLike | undefined;
 
 	/**
 	 * @private
 	 */
-	_renderer: RendererLike;
+	_renderer: RendererLike | undefined;
 
 	/**
 	 * このエンティティを最後に描画した時の`Camrera`。
 	 *
 	 * @private
 	 */
-	_renderedCamera: Camera;
+	_renderedCamera: Camera | undefined;
 
 	/**
 	 * 描画されるキャッシュサイズ。
@@ -100,7 +100,7 @@ export abstract class CacheableE extends E {
 				this._renderer = this._cache.renderer();
 			}
 
-			var cacheRenderer = this._renderer;
+			var cacheRenderer = this._renderer!;
 			cacheRenderer.begin();
 			if (!isNew) {
 				cacheRenderer.clear();
@@ -128,7 +128,7 @@ export abstract class CacheableE extends E {
 	 */
 	renderSelfFromCache(renderer: RendererLike): void {
 		renderer.drawImage(
-			this._cache,
+			this._cache!,
 			0,
 			0,
 			this._cacheSize.width + CacheableE.PADDING,

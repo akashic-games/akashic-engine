@@ -152,7 +152,7 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_player: AudioPlayerLike;
+	_player: AudioPlayerLike | undefined;
 
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 	get player(): AudioPlayerLike {
@@ -165,11 +165,6 @@ export class MusicAudioSystem extends AudioSystem {
 	}
 	set player(v: AudioPlayerLike) {
 		this._player = v;
-	}
-
-	constructor(param: AudioSystemParameterObject) {
-		super(param);
-		this._player = undefined;
 	}
 
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {

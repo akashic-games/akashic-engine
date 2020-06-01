@@ -14,7 +14,6 @@ import { MessageEvent, OperationEvent } from "./Event";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { LocalTickModeString } from "./LocalTickModeString";
-import { Matrix } from "./Matrix";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
 import { TickGenerationModeString } from "./TickGenerationModeString";
 import { Timer } from "./Timer";
@@ -192,7 +191,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * シーンの識別用の名前。
 	 */
-	name: string;
+	name: string | undefined;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
@@ -280,7 +279,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * シーン内で利用可能なストレージの値を保持する `StorageValueStore`。
 	 */
-	storageValues: StorageValueStore;
+	storageValues: StorageValueStore | undefined;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
@@ -367,7 +366,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * @private
 	 */
-	_storageLoader: StorageLoader;
+	_storageLoader: StorageLoader | undefined;
 
 	/**
 	 * アセットとストレージの読み込みが終わったことを通知するTrigger。
@@ -569,7 +568,7 @@ export class Scene implements StorageLoaderHandler {
 
 		this._storageLoader = undefined;
 
-		this.game = undefined;
+		this.game = undefined!;
 
 		this.state = "destroyed";
 		this.onStateChange.fire(this.state);
@@ -721,7 +720,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @param e 子エンティティとして追加するエンティティ
 	 */
 	append(e: E): void {
-		this.insertBefore(e, undefined);
+		this.insertBefore(e);
 	}
 
 	/**
@@ -733,7 +732,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @param e 子エンティティとして追加するエンティティ
 	 * @param target 挿入位置にある子エンティティ
 	 */
-	insertBefore(e: E, target: E): void {
+	insertBefore(e: E, target?: E): void {
 		if (e.parent) e.remove();
 
 		e.parent = this;
@@ -767,10 +766,9 @@ export class Scene implements StorageLoaderHandler {
 	 * @param camera 対象のカメラ。指定されなかった場合undefined
 	 */
 	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
-		var mayConsumeLocalTick = this.local !== "non-local";
-		var children = this.children;
-		var m: Matrix = undefined;
-		if (camera && camera instanceof Camera2D) m = camera.getMatrix();
+		const mayConsumeLocalTick = this.local !== "non-local";
+		const children = this.children;
+		const m = camera && camera instanceof Camera2D ? camera.getMatrix() : null;
 
 		for (var i = children.length - 1; i >= 0; --i) {
 			const ret = children[i].findPointSourceByPoint(point, m, force);
@@ -857,7 +855,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @private
 	 */
 	_needsLoading(): boolean {
-		return this._sceneAssetHolder.waitingAssetsCount > 0 || (this._storageLoader && !this._storageLoader._loaded);
+		return this._sceneAssetHolder.waitingAssetsCount > 0 || (!!this._storageLoader && !this._storageLoader._loaded);
 	}
 
 	/**

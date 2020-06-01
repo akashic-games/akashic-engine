@@ -95,7 +95,7 @@ export interface SurfaceAtlasSetLike {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ
 	 */
-	addGlyph(glyph: GlyphLike): SurfaceAtlasLike;
+	addGlyph(glyph: GlyphLike): SurfaceAtlasLike | null;
 
 	/**
 	 * このサーフェスアトラスの破棄を行う。

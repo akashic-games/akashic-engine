@@ -63,7 +63,7 @@ export class Pane extends CacheableE {
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 * @deprecated 非推奨である。将来的に削除される予定である。
 	 */
-	backgroundEffector: SurfaceEffector;
+	backgroundEffector: SurfaceEffector | undefined;
 
 	/**
 	 * @private
@@ -94,12 +94,7 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	// Effect済み背景画像の描画サーフェス
-	_bgSurface: SurfaceLike;
-
-	/**
-	 * @private
-	 */
-	_bgRenderer: RendererLike;
+	_bgSurface: SurfaceLike | undefined;
 
 	/**
 	 * @private
@@ -139,11 +134,9 @@ export class Pane extends CacheableE {
 		this._backgroundImageSurface = SurfaceUtil.asSurface(param.backgroundImage);
 		this.backgroundEffector = param.backgroundEffector;
 		this._shouldRenderChildren = false;
-		this._padding = param.padding;
+		this._padding = param.padding || 0;
 		this._initialize();
 		this._paddingChanged = false;
-		this._bgSurface = undefined;
-		this._bgRenderer = undefined;
 	}
 
 	/**
@@ -221,7 +214,7 @@ export class Pane extends CacheableE {
 		this._backgroundImageSurface = undefined;
 		this._beforeBackgroundImage = undefined;
 		this._bgSurface = undefined;
-		this._childrenSurface = undefined;
+		this._childrenSurface = undefined!;
 		super.destroy();
 	}
 
@@ -303,7 +296,7 @@ export class Pane extends CacheableE {
 	 * Eを継承する他のクラスと異なり、Paneは子要素の位置を包括矩形に含まない。
 	 * @private
 	 */
-	_calculateBoundingRect(m?: Matrix): CommonRect {
+	_calculateBoundingRect(m?: Matrix): CommonRect | undefined {
 		var matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);

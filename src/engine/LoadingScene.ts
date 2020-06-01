@@ -87,7 +87,7 @@ export class LoadingScene extends Scene {
 		this.targetReady = this.onTargetReady;
 		this.targetAssetLoaded = this.onTargetAssetLoad;
 		this._explicitEnd = !!param.explicitEnd;
-		this._targetScene = undefined;
+		this._targetScene = undefined!;
 	}
 
 	destroy(): void {
@@ -146,7 +146,7 @@ export class LoadingScene extends Scene {
 		if (!this._targetScene) return;
 		this._targetScene._onReady.removeAll({ owner: this });
 		this._targetScene.onAssetLoad.removeAll({ owner: this });
-		this._targetScene = undefined;
+		this._targetScene = undefined!;
 	}
 
 	/**
