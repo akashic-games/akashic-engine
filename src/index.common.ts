@@ -38,7 +38,6 @@ export * from "./pdi-types/VideoSystemLike";
 export * from "./pdi-common-impls/Asset";
 export * from "./pdi-common-impls/AudioAsset";
 export * from "./pdi-common-impls/AudioPlayer";
-export * from "./pdi-common-impls/AudioSystem";
 export * from "./pdi-common-impls/ExceptionFactory";
 export * from "./pdi-common-impls/Glyph";
 export * from "./pdi-common-impls/GlyphFactory";
@@ -52,8 +51,8 @@ export * from "./pdi-common-impls/SurfaceAtrasSlot";
 export * from "./pdi-common-impls/TextAsset";
 export * from "./pdi-common-impls/VideoAsset";
 export * from "./pdi-common-impls/VideoPlayer";
-export * from "./pdi-common-impls/VideoSystem";
 
+export * from "./engine/AudioSystem";
 export * from "./engine/entities/CacheableE";
 export * from "./engine/entities/E";
 export * from "./engine/entities/FilledRect";
@@ -118,6 +117,7 @@ export * from "./engine/TickGenerationModeString";
 export * from "./engine/Timer";
 export * from "./engine/TimerManager";
 export * from "./engine/Util";
+export * from "./engine/VideoSystem";
 export * from "./engine/Xorshift";
 export * from "./engine/XorshiftRandomGenerator";
 

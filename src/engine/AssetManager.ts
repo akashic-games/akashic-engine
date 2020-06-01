@@ -1,5 +1,4 @@
 import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
-import { VideoSystem } from "../pdi-common-impls/VideoSystem";
 import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
 import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
 import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
@@ -15,6 +14,7 @@ import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { getGameInAssetContext } from "./getGameInAssetContext";
+import { VideoSystem } from "./VideoSystem";
 
 export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
 

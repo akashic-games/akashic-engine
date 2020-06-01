@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 3.0.0-beta.23
+
+その他変更
+ * `src/pdi-common-impls` の `AudioSystem`, `VideoSystem` を `src/engine` へ変更。
+    * `pdi-common-impls` 内では `AudioSystemLike`, `VideoSystemLike` を使用するよう修正。
+
 ## 3.0.0-beta.22
 
 機能追加
