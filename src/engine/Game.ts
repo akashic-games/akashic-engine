@@ -96,7 +96,6 @@ interface PostTickReplaceSceneTask {
 	preserveCurrent: boolean;
 }
 
-
 interface PostTickPopSceneTask {
 	/**
 	 * 遷移の種類。
@@ -1397,7 +1396,6 @@ export class Game {
 		this._onStart.destroy();
 		this._onStart = undefined!;
 
-
 		// TODO より能動的にdestroy処理を入れるべきかもしれない
 		this.resourceFactory = undefined!;
 		this.storage = undefined!;
@@ -1567,8 +1565,7 @@ export class Game {
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
 		const scene = this.scenes.pop();
-		if (!scene)
-			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; scene stack underflow");
+		if (!scene) throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; scene stack underflow");
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
