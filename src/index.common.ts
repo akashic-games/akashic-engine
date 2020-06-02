@@ -111,7 +111,6 @@ export * from "./engine/SurfaceEffector";
 export * from "./engine/SurfaceUtil";
 export * from "./engine/TextAlign";
 export * from "./engine/TextAlignString";
-export * from "./engine/TextBaseline";
 export * from "./engine/TextMetrics";
 export * from "./engine/TickGenerationModeString";
 export * from "./engine/Timer";
