@@ -42,6 +42,7 @@ export * from "./pdi-common-impls/ExceptionFactory";
 export * from "./pdi-common-impls/Glyph";
 export * from "./pdi-common-impls/GlyphFactory";
 export * from "./pdi-common-impls/ImageAsset";
+export * from "./pdi-common-impls/PdiCommonUtil";
 export * from "./pdi-common-impls/Renderer";
 export * from "./pdi-common-impls/ResourceFactory";
 export * from "./pdi-common-impls/ScriptAsset";

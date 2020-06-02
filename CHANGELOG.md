@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 3.0.0-beta.24
+
+その他変更
+ * `src/pdi-common-impls` に `PdiCommonUtil.ts` を追加
+    * `src/engine/PathUtil` の一部関数を `PdiCommonUtil.ts` へ移動
+
 ## 3.0.0-beta.23
 
 その他変更
