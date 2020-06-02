@@ -732,7 +732,7 @@ export class Game {
 		this.height = gameConfiguration.height;
 		this.renderers = [];
 		this.scenes = [];
-		this.random = undefined!;
+		this.random = null!;
 		this.age = 0;
 		this.assetBase = param.assetBase || "";
 		this.resourceFactory = param.resourceFactory;
