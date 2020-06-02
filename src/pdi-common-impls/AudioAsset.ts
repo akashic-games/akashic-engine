@@ -35,6 +35,7 @@ export abstract class AudioAsset extends Asset implements AudioAssetLike {
 		this.loop = loop;
 		this.hint = hint;
 		this._system = system;
+		this.data = undefined;
 	}
 
 	play(): AudioPlayerLike {

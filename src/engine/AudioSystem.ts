@@ -167,6 +167,11 @@ export class MusicAudioSystem extends AudioSystem {
 		this._player = v;
 	}
 
+	constructor(param: AudioSystemParameterObject) {
+		super(param);
+		this._player = undefined;
+	}
+
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {
 		if (this.player.currentAudio && this.player.currentAudio.id === asset.id) return [this.player];
 		return [];
