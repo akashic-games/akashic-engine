@@ -269,7 +269,7 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	_initialize(): void {
-		var p = this._padding === undefined ? 0 : this._padding;
+		var p = this._padding;
 		var r: CommonRect;
 		if (typeof p === "number") {
 			r = { top: p, bottom: p, left: p, right: p };

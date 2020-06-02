@@ -483,8 +483,7 @@ export class E extends Object2D implements CommonArea {
 	 */
 	remove(e?: E): void {
 		if (e === undefined) {
-			if (this.parent == null) throw ExceptionFactory.createAssertionError("E#remove: has no parent");
-			this.parent.remove(this);
+			this.parent!.remove(this);
 			return;
 		}
 
