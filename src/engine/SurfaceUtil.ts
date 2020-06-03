@@ -10,7 +10,7 @@ export module SurfaceUtil {
 	 *
 	 * @param src
 	 */
-	export function asSurface(src: ImageAssetLike | SurfaceLike): SurfaceLike {
+	export function asSurface(src: ImageAssetLike | SurfaceLike | undefined): SurfaceLike {
 		if (!src) {
 			return undefined;
 		} else if ("type" in src && src.type === "image") {

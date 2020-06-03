@@ -20,7 +20,7 @@ export abstract class Font {
 	 *
 	 * @param code 文字コード
 	 */
-	abstract glyphForCharacter(code: number): GlyphLike;
+	abstract glyphForCharacter(code: number): GlyphLike | null;
 
 	abstract destroy(): void;
 
@@ -35,7 +35,7 @@ export abstract class Font {
 		let width = 0;
 		let actualBoundingBoxLeft = 0;
 		let actualBoundingBoxRight = 0;
-		let lastGlyph: GlyphLike;
+		let lastGlyph: GlyphLike | null = null;
 
 		for (let i = 0; i < text.length; i++) {
 			const code = Util.charCodeAt(text, i);

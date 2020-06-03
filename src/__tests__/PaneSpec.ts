@@ -29,7 +29,7 @@ describe("test Pane", () => {
 		expect(pane._childrenSurface instanceof Surface).toBe(true);
 		expect(pane._childrenRenderer instanceof Renderer).toBe(true);
 		expect(pane._paddingChanged).toBe(false);
-		expect(pane).toHaveUndefinedValue("_bgSurface", "_bgRenderer");
+		expect(pane._bgSurface).toBeUndefined();
 	});
 
 	it("padding", () => {

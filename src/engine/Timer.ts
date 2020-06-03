@@ -65,10 +65,10 @@ export class Timer {
 	}
 
 	destroy(): void {
-		this.interval = undefined;
+		this.interval = undefined!;
 		this.onElapse.destroy();
-		this.onElapse = undefined;
-		this.elapsed = undefined;
+		this.onElapse = undefined!;
+		this.elapsed = undefined!;
 		this._scaledInterval = 0;
 		this._scaledElapsed = 0;
 	}

@@ -90,7 +90,7 @@ export class BitmapFont extends Font {
 	 * コードポイントに対応するグリフを返す。
 	 * @param code コードポイント
 	 */
-	glyphForCharacter(code: number): GlyphLike {
+	glyphForCharacter(code: number): GlyphLike | null {
 		var g = this.map[code] || this.missingGlyph;
 
 		if (!g) {
@@ -126,7 +126,7 @@ export class BitmapFont extends Font {
 		if (this.surface && !this.surface.destroyed()) {
 			this.surface.destroy();
 		}
-		this.map = undefined;
+		this.map = undefined!;
 	}
 
 	/**

@@ -140,7 +140,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
 	 * @private
 	 */
-	_moveGlyphSurface(glyph: GlyphLike): SurfaceAtlasLike {
+	_moveGlyphSurface(glyph: GlyphLike): SurfaceAtlasLike | null {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
@@ -172,7 +172,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 
 			for (let i = 0; i < glyphs.length; i++) {
 				const glyph = glyphs[i];
-				glyph.surface = null;
+				glyph.surface = undefined;
 				glyph.isSurfaceValid = false;
 				glyph._atlas = null;
 			}
@@ -260,7 +260,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ
 	 */
-	addGlyph(glyph: GlyphLike): SurfaceAtlasLike {
+	addGlyph(glyph: GlyphLike): SurfaceAtlasLike | null {
 		// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
 		// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 		// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
@@ -285,9 +285,9 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 		for (var i = 0; i < this._surfaceAtlases.length; ++i) {
 			this._surfaceAtlases[i].destroy();
 		}
-		this._surfaceAtlases = undefined;
-		this._resourceFactory = undefined;
-		this._atlasGlyphsTable = undefined;
+		this._surfaceAtlases = undefined!;
+		this._resourceFactory = undefined!;
+		this._atlasGlyphsTable = undefined!;
 	}
 
 	/**

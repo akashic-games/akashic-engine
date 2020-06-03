@@ -77,7 +77,7 @@ export abstract class VideoAsset extends Asset implements VideoAssetLike {
 	abstract getPlayer(): VideoPlayerLike;
 
 	destroy(): void {
-		this._system = undefined;
+		this._system = undefined!;
 		super.destroy();
 	}
 }
