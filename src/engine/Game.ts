@@ -1462,7 +1462,7 @@ export class Game {
 	/**
 	 * @private
 	 */
-	_updateEventTriggers(scene?: Scene): void {
+	_updateEventTriggers(scene: Scene | undefined): void {
 		this._modified = true;
 		if (!scene) {
 			this._eventTriggerMap.message = undefined!;
