@@ -62,35 +62,70 @@ const enum PostTickTaskType {
  *
  * tick 消化タイミングに同期して行われるタスクを表す。
  */
-interface PostTickTask {
+type PostTickTask = PostTickPopSceneTask | PostTickPushSceneTask | PostTickReplaceSceneTask | PostTickCallFunctionTask;
+
+interface PostTickPushSceneTask {
 	/**
 	 * 遷移の種類。
 	 */
-	type: PostTickTaskType;
+	type: PostTickTaskType.PushScene;
 
 	/**
 	 * 遷移先になるシーン。
 	 * `type` が `Push` または `Replace` の時のみ存在。
 	 */
-	scene?: Scene;
+	scene: Scene;
+}
+
+interface PostTickReplaceSceneTask {
+	/**
+	 * 遷移の種類。
+	 */
+	type: PostTickTaskType.ReplaceScene;
+
+	/**
+	 * 遷移先になるシーン。
+	 * `type` が `Push` または `Replace` の時のみ存在。
+	 */
+	scene: Scene;
 
 	/**
 	 * 現在のシーンを破棄するか否か。
-	 * `type` が `Pop` または `Replace` の時のみ存在。
+	 * `type` が `PopScene` または `Replace` の時のみ存在。
 	 */
-	preserveCurrent?: boolean;
+	preserveCurrent: boolean;
+}
+
+interface PostTickPopSceneTask {
+	/**
+	 * 遷移の種類。
+	 */
+	type: PostTickTaskType.PopScene;
+
+	/**
+	 * 現在のシーンを破棄するか否か。
+	 * `type` が `PopScene` または `Replace` の時のみ存在。
+	 */
+	preserveCurrent: boolean;
+}
+
+interface PostTickCallFunctionTask {
+	/**
+	 * 遷移の種類。
+	 */
+	type: PostTickTaskType.Call;
 
 	/**
 	 * 呼び出す関数。
 	 * `type` が `Call` の時のみ存在。
 	 */
-	fun?: Function;
+	fun: Function;
 
 	/**
 	 * `fun` の `this` として使う値。
 	 * `type` が `Call` の時のみ存在。
 	 */
-	owner?: any;
+	owner: any;
 }
 
 export interface GameResetParameterObject {
@@ -287,7 +322,7 @@ export class Game {
 	 */
 	// ゲーム開発者がこのIDに付随する情報(名前など)を、ローカルエンティティでの表示や
 	// 干渉などで利用したい場合は、外部システムに問い合わせる必要がある。
-	selfId: string;
+	selfId: string | undefined;
 
 	/**
 	 * 本ゲームで利用可能なオーディオシステム群。musicとsoundが登録されている。
@@ -347,7 +382,7 @@ export class Game {
 	 * また、この値に応じてゲームの処理や内部状態を変化させるべきではない。
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	playId: string;
+	playId: string | undefined;
 
 	/**
 	 * ロードしている操作プラグインを保持するオブジェクト。
@@ -407,7 +442,7 @@ export class Game {
 	/**
 	 * ゲーム全体で共有するサーフェスアトラス。
 	 */
-	surfaceAtlasSet: SurfaceAtlasSetLike;
+	surfaceAtlasSet: SurfaceAtlasSetLike | undefined;
 
 	/**
 	 * 操作プラグインの管理者。
@@ -540,7 +575,7 @@ export class Game {
 	 * _loadAndStart() に渡された、エントリポイント(mainスクリプト)に渡す引数。
 	 * @private
 	 */
-	_mainParameter: GameMainParameterObject;
+	_mainParameter: GameMainParameterObject | undefined;
 
 	/**
 	 * アセットの管理者。
@@ -613,7 +648,7 @@ export class Game {
 	 * focusingcameraがこの値を暗黙的に生成するので、通常ゲーム開発者はこの値を直接指定する必要はない。
 	 * @private
 	 */
-	_focusingCamera: Camera;
+	_focusingCamera: Camera | undefined;
 
 	/**
 	 * このゲームの設定(game.json の内容)。
@@ -675,10 +710,10 @@ export class Game {
 	 * この値を変更した場合、変更を描画に反映するためには `Game#modified()` を呼び出す必要がある。
 	 */
 	// focusingCameraが変更されても古いカメラをtargetCamerasに持つエンティティのEntityStateFlags.Modifiedを取りこぼすことが無いように、変更時にはrenderを呼べるようアクセサを使う
-	get focusingCamera(): Camera {
+	get focusingCamera(): Camera | undefined {
 		return this._focusingCamera;
 	}
-	set focusingCamera(c: Camera) {
+	set focusingCamera(c: Camera | undefined) {
 		if (c === this._focusingCamera) return;
 		if (this._modified) this.render();
 		this._focusingCamera = c;
@@ -691,12 +726,12 @@ export class Game {
 	 */
 	constructor(param: GameParameterObject) {
 		const gameConfiguration = this._normalizeConfiguration(param.configuration);
-		this.fps = gameConfiguration.fps;
+		this.fps = gameConfiguration.fps!;
 		this.width = gameConfiguration.width;
 		this.height = gameConfiguration.height;
 		this.renderers = [];
 		this.scenes = [];
-		this.random = null;
+		this.random = null!;
 		this.age = 0;
 		this.assetBase = param.assetBase || "";
 		this.resourceFactory = param.resourceFactory;
@@ -727,11 +762,11 @@ export class Game {
 			leave: this.onLeave,
 			"player-info": this.onPlayerInfo,
 			seed: this.onSeed,
-			message: undefined,
-			"point-down": undefined,
-			"point-move": undefined,
-			"point-up": undefined,
-			operation: undefined
+			message: undefined!,
+			"point-down": undefined!,
+			"point-move": undefined!,
+			"point-up": undefined!,
+			operation: undefined!
 		};
 
 		this.onResized = new Trigger<CommonSize>();
@@ -775,8 +810,8 @@ export class Game {
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
-		this.onSceneChange = new Trigger<Scene>();
-		this._onSceneChange = new Trigger<Scene>();
+		this.onSceneChange = new Trigger();
+		this._onSceneChange = new Trigger();
 		this._onSceneChange.add(this._handleSceneChanged, this);
 		this._sceneChanged = this._onSceneChange;
 
@@ -824,7 +859,7 @@ export class Game {
 		this._postTickTasks.push({
 			type: PostTickTaskType.ReplaceScene,
 			scene: scene,
-			preserveCurrent: preserveCurrent
+			preserveCurrent: !!preserveCurrent
 		});
 	}
 
@@ -843,7 +878,7 @@ export class Game {
 	 */
 	popScene(preserve?: boolean, step: number = 1): void {
 		for (let i = 0; i < step; i++) {
-			this._postTickTasks.push({ type: PostTickTaskType.PopScene, preserveCurrent: preserve });
+			this._postTickTasks.push({ type: PostTickTaskType.PopScene, preserveCurrent: !!preserve });
 		}
 	}
 
@@ -868,7 +903,7 @@ export class Game {
 	 * @param events ティックに含ませるイベント。省略された場合、 `undefined` 。
 	 */
 	tick(advanceAge: boolean, omittedTickCount?: number, events?: pl.Event[]): boolean {
-		let scene: Scene;
+		let scene: Scene | null = null;
 
 		if (this._isTerminated) return false;
 
@@ -966,9 +1001,11 @@ export class Game {
 	 * @param point 対象の座標
 	 * @param camera 対象のカメラ。指定しなければ `Game.focusingCamera` が使われる
 	 */
-	findPointSource(point: CommonOffset, camera?: Camera): PointSource {
+	findPointSource(point: CommonOffset, camera?: Camera): PointSource | undefined {
 		if (!camera) camera = this.focusingCamera;
-		return this.scene().findPointSourceByPoint(point, false, camera);
+		const scene = this.scene();
+		if (!scene) return undefined;
+		return scene.findPointSourceByPoint(point, false, camera);
 	}
 
 	/**
@@ -1204,9 +1241,9 @@ export class Game {
 	 * @private
 	 */
 	_decodeOperationPluginOperation(code: number, op: (number | string)[]): any {
-		const plugins = this.operationPluginManager.plugins;
-		if (!plugins[code] || !plugins[code].decode) return op;
-		return plugins[code].decode(op);
+		const plugin = this.operationPluginManager.plugins[code];
+		if (!plugin || !plugin.decode) return op;
+		return plugin.decode(op);
 	}
 
 	/**
@@ -1254,7 +1291,7 @@ export class Game {
 		this.db = {};
 		this._localDb = {};
 		this._modified = true;
-		this.loadingScene = undefined;
+		this.loadingScene = undefined!;
 		this._focusingCamera = undefined;
 		this.lastLocalTickMode = null;
 		this.lastTickGenerationMode = null;
@@ -1308,88 +1345,88 @@ export class Game {
 		}
 
 		// NOTE: fps, width, height, external, vars はそのまま保持しておく
-		this.db = undefined;
-		this.renderers = undefined;
-		this.scenes = undefined;
-		this.random = undefined;
-		this.onJoin.destroy();
-		this.onJoin = undefined;
-		this.onLeave.destroy();
-		this.onLeave = undefined;
-		this.onSeed.destroy();
-		this.onSeed = undefined;
-		this.onPlayerInfo.destroy();
-		this.onPlayerInfo = undefined;
-
+		this.db = undefined!;
+		this.renderers = undefined!;
+		this.scenes = undefined!;
+		this.random = undefined!;
 		this._modified = false;
 		this.age = 0;
-		this.assets = undefined; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
+		this.assets = undefined!; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
 		this.isLoaded = false;
-		this.loadingScene = undefined;
+		this.loadingScene = undefined!;
 		this.assetBase = "";
 		this.selfId = undefined;
 		this.audio.music.stopAll();
 		this.audio.sound.stopAll();
-		this.audio = undefined;
-		this.defaultAudioSystemId = undefined;
+		this.audio = undefined!;
+		this.defaultAudioSystemId = undefined!;
+		this.handlerSet = undefined!;
+
+		this.onJoin.destroy();
+		this.onJoin = undefined!;
+		this.onLeave.destroy();
+		this.onLeave = undefined!;
+		this.onSeed.destroy();
+		this.onSeed = undefined!;
+		this.onPlayerInfo.destroy();
+		this.onPlayerInfo = undefined!;
+		this.onResized.destroy();
+		this.onResized = undefined!;
+		this.onSkipChange.destroy();
+		this.onSkipChange = undefined!;
+		this.onSceneChange.destroy();
+		this.onSceneChange = undefined!;
 		this.onSnapshotRequest.destroy();
-		this.onSnapshotRequest = undefined;
-		this.handlerSet = undefined;
+		this.onSnapshotRequest = undefined!;
+		this.join = undefined!;
+		this.leave = undefined!;
+		this.seed = undefined!;
+		this.playerInfo = undefined!;
+		this.snapshotRequest = undefined!;
+		this.resized = undefined!;
+		this.skippingChanged = undefined!;
+		this._sceneChanged = undefined!;
+		this._loaded = undefined!;
+		this._started = undefined!;
+		this._operationPluginOperated = undefined!;
+		this._onSceneChange.destroy();
+		this._onSceneChange = undefined!;
+		this._onLoad.destroy();
+		this._onLoad = undefined!;
+		this._onStart.destroy();
+		this._onStart = undefined!;
 
 		// TODO より能動的にdestroy処理を入れるべきかもしれない
-		this.resourceFactory = undefined;
-		this.storage = undefined;
+		this.resourceFactory = undefined!;
+		this.storage = undefined!;
 
 		this.playId = undefined;
-		this.operationPlugins = undefined; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
-		this.onResized.destroy();
-		this.onResized = undefined;
-		this.onSkipChange.destroy();
-		this.onSkipChange = undefined;
-		this._eventTriggerMap = undefined;
-		this._initialScene = undefined;
-		this._defaultLoadingScene = undefined;
-		this.onSceneChange.destroy();
-		this.onSceneChange = undefined;
-		this._onSceneChange.destroy();
-		this._onSceneChange = undefined;
-		this._onLoad.destroy();
-		this._onLoad = undefined;
-		this._onStart.destroy();
-		this._onStart = undefined;
-		this._main = undefined;
+		this.operationPlugins = undefined!; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
+		this._eventTriggerMap = undefined!;
+		this._initialScene = undefined!;
+		this._defaultLoadingScene = undefined!;
+		this._main = undefined!;
 		this._mainFunc = undefined;
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
-		this._assetManager = undefined;
-		this._eventConverter = undefined;
-		this._pointEventResolver = undefined;
-		this.audio = undefined;
-		this.operationPluginManager = undefined;
+		this._assetManager = undefined!;
+		this._eventConverter = undefined!;
+		this._pointEventResolver = undefined!;
+		this.operationPluginManager = undefined!;
 		this._onOperationPluginOperated.destroy();
-		this._onOperationPluginOperated = undefined;
+		this._onOperationPluginOperated = undefined!;
 		this._idx = 0;
 		this._localDb = {};
 		this._localIdx = 0;
 		this._cameraIdx = 0;
 		this._isTerminated = true;
 		this._focusingCamera = undefined;
-		this._configuration = undefined;
+		this._configuration = undefined!;
 		this._postTickTasks = [];
-		this.surfaceAtlasSet.destroy();
+		if (this.surfaceAtlasSet) {
+			this.surfaceAtlasSet.destroy();
+		}
 		this.surfaceAtlasSet = undefined;
-
-		this.join = undefined;
-		this.leave = undefined;
-		this.seed = undefined;
-		this.playerInfo = undefined;
-		this.snapshotRequest = undefined;
-		this.resized = undefined;
-		this.skippingChanged = undefined;
-		this._sceneChanged = undefined;
-		this._loaded = undefined;
-		this._started = undefined;
-		this._operationPluginOperated = undefined;
 	}
 
 	/**
@@ -1425,14 +1462,14 @@ export class Game {
 	/**
 	 * @private
 	 */
-	_updateEventTriggers(scene: Scene): void {
+	_updateEventTriggers(scene: Scene | undefined): void {
 		this._modified = true;
 		if (!scene) {
-			this._eventTriggerMap.message = undefined;
-			this._eventTriggerMap["point-down"] = undefined;
-			this._eventTriggerMap["point-move"] = undefined;
-			this._eventTriggerMap["point-up"] = undefined;
-			this._eventTriggerMap.operation = undefined;
+			this._eventTriggerMap.message = undefined!;
+			this._eventTriggerMap["point-down"] = undefined!;
+			this._eventTriggerMap["point-move"] = undefined!;
+			this._eventTriggerMap["point-up"] = undefined!;
+			this._eventTriggerMap.operation = undefined!;
 			return;
 		}
 
@@ -1528,6 +1565,7 @@ export class Game {
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
 		const scene = this.scenes.pop();
+		if (!scene) throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; scene stack underflow");
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
 		if (!preserveCurrent) scene.destroy();
@@ -1543,7 +1581,7 @@ export class Game {
 		this.operationPlugins = this.operationPluginManager.plugins;
 
 		if (this._mainFunc) {
-			this._mainFunc(this._runtimeValueBase, this._mainParameter);
+			this._mainFunc(this._runtimeValueBase, this._mainParameter || {});
 		} else if (this._main) {
 			const mainFun = this._moduleManager._require(this._main);
 			if (!mainFun || typeof mainFun !== "function")

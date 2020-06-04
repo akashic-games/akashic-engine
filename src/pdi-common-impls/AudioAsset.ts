@@ -27,7 +27,7 @@ export abstract class AudioAsset extends Asset implements AudioAssetLike {
 	/**
 	 * @private
 	 */
-	_lastPlayedPlayer: AudioPlayerLike;
+	_lastPlayedPlayer: AudioPlayerLike | undefined;
 
 	constructor(id: string, assetPath: string, duration: number, system: AudioSystemLike, loop: boolean, hint: AudioAssetHint) {
 		super(id, assetPath);
@@ -58,7 +58,7 @@ export abstract class AudioAsset extends Asset implements AudioAssetLike {
 		if (this._system) this.stop();
 
 		this.data = undefined;
-		this._system = undefined;
+		this._system = undefined!;
 		this._lastPlayedPlayer = undefined;
 		super.destroy();
 	}

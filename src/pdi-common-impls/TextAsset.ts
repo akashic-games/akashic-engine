@@ -19,7 +19,7 @@ export abstract class TextAsset extends Asset implements TextAssetLike {
 	}
 
 	destroy(): void {
-		this.data = undefined;
+		this.data = undefined!;
 		super.destroy();
 	}
 }

@@ -159,7 +159,7 @@ export class Object2D implements CommonArea {
 	 * 初期値は `undefined` となり、合成方法を指定しないことを意味する。
 	 * `E` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 */
-	compositeOperation: CompositeOperation | CompositeOperationString;
+	compositeOperation: CompositeOperation | CompositeOperationString | undefined;
 
 	/**
 	 * オブジェクトのアンカーの横位置。アンカーについては以下の通り。
@@ -197,7 +197,7 @@ export class Object2D implements CommonArea {
 	 * `Object2D` を継承したクラスを新たに作る場合には、本フィールドを適切に操作しなければならない。
 	 * @private
 	 */
-	_matrix: Matrix;
+	_matrix: Matrix | undefined;
 
 	/**
 	 * デフォルト値で `Object2D` のインスタンスを生成する。
@@ -261,7 +261,7 @@ export class Object2D implements CommonArea {
 		}
 		if (typeof posOrX === "number") {
 			this.x = posOrX;
-			this.y = y;
+			this.y = y!;
 		} else {
 			this.x = posOrX.x;
 			this.y = posOrX.y;
@@ -304,7 +304,7 @@ export class Object2D implements CommonArea {
 		}
 		if (typeof sizeOrWidth === "number") {
 			this.width = sizeOrWidth;
-			this.height = height;
+			this.height = height!;
 		} else {
 			this.width = sizeOrWidth.width;
 			this.height = sizeOrWidth.height;

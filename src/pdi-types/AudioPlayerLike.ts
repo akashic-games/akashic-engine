@@ -18,7 +18,7 @@ export interface AudioPlayerLike {
 	 * 再生中のオーディオアセット。
 	 * 再生中のものがない場合、 `undefined` 。
 	 */
-	currentAudio: AudioAssetLike;
+	currentAudio: AudioAssetLike | undefined;
 
 	/**
 	 * `play()` が呼び出された時に通知される `Trigger` 。

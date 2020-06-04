@@ -184,7 +184,7 @@ export class StorageValueStore {
 	/**
 	 * @private
 	 */
-	_values: StorageValue[][];
+	_values: StorageValue[][] | undefined;
 
 	constructor(keys: StorageKey[], values?: StorageValue[][]) {
 		this._keys = keys;
@@ -196,7 +196,7 @@ export class StorageValueStore {
 	 * 通常、インデックスは `Scene` のコンストラクタに指定した `storageKeys` のインデックスに対応する。
 	 * @param keyOrIndex `StorageKey` 又はインデックス
 	 */
-	get(keyOrIndex: StorageReadKey | number): StorageValue[] {
+	get(keyOrIndex: StorageReadKey | number): StorageValue[] | undefined {
 		if (this._values === undefined) {
 			return [];
 		}
@@ -228,7 +228,7 @@ export class StorageValueStore {
 	 * 通常、インデックスは `Scene` のコンストラクタに指定した `storageKeys` のインデックスに対応する。
 	 * @param keyOrIndex `StorageKey` 又はインデックス
 	 */
-	getOne(keyOrIndex: StorageReadKey | number): StorageValue {
+	getOne(keyOrIndex: StorageReadKey | number): StorageValue | undefined {
 		var values = this.get(keyOrIndex);
 		if (!values) return undefined;
 
@@ -273,7 +273,7 @@ export class StorageLoader {
 		this._loaded = false;
 		this._storage = storage;
 		this._valueStore = new StorageValueStore(keys);
-		this._handler = undefined;
+		this._handler = undefined!;
 		this._valueStoreSerialization = serialization;
 	}
 
@@ -316,7 +316,7 @@ export class Storage {
 	/**
 	 * @private
 	 */
-	_write: (key: StorageKey, value: StorageValue, option: StorageWriteOption) => void;
+	_write: (key: StorageKey, value: StorageValue, option?: StorageWriteOption) => void;
 
 	/**
 	 * @private
@@ -361,7 +361,7 @@ export class Storage {
 	 */
 	// ストレージに値の書き込むを行う関数を登録する。
 	// 登録した関数内の `this` は `Storage` を指す。
-	_registerWrite(write: (key: StorageKey, value: StorageValue, option: StorageWriteOption) => void): void {
+	_registerWrite(write: (key: StorageKey, value: StorageValue, option?: StorageWriteOption) => void): void {
 		this._write = write;
 	}
 

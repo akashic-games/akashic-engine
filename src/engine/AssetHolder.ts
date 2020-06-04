@@ -135,9 +135,9 @@ export class AssetHolder<UserData> {
 			this._assetManager.unrefAssets(this._assets);
 		}
 		this.waitingAssetsCount = 0;
-		this.userData = undefined;
-		this._handlerSet = undefined;
-		this._assetIds = undefined;
+		this.userData = undefined!;
+		this._handlerSet = undefined!;
+		this._assetIds = undefined!;
 		this._requested = false;
 	}
 

@@ -38,9 +38,7 @@ class AssetLoadingInfo {
 	}
 }
 
-function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): AudioSystemConfigurationMap {
-	confMap = confMap || {};
-
+function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap = {}): AudioSystemConfigurationMap {
 	const systemDefaults: AudioSystemConfigurationMap = {
 		music: {
 			loop: true,
@@ -222,12 +220,12 @@ export class AssetManager implements AssetLoadHandler {
 		for (var i = 0; i < assetIds.length; ++i) {
 			this._releaseAsset(assetIds[i]);
 		}
-		this.configuration = undefined;
-		this._assets = undefined;
-		this._liveAssetVirtualPathTable = undefined;
-		this._liveAssetPathTable = undefined;
-		this._refCounts = undefined;
-		this._loadings = undefined;
+		this.configuration = undefined!;
+		this._assets = undefined!;
+		this._liveAssetVirtualPathTable = undefined!;
+		this._liveAssetPathTable = undefined!;
+		this._refCounts = undefined!;
+		this._loadings = undefined!;
 	}
 
 	/**
@@ -511,7 +509,7 @@ export class AssetManager implements AssetLoadHandler {
 				return asset;
 			case "audio":
 				var system = conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, !!conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":
@@ -519,7 +517,8 @@ export class AssetManager implements AssetLoadHandler {
 			case "video":
 				// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
 				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
-				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, new VideoSystem(), conf.loop, conf.useRealSize);
+				const videoSystem = new VideoSystem();
+				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, videoSystem, !!conf.loop, !!conf.useRealSize);
 			default:
 				throw ExceptionFactory.createAssertionError(
 					"AssertionError#_createAssetFor: unknown asset type " + (conf as AssetLike).type + " for asset ID: " + id
@@ -528,8 +527,8 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	_releaseAsset(assetId: string): void {
-		var asset = this._assets[assetId] || (this._loadings[assetId] && this._loadings[assetId].asset);
-		var path: string;
+		const asset = this._assets[assetId] || (this._loadings[assetId] && this._loadings[assetId].asset);
+		let path: string | null = null;
 		if (asset) {
 			path = asset.path;
 			if (asset.inUse()) {

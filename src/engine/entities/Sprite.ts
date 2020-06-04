@@ -93,7 +93,7 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
-	_stretchMatrix: Matrix;
+	_stretchMatrix: Matrix | undefined;
 
 	/**
 	 * @private
@@ -193,9 +193,9 @@ export class Sprite extends E {
 		if (this._surface && !this._surface.destroyed() && destroySurface) {
 			this._surface.destroy();
 		}
-		this.src = undefined;
+		this.src = undefined!;
 		this._beforeSrc = undefined;
-		this._surface = undefined;
+		this._surface = undefined!;
 		super.destroy();
 	}
 
@@ -215,7 +215,7 @@ export class Sprite extends E {
 			}
 		}
 		if (this._surface !== this._beforeSurface) {
-			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface, this._surface);
+			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface!, this._surface);
 			this._beforeSurface = this._surface;
 		}
 	}
