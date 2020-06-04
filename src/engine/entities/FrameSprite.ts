@@ -94,7 +94,7 @@ export class FrameSprite extends Sprite {
 	 * 指定しなかった場合、 `start()` 時にFPSの逆数に設定される。(つまり、1フレームごとに画像が切り替わっていく)
 	 * この値を変更した場合、反映には `this.start()` を呼び出す必要がある。
 	 */
-	interval: number;
+	interval: number | undefined;
 
 	/**
 	 * アニメーションをループ再生させるか否か。
@@ -118,7 +118,7 @@ export class FrameSprite extends Sprite {
 	/**
 	 * @private
 	 */
-	_timer: Timer;
+	_timer: Timer | undefined;
 
 	/**
 	 * @private

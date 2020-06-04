@@ -104,8 +104,9 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 */
 	start(code: number): void {
-		if (!this._infos[code] || !this._infos[code]._plugin) return;
-		this._infos[code]._plugin.start();
+		const info = this._infos[code];
+		if (!info || !info._plugin) return;
+		info._plugin.start();
 	}
 
 	/**
@@ -113,19 +114,20 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 */
 	stop(code: number): void {
-		if (!this._infos[code] || !this._infos[code]._plugin) return;
-		this._infos[code]._plugin.stop();
+		const info = this._infos[code];
+		if (!info || !info._plugin) return;
+		info._plugin.stop();
 	}
 
 	destroy(): void {
 		this.stopAll();
 		this.onOperate.destroy();
-		this.onOperate = undefined;
-		this.operated = undefined;
-		this.plugins = undefined;
-		this._game = undefined;
-		this._viewInfo = undefined;
-		this._infos = undefined;
+		this.onOperate = undefined!;
+		this.operated = undefined!;
+		this.plugins = undefined!;
+		this._game = undefined!;
+		this._viewInfo = undefined!;
+		this._infos = undefined!;
 	}
 
 	stopAll(): void {

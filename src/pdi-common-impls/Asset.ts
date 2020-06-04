@@ -23,11 +23,11 @@ export abstract class Asset implements AssetLike {
 
 	destroy(): void {
 		this.onDestroyed.fire(this);
-		this.id = undefined;
-		this.originalPath = undefined;
-		this.path = undefined;
+		this.id = undefined!;
+		this.originalPath = undefined!;
+		this.path = undefined!;
 		this.onDestroyed.destroy();
-		this.onDestroyed = undefined;
+		this.onDestroyed = undefined!;
 	}
 
 	destroyed(): boolean {

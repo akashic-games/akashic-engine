@@ -149,12 +149,12 @@ export class E extends Object2D implements CommonArea {
 	 * このエンティティの全子エンティティ。
 	 * 子エンティティが存在しない場合、本フィールドの値は `undefined` または空配列である。
 	 */
-	children: E[];
+	children: E[] | undefined;
 
 	/**
 	 * 親。
 	 */
-	parent: E | Scene;
+	parent: E | Scene | undefined;
 
 	/**
 	 * このエンティティが属するシーン。
@@ -184,7 +184,7 @@ export class E extends Object2D implements CommonArea {
 	 *
 	 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
 	 */
-	shaderProgram: ShaderProgramLike;
+	shaderProgram: ShaderProgramLike | null | undefined;
 
 	/**
 	 * 子にtouchableなものが含まれているかどうかを表す。
@@ -192,11 +192,11 @@ export class E extends Object2D implements CommonArea {
 	 */
 	_hasTouchableChildren: boolean;
 
-	private _onUpdate: Trigger<void>;
-	private _onMessage: Trigger<MessageEvent>;
-	private _onPointDown: Trigger<PointDownEvent>;
-	private _onPointUp: Trigger<PointUpEvent>;
-	private _onPointMove: Trigger<PointMoveEvent>;
+	private _onUpdate: Trigger<void> | undefined;
+	private _onMessage: Trigger<MessageEvent> | undefined;
+	private _onPointDown: Trigger<PointDownEvent> | undefined;
+	private _onPointUp: Trigger<PointUpEvent> | undefined;
+	private _onPointMove: Trigger<PointMoveEvent> | undefined;
 	private _touchable: boolean;
 
 	/**
@@ -454,7 +454,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param e 子エンティティとして追加するエンティティ
 	 * @param target 挿入位置にある子エンティティ
 	 */
-	insertBefore(e: E, target: E): void {
+	insertBefore(e: E, target: E | undefined): void {
 		if (e.parent) e.remove();
 		if (!this.children) this.children = [];
 
@@ -483,14 +483,14 @@ export class E extends Object2D implements CommonArea {
 	 */
 	remove(e?: E): void {
 		if (e === undefined) {
-			this.parent.remove(this);
+			this.parent!.remove(this);
 			return;
 		}
 
 		var index = this.children ? this.children.indexOf(e) : -1;
 		if (index < 0) throw ExceptionFactory.createAssertionError("E#remove: invalid child");
-		this.children[index].parent = undefined;
-		this.children.splice(index, 1);
+		this.children![index].parent = undefined;
+		this.children!.splice(index, 1);
 
 		if (e._touchable || e._hasTouchableChildren) {
 			if (!this._findTouchableChildren(this)) {
@@ -615,16 +615,17 @@ export class E extends Object2D implements CommonArea {
 	 * @param m `this` に適用する変換行列。省略された場合、単位行列
 	 * @param force touchable指定を無視する場合真を指定する。省略された場合、偽
 	 */
-	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean): PointSource {
+	findPointSourceByPoint(point: CommonOffset, m?: Matrix, force?: boolean): PointSource | undefined {
 		if (this.state & EntityStateFlags.Hidden) return undefined;
 
 		m = m ? m.multiplyNew(this.getMatrix()) : this.getMatrix().clone();
 		const p = m.multiplyInverseForPoint(point);
 
 		if (this._hasTouchableChildren || (force && this.children && this.children.length)) {
+			const children = this.children!;
 			if (this.shouldFindChildrenByPoint(p)) {
-				for (let i = this.children.length - 1; i >= 0; --i) {
-					const child = this.children[i];
+				for (let i = children.length - 1; i >= 0; --i) {
+					const child = children[i];
 					if (force || child._touchable || child._hasTouchableChildren) {
 						const target = child.findPointSourceByPoint(point, m, force);
 						if (target) return target;
@@ -685,7 +686,7 @@ export class E extends Object2D implements CommonArea {
 	/**
 	 * このEの包含矩形を計算する。
 	 */
-	calculateBoundingRect(): CommonRect {
+	calculateBoundingRect(): CommonRect | undefined {
 		return this._calculateBoundingRect(undefined);
 	}
 
@@ -696,7 +697,7 @@ export class E extends Object2D implements CommonArea {
 	localToGlobal(offset: CommonOffset): CommonOffset {
 		let point = offset;
 		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
-		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			point = entity.getMatrix().multiplyPoint(point);
 		}
 		return point;
@@ -709,7 +710,7 @@ export class E extends Object2D implements CommonArea {
 	globalToLocal(offset: CommonOffset): CommonOffset {
 		let matrix: Matrix = new PlainMatrix();
 		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
-		for (let entity: E | Scene = this; entity instanceof E; entity = entity.parent) {
+		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
 		}
 		return matrix.multiplyInverseForPoint(offset);
@@ -718,7 +719,7 @@ export class E extends Object2D implements CommonArea {
 	/**
 	 * @private
 	 */
-	_calculateBoundingRect(m?: Matrix): CommonRect {
+	_calculateBoundingRect(m?: Matrix): CommonRect | undefined {
 		var matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);
@@ -804,7 +805,7 @@ export class E extends Object2D implements CommonArea {
 		return false;
 	}
 
-	private _findTouchableChildren(e: E): E {
+	private _findTouchableChildren(e: E): E | undefined {
 		if (e.children) {
 			for (var i = 0; i < e.children.length; ++i) {
 				if (e.children[i].touchable) return e.children[i];

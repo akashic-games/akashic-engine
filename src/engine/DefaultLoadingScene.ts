@@ -104,7 +104,7 @@ export class DefaultLoadingScene extends LoadingScene {
 			this._barHeight = 5;
 			this._style = "default";
 		}
-		this._gauge = undefined;
+		this._gauge = undefined!;
 		this._gaugeUpdateCount = 0;
 		this._totalWaitingAssetCount = 0;
 		this.onLoad.add(this._handleLoad, this);

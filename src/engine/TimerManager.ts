@@ -26,7 +26,7 @@ export class TimerIdentifier {
 	/**
 	 * @private
 	 */
-	_fired: (c: TimerIdentifier) => void;
+	_fired: ((c: TimerIdentifier) => void) | undefined;
 
 	/**
 	 * @private
@@ -44,9 +44,9 @@ export class TimerIdentifier {
 
 	destroy(): void {
 		this._timer.onElapse.remove(this._handleElapse, this);
-		this._timer = undefined;
-		this._handler = undefined;
-		this._handlerOwner = undefined;
+		this._timer = undefined!;
+		this._handler = undefined!;
+		this._handlerOwner = undefined!;
 		this._fired = undefined;
 		this._firedOwner = undefined;
 	}
@@ -94,10 +94,10 @@ export class TimerManager {
 			this._timers[i].destroy();
 		}
 
-		this._timers = undefined;
-		this._trigger = undefined;
-		this._identifiers = undefined;
-		this._fps = undefined;
+		this._timers = undefined!;
+		this._trigger = undefined!;
+		this._identifiers = undefined!;
+		this._fps = undefined!;
 	}
 
 	destroyed(): boolean {

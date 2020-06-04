@@ -157,12 +157,6 @@ describe("test PathUtil", () => {
 		expect(paths).toEqual(["https://node_modules/node_modules"]);
 	});
 
-	it("addExtname", () => {
-		expect(PathUtil.addExtname("file", "ext")).toBe("file.ext");
-		expect(PathUtil.addExtname("http://example/file?query", "ext")).toBe("http://example/file.ext?query");
-		expect(PathUtil.addExtname("http://example/?query", "ext")).toBe("http://example/.ext?query");
-	});
-
 	it("splitPath", () => {
 		expect(PathUtil.splitPath("http://example.com/file.ext")).toEqual({
 			host: "http://example.com",
