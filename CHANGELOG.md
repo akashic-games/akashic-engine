@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.24
+
+仕様変更
+ * `g.TextBaseline` を廃止
+
 ## 3.0.0-beta.23
 
 その他変更
