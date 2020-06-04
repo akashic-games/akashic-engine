@@ -58,11 +58,11 @@ export class OperationPluginManager {
 	plugins: { [key: number]: OperationPlugin };
 
 	private _game: Game;
-	private _viewInfo: OperationPluginViewInfo;
+	private _viewInfo: OperationPluginViewInfo | null;
 	private _infos: InternalOperationPluginInfo[];
 	private _initialized: boolean;
 
-	constructor(game: Game, viewInfo: OperationPluginViewInfo, infos: InternalOperationPluginInfo[]) {
+	constructor(game: Game, viewInfo: OperationPluginViewInfo | null, infos: InternalOperationPluginInfo[]) {
 		this.onOperate = new Trigger<InternalOperationPluginOperation>();
 		this.operated = this.onOperate;
 		this.plugins = {};

@@ -269,7 +269,7 @@ export class DynamicFont extends Font {
 			this._atlasSet = game.surfaceAtlasSet;
 		}
 
-		this._atlasSet.addAtlas();
+		if (this._atlasSet) this._atlasSet.addAtlas();
 
 		if (this.hint.presetChars) {
 			for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
@@ -293,7 +293,7 @@ export class DynamicFont extends Font {
 	 *
 	 * @param code 文字コード
 	 */
-	glyphForCharacter(code: number): GlyphLike {
+	glyphForCharacter(code: number): GlyphLike | null {
 		var glyph = this._glyphs[code];
 
 		if (!(glyph && glyph.isSurfaceValid)) {
@@ -331,14 +331,14 @@ export class DynamicFont extends Font {
 	 *
 	 * @param missingGlyph `BitmapFont#map` に存在しないコードポイントの代わりに表示するべき文字。最初の一文字が用いられる。
 	 */
-	asBitmapFont(missingGlyphChar?: string): BitmapFont {
+	asBitmapFont(missingGlyphChar?: string): BitmapFont | null {
 		if (this._atlasSet.getAtlasNum() !== 1) {
 			return null;
 		}
 
-		let missingGlyphCharCodePoint: number;
+		let missingGlyphCharCodePoint: number | null = null;
 		if (missingGlyphChar) {
-			missingGlyphCharCodePoint = Util.charCodeAt(missingGlyphChar, 0);
+			missingGlyphCharCodePoint = Util.charCodeAt(missingGlyphChar, 0)!;
 			this.glyphForCharacter(missingGlyphCharCodePoint);
 		}
 
@@ -364,6 +364,7 @@ export class DynamicFont extends Font {
 		// デフォルト値である。ここでは必ず与えているのでデフォルト値としては利用されない。
 		// しかし defaultGlyphHeight は BitmapFont#size にも用いられる。
 		// そのために this.size をコンストラクタの第４引数に与えることにする。
+		// @ts-ignore
 		const missingGlyph = glyphAreaMap[missingGlyphCharCodePoint];
 		const atlas = this._atlasSet.getAtlas(0);
 		const size = atlas.getAtlasUsedSize();
@@ -387,8 +388,8 @@ export class DynamicFont extends Font {
 		if (this._isSurfaceAtlasSetOwner) {
 			this._atlasSet.destroy();
 		}
-		this._glyphs = null;
-		this._glyphFactory = null;
+		this._glyphs = undefined!;
+		this._glyphFactory = undefined!;
 		this._destroyed = true;
 	}
 

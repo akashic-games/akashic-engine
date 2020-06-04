@@ -4,11 +4,12 @@ import { SurfaceAtlasSlotLike } from "../pdi-types/SurfaceAtlasSlotLike";
 import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { SurfaceAtlasSlot } from "./SurfaceAtrasSlot";
 
-function getSurfaceAtlasSlot(slot: SurfaceAtlasSlotLike, width: number, height: number): SurfaceAtlasSlotLike {
+function getSurfaceAtlasSlot(slot: SurfaceAtlasSlotLike, width: number, height: number): SurfaceAtlasSlotLike | null {
 	while (slot) {
 		if (slot.width >= width && slot.height >= height) {
 			return slot;
 		}
+		// @ts-ignore
 		slot = slot.next;
 	}
 
@@ -53,7 +54,7 @@ export class SurfaceAtlas implements SurfaceAtlasLike {
 	/**
 	 * @private
 	 */
-	_acquireSurfaceAtlasSlot(width: number, height: number): SurfaceAtlasSlotLike {
+	_acquireSurfaceAtlasSlot(width: number, height: number): SurfaceAtlasSlotLike | null {
 		// Renderer#drawImage()でサーフェス上の一部を描画するとき、
 		// 指定した部分に隣接する画素がにじみ出る現象が確認されている。
 		// ここれではそれを避けるため1pixelの余白を与えている。
@@ -123,7 +124,7 @@ export class SurfaceAtlas implements SurfaceAtlasLike {
 	 * @param width サーフェス内における矩形の幅。0より大きい数値でなければならない
 	 * @param height サーフェス内における矩形の高さ。0より大きい数値でなければならない
 	 */
-	addSurface(surface: SurfaceLike, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlotLike {
+	addSurface(surface: SurfaceLike, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlotLike | null {
 		const slot = this._acquireSurfaceAtlasSlot(width, height);
 		if (!slot) {
 			return null;

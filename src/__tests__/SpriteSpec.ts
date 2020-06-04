@@ -287,7 +287,7 @@ describe("test Sprite", () => {
 
 	it("srcの変更", () => {
 		const runtime = skeletonRuntime();
-		const imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
+		const imageAsset = runtime.game.resourceFactory.createImageAsset("dummyId", "dummyPath", 200, 200);
 		const sprite = new MonitorSprite({
 			scene: runtime.scene,
 			src: imageAsset
@@ -297,7 +297,7 @@ describe("test Sprite", () => {
 		expect(sprite._surface).toBe(imageAsset.asSurface());
 		expect(sprite._beforeSurface).toBe(imageAsset.asSurface());
 
-		const otherImageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 100, 100);
+		const otherImageAsset = runtime.game.resourceFactory.createImageAsset("dummyId", "dummyPath", 100, 100);
 		sprite.src = otherImageAsset;
 		sprite.invalidate();
 		expect(sprite.src).toBe(otherImageAsset);

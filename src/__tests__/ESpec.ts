@@ -51,9 +51,9 @@ describe("test E", () => {
 		});
 
 		expect(e.parent).toBeUndefined();
-		expect(e.children.length).toBe(2);
-		expect(e.children[0]).toBe(c1);
-		expect(e.children[1]).toBe(c2);
+		expect(e.children!.length).toBe(2);
+		expect(e.children![0]).toBe(c1);
+		expect(e.children![1]).toBe(c2);
 		expect(e.touchable).toBe(true);
 		expect(e.local).toBe(true);
 		expect(e.scene).toBe(runtime.scene);
@@ -105,8 +105,8 @@ describe("test E", () => {
 		c2 = new E({ scene: runtime.scene, parent: p, tag: "tagged" });
 		expect(c1.parent).toBe(p);
 		expect(c2.parent).toBe(p);
-		expect(p.children[0]).toBe(c1);
-		expect(p.children[1]).toBe(c2);
+		expect(p.children![0]).toBe(c1);
+		expect(p.children![1]).toBe(c2);
 		expect(c2.tag).toBe("tagged");
 	});
 
@@ -196,7 +196,7 @@ describe("test E", () => {
 	});
 
 	it("scene", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game });
 		const e2 = new E({ scene: scene });
 		expect(e.game() === runtime.game).toBe(true);
@@ -221,15 +221,15 @@ describe("test E", () => {
 		const e5 = new E({ scene: runtime.scene });
 		e.append(e2);
 		e.insertBefore(e3, e2);
-		expect(e.children[0]).toBe(e3);
-		expect(e.children[1]).toBe(e2);
+		expect(e.children![0]).toBe(e3);
+		expect(e.children![1]).toBe(e2);
 		e.insertBefore(e4, e5);
-		expect(e.children[2]).toBe(e4);
+		expect(e.children![2]).toBe(e4);
 
 		const e6 = new E({ scene: runtime.scene });
 		const e7 = new E({ scene: runtime.scene });
 		e6.insertBefore(e7, undefined);
-		expect(e6.children[0]).toBe(e7);
+		expect(e6.children![0]).toBe(e7);
 	});
 
 	it("remove", () => {
@@ -280,32 +280,32 @@ describe("test E", () => {
 		const e2 = new E({ scene: runtime.scene });
 
 		e.append(e2);
-		expect(e.children.length).toBe(1);
-		expect(e.children[0]).toBe(e2);
+		expect(e.children!.length).toBe(1);
+		expect(e.children![0]).toBe(e2);
 
 		e2.destroy();
-		expect(e.children.length).toBe(0);
+		expect(e.children!.length).toBe(0);
 
 		const e3 = new E({ scene: runtime.scene });
 		const e4 = new E({ scene: runtime.scene });
 		e.append(e3);
 		e.append(e4);
 
-		expect(e.children.length).toBe(2);
-		expect(e.children[0]).toBe(e3);
-		expect(e.children[1]).toBe(e4);
+		expect(e.children!.length).toBe(2);
+		expect(e.children![0]).toBe(e3);
+		expect(e.children![1]).toBe(e4);
 
 		e3.destroy();
-		expect(e.children.length).toBe(1);
-		expect(e.children[0]).toBe(e4);
+		expect(e.children!.length).toBe(1);
+		expect(e.children![0]).toBe(e4);
 		expect(e3.parent).toBe(undefined);
 		expect(e3.destroyed()).toBe(true);
 
 		const e5 = new E({ scene: runtime.scene });
 		e.append(e5);
-		expect(e.children.length).toBe(2);
-		expect(e.children[0]).toBe(e4);
-		expect(e.children[1]).toBe(e5);
+		expect(e.children!.length).toBe(2);
+		expect(e.children![0]).toBe(e4);
+		expect(e.children![1]).toBe(e5);
 
 		e.destroy();
 		expect(e.parent).toBe(undefined);
@@ -495,15 +495,15 @@ describe("test E", () => {
 		face1.modified();
 
 		let found: PointSource;
-		found = runtime.game.findPointSource({ x: 150, y: 150 });
+		found = runtime.game.findPointSource({ x: 150, y: 150 })!;
 		expect(found && found.target).toBe(e);
-		found = runtime.game.findPointSource({ x: 115, y: 115 });
+		found = runtime.game.findPointSource({ x: 115, y: 115 })!;
 		expect(found && found.target).toBe(face1);
 
 		const cam1 = new Camera2D({});
 		cam1.x = cam1.y = 10;
 
-		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam1);
+		found = runtime.game.findPointSource({ x: 115, y: 115 }, cam1)!;
 		expect(found && found.target).toBe(e);
 
 		const face2 = new E({ scene: runtime.scene });
@@ -513,15 +513,15 @@ describe("test E", () => {
 		face2.modified();
 
 		face2.touchable = true;
-		found = runtime.game.findPointSource({ x: 115, y: 115 });
+		found = runtime.game.findPointSource({ x: 115, y: 115 })!;
 		expect(found && found.target).toBe(face2);
 
 		face2.touchable = false;
-		found = runtime.game.findPointSource({ x: 115, y: 115 });
+		found = runtime.game.findPointSource({ x: 115, y: 115 })!;
 		expect(found && found.target).toBe(face1);
 
 		face1.touchable = false;
-		found = runtime.game.findPointSource({ x: 115, y: 115 });
+		found = runtime.game.findPointSource({ x: 115, y: 115 })!;
 		expect(found && found.target).toBe(e);
 	});
 
@@ -717,7 +717,7 @@ describe("test E", () => {
 	});
 
 	it("findPointSource - local scene", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game, local: true });
 		game.pushScene(scene);
 		game._flushPostTickTasks();
@@ -794,6 +794,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
+		// @ts-ignore
 		m.fire();
 
 		expect(firedFlg).toBe(true);
@@ -816,6 +817,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
+		// @ts-ignore
 		p.fire();
 
 		expect(firedFlg).toBe(true);
@@ -838,6 +840,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
+		// @ts-ignore
 		p.fire();
 
 		expect(firedFlg).toBe(true);
@@ -860,6 +863,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
+		// @ts-ignore
 		p.fire();
 
 		expect(firedFlg).toBe(true);
@@ -1043,7 +1047,7 @@ describe("test E", () => {
 		expect(e._isTargetOperation(p)).toBe(false);
 		e.show();
 		expect(e._isTargetOperation(p)).toBe(true);
-		expect(e._isTargetOperation(null)).toBe(false);
+		expect(e._isTargetOperation(null!)).toBe(false);
 
 		const e2 = new E({ scene: runtime.scene });
 		expect(e2._isTargetOperation(p)).toBe(false);
@@ -1053,7 +1057,7 @@ describe("test E", () => {
 		expect(e2._isTargetOperation(p)).toBe(false);
 		e2.show();
 		expect(e2._isTargetOperation(p)).toBe(false);
-		expect(e2._isTargetOperation(null)).toBe(false);
+		expect(e2._isTargetOperation(null!)).toBe(false);
 	});
 
 	it("render - compositeOperationString", () => {
@@ -1094,7 +1098,7 @@ describe("test E", () => {
 		scene.append(e);
 		e.modified();
 
-		const result = e.calculateBoundingRect();
+		const result = e.calculateBoundingRect()!;
 		expect(result.left).toBe(0);
 		expect(result.right).toBe(200);
 		expect(result.top).toBe(0);
@@ -1109,7 +1113,7 @@ describe("test E", () => {
 		scene.append(e2);
 		e2.modified();
 
-		const result2 = e2.calculateBoundingRect();
+		const result2 = e2.calculateBoundingRect()!;
 		expect(result2.left).toBe(-150);
 		expect(result2.right).toBe(50);
 		expect(result2.top).toBe(-60);
@@ -1124,7 +1128,7 @@ describe("test E", () => {
 		scene.append(e3);
 		e3.modified();
 
-		const result3 = e3.calculateBoundingRect();
+		const result3 = e3.calculateBoundingRect()!;
 		expect(result3.left).toBe(-140);
 		expect(result3.right).toBe(10);
 		expect(result3.top).toBe(-180);
@@ -1151,7 +1155,7 @@ describe("test E", () => {
 		scene.append(e3);
 		e.append(e3);
 
-		const result = e.calculateBoundingRect();
+		const result = e.calculateBoundingRect()!;
 		expect(result.left).toBe(0);
 		expect(result.right).toBe(400);
 		expect(result.top).toBe(0);
@@ -1184,7 +1188,7 @@ describe("test E", () => {
 		scene.append(e4);
 		e3.append(e4);
 
-		const result = e.calculateBoundingRect();
+		const result = e.calculateBoundingRect()!;
 		expect(result.left).toBe(0);
 		expect(result.right).toBe(400);
 		expect(result.top).toBe(0);

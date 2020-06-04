@@ -40,7 +40,7 @@ export class EventConverter {
 	toGameEvent(pev: pl.Event): Event {
 		let pointerId: number;
 		let entityId: number;
-		let target: E;
+		let target: E | undefined;
 		let point: CommonOffset;
 		let startDelta: CommonOffset;
 		let prevDelta: CommonOffset;
@@ -50,6 +50,7 @@ export class EventConverter {
 		const eventCode = pev[EventIndex.General.Code];
 		const prio = pev[EventIndex.General.Priority];
 		const playerId = pev[EventIndex.General.PlayerId];
+		// @ts-ignore
 		let player = this._playerTable[playerId] || { id: playerId };
 		switch (eventCode) {
 			case pl.EventCode.Join:
@@ -57,12 +58,15 @@ export class EventConverter {
 					id: playerId,
 					name: pev[EventIndex.Join.PlayerName]
 				};
+				// @ts-ignore
 				if (this._playerTable[playerId] && this._playerTable[playerId].userData != null) {
+					// @ts-ignore
 					player.userData = this._playerTable[playerId].userData;
 				}
+				// @ts-ignore
 				this._playerTable[playerId] = player;
 
-				let store: StorageValueStore = undefined;
+				let store: StorageValueStore | undefined = undefined;
 				if (pev[EventIndex.Join.StorageData]) {
 					let keys: pl.StorageReadKey[] = [];
 					let values: pl.StorageValue[][] = [];
@@ -85,11 +89,13 @@ export class EventConverter {
 			case pl.EventCode.PlayerInfo:
 				let playerName = pev[EventIndex.PlayerInfo.PlayerName];
 				let userData: any = pev[EventIndex.PlayerInfo.UserData];
+				// @ts-ignore
 				this._playerTable[playerId] = {
 					id: playerId,
 					name: playerName,
 					userData
 				};
+				// @ts-ignore
 				return new PlayerInfoEvent(playerId, playerName, userData, prio);
 
 			case pl.EventCode.Message:
@@ -162,7 +168,7 @@ export class EventConverter {
 	 * g.Eventからplaylog.Eventに変換する。
 	 */
 	toPlaylogEvent(e: Event, preservePlayer?: boolean): pl.Event {
-		let targetId: number;
+		let targetId: number | undefined;
 		let playerId: string;
 		switch (e.type) {
 			case "join":
@@ -190,8 +196,8 @@ export class EventConverter {
 				];
 			case "point-down":
 				let pointDown = <PointDownEvent>e;
-				targetId = pointDown.target ? pointDown.target.id : null;
-				playerId = preservePlayer ? pointDown.player.id : this._playerId;
+				targetId = pointDown.target ? pointDown.target.id : undefined;
+				playerId = preservePlayer && pointDown.player ? pointDown.player.id : this._playerId;
 				return [
 					pl.EventCode.PointDown, // 0: イベントコード
 					pointDown.priority, //     1: 優先度
@@ -204,8 +210,8 @@ export class EventConverter {
 				];
 			case "point-move":
 				let pointMove = <PointMoveEvent>e;
-				targetId = pointMove.target ? pointMove.target.id : null;
-				playerId = preservePlayer ? pointMove.player.id : this._playerId;
+				targetId = pointMove.target ? pointMove.target.id : undefined;
+				playerId = preservePlayer && pointMove.player ? pointMove.player.id : this._playerId;
 				return [
 					pl.EventCode.PointMove, // 0: イベントコード
 					pointMove.priority, //     1: 優先度
@@ -222,8 +228,8 @@ export class EventConverter {
 				];
 			case "point-up":
 				let pointUp = <PointUpEvent>e;
-				targetId = pointUp.target ? pointUp.target.id : null;
-				playerId = preservePlayer ? pointUp.player.id : this._playerId;
+				targetId = pointUp.target ? pointUp.target.id : undefined;
+				playerId = preservePlayer && pointUp.player ? pointUp.player.id : this._playerId;
 				return [
 					pl.EventCode.PointUp, // 0: イベントコード
 					pointUp.priority, //     1: 優先度
@@ -240,7 +246,7 @@ export class EventConverter {
 				];
 			case "message":
 				let message = <MessageEvent>e;
-				playerId = preservePlayer ? message.player.id : this._playerId;
+				playerId = preservePlayer && message.player ? message.player.id : this._playerId;
 				return [
 					pl.EventCode.Message, // 0: イベントコード
 					message.priority, //     1: 優先度
@@ -250,7 +256,7 @@ export class EventConverter {
 				];
 			case "operation":
 				let op = <OperationEvent>e;
-				playerId = preservePlayer ? op.player.id : this._playerId;
+				playerId = preservePlayer && op.player ? op.player.id : this._playerId;
 				return [
 					pl.EventCode.Operation, // 0: イベントコード
 					op.priority, //            1: 優先度

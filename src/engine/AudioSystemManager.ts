@@ -12,11 +12,13 @@ export class AudioSystemManager {
 	/**
 	 * ループ再生可能な AudioSystem
 	 */
+	// @ts-ignore
 	music: AudioSystemLike;
 
 	/**
 	 * 効果音を扱う AudioSystem
 	 */
+	// @ts-ignore
 	sound: AudioSystemLike;
 
 	/**

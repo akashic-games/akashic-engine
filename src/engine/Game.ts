@@ -442,7 +442,7 @@ export class Game {
 	/**
 	 * ゲーム全体で共有するサーフェスアトラス。
 	 */
-	surfaceAtlasSet: SurfaceAtlasSetLike | undefined;
+	surfaceAtlasSet: SurfaceAtlasSetLike;
 
 	/**
 	 * 操作プラグインの管理者。
@@ -731,12 +731,25 @@ export class Game {
 		this.height = gameConfiguration.height;
 		this.renderers = [];
 		this.scenes = [];
-		this.random = null!;
 		this.age = 0;
 		this.assetBase = param.assetBase || "";
 		this.resourceFactory = param.resourceFactory;
 		this.handlerSet = param.handlerSet;
 		this.selfId = param.selfId;
+		this.db = undefined!;
+		this.loadingScene = undefined!;
+		this.operationPlugins = undefined!;
+		this.random = undefined!;
+		this._defaultLoadingScene = undefined!;
+		this._eventConverter = undefined!;
+		this._pointEventResolver = undefined!;
+		this._idx = undefined!;
+		this._localDb = undefined!;
+		this._localIdx = undefined!;
+		this._cameraIdx = undefined!;
+		this._isTerminated = undefined!;
+		this._modified = undefined!;
+		this._postTickTasks = undefined!;
 		this.playId = undefined;
 		this.isSkipping = false;
 		this.audio = new AudioSystemManager(this.resourceFactory);
@@ -744,7 +757,7 @@ export class Game {
 		this.defaultAudioSystemId = "sound";
 		this.storage = new Storage();
 		this.assets = {};
-		this.surfaceAtlasSet = undefined;
+		this.surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: this.resourceFactory });
 
 		this.onJoin = new Trigger<JoinEvent>();
 		this.onLeave = new Trigger<LeaveEvent>();
@@ -805,7 +818,7 @@ export class Game {
 		this._moduleManager = new ModuleManager(this._runtimeValueBase, this._assetManager);
 
 		const operationPluginsField = gameConfiguration.operationPlugins || [];
-		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo, operationPluginsField);
+		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null, operationPluginsField);
 		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
@@ -1297,13 +1310,13 @@ export class Game {
 		this.lastTickGenerationMode = null;
 		this.onSnapshotRequest.removeAll();
 		this._postTickTasks = [];
-		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId });
-		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId });
+		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
+		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
 
 		this._isTerminated = false;
 		this.vars = {};
 
-		if (this.surfaceAtlasSet) this.surfaceAtlasSet.destroy();
+		this.surfaceAtlasSet.destroy();
 		this.surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: this.resourceFactory });
 
 		switch (this._configuration.defaultLoadingScene) {
@@ -1423,10 +1436,8 @@ export class Game {
 		this._focusingCamera = undefined;
 		this._configuration = undefined!;
 		this._postTickTasks = [];
-		if (this.surfaceAtlasSet) {
-			this.surfaceAtlasSet.destroy();
-		}
-		this.surfaceAtlasSet = undefined;
+		this.surfaceAtlasSet.destroy();
+		this.surfaceAtlasSet = undefined!;
 	}
 
 	/**
@@ -1488,7 +1499,7 @@ export class Game {
 		this._initialScene.onLoad.remove(this._handleInitialSceneLoad, this);
 		this.assets = this._initialScene.assets;
 		this.isLoaded = true;
-		this._onLoad.fire();
+		this._onLoad.fire(this);
 	}
 
 	_handleOperationPluginOperated(op: InternalOperationPluginOperation): void {

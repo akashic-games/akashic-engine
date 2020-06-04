@@ -10,14 +10,14 @@ describe("test LoadingScene", () => {
 	});
 
 	it("初期化", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const loadingScene = new LoadingScene({ game: game });
 		expect(loadingScene).not.toHaveProperty("mascot");
 		expect(loadingScene.game).toBe(game);
 	});
 
 	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		global.g = { game: new Game({ width: 320, height: 320, main: "" }) };
+		global.g = { game: new Game({ width: 320, height: 320, main: "", assets: {} }) };
 		const loadingScene = new LoadingScene();
 		expect(loadingScene.local).toBeTruthy();
 		expect(loadingScene.game).toBe(global.g.game);

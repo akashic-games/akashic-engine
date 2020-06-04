@@ -708,6 +708,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @param e 登録を削除するエンティティ
 	 */
 	unregister(e: E): void {
+		// @ts-ignore
 		e.scene = undefined;
 		this.game.unregister(e);
 	}
@@ -768,12 +769,12 @@ export class Scene implements StorageLoaderHandler {
 	findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
 		const mayConsumeLocalTick = this.local !== "non-local";
 		const children = this.children;
-		const m = camera && camera instanceof Camera2D ? camera.getMatrix() : null;
+		const m = camera && camera instanceof Camera2D ? camera.getMatrix() : undefined;
 
 		for (var i = children.length - 1; i >= 0; --i) {
 			const ret = children[i].findPointSourceByPoint(point, m, force);
 			if (ret) {
-				ret.local = ret.target.local || mayConsumeLocalTick;
+				ret.local = (ret.target && ret.target.local) || mayConsumeLocalTick;
 				return ret;
 			}
 		}

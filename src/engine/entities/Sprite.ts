@@ -115,6 +115,7 @@ export class Sprite extends E {
 		if ("_drawable" in param.src) {
 			this._surface = param.src;
 		} else {
+			// @ts-ignore
 			this._surface = SurfaceUtil.asSurface(param.src);
 		}
 		if (param.width == null) this.width = this._surface.width;
@@ -211,6 +212,7 @@ export class Sprite extends E {
 			if ("_drawable" in this.src) {
 				this._surface = this.src;
 			} else {
+				// @ts-ignore
 				this._surface = SurfaceUtil.asSurface(this.src);
 			}
 		}

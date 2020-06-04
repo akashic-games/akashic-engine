@@ -70,7 +70,7 @@ describe("test Storage", () => {
 		storage._registerWrite(writeMethod);
 		expect(storage._write).toBe(writeMethod);
 
-		storage.write(null, null);
+		storage.write(null!, null!);
 		expect(writeCalled).toBe(true);
 	});
 
@@ -173,6 +173,7 @@ describe("test Storage", () => {
 			l._onLoaded(values);
 		});
 		const loader = storage._createLoader(keys);
+		// @ts-ignore
 		loader._load(undefined);
 
 		const store = loader._valueStore;
@@ -210,6 +211,7 @@ describe("test Storage", () => {
 		});
 		const loader = storage._createLoader(keys);
 		const store = loader._valueStore;
+		// @ts-ignore
 		loader._load(undefined);
 
 		expect(store.get(1)).toBeUndefined();
@@ -255,6 +257,7 @@ describe("test Storage", () => {
 			l._onLoaded(values);
 		});
 		const loader = storage._createLoader(keys);
+		// @ts-ignore
 		loader._load(undefined);
 		expect(loader._loaded).toBe(true);
 		expect(loader._valueStore._values).toBe(values);
@@ -285,8 +288,10 @@ describe("test Storage", () => {
 		const loader = storage._createLoader(keys);
 		storage._registerLoad(() => {
 			if (goError) {
+				// @ts-ignore
 				loader._onError(undefined);
 			} else {
+				// @ts-ignore
 				loader._onLoaded(undefined);
 			}
 		});
@@ -330,7 +335,7 @@ describe("test Storage", () => {
 			condition: StorageCondition.Equal,
 			comparisonValue: "orange"
 		};
-		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option: StorageWriteOption): void {
+		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option?: StorageWriteOption): void {
 			expect(this).toBe(storage);
 			expect(writeKey).toBe(key);
 			expect(writeValue).toBe(value);
@@ -348,7 +353,7 @@ describe("test Storage", () => {
 			userId: "456"
 		};
 		const value = { data: 1 };
-		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option: StorageWriteOption): void {
+		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option?: StorageWriteOption): void {
 			expect(this).toBe(storage);
 			expect(writeKey).toBe(key);
 			expect(writeValue).toBe(value);
@@ -370,7 +375,7 @@ describe("test Storage", () => {
 			condition: StorageCondition.GreaterThan,
 			comparisonValue: 20
 		};
-		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option: StorageWriteOption): void {
+		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option?: StorageWriteOption): void {
 			expect(this).toBe(storage);
 			expect(writeKey).toBe(key);
 			expect(writeValue).toBe(value);
@@ -387,13 +392,14 @@ describe("test Storage", () => {
 			gameId: "123",
 			userId: "456"
 		};
+		// @ts-ignore
 		const value: StorageValue = { data: null };
 		const option = {
 			condition: StorageCondition.GreaterThan,
 			comparisonValue: 10,
 			operation: StorageCountsOperation.Incr
 		};
-		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option: StorageWriteOption): void {
+		storage._registerWrite(function(this: any, writeKey: StorageKey, writeValue: StorageValue, _option?: StorageWriteOption): void {
 			expect(this).toBe(storage);
 			expect(writeKey).toBe(key);
 			expect(writeValue).toBe(value);

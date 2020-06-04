@@ -22,12 +22,12 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 	/**
 	 * @private
 	 */
-	_surface: SurfaceLike;
+	_surface: SurfaceLike | undefined;
 
 	/**
 	 * @private
 	 */
-	_beforeSrcSurface: SurfaceLike;
+	_beforeSrcSurface: SurfaceLike | undefined;
 
 	/**
 	 * `NinePatchSurfaceEffector` のインスタンスを生成する。

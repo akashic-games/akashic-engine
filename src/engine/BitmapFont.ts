@@ -69,6 +69,7 @@ export class BitmapFont extends Font {
 	 */
 	constructor(param: BitmapFontParameterObject) {
 		super();
+		// @ts-ignore
 		this.surface = SurfaceUtil.asSurface(param.src);
 
 		if (param.glyphInfo) {
@@ -78,11 +79,16 @@ export class BitmapFont extends Font {
 			this.missingGlyph = param.glyphInfo.missingGlyph;
 			this.size = param.glyphInfo.height;
 		} else {
+			// @ts-ignore
 			this.map = param.map;
-			this.defaultGlyphWidth = param.defaultGlyphWidth;
-			this.defaultGlyphHeight = param.defaultGlyphHeight;
-			this.missingGlyph = param.missingGlyph;
-			this.size = param.defaultGlyphHeight;
+			// @ts-ignore
+			this.defaultGlyphWidth = param.defaultGlyphWidth!;
+			// @ts-ignore
+			this.defaultGlyphHeight = param.defaultGlyphHeight!;
+			// @ts-ignore
+			this.missingGlyph = param.missingGlyph!;
+			// @ts-ignore
+			this.size = param.defaultGlyphHeight!;
 		}
 	}
 

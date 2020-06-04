@@ -43,7 +43,7 @@ export const customMatchers = {
 	toThrowError: (received: any, expected: string): jest.CustomMatcherResult => {
 		const result = { pass: false, message: () => "" };
 		let threw = false;
-		let thrown: Error;
+		let thrown!: Error;
 
 		if (typeof received !== "function") {
 			throw new Error("Actual is not a Function");

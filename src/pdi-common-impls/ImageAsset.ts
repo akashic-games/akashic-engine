@@ -16,6 +16,7 @@ export abstract class ImageAsset extends Asset implements ImageAssetLike {
 	type: "image" = "image";
 	width: number;
 	height: number;
+	// @ts-ignore
 	hint: ImageAssetHint;
 
 	constructor(id: string, assetPath: string, width: number, height: number) {

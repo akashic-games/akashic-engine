@@ -32,9 +32,9 @@ export interface GameConfiguration {
 	audio?: AudioSystemConfigurationMap;
 
 	/**
-	 * アセット宣言。ユニットテスト記述の都合上省略を許すが、通常非undefinedでしか使わない。
+	 * アセット宣言。
 	 */
-	assets?: AssetConfigurationMap;
+	assets: AssetConfigurationMap;
 
 	/**
 	 * 操作プラグインの情報。

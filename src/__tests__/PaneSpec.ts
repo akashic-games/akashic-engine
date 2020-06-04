@@ -65,7 +65,7 @@ describe("test Pane", () => {
 
 	it("change backgroundImage", () => {
 		const scene = runtime.scene;
-		const imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
+		const imageAsset = runtime.game.resourceFactory.createImageAsset("dummy", "testAssetPath", 200, 200);
 		const r = new Renderer();
 
 		const pane = new Pane({
@@ -172,7 +172,7 @@ describe("test Pane", () => {
 		expect(renderer.methodCallParamsHistory("drawImage").length).toBe(1);
 		renderer.clearMethodCallHistory();
 
-		const imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200);
+		const imageAsset = runtime.game.resourceFactory.createImageAsset("dummy", "testAssetPath", 200, 200);
 
 		// given backgroundImage
 		pane = new Pane({

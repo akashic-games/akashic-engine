@@ -11,6 +11,7 @@ export abstract class Font {
 	 *
 	 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
+	// @ts-ignore
 	size: number;
 
 	/**

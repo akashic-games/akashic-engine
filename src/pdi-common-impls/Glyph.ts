@@ -46,7 +46,7 @@ export class Glyph implements GlyphLike {
 	 *
 	 * 描画すべき内容がない場合 `surface` は `undefined` である。
 	 */
-	surface: SurfaceLike;
+	surface: SurfaceLike | undefined;
 
 	/**
 	 * X軸方向についての描画位置調整量。

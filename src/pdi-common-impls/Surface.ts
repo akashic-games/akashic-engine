@@ -33,7 +33,7 @@ export abstract class Surface implements SurfaceLike, CommonSize {
 	 * 本Surfaceが破棄済であるかを示す値。
 	 * @private
 	 */
-	_destroyed: boolean;
+	_destroyed!: boolean; // 破棄時に一度だけ代入する特殊なフィールドなため、初期値を代入しない
 
 	/**
 	 * `Surface` のインスタンスを生成する。

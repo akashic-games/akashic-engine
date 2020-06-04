@@ -46,7 +46,7 @@ export module Util {
 	 * @param idx 取り出される文字の位置
 	 */
 	// highly based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
-	export function charCodeAt(str: string, idx: number): number {
+	export function charCodeAt(str: string, idx: number): number | null {
 		var code = str.charCodeAt(idx);
 
 		if (0xd800 <= code && code <= 0xdbff) {

@@ -81,6 +81,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 		this._destroyRequestedAssets = {};
 		this._explicitMuted = param.muted || false;
 		this._suppressed = false;
+		this._muted = false;
 		this._resourceFactory = param.resourceFactory;
 		this._updateMuted();
 	}
@@ -187,8 +188,8 @@ export class MusicAudioSystem extends AudioSystem {
 	_reset(): void {
 		super._reset();
 		if (this._player) {
-			this._player.onPlay.remove({ owner: this, func: this._handlePlay });
-			this._player.onStop.remove({ owner: this, func: this._handleStop });
+			this._player.onPlay.remove(this._handlePlay, this);
+			this._player.onStop.remove(this._handleStop, this);
 		}
 		this._player = undefined;
 	}
@@ -255,7 +256,8 @@ export class SoundAudioSystem extends AudioSystem {
 	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {
 		var ret: AudioPlayerLike[] = [];
 		for (var i = 0; i < this.players.length; ++i) {
-			if (this.players[i].currentAudio && this.players[i].currentAudio.id === asset.id) ret.push(this.players[i]);
+			const currentAudio = this.players[i].currentAudio;
+			if (currentAudio && currentAudio.id === asset.id) ret.push(this.players[i]);
 		}
 		return ret;
 	}
@@ -274,8 +276,8 @@ export class SoundAudioSystem extends AudioSystem {
 		super._reset();
 		for (var i = 0; i < this.players.length; ++i) {
 			var player = this.players[i];
-			player.onPlay.remove({ owner: this, func: this._handlePlay });
-			player.onStop.remove({ owner: this, func: this._handleStop });
+			player.onPlay.remove(this._handlePlay, this);
+			player.onStop.remove(this._handleStop, this);
 		}
 		this.players = [];
 	}
@@ -318,7 +320,7 @@ export class SoundAudioSystem extends AudioSystem {
 		var index = this.players.indexOf(e.player);
 		if (index < 0) return;
 
-		e.player.onStop.remove({ owner: this, func: this._handleStop });
+		e.player.onStop.remove(this._handleStop, this);
 		this.players.splice(index, 1);
 		if (this._destroyRequestedAssets[e.audio.id]) {
 			delete this._destroyRequestedAssets[e.audio.id];

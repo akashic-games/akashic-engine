@@ -15,5 +15,5 @@ export interface OperationPluginStatic {
 	 * @param viewInfo このプラグインが参照すべきviewの情報。環境によっては `null` でありうる。
 	 * @param option game.jsonに指定されたこのプラグイン向けのオプション
 	 */
-	new (game: any, viewInfo: OperationPluginViewInfo, option?: any): OperationPlugin;
+	new (game: any, viewInfo: OperationPluginViewInfo | null, option?: any): OperationPlugin;
 }

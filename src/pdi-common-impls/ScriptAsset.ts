@@ -15,6 +15,11 @@ export abstract class ScriptAsset extends Asset implements ScriptAssetLike {
 	type: "script" = "script";
 	script: string;
 
+	constructor(id: string, path: string) {
+		super(id, path);
+		this.script = undefined!;
+	}
+
 	abstract execute(execEnv: ScriptAssetRuntimeValue): any;
 
 	destroy(): void {

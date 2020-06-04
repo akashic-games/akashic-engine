@@ -3,7 +3,7 @@ import { VideoAssetLike } from "./VideoAssetLike";
 
 export interface VideoPlayerEvent {
 	player: VideoPlayerLike;
-	video: VideoAssetLike;
+	video: VideoAssetLike | undefined;
 }
 
 /**

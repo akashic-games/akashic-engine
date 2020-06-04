@@ -27,7 +27,7 @@ export interface SurfaceAtlasLike {
 	 * @param width サーフェス内における矩形の幅。0より大きい数値でなければならない
 	 * @param height サーフェス内における矩形の高さ。0より大きい数値でなければならない
 	 */
-	addSurface(surface: SurfaceLike, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlotLike;
+	addSurface(surface: SurfaceLike, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlotLike | null;
 
 	/**
 	 * サーフェスアトラスの大きさを取得する。

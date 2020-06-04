@@ -10,8 +10,8 @@ export class SurfaceAtlasSlot implements SurfaceAtlasSlotLike {
 	y: number;
 	width: number;
 	height: number;
-	prev: SurfaceAtlasSlotLike;
-	next: SurfaceAtlasSlotLike;
+	prev: SurfaceAtlasSlotLike | null;
+	next: SurfaceAtlasSlotLike | null;
 
 	constructor(x: number, y: number, width: number, height: number) {
 		this.x = x;

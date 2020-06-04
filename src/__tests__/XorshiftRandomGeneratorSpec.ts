@@ -11,7 +11,7 @@ describe("test XorshiftRandomGenerator", () => {
 
 	it("初期化 - missed seed", () => {
 		expect(() => {
-			return new XorshiftRandomGenerator(undefined);
+			return new XorshiftRandomGenerator(undefined!);
 		}).toThrow();
 	});
 

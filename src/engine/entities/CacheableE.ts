@@ -54,6 +54,7 @@ export abstract class CacheableE extends E {
 	 *
 	 * @private
 	 */
+	// @ts-ignore
 	_cacheSize: CommonSize;
 
 	/**
