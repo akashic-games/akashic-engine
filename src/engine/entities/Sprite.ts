@@ -216,8 +216,8 @@ export class Sprite extends E {
 				this._surface = SurfaceUtil.asSurface(this.src);
 			}
 		}
-		if (this._beforeSurface != null && this._surface !== this._beforeSurface) {
-			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface, this._surface);
+		if (this._surface !== this._beforeSurface) {
+			SurfaceUtil.migrateAnimatingHandler(this, this._beforeSurface!, this._surface);
 			this._beforeSurface = this._surface;
 		}
 	}

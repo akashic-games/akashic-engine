@@ -153,6 +153,7 @@ export class FrameSprite extends Sprite {
 		this.frameNumber = param.frameNumber || 0;
 		this.frames = param.frames != null ? param.frames : [0];
 		this.interval = param.interval;
+		this._timer = undefined;
 		this.loop = param.loop != null ? param.loop : true;
 		this.onFinish = new Trigger<void>();
 		this.finished = this.onFinish;

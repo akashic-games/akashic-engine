@@ -445,7 +445,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param e 子エンティティとして追加するエンティティ
 	 */
 	append(e: E): void {
-		this.insertBefore(e);
+		this.insertBefore(e, undefined);
 	}
 
 	/**
@@ -456,7 +456,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param e 子エンティティとして追加するエンティティ
 	 * @param target 挿入位置にある子エンティティ
 	 */
-	insertBefore(e: E, target?: E): void {
+	insertBefore(e: E, target: E | undefined): void {
 		if (e.parent) e.remove();
 		if (!this.children) this.children = [];
 
@@ -485,8 +485,7 @@ export class E extends Object2D implements CommonArea {
 	 */
 	remove(e?: E): void {
 		if (e === undefined) {
-			if (this.parent == null) throw ExceptionFactory.createAssertionError("E#remove: has no parent");
-			this.parent.remove(this);
+			this.parent!.remove(this);
 			return;
 		}
 
