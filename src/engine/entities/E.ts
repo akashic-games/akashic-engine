@@ -159,6 +159,7 @@ export class E extends Object2D implements CommonArea {
 	/**
 	 * このエンティティが属するシーン。
 	 */
+	// @ts-ignore 外部クラスにより直接書き換えられる
 	scene: Scene;
 
 	/**
@@ -356,6 +357,7 @@ export class E extends Object2D implements CommonArea {
 		if (!!param.hidden) this.hide();
 
 		// set id, scene
+		// @ts-ignore NOTE: Game クラスで割り当てられるため、ここでは undefined を許容している
 		this.id = param.id;
 		param.scene.register(this);
 	}

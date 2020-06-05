@@ -5,8 +5,10 @@ import { SurfaceAtlasLike } from "../pdi-types/SurfaceAtlasLike";
 import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
-	var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
-	var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));
+	// @ts-ignore
+	var width = Math.ceil(Math.min(hint.initialAtlasWidth!, hint.maxAtlasWidth));
+	// @ts-ignore
+	var height = Math.ceil(Math.min(hint.initialAtlasHeight!, hint.maxAtlasHeight));
 	return { width: width, height: height };
 }
 
@@ -144,11 +146,11 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
-			const slot = atlas.addSurface(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height);
+			const slot = atlas.addSurface(glyph.surface!, glyph.x, glyph.y, glyph.width, glyph.height);
 
 			if (slot) {
 				this._currentAtlasIndex = index;
-				glyph.surface.destroy();
+				if (glyph.surface) glyph.surface.destroy();
 				glyph.surface = atlas._surface;
 				glyph.x = slot.x;
 				glyph.y = slot.y;

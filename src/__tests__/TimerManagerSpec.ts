@@ -108,7 +108,7 @@ describe("test TimerManager", () => {
 
 	it("deleteTimer - error (invalid context)", () => {
 		const m = new TimerManager(trigger, 30);
-		const t = new Timer(100, undefined);
+		const t = new Timer(100, undefined!);
 		expect(() => {
 			m.deleteTimer(t);
 		}).toThrowError("AssertionError");

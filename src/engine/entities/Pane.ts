@@ -88,6 +88,7 @@ export class Pane extends CacheableE {
 	/**
 	 * @private
 	 */
+	// @ts-ignore
 	_normalizedPadding: CommonRect;
 
 	/**
@@ -109,16 +110,19 @@ export class Pane extends CacheableE {
 	/**
 	 * @private
 	 */
+	// @ts-ignore
 	_childrenArea: CommonArea;
 
 	/**
 	 * @private
 	 */
+	// @ts-ignore
 	_childrenSurface: SurfaceLike;
 
 	/**
 	 * @private
 	 */
+	// @ts-ignore
 	_childrenRenderer: RendererLike;
 
 	/**

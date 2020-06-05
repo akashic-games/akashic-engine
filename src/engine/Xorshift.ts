@@ -4,10 +4,10 @@
 // Arranged by DWANGO Co., Ltd.
 
 export class Xorshift {
-	private _state0U: number;
-	private _state0L: number;
-	private _state1U: number;
-	private _state1L: number;
+	private _state0U!: number;
+	private _state0L!: number;
+	private _state1U!: number;
+	private _state1L!: number;
 
 	static deserialize(ser: XorshiftSerialization): Xorshift {
 		var ret = new Xorshift(0);

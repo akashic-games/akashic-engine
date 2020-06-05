@@ -23,7 +23,7 @@ export interface ModuleLike {
 	 * このモジュールの親。一番最初にこのモジュール (のファイル) を require() したモジュール。
 	 * 該当するモジュールがなければ `null` である。
 	 */
-	parent: ModuleLike;
+	parent: ModuleLike | null;
 
 	/**
 	 * このモジュールの読み込みが完了しているか。

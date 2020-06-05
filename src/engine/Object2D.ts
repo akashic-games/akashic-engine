@@ -364,8 +364,10 @@ export class Object2D implements CommonArea {
 	 */
 	_updateMatrix(): void {
 		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX !== 0 || this.anchorY !== 0) {
+			// @ts-ignore
 			this._matrix.update(this.width, this.height, this.scaleX, this.scaleY, this.angle, this.x, this.y, this.anchorX, this.anchorY);
 		} else {
+			// @ts-ignore
 			this._matrix.reset(this.x, this.y);
 		}
 	}

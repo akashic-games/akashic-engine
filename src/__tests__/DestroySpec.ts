@@ -50,7 +50,7 @@ describe("test Destroy", () => {
 			defaultGlyphHeight: 12,
 			missingGlyph: missingGlyph
 		});
-		imageAsset = runtime.game.resourceFactory.createImageAsset(null, null, 200, 200) as ImageAsset;
+		imageAsset = runtime.game.resourceFactory.createImageAsset("dymmy", "./dummyPath", 200, 200) as ImageAsset;
 	});
 
 	it("auto destroy", () => {

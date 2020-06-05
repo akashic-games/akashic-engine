@@ -91,7 +91,7 @@ describe("test BitmapFont", () => {
 			defaultGlyphHeight: 30,
 			missingGlyph: missingGlyph
 		});
-		const glyph = bmpFont.glyphForCharacter(11);
+		const glyph = bmpFont.glyphForCharacter(11)!;
 		expect(glyph.code).toBe(11);
 		expect(glyph.x).toBe(0);
 		expect(glyph.y).toBe(1);

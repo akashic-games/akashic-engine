@@ -4,7 +4,7 @@ import * as g from "../..";
 declare global {
 	namespace NodeJS {
 		interface Global {
-			g: typeof g | { game: Game };
+			g: any;
 		}
 	}
 }
@@ -176,7 +176,7 @@ export class Renderer extends g.Renderer {
 	}
 
 	_getImageData(): g.ImageData {
-		return null;
+		throw new Error("not implemented");
 	}
 
 	_putImageData(_imageData: g.ImageData): void {
@@ -185,7 +185,7 @@ export class Renderer extends g.Renderer {
 }
 
 export class Surface extends g.Surface {
-	createdRenderer: g.Renderer;
+	createdRenderer: g.Renderer | undefined;
 
 	constructor(width: number, height: number, drawable?: any) {
 		super(width, height, drawable);
@@ -233,7 +233,7 @@ class LoadFailureController {
 
 export class ImageAsset extends g.ImageAsset {
 	_failureController: LoadFailureController;
-	_surface: Surface;
+	_surface: Surface | undefined;
 
 	constructor(necessaryRetryCount: number, id: string, assetPath: string, width: number, height: number) {
 		super(id, assetPath, width, height);
@@ -269,8 +269,8 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 	constructor(necessaryRetryCount: number, id: string, assetPath: string, width: number, height: number) {
 		super(necessaryRetryCount, id, assetPath, width, height);
 		this._delaying = true;
-		this._lastGivenLoader = undefined;
-		this._isError = undefined;
+		this._lastGivenLoader = undefined!;
+		this._isError = false;
 		this._loadingResult = undefined;
 	}
 
@@ -400,26 +400,20 @@ export class ScriptAsset extends g.ScriptAsset {
 }
 
 export class VideoAsset extends g.VideoAsset {
-	_failureController: LoadFailureController;
-
 	constructor(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem, loop: boolean, useRealSize: boolean) {
 		super(id, assetPath, width, height, system, loop, useRealSize);
 	}
 
-	_load(loader: g.AssetLoadHandler): void {
-		if (this._failureController.tryLoad(this, loader)) {
-			setTimeout(() => {
-				if (!this.destroyed()) loader._onAssetLoad(this);
-			}, 0);
-		}
+	_load(_loader: g.AssetLoadHandler): void {
+		throw new Error("not implemented");
 	}
 
 	asSurface(): Surface {
-		return null;
+		throw new Error("not implemented");
 	}
 
 	getPlayer(): g.VideoPlayer {
-		return null;
+		throw new Error("not implemented");
 	}
 }
 
@@ -450,7 +444,7 @@ export class GlyphFactory extends g.GlyphFactory {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
 	create(_code: number): g.Glyph {
-		return <g.Glyph>undefined;
+		throw new Error("not implemented");
 	}
 }
 
@@ -469,6 +463,7 @@ export class ResourceFactory extends g.ResourceFactory {
 	constructor() {
 		super();
 		this.scriptContents = {};
+		this._game = undefined!;
 		this.createsDelayedAsset = false;
 		this._necessaryRetryCount = 0;
 		this._delayedAssets = [];
@@ -562,7 +557,7 @@ export class ResourceFactory extends g.ResourceFactory {
 		_loop: boolean,
 		_useRealSize: boolean
 	): g.VideoAsset {
-		return <g.VideoAsset>undefined;
+		throw new Error("not implemented");
 	}
 }
 
@@ -573,7 +568,7 @@ export class GameHandlerSet implements g.GameHandlerSet {
 	modeHistry: g.SceneMode[] = [];
 
 	raiseTick(events?: pl.Event[]): void {
-		this.raisedTicks.push(events);
+		if (events) this.raisedTicks.push(events);
 	}
 	raiseEvent(event: pl.Event): void {
 		this.raisedEvents.push(event);
@@ -607,9 +602,9 @@ export class GameHandlerSet implements g.GameHandlerSet {
 export class Game extends g.Game {
 	terminatedGame: boolean;
 	autoTickForInternalEvents: boolean;
-	resourceFactory: ResourceFactory;
-	handlerSet: GameHandlerSet;
-	audio: AudioSystemManager;
+	resourceFactory!: ResourceFactory; // NOTE: 継承元クラスで代入
+	handlerSet!: GameHandlerSet; // NOTE: 継承元クラスで代入
+	audio!: AudioSystemManager; // NOTE: 継承元クラスで代入
 
 	constructor(
 		configuration: g.GameConfiguration,
@@ -628,8 +623,9 @@ export class Game extends g.Game {
 
 	// 引数がなかった当時の tick の挙動を再現するメソッド。
 	classicTick(): boolean {
-		const advance = this.scene() && this.scene().local !== "full-local";
-		return this.tick(advance);
+		const scene = this.scene();
+		const advance = scene && scene.local !== "full-local";
+		return this.tick(!!advance);
 	}
 
 	_pushPostTickTask<T>(fun: () => void, owner: any): void {

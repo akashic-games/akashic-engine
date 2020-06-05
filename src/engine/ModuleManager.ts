@@ -56,8 +56,8 @@ export class ModuleManager {
 	_require(path: string, currentModule?: Module): any {
 		// Node.js の require の挙動については http://nodejs.jp/nodejs.org_ja/api/modules.html も参照。
 
-		let targetScriptAsset: AssetLike;
-		let resolvedPath: string;
+		let targetScriptAsset: AssetLike | undefined;
+		let resolvedPath: string | undefined;
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
 
@@ -119,6 +119,7 @@ export class ModuleManager {
 		}
 
 		if (targetScriptAsset) {
+			// @ts-ignore
 			if (this._scriptCaches.hasOwnProperty(resolvedPath)) return this._scriptCaches[resolvedPath]._cachedValue();
 
 			if (targetScriptAsset.type === "script") {
@@ -130,12 +131,14 @@ export class ModuleManager {
 					require: (path: string, mod?: Module) => this._require(path, mod)
 				});
 				const script = new ScriptAssetContext(targetScriptAsset as ScriptAssetLike, module);
+				// @ts-ignore
 				this._scriptCaches[resolvedPath] = script;
 				return script._executeScript(currentModule);
 			} else if (targetScriptAsset.type === "text") {
 				// JSONの場合の特殊挙動をトレースするためのコード。node.jsの仕様に準ずる
 				if (targetScriptAsset && PathUtil.resolveExtname(path) === ".json") {
 					// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
+					// @ts-ignore
 					const cache = (this._scriptCaches[resolvedPath] = new RequireCachedValue(
 						JSON.parse((targetScriptAsset as TextAssetLike).data)
 					));

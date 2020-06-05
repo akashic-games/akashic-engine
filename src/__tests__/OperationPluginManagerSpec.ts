@@ -47,6 +47,7 @@ describe("test OperationPluginManager", () => {
 		const conf: GameConfiguration = {
 			width: 320,
 			height: 270,
+			assets: {},
 			operationPlugins: [
 				{ code: 42, script: "/script/op-plugin.js" },
 				{ code: 10, script: undefined },
@@ -127,6 +128,7 @@ describe("test OperationPluginManager", () => {
 			self.initialize();
 
 			expect((self as any)._infos[30]).toBeUndefined();
+			// @ts-ignore
 			self.register(TestOperationPlugin, 30, { dummy: true });
 
 			expect((self as any)._infos[30]).toBeDefined();
@@ -138,6 +140,7 @@ describe("test OperationPluginManager", () => {
 			expect(plugin1._started).toBe(true);
 
 			expect((self as any)._infos[60]).toBeUndefined();
+			// @ts-ignore
 			self.register(TestOperationPluginUnsupported, 60, { dummy: false });
 			expect((self as any)._infos[60]).toBeDefined();
 			expect((self as any)._infos[60]._plugin).toBeUndefined();
@@ -147,10 +150,12 @@ describe("test OperationPluginManager", () => {
 			expect(plugin2).toBeUndefined();
 
 			expect(() => {
+				// @ts-ignore
 				self.register(TestOperationPlugin, 30);
 			}).toThrowError("Plugin#code conflicted for code: 30");
 			expect(() => {
 				// unsupported の場合初期化されない (=例外が発生しない) ことを確認
+				// @ts-ignore
 				self.register(TestOperationPluginUnsupported, 42);
 			}).not.toThrowError("Plugin#code conflicted for code: 42");
 

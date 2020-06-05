@@ -15,7 +15,7 @@ export abstract class TextAsset extends Asset implements TextAssetLike {
 
 	constructor(id: string, assetPath: string) {
 		super(id, assetPath);
-		this.data = undefined;
+		this.data = undefined!;
 	}
 
 	destroy(): void {

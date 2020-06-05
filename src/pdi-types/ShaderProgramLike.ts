@@ -14,15 +14,15 @@ export interface ShaderProgramLike {
 	 *   * 描画元テクスチャの座標
 	 *   * gl_FragColor = texture2D(uSampler, vTexCoord); のような形で描画元テクスチャのピクセルを参照できる
 	 *
-	 * この値は本クラスの生成時にのみ指定可能であり、直接書き換えてはならない。
+	 * この値が省略された場合、エンジンで用意されたデフォルトのフラグメントシェーダを利用する。
 	 */
-	fragmentShader: string;
+	fragmentShader: string | undefined;
 
 	/**
 	 * 各シェーダに与えられるuniform値のマップ。
-	 * この値は本クラスの生成時にのみ指定可能であり、 `ShaderUniform#value` 以外の値を直接書き換えてはならない。
+	 * `ShaderUniform#value` 以外の値を直接書き換えてはならない。
 	 */
-	uniforms: { [name: string]: ShaderUniform };
+	uniforms: { [name: string]: ShaderUniform } | undefined;
 
 	/**
 	 * シェーダプログラムの実体。

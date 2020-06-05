@@ -107,7 +107,7 @@ export class Label extends CacheableE {
 	 * このラベルの最大幅。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
-	maxWidth: number;
+	maxWidth: number | undefined;
 
 	/**
 	 * `width` プロパティを `this.text` の描画に必要な幅で自動的に更新するかを表す。
@@ -124,7 +124,7 @@ export class Label extends CacheableE {
 	 * 元の描画色に重ねて表示されるため、アルファ値を指定した場合は元の描画色が透けて表示される。
 	 * 初期値は `undefined` となり、 描画色の変更を行わない。
 	 */
-	textColor: string;
+	textColor: string | undefined;
 
 	/**
 	 * @private
@@ -213,7 +213,7 @@ export class Label extends CacheableE {
 		}
 
 		renderer.drawImage(
-			this._cache,
+			this._cache!,
 			0,
 			0,
 			this._cacheSize.width + CacheableE.PADDING,
@@ -228,7 +228,7 @@ export class Label extends CacheableE {
 			return;
 		}
 
-		var scale = this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
+		var scale = this.maxWidth && this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
 		var offsetX = 0;
 		switch (this._realTextAlign) {
 			case "center":
@@ -251,7 +251,7 @@ export class Label extends CacheableE {
 		renderer.save();
 		var glyphScale = this.fontSize / this.font.size;
 		for (var i = 0; i < this.glyphs.length; ++i) {
-			var glyph = this.glyphs[i];
+			let glyph: GlyphLike | null = this.glyphs[i];
 			var glyphWidth = glyph.advanceWidth * glyphScale;
 
 			var code = glyph.code;

@@ -59,8 +59,8 @@ export interface Event {
  * 対象とその対象から見た相対座標によって構成される。
  */
 export interface PointSourceBase<T extends PointTarget> {
-	target: T;
-	point: CommonOffset;
+	target: T | undefined;
+	point: CommonOffset | undefined;
 	local?: boolean;
 }
 
@@ -84,17 +84,19 @@ export class PointEventBase<T extends PointTarget> implements Event {
 	/**
 	 * 本クラスはどのtypeにも属さない。
 	 */
+	// @ts-ignore
 	type: "point-down" | "point-move" | "point-up";
 	priority: number;
 	local: boolean;
-	player: Player;
+	player: Player | undefined;
 	pointerId: number;
 	point: CommonOffset;
-	target: T;
+	target: T | undefined;
 
-	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+	constructor(pointerId: number, target: T | undefined, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
-		this.local = local;
+		this.local = !!local;
 		this.player = player;
 		this.pointerId = pointerId;
 		this.target = target;
@@ -108,7 +110,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
 export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
 	type: "point-down" = "point-down";
 
-	constructor(pointerId: number, target: T, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+	constructor(pointerId: number, target: T | undefined, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
 		super(pointerId, target, point, player, local, priority);
 	}
 }
@@ -128,7 +130,7 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
 
 	constructor(
 		pointerId: number,
-		target: T,
+		target: T | undefined,
 		point: CommonOffset,
 		prevDelta: CommonOffset,
 		startDelta: CommonOffset,
@@ -160,7 +162,7 @@ export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T>
 
 	constructor(
 		pointerId: number,
-		target: T,
+		target: T | undefined,
 		point: CommonOffset,
 		prevDelta: CommonOffset,
 		startDelta: CommonOffset,
@@ -182,12 +184,13 @@ export class MessageEvent implements Event {
 	type: "message" = "message";
 	priority: number;
 	local: boolean;
-	player: Player;
+	player: Player | undefined;
 	data: any;
 
 	constructor(data: any, player?: Player, local?: boolean, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
-		this.local = local;
+		this.local = !!local;
 		this.player = player;
 		this.data = data;
 	}
@@ -201,13 +204,14 @@ export class OperationEvent implements Event {
 	type: "operation" = "operation";
 	priority: number;
 	local: boolean;
-	player: Player;
+	player: Player | undefined;
 	code: number;
 	data: any;
 
 	constructor(code: number, data: any, player?: Player, local?: boolean, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
-		this.local = local;
+		this.local = !!local;
 		this.player = player;
 		this.code = code;
 		this.data = data;
@@ -222,9 +226,10 @@ export class JoinEvent implements Event {
 	type: "join" = "join";
 	priority: number;
 	player: Player;
-	storageValues: StorageValueStore;
+	storageValues: StorageValueStore | undefined;
 
 	constructor(player: Player, storageValues?: StorageValueStore, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
 		this.player = player;
 		this.storageValues = storageValues;
@@ -241,6 +246,7 @@ export class LeaveEvent implements Event {
 	player: Player;
 
 	constructor(player: Player, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
 		this.player = player;
 	}
@@ -256,6 +262,7 @@ export class TimestampEvent implements Event {
 	timestamp: number;
 
 	constructor(timestamp: number, player: Player, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
 		this.player = player;
 		this.timestamp = timestamp;
@@ -274,6 +281,7 @@ export class PlayerInfoEvent implements Event {
 	userData: any;
 
 	constructor(playerId: string, playerName: string, userData?: any, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
 		this.playerId = playerId;
 		this.playerName = playerName;
@@ -291,6 +299,7 @@ export class SeedEvent implements Event {
 	generator: RandomGenerator;
 
 	constructor(generator: RandomGenerator, priority?: number) {
+		// @ts-ignore TODO: priority のデフォルト値の扱い
 		this.priority = priority;
 		this.generator = generator;
 	}

@@ -170,9 +170,9 @@ describe("test Scene", () => {
 		const scene1 = new Scene({ game: game });
 		const scene2 = new Scene({ game: game });
 		const e = new E({ scene: scene1 });
-		scene1.insertBefore(e, null);
+		scene1.insertBefore(e, undefined);
 		expect(e.parent).toBe(scene1);
-		scene2.insertBefore(e, null);
+		scene2.insertBefore(e, undefined);
 		expect(e.parent).toBe(scene2);
 
 		const e2 = new E({ scene: scene2 });
@@ -219,8 +219,8 @@ describe("test Scene", () => {
 			loader._onLoaded(values);
 		});
 		scene._onReady.add(() => {
-			expect(scene._storageLoader._loaded).toBe(true);
-			expect(scene.storageValues.get(0)).toBe(values[0]);
+			expect(scene._storageLoader!._loaded).toBe(true);
+			expect(scene.storageValues!.get(0)).toBe(values[0]);
 			done();
 		});
 		scene._load();
@@ -243,7 +243,7 @@ describe("test Scene", () => {
 			loader._onLoaded(values);
 		});
 		scene._onReady.add(() => {
-			expect(scene._storageLoader._loaded).toBe(true);
+			expect(scene._storageLoader!._loaded).toBe(true);
 			expect(scene.serializeStorageValues()).toBeUndefined();
 			done();
 		});
@@ -277,9 +277,9 @@ describe("test Scene", () => {
 			}
 		});
 		scene._onReady.add(() => {
-			expect(scene._storageLoader._loaded).toBe(true);
+			expect(scene._storageLoader!._loaded).toBe(true);
 			expect(scene.serializeStorageValues()).toBe("myserialization1");
-			expect(scene.storageValues.get(0)).toBe(serializedValues[0]);
+			expect(scene.storageValues!.get(0)).toBe(serializedValues[0]);
 			done();
 		});
 		scene._load();
@@ -307,7 +307,7 @@ describe("test Scene", () => {
 
 		scene._onReady.add(() => {
 			expect(scene._storageLoader).toBeDefined();
-			expect(scene.storageValues.get(0)).toBe(values[0]);
+			expect(scene.storageValues!.get(0)).toBe(values[0]);
 			expect(scene.assets.foo).toBeDefined();
 			expect(scene.assets.baa).toBeDefined();
 			done();
@@ -1070,7 +1070,7 @@ describe("test Scene", () => {
 	});
 
 	it("createTimer/deleteTimer", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "", assets: {} });
 		const game = runtime.game;
 		const scene = runtime.scene;
 		const timer = scene.createTimer(100);
@@ -1100,9 +1100,9 @@ describe("test Scene", () => {
 	});
 
 	it("setInterval/clearInterval", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "", assets: {} });
 		const game = runtime.game;
-		const scene1 = game.scene();
+		const scene1 = game.scene()!;
 		let state1 = false;
 		let success1 = false;
 
@@ -1154,9 +1154,9 @@ describe("test Scene", () => {
 	});
 
 	it("setTimeout - deprecated", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "", assets: {} });
 		const game = runtime.game;
-		const scene1 = game.scene();
+		const scene1 = game.scene()!;
 		let state1 = false;
 		let success1 = false;
 
@@ -1183,9 +1183,9 @@ describe("test Scene", () => {
 	});
 
 	it("setTimeout", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "", assets: {} });
 		const game = runtime.game;
-		const scene = game.scene();
+		const scene = game.scene()!;
 		const owner = {};
 		let callCount = 0;
 		scene.setTimeout(
@@ -1213,9 +1213,9 @@ describe("test Scene", () => {
 	});
 
 	it("clearTimeout", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "", assets: {} });
 		const game = runtime.game;
-		const scene1 = game.scene();
+		const scene1 = game.scene()!;
 
 		expect(scene1._timer._timers.length).toBe(0);
 		const holder1 = scene1.setTimeout(() => {
@@ -1233,9 +1233,9 @@ describe("test Scene", () => {
 	});
 
 	it("setInterval - release scene", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, main: "", assets: {} });
 		const game = runtime.game;
-		const scene1 = game.scene();
+		const scene1 = game.scene()!;
 		const state2 = false;
 
 		expect(scene1._timer._timers.length).toBe(0);
@@ -1270,9 +1270,9 @@ describe("test Scene", () => {
 	});
 
 	it("setInterval", () => {
-		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "" });
+		const runtime = skeletonRuntime({ width: 320, height: 320, fps: 32, main: "", assets: {} });
 		const game = runtime.game;
-		const scene = game.scene();
+		const scene = game.scene()!;
 		const owner = {};
 		let callCount = 0;
 		scene.setInterval(
@@ -1303,7 +1303,7 @@ describe("test Scene", () => {
 	});
 
 	it("isCurrentScene/gotoScene/end", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
@@ -1336,7 +1336,7 @@ describe("test Scene", () => {
 	});
 
 	it("gotoScene - AssertionError", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });
@@ -1350,7 +1350,7 @@ describe("test Scene", () => {
 	});
 
 	it("end - AssertionError", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
 			const scene1 = new Scene({ game: game });

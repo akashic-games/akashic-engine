@@ -316,17 +316,17 @@ export class Storage {
 	/**
 	 * @private
 	 */
-	_write: (key: StorageKey, value: StorageValue, option?: StorageWriteOption) => void;
+	_write: ((key: StorageKey, value: StorageValue, option?: StorageWriteOption) => void) | undefined;
 
 	/**
 	 * @private
 	 */
-	_load: (keys: StorageReadKey[], load: StorageLoader, serialization?: StorageValueStoreSerialization) => void;
+	_load: ((keys: StorageReadKey[], load: StorageLoader, serialization?: StorageValueStoreSerialization) => void) | undefined;
 
 	/**
 	 * @private
 	 */
-	_requestedKeysForJoinPlayer: StorageReadKey[];
+	_requestedKeysForJoinPlayer: StorageReadKey[] | undefined;
 
 	/**
 	 * ストレージに値を書き込む。

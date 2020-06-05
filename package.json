@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@akashic/playlog": "~2.0.0",
-    "@akashic/trigger": "~0.1.7"
+    "@akashic/trigger": "~1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.2",

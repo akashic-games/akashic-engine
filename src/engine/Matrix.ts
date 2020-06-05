@@ -66,8 +66,8 @@ export interface Matrix {
 		angle: number,
 		x: number,
 		y: number,
-		anchorX: number,
-		anchorY: number
+		anchorX: number | null,
+		anchorY: number | null
 	): void;
 
 	/**
@@ -90,8 +90,8 @@ export interface Matrix {
 		angle: number,
 		x: number,
 		y: number,
-		anchorX: number,
-		anchorY: number
+		anchorX: number | null,
+		anchorY: number | null
 	): void;
 
 	/**
@@ -180,6 +180,7 @@ export class PlainMatrix {
 		} else if (typeof widthOrSrc === "number") {
 			this._modified = false;
 			this._matrix = <[number, number, number, number, number, number]> new Array<number>(6);
+			// @ts-ignore
 			this.update(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, anchorX, anchorY);
 		} else {
 			this._modified = widthOrSrc._modified;

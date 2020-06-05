@@ -16,28 +16,28 @@ describe("test Event", () => {
 	it("初期化 - PointDown", () => {
 		const point = { x: 1, y: 2 };
 		const player = { id: "3", name: "p" };
-		const pointDownEvent = new PointDownEvent(1, null, point, player, false, 2);
+		const pointDownEvent = new PointDownEvent(1, undefined, point, player, false, 2);
 		expect(pointDownEvent.type).toBe("point-down");
 		expect(pointDownEvent.priority).toBe(2);
 		expect(pointDownEvent.local).toBe(false);
 		expect(pointDownEvent.point).toBe(point);
 		expect(pointDownEvent.player).toBe(player);
 		expect(pointDownEvent.pointerId).toBe(1);
-		expect(pointDownEvent.target).toBe(null);
+		expect(pointDownEvent.target).toBeUndefined();
 	});
 
 	it("初期化 - PointUp", () => {
 		const point = { x: 1, y: 2 };
 		const pointAfter = { x: 0, y: 4 };
 		const player = { id: "3", name: "p" };
-		const pointUpEvent = new PointUpEvent(1, null, point, pointAfter, point, player, false, 2);
+		const pointUpEvent = new PointUpEvent(1, undefined, point, pointAfter, point, player, false, 2);
 		expect(pointUpEvent.type).toBe("point-up");
 		expect(pointUpEvent.priority).toBe(2);
 		expect(pointUpEvent.local).toBe(false);
 		expect(pointUpEvent.point).toBe(point);
 		expect(pointUpEvent.player).toBe(player);
 		expect(pointUpEvent.pointerId).toBe(1);
-		expect(pointUpEvent.target).toBe(null);
+		expect(pointUpEvent.target).toBeUndefined();
 		expect(pointUpEvent.prevDelta).toEqual(pointAfter);
 		expect(pointUpEvent.startDelta).toEqual(point);
 	});
@@ -46,14 +46,14 @@ describe("test Event", () => {
 		const point = { x: 1, y: 2 };
 		const pointAfter = { x: 0, y: 4 };
 		const player = { id: "3", name: "p" };
-		const pointMoveEvent = new PointMoveEvent(1, null, point, pointAfter, point, player, false, 2);
+		const pointMoveEvent = new PointMoveEvent(1, undefined, point, pointAfter, point, player, false, 2);
 		expect(pointMoveEvent.type).toBe("point-move");
 		expect(pointMoveEvent.priority).toBe(2);
 		expect(pointMoveEvent.local).toBe(false);
 		expect(pointMoveEvent.point).toBe(point);
 		expect(pointMoveEvent.player).toBe(player);
 		expect(pointMoveEvent.pointerId).toBe(1);
-		expect(pointMoveEvent.target).toBe(null);
+		expect(pointMoveEvent.target).toBeUndefined();
 		expect(pointMoveEvent.prevDelta).toEqual(pointAfter);
 		expect(pointMoveEvent.startDelta).toEqual(point);
 	});

@@ -22,7 +22,7 @@ describe("Util.distance()", () => {
 		let ex;
 		ex = ExceptionFactory.createTypeMismatchError("test", "string", {});
 		expect(ex.message).toBe("Type mismatch on test, expected type is string, actual type is Object.");
-		ex = ExceptionFactory.createTypeMismatchError("hoge", "number", new TextAsset(null, 0, "a", "b"));
+		ex = ExceptionFactory.createTypeMismatchError("hoge", "number", new TextAsset(null!, 0, "a", "b"));
 		expect(ex.message).toBe("Type mismatch on hoge, expected type is number, actual type is TextAsset.");
 		ex = ExceptionFactory.createTypeMismatchError("hoge", "number");
 		expect(ex.message).toBe("Type mismatch on hoge, expected type is number.");

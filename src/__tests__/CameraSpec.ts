@@ -56,7 +56,7 @@ describe("test Camera", () => {
 		cam.getMatrix();
 		cam.modified();
 		expect(cam._modifiedCount).toBe(2);
-		expect(cam._matrix._modified).toBe(true);
+		expect(cam._matrix!._modified).toBe(true);
 		expect(cam._matrix).not.toEqual(matrix);
 	});
 
@@ -92,7 +92,7 @@ describe("test Camera", () => {
 	});
 
 	it("_applyTransformToRenderer", () => {
-		const game = new Game({ width: 320, height: 240, main: "" });
+		const game = new Game({ width: 320, height: 240, main: "", assets: {} });
 		const cam = new Camera2D({});
 		const surface = game.resourceFactory.createSurface(320, 240);
 		const renderer = surface.renderer() as Renderer;

@@ -8,6 +8,7 @@ import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
  * Scene#assets、またはGame#assetsによって取得して利用する。
  */
 export abstract class Asset implements AssetLike {
+	// @ts-ignore 妥当な値を派生クラスが代入しているのでここでは値を入れない
 	type: string;
 	id: string;
 	path: string;

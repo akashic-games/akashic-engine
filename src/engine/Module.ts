@@ -35,7 +35,7 @@ export class Module implements ModuleLike {
 	 * このモジュールの親。一番最初にこのモジュール (のファイル) を require() したモジュール。
 	 * 該当するモジュールがなければ `null` である。
 	 */
-	parent: ModuleLike;
+	parent: ModuleLike | null;
 
 	/**
 	 * このモジュールの読み込みが完了しているか。
@@ -65,7 +65,7 @@ export class Module implements ModuleLike {
 	/**
 	 * @private
 	 */
-	_virtualDirname: string;
+	_virtualDirname: string | undefined;
 
 	/**
 	 * @private

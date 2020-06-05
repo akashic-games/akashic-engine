@@ -6,8 +6,8 @@ import { PointSource } from "./entities/E";
 import { EventPriority } from "./EventPriority";
 
 interface PointEventHolder {
-	targetId: number;
-	local: boolean;
+	targetId?: number;
+	local?: boolean;
 	point: CommonOffset;
 	start: CommonOffset;
 	prev: CommonOffset;
@@ -16,7 +16,7 @@ interface PointEventHolder {
 }
 
 export interface PointSourceResolver {
-	findPointSource(point: CommonOffset, camera?: Camera): PointSource;
+	findPointSource(point: CommonOffset, camera?: Camera): PointSource | undefined;
 }
 
 export interface PointEventResolverParameterObject {
@@ -56,13 +56,17 @@ export class PointEventResolver {
 
 	pointDown(e: PlatformPointEvent): pl.PointDownEvent {
 		const source = this._sourceResolver.findPointSource(e.offset);
+		// @ts-ignore
 		const point = source.point ? source.point : e.offset;
-		const targetId = source.target ? source.target.id : null;
+		// @ts-ignore
+		const targetId = source.target ? source.target.id : undefined;
+		// @ts-ignore
+		const local = source.local;
 
 		this._pointEventMap[e.identifier] = {
-			targetId: targetId,
-			local: source.local,
-			point: point,
+			targetId,
+			local,
+			point,
 			start: { x: e.offset.x, y: e.offset.y },
 			prev: { x: e.offset.x, y: e.offset.y }
 		};
@@ -77,7 +81,7 @@ export class PointEventResolver {
 			point.y, //                5: Y座標
 			targetId //                6?: エンティティID
 		];
-		if (source.local) ret.push(source.local); // 7?: ローカル
+		if (source && source.local) ret.push(source.local); // 7?: ローカル
 		return ret;
 	}
 

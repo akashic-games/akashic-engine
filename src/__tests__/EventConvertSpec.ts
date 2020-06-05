@@ -14,7 +14,8 @@ describe("EventConverter", () => {
 			width: 320,
 			height: 320,
 			fps: 30,
-			main: ""
+			main: "",
+			assets: {}
 		});
 		const self = new EventConverter({ game, playerId: "dummyPlayerId" });
 		expect(self._game).toBe(game);
@@ -30,7 +31,7 @@ describe("EventConverter", () => {
 		const self = new EventConverter({ game, playerId: player.id });
 
 		const sds = [{ readKey: { region: StorageRegion.Slots, regionKey: "reg-key" }, values: [{ data: 100 }] }];
-		const pjoin: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id, player.name, sds];
+		const pjoin: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id, player.name!, sds];
 		const join = new JoinEvent(player, new StorageValueStore([sds[0].readKey], [sds[0].values]), EventPriority.System);
 		const join2 = self.toGameEvent(pjoin);
 		expect(join).toEqual(join2);
@@ -50,24 +51,24 @@ describe("EventConverter", () => {
 		scene.append(rect);
 
 		// エンティティが存在する位置
-		const source = game.findPointSource({ x: 110, y: 120 });
-		expect(source.target.id).toBeGreaterThan(0);
+		const source = game.findPointSource({ x: 110, y: 120 })!;
+		expect(source.target!.id).toBeGreaterThan(0);
 		expect(source.point).toEqual({ x: 10, y: 20 });
 
-		const pd = new PointDownEvent(1, source.target, source.point, player, false, EventPriority.Joined);
+		const pd = new PointDownEvent(1, source.target, source.point!, player, false, EventPriority.Joined);
 		const pd2 = self.toGameEvent(self.toPlaylogEvent(pd));
 		expect(pd).toEqual(pd2);
-		const pm = new PointMoveEvent(1, source.target, source.point, { x: 2, y: 3 }, { x: 2, y: 3 }, player, false, EventPriority.Lowest);
+		const pm = new PointMoveEvent(1, source.target, source.point!, { x: 2, y: 3 }, { x: 2, y: 3 }, player, false, EventPriority.Lowest);
 		const pm2 = self.toGameEvent(self.toPlaylogEvent(pm));
 		expect(pm).toEqual(pm2);
-		const pu = new PointUpEvent(1, source.target, source.point, { x: 4, y: 1 }, { x: 6, y: 4 }, player, false, EventPriority.Joined);
+		const pu = new PointUpEvent(1, source.target, source.point!, { x: 4, y: 1 }, { x: 6, y: 4 }, player, false, EventPriority.Joined);
 		const pu2 = self.toGameEvent(self.toPlaylogEvent(pu));
 		expect(pu).toEqual(pu2);
 
 		// エンティティが存在する位置
 		const point = { x: 10, y: 10 };
 		const nonJoinedPlayer: Player = { id: "nonjoined-dummy-id" };
-		const source2 = game.findPointSource(point);
+		const source2 = game.findPointSource(point)!;
 		expect(source2.target).toBe(undefined);
 		expect(source2.point).toEqual(undefined);
 		expect(source2.local).toEqual(false);
@@ -127,17 +128,17 @@ describe("EventConverter", () => {
 		// PlayerInfoEvent 送信後にプレイヤー情報が取得できていることを確認
 		const pdown: pl.PointDownEvent = [pl.EventCode.PointDown, EventPriority.System, "dummyPlayerId", 0, 110, 120];
 		const pointDown = self.toGameEvent(pdown) as PointDownEvent;
-		expect(pointDown.player.id).toBe("dummyPlayerId");
-		expect(pointDown.player.name).toBe("dummyName");
-		expect(pointDown.player.userData).toEqual({ userData: "dummy" });
+		expect(pointDown.player!.id).toBe("dummyPlayerId");
+		expect(pointDown.player!.name).toBe("dummyName");
+		expect(pointDown.player!.userData).toEqual({ userData: "dummy" });
 
 		// JoinEvent 送信後にユーザデータが上書きされていないことを確認
-		const pjoin2: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id, player.name, sds];
+		const pjoin2: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id, player.name!, sds];
 		self.toGameEvent(pjoin2);
 		const pdown2: pl.PointDownEvent = [pl.EventCode.PointDown, EventPriority.System, "dummyPlayerId", 0, 110, 120];
 		const pointDown2 = self.toGameEvent(pdown2) as PointDownEvent;
-		expect(pointDown2.player.id).toBe("dummyPlayerId");
-		expect(pointDown2.player.name).toBe("dummyName");
-		expect(pointDown2.player.userData).toEqual({ userData: "dummy" });
+		expect(pointDown2.player!.id).toBe("dummyPlayerId");
+		expect(pointDown2.player!.name).toBe("dummyName");
+		expect(pointDown2.player!.userData).toEqual({ userData: "dummy" });
 	});
 });

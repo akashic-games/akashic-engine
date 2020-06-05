@@ -19,12 +19,12 @@ expect.extend(customMatchers);
 
 describe("test Game", () => {
 	it("初期化", () => {
-		const game = new Game({ width: 320, height: 270, main: "" }, undefined, "foo");
+		const game = new Game({ width: 320, height: 270, main: "", assets: {} }, undefined, "foo");
 		expect(game._idx).toBe(0);
 		expect(game.db).toEqual({});
 		expect(game.renderers.length).toBe(0);
 		expect(game.scenes.length).toBe(0);
-		expect(game.random).toBe(null);
+		expect(game.random).toBeUndefined();
 		expect(game._modified).toBe(true);
 		expect(game.external).toEqual({});
 		expect(game.age).toBe(0);
@@ -32,28 +32,28 @@ describe("test Game", () => {
 		expect(game.width).toBe(320);
 		expect(game.height).toBe(270);
 		expect(game.selfId).toBe("foo");
-		expect(game.playId).toBe(undefined);
-		expect(game.onSkipChange).not.toBe(undefined);
-		expect(game.onSceneChange).not.toBe(undefined);
-		expect(game._onSceneChange).not.toBe(undefined);
+		expect(game.playId).toBeUndefined();
+		expect(game.onSkipChange).not.toBeUndefined();
+		expect(game.onSceneChange).not.toBeUndefined();
+		expect(game._onSceneChange).not.toBeUndefined();
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
 	});
 
 	it("_destroy()", () => {
-		const game = new Game({ width: 320, height: 270, main: "" }, undefined, "foo");
+		const game = new Game({ width: 320, height: 270, main: "", assets: {} }, undefined, "foo");
 		game._destroy();
-		expect(game.db).toBe(undefined);
-		expect(game.renderers).toBe(undefined);
-		expect(game.scenes).toBe(undefined);
-		expect(game.random).toBe(undefined);
+		expect(game.db).toBeUndefined();
+		expect(game.renderers).toBeUndefined();
+		expect(game.scenes).toBeUndefined();
+		expect(game.random).toBeUndefined();
 		expect(game._modified).toBe(false);
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
-		expect(game.playId).toBe(undefined);
-		expect(game.onSkipChange).toBe(undefined);
-		expect(game.onSceneChange).toBe(undefined);
-		expect(game._onSceneChange).toBe(undefined);
+		expect(game.playId).toBeUndefined();
+		expect(game.onSkipChange).toBeUndefined();
+		expect(game.onSceneChange).toBeUndefined();
+		expect(game._onSceneChange).toBeUndefined();
 	});
 
 	it("global assets", done => {
@@ -181,7 +181,7 @@ describe("test Game", () => {
 			expect(args).toEqual({ args: "arg-value" });
 			done();
 		};
-		const game = new Game({ width: 320, height: 320, main: "dummy" }, "/", undefined, undefined, mainFunc);
+		const game = new Game({ width: 320, height: 320, main: "dummy", assets: {} }, "/", undefined, undefined, mainFunc);
 		game._loadAndStart({ args: "arg-value" });
 	});
 
@@ -218,7 +218,7 @@ describe("test Game", () => {
 	});
 
 	it("pushScene", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -236,7 +236,7 @@ describe("test Game", () => {
 	});
 
 	it("popScene", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -256,7 +256,7 @@ describe("test Game", () => {
 	});
 
 	it("popScene - specified step", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -291,7 +291,7 @@ describe("test Game", () => {
 	});
 
 	it("replaceScene", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -322,7 +322,7 @@ describe("test Game", () => {
 			game.pushScene(scene);
 			expect(game.age).toBe(0);
 			expect(game.classicTick()).toBe(true);
-			expect(game.scene().local).toBe("non-local");
+			expect(game.scene()!.local).toBe("non-local");
 			expect(game.classicTick()).toBe(false);
 			expect(game.age).toBe(1);
 			expect(game.tick(false, 3)).toBe(false);
@@ -620,7 +620,7 @@ describe("test Game", () => {
 		};
 		const game = new Game(gameConfiguration);
 
-		let topIsLocal: LocalTickModeString = undefined;
+		let topIsLocal: LocalTickModeString | undefined = undefined;
 		let sceneChangedCount = 0;
 		let _sceneChangedCount = 0;
 		game.onSceneChange.add(() => {
@@ -628,7 +628,7 @@ describe("test Game", () => {
 		});
 		game._onSceneChange.add(scene => {
 			_sceneChangedCount++;
-			topIsLocal = scene.local;
+			topIsLocal = scene!.local;
 		});
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
@@ -706,7 +706,7 @@ describe("test Game", () => {
 	});
 
 	it("scene", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game });
 		const scene2 = new Scene({ game: game });
 		game.pushScene(scene);
@@ -718,7 +718,7 @@ describe("test Game", () => {
 	});
 
 	it("register", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game });
 		const e = new E({ scene: scene });
 		expect(e.id).toBe(1);
@@ -735,7 +735,7 @@ describe("test Game", () => {
 	});
 
 	it("unregister", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game });
 		const e = new E({ scene: scene });
 		expect(game.db).toEqual({ 1: e });
@@ -750,7 +750,7 @@ describe("test Game", () => {
 	});
 
 	it("terminateGame", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game });
 
 		let count = 0;
@@ -774,7 +774,7 @@ describe("test Game", () => {
 	});
 
 	it("no crash on Scene#destroy()", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		game._onLoad.add(() => {
 			const scene = new Scene({ game: game });
@@ -805,7 +805,7 @@ describe("test Game", () => {
 	});
 
 	it("raiseEvent", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const ev = new MessageEvent("data");
 		const ev2 = new MessageEvent("foo");
 		game.raiseEvent(ev);
@@ -816,7 +816,7 @@ describe("test Game", () => {
 	});
 
 	it("vars", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		expect(game.vars).toEqual({});
 		game.vars.myState = "well";
 		expect(game.vars.myState).toBe("well");
@@ -845,7 +845,7 @@ describe("test Game", () => {
 		game.resourceFactory.scriptContents["/script/mainScene.js"] =
 			"module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s);}";
 		expect(game.age).toBe(0);
-		expect(game.random).toBe(null);
+		expect(game.random).toBeUndefined();
 
 		game._onLoad.add(() => {
 			expect(game.isLoaded).toBe(true);
@@ -933,7 +933,7 @@ describe("test Game", () => {
 		game.resourceFactory.scriptContents["./script/mainScene.js"] =
 			"module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s); };";
 		expect(game.age).toBe(0);
-		expect(game.random).toBe(null);
+		expect(game.random).toBeUndefined();
 
 		let testDone = false;
 		game._onLoad.add(() => {
@@ -968,7 +968,7 @@ describe("test Game", () => {
 	});
 
 	it("controls audio volume", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		expect(game.audio._muted).toBe(false);
 		expect(() => {
@@ -997,7 +997,7 @@ describe("test Game", () => {
 	});
 
 	it("focusingCamera", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const r = new Renderer();
 		game.renderers.push(r);
 		const scene = new Scene({ game: game });

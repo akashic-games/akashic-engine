@@ -797,7 +797,7 @@ describe("test Module", () => {
 	});
 
 	it("_findAssetByPathAsFile", () => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const manager = game._moduleManager;
 		const liveAssetPathTable = {
 			"foo/bar.js": game.resourceFactory.createScriptAsset("bar", "/foo/bar.js"),
@@ -810,7 +810,7 @@ describe("test Module", () => {
 	});
 
 	it("_findAssetByPathDirectory", done => {
-		const game = new Game({ width: 320, height: 320, main: "" });
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
 		const liveAssetPathTable = {
 			"foo/root.js": game.resourceFactory.createScriptAsset("root", "/foo/root.js"),

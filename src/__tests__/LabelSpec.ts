@@ -46,6 +46,7 @@ describe("test Label", () => {
 		const height = 64;
 		const imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		const map = { "37564": { x: 0, y: 1 } };
+		// @ts-ignore
 		const missingGlyph: GlyphArea = null;
 
 		const bmpfont = new BitmapFont({
@@ -96,6 +97,7 @@ describe("test Label", () => {
 		const height = 64;
 		const imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		const map = { "37564": { x: 0, y: 1 } };
+		// @ts-ignore
 		const missingGlyph: GlyphArea = null;
 
 		const bmpfont = new BitmapFont({
@@ -105,7 +107,7 @@ describe("test Label", () => {
 			defaultGlyphHeight: height,
 			missingGlyph: missingGlyph
 		});
-		expect(bmpfont.glyphForCharacter(37564).code).toBe(37564);
+		expect(bmpfont.glyphForCharacter(37564)!.code).toBe(37564);
 		expect(bmpfont.glyphForCharacter(-1)).toBeNull();
 	});
 
@@ -135,7 +137,7 @@ describe("test Label", () => {
 			textColor: "white"
 		});
 		bmpfont.glyphForCharacter = () => {
-			return undefined;
+			return null;
 		}; // g.Font からグリフ情報を得られない状態を模倣する
 		label.text = "咫";
 		expect(() => {
@@ -148,7 +150,7 @@ describe("test Label", () => {
 		const height = 64;
 		const imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
 		const map = { 97: { x: 0, y: 1 } }; // "a".charCodeAt(0) === 97
-		const missingGlyph: GlyphArea = null;
+		const missingGlyph: GlyphArea = null!;
 
 		const bmpfont = new BitmapFont({
 			src: imageAsset,

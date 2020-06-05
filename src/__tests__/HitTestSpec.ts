@@ -17,7 +17,7 @@ describe("test E", () => {
 	it("移動なし", () => {
 		for (let x = 0; x < e.width; x++) {
 			for (let y = 0; y < e.height; y++) {
-				const t = e.findPointSourceByPoint({ x: x, y: y });
+				const t = e.findPointSourceByPoint({ x: x, y: y })!;
 				expect(t.target).toBe(e);
 			}
 		}
@@ -37,17 +37,17 @@ describe("test E", () => {
 		e.moveTo(xp, yp);
 		for (let x = xp; x < e.width + xp; x++) {
 			for (let y = yp; y < e.height + yp; y++) {
-				const t = e.findPointSourceByPoint({ x: x, y: y });
+				const t = e.findPointSourceByPoint({ x: x, y: y })!;
 				expect(t.target).toBe(e);
 			}
 		}
-		let t = e.findPointSourceByPoint({ x: e.width + xp, y: e.height + yp - 1 });
+		let t = e.findPointSourceByPoint({ x: e.width + xp, y: e.height + yp - 1 })!;
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: e.width + xp - 1, y: e.height + yp });
+		t = e.findPointSourceByPoint({ x: e.width + xp - 1, y: e.height + yp })!;
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp - 1, y: yp });
+		t = e.findPointSourceByPoint({ x: xp - 1, y: yp })!;
 		expect(t).toBeUndefined();
-		t = e.findPointSourceByPoint({ x: xp, y: yp - 1 });
+		t = e.findPointSourceByPoint({ x: xp, y: yp - 1 })!;
 		expect(t).toBeUndefined();
 	});
 
@@ -60,7 +60,7 @@ describe("test E", () => {
 		e.scale(scale);
 		for (let x = fromX; x < toX; x++) {
 			for (let y = fromY; y < toY; y++) {
-				const t = e.findPointSourceByPoint({ x, y });
+				const t = e.findPointSourceByPoint({ x, y })!;
 				expect(t.target).toBe(e);
 			}
 		}
@@ -93,7 +93,7 @@ describe("test E", () => {
 		e.scale(scale);
 		for (let x = fromX; x < toX; x++) {
 			for (let y = fromY; y < toY; y++) {
-				const t = e.findPointSourceByPoint({ x, y });
+				const t = e.findPointSourceByPoint({ x, y })!;
 				expect(t.target).toBe(e);
 			}
 		}
@@ -122,7 +122,7 @@ describe("test E", () => {
 		e.angle = angle;
 		for (let x = fromX + 0.1; x < toX; x++) {
 			for (let y = fromY + 0.1; y < toY; y++) {
-				const t = e.findPointSourceByPoint({ x, y });
+				const t = e.findPointSourceByPoint({ x, y })!;
 				expect(t.target).toBe(e);
 			}
 		}
@@ -153,7 +153,7 @@ describe("test E", () => {
 		e.angle = angle;
 		for (let x = fromX + 0.1; x < toX; x++) {
 			for (let y = fromY + 0.1; y < toY; y++) {
-				const t = e.findPointSourceByPoint({ x, y });
+				const t = e.findPointSourceByPoint({ x, y })!;
 				expect(t.target).toBe(e);
 			}
 		}
@@ -184,7 +184,7 @@ describe("test E", () => {
 		e.angle = angle;
 		for (let x = fromX + 0.1; x < toX; x++) {
 			for (let y = fromY + 0.1; y < toY; y++) {
-				const t = e.findPointSourceByPoint({ x, y });
+				const t = e.findPointSourceByPoint({ x, y })!;
 				expect(t.target).toBe(e);
 			}
 		}
@@ -218,9 +218,9 @@ describe("test E", () => {
 		expect(e.touchable).toBe(false);
 		expect(e._hasTouchableChildren).toBe(true);
 
-		let t = e.findPointSourceByPoint({ x: 20, y: 10 });
+		let t = e.findPointSourceByPoint({ x: 20, y: 10 })!;
 		expect(t.target).toBe(e2);
-		t = e.findPointSourceByPoint({ x: 30, y: 11 });
+		t = e.findPointSourceByPoint({ x: 30, y: 11 })!;
 		expect(t).toBeUndefined();
 	});
 
@@ -237,11 +237,11 @@ describe("test E", () => {
 		expect(e2.touchable).toBe(true);
 		expect(e._hasTouchableChildren).toBe(true);
 
-		let t = e.findPointSourceByPoint({ x: 20, y: 10 });
+		let t = e.findPointSourceByPoint({ x: 20, y: 10 })!;
 		expect(t.target).toBe(e2);
-		t = e.findPointSourceByPoint({ x: 30, y: 11 });
+		t = e.findPointSourceByPoint({ x: 30, y: 11 })!;
 		expect(t.target).toBe(e);
-		t = e.findPointSourceByPoint({ x: 30, y: 40 });
+		t = e.findPointSourceByPoint({ x: 30, y: 40 })!;
 		expect(t).toBeUndefined();
 	});
 
@@ -277,7 +277,7 @@ describe("test E", () => {
 		e.anchorX = null;
 		for (let x = fromX + 0.1; x < toX; x++) {
 			for (let y = fromY + 0.1; y < toY; y++) {
-				const t = e.findPointSourceByPoint({ x, y });
+				const t = e.findPointSourceByPoint({ x, y })!;
 				expect(t.target).toBe(e);
 			}
 		}

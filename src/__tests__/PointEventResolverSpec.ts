@@ -8,6 +8,7 @@ import { skeletonRuntime } from "./helpers";
 describe("PointEventResolver", () => {
 	it("can be instantiated", () => {
 		const game = skeletonRuntime().game;
+		// @ts-ignore
 		const resolver = new PointEventResolver({ sourceResolver: game, playerId: game.selfId });
 		expect(resolver._sourceResolver).toBe(game);
 		expect(resolver._playerId).toBe(game.selfId);
@@ -56,7 +57,7 @@ describe("PointEventResolver", () => {
 		expect(e[3]).toBe(0); //                      3: ポインターID
 		expect(e[4]).toBe(10); //                     4: X座標
 		expect(e[5]).toBe(20); //                     5: Y座標
-		expect(e[6]).toBe(null); //                   6?: エンティティID
+		expect(e[6]).toBeUndefined(); //              6?: エンティティID
 
 		// (110, 110) の位置 (50x50の赤いFilledRectが(100, 100)にある)
 		e = resolver.pointDown({
@@ -86,7 +87,7 @@ describe("PointEventResolver", () => {
 		expect(e[3]).toBe(0); //                      3: ポインターID
 		expect(e[4]).toBe(20); //                     4: X座標
 		expect(e[5]).toBe(20); //                     5: Y座標
-		expect(e[6] < 0).toBe(true); //               6?: エンティティID
+		expect(e[6]! < 0).toBe(true); //              6?: エンティティID
 		expect(e[7]).toBe(true); //                   7?: ローカル
 	});
 
@@ -119,10 +120,10 @@ describe("PointEventResolver", () => {
 		});
 		scene.append(rect2);
 
-		let e: pl.PointMoveEvent;
+		let e: pl.PointDownEvent | pl.PointMoveEvent | pl.PointUpEvent;
 		// (10, 20) の位置 (何もない)
 		resolver.pointDown({ type: PlatformPointType.Down, identifier: 0, offset: { x: 10, y: 20 } });
-		e = resolver.pointMove({ type: PlatformPointType.Move, identifier: 0, offset: { x: 20, y: 25 } });
+		e = resolver.pointMove({ type: PlatformPointType.Move, identifier: 0, offset: { x: 20, y: 25 } })!;
 		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointMove); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
@@ -134,8 +135,8 @@ describe("PointEventResolver", () => {
 		expect(e[7]).toBe(5); //                      7: ポイントダウンイベントからのY座標の差
 		expect(e[8]).toBe(10); //                     8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(5); //                      9: 直前のポイントムーブイベントからのY座標の差
-		expect(e[10]).toBe(null); //                  10?: エンティティID
-		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 22, y: 23 } });
+		expect(e[10]).toBeUndefined(); //             10?: エンティティID
+		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 22, y: 23 } })!;
 		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointUp); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
@@ -147,11 +148,11 @@ describe("PointEventResolver", () => {
 		expect(e[7]).toBe(3); //                    7: ポイントダウンイベントからのY座標の差
 		expect(e[8]).toBe(2); //                    8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(-2); //                   9: 直前のポイントムーブイベントからのY座標の差
-		expect(e[10]).toBe(null); //                10?: エンティティID
+		expect(e[10]).toBeUndefined(); //           10?: エンティティID
 
 		// (110, 110) の位置 (50x50の赤いFilledRectが(100, 100)にある)
 		resolver.pointDown({ type: PlatformPointType.Down, identifier: 0, offset: { x: 110, y: 110 } });
-		e = resolver.pointMove({ type: PlatformPointType.Move, identifier: 0, offset: { x: 130, y: 115 } });
+		e = resolver.pointMove({ type: PlatformPointType.Move, identifier: 0, offset: { x: 130, y: 115 } })!;
 		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointMove); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
@@ -164,7 +165,7 @@ describe("PointEventResolver", () => {
 		expect(e[8]).toBe(20); //                     8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(5); //                      9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeGreaterThan(0); //          10?: エンティティID
-		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 127, y: 100 } });
+		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 127, y: 100 } })!;
 		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointUp); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度

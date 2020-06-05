@@ -15,8 +15,8 @@ export interface ImageAssetLike extends AssetLike {
 	type: "image";
 	width: number;
 	height: number;
-	hint: ImageAssetHint;
+	hint: ImageAssetHint | undefined;
 
 	asSurface(): SurfaceLike;
-	initialize(hint: ImageAssetHint): void;
+	initialize(hint: ImageAssetHint | undefined): void;
 }
