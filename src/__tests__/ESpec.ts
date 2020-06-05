@@ -1,4 +1,16 @@
-import { Camera2D, CompositeOperation, E, PlainMatrix, PlatformPointType, PointDownEvent, PointSource, Scene } from "..";
+import {
+	Camera2D,
+	CompositeOperation,
+	E,
+	PlainMatrix,
+	PlatformPointType,
+	PointDownEvent,
+	PointSource,
+	Scene,
+	MessageEvent,
+	PointUpEvent,
+	PointMoveEvent
+} from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
@@ -794,8 +806,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
-		// @ts-ignore
-		m.fire();
+		m.fire(new MessageEvent("dummy"));
 
 		expect(firedFlg).toBe(true);
 	});
@@ -817,8 +828,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
-		// @ts-ignore
-		p.fire();
+		p.fire(new PointDownEvent(0, undefined, { x: 0, y: 0 }));
 
 		expect(firedFlg).toBe(true);
 	});
@@ -840,8 +850,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
-		// @ts-ignore
-		p.fire();
+		p.fire(new PointUpEvent(0, undefined, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }));
 
 		expect(firedFlg).toBe(true);
 	});
@@ -863,8 +872,7 @@ describe("test E", () => {
 
 		expect(firedFlg).toBe(false);
 
-		// @ts-ignore
-		p.fire();
+		p.fire(new PointMoveEvent(0, undefined, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }));
 
 		expect(firedFlg).toBe(true);
 	});
