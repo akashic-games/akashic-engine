@@ -37,11 +37,13 @@ export interface BitmapFontParameterObject {
 
 	/**
 	 * `map` で指定を省略した文字に使われる、デフォルトの文字の幅。
+	 * @default 0
 	 */
 	defaultGlyphWidth?: number;
 
 	/**
 	 * `map` で指定を省略した文字に使われる、デフォルトの文字の高さ
+	 * @default 0
 	 */
 	defaultGlyphHeight?: number;
 
@@ -60,7 +62,7 @@ export class BitmapFont extends Font {
 	defaultGlyphWidth: number;
 	defaultGlyphHeight: number;
 	map: { [key: string]: GlyphArea };
-	missingGlyph: GlyphArea;
+	missingGlyph: GlyphArea | undefined;
 	size: number;
 
 	/**
@@ -79,16 +81,11 @@ export class BitmapFont extends Font {
 			this.missingGlyph = param.glyphInfo.missingGlyph;
 			this.size = param.glyphInfo.height;
 		} else {
-			// @ts-ignore
-			this.map = param.map;
-			// @ts-ignore
-			this.defaultGlyphWidth = param.defaultGlyphWidth!;
-			// @ts-ignore
-			this.defaultGlyphHeight = param.defaultGlyphHeight!;
-			// @ts-ignore
-			this.missingGlyph = param.missingGlyph!;
-			// @ts-ignore
-			this.size = param.defaultGlyphHeight!;
+			this.map = param.map || {};
+			this.defaultGlyphWidth = param.defaultGlyphWidth || 0;
+			this.defaultGlyphHeight = param.defaultGlyphHeight || 0;
+			this.missingGlyph = param.missingGlyph;
+			this.size = param.defaultGlyphHeight || 0;
 		}
 	}
 
