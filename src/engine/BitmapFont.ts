@@ -37,13 +37,13 @@ export interface BitmapFontParameterObject {
 
 	/**
 	 * `map` で指定を省略した文字に使われる、デフォルトの文字の幅。
-	 * @default 0
+	 * この値を省略した場合、 map の持つ全ての GlyphArea は width を持たなければならない。そうでない場合の動作は不定である。
 	 */
 	defaultGlyphWidth?: number;
 
 	/**
 	 * `map` で指定を省略した文字に使われる、デフォルトの文字の高さ
-	 * @default 0
+	 * この値を省略した場合、 map の持つ全ての GlyphArea は height を持たなければならない。そうでない場合の動作は不定である。
 	 */
 	defaultGlyphHeight?: number;
 
