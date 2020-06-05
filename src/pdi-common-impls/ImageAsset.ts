@@ -16,8 +16,7 @@ export abstract class ImageAsset extends Asset implements ImageAssetLike {
 	type: "image" = "image";
 	width: number;
 	height: number;
-	// @ts-ignore
-	hint: ImageAssetHint;
+	hint: ImageAssetHint | undefined;
 
 	constructor(id: string, assetPath: string, width: number, height: number) {
 		super(id, assetPath);
@@ -27,7 +26,7 @@ export abstract class ImageAsset extends Asset implements ImageAssetLike {
 
 	abstract asSurface(): SurfaceLike;
 
-	initialize(hint: ImageAssetHint): void {
+	initialize(hint: ImageAssetHint | undefined): void {
 		this.hint = hint;
 	}
 }
