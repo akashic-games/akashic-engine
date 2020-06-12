@@ -42,8 +42,7 @@
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
     "eslint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix",
-    "doc": "",
-    "doc2": "typedoc --out doc/html/ --mode file --gaID UA-162208211-1"
+    "doc": "typedoc --out doc/html/ --mode file --gaID UA-162208211-1"
   },
   "files": [
     "lib",
