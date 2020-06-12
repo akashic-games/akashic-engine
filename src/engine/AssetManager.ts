@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
 import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
 import { AudioAssetLike } from "../pdi-types/AudioAssetLike";

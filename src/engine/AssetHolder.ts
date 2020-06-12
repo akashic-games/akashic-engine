@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { AssetLoadFailureInfo } from "../pdi-types/AssetLoadFailureInfo";
 import { AssetLoadError } from "../pdi-types/errors";

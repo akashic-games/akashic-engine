@@ -1,12 +1,12 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.0.0-beta.25",
+  "version": "3.0.0-beta.26",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
     "@akashic/playlog": "~2.0.0",
     "@akashic/trigger": "~1.0.0",
-    "@akashic/pdi-common-impl": "../pdi-common-impl"
+    "@akashic/pdi-common-impl": "~0.0.1"
   },
   "devDependencies": {
     "@types/jest": "^25.1.2",

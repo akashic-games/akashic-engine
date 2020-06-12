@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { Camera } from "./Camera";
 import { E } from "./entities/E";
 import { Sprite } from "./entities/Sprite";

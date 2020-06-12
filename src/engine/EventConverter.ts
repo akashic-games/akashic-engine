@@ -1,5 +1,5 @@
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import * as pl from "@akashic/playlog";
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { CommonOffset } from "../pdi-types/commons";
 import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import { Event, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";

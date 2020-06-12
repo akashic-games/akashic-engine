@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 
 /**
  * パスユーティリティ。

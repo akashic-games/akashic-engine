@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { RandomGenerator } from "./RandomGenerator";
 import { Xorshift, XorshiftSerialization } from "./Xorshift";
 

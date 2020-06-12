@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { CommonArea, CommonOffset, CommonSize } from "../pdi-types/commons";
 import { CompositeOperation } from "../pdi-types/CompositeOperation";
 import { CompositeOperationString } from "../pdi-types/CompositeOperationString";

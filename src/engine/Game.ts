@@ -1,6 +1,6 @@
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { CommonOffset, CommonSize } from "../pdi-types/commons";
 import { PlatformPointEvent, PlatformPointType } from "../pdi-types/PlatformPointEvent";

@@ -1,5 +1,5 @@
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { Trigger } from "@akashic/trigger";
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { Timer } from "./Timer";
 
 /**

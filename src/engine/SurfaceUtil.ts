@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { CommonArea, CommonOffset, CommonRect } from "../pdi-types/commons";
 import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
 import { SurfaceLike } from "../pdi-types/SurfaceLike";

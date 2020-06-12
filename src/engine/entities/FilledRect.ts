@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "../../pdi-common-impls/ExceptionFactory";
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { RendererLike } from "../../pdi-types/RendererLike";
 import { E, EParameterObject } from "./E";
 

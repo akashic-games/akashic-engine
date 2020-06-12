@@ -1,5 +1,5 @@
+import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { Trigger } from "@akashic/trigger";
-import { ExceptionFactory } from "../pdi-common-impls/ExceptionFactory";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { AssetLoadFailureInfo } from "../pdi-types/AssetLoadFailureInfo";
 import { CommonOffset } from "../pdi-types/commons";
