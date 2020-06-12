@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.26
+
+その他変更
+ * `@akashic/pdi-common-impl` を使用するよう変更
+
 ## 3.0.0-beta.25
 
 仕様変更
