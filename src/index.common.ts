@@ -1,4 +1,3 @@
-export * from "@akashic/pdi-common-impl";
 export * from "@akashic/trigger";
 
 export * from "./pdi-types/commons";

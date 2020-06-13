@@ -1,4 +1,3 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { Trigger } from "@akashic/trigger";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { AssetLoadFailureInfo } from "../pdi-types/AssetLoadFailureInfo";
@@ -11,6 +10,7 @@ import { Camera2D } from "./Camera2D";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./entities/E";
 import { MessageEvent, OperationEvent } from "./Event";
+import { ExceptionFactory } from "./ExceptionFactory";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { LocalTickModeString } from "./LocalTickModeString";

@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
+import { ExceptionFactory } from "./ExceptionFactory";
 import { Game } from "./Game";
 
 declare const g: { game: Game };

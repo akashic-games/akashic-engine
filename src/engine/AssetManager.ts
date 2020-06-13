@@ -1,4 +1,3 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
 import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
 import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
@@ -13,6 +12,7 @@ import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap,
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
+import { ExceptionFactory } from "./ExceptionFactory";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { VideoSystem } from "./VideoSystem";
 

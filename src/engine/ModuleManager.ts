@@ -1,9 +1,9 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { AssetLike } from "../pdi-types/AssetLike";
 import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
 import { ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";
 import { TextAssetLike } from "../pdi-types/TextAssetLike";
 import { AssetManager } from "./AssetManager";
+import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
 import { PathUtil } from "./PathUtil";
 import { RequireCacheable } from "./RequireCacheable";

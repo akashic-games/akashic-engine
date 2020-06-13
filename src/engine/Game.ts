@@ -1,4 +1,3 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
 import { AssetLike } from "../pdi-types/AssetLike";
@@ -15,6 +14,7 @@ import { E, PointSource, PointDownEvent, PointMoveEvent, PointUpEvent } from "./
 import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent, OperationEvent } from "./Event";
 import { EventConverter } from "./EventConverter";
 import { EventFilter } from "./EventFilter";
+import { ExceptionFactory } from "./ExceptionFactory";
 import { GameConfiguration } from "./GameConfiguration";
 import { GameHandlerSet } from "./GameHandlerSet";
 import { GameMainParameterObject } from "./GameMainParameterObject";

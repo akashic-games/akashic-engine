@@ -1,6 +1,6 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
 import { Trigger } from "@akashic/trigger";
 import { AssetLike } from "../pdi-types/AssetLike";
+import { ExceptionFactory } from "./ExceptionFactory";
 import { Scene, SceneParameterObject } from "./Scene";
 
 export interface LoadingSceneParameterObject extends SceneParameterObject {
