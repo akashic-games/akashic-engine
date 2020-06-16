@@ -4,9 +4,10 @@
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
+    "@akashic/akashic-pdi": "file:../akashic-pdi/akashic-akashic-pdi-3.0.0-beta.2.tgz",
+    "@akashic/pdi-common-impl": "file:../pdi-common-impl/akashic-pdi-common-impl-0.0.1.tgz",
     "@akashic/playlog": "~2.0.0",
-    "@akashic/trigger": "~1.0.0",
-    "@akashic/pdi-common-impl": "~0.0.1"
+    "@akashic/trigger": "~1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.2",
