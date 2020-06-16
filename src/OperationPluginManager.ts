@@ -1,10 +1,10 @@
+import { OperationPluginViewInfo } from "@akashic/akashic-pdi";
 import { Trigger } from "@akashic/trigger";
 import { Game } from "./Game";
 import { OperationPlugin } from "./OperationPlugin";
 import { InternalOperationPluginInfo } from "./OperationPluginInfo";
 import { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
 import { OperationPluginStatic } from "./OperationPluginStatic";
-import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
 
 /**
  * 操作プラグインからの通知をハンドルするクラス。

@@ -1,4 +1,4 @@
-import { ScriptAssetRuntimeValueBase, PlatformPointType, PlatformPointEvent } from "@akashic/akashic-pdi";
+import { ScriptAssetRuntimeValueBase, PlatformPointType, PlatformPointEvent, OperationPluginViewInfo } from "@akashic/akashic-pdi";
 import * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
 import { AssetManager } from "./AssetManager";
@@ -19,7 +19,6 @@ import { ModuleManager } from "./ModuleManager";
 import { OperationPlugin } from "./OperationPlugin";
 import { OperationPluginManager } from "./OperationPluginManager";
 import { InternalOperationPluginOperation } from "./OperationPluginOperation";
-import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
 import { Asset, CommonOffset, CommonSize, Renderer, ResourceFactory } from "./pdiTypes";
 import { PointEventResolver } from "./PointEventResolver";
 import { RandomGenerator } from "./RandomGenerator";

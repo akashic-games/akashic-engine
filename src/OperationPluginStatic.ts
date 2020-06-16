@@ -1,5 +1,5 @@
+import { OperationPluginViewInfo } from "@akashic/akashic-pdi";
 import { OperationPlugin } from "./OperationPlugin";
-import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
 
 /**
  * Operation Pluginの実装すべきstatic methodについての定義。

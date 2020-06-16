@@ -44,8 +44,6 @@ export * from "./OperationPluginInfo";
 export * from "./OperationPluginManager";
 export * from "./OperationPluginOperation";
 export * from "./OperationPluginStatic";
-export * from "./OperationPluginView";
-export * from "./OperationPluginViewInfo";
 export * from "./PathUtil";
 export * from "./Player";
 export * from "./PointEventResolver";
