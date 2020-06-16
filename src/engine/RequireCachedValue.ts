@@ -1,6 +1,9 @@
 import { RequireCacheable } from "./RequireCacheable";
 
 export class RequireCachedValue implements RequireCacheable {
+	/**
+	 * @private
+	 */
 	_value: any;
 
 	constructor(value: any) {

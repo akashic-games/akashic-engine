@@ -6,10 +6,29 @@ import { PointSource } from "./entities/E";
 import { EventPriority } from "./EventPriority";
 
 interface PointEventHolder {
+	/**
+	 * @private
+	 */
 	targetId?: number;
+
+	/**
+	 * @private
+	 */
 	local?: boolean;
+
+	/**
+	 * @private
+	 */
 	point: CommonOffset;
+
+	/**
+	 * @private
+	 */
 	start: CommonOffset;
+
+	/**
+	 * @private
+	 */
 	prev: CommonOffset;
 	// TODO: タイムスタンプのようなものを入れて一定時間後にクリアする仕組みが必要かもしれない。
 	//       pointUpをトリガに解放するので、pointUpを取り逃すとリークする(mapに溜まったままになってしまう)
@@ -43,7 +62,13 @@ export interface PointEventResolverParameterObject {
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class PointEventResolver {
+	/**
+	 * @private
+	 */
 	_sourceResolver: PointSourceResolver;
+	/**
+	 * @private
+	 */
 	_playerId: string;
 
 	// g.Eと関連した座標データ

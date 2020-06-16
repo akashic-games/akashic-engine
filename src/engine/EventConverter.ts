@@ -10,8 +10,19 @@ import { StorageValueStore } from "./Storage";
 
 // TODO: Game を意識しないインターフェース を検討する
 interface EventConverterParameterObejctGameLike {
+	/**
+	 * @private
+	 */
 	db: { [idx: number]: E };
+
+	/**
+	 * @private
+	 */
 	_localDb: { [id: number]: E };
+
+	/**
+	 * @private
+	 */
 	_decodeOperationPluginOperation: (code: number, op: (number | string)[]) => any;
 }
 
@@ -24,8 +35,19 @@ export interface EventConverterParameterObejct {
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
 export class EventConverter {
+	/**
+	 * @private
+	 */
 	_game: EventConverterParameterObejctGameLike;
+
+	/**
+	 * @private
+	 */
 	_playerId: string;
+
+	/**
+	 * @private
+	 */
 	_playerTable: { [key: string]: Player };
 
 	constructor(param: EventConverterParameterObejct) {

@@ -71,10 +71,29 @@ export class TimerIdentifier {
  * ゲーム開発者が本クラスを利用する事はない。
  */
 export class TimerManager {
+	/**
+	 * @private
+	 */
 	_timers: Timer[];
+
+	/**
+	 * @private
+	 */
 	_trigger: Trigger<void>;
+
+	/**
+	 * @private
+	 */
 	_identifiers: TimerIdentifier[];
+
+	/**
+	 * @private
+	 */
 	_fps: number;
+
+	/**
+	 * @private
+	 */
 	_registered: boolean;
 
 	constructor(trigger: Trigger<void>, fps: number) {

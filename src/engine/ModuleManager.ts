@@ -46,6 +46,8 @@ export class ModuleManager {
 	 * node.jsのrequireに限りなく近いモデルでrequireする。
 	 * ただしアセットIDで該当すればそちらを優先する。また node.js のコアモジュールには対応していない。
 	 * 通常、ゲーム開発者が利用するのは `Module#require()` であり、このメソッドはその内部実装を提供する。
+	 *
+	 * @private (NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明)
 	 * @param path requireのパス。相対パスと、Asset識別名を利用することが出来る。
 	 *              なお、./xxx.json のようにjsonを指定する場合、そのAssetはTextAssetである必要がある。
 	 *              その他の形式である場合、そのAssetはScriptAssetである必要がある。
@@ -154,6 +156,7 @@ export class ModuleManager {
 	 * 見つかった場合そのアセットを、そうでない場合 `undefined` を返す。
 	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
 	 *
+	 * @private
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
@@ -170,6 +173,7 @@ export class ModuleManager {
 	 * ディレクトリ内に package.json が存在する場合、package.json 自体もアセットとして
 	 * `liveAssetPathTable` から参照可能でなければならないことに注意。
 	 *
+	 * @private
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */

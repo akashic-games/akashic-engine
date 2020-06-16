@@ -38,6 +38,9 @@ class CameraCancellingE extends E {
 		this._canceller = new Object2D();
 	}
 
+	/**
+	 * @private
+	 */
 	renderSelf(renderer: RendererLike, camera?: Camera): boolean {
 		if (!this.children) return false;
 

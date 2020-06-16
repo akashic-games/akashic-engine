@@ -67,12 +67,14 @@ type PostTickTask = PostTickPopSceneTask | PostTickPushSceneTask | PostTickRepla
 interface PostTickPushSceneTask {
 	/**
 	 * 遷移の種類。
+	 * @private
 	 */
 	type: PostTickTaskType.PushScene;
 
 	/**
 	 * 遷移先になるシーン。
 	 * `type` が `Push` または `Replace` の時のみ存在。
+	 * @private
 	 */
 	scene: Scene;
 }
@@ -80,18 +82,21 @@ interface PostTickPushSceneTask {
 interface PostTickReplaceSceneTask {
 	/**
 	 * 遷移の種類。
+	 * @private
 	 */
 	type: PostTickTaskType.ReplaceScene;
 
 	/**
 	 * 遷移先になるシーン。
 	 * `type` が `Push` または `Replace` の時のみ存在。
+	 * @private
 	 */
 	scene: Scene;
 
 	/**
 	 * 現在のシーンを破棄するか否か。
 	 * `type` が `PopScene` または `Replace` の時のみ存在。
+	 * @private
 	 */
 	preserveCurrent: boolean;
 }
@@ -99,12 +104,14 @@ interface PostTickReplaceSceneTask {
 interface PostTickPopSceneTask {
 	/**
 	 * 遷移の種類。
+	 * @private
 	 */
 	type: PostTickTaskType.PopScene;
 
 	/**
 	 * 現在のシーンを破棄するか否か。
 	 * `type` が `PopScene` または `Replace` の時のみ存在。
+	 * @private
 	 */
 	preserveCurrent: boolean;
 }
@@ -112,18 +119,21 @@ interface PostTickPopSceneTask {
 interface PostTickCallFunctionTask {
 	/**
 	 * 遷移の種類。
+	 * @private
 	 */
 	type: PostTickTaskType.Call;
 
 	/**
 	 * 呼び出す関数。
 	 * `type` が `Call` の時のみ存在。
+	 * @private
 	 */
 	fun: Function;
 
 	/**
 	 * `fun` の `this` として使う値。
 	 * `type` が `Call` の時のみ存在。
+	 * @private
 	 */
 	owner: any;
 }
@@ -568,6 +578,7 @@ export class Game {
 
 	/**
 	 * エントリポイントの関数。
+	 * @private
 	 */
 	_mainFunc: GameMainFunction | undefined;
 
@@ -1209,6 +1220,10 @@ export class Game {
 		return this.handlerSet.getInstanceType() === "active";
 	}
 
+	/**
+	 * @private
+	 * NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明
+	 */
 	_pushPostTickTask(fun: () => void, owner: any): void {
 		this._postTickTasks.push({
 			type: PostTickTaskType.Call,
@@ -1502,11 +1517,17 @@ export class Game {
 		this._onLoad.fire(this);
 	}
 
+	/**
+	 * @private
+	 */
 	_handleOperationPluginOperated(op: InternalOperationPluginOperation): void {
 		const pev = this._eventConverter.makePlaylogOperationEvent(op);
 		this.handlerSet.raiseEvent(pev);
 	}
 
+	/**
+	 * @private
+	 */
 	_handleSceneChanged(scene?: Scene): void {
 		this._updateEventTriggers(scene);
 		const local = scene ? scene.local : "full-local";
@@ -1570,6 +1591,9 @@ export class Game {
 		} while (this._postTickTasks.length > 0); // flush中に追加される限りflushを続行する
 	}
 
+	/**
+	 * @private
+	 */
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
 	}

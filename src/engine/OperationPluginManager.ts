@@ -21,6 +21,9 @@ class OperationHandler {
 		this._handlerOwner = owner;
 	}
 
+	/**
+	 * @private
+	 */
 	onOperation(op: OperationPluginOperation | (number | string)[]): void {
 		var iop: InternalOperationPluginOperation;
 		if (op instanceof Array) {

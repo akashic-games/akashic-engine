@@ -112,8 +112,23 @@ export class Xorshift {
  */
 
 export interface XorshiftSerialization {
+	/**
+	 * @private
+	 */
 	_state0U: number;
+
+	/**
+	 * @private
+	 */
 	_state0L: number;
+
+	/**
+	 * @private
+	 */
 	_state1U: number;
+
+	/**
+	 * @private
+	 */
 	_state1L: number;
 }
