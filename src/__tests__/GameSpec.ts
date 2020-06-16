@@ -1,19 +1,17 @@
+import { PlatformPointType } from "@akashic/akashic-pdi";
 import {
 	AssetConfiguration,
 	Camera2D,
 	E,
 	GameConfiguration,
-	ImageAsset,
 	LoadingScene,
 	LoadingSceneParameterObject,
 	LocalTickModeString,
 	MessageEvent,
-	PlatformPointType,
 	Scene,
-	ScriptAsset,
 	XorshiftRandomGenerator
 } from "..";
-import { customMatchers, EntityStateFlags, Game, Renderer } from "./helpers";
+import { customMatchers, EntityStateFlags, Game, Renderer, ImageAsset, ScriptAsset } from "./helpers";
 
 expect.extend(customMatchers);
 

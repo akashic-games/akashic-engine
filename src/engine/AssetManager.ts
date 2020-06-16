@@ -1,36 +1,39 @@
-import { AssetLike, AssetLoadHandler } from "../pdi-types/AssetLike";
-import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
-import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
-import { AssetLoadError } from "../pdi-types/errors";
-import { ImageAssetHint } from "../pdi-types/ImageAssetHint";
-import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
-import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
-import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
-import { TextAssetLike } from "../pdi-types/TextAssetLike";
-import { VideoAssetLike } from "../pdi-types/VideoAssetLike";
 import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { getGameInAssetContext } from "./getGameInAssetContext";
+import {
+	Asset,
+	AssetLoadHandler,
+	AudioAssetHint,
+	AudioAsset,
+	AssetLoadError,
+	ImageAssetHint,
+	ImageAsset,
+	ResourceFactory,
+	ScriptAsset,
+	TextAsset,
+	VideoAsset
+} from "./pdiTypes";
 import { VideoSystem } from "./VideoSystem";
 
-export type OneOfAssetLike = AudioAssetLike | ImageAssetLike | ScriptAssetLike | TextAssetLike | VideoAssetLike;
+export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset;
 
 export interface AssetManagerParameterGameLike {
-	resourceFactory: ResourceFactoryLike;
+	resourceFactory: ResourceFactory;
 	audio: AudioSystemManager;
 	defaultAudioSystemId: "music" | "sound";
 }
 
 class AssetLoadingInfo {
-	asset: OneOfAssetLike;
+	asset: OneOfAsset;
 	handlers: AssetManagerLoadHandler[];
 	errorCount: number;
 	loading: boolean;
 
-	constructor(asset: OneOfAssetLike, handler: AssetManagerLoadHandler) {
+	constructor(asset: OneOfAsset, handler: AssetManagerLoadHandler) {
 		this.asset = asset;
 		this.handlers = [handler];
 		this.errorCount = 0;
@@ -127,7 +130,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * requestAssets() で読み込みをリクエストしたゲーム開発者はコールバックでアセットを受け取るので、この変数を参照する必要は通常ない
 	 * @private
 	 */
-	_assets: { [key: string]: OneOfAssetLike };
+	_assets: { [key: string]: OneOfAsset };
 
 	/**
 	 * 読み込み済みのrequire解決用の仮想パスからアセットを引くためのテーブル。
@@ -135,7 +138,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * この情報は逆引き用の補助的な値にすぎない。このクラスの読み込み済みアセットの管理はすべて `_assets` 経由で行う。
 	 * @private
 	 */
-	_liveAssetVirtualPathTable: { [key: string]: OneOfAssetLike };
+	_liveAssetVirtualPathTable: { [key: string]: OneOfAsset };
 
 	/**
 	 * 読み込み済みのアセットの絶対パスからrequire解決用の仮想パスを引くためのテーブル。
@@ -160,7 +163,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * 各種リソースのファクトリ。
 	 */
-	private _resourceFactory: ResourceFactoryLike;
+	private _resourceFactory: ResourceFactory;
 
 	/**
 	 * オーディオシステム群
@@ -241,7 +244,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * 引数 `asset` は読み込みの失敗が (`Scene#assetLoadFail` で) 通知されたアセットでなければならない。
 	 * @param asset 読み込みを再試行するアセット
 	 */
-	retryLoad(asset: AssetLike): void {
+	retryLoad(asset: Asset): void {
 		if (!this._loadings.hasOwnProperty(asset.id))
 			throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: invalid argument.");
 
@@ -336,7 +339,7 @@ export class AssetManager implements AssetLoadHandler {
 	 *
 	 * @param assetOrId 参照カウントを減らすアセットまたはアセットID
 	 */
-	unrefAsset(assetOrId: string | AssetLike): void {
+	unrefAsset(assetOrId: string | Asset): void {
 		var assetId = typeof assetOrId === "string" ? assetOrId : assetOrId.id;
 		if (--this._refCounts[assetId] > 0) return;
 		this._releaseAsset(assetId);
@@ -366,7 +369,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetOrIds 参照カウントを減らすアセットまたはアセットID
 	 * @private
 	 */
-	unrefAssets(assetOrIds: (string | AssetLike)[]): void {
+	unrefAssets(assetOrIds: (string | Asset)[]): void {
 		for (var i = 0, len = assetOrIds.length; i < len; ++i) {
 			this.unrefAsset(assetOrIds[i]);
 		}
@@ -382,7 +385,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param accessorPath 取得するアセットのアクセッサパス
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
-	peekLiveAssetByAccessorPath<T extends OneOfAssetLike>(accessorPath: string, type: string): T {
+	peekLiveAssetByAccessorPath<T extends OneOfAsset>(accessorPath: string, type: string): T {
 		if (accessorPath[0] !== "/")
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
 		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
@@ -398,7 +401,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetId 取得するアセットのID
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
-	peekLiveAssetById<T extends OneOfAssetLike>(assetId: string, type: string): T {
+	peekLiveAssetById<T extends OneOfAsset>(assetId: string, type: string): T {
 		const asset = this._assets[assetId];
 		if (!asset || type !== asset.type)
 			throw ExceptionFactory.createAssertionError(`SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
@@ -414,7 +417,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param patternOrFilter 取得するアセットのパスパターンまたはフィルタ
 	 * @param type 取得するアセットのタイプ。 null の場合、全てのタイプとして扱われる。
 	 */
-	peekAllLiveAssetsByPattern<T extends OneOfAssetLike>(
+	peekAllLiveAssetsByPattern<T extends OneOfAsset>(
 		patternOrFilter: string | ((accessorPath: string) => boolean),
 		type: string | null
 	): T[] {
@@ -486,7 +489,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAssetLike {
+	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAsset {
 		var id: string;
 		var uri: string;
 		var conf: AssetConfiguration | DynamicAssetConfiguration;
@@ -521,7 +524,7 @@ export class AssetManager implements AssetLoadHandler {
 				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, videoSystem, !!conf.loop, !!conf.useRealSize);
 			default:
 				throw ExceptionFactory.createAssertionError(
-					"AssertionError#_createAssetFor: unknown asset type " + (conf as AssetLike).type + " for asset ID: " + id
+					"AssertionError#_createAssetFor: unknown asset type " + (conf as Asset).type + " for asset ID: " + id
 				);
 		}
 	}
@@ -567,7 +570,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_onAssetError(asset: OneOfAssetLike, error: AssetLoadError): void {
+	_onAssetError(asset: OneOfAsset, error: AssetLoadError): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
@@ -586,7 +589,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_onAssetLoad(asset: OneOfAssetLike): void {
+	_onAssetLoad(asset: OneOfAsset): void {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 

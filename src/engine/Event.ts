@@ -1,4 +1,4 @@
-import { CommonOffset } from "../pdi-types/commons";
+import { CommonOffset } from "./pdiTypes";
 import { Player } from "./Player";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";

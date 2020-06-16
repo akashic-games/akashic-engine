@@ -1,5 +1,5 @@
-import { RendererLike } from "../../pdi-types/RendererLike";
 import { ExceptionFactory } from "../ExceptionFactory";
+import { Renderer } from "../pdiTypes";
 import { E, EParameterObject } from "./E";
 
 /**
@@ -48,7 +48,7 @@ export class FilledRect extends E {
 	 * このエンティティ自身の描画を行う。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	renderSelf(renderer: RendererLike): boolean {
+	renderSelf(renderer: Renderer): boolean {
 		renderer.fillRect(0, 0, this.width, this.height, this.cssColor);
 		return true;
 	}

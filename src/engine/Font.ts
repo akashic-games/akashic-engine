@@ -1,4 +1,4 @@
-import { GlyphLike } from "../pdi-types/GlyphLike";
+import { Glyph } from "./pdiTypes";
 import { TextMetrics } from "./TextMetrics";
 import { Util } from "./Util";
 
@@ -21,7 +21,7 @@ export abstract class Font {
 	 *
 	 * @param code 文字コード
 	 */
-	abstract glyphForCharacter(code: number): GlyphLike | null;
+	abstract glyphForCharacter(code: number): Glyph | null;
 
 	abstract destroy(): void;
 
@@ -36,7 +36,7 @@ export abstract class Font {
 		let width = 0;
 		let actualBoundingBoxLeft = 0;
 		let actualBoundingBoxRight = 0;
-		let lastGlyph: GlyphLike | null = null;
+		let lastGlyph: Glyph | null = null;
 
 		for (let i = 0; i < text.length; i++) {
 			const code = Util.charCodeAt(text, i);

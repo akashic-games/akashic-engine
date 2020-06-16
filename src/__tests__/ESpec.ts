@@ -1,9 +1,9 @@
+import { PlatformPointType } from "@akashic/akashic-pdi";
 import {
 	Camera2D,
 	CompositeOperation,
 	E,
 	PlainMatrix,
-	PlatformPointType,
 	PointDownEvent,
 	PointSource,
 	Scene,

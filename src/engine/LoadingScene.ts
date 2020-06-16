@@ -1,6 +1,6 @@
 import { Trigger } from "@akashic/trigger";
-import { AssetLike } from "../pdi-types/AssetLike";
 import { ExceptionFactory } from "./ExceptionFactory";
+import { Asset } from "./pdiTypes";
 import { Scene, SceneParameterObject } from "./Scene";
 
 export interface LoadingSceneParameterObject extends SceneParameterObject {
@@ -43,7 +43,7 @@ export class LoadingScene extends Scene {
 	/**
 	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
 	 */
-	onTargetAssetLoad: Trigger<AssetLike>;
+	onTargetAssetLoad: Trigger<Asset>;
 	/**
 	 * ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
 	 * ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。
@@ -61,7 +61,7 @@ export class LoadingScene extends Scene {
 	 * ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onTargetAssetLoad` を利用すること。
 	 */
-	targetAssetLoaded: Trigger<AssetLike>;
+	targetAssetLoaded: Trigger<Asset>;
 
 	/**
 	 * @private
@@ -82,7 +82,7 @@ export class LoadingScene extends Scene {
 		super(param);
 		this.onTargetReset = new Trigger<Scene>();
 		this.onTargetReady = new Trigger<Scene>();
-		this.onTargetAssetLoad = new Trigger<AssetLike>();
+		this.onTargetAssetLoad = new Trigger<Asset>();
 		this.targetReset = this.onTargetReset;
 		this.targetReady = this.onTargetReady;
 		this.targetAssetLoaded = this.onTargetAssetLoad;
@@ -166,7 +166,7 @@ export class LoadingScene extends Scene {
 	/**
 	 * @private
 	 */
-	_handleAssetLoad(asset: AssetLike): void {
+	_handleAssetLoad(asset: Asset): void {
 		this.onTargetAssetLoad.fire(asset);
 	}
 

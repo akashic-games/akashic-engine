@@ -1,6 +1,6 @@
-import { RendererLike } from "../pdi-types/RendererLike";
 import { Camera } from "./Camera";
 import { Object2D, Object2DParameterObject } from "./Object2D";
+import { Renderer } from "./pdiTypes";
 
 export interface Camera2DSerialization {
 	param: Camera2DParameterObject;
@@ -112,7 +112,7 @@ export class Camera2D extends Object2D implements Camera {
 	/**
 	 * @private
 	 */
-	_applyTransformToRenderer(renderer: RendererLike): void {
+	_applyTransformToRenderer(renderer: Renderer): void {
 		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX !== 0 || this.anchorY !== 0) {
 			// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
 			renderer.transform(this.getMatrix()._matrix);

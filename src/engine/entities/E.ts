@@ -1,7 +1,4 @@
 import { ChainTrigger, Trigger } from "@akashic/trigger";
-import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
-import { RendererLike } from "../../pdi-types/RendererLike";
-import { ShaderProgramLike } from "../../pdi-types/ShaderProgramLike";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
 import { MessageEvent, PointDownEventBase, PointEventBase, PointMoveEventBase, PointSourceBase, PointUpEventBase } from "../Event";
@@ -9,7 +6,9 @@ import { ExceptionFactory } from "../ExceptionFactory";
 import { Game } from "../Game";
 import { Matrix, PlainMatrix } from "../Matrix";
 import { Object2D, Object2DParameterObject } from "../Object2D";
+import { CommonArea, CommonOffset, CommonRect, Renderer } from "../pdiTypes";
 import { Scene } from "../Scene";
+import { ShaderProgram } from "../ShaderProgram";
 import { Util } from "../Util";
 
 /**
@@ -121,7 +120,7 @@ export interface EParameterObject extends Object2DParameterObject {
 	 *
 	 * @default undefined
 	 */
-	shaderProgram?: ShaderProgramLike;
+	shaderProgram?: ShaderProgram;
 }
 
 /**
@@ -185,7 +184,7 @@ export class E extends Object2D implements CommonArea {
 	 *
 	 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
 	 */
-	shaderProgram: ShaderProgramLike | null | undefined;
+	shaderProgram: ShaderProgram | null | undefined;
 
 	/**
 	 * 子にtouchableなものが含まれているかどうかを表す。
@@ -370,7 +369,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param renderer 描画先に対するRenderer
 	 * @param camera 対象のカメラ。省略された場合、undefined
 	 */
-	render(renderer: RendererLike, camera?: Camera): void {
+	render(renderer: Renderer, camera?: Camera): void {
 		this.state &= ~EntityStateFlags.Modified;
 
 		if (this.state & EntityStateFlags.Hidden) return;
@@ -427,7 +426,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param renderer 描画先に対するRenderer
 	 * @param camera 対象のカメラ
 	 */
-	renderSelf(_renderer: RendererLike, _camera?: Camera): boolean {
+	renderSelf(_renderer: Renderer, _camera?: Camera): boolean {
 		// nothing to do
 		return true;
 	}

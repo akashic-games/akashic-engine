@@ -1,10 +1,7 @@
-import { CommonArea, CommonOffset, CommonRect } from "../../pdi-types/commons";
-import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
-import { RendererLike } from "../../pdi-types/RendererLike";
-import { SurfaceLike } from "../../pdi-types/SurfaceLike";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
 import { Matrix } from "../Matrix";
+import { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "../pdiTypes";
 import { SurfaceEffector } from "../SurfaceEffector";
 import { SurfaceUtil } from "../SurfaceUtil";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";
@@ -29,7 +26,7 @@ export interface PaneParameterObject extends CacheableEParameterObject {
 	 * 省略された場合、背景には何も描かれない。
 	 * @default undefined
 	 */
-	backgroundImage?: ImageAssetLike | SurfaceLike;
+	backgroundImage?: ImageAsset | Surface;
 
 	/**
 	 * 子孫エンティティの描画位置・クリッピングサイズを決めるパディング。
@@ -56,7 +53,7 @@ export class Pane extends CacheableE {
 	 * 背景画像の `ImageAsset` または `Surface` 。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
-	backgroundImage: ImageAssetLike | SurfaceLike | undefined;
+	backgroundImage: ImageAsset | Surface | undefined;
 
 	/**
 	 * 背景画像の拡大・縮小に用いられる `SurfaceEffector` 。
@@ -68,12 +65,12 @@ export class Pane extends CacheableE {
 	/**
 	 * @private
 	 */
-	_backgroundImageSurface: SurfaceLike | undefined;
+	_backgroundImageSurface: Surface | undefined;
 
 	/**
 	 * @private
 	 */
-	_beforeBackgroundImage: ImageAssetLike | SurfaceLike | undefined;
+	_beforeBackgroundImage: ImageAsset | Surface | undefined;
 
 	/**
 	 * @private
@@ -95,7 +92,7 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	// Effect済み背景画像の描画サーフェス
-	_bgSurface: SurfaceLike | undefined;
+	_bgSurface: Surface | undefined;
 
 	/**
 	 * @private
@@ -117,13 +114,13 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	// @ts-ignore
-	_childrenSurface: SurfaceLike;
+	_childrenSurface: Surface;
 
 	/**
 	 * @private
 	 */
 	// @ts-ignore
-	_childrenRenderer: RendererLike;
+	_childrenRenderer: Renderer;
 
 	/**
 	 * 各種パラメータを指定して `Pane` のインスタンスを生成する。
@@ -176,7 +173,7 @@ export class Pane extends CacheableE {
 		return false;
 	}
 
-	renderCache(renderer: RendererLike, camera?: Camera): void {
+	renderCache(renderer: Renderer, camera?: Camera): void {
 		if (this.width <= 0 || this.height <= 0) {
 			return;
 		}

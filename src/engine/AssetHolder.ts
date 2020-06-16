@@ -1,9 +1,8 @@
-import { AssetLike } from "../pdi-types/AssetLike";
-import { AssetLoadFailureInfo } from "../pdi-types/AssetLoadFailureInfo";
-import { AssetLoadError } from "../pdi-types/errors";
+import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import { AssetManager } from "./AssetManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
+import { Asset, AssetLoadError } from "./pdiTypes";
 
 export interface DestroyedCheckable {
 	destroyed(): boolean;
@@ -19,7 +18,7 @@ export interface AssetHolderHandlerSet<UserData> {
 	 * アセットが一つ読み込まれるたびに呼び出されるハンドラ。
 	 * @param asset 読み込まれたアセット
 	 */
-	handleLoad: (asset: AssetLike) => void;
+	handleLoad: (asset: Asset) => void;
 
 	/**
 	 * アセットが一つ読み込み失敗するごとに呼び出されるハンドラ。
@@ -101,7 +100,7 @@ export class AssetHolder<UserData> {
 	/**
 	 * @private
 	 */
-	_assets: AssetLike[];
+	_assets: Asset[];
 
 	/**
 	 * @private
@@ -148,7 +147,7 @@ export class AssetHolder<UserData> {
 	/**
 	 * @private
 	 */
-	_onAssetError(asset: AssetLike, error: AssetLoadError): void {
+	_onAssetError(asset: Asset, error: AssetLoadError): void {
 		const hs = this._handlerSet;
 		if (this.destroyed() || hs.owner.destroyed()) return;
 		var failureInfo = {
@@ -172,7 +171,7 @@ export class AssetHolder<UserData> {
 	/**
 	 * @private
 	 */
-	_onAssetLoad(asset: AssetLike): void {
+	_onAssetLoad(asset: Asset): void {
 		const hs = this._handlerSet;
 		if (this.destroyed() || hs.owner.destroyed()) return;
 

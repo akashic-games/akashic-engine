@@ -1,5 +1,4 @@
-import { AssetLike } from "./AssetLike";
-import { AssetLoadError } from "./errors";
+import { Asset, AssetLoadError } from "./pdiTypes";
 
 /**
  * `Asset` の読み込み失敗を通知するインターフェース。
@@ -8,7 +7,7 @@ export interface AssetLoadFailureInfo {
 	/**
 	 * 読み込みに失敗したアセット。
 	 */
-	asset: AssetLike;
+	asset: Asset;
 
 	/**
 	 * 失敗の内容を表すエラー。

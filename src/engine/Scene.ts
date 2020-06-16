@@ -1,10 +1,8 @@
+import { StorageLoadError } from "@akashic/akashic-pdi";
 import { Trigger } from "@akashic/trigger";
-import { AssetLike } from "../pdi-types/AssetLike";
-import { AssetLoadFailureInfo } from "../pdi-types/AssetLoadFailureInfo";
-import { CommonOffset } from "../pdi-types/commons";
-import { StorageLoadError } from "../pdi-types/errors";
 import { AssetAccessor } from "./AssetAccessor";
 import { AssetHolder } from "./AssetHolder";
+import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
@@ -14,6 +12,7 @@ import { ExceptionFactory } from "./ExceptionFactory";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { LocalTickModeString } from "./LocalTickModeString";
+import { Asset, CommonOffset } from "./pdiTypes";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
 import { TickGenerationModeString } from "./TickGenerationModeString";
 import { Timer } from "./Timer";
@@ -142,7 +141,7 @@ export class Scene implements StorageLoaderHandler {
 	 * アセットID をkeyに、対応するアセットのインスタンスを得ることができる。
 	 * keyはこのシーンの生成時、コンストラクタの第二引数 `assetIds` に渡された配列に含まれる文字列でなければならない。
 	 */
-	assets: { [key: string]: AssetLike };
+	assets: { [key: string]: Asset };
 
 	/**
 	 * このシーンで利用できるアセットへのアクセッサ。
@@ -212,7 +211,7 @@ export class Scene implements StorageLoaderHandler {
 	 * このシーンのアセットが一つ読み込まれる度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	onAssetLoad: Trigger<AssetLike>;
+	onAssetLoad: Trigger<Asset>;
 
 	/**
 	 * アセット読み込み失敗イベント。
@@ -229,7 +228,7 @@ export class Scene implements StorageLoaderHandler {
 	 * このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 */
-	onAssetLoadComplete: Trigger<AssetLike>;
+	onAssetLoadComplete: Trigger<Asset>;
 
 	/**
 	 * シーンの状態。
@@ -303,7 +302,7 @@ export class Scene implements StorageLoaderHandler {
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoad` を利用すること。
 	 */
-	assetLoaded: Trigger<AssetLike>;
+	assetLoaded: Trigger<Asset>;
 
 	/**
 	 * アセット読み込み失敗イベント。
@@ -322,7 +321,7 @@ export class Scene implements StorageLoaderHandler {
 	 * アセット読み込み中の動作をカスタマイズしたい場合に用いる。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onAssetLoadComplete` を利用すること。
 	 */
-	assetLoadCompleted: Trigger<AssetLike>;
+	assetLoadCompleted: Trigger<Asset>;
 
 	/**
 	 * 汎用メッセージイベント。
@@ -476,9 +475,9 @@ export class Scene implements StorageLoaderHandler {
 		this.update = this.onUpdate;
 		this._timer = new TimerManager(this.onUpdate, this.game.fps);
 
-		this.onAssetLoad = new Trigger<AssetLike>();
+		this.onAssetLoad = new Trigger<Asset>();
 		this.onAssetLoadFailure = new Trigger<AssetLoadFailureInfo>();
-		this.onAssetLoadComplete = new Trigger<AssetLike>();
+		this.onAssetLoadComplete = new Trigger<Asset>();
 		this.assetLoaded = this.onAssetLoad;
 		this.assetLoadFailed = this.onAssetLoadFailure;
 		this.assetLoadCompleted = this.onAssetLoadComplete;
@@ -877,7 +876,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * @private
 	 */
-	_handleSceneAssetLoad(asset: AssetLike): void {
+	_handleSceneAssetLoad(asset: Asset): void {
 		this.assets[asset.id] = asset;
 		this.onAssetLoad.fire(asset);
 		this.onAssetLoadComplete.fire(asset);

@@ -1,7 +1,5 @@
-import { GlyphArea, GlyphLike } from "../pdi-types/GlyphLike";
-import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
-import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { Font } from "./Font";
+import { GlyphArea, Glyph, ImageAsset, Surface } from "./pdiTypes";
 import { SurfaceUtil } from "./SurfaceUtil";
 
 /**
@@ -22,7 +20,7 @@ export interface BitmapFontParameterObject {
 	/**
 	 * 文字データとして利用する画像を表す `Surface` または `ImageAsset`。文字を敷き詰めたもの。
 	 */
-	src: SurfaceLike | ImageAssetLike;
+	src: Surface | ImageAsset;
 
 	/**
 	 * BitmapFont の生成に必要なデータセット。
@@ -58,7 +56,7 @@ export interface BitmapFontParameterObject {
  * ラスタ画像によるフォント。
  */
 export class BitmapFont extends Font {
-	surface: SurfaceLike;
+	surface: Surface;
 	defaultGlyphWidth: number;
 	defaultGlyphHeight: number;
 	map: { [key: string]: GlyphArea };
@@ -93,7 +91,7 @@ export class BitmapFont extends Font {
 	 * コードポイントに対応するグリフを返す。
 	 * @param code コードポイント
 	 */
-	glyphForCharacter(code: number): GlyphLike | null {
+	glyphForCharacter(code: number): Glyph | null {
 		var g = this.map[code] || this.missingGlyph;
 
 		if (!g) {

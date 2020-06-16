@@ -1,7 +1,6 @@
-import { CommonRect } from "../pdi-types/commons";
-import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
+import { CommonRect, Surface } from "./pdiTypes";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
 
@@ -22,12 +21,12 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 	/**
 	 * @private
 	 */
-	_surface: SurfaceLike | undefined;
+	_surface: Surface | undefined;
 
 	/**
 	 * @private
 	 */
-	_beforeSrcSurface: SurfaceLike | undefined;
+	_beforeSrcSurface: Surface | undefined;
 
 	/**
 	 * `NinePatchSurfaceEffector` のインスタンスを生成する。
@@ -52,7 +51,7 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 	/**
 	 * 指定の大きさに拡大・縮小した描画結果の `Surface` を生成して返す。詳細は `SurfaceEffector#render` の項を参照。
 	 */
-	render(srcSurface: SurfaceLike, width: number, height: number): SurfaceLike {
+	render(srcSurface: Surface, width: number, height: number): Surface {
 		if (!this._surface || this._surface.width !== width || this._surface.height !== height || this._beforeSrcSurface !== srcSurface) {
 			this._surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 			this._beforeSrcSurface = srcSurface;

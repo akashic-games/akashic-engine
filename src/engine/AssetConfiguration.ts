@@ -1,5 +1,4 @@
-import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
-import { ImageAssetHint } from "../pdi-types/ImageAssetHint";
+import { AudioAssetHint, ImageAssetHint } from "./pdiTypes";
 
 /**
  * アセット宣言

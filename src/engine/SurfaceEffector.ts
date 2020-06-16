@@ -1,4 +1,4 @@
-import { SurfaceLike } from "../pdi-types/SurfaceLike";
+import { Surface } from "./pdiTypes";
 
 /**
  * `Surface` に対して様々な表現によって書き込む事が出来ることを表すインターフェース。
@@ -19,5 +19,5 @@ export interface SurfaceEffector {
 	 * @param width 描画する幅
 	 * @param height 描画する高さ
 	 */
-	render(srcSurface: SurfaceLike, width: number, height: number): SurfaceLike;
+	render(srcSurface: Surface, width: number, height: number): Surface;
 }

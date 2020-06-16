@@ -1,6 +1,6 @@
-import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
+import { ScriptAsset } from "./pdiTypes";
 import { RequireCacheable } from "./RequireCacheable";
 
 /**
@@ -14,7 +14,7 @@ export class ScriptAssetContext implements RequireCacheable {
 	/**
 	 * @private
 	 */
-	_asset: ScriptAssetLike;
+	_asset: ScriptAsset;
 
 	/**
 	 * @private
@@ -26,7 +26,7 @@ export class ScriptAssetContext implements RequireCacheable {
 	 */
 	_started: boolean;
 
-	constructor(asset: ScriptAssetLike, module: Module) {
+	constructor(asset: ScriptAsset, module: Module) {
 		this._asset = asset;
 		this._module = module;
 		this._started = false;

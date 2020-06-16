@@ -1,4 +1,4 @@
-import { StorageLoadError } from "../pdi-types/errors";
+import { StorageLoadError } from "@akashic/akashic-pdi";
 
 // TODO: (GAMEDEV-1549) コメント整理
 /**

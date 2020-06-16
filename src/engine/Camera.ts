@@ -1,4 +1,4 @@
-import { RendererLike } from "../pdi-types/RendererLike";
+import { Renderer } from "./pdiTypes";
 
 /**
  * カメラを表すインターフェース。
@@ -12,7 +12,7 @@ export interface Camera {
 	/**
 	 * @private
 	 */
-	_applyTransformToRenderer: (renderer: RendererLike) => void;
+	_applyTransformToRenderer: (renderer: Renderer) => void;
 
 	serialize(): any;
 }

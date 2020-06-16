@@ -1,5 +1,3 @@
-import { AssetLike } from "../pdi-types/AssetLike";
-import { RendererLike } from "../pdi-types/RendererLike";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import { E, EParameterObject } from "./entities/E";
@@ -7,6 +5,7 @@ import { FilledRect } from "./entities/FilledRect";
 import { Game } from "./Game";
 import { LoadingScene } from "./LoadingScene";
 import { Object2D } from "./Object2D";
+import { Asset, Renderer } from "./pdiTypes";
 import { Scene } from "./Scene";
 
 /**
@@ -38,7 +37,7 @@ class CameraCancellingE extends E {
 		this._canceller = new Object2D();
 	}
 
-	renderSelf(renderer: RendererLike, camera?: Camera): boolean {
+	renderSelf(renderer: Renderer, camera?: Camera): boolean {
 		if (!this.children) return false;
 
 		if (camera) {
@@ -194,7 +193,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	/**
 	 * @private
 	 */
-	_handleTargetAssetLoad(_asset: AssetLike): void {
+	_handleTargetAssetLoad(_asset: Asset): void {
 		var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
 		this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
 		this._gauge.modified();

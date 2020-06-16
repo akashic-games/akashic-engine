@@ -1,6 +1,5 @@
-import { AudioAssetHint } from "../pdi-types/AudioAssetHint";
-import { ImageAssetHint } from "../pdi-types/ImageAssetHint";
 import { AssetConfigurationCommonBase } from "./AssetConfiguration";
+import { AudioAssetHint, ImageAssetHint } from "./pdiTypes";
 
 export type DynamicAssetConfiguration =
 	| DynamicAudioAssetConfigurationBase

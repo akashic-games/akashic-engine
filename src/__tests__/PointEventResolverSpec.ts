@@ -1,8 +1,8 @@
+import { PlatformPointType } from "@akashic/akashic-pdi";
 import * as pl from "@akashic/playlog";
 import { FilledRect } from "../engine/entities/FilledRect";
 import { EventPriority } from "../engine/EventPriority";
 import { PointEventResolver } from "../engine/PointEventResolver";
-import { PlatformPointType } from "../pdi-types/PlatformPointEvent";
 import { skeletonRuntime } from "./helpers";
 
 describe("PointEventResolver", () => {

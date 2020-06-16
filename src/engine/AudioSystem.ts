@@ -1,8 +1,5 @@
-import { AudioAssetLike } from "../pdi-types/AudioAssetLike";
-import { AudioPlayerEvent, AudioPlayerLike } from "../pdi-types/AudioPlayerLike";
-import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
-import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { ExceptionFactory } from "./ExceptionFactory";
+import { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory } from "./pdiTypes";
 
 export interface AudioSystemParameterObject {
 	/**
@@ -23,10 +20,10 @@ export interface AudioSystemParameterObject {
 	/**
 	 * 各種リソースのファクトリ
 	 */
-	resourceFactory: ResourceFactoryLike;
+	resourceFactory: ResourceFactory;
 }
 
-export abstract class AudioSystem implements AudioSystemLike {
+export abstract class AudioSystem implements AudioSystem {
 	id: string;
 
 	/**
@@ -42,7 +39,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_destroyRequestedAssets: { [key: string]: AudioAssetLike };
+	_destroyRequestedAssets: { [key: string]: AudioAsset };
 
 	/**
 	 * 再生速度が等倍以外に指定された等の要因により、音声再生が抑制されているかどうか。
@@ -53,7 +50,7 @@ export abstract class AudioSystem implements AudioSystemLike {
 	/**
 	 * @private
 	 */
-	_resourceFactory: ResourceFactoryLike;
+	_resourceFactory: ResourceFactory;
 
 	/**
 	 * 明示的に設定された、ミュート中か否か。
@@ -88,11 +85,11 @@ export abstract class AudioSystem implements AudioSystemLike {
 
 	abstract stopAll(): void;
 
-	abstract findPlayers(asset: AudioAssetLike): AudioPlayerLike[];
+	abstract findPlayers(asset: AudioAsset): AudioPlayer[];
 
-	abstract createPlayer(): AudioPlayerLike;
+	abstract createPlayer(): AudioPlayer;
 
-	requestDestroy(asset: AudioAssetLike): void {
+	requestDestroy(asset: AudioAsset): void {
 		this._destroyRequestedAssets[asset.id] = asset;
 	}
 
@@ -153,10 +150,10 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_player: AudioPlayerLike | undefined;
+	_player: AudioPlayer | undefined;
 
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
-	get player(): AudioPlayerLike {
+	get player(): AudioPlayer {
 		if (!this._player) {
 			this._player = this._resourceFactory.createAudioPlayer(this);
 			this._player.onPlay.add(this._handlePlay, this);
@@ -164,7 +161,7 @@ export class MusicAudioSystem extends AudioSystem {
 		}
 		return this._player;
 	}
-	set player(v: AudioPlayerLike) {
+	set player(v: AudioPlayer) {
 		this._player = v;
 	}
 
@@ -173,12 +170,12 @@ export class MusicAudioSystem extends AudioSystem {
 		this._player = undefined;
 	}
 
-	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {
+	findPlayers(asset: AudioAsset): AudioPlayer[] {
 		if (this.player.currentAudio && this.player.currentAudio.id === asset.id) return [this.player];
 		return [];
 	}
 
-	createPlayer(): AudioPlayerLike {
+	createPlayer(): AudioPlayer {
 		return this.player;
 	}
 
@@ -241,14 +238,14 @@ export class MusicAudioSystem extends AudioSystem {
 }
 
 export class SoundAudioSystem extends AudioSystem {
-	players: AudioPlayerLike[];
+	players: AudioPlayer[];
 
 	constructor(param: AudioSystemParameterObject) {
 		super(param);
 		this.players = [];
 	}
 
-	createPlayer(): AudioPlayerLike {
+	createPlayer(): AudioPlayer {
 		var player = this._resourceFactory.createAudioPlayer(this);
 		if (player.canHandleStopped()) this.players.push(player);
 
@@ -258,8 +255,8 @@ export class SoundAudioSystem extends AudioSystem {
 		return player;
 	}
 
-	findPlayers(asset: AudioAssetLike): AudioPlayerLike[] {
-		var ret: AudioPlayerLike[] = [];
+	findPlayers(asset: AudioAsset): AudioPlayer[] {
+		var ret: AudioPlayer[] = [];
 		for (var i = 0; i < this.players.length; ++i) {
 			const currentAudio = this.players[i].currentAudio;
 			if (currentAudio && currentAudio.id === asset.id) ret.push(this.players[i]);

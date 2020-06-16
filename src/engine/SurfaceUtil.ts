@@ -1,7 +1,5 @@
-import { CommonArea, CommonOffset, CommonRect } from "../pdi-types/commons";
-import { ImageAssetLike } from "../pdi-types/ImageAssetLike";
-import { SurfaceLike } from "../pdi-types/SurfaceLike";
 import { ExceptionFactory } from "./ExceptionFactory";
+import { CommonArea, CommonOffset, CommonRect, ImageAsset, Surface } from "./pdiTypes";
 
 export module SurfaceUtil {
 	/**
@@ -10,7 +8,7 @@ export module SurfaceUtil {
 	 *
 	 * @param src
 	 */
-	export function asSurface(src: ImageAssetLike | SurfaceLike | undefined): SurfaceLike | undefined {
+	export function asSurface(src: ImageAsset | Surface | undefined): Surface | undefined {
 		if (!src) {
 			return undefined;
 		} else if ("type" in src && src.type === "image") {
@@ -42,7 +40,7 @@ export module SurfaceUtil {
 	 * @param animatingHandler アニメーティングハンドラ
 	 * @param surface サーフェス
 	 */
-	export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: SurfaceLike): void {
+	export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: Surface): void {
 		if (surface.isPlaying()) {
 			animatingHandler._handleAnimationStart();
 		}
@@ -57,11 +55,7 @@ export module SurfaceUtil {
 	 * @param beforeSurface ハンドラ登録を解除するサーフェス
 	 * @param afterSurface ハンドラを登録するサーフェス
 	 */
-	export function migrateAnimatingHandler(
-		animatingHandler: AnimatingHandler,
-		_beforeSurface: SurfaceLike,
-		afterSurface: SurfaceLike
-	): void {
+	export function migrateAnimatingHandler(animatingHandler: AnimatingHandler, _beforeSurface: Surface, afterSurface: Surface): void {
 		animatingHandler._handleAnimationStop();
 
 		if (afterSurface.isPlaying()) {
@@ -81,7 +75,7 @@ export module SurfaceUtil {
 	 * @param srcSurface 描画元 `Surface`
 	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 	 */
-	export function drawNinePatch(destSurface: SurfaceLike, srcSurface: SurfaceLike, borderWidth: CommonRect | number = 4): void {
+	export function drawNinePatch(destSurface: Surface, srcSurface: Surface, borderWidth: CommonRect | number = 4): void {
 		const renderer = destSurface.renderer();
 		const width = destSurface.width;
 		const height = destSurface.height;

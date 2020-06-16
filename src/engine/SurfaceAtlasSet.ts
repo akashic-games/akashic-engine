@@ -1,8 +1,5 @@
-import { CommonSize } from "../pdi-types/commons";
-import { GlyphLike } from "../pdi-types/GlyphLike";
-import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
-import { SurfaceAtlasLike } from "../pdi-types/SurfaceAtlasLike";
-import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";
+import * as pdi from "@akashic/akashic-pdi";
+import { CommonSize, Glyph, ResourceFactory } from "./pdiTypes";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	// @ts-ignore
@@ -13,18 +10,51 @@ function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 }
 
 /**
+ * SurfaceAtlasが効率よく動作するためのヒント。
+ *
+ * ゲーム開発者はSurfaceAtlasが効率よく動作するための各種初期値・最大値などを提示できる。
+ * SurfaceAtlasはこれを参考にするが、そのまま採用するとは限らない。
+ */
+export interface SurfaceAtlasSetHint {
+	/**
+	 * 初期アトラス幅。
+	 */
+	initialAtlasWidth?: number;
+
+	/**
+	 * 初期アトラス高さ。
+	 */
+	initialAtlasHeight?: number;
+
+	/**
+	 * 最大アトラス幅。
+	 */
+	maxAtlasWidth?: number;
+
+	/**
+	 * 最大アトラス高さ。
+	 */
+	maxAtlasHeight?: number;
+
+	/**
+	 * 最大アトラス保持数。
+	 */
+	maxAtlasNum?: number;
+}
+
+/**
  * 削除対象のデータ
  */
 export interface RemoveAtlasData {
 	/**
 	 * 削除対象のSurfaceAtlas
 	 */
-	surfaceAtlases: SurfaceAtlasLike[];
+	surfaceAtlases: pdi.SurfaceAtlas[];
 
 	/**
 	 * 削除対象のグリフ
 	 */
-	glyphs: GlyphLike[][];
+	glyphs: Glyph[][];
 }
 
 /**
@@ -34,7 +64,7 @@ export interface SurfaceAtlasSetParameterObject {
 	/**
 	 * ゲームインスタンス。
 	 */
-	resourceFactory: ResourceFactoryLike;
+	resourceFactory: ResourceFactory;
 
 	/**
 	 * ヒント。
@@ -47,7 +77,7 @@ export interface SurfaceAtlasSetParameterObject {
 /**
  * DynamicFontで使用される、SurfaceAtlasを管理する。
  */
-export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
+export class SurfaceAtlasSet {
 	/**
 	 * SurfaceAtlas最大保持数初期値
 	 */
@@ -56,12 +86,12 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	/**
 	 * @private
 	 */
-	_surfaceAtlases: SurfaceAtlasLike[];
+	_surfaceAtlases: pdi.SurfaceAtlas[];
 
 	/**
 	 * @private
 	 */
-	_atlasGlyphsTable: GlyphLike[][];
+	_atlasGlyphsTable: Glyph[][];
 
 	/**
 	 * @private
@@ -71,7 +101,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	/**
 	 * @private
 	 */
-	_resourceFactory: ResourceFactoryLike;
+	_resourceFactory: ResourceFactory;
 
 	/**
 	 * @private
@@ -142,7 +172,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
 	 * @private
 	 */
-	_moveGlyphSurface(glyph: GlyphLike): SurfaceAtlasLike | null {
+	_moveGlyphSurface(glyph: Glyph): pdi.SurfaceAtlas | null {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
@@ -209,7 +239,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param index 取得対象のインデックス
 	 */
-	getAtlas(index: number): SurfaceAtlasLike {
+	getAtlas(index: number): pdi.SurfaceAtlas {
 		return this._surfaceAtlases[index];
 	}
 
@@ -262,7 +292,7 @@ export class SurfaceAtlasSet implements SurfaceAtlasSetLike {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ
 	 */
-	addGlyph(glyph: GlyphLike): SurfaceAtlasLike | null {
+	addGlyph(glyph: Glyph): pdi.SurfaceAtlas | null {
 		// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
 		// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 		// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。

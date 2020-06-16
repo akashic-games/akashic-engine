@@ -1,15 +1,9 @@
-import { FontFamily } from "../pdi-types/FontFamily";
-import { FontWeight } from "../pdi-types/FontWeight";
-import { FontWeightString } from "../pdi-types/FontWeightString";
-import { GlyphFactoryLike } from "../pdi-types/GlyphFactoryLike";
-import { GlyphArea, GlyphLike } from "../pdi-types/GlyphLike";
-import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
-import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
-import { SurfaceAtlasSetHint, SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";
+import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactory, ResourceFactory } from "./pdiTypes";
+import { SurfaceAtlasSetHint, SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { Util } from "./Util";
 
 /**
@@ -86,7 +80,7 @@ export interface DynamicFontParameterObject {
 	 * サーフェスアトラスセット
 	 * @default undefined
 	 */
-	surfaceAtlasSet?: SurfaceAtlasSetLike;
+	surfaceAtlasSet?: SurfaceAtlasSet;
 }
 
 /**
@@ -178,17 +172,17 @@ export class DynamicFont extends Font {
 	/**
 	 * @private
 	 */
-	_resourceFactory: ResourceFactoryLike;
+	_resourceFactory: ResourceFactory;
 
 	/**
 	 * @private
 	 */
-	_glyphs: { [key: number]: GlyphLike };
+	_glyphs: { [key: number]: Glyph };
 
 	/**
 	 * @private
 	 */
-	_glyphFactory: GlyphFactoryLike;
+	_glyphFactory: GlyphFactory;
 
 	/**
 	 * @private
@@ -203,7 +197,7 @@ export class DynamicFont extends Font {
 	/**
 	 * @private
 	 */
-	_atlasSet: SurfaceAtlasSetLike;
+	_atlasSet: SurfaceAtlasSet;
 
 	/**
 	 * 各種パラメータを指定して `DynamicFont` のインスタンスを生成する。
@@ -293,7 +287,7 @@ export class DynamicFont extends Font {
 	 *
 	 * @param code 文字コード
 	 */
-	glyphForCharacter(code: number): GlyphLike | null {
+	glyphForCharacter(code: number): Glyph | null {
 		var glyph = this._glyphs[code];
 
 		if (!(glyph && glyph.isSurfaceValid)) {

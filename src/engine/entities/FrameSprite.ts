@@ -1,6 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
-import { SurfaceLike } from "../../pdi-types/SurfaceLike";
+import { ImageAsset, Surface } from "../pdiTypes";
 import { Timer } from "../Timer";
 import { Sprite, SpriteParameterObject } from "./Sprite";
 
@@ -12,7 +11,7 @@ export interface FrameSpriteParameterObject extends SpriteParameterObject {
 	/**
 	 * 画像として使う `Surface` または `ImageAsset` 。
 	 */
-	src: SurfaceLike | ImageAssetLike;
+	src: Surface | ImageAsset;
 
 	/**
 	 * このエンティティの幅

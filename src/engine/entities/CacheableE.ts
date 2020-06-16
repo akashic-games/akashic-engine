@@ -1,8 +1,6 @@
-import { CommonSize } from "../../pdi-types/commons";
-import { RendererLike } from "../../pdi-types/RendererLike";
-import { SurfaceLike } from "../../pdi-types/SurfaceLike";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
+import { CommonSize, Renderer, Surface } from "../pdiTypes";
 import { E, EParameterObject } from "./E";
 
 /**
@@ -34,12 +32,12 @@ export abstract class CacheableE extends E {
 	 * このエンティティの内部キャッシュ。
 	 * @private
 	 */
-	_cache: SurfaceLike | undefined;
+	_cache: Surface | undefined;
 
 	/**
 	 * @private
 	 */
-	_renderer: RendererLike | undefined;
+	_renderer: Renderer | undefined;
 
 	/**
 	 * このエンティティを最後に描画した時の`Camrera`。
@@ -82,7 +80,7 @@ export abstract class CacheableE extends E {
 	 * このエンティティ自身の描画を行う。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	renderSelf(renderer: RendererLike, camera?: Camera): boolean {
+	renderSelf(renderer: Renderer, camera?: Camera): boolean {
 		var padding = CacheableE.PADDING;
 		if (this._renderedCamera !== camera) {
 			this.state &= ~EntityStateFlags.Cached;
@@ -127,7 +125,7 @@ export abstract class CacheableE extends E {
 	 * 内部キャッシュから自身の描画を行う。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	renderSelfFromCache(renderer: RendererLike): void {
+	renderSelfFromCache(renderer: Renderer): void {
 		renderer.drawImage(
 			this._cache!,
 			0,
@@ -144,7 +142,7 @@ export abstract class CacheableE extends E {
 	 * 本クラスを継承したエンティティはこのメソッド内で`renderer`に対してキャッシュの内容を描画しなければならない。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	abstract renderCache(renderer: RendererLike, camera?: Camera): void;
+	abstract renderCache(renderer: Renderer, camera?: Camera): void;
 
 	/**
 	 * 利用している `Surface` を破棄した上で、このエンティティを破棄する。

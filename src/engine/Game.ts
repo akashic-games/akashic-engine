@@ -1,11 +1,6 @@
+import { ScriptAssetRuntimeValueBase, PlatformPointType, PlatformPointEvent } from "@akashic/akashic-pdi";
 import * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
-import { AssetLike } from "../pdi-types/AssetLike";
-import { CommonOffset, CommonSize } from "../pdi-types/commons";
-import { PlatformPointEvent, PlatformPointType } from "../pdi-types/PlatformPointEvent";
-import { RendererLike } from "../pdi-types/RendererLike";
-import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
-import { ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";
 import { AssetManager } from "./AssetManager";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { Camera } from "./Camera";
@@ -25,12 +20,12 @@ import { OperationPlugin } from "./OperationPlugin";
 import { OperationPluginManager } from "./OperationPluginManager";
 import { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
+import { Asset, CommonOffset, CommonSize, Renderer, ResourceFactory } from "./pdiTypes";
 import { PointEventResolver } from "./PointEventResolver";
 import { RandomGenerator } from "./RandomGenerator";
 import { Scene } from "./Scene";
 import { Storage } from "./Storage";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
-import { SurfaceAtlasSetLike } from "./SurfaceAtlasSetLike";
 import { TickGenerationModeString } from "./TickGenerationModeString";
 import { XorshiftRandomGenerator } from "./XorshiftRandomGenerator";
 
@@ -184,7 +179,7 @@ export interface GameParameterObject {
 	/**
 	 * この `Game` が用いる、リソースのファクトリ
 	 */
-	resourceFactory: ResourceFactoryLike;
+	resourceFactory: ResourceFactory;
 
 	/**
 	 * この `Game` が用いるハンドラセット
@@ -244,7 +239,7 @@ export class Game {
 	/**
 	 * このコンテンツを描画するためのオブジェクト群。
 	 */
-	renderers: RendererLike[];
+	renderers: Renderer[];
 	/**
 	 * シーンのスタック。
 	 */
@@ -290,7 +285,7 @@ export class Game {
 	/**
 	 * グローバルアセットのマップ。this._initialScene.assets のエイリアス。
 	 */
-	assets: { [key: string]: AssetLike };
+	assets: { [key: string]: Asset };
 
 	/**
 	 * グローバルアセットが読み込み済みの場合真。でなければ偽。
@@ -353,7 +348,7 @@ export class Game {
 	/**
 	 * 各種リソースのファクトリ。
 	 */
-	resourceFactory: ResourceFactoryLike;
+	resourceFactory: ResourceFactory;
 
 	/**
 	 * ハンドラセット。
@@ -442,7 +437,7 @@ export class Game {
 	/**
 	 * ゲーム全体で共有するサーフェスアトラス。
 	 */
-	surfaceAtlasSet: SurfaceAtlasSetLike;
+	surfaceAtlasSet: SurfaceAtlasSet;
 
 	/**
 	 * 操作プラグインの管理者。

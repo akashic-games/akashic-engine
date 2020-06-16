@@ -1,11 +1,9 @@
-import { AssetLike } from "../pdi-types/AssetLike";
-import { ScriptAssetLike } from "../pdi-types/ScriptAssetLike";
-import { ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";
-import { TextAssetLike } from "../pdi-types/TextAssetLike";
+import { ScriptAssetRuntimeValueBase } from "@akashic/akashic-pdi";
 import { AssetManager } from "./AssetManager";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
 import { PathUtil } from "./PathUtil";
+import { Asset, ScriptAsset, TextAsset } from "./pdiTypes";
 import { RequireCacheable } from "./RequireCacheable";
 import { RequireCachedValue } from "./RequireCachedValue";
 import { ScriptAssetContext } from "./ScriptAssetContext";
@@ -56,7 +54,7 @@ export class ModuleManager {
 	_require(path: string, currentModule?: Module): any {
 		// Node.js の require の挙動については http://nodejs.jp/nodejs.org_ja/api/modules.html も参照。
 
-		let targetScriptAsset: AssetLike | undefined;
+		let targetScriptAsset: Asset | undefined;
 		let resolvedPath: string | undefined;
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
@@ -130,7 +128,7 @@ export class ModuleManager {
 					virtualPath: this._assetManager._liveAssetPathTable[targetScriptAsset.path],
 					require: (path: string, mod?: Module) => this._require(path, mod)
 				});
-				const script = new ScriptAssetContext(targetScriptAsset as ScriptAssetLike, module);
+				const script = new ScriptAssetContext(targetScriptAsset as ScriptAsset, module);
 				// @ts-ignore
 				this._scriptCaches[resolvedPath] = script;
 				return script._executeScript(currentModule);
@@ -140,7 +138,7 @@ export class ModuleManager {
 					// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
 					// @ts-ignore
 					const cache = (this._scriptCaches[resolvedPath] = new RequireCachedValue(
-						JSON.parse((targetScriptAsset as TextAssetLike).data)
+						JSON.parse((targetScriptAsset as TextAsset).data)
 					));
 					return cache._cachedValue();
 				}
@@ -157,7 +155,7 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: AssetLike }): AssetLike | undefined {
+	_findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
 		if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return liveAssetPathTable[resolvedPath];
 		if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return liveAssetPathTable[resolvedPath + ".js"];
 		return undefined;
@@ -173,11 +171,11 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: AssetLike }): AssetLike | undefined {
+	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
 		var path: string;
 		path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
-			var pkg = JSON.parse((liveAssetPathTable[path] as TextAssetLike).data);
+			var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 			if (pkg && typeof pkg.main === "string") {
 				var asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (asset) return asset;

@@ -1,5 +1,5 @@
-import { ModuleLike } from "../pdi-types/ModuleLike";
-import { ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "../pdi-types/ScriptAssetRuntimeValue";
+import * as pdi from "@akashic/akashic-pdi";
+import { ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/akashic-pdi";
 import { PathUtil } from "./PathUtil";
 
 export interface ModuleParameterObject {
@@ -13,7 +13,7 @@ export interface ModuleParameterObject {
 /**
  * Node.js が提供する module の互換クラス。
  */
-export class Module implements ModuleLike {
+export class Module implements pdi.Module {
 	/**
 	 * モジュールのID。
 	 * アセットIDとは異なることに注意。
@@ -35,7 +35,7 @@ export class Module implements ModuleLike {
 	 * このモジュールの親。一番最初にこのモジュール (のファイル) を require() したモジュール。
 	 * 該当するモジュールがなければ `null` である。
 	 */
-	parent: ModuleLike | null;
+	parent: Module | null;
 
 	/**
 	 * このモジュールの読み込みが完了しているか。
@@ -45,7 +45,7 @@ export class Module implements ModuleLike {
 	/**
 	 * このモジュールが `require()` したモジュール。
 	 */
-	children: ModuleLike[];
+	children: Module[];
 
 	/**
 	 * このモジュール内で `require()` した時の検索先ディレクトリ。

@@ -1,6 +1,5 @@
-import { AudioSystemLike } from "../pdi-types/AudioSystemLike";
-import { ResourceFactoryLike } from "../pdi-types/ResourceFactoryLike";
-import { MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
+import { AudioSystem, MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
+import { ResourceFactory } from "./pdiTypes";
 
 /**
  * `AudioSystem` の管理クラス。
@@ -13,20 +12,20 @@ export class AudioSystemManager {
 	 * ループ再生可能な AudioSystem
 	 */
 	// @ts-ignore
-	music: AudioSystemLike;
+	music: AudioSystem;
 
 	/**
 	 * 効果音を扱う AudioSystem
 	 */
 	// @ts-ignore
-	sound: AudioSystemLike;
+	sound: AudioSystem;
 
 	/**
 	 * @private
 	 */
 	_muted: boolean;
 
-	constructor(resourceFactory: ResourceFactoryLike) {
+	constructor(resourceFactory: ResourceFactory) {
 		this._muted = false;
 		this._initializeAudioSystems(resourceFactory);
 	}
@@ -62,7 +61,7 @@ export class AudioSystemManager {
 	/**
 	 * @private
 	 */
-	_initializeAudioSystems(resourceFactory: ResourceFactoryLike): void {
+	_initializeAudioSystems(resourceFactory: ResourceFactory): void {
 		this.music = new MusicAudioSystem({
 			id: "music",
 			muted: this._muted,

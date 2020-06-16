@@ -1,6 +1,5 @@
-import { GlyphLike } from "../../pdi-types/GlyphLike";
-import { RendererLike } from "../../pdi-types/RendererLike";
 import { Font } from "../Font";
+import { Glyph, Renderer } from "../pdiTypes";
 import { TextAlign } from "../TextAlign";
 import { TextAlignString } from "../TextAlignString";
 import { Util } from "../Util";
@@ -94,7 +93,7 @@ export class Label extends CacheableE {
 	 * キャッシュされたグリフ情報。
 	 * 通常、ゲーム開発者がこのプロパティを参照する必要はない。
 	 */
-	glyphs: GlyphLike[];
+	glyphs: Glyph[];
 
 	/**
 	 * フォントサイズ。
@@ -197,7 +196,7 @@ export class Label extends CacheableE {
 	/**
 	 * Label自身の描画を行う。
 	 */
-	renderSelfFromCache(renderer: RendererLike): void {
+	renderSelfFromCache(renderer: Renderer): void {
 		// glyphのはみ出し量に応じて、描画先のX座標を調整する。
 		var destOffsetX;
 		switch (this._realTextAlign) {
@@ -223,7 +222,7 @@ export class Label extends CacheableE {
 		);
 	}
 
-	renderCache(renderer: RendererLike): void {
+	renderCache(renderer: Renderer): void {
 		if (!this.fontSize || this.height <= 0 || this._textWidth <= 0) {
 			return;
 		}
@@ -251,7 +250,7 @@ export class Label extends CacheableE {
 		renderer.save();
 		var glyphScale = this.fontSize / this.font.size;
 		for (var i = 0; i < this.glyphs.length; ++i) {
-			let glyph: GlyphLike | null = this.glyphs[i];
+			let glyph: Glyph | null = this.glyphs[i];
 			var glyphWidth = glyph.advanceWidth * glyphScale;
 
 			var code = glyph.code;

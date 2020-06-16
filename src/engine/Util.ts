@@ -1,6 +1,4 @@
-import { CommonArea, CommonOffset } from "../pdi-types/commons";
-import { CompositeOperation as CompOp } from "../pdi-types/CompositeOperation";
-import { CompositeOperationString } from "../pdi-types/CompositeOperationString";
+import { CommonArea, CommonOffset, CompositeOperation as CompOp, CompositeOperationString } from "./pdiTypes";
 
 /**
  * ユーティリティ。

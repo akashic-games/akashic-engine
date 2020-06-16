@@ -1,8 +1,6 @@
-import { ImageAssetLike } from "../../pdi-types/ImageAssetLike";
-import { RendererLike } from "../../pdi-types/RendererLike";
-import { SurfaceLike } from "../../pdi-types/SurfaceLike";
 import { Camera } from "../Camera";
 import { Matrix, PlainMatrix } from "../Matrix";
+import { ImageAsset, Renderer, Surface } from "../pdiTypes";
 import { SurfaceUtil } from "../SurfaceUtil";
 import { E, EParameterObject } from "./E";
 
@@ -17,7 +15,7 @@ export interface SpriteParameterObject extends EParameterObject {
 	/**
 	 * 画像として使う `Surface` または `ImageAsset` 。
 	 */
-	src: SurfaceLike | ImageAssetLike;
+	src: Surface | ImageAsset;
 
 	/**
 	 * `surface` の描画対象部分の幅。
@@ -57,7 +55,7 @@ export class Sprite extends E {
 	 * `srcX` ・ `srcY` ・ `srcWidth` ・ `srcHeight` の作る矩形がこの画像の範囲外を示す場合、描画結果は保証されない。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
 	 */
-	src: SurfaceLike | ImageAssetLike;
+	src: Surface | ImageAsset;
 
 	/**
 	 * `surface` の描画対象部分の幅。
@@ -88,7 +86,7 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
-	_surface: SurfaceLike;
+	_surface: Surface;
 
 	/**
 	 * @private
@@ -98,12 +96,12 @@ export class Sprite extends E {
 	/**
 	 * @private
 	 */
-	_beforeSrc: SurfaceLike | ImageAssetLike | undefined;
+	_beforeSrc: Surface | ImageAsset | undefined;
 
 	/**
 	 * @private
 	 */
-	_beforeSurface: SurfaceLike | undefined;
+	_beforeSurface: Surface | undefined;
 
 	/**
 	 * 各種パラメータを指定して `Sprite` のインスタンスを生成する。
@@ -160,7 +158,7 @@ export class Sprite extends E {
 	 * このエンティティ自身の描画を行う。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	renderSelf(renderer: RendererLike, _camera?: Camera): boolean {
+	renderSelf(renderer: Renderer, _camera?: Camera): boolean {
 		if (this.srcWidth <= 0 || this.srcHeight <= 0) {
 			return true;
 		}
