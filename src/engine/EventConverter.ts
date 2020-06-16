@@ -168,7 +168,7 @@ export class EventConverter {
 	 * g.Eventからplaylog.Eventに変換する。
 	 */
 	toPlaylogEvent(e: Event, preservePlayer?: boolean): pl.Event {
-		let targetId: number | undefined;
+		let targetId: number | null;
 		let playerId: string;
 		switch (e.type) {
 			case "join":
@@ -196,7 +196,7 @@ export class EventConverter {
 				];
 			case "point-down":
 				let pointDown = <PointDownEvent>e;
-				targetId = pointDown.target ? pointDown.target.id : undefined;
+				targetId = pointDown.target ? pointDown.target.id : null;
 				playerId = preservePlayer && pointDown.player ? pointDown.player.id : this._playerId;
 				return [
 					pl.EventCode.PointDown, // 0: イベントコード
@@ -210,7 +210,7 @@ export class EventConverter {
 				];
 			case "point-move":
 				let pointMove = <PointMoveEvent>e;
-				targetId = pointMove.target ? pointMove.target.id : undefined;
+				targetId = pointMove.target ? pointMove.target.id : null;
 				playerId = preservePlayer && pointMove.player ? pointMove.player.id : this._playerId;
 				return [
 					pl.EventCode.PointMove, // 0: イベントコード
@@ -228,7 +228,7 @@ export class EventConverter {
 				];
 			case "point-up":
 				let pointUp = <PointUpEvent>e;
-				targetId = pointUp.target ? pointUp.target.id : undefined;
+				targetId = pointUp.target ? pointUp.target.id : null;
 				playerId = preservePlayer && pointUp.player ? pointUp.player.id : this._playerId;
 				return [
 					pl.EventCode.PointUp, // 0: イベントコード
