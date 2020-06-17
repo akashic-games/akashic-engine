@@ -64,76 +64,78 @@ const enum PostTickTaskType {
  */
 type PostTickTask = PostTickPopSceneTask | PostTickPushSceneTask | PostTickReplaceSceneTask | PostTickCallFunctionTask;
 
+/**
+ * @ignore
+ */
 interface PostTickPushSceneTask {
 	/**
 	 * 遷移の種類。
-	 * @private
 	 */
 	type: PostTickTaskType.PushScene;
 
 	/**
 	 * 遷移先になるシーン。
 	 * `type` が `Push` または `Replace` の時のみ存在。
-	 * @private
 	 */
 	scene: Scene;
 }
 
+/**
+ * @ignore
+ */
 interface PostTickReplaceSceneTask {
 	/**
 	 * 遷移の種類。
-	 * @private
 	 */
 	type: PostTickTaskType.ReplaceScene;
 
 	/**
 	 * 遷移先になるシーン。
 	 * `type` が `Push` または `Replace` の時のみ存在。
-	 * @private
 	 */
 	scene: Scene;
 
 	/**
 	 * 現在のシーンを破棄するか否か。
 	 * `type` が `PopScene` または `Replace` の時のみ存在。
-	 * @private
 	 */
 	preserveCurrent: boolean;
 }
 
+/**
+ * @ignore
+ */
 interface PostTickPopSceneTask {
 	/**
 	 * 遷移の種類。
-	 * @private
 	 */
 	type: PostTickTaskType.PopScene;
 
 	/**
 	 * 現在のシーンを破棄するか否か。
 	 * `type` が `PopScene` または `Replace` の時のみ存在。
-	 * @private
 	 */
 	preserveCurrent: boolean;
 }
 
+/**
+ * @ignore
+ */
 interface PostTickCallFunctionTask {
 	/**
 	 * 遷移の種類。
-	 * @private
 	 */
 	type: PostTickTaskType.Call;
 
 	/**
 	 * 呼び出す関数。
 	 * `type` が `Call` の時のみ存在。
-	 * @private
 	 */
 	fun: Function;
 
 	/**
 	 * `fun` の `this` として使う値。
 	 * `type` が `Call` の時のみ存在。
-	 * @private
 	 */
 	owner: any;
 }

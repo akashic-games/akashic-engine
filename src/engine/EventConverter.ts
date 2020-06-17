@@ -8,21 +8,13 @@ import { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import { Player } from "./Player";
 import { StorageValueStore } from "./Storage";
 
+/**
+ * @ignore
+ */
 // TODO: Game を意識しないインターフェース を検討する
 interface EventConverterParameterObejctGameLike {
-	/**
-	 * @private
-	 */
 	db: { [idx: number]: E };
-
-	/**
-	 * @private
-	 */
 	_localDb: { [id: number]: E };
-
-	/**
-	 * @private
-	 */
 	_decodeOperationPluginOperation: (code: number, op: (number | string)[]) => any;
 }
 

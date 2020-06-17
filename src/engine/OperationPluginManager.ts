@@ -9,6 +9,7 @@ import { OperationPluginViewInfo } from "./OperationPluginViewInfo";
 /**
  * 操作プラグインからの通知をハンドルするクラス。
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ * @ignore
  */
 class OperationHandler {
 	private _code: number;
@@ -21,9 +22,6 @@ class OperationHandler {
 		this._handlerOwner = owner;
 	}
 
-	/**
-	 * @private
-	 */
 	onOperation(op: OperationPluginOperation | (number | string)[]): void {
 		var iop: InternalOperationPluginOperation;
 		if (op instanceof Array) {

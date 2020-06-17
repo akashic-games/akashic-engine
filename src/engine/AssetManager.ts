@@ -24,25 +24,13 @@ export interface AssetManagerParameterGameLike {
 	defaultAudioSystemId: "music" | "sound";
 }
 
+/**
+ * @ignore
+ */
 class AssetLoadingInfo {
-	/**
-	 * @private
-	 */
 	asset: OneOfAssetLike;
-
-	/**
-	 * @private
-	 */
 	handlers: AssetManagerLoadHandler[];
-
-	/**
-	 * @private
-	 */
 	errorCount: number;
-
-	/**
-	 * @private
-	 */
 	loading: boolean;
 
 	constructor(asset: OneOfAssetLike, handler: AssetManagerLoadHandler) {

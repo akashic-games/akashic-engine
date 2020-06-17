@@ -5,30 +5,14 @@ import { Camera } from "./Camera";
 import { PointSource } from "./entities/E";
 import { EventPriority } from "./EventPriority";
 
+/**
+ * @ignore
+ */
 interface PointEventHolder {
-	/**
-	 * @private
-	 */
 	targetId?: number;
-
-	/**
-	 * @private
-	 */
 	local?: boolean;
-
-	/**
-	 * @private
-	 */
 	point: CommonOffset;
-
-	/**
-	 * @private
-	 */
 	start: CommonOffset;
-
-	/**
-	 * @private
-	 */
 	prev: CommonOffset;
 	// TODO: タイムスタンプのようなものを入れて一定時間後にクリアする仕組みが必要かもしれない。
 	//       pointUpをトリガに解放するので、pointUpを取り逃すとリークする(mapに溜まったままになってしまう)
