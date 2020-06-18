@@ -72,27 +72,27 @@ export class TimerIdentifier {
  */
 export class TimerManager {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_timers: Timer[];
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_trigger: Trigger<void>;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_identifiers: TimerIdentifier[];
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_fps: number;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_registered: boolean;
 
