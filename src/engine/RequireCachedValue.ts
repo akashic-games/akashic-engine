@@ -2,7 +2,7 @@ import { RequireCacheable } from "./RequireCacheable";
 
 export class RequireCachedValue implements RequireCacheable {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_value: any;
 

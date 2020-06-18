@@ -89,8 +89,7 @@ export interface GlyphLike {
 	isSurfaceValid: boolean;
 
 	/**
-	 * @private
-	 * NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明
+	 * @ignore
 	 */
 	_atlas: SurfaceAtlasLike | null;
 }

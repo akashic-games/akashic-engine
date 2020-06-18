@@ -28,17 +28,17 @@ export interface EventConverterParameterObejct {
  */
 export class EventConverter {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_game: EventConverterParameterObejctGameLike;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_playerId: string;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_playerTable: { [key: string]: Player };
 

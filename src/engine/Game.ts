@@ -580,7 +580,7 @@ export class Game {
 
 	/**
 	 * エントリポイントの関数。
-	 * @private
+	 * @ignore
 	 */
 	_mainFunc: GameMainFunction | undefined;
 
@@ -1223,8 +1223,7 @@ export class Game {
 	}
 
 	/**
-	 * @private
-	 * NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明
+	 * @ignore
 	 */
 	_pushPostTickTask(fun: () => void, owner: any): void {
 		this._postTickTasks.push({
@@ -1520,7 +1519,7 @@ export class Game {
 	}
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handleOperationPluginOperated(op: InternalOperationPluginOperation): void {
 		const pev = this._eventConverter.makePlaylogOperationEvent(op);
@@ -1528,7 +1527,7 @@ export class Game {
 	}
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handleSceneChanged(scene?: Scene): void {
 		this._updateEventTriggers(scene);
@@ -1594,7 +1593,7 @@ export class Game {
 	}
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;

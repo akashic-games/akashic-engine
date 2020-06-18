@@ -435,7 +435,7 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 		var ret: { [key: string]: AssetConfiguration } = {};
@@ -533,7 +533,7 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_releaseAsset(assetId: string): void {
 		const asset = this._assets[assetId] || (this._loadings[assetId] && this._loadings[assetId].asset);

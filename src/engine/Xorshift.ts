@@ -113,22 +113,22 @@ export class Xorshift {
 
 export interface XorshiftSerialization {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_state0U: number;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_state0L: number;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_state1U: number;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_state1L: number;
 }

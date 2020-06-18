@@ -47,11 +47,11 @@ export interface PointEventResolverParameterObject {
  */
 export class PointEventResolver {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_sourceResolver: PointSourceResolver;
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_playerId: string;
 

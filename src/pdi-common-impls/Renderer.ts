@@ -84,7 +84,7 @@ export abstract class Renderer implements RendererLike {
 	 * 引数は CanvasRenderingContext2D#getImageData() と同様である。
 	 * 本メソッドの呼び出しは `Renderer#end()` から `Renderer#begin()` の間でなければならない。
 	 * NOTE: 実行環境によっては戻り値が `null` または `undefined` となりえることに注意。
-	 * @private (NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明)
+	 * @ignore
 	 */
 	abstract _getImageData(sx: number, sy: number, sw: number, sh: number): ImageData;
 
@@ -92,7 +92,7 @@ export abstract class Renderer implements RendererLike {
 	 * 本Rendererの描画内容を上書きする。
 	 * 引数は CanvasRenderingContext2D#putImageData() と同様である。
 	 * 本メソッドの呼び出しは `Renderer#end()` から `Renderer#begin()` の間でなければならない。
-	 * @private (NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明)
+	 * @ignore
 	 */
 	abstract _putImageData(
 		imageData: ImageData,

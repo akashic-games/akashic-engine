@@ -9,27 +9,27 @@ import { Timer } from "./Timer";
  */
 export class TimerIdentifier {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_timer: Timer;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handler: () => void;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handlerOwner: any;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_fired: ((c: TimerIdentifier) => void) | undefined;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_firedOwner: any;
 

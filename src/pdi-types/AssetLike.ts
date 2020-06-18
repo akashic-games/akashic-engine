@@ -9,7 +9,7 @@ import { AssetLoadError } from "./errors";
 export interface AssetLoadHandler {
 	/**
 	 * 読み込失敗の通知を受ける関数。
-	 * @private (NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明)
+	 * @ignore
 	 * @param asset 読み込みに失敗したアセット
 	 * @param error 失敗の内容を表すエラー
 	 */
@@ -17,7 +17,7 @@ export interface AssetLoadHandler {
 
 	/**
 	 * 読み込み完了の通知を受ける関数。
-	 * @private (NOTE: 接頭辞に_は付いているが、他クラスから参照されているので @private していいか不明)
+	 * @ignore
 	 * @param asset 読み込みが完了したアセット
 	 */
 	_onAssetLoad(asset: AssetLike): void;

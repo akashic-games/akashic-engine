@@ -1,7 +1,7 @@
 # ChangeLog
 
 ## Unreleased changes
-* 内部でしか使われていない変数・メソッドに @private を付与
+* 内部でしか使われていない変数・メソッドに @ignore を付与
 
 ## 3.0.0-beta.25
 
