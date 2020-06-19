@@ -1,6 +1,10 @@
 export * from "@akashic/trigger";
-export * from "@akashic/akashic-pdi";
 
+// akashic-pdi 由来の型を g 直下から reexport する。
+// ただし一部の型名は、akashic-engine で同名のクラス実装を与えているため、
+// そのままでは両方 export しようとして衝突する。
+// ここで明示的に片方を export して衝突を解決している。
+export * from "@akashic/akashic-pdi";
 export { AudioSystem } from "./AudioSystem";
 export { Module } from "./Module";
 export { ShaderProgram } from "./ShaderProgram";
