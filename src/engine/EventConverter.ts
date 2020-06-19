@@ -25,21 +25,11 @@ export interface EventConverterParameterObejct {
 
 /**
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ * @ignore
  */
 export class EventConverter {
-	/**
-	 * @ignore
-	 */
 	_game: EventConverterParameterObejctGameLike;
-
-	/**
-	 * @ignore
-	 */
 	_playerId: string;
-
-	/**
-	 * @ignore
-	 */
 	_playerTable: { [key: string]: Player };
 
 	constructor(param: EventConverterParameterObejct) {

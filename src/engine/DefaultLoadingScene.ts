@@ -26,7 +26,6 @@ export interface DefaultLoadingSceneParameterObject {
 /**
  * カメラのtransformを戻すエンティティ。
  * LoadingSceneのインジケータがカメラの影響を受けないようにするための内部エンティティ。
- * @ignore
  */
 class CameraCancellingE extends E {
 	_canceller: Object2D;

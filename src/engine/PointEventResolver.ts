@@ -44,15 +44,10 @@ export interface PointEventResolverParameterObject {
  * Down -> Move -> Up の流れを保証する機能も持つ。
  *
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ * @ignore
  */
 export class PointEventResolver {
-	/**
-	 * @ignore
-	 */
 	_sourceResolver: PointSourceResolver;
-	/**
-	 * @ignore
-	 */
 	_playerId: string;
 
 	// g.Eと関連した座標データ
