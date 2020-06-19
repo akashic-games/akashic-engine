@@ -1,5 +1,5 @@
+import { Renderer } from "@akashic/akashic-pdi";
 import { ExceptionFactory } from "../ExceptionFactory";
-import { Renderer } from "../pdiTypes";
 import { E, EParameterObject } from "./E";
 
 /**

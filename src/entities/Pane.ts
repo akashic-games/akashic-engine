@@ -1,7 +1,7 @@
+import { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "@akashic/akashic-pdi";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
 import { Matrix } from "../Matrix";
-import { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "../pdiTypes";
 import { SurfaceEffector } from "../SurfaceEffector";
 import { SurfaceUtil } from "../SurfaceUtil";
 import { CacheableE, CacheableEParameterObject } from "./CacheableE";

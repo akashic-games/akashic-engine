@@ -1,6 +1,6 @@
+import { Renderer } from "@akashic/akashic-pdi";
 import { Camera } from "./Camera";
 import { Object2D, Object2DParameterObject } from "./Object2D";
-import { Renderer } from "./pdiTypes";
 
 export interface Camera2DSerialization {
 	param: Camera2DParameterObject;

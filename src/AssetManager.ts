@@ -1,9 +1,3 @@
-import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
-import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
-import { AudioSystemManager } from "./AudioSystemManager";
-import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
-import { ExceptionFactory } from "./ExceptionFactory";
-import { getGameInAssetContext } from "./getGameInAssetContext";
 import {
 	Asset,
 	AssetLoadHandler,
@@ -16,7 +10,13 @@ import {
 	ScriptAsset,
 	TextAsset,
 	VideoAsset
-} from "./pdiTypes";
+} from "@akashic/akashic-pdi";
+import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
+import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
+import { AudioSystemManager } from "./AudioSystemManager";
+import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
+import { ExceptionFactory } from "./ExceptionFactory";
+import { getGameInAssetContext } from "./getGameInAssetContext";
 import { VideoSystem } from "./VideoSystem";
 
 export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset;

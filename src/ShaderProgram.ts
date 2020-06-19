@@ -1,5 +1,4 @@
-import * as pdi from "@akashic/akashic-pdi";
-import { ShaderUniform } from "./pdiTypes";
+import { ShaderProgram as PdiShaderProgram, ShaderUniform } from "@akashic/akashic-pdi";
 
 /**
  * `ShaderProgram` のコンストラクタに渡すことができるパラメータ。
@@ -34,7 +33,7 @@ export interface ShaderProgramParameterObject {
  * akashic-engineにおけるシェーダ機能を提供するクラス。
  * 現バージョンのakashic-engineではフラグメントシェーダのみをサポートする。
  */
-export class ShaderProgram implements pdi.ShaderProgram {
+export class ShaderProgram implements PdiShaderProgram {
 	/**
 	 * フラグメントシェーダの文字列。
 	 *

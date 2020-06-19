@@ -1,8 +1,8 @@
+import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/akashic-pdi";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
-import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactory, ResourceFactory } from "./pdiTypes";
 import { SurfaceAtlasSetHint, SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { Util } from "./Util";
 

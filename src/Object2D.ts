@@ -1,6 +1,6 @@
+import { CommonArea, CommonOffset, CommonSize, CompositeOperation, CompositeOperationString } from "@akashic/akashic-pdi";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Matrix, PlainMatrix } from "./Matrix";
-import { CommonArea, CommonOffset, CommonSize, CompositeOperation, CompositeOperationString } from "./pdiTypes";
 
 /**
  * `Object2D` のコンストラクタに渡すことができるパラメータ。

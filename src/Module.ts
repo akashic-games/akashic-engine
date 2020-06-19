@@ -1,5 +1,4 @@
-import * as pdi from "@akashic/akashic-pdi";
-import { ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/akashic-pdi";
+import { Module as PdiModule, ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/akashic-pdi";
 import { PathUtil } from "./PathUtil";
 
 export interface ModuleParameterObject {
@@ -13,7 +12,7 @@ export interface ModuleParameterObject {
 /**
  * Node.js が提供する module の互換クラス。
  */
-export class Module implements pdi.Module {
+export class Module implements PdiModule {
 	/**
 	 * モジュールのID。
 	 * アセットIDとは異なることに注意。

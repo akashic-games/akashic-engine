@@ -1,5 +1,5 @@
+import { AudioAssetHint, ImageAssetHint } from "@akashic/akashic-pdi";
 import { AssetConfigurationCommonBase } from "./AssetConfiguration";
-import { AudioAssetHint, ImageAssetHint } from "./pdiTypes";
 
 export type DynamicAssetConfiguration =
 	| DynamicAudioAssetConfigurationBase

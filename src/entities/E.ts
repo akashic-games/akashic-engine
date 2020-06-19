@@ -1,3 +1,4 @@
+import { CommonArea, CommonOffset, CommonRect, Renderer } from "@akashic/akashic-pdi";
 import { ChainTrigger, Trigger } from "@akashic/trigger";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
@@ -6,7 +7,6 @@ import { ExceptionFactory } from "../ExceptionFactory";
 import { Game } from "../Game";
 import { Matrix, PlainMatrix } from "../Matrix";
 import { Object2D, Object2DParameterObject } from "../Object2D";
-import { CommonArea, CommonOffset, CommonRect, Renderer } from "../pdiTypes";
 import { Scene } from "../Scene";
 import { ShaderProgram } from "../ShaderProgram";
 import { Util } from "../Util";

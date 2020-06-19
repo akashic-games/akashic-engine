@@ -1,3 +1,4 @@
+import { Asset, Renderer } from "@akashic/akashic-pdi";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import { E, EParameterObject } from "./entities/E";
@@ -5,7 +6,6 @@ import { FilledRect } from "./entities/FilledRect";
 import { Game } from "./Game";
 import { LoadingScene } from "./LoadingScene";
 import { Object2D } from "./Object2D";
-import { Asset, Renderer } from "./pdiTypes";
 import { Scene } from "./Scene";
 
 /**

@@ -1,6 +1,6 @@
+import { CommonRect, Surface } from "@akashic/akashic-pdi";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
-import { CommonRect, Surface } from "./pdiTypes";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
 

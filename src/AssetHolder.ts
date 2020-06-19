@@ -1,8 +1,8 @@
+import { Asset, AssetLoadError } from "@akashic/akashic-pdi";
 import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import { AssetManager } from "./AssetManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { Asset, AssetLoadError } from "./pdiTypes";
 
 export interface DestroyedCheckable {
 	destroyed(): boolean;

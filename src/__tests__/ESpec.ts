@@ -1,4 +1,3 @@
-import { PlatformPointType } from "@akashic/akashic-pdi";
 import {
 	Camera2D,
 	CompositeOperation,
@@ -8,6 +7,7 @@ import {
 	PointSource,
 	Scene,
 	MessageEvent,
+	PlatformPointType,
 	PointUpEvent,
 	PointMoveEvent
 } from "..";

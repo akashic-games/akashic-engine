@@ -1,4 +1,3 @@
-import { PlatformPointType } from "@akashic/akashic-pdi";
 import {
 	AssetConfiguration,
 	Camera2D,
@@ -8,6 +7,7 @@ import {
 	LoadingSceneParameterObject,
 	LocalTickModeString,
 	MessageEvent,
+	PlatformPointType,
 	Scene,
 	XorshiftRandomGenerator
 } from "..";

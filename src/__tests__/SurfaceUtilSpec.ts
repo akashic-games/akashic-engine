@@ -1,4 +1,4 @@
-import * as pdi from "@akashic/akashic-pdi";
+import { ImageAsset as PdiImageAsset } from "@akashic/akashic-pdi";
 import { SurfaceUtil } from "..";
 import { customMatchers, Game, Renderer, skeletonRuntime, Surface } from "./helpers";
 
@@ -31,7 +31,7 @@ describe("test SurfaceUtil", () => {
 			}
 		});
 		game._onLoad.add(() => {
-			expect(SurfaceUtil.asSurface(game.assets.foo as pdi.ImageAsset)).toEqual((game.assets.foo as pdi.ImageAsset).asSurface());
+			expect(SurfaceUtil.asSurface(game.assets.foo as PdiImageAsset)).toEqual((game.assets.foo as PdiImageAsset).asSurface());
 			done();
 		});
 		game._startLoadingGlobalAssets();

@@ -1,4 +1,4 @@
-import * as pdi from "@akashic/akashic-pdi";
+import { VideoSystem as PdiVideoSystem } from "@akashic/akashic-pdi";
 
 /**
  * 将来 VideoPlayerインスタンスの一元管理（ボリューム設定などAudioSystemと似た役割）
@@ -6,4 +6,4 @@ import * as pdi from "@akashic/akashic-pdi";
  * 定義されている。
  * TODO: 実装
  */
-export class VideoSystem implements pdi.VideoSystem {}
+export class VideoSystem implements PdiVideoSystem {}

@@ -1,6 +1,6 @@
+import { ImageAsset, Renderer, Surface } from "@akashic/akashic-pdi";
 import { Camera } from "../Camera";
 import { Matrix, PlainMatrix } from "../Matrix";
-import { ImageAsset, Renderer, Surface } from "../pdiTypes";
 import { SurfaceUtil } from "../SurfaceUtil";
 import { E, EParameterObject } from "./E";
 

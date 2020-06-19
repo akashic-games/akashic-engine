@@ -1,6 +1,10 @@
 export * from "@akashic/trigger";
-import * as pdi from "@akashic/akashic-pdi";
-export { pdi };
+export * from "@akashic/akashic-pdi";
+
+export { AudioSystem } from "./AudioSystem";
+export { Module } from "./Module";
+export { ShaderProgram } from "./ShaderProgram";
+export { VideoSystem } from "./VideoSystem";
 
 export * from "./AudioSystem";
 export * from "./entities/CacheableE";
@@ -48,7 +52,6 @@ export * from "./PathUtil";
 export * from "./Player";
 export * from "./PointEventResolver";
 export * from "./RandomGenerator";
-export * from "./pdiTypes";
 export * from "./RequireCacheable";
 export * from "./RequireCachedValue";
 export * from "./ScriptAssetContext";

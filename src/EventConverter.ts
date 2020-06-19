@@ -1,10 +1,10 @@
+import { CommonOffset } from "@akashic/akashic-pdi";
 import * as pl from "@akashic/playlog";
 import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import { Event, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
 import { EventIndex } from "./EventIndex";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { InternalOperationPluginOperation } from "./OperationPluginOperation";
-import { CommonOffset } from "./pdiTypes";
 import { Player } from "./Player";
 import { StorageValueStore } from "./Storage";
 

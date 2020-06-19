@@ -1,9 +1,8 @@
-import { ScriptAssetRuntimeValueBase } from "@akashic/akashic-pdi";
+import { Asset, ScriptAsset, ScriptAssetRuntimeValueBase, TextAsset } from "@akashic/akashic-pdi";
 import { AssetManager } from "./AssetManager";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
 import { PathUtil } from "./PathUtil";
-import { Asset, ScriptAsset, TextAsset } from "./pdiTypes";
 import { RequireCacheable } from "./RequireCacheable";
 import { RequireCachedValue } from "./RequireCachedValue";
 import { ScriptAssetContext } from "./ScriptAssetContext";

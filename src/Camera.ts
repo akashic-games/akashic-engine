@@ -1,4 +1,4 @@
-import { Renderer } from "./pdiTypes";
+import { Renderer } from "@akashic/akashic-pdi";
 
 /**
  * カメラを表すインターフェース。

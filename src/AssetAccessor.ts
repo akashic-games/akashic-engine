@@ -1,5 +1,5 @@
+import { AudioAsset, ImageAsset, ScriptAsset, TextAsset } from "@akashic/akashic-pdi";
 import { AssetManager } from "./AssetManager";
-import { AudioAsset, ImageAsset, ScriptAsset, TextAsset } from "./pdiTypes";
 
 /**
  * アセットへのアクセスを提供するアクセッサ群。

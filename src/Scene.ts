@@ -1,4 +1,4 @@
-import { StorageLoadError } from "@akashic/akashic-pdi";
+import { Asset, CommonOffset, StorageLoadError } from "@akashic/akashic-pdi";
 import { Trigger } from "@akashic/trigger";
 import { AssetAccessor } from "./AssetAccessor";
 import { AssetHolder } from "./AssetHolder";
@@ -12,7 +12,6 @@ import { ExceptionFactory } from "./ExceptionFactory";
 import { Game } from "./Game";
 import { getGameInAssetContext } from "./getGameInAssetContext";
 import { LocalTickModeString } from "./LocalTickModeString";
-import { Asset, CommonOffset } from "./pdiTypes";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
 import { TickGenerationModeString } from "./TickGenerationModeString";
 import { Timer } from "./Timer";

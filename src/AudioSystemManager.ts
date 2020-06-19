@@ -1,5 +1,5 @@
+import { ResourceFactory } from "@akashic/akashic-pdi";
 import { AudioSystem, MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
-import { ResourceFactory } from "./pdiTypes";
 
 /**
  * `AudioSystem` の管理クラス。

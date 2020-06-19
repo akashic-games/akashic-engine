@@ -1,5 +1,4 @@
-import * as pdi from "@akashic/akashic-pdi";
-import { CommonSize, Glyph, ResourceFactory } from "./pdiTypes";
+import { CommonSize, Glyph, ResourceFactory, SurfaceAtlas as PdiSurfaceAtlas } from "@akashic/akashic-pdi";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	// @ts-ignore
@@ -49,7 +48,7 @@ export interface RemoveAtlasData {
 	/**
 	 * 削除対象のSurfaceAtlas
 	 */
-	surfaceAtlases: pdi.SurfaceAtlas[];
+	surfaceAtlases: PdiSurfaceAtlas[];
 
 	/**
 	 * 削除対象のグリフ
@@ -86,7 +85,7 @@ export class SurfaceAtlasSet {
 	/**
 	 * @private
 	 */
-	_surfaceAtlases: pdi.SurfaceAtlas[];
+	_surfaceAtlases: PdiSurfaceAtlas[];
 
 	/**
 	 * @private
@@ -172,7 +171,7 @@ export class SurfaceAtlasSet {
 	 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
 	 * @private
 	 */
-	_moveGlyphSurface(glyph: Glyph): pdi.SurfaceAtlas | null {
+	_moveGlyphSurface(glyph: Glyph): PdiSurfaceAtlas | null {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
@@ -239,7 +238,7 @@ export class SurfaceAtlasSet {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param index 取得対象のインデックス
 	 */
-	getAtlas(index: number): pdi.SurfaceAtlas {
+	getAtlas(index: number): PdiSurfaceAtlas {
 		return this._surfaceAtlases[index];
 	}
 
@@ -292,7 +291,7 @@ export class SurfaceAtlasSet {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ
 	 */
-	addGlyph(glyph: Glyph): pdi.SurfaceAtlas | null {
+	addGlyph(glyph: Glyph): PdiSurfaceAtlas | null {
 		// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
 		// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 		// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。

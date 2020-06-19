@@ -1,4 +1,4 @@
-import { CommonOffset } from "./pdiTypes";
+import { CommonOffset } from "@akashic/akashic-pdi";
 
 /**
  * 変換行列を表すインターフェース。
