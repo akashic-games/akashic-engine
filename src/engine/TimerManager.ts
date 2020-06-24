@@ -9,27 +9,27 @@ import { Timer } from "./Timer";
  */
 export class TimerIdentifier {
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_timer: Timer;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handler: () => void;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_handlerOwner: any;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_fired: ((c: TimerIdentifier) => void) | undefined;
 
 	/**
-	 * @private
+	 * @ignore
 	 */
 	_firedOwner: any;
 
@@ -71,10 +71,29 @@ export class TimerIdentifier {
  * ゲーム開発者が本クラスを利用する事はない。
  */
 export class TimerManager {
+	/**
+	 * @ignore
+	 */
 	_timers: Timer[];
+
+	/**
+	 * @ignore
+	 */
 	_trigger: Trigger<void>;
+
+	/**
+	 * @ignore
+	 */
 	_identifiers: TimerIdentifier[];
+
+	/**
+	 * @ignore
+	 */
 	_fps: number;
+
+	/**
+	 * @ignore
+	 */
 	_registered: boolean;
 
 	constructor(trigger: Trigger<void>, fps: number) {

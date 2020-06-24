@@ -24,6 +24,9 @@ export interface AssetManagerParameterGameLike {
 	defaultAudioSystemId: "music" | "sound";
 }
 
+/**
+ * @ignore
+ */
 class AssetLoadingInfo {
 	asset: OneOfAssetLike;
 	handlers: AssetManagerLoadHandler[];
@@ -431,6 +434,9 @@ export class AssetManager implements AssetLoadHandler {
 		return ret;
 	}
 
+	/**
+	 * @ignore
+	 */
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 		var ret: { [key: string]: AssetConfiguration } = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
@@ -526,6 +532,9 @@ export class AssetManager implements AssetLoadHandler {
 		}
 	}
 
+	/**
+	 * @ignore
+	 */
 	_releaseAsset(assetId: string): void {
 		const asset = this._assets[assetId] || (this._loadings[assetId] && this._loadings[assetId].asset);
 		let path: string | null = null;

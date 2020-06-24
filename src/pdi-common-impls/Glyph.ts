@@ -78,6 +78,9 @@ export class Glyph implements GlyphLike {
 	 */
 	isSurfaceValid: boolean;
 
+	/**
+	 * @ignore
+	 */
 	_atlas: SurfaceAtlasLike | null;
 
 	/**

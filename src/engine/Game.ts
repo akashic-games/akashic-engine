@@ -64,6 +64,9 @@ const enum PostTickTaskType {
  */
 type PostTickTask = PostTickPopSceneTask | PostTickPushSceneTask | PostTickReplaceSceneTask | PostTickCallFunctionTask;
 
+/**
+ * @ignore
+ */
 interface PostTickPushSceneTask {
 	/**
 	 * 遷移の種類。
@@ -77,6 +80,9 @@ interface PostTickPushSceneTask {
 	scene: Scene;
 }
 
+/**
+ * @ignore
+ */
 interface PostTickReplaceSceneTask {
 	/**
 	 * 遷移の種類。
@@ -96,6 +102,9 @@ interface PostTickReplaceSceneTask {
 	preserveCurrent: boolean;
 }
 
+/**
+ * @ignore
+ */
 interface PostTickPopSceneTask {
 	/**
 	 * 遷移の種類。
@@ -109,6 +118,9 @@ interface PostTickPopSceneTask {
 	preserveCurrent: boolean;
 }
 
+/**
+ * @ignore
+ */
 interface PostTickCallFunctionTask {
 	/**
 	 * 遷移の種類。
@@ -568,6 +580,7 @@ export class Game {
 
 	/**
 	 * エントリポイントの関数。
+	 * @ignore
 	 */
 	_mainFunc: GameMainFunction | undefined;
 
@@ -1209,6 +1222,9 @@ export class Game {
 		return this.handlerSet.getInstanceType() === "active";
 	}
 
+	/**
+	 * @ignore
+	 */
 	_pushPostTickTask(fun: () => void, owner: any): void {
 		this._postTickTasks.push({
 			type: PostTickTaskType.Call,
@@ -1502,11 +1518,17 @@ export class Game {
 		this._onLoad.fire(this);
 	}
 
+	/**
+	 * @ignore
+	 */
 	_handleOperationPluginOperated(op: InternalOperationPluginOperation): void {
 		const pev = this._eventConverter.makePlaylogOperationEvent(op);
 		this.handlerSet.raiseEvent(pev);
 	}
 
+	/**
+	 * @ignore
+	 */
 	_handleSceneChanged(scene?: Scene): void {
 		this._updateEventTriggers(scene);
 		const local = scene ? scene.local : "full-local";
@@ -1570,6 +1592,9 @@ export class Game {
 		} while (this._postTickTasks.length > 0); // flush中に追加される限りflushを続行する
 	}
 
+	/**
+	 * @ignore
+	 */
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
 	}

@@ -88,5 +88,8 @@ export interface GlyphLike {
 	 */
 	isSurfaceValid: boolean;
 
+	/**
+	 * @ignore
+	 */
 	_atlas: SurfaceAtlasLike | null;
 }

@@ -28,9 +28,6 @@ export interface DefaultLoadingSceneParameterObject {
  * LoadingSceneのインジケータがカメラの影響を受けないようにするための内部エンティティ。
  */
 class CameraCancellingE extends E {
-	/**
-	 * @private
-	 */
 	_canceller: Object2D;
 
 	constructor(param: EParameterObject) {

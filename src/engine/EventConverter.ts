@@ -8,6 +8,9 @@ import { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import { Player } from "./Player";
 import { StorageValueStore } from "./Storage";
 
+/**
+ * @ignore
+ */
 // TODO: Game を意識しないインターフェース を検討する
 interface EventConverterParameterObejctGameLike {
 	db: { [idx: number]: E };
@@ -22,6 +25,7 @@ export interface EventConverterParameterObejct {
 
 /**
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ * @ignore
  */
 export class EventConverter {
 	_game: EventConverterParameterObejctGameLike;

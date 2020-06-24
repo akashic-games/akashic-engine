@@ -17,6 +17,10 @@ export interface AudioAssetLike extends AssetLike {
 	duration: number;
 	loop: boolean;
 	hint: AudioAssetHint;
+
+	/**
+	 * @ignore
+	 */
 	_system: AudioSystemLike;
 
 	play(): AudioPlayerLike;

@@ -5,6 +5,9 @@ import { Camera } from "./Camera";
 import { PointSource } from "./entities/E";
 import { EventPriority } from "./EventPriority";
 
+/**
+ * @ignore
+ */
 interface PointEventHolder {
 	targetId?: number;
 	local?: boolean;
@@ -41,6 +44,7 @@ export interface PointEventResolverParameterObject {
  * Down -> Move -> Up の流れを保証する機能も持つ。
  *
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ * @ignore
  */
 export class PointEventResolver {
 	_sourceResolver: PointSourceResolver;
