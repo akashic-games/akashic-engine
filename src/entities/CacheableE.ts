@@ -1,4 +1,4 @@
-import { CommonSize, Renderer, Surface } from "@akashic/akashic-pdi";
+import { CommonSize, Renderer, Surface } from "@akashic/pdi-types";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
 import { E, EParameterObject } from "./E";

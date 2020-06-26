@@ -1,4 +1,4 @@
-import { Asset } from "@akashic/akashic-pdi";
+import { Asset } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Scene, SceneParameterObject } from "./Scene";

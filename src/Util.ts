@@ -1,4 +1,4 @@
-import { CommonArea, CommonOffset, CompositeOperation as CompOp, CompositeOperationString } from "@akashic/akashic-pdi";
+import { CommonArea, CommonOffset, CompositeOperation as CompOp, CompositeOperationString } from "@akashic/pdi-types";
 
 /**
  * ユーティリティ。

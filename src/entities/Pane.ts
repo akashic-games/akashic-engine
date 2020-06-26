@@ -1,4 +1,4 @@
-import { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "@akashic/akashic-pdi";
+import { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "@akashic/pdi-types";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
 import { Matrix } from "../Matrix";

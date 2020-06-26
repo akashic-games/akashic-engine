@@ -1,4 +1,4 @@
-import { ScriptAsset } from "@akashic/akashic-pdi";
+import { ScriptAsset } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
 import { RequireCacheable } from "./RequireCacheable";

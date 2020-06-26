@@ -1,4 +1,4 @@
-import { CommonOffset } from "@akashic/akashic-pdi";
+import { CommonOffset } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import { Event, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";

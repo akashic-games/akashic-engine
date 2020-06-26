@@ -1,3 +1,4 @@
+import * as pci from "@akashic/pdi-common-impl";
 import {
 	AssetLoadHandler,
 	AssetLoadError,
@@ -15,8 +16,7 @@ import {
 	Renderer as PdiRenderer,
 	VideoPlayer as PdiVideoPlayer,
 	VideoSystem as PdiVideoSystem
-} from "@akashic/akashic-pdi";
-import * as pci from "@akashic/pdi-common-impl";
+} from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import * as g from "../..";
 

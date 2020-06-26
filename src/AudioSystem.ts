@@ -1,4 +1,4 @@
-import { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory } from "@akashic/akashic-pdi";
+import { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 
 export interface AudioSystemParameterObject {

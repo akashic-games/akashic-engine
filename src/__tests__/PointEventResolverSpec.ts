@@ -1,4 +1,4 @@
-import { PlatformPointType } from "@akashic/akashic-pdi";
+import { PlatformPointType } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { FilledRect } from "../entities/FilledRect";
 import { EventPriority } from "../EventPriority";

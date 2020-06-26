@@ -1,4 +1,4 @@
-import { AudioAssetHint, ImageAssetHint } from "@akashic/akashic-pdi";
+import { AudioAssetHint, ImageAssetHint } from "@akashic/pdi-types";
 
 /**
  * アセット宣言

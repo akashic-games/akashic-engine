@@ -1,4 +1,4 @@
-import { CommonSize, Glyph, ResourceFactory, SurfaceAtlas as PdiSurfaceAtlas } from "@akashic/akashic-pdi";
+import { CommonSize, Glyph, ResourceFactory, SurfaceAtlas as PdiSurfaceAtlas } from "@akashic/pdi-types";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	// @ts-ignore

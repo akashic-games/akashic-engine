@@ -1,4 +1,4 @@
-import { ShaderProgram as PdiShaderProgram, ShaderUniform } from "@akashic/akashic-pdi";
+import { ShaderProgram as PdiShaderProgram, ShaderUniform } from "@akashic/pdi-types";
 
 /**
  * `ShaderProgram` のコンストラクタに渡すことができるパラメータ。

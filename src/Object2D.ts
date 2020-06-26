@@ -1,4 +1,4 @@
-import { CommonArea, CommonOffset, CommonSize, CompositeOperation, CompositeOperationString } from "@akashic/akashic-pdi";
+import { CommonArea, CommonOffset, CommonSize, CompositeOperation, CompositeOperationString } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Matrix, PlainMatrix } from "./Matrix";
 

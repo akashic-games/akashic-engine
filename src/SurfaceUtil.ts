@@ -1,4 +1,4 @@
-import { CommonArea, CommonOffset, CommonRect, ImageAsset, Surface } from "@akashic/akashic-pdi";
+import { CommonArea, CommonOffset, CommonRect, ImageAsset, Surface } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 
 export module SurfaceUtil {

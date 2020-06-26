@@ -10,7 +10,7 @@ import {
 	ScriptAsset,
 	TextAsset,
 	VideoAsset
-} from "@akashic/akashic-pdi";
+} from "@akashic/pdi-types";
 import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";

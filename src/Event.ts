@@ -1,4 +1,4 @@
-import { CommonOffset } from "@akashic/akashic-pdi";
+import { CommonOffset } from "@akashic/pdi-types";
 import { Player } from "./Player";
 import { RandomGenerator } from "./RandomGenerator";
 import { StorageValueStore } from "./Storage";

@@ -1,4 +1,4 @@
-import { ResourceFactory } from "@akashic/akashic-pdi";
+import { ResourceFactory } from "@akashic/pdi-types";
 import { AudioSystem, MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
 
 /**

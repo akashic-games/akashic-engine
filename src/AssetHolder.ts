@@ -1,4 +1,4 @@
-import { Asset, AssetLoadError } from "@akashic/akashic-pdi";
+import { Asset, AssetLoadError } from "@akashic/pdi-types";
 import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import { AssetManager } from "./AssetManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";

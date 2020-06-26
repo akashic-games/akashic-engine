@@ -1,4 +1,4 @@
-import { Asset, CommonOffset, StorageLoadError } from "@akashic/akashic-pdi";
+import { Asset, CommonOffset, StorageLoadError } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { AssetAccessor } from "./AssetAccessor";
 import { AssetHolder } from "./AssetHolder";

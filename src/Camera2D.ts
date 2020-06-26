@@ -1,4 +1,4 @@
-import { Renderer } from "@akashic/akashic-pdi";
+import { Renderer } from "@akashic/pdi-types";
 import { Camera } from "./Camera";
 import { Object2D, Object2DParameterObject } from "./Object2D";
 

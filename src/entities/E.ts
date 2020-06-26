@@ -1,4 +1,4 @@
-import { CommonArea, CommonOffset, CommonRect, Renderer } from "@akashic/akashic-pdi";
+import { CommonArea, CommonOffset, CommonRect, Renderer } from "@akashic/pdi-types";
 import { ChainTrigger, Trigger } from "@akashic/trigger";
 import { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";

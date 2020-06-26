@@ -1,4 +1,4 @@
-import { AudioAsset, ImageAsset, ScriptAsset, TextAsset } from "@akashic/akashic-pdi";
+import { AudioAsset, ImageAsset, ScriptAsset, TextAsset } from "@akashic/pdi-types";
 import { AssetManager } from "./AssetManager";
 
 /**

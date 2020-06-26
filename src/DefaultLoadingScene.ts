@@ -1,4 +1,4 @@
-import { Asset, Renderer } from "@akashic/akashic-pdi";
+import { Asset, Renderer } from "@akashic/pdi-types";
 import { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import { E, EParameterObject } from "./entities/E";

@@ -1,4 +1,4 @@
-import { CommonOffset, PlatformPointEvent } from "@akashic/akashic-pdi";
+import { CommonOffset, PlatformPointEvent } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { Camera } from "./Camera";
 import { PointSource } from "./entities/E";

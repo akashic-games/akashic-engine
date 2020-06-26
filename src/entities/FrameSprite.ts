@@ -1,4 +1,4 @@
-import { ImageAsset, Surface } from "@akashic/akashic-pdi";
+import { ImageAsset, Surface } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { Timer } from "../Timer";
 import { Sprite, SpriteParameterObject } from "./Sprite";

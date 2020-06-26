@@ -1,4 +1,4 @@
-import { CommonArea } from "@akashic/akashic-pdi";
+import { CommonArea } from "@akashic/pdi-types";
 import { Util } from "./Util";
 
 /**

@@ -1,4 +1,4 @@
-import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/akashic-pdi";
+import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Game } from "./Game";

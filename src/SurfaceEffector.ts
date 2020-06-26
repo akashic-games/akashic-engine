@@ -1,4 +1,4 @@
-import { Surface } from "@akashic/akashic-pdi";
+import { Surface } from "@akashic/pdi-types";
 
 /**
  * `Surface` に対して様々な表現によって書き込む事が出来ることを表すインターフェース。

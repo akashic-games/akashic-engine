@@ -1,4 +1,4 @@
-import { AssertionError, AssetLoadError, TypeMismatchError } from "@akashic/akashic-pdi";
+import { AssertionError, AssetLoadError, TypeMismatchError } from "@akashic/pdi-types";
 
 /**
  * 例外生成ファクトリ。

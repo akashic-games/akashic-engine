@@ -1,4 +1,4 @@
-import { ImageAsset as PdiImageAsset } from "@akashic/akashic-pdi";
+import { ImageAsset as PdiImageAsset } from "@akashic/pdi-types";
 import { SurfaceUtil } from "..";
 import { customMatchers, Game, Renderer, skeletonRuntime, Surface } from "./helpers";
 

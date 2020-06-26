@@ -8,7 +8,7 @@ import {
 	PlatformPointType,
 	PlatformPointEvent,
 	OperationPluginViewInfo
-} from "@akashic/akashic-pdi";
+} from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
 import { AssetManager } from "./AssetManager";

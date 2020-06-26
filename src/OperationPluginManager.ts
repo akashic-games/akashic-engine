@@ -1,4 +1,4 @@
-import { OperationPluginViewInfo } from "@akashic/akashic-pdi";
+import { OperationPluginViewInfo } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { Game } from "./Game";
 import { OperationPlugin } from "./OperationPlugin";

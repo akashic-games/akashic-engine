@@ -1,4 +1,4 @@
-import { Glyph, Renderer } from "@akashic/akashic-pdi";
+import { Glyph, Renderer } from "@akashic/pdi-types";
 import { Font } from "../Font";
 import { TextAlign } from "../TextAlign";
 import { TextAlignString } from "../TextAlignString";

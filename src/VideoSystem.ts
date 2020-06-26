@@ -1,4 +1,4 @@
-import { VideoSystem as PdiVideoSystem } from "@akashic/akashic-pdi";
+import { VideoSystem as PdiVideoSystem } from "@akashic/pdi-types";
 
 /**
  * 将来 VideoPlayerインスタンスの一元管理（ボリューム設定などAudioSystemと似た役割）

@@ -1,4 +1,4 @@
-import { OperationPluginViewInfo } from "@akashic/akashic-pdi";
+import { OperationPluginViewInfo } from "@akashic/pdi-types";
 import { OperationPlugin } from "./OperationPlugin";
 
 /**

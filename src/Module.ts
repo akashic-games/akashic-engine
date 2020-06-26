@@ -1,4 +1,4 @@
-import { Module as PdiModule, ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/akashic-pdi";
+import { Module as PdiModule, ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/pdi-types";
 import { PathUtil } from "./PathUtil";
 
 export interface ModuleParameterObject {

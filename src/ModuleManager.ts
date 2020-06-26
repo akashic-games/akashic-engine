@@ -1,4 +1,4 @@
-import { Asset, ScriptAsset, ScriptAssetRuntimeValueBase, TextAsset } from "@akashic/akashic-pdi";
+import { Asset, ScriptAsset, ScriptAssetRuntimeValueBase, TextAsset } from "@akashic/pdi-types";
 import { AssetManager } from "./AssetManager";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
