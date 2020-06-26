@@ -3,9 +3,9 @@ import {
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	GameConfiguration,
-	AssetLike,
-	ScriptAssetLike,
-	AudioAssetLike,
+	Asset,
+	ScriptAsset,
+	AudioAsset,
 	ImageAsset,
 	ImageAssetConfigurationBase
 } from "..";
@@ -696,7 +696,7 @@ describe("test AssetManager", () => {
 				({ manager }) => {
 					// live でも type が合わなければエラー
 					expect(() => manager.peekLiveAssetById("id-script/main.js", "image")).toThrowError("AssertionError");
-					const mainjs = manager.peekLiveAssetById("id-script/main.js", "script") as ScriptAssetLike;
+					const mainjs = manager.peekLiveAssetById("id-script/main.js", "script") as ScriptAsset;
 					expect(mainjs.type).toBe("script");
 					expect(mainjs.path).toBe("script/main.js");
 					expect(typeof mainjs.execute).toBe("function");
@@ -706,7 +706,7 @@ describe("test AssetManager", () => {
 					expect(() => manager.peekLiveAssetById("id-assets/stage01/bgm01", "audio")).toThrowError("AssertionError");
 
 					expect(() => manager.peekLiveAssetById("id-assets/stage01/se01", "text")).toThrowError("AssertionError");
-					const se01 = manager.peekLiveAssetById("id-assets/stage01/se01", "audio") as AudioAssetLike;
+					const se01 = manager.peekLiveAssetById("id-assets/stage01/se01", "audio") as AudioAsset;
 					expect(se01.type).toBe("audio");
 					expect(se01.path).toBe("assets/stage01/se01");
 					expect(se01.duration).toBe(10000);
@@ -723,7 +723,7 @@ describe("test AssetManager", () => {
 				({ manager }) => {
 					// live でも type が合わなければエラー
 					expect(() => manager.peekLiveAssetByAccessorPath("/script/main.js", "image")).toThrowError("AssertionError");
-					const mainjs = manager.peekLiveAssetByAccessorPath("/script/main.js", "script") as ScriptAssetLike;
+					const mainjs = manager.peekLiveAssetByAccessorPath("/script/main.js", "script") as ScriptAsset;
 					expect(mainjs.type).toBe("script");
 					expect(mainjs.path).toBe("script/main.js");
 					expect(typeof mainjs.execute).toBe("function");
@@ -733,7 +733,7 @@ describe("test AssetManager", () => {
 					expect(() => manager.peekLiveAssetByAccessorPath("/assets/stage01/bgm01", "audio")).toThrowError("AssertionError");
 
 					expect(() => manager.peekLiveAssetByAccessorPath("/assets/stage01/se01", "text")).toThrowError("AssertionError");
-					const se01 = manager.peekLiveAssetByAccessorPath("/assets/stage01/se01", "audio") as AudioAssetLike;
+					const se01 = manager.peekLiveAssetByAccessorPath("/assets/stage01/se01", "audio") as AudioAsset;
 					expect(se01.type).toBe("audio");
 					expect(se01.path).toBe("assets/stage01/se01");
 					expect(se01.duration).toBe(10000);
@@ -745,7 +745,7 @@ describe("test AssetManager", () => {
 			);
 		});
 
-		function extractAssetProps(asset: AssetLike): { id: string; type: string; path: string } {
+		function extractAssetProps(asset: Asset): { id: string; type: string; path: string } {
 			return { id: asset.id, type: asset.type, path: asset.path };
 		}
 

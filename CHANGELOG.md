@@ -1,7 +1,10 @@
 # ChangeLog
 
-## Unreleased changes
-* 内部でしか使われていない変数・メソッドに @ignore を付与
+## 3.0.0-beta.26
+
+その他変更
+ * `@akashic/pdi-common-impl` を使用するよう変更
+ * 内部でしか使われていない変数・メソッドに @ignore を付与
 
 ## 3.0.0-beta.25
 

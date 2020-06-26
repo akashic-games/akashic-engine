@@ -1,9 +1,9 @@
-import { GlyphLike, SurfaceAtlas, SurfaceAtlasSet, SurfaceAtlasSetParameterObject } from "..";
-import { skeletonRuntime, Surface } from "./helpers";
+import { Glyph, SurfaceAtlasSet, SurfaceAtlasSetParameterObject } from "..";
+import { skeletonRuntime, Surface, SurfaceAtlas } from "./helpers";
 
 describe("test SurfaceAtlasSet", () => {
 	let surfaceAtlasSet: SurfaceAtlasSet;
-	const createGlyph = (code: number, x: number, y: number, width: number, height: number): GlyphLike => {
+	const createGlyph = (code: number, x: number, y: number, width: number, height: number): Glyph => {
 		return {
 			code,
 			x,

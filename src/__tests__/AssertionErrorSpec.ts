@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "..";
+import { ExceptionFactory } from "../ExceptionFactory";
 
 describe("test AssertionError", () => {
 	it("初期化", () => {

@@ -1,6 +1,6 @@
 import { Trigger } from "@akashic/trigger";
-import { Asset, AssetConfiguration, AssetManager, AudioAsset, E, ImageAsset, Scene, SceneStateString, StorageRegion } from "..";
-import { customMatchers, Game, skeletonRuntime } from "./helpers";
+import { AssetConfiguration, AssetManager, E, Scene, SceneStateString, StorageRegion } from "..";
+import { customMatchers, Game, skeletonRuntime, ImageAsset, AudioAsset } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -773,13 +773,13 @@ describe("test Scene", () => {
 		let failureCount = 0;
 		let loadedCount = 0;
 		scene.onAssetLoad.add(asset => {
-			expect(asset instanceof Asset).toBe(true);
+			expect(asset instanceof ImageAsset).toBe(true);
 			expect(asset.id).toBe("foo");
 			expect(failureCount).toBe(2);
 			++loadedCount;
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {
-			expect(failureInfo.asset instanceof Asset).toBe(true);
+			expect(failureInfo.asset instanceof ImageAsset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
 			expect(failureInfo.error.name).toBe("AssetLoadError");
@@ -838,7 +838,7 @@ describe("test Scene", () => {
 			fail("should not be loaded");
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {
-			expect(failureInfo.asset instanceof Asset).toBe(true);
+			expect(failureInfo.asset instanceof ImageAsset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
 			expect(failureInfo.cancelRetry).toBe(false);
@@ -876,7 +876,7 @@ describe("test Scene", () => {
 			fail("should not be loaded");
 		});
 		scene.onAssetLoadFailure.add(failureInfo => {
-			expect(failureInfo.asset instanceof Asset).toBe(true);
+			expect(failureInfo.asset instanceof ImageAsset).toBe(true);
 			expect(failureInfo.asset.id).toBe("foo");
 			expect(failureInfo.error instanceof Error).toBe(true);
 			expect(failureInfo.error.retriable).toBe(true);
