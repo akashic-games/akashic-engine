@@ -7,6 +7,7 @@ import { Asset, AssetLoadError } from "@akashic/pdi-types";
 export interface AssetManagerLoadHandler {
 	/**
 	 * 読み込失敗の通知を受ける関数。
+	 * @ignore
 	 * @param asset 読み込みに失敗したアセット
 	 * @param error 失敗の内容を表すエラー
 	 * @param retryCallback 読み込みの再試行を行うコールバック関数。`AssetManager#retryLoad()` が設定される。
@@ -15,6 +16,7 @@ export interface AssetManagerLoadHandler {
 
 	/**
 	 * 読み込み完了の通知を受ける関数。
+	 * @ignore
 	 * @param asset 読み込みが完了したアセット
 	 */
 	_onAssetLoad(asset: Asset): void;
