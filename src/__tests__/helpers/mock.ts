@@ -1,3 +1,22 @@
+import * as pci from "@akashic/pdi-common-impl";
+import {
+	AssetLoadHandler,
+	AssetLoadError,
+	AudioAssetHint,
+	CompositeOperationString,
+	FontWeightString,
+	ImageData,
+	OperationPluginViewInfo,
+	ScriptAssetRuntimeValue,
+	AudioSystem as PdiAudioSystem,
+	Asset as PdiAsset,
+	Glyph as PdiGlyph,
+	GlyphFactory as PdiGlyphFactory,
+	Surface as PdiSurface,
+	Renderer as PdiRenderer,
+	VideoPlayer as PdiVideoPlayer,
+	VideoSystem as PdiVideoSystem
+} from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import * as g from "../..";
 
@@ -11,7 +30,7 @@ declare global {
 
 global.g = g;
 
-export class Renderer extends g.Renderer {
+export class Renderer extends pci.Renderer {
 	methodCallHistoryWithParams: {
 		methodName: string;
 		params?: {};
@@ -100,7 +119,7 @@ export class Renderer extends g.Renderer {
 		});
 	}
 
-	setCompositeOperation(operation: g.CompositeOperationString): void {
+	setCompositeOperation(operation: CompositeOperationString): void {
 		this.methodCallHistoryWithParams.push({
 			methodName: "setCompositeOperation",
 			params: {
@@ -135,7 +154,7 @@ export class Renderer extends g.Renderer {
 	}
 
 	drawSprites(
-		surface: g.Surface,
+		surface: PdiSurface,
 		offsetX: number[],
 		offsetY: number[],
 		width: number[],
@@ -175,23 +194,23 @@ export class Renderer extends g.Renderer {
 		return false;
 	}
 
-	_getImageData(): g.ImageData {
+	_getImageData(): ImageData {
 		throw new Error("not implemented");
 	}
 
-	_putImageData(_imageData: g.ImageData): void {
+	_putImageData(_imageData: ImageData): void {
 		// do noting.
 	}
 }
 
-export class Surface extends g.Surface {
-	createdRenderer: g.Renderer | undefined;
+export class Surface extends pci.Surface {
+	createdRenderer: PdiRenderer | undefined;
 
 	constructor(width: number, height: number, drawable?: any) {
 		super(width, height, drawable);
 	}
 
-	renderer(): g.Renderer {
+	renderer(): PdiRenderer {
 		if (this.createdRenderer == null) {
 			this.createdRenderer = new Renderer();
 		}
@@ -213,7 +232,7 @@ class LoadFailureController {
 		this.failureCount = 0;
 	}
 
-	tryLoad(asset: g.Asset, loader: g.AssetLoadHandler): boolean {
+	tryLoad(asset: PdiAsset, loader: AssetLoadHandler): boolean {
 		if (this.necessaryRetryCount < 0) {
 			setTimeout(() => {
 				if (!asset.destroyed())
@@ -231,7 +250,7 @@ class LoadFailureController {
 	}
 }
 
-export class ImageAsset extends g.ImageAsset {
+export class ImageAsset extends pci.ImageAsset {
 	_failureController: LoadFailureController;
 	_surface: Surface | undefined;
 
@@ -240,7 +259,7 @@ export class ImageAsset extends g.ImageAsset {
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
-	_load(loader: g.AssetLoadHandler): void {
+	_load(loader: AssetLoadHandler): void {
 		if (this._failureController.tryLoad(this, loader)) {
 			setTimeout(() => {
 				if (!this.destroyed()) loader._onAssetLoad(this);
@@ -248,7 +267,7 @@ export class ImageAsset extends g.ImageAsset {
 		}
 	}
 
-	asSurface(): g.Surface {
+	asSurface(): PdiSurface {
 		if (this._surface == null) {
 			this._surface = new Surface(this.width, this.height);
 		}
@@ -262,7 +281,7 @@ export interface DelayedAsset {
 
 export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 	_delaying: boolean;
-	_lastGivenLoader: g.AssetLoadHandler;
+	_lastGivenLoader: AssetLoadHandler;
 	_isError: boolean;
 	_loadingResult: any;
 
@@ -279,7 +298,7 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 		this._flushDelayed();
 	}
 
-	_load(loader: g.AssetLoadHandler): void {
+	_load(loader: AssetLoadHandler): void {
 		if (this._delaying) {
 			// 遅延が要求されている状態で _load() が呼ばれた: loaderを自分に差し替えて _onAssetLoad, _onAssetError の通知を遅延する
 			this._lastGivenLoader = loader;
@@ -290,12 +309,12 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 		}
 	}
 
-	_onAssetError(_asset: g.Asset, _error: g.AssetLoadError): void {
+	_onAssetError(_asset: PdiAsset, _error: AssetLoadError): void {
 		this._isError = true;
 		this._loadingResult = arguments;
 		this._flushDelayed();
 	}
-	_onAssetLoad(_asset: g.Asset): void {
+	_onAssetLoad(_asset: PdiAsset): void {
 		this._isError = false;
 		this._loadingResult = arguments;
 		this._flushDelayed();
@@ -313,7 +332,7 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 	}
 }
 
-export class AudioAsset extends g.AudioAsset {
+export class AudioAsset extends pci.AudioAsset {
 	_failureController: LoadFailureController;
 
 	constructor(
@@ -321,15 +340,15 @@ export class AudioAsset extends g.AudioAsset {
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: g.AudioSystemLike,
+		system: PdiAudioSystem,
 		loop: boolean,
-		hint: g.AudioAssetHint
+		hint: AudioAssetHint
 	) {
 		super(id, assetPath, duration, system, loop, hint);
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
-	_load(loader: g.AssetLoadHandler): void {
+	_load(loader: AssetLoadHandler): void {
 		if (this._failureController.tryLoad(this, loader)) {
 			setTimeout(() => {
 				if (!this.destroyed()) loader._onAssetLoad(this);
@@ -338,7 +357,7 @@ export class AudioAsset extends g.AudioAsset {
 	}
 }
 
-export class TextAsset extends g.TextAsset {
+export class TextAsset extends pci.TextAsset {
 	game: g.Game;
 	_failureController: LoadFailureController;
 
@@ -348,7 +367,7 @@ export class TextAsset extends g.TextAsset {
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
-	_load(loader: g.AssetLoadHandler): void {
+	_load(loader: AssetLoadHandler): void {
 		if (this._failureController.tryLoad(this, loader)) {
 			setTimeout(() => {
 				if ((<ResourceFactory> this.game.resourceFactory).scriptContents.hasOwnProperty(this.path)) {
@@ -362,7 +381,7 @@ export class TextAsset extends g.TextAsset {
 	}
 }
 
-export class ScriptAsset extends g.ScriptAsset {
+export class ScriptAsset extends pci.ScriptAsset {
 	game: g.Game;
 	_failureController: LoadFailureController;
 
@@ -372,7 +391,7 @@ export class ScriptAsset extends g.ScriptAsset {
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
-	_load(loader: g.AssetLoadHandler): void {
+	_load(loader: AssetLoadHandler): void {
 		if (this._failureController.tryLoad(this, loader)) {
 			setTimeout(() => {
 				if (!this.destroyed()) loader._onAssetLoad(this);
@@ -380,7 +399,7 @@ export class ScriptAsset extends g.ScriptAsset {
 		}
 	}
 
-	execute(env: g.ScriptAssetRuntimeValue): any {
+	execute(env: ScriptAssetRuntimeValue): any {
 		if (!(<ResourceFactory> this.game.resourceFactory).scriptContents.hasOwnProperty(env.module.filename)) {
 			// 特にスクリプトの内容指定がないケース:
 			// ScriptAssetは任意の値を返してよいが、シーンを記述したスクリプトは
@@ -399,12 +418,12 @@ export class ScriptAsset extends g.ScriptAsset {
 	}
 }
 
-export class VideoAsset extends g.VideoAsset {
+export class VideoAsset extends pci.VideoAsset {
 	constructor(id: string, assetPath: string, width: number, height: number, system: g.VideoSystem, loop: boolean, useRealSize: boolean) {
 		super(id, assetPath, width, height, system, loop, useRealSize);
 	}
 
-	_load(_loader: g.AssetLoadHandler): void {
+	_load(_loader: AssetLoadHandler): void {
 		throw new Error("not implemented");
 	}
 
@@ -412,15 +431,15 @@ export class VideoAsset extends g.VideoAsset {
 		throw new Error("not implemented");
 	}
 
-	getPlayer(): g.VideoPlayer {
+	getPlayer(): PdiVideoPlayer {
 		throw new Error("not implemented");
 	}
 }
 
-export class AudioPlayer extends g.AudioPlayer {
+export class AudioPlayer extends pci.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
-	constructor(system: g.AudioSystem) {
+	constructor(system: PdiAudioSystem) {
 		super(system);
 		this.canHandleStoppedValue = true;
 	}
@@ -430,7 +449,7 @@ export class AudioPlayer extends g.AudioPlayer {
 	}
 }
 
-export class GlyphFactory extends g.GlyphFactory {
+export class GlyphFactory extends pci.GlyphFactory {
 	constructor(
 		fontFamily: string | string[],
 		fontSize: number,
@@ -439,16 +458,18 @@ export class GlyphFactory extends g.GlyphFactory {
 		strokeWidth?: number,
 		strokeColor?: string,
 		strokeOnly?: boolean,
-		fontWeight?: g.FontWeightString
+		fontWeight?: FontWeightString
 	) {
 		super(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
-	create(_code: number): g.Glyph {
+	create(_code: number): PdiGlyph {
 		throw new Error("not implemented");
 	}
 }
 
-export class ResourceFactory extends g.ResourceFactory {
+export class SurfaceAtlas extends pci.SurfaceAtlas {}
+
+export class ResourceFactory extends pci.ResourceFactory {
 	_game: g.Game;
 	scriptContents: { [key: string]: string };
 
@@ -495,7 +516,7 @@ export class ResourceFactory extends g.ResourceFactory {
 		this._delayedAssets = [];
 	}
 
-	createImageAsset(id: string, assetPath: string, width: number, height: number): g.ImageAsset {
+	createImageAsset(id: string, assetPath: string, width: number, height: number): ImageAsset {
 		if (this.createsDelayedAsset) {
 			const ret = new DelayedImageAsset(this._necessaryRetryCount, id, assetPath, width, height);
 			this._delayedAssets.push(ret);
@@ -509,30 +530,30 @@ export class ResourceFactory extends g.ResourceFactory {
 		id: string,
 		assetPath: string,
 		duration: number,
-		system: g.AudioSystemLike,
+		system: PdiAudioSystem,
 		loop: boolean,
-		hint: g.AudioAssetHint
-	): g.AudioAsset {
+		hint: AudioAssetHint
+	): AudioAsset {
 		return new AudioAsset(this._necessaryRetryCount, id, assetPath, duration, system, loop, hint);
 	}
 
-	createTextAsset(id: string, assetPath: string): g.TextAsset {
+	createTextAsset(id: string, assetPath: string): TextAsset {
 		return new TextAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
-	createScriptAsset(id: string, assetPath: string): g.ScriptAsset {
+	createScriptAsset(id: string, assetPath: string): ScriptAsset {
 		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
-	createSurface(width: number, height: number): g.Surface {
+	createSurface(width: number, height: number): pci.Surface {
 		return new Surface(width, height);
 	}
 
-	createSurfaceAtlas(width: number, height: number): g.SurfaceAtlas {
-		return new g.SurfaceAtlas(new Surface(width, height));
+	createSurfaceAtlas(width: number, height: number): pci.SurfaceAtlas {
+		return new SurfaceAtlas(new Surface(width, height));
 	}
 
-	createAudioPlayer(system: g.AudioSystem): g.AudioPlayer {
+	createAudioPlayer(system: PdiAudioSystem): AudioPlayer {
 		return new AudioPlayer(system);
 	}
 
@@ -544,8 +565,8 @@ export class ResourceFactory extends g.ResourceFactory {
 		strokeWidth?: number,
 		strokeColor?: string,
 		strokeOnly?: boolean,
-		fontWeight?: g.FontWeightString
-	): g.GlyphFactory {
+		fontWeight?: FontWeightString
+	): PdiGlyphFactory {
 		return new GlyphFactory(fontFamily, fontSize, baselineHeight, fontColor, strokeWidth, strokeColor, strokeOnly, fontWeight);
 	}
 	createVideoAsset(
@@ -553,10 +574,10 @@ export class ResourceFactory extends g.ResourceFactory {
 		_assetPath: string,
 		_width: number,
 		_height: number,
-		_system: g.VideoSystem,
+		_system: PdiVideoSystem,
 		_loop: boolean,
 		_useRealSize: boolean
-	): g.VideoAsset {
+	): VideoAsset {
 		throw new Error("not implemented");
 	}
 }
@@ -604,13 +625,12 @@ export class Game extends g.Game {
 	autoTickForInternalEvents: boolean;
 	resourceFactory!: ResourceFactory; // NOTE: 継承元クラスで代入
 	handlerSet!: GameHandlerSet; // NOTE: 継承元クラスで代入
-	audio!: AudioSystemManager; // NOTE: 継承元クラスで代入
 
 	constructor(
 		configuration: g.GameConfiguration,
 		assetBase?: string,
 		selfId?: string,
-		operationPluginViewInfo?: g.OperationPluginViewInfo,
+		operationPluginViewInfo?: OperationPluginViewInfo,
 		mainFunc?: g.GameMainFunction
 	) {
 		const resourceFactory = new ResourceFactory();
@@ -673,11 +693,6 @@ export class CacheableE extends g.CacheableE {
 	}
 }
 
-export interface AudioSystemLike extends g.AudioSystemLike {
-	_destroyRequestedAssets: { [key: string]: g.AudioAssetLike };
-}
-
-export interface AudioSystemManager extends g.AudioSystemManager {
-	music: AudioSystemLike;
-	sound: AudioSystemLike;
+export interface AudioSystem extends PdiAudioSystem {
+	_destroyRequestedAssets: { [key: string]: g.AudioAsset };
 }

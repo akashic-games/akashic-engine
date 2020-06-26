@@ -1,4 +1,4 @@
-import { ExceptionFactory } from "@akashic/pdi-common-impl";
+import { ExceptionFactory } from "../ExceptionFactory";
 import { TextAsset } from "./helpers";
 
 describe("Util.distance()", () => {

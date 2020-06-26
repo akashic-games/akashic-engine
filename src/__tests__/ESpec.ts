@@ -3,11 +3,11 @@ import {
 	CompositeOperation,
 	E,
 	PlainMatrix,
-	PlatformPointType,
 	PointDownEvent,
 	PointSource,
 	Scene,
 	MessageEvent,
+	PlatformPointType,
 	PointUpEvent,
 	PointMoveEvent
 } from "..";

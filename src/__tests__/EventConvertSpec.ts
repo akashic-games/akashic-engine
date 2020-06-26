@@ -1,11 +1,11 @@
 import * as pl from "@akashic/playlog";
-import { PointDownEvent, PointMoveEvent, PointUpEvent } from "../engine/entities/E";
-import { FilledRect } from "../engine/entities/FilledRect";
-import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent, PlayerInfoEvent } from "../engine/Event";
-import { EventConverter } from "../engine/EventConverter";
-import { EventPriority } from "../engine/EventPriority";
-import { Player } from "../engine/Player";
-import { StorageRegion, StorageValueStore } from "../engine/Storage";
+import { PointDownEvent, PointMoveEvent, PointUpEvent } from "../entities/E";
+import { FilledRect } from "../entities/FilledRect";
+import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent, PlayerInfoEvent } from "../Event";
+import { EventConverter } from "../EventConverter";
+import { EventPriority } from "../EventPriority";
+import { Player } from "../Player";
+import { StorageRegion, StorageValueStore } from "../Storage";
 import { Game, skeletonRuntime } from "./helpers";
 
 describe("EventConverter", () => {

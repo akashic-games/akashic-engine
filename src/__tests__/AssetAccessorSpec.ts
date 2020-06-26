@@ -1,4 +1,4 @@
-import { GameConfiguration, AssetAccessor, AssetLike } from "..";
+import { Asset, GameConfiguration, AssetAccessor } from "..";
 import { customMatchers, Game, ResourceFactory } from "./helpers";
 
 expect.extend(customMatchers);
@@ -83,7 +83,7 @@ describe("test AssetAccessor", () => {
 		});
 	}
 
-	function extractAssetProps(asset: AssetLike): { id: string; type: string; path: string } {
+	function extractAssetProps(asset: Asset): { id: string; type: string; path: string } {
 		return { id: asset.id, type: asset.type, path: asset.path };
 	}
 
