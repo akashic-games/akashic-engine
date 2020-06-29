@@ -1,6 +1,9 @@
 import { CommonArea, CommonOffset, CommonRect, ImageAsset, Surface } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 
+/**
+ * Surface に関連するユーティリティ。
+ */
 export module SurfaceUtil {
 	/**
 	 * 引数 `src` が `undefined` または `Surface` でそのまま返す。

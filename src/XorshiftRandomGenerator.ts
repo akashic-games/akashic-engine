@@ -26,12 +26,21 @@ export class XorshiftRandomGenerator extends RandomGenerator {
 	}
 
 	/**
+	 * 乱数を生成する。
+	 * `min` 以上 `max` 以下の数値を返す。
+	 *
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `XorshiftRandomGenerator#generate()` を利用すること。
 	 */
 	get(min: number, max: number): number {
 		return this._xorshift.nextInt(min, max + 1);
 	}
 
+	/**
+	 * 乱数を生成する。
+	 * 0 以上 1 未満の数値を返す。
+	 *
+	 * ローカルイベントの処理中を除き、原則 `Math.random()` ではなくこのメソッドを利用すること。
+	 */
 	generate(): number {
 		return this._xorshift.random();
 	}
