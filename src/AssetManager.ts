@@ -16,7 +16,6 @@ import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { getGameInAssetContext } from "./getGameInAssetContext";
 import { VideoSystem } from "./VideoSystem";
 
 export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset;
@@ -186,18 +185,17 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * `AssetManager` のインスタンスを生成する。
 	 *
-	 * @param gameParams このインスタンスが属するゲーム。ゲーム開発者が指定する必要はない。
+	 * @param gameParams このインスタンスが属するゲーム。
 	 * @param conf このアセットマネージャに与えるアセット定義。game.json の `"assets"` に相当。
 	 * @param audioSystemConfMap このアセットマネージャに与えるオーディオシステムの宣言。
 	 * @param moduleMainScripts このアセットマネージャに与える require() 解決用のエントリポイント。
 	 */
 	constructor(
-		gameParams?: AssetManagerParameterGameLike,
+		gameParams: AssetManagerParameterGameLike,
 		conf?: AssetConfigurationMap,
 		audioSystemConfMap?: AudioSystemConfigurationMap,
 		moduleMainScripts?: ModuleMainScriptsMap
 	) {
-		gameParams = gameParams || getGameInAssetContext();
 		this._resourceFactory = gameParams.resourceFactory;
 		this._audioSystemManager = gameParams.audio;
 		this._defaultAudioSystemId = gameParams.defaultAudioSystemId;
