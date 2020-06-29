@@ -25,7 +25,6 @@ export type SceneRequestAssetHandler = () => void;
 export interface SceneParameterObject {
 	/**
 	 * このシーンの属するゲーム。
-	 * @default g.game
 	 */
 	game: Game;
 

@@ -15,7 +15,6 @@ import { Scene } from "./Scene";
 export interface DefaultLoadingSceneParameterObject {
 	/**
 	 * このシーンが属する `Game` 。
-	 * @default g.game
 	 */
 	game: Game;
 	style?: "default" | "compact";

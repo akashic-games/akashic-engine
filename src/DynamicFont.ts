@@ -15,7 +15,6 @@ import { Util } from "./Util";
 export interface DynamicFontParameterObject {
 	/**
 	 * ゲームインスタンス。
-	 * @default g.game
 	 */
 	game: Game;
 
