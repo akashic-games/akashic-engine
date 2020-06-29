@@ -3,7 +3,7 @@
 ## 3.0.0-beta.27
 
 不具合修正
- * `getGameInAssetContext()` が機能していなかた問題の修正と廃止
+ * `getGameInAssetContext()` が機能していない問題の修正と廃止
 
 ## 3.0.0-beta.26
 
