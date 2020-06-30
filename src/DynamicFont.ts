@@ -2,7 +2,6 @@ import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactor
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Game } from "./Game";
-import { getGameInAssetContext } from "./getGameInAssetContext";
 import { SurfaceAtlasSetHint, SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { Util } from "./Util";
 
@@ -16,10 +15,8 @@ import { Util } from "./Util";
 export interface DynamicFontParameterObject {
 	/**
 	 * ゲームインスタンス。
-	 * ゲーム開発者が指定する必要はない。
-	 * @default g.game
 	 */
-	game?: Game;
+	game: Game;
 
 	/**
 	 * フォントファミリ。
@@ -213,7 +210,7 @@ export class DynamicFont extends Font {
 		this.strokeWidth = param.strokeWidth != null ? param.strokeWidth : 0;
 		this.strokeColor = param.strokeColor != null ? param.strokeColor : "black";
 		this.strokeOnly = param.strokeOnly != null ? param.strokeOnly : false;
-		const game = param.game || getGameInAssetContext();
+		const game = param.game;
 		this._resourceFactory = game.resourceFactory;
 
 		const ff = this.fontFamily;

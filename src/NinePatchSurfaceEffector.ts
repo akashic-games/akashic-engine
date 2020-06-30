@@ -1,6 +1,5 @@
 import { CommonRect, Surface } from "@akashic/pdi-types";
 import { Game } from "./Game";
-import { getGameInAssetContext } from "./getGameInAssetContext";
 import { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
 
@@ -31,11 +30,11 @@ export class NinePatchSurfaceEffector implements SurfaceEffector {
 	/**
 	 * `NinePatchSurfaceEffector` のインスタンスを生成する。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `SurfaceUtil#drawNinePatch()` を利用すること。
-	 * @param game このインスタンスが属する `Game`。ゲーム開発者が指定する必要はない。
+	 * @param game このインスタンスが属する `Game`。
 	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 	 */
-	constructor(game: Game | null, borderWidth: CommonRect | number = 4) {
-		this.game = game || getGameInAssetContext();
+	constructor(game: Game, borderWidth: CommonRect | number = 4) {
+		this.game = game;
 		if (typeof borderWidth === "number") {
 			this.borderWidth = {
 				top: borderWidth,

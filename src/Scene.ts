@@ -10,7 +10,6 @@ import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./
 import { MessageEvent, OperationEvent } from "./Event";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Game } from "./Game";
-import { getGameInAssetContext } from "./getGameInAssetContext";
 import { LocalTickModeString } from "./LocalTickModeString";
 import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
 import { TickGenerationModeString } from "./TickGenerationModeString";
@@ -26,10 +25,8 @@ export type SceneRequestAssetHandler = () => void;
 export interface SceneParameterObject {
 	/**
 	 * このシーンの属するゲーム。
-	 * ゲーム開発者が指定する必要はない。
-	 * @default g.game
 	 */
-	game?: Game;
+	game: Game;
 
 	/**
 	 * このシーンで用いるアセットIDの配列。
@@ -434,8 +431,8 @@ export class Scene implements StorageLoaderHandler {
 	 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
-	constructor(param: SceneParameterObject = {}) {
-		var game = param.game || getGameInAssetContext();
+	constructor(param: SceneParameterObject) {
+		var game = param.game;
 		var local =
 			param.local === undefined
 				? "non-local"

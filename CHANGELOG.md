@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.27
+
+不具合修正
+ * `getGameInAssetContext()` が機能していない問題の修正と廃止
+
 ## 3.0.0-beta.26
 
 その他変更

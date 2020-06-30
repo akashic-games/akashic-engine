@@ -78,13 +78,6 @@ describe("test AssetManager", () => {
 		}
 	};
 
-	beforeEach(() => {
-		global.g = undefined;
-	});
-	afterAll(() => {
-		global.g = undefined;
-	});
-
 	it("初期化", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
@@ -121,61 +114,6 @@ describe("test AssetManager", () => {
 		expect(manager.configuration.quux.duration).toEqual((gameConfiguration.assets.quux as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.quux.loop).toEqual(true);
 		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
-	});
-
-	it("初期化- 全て省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		global.g = { game: new Game(gameConfiguration, "/") };
-		const manager = new AssetManager();
-		expect(manager.configuration).toMatchObject({});
-		expect(Object.keys(manager._assets).length).toEqual(0);
-		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
-		expect(Object.keys(manager._liveAssetPathTable).length).toEqual(0);
-		expect(Object.keys(manager._refCounts).length).toEqual(0);
-		expect(Object.keys((manager as any)._loadings).length).toEqual(0);
-	});
-
-	it("初期化- game省略, g.gameが存在する場合は正常にインスタンスが生成される", () => {
-		global.g = { game: new Game(gameConfiguration, "/") };
-		const manager = new AssetManager(undefined, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
-		expect(manager.configuration).toMatchObject({});
-		expect(Object.keys(manager._assets).length).toEqual(0);
-		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
-		expect(Object.keys(manager._liveAssetPathTable).length).toEqual(0);
-		expect(Object.keys(manager._refCounts).length).toEqual(0);
-		expect(Object.keys((manager as any)._loadings).length).toEqual(0);
-
-		expect(manager.configuration.zoo.systemId).toEqual("music");
-		expect(manager.configuration.zoo.duration).toEqual((gameConfiguration.assets.zoo as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.zoo.loop).toEqual(true);
-		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
-
-		expect(manager.configuration.baz.systemId).toEqual("music");
-		expect(manager.configuration.baz.duration).toEqual((gameConfiguration.assets.baz as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.baz.loop).toEqual(false);
-		expect(manager.configuration.baz.hint).toEqual({ streaming: false });
-
-		expect(manager.configuration.qux.systemId).toEqual("sound");
-		expect(manager.configuration.qux.duration).toEqual((gameConfiguration.assets.qux as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.qux.loop).toEqual(false);
-		expect(manager.configuration.qux.hint).toEqual({ streaming: false });
-
-		expect(manager.configuration.quux.systemId).toEqual("sound");
-		expect(manager.configuration.quux.duration).toEqual((gameConfiguration.assets.quux as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.quux.loop).toEqual(true);
-		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
-	});
-
-	it("初期化- game省略, g もしくは g.game がない場合エラーとなる", () => {
-		global.g = { game: undefined };
-		try {
-			new AssetManager();
-		} catch (e) {
-			expect(e.message).toBe("getGameInAssetContext(): Not in ScriptAsset.");
-			expect(e.name).toEqual("AssertionError");
-		}
-
-		global.g = undefined;
-		expect(() => new AssetManager()).toThrow("getGameInAssetContext(): Not in ScriptAsset.");
 	});
 
 	it("rejects illegal configuration", () => {
