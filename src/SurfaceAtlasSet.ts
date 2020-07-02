@@ -1,4 +1,5 @@
 import { CommonSize, Glyph, ResourceFactory, SurfaceAtlas as PdiSurfaceAtlas } from "@akashic/pdi-types";
+import { SurfaceAtlas } from "./SurfaceAtlas";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	// @ts-ignore
@@ -210,7 +211,8 @@ export class SurfaceAtlasSet {
 			atlas.destroy();
 		}
 
-		this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+		const surface = this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height);
+		this._surfaceAtlases.push(new SurfaceAtlas(surface));
 		this._currentAtlasIndex = this._surfaceAtlases.length - 1;
 	}
 
@@ -228,7 +230,8 @@ export class SurfaceAtlasSet {
 		if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 			this._deleteAtlas(1);
 		}
-		this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+		const surface = this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height);
+		this._surfaceAtlases.push(new SurfaceAtlas(surface));
 	}
 
 	/**

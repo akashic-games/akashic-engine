@@ -467,8 +467,6 @@ export class GlyphFactory extends pci.GlyphFactory {
 	}
 }
 
-export class SurfaceAtlas extends pci.SurfaceAtlas {}
-
 export class ResourceFactory extends pci.ResourceFactory {
 	_game: g.Game;
 	scriptContents: { [key: string]: string };
@@ -547,10 +545,6 @@ export class ResourceFactory extends pci.ResourceFactory {
 
 	createSurface(width: number, height: number): pci.Surface {
 		return new Surface(width, height);
-	}
-
-	createSurfaceAtlas(width: number, height: number): pci.SurfaceAtlas {
-		return new SurfaceAtlas(new Surface(width, height));
 	}
 
 	createAudioPlayer(system: PdiAudioSystem): AudioPlayer {
