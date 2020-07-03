@@ -1,7 +1,7 @@
 import * as pdi from "@akashic/pdi-types";
 import { SurfaceAtlasSlot } from "./SurfaceAtlasSlot";
 
-function getSurfaceAtlasSlot(slot: pdi.SurfaceAtlasSlot, width: number, height: number): pdi.SurfaceAtlasSlot | null {
+function getSurfaceAtlasSlot(slot: SurfaceAtlasSlot, width: number, height: number): SurfaceAtlasSlot | null {
 	while (slot) {
 		if (slot.width >= width && slot.height >= height) {
 			return slot;
@@ -20,7 +20,7 @@ function getSurfaceAtlasSlot(slot: pdi.SurfaceAtlasSlot, width: number, height: 
  *
  * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
  */
-export class SurfaceAtlas implements pdi.SurfaceAtlas {
+export class SurfaceAtlas {
 	/**
 	 * @private
 	 */
@@ -29,7 +29,7 @@ export class SurfaceAtlas implements pdi.SurfaceAtlas {
 	/**
 	 * @private
 	 */
-	_emptySurfaceAtlasSlotHead: pdi.SurfaceAtlasSlot;
+	_emptySurfaceAtlasSlotHead: SurfaceAtlasSlot;
 
 	/**
 	 * @private
@@ -51,7 +51,7 @@ export class SurfaceAtlas implements pdi.SurfaceAtlas {
 	/**
 	 * @private
 	 */
-	_acquireSurfaceAtlasSlot(width: number, height: number): pdi.SurfaceAtlasSlot | null {
+	_acquireSurfaceAtlasSlot(width: number, height: number): SurfaceAtlasSlot | null {
 		// Renderer#drawImage()でサーフェス上の一部を描画するとき、
 		// 指定した部分に隣接する画素がにじみ出る現象が確認されている。
 		// ここれではそれを避けるため1pixelの余白を与えている。
@@ -66,8 +66,8 @@ export class SurfaceAtlas implements pdi.SurfaceAtlas {
 
 		var remainWidth = slot.width - width;
 		var remainHeight = slot.height - height;
-		var left: pdi.SurfaceAtlasSlot;
-		var right: pdi.SurfaceAtlasSlot;
+		var left: SurfaceAtlasSlot;
+		var right: SurfaceAtlasSlot;
 		if (remainWidth <= remainHeight) {
 			left = new SurfaceAtlasSlot(slot.x + width, slot.y, remainWidth, height);
 			right = new SurfaceAtlasSlot(slot.x, slot.y + height, slot.width, remainHeight);
@@ -101,7 +101,7 @@ export class SurfaceAtlas implements pdi.SurfaceAtlas {
 	/**
 	 * @private
 	 */
-	_updateUsedRectangleAreaSize(slot: pdi.SurfaceAtlasSlot): void {
+	_updateUsedRectangleAreaSize(slot: SurfaceAtlasSlot): void {
 		const slotRight = slot.x + slot.width;
 		const slotBottom = slot.y + slot.height;
 		if (slotRight > this._usedRectangleAreaSize.width) {
@@ -121,7 +121,7 @@ export class SurfaceAtlas implements pdi.SurfaceAtlas {
 	 * @param width サーフェス内における矩形の幅。0より大きい数値でなければならない
 	 * @param height サーフェス内における矩形の高さ。0より大きい数値でなければならない
 	 */
-	addSurface(surface: pdi.Surface, offsetX: number, offsetY: number, width: number, height: number): pdi.SurfaceAtlasSlot | null {
+	addSurface(surface: pdi.Surface, offsetX: number, offsetY: number, width: number, height: number): SurfaceAtlasSlot | null {
 		const slot = this._acquireSurfaceAtlasSlot(width, height);
 		if (!slot) {
 			return null;

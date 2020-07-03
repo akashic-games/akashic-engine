@@ -6,6 +6,7 @@ export * from "@akashic/trigger";
 // ここで明示的に片方を export して衝突を解決している。
 export * from "@akashic/pdi-types";
 export { AudioSystem } from "./AudioSystem";
+export { Glyph } from "./Glyph";
 export { Module } from "./Module";
 export { ShaderProgram } from "./ShaderProgram";
 export { VideoSystem } from "./VideoSystem";
@@ -62,7 +63,9 @@ export * from "./ScriptAssetContext";
 export * from "./ShaderProgram";
 export * from "./SpriteFactory";
 export * from "./Storage";
+export * from "./SurfaceAtlas";
 export * from "./SurfaceAtlasSet";
+export * from "./SurfaceAtlasSlot";
 export * from "./SurfaceEffector";
 export * from "./SurfaceUtil";
 export * from "./TextAlign";
