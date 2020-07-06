@@ -1,4 +1,4 @@
-import { FontFamily, FontWeight, FontWeightString, Glyph as pdiGlyph, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
+import { FontFamily, FontWeight, FontWeightString, Glyph as PdiGlyph, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Game } from "./Game";
@@ -175,7 +175,7 @@ export class DynamicFont extends Font {
 	/**
 	 * @private
 	 */
-	_glyphs: { [key: number]: pdiGlyph };
+	_glyphs: { [key: number]: PdiGlyph };
 
 	/**
 	 * @private
@@ -285,7 +285,7 @@ export class DynamicFont extends Font {
 	 *
 	 * @param code 文字コード
 	 */
-	glyphForCharacter(code: number): pdiGlyph | null {
+	glyphForCharacter(code: number): Glyph | null {
 		let glyph = this._glyphs[code] as Glyph;
 
 		if (!(glyph && glyph.isSurfaceValid)) {
