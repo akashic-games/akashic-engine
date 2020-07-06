@@ -1,4 +1,5 @@
-import { CommonSize, Glyph, ResourceFactory, SurfaceAtlas as PdiSurfaceAtlas } from "@akashic/pdi-types";
+import { CommonSize, Glyph, ResourceFactory } from "@akashic/pdi-types";
+import { SurfaceAtlas } from "./SurfaceAtlas";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	// @ts-ignore
@@ -48,7 +49,7 @@ export interface RemoveAtlasData {
 	/**
 	 * 削除対象のSurfaceAtlas
 	 */
-	surfaceAtlases: PdiSurfaceAtlas[];
+	surfaceAtlases: SurfaceAtlas[];
 
 	/**
 	 * 削除対象のグリフ
@@ -85,7 +86,7 @@ export class SurfaceAtlasSet {
 	/**
 	 * @private
 	 */
-	_surfaceAtlases: PdiSurfaceAtlas[];
+	_surfaceAtlases: SurfaceAtlas[];
 
 	/**
 	 * @private
@@ -171,7 +172,7 @@ export class SurfaceAtlasSet {
 	 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
 	 * @private
 	 */
-	_moveGlyphSurface(glyph: Glyph): PdiSurfaceAtlas | null {
+	_moveGlyphSurface(glyph: Glyph): SurfaceAtlas | null {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
@@ -210,7 +211,8 @@ export class SurfaceAtlasSet {
 			atlas.destroy();
 		}
 
-		this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+		const surface = this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height);
+		this._surfaceAtlases.push(new SurfaceAtlas(surface));
 		this._currentAtlasIndex = this._surfaceAtlases.length - 1;
 	}
 
@@ -228,7 +230,8 @@ export class SurfaceAtlasSet {
 		if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 			this._deleteAtlas(1);
 		}
-		this._surfaceAtlases.push(this._resourceFactory.createSurfaceAtlas(this._atlasSize.width, this._atlasSize.height));
+		const surface = this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height);
+		this._surfaceAtlases.push(new SurfaceAtlas(surface));
 	}
 
 	/**
@@ -238,7 +241,7 @@ export class SurfaceAtlasSet {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param index 取得対象のインデックス
 	 */
-	getAtlas(index: number): PdiSurfaceAtlas {
+	getAtlas(index: number): SurfaceAtlas {
 		return this._surfaceAtlases[index];
 	}
 
@@ -291,7 +294,7 @@ export class SurfaceAtlasSet {
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ
 	 */
-	addGlyph(glyph: Glyph): PdiSurfaceAtlas | null {
+	addGlyph(glyph: Glyph): SurfaceAtlas | null {
 		// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
 		// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 		// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。

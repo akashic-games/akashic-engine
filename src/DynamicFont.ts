@@ -1,7 +1,8 @@
-import { FontFamily, FontWeight, FontWeightString, Glyph, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
+import { FontFamily, FontWeight, FontWeightString, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
 import { Game } from "./Game";
+import { Glyph } from "./Glyph";
 import { SurfaceAtlasSetHint, SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { Util } from "./Util";
 
@@ -285,10 +286,10 @@ export class DynamicFont extends Font {
 	 * @param code 文字コード
 	 */
 	glyphForCharacter(code: number): Glyph | null {
-		var glyph = this._glyphs[code];
+		let glyph = this._glyphs[code];
 
 		if (!(glyph && glyph.isSurfaceValid)) {
-			glyph = this._glyphFactory.create(code);
+			glyph = this._glyphFactory.create(code) as Glyph;
 
 			if (glyph.surface) {
 				// 空白文字でなければアトラス化する

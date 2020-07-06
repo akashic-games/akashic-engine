@@ -1,15 +1,15 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.0.0-beta.27",
+  "version": "3.0.0-beta.28",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
-    "@akashic/pdi-types": "~1.0.0",
+    "@akashic/pdi-types": "~1.0.1",
     "@akashic/playlog": "~3.0.0",
     "@akashic/trigger": "~1.0.0"
   },
   "devDependencies": {
-    "@akashic/pdi-common-impl": "0.0.2",
+    "@akashic/pdi-common-impl": "0.0.3",
     "@types/jest": "^25.1.2",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",

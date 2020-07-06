@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 3.0.0-beta.28
+
+その他変更
+ * @akashic/pdi-types@1.0.1 に追従
+    * `@akashic/pdi-common-impl` の `SurfaceAtlas`, `SurfaceAtlasSlot` を Akashic Engine で持つよう変更
+
 ## 3.0.0-beta.27
 
 不具合修正
