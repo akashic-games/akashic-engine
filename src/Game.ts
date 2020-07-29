@@ -301,6 +301,11 @@ namespace g {
 		isSkipping: boolean;
 
 		/**
+		 * ゲームにjoinしているプレイヤーの一覧。
+		 */
+		joinedPlayerIds: string[];
+
+		/**
 		 * イベントとTriggerのマップ。
 		 * @private
 		 */
@@ -485,6 +490,7 @@ namespace g {
 			this.selfId = selfId || undefined;
 			this.playId = undefined;
 			this.isSkipping = false;
+			this.joinedPlayerIds = [];
 
 			this._audioSystemManager = new AudioSystemManager(this);
 			this.audio = {
@@ -958,6 +964,9 @@ namespace g {
 			this.isSkipping = false;
 			this.skippingChanged.add(this._handleSkippingChanged, this);
 
+			this.joinedPlayerIds = [];
+			this.join.add(this._handleJoinedPlayerIds, this);
+
 			this._idx = 0;
 			this._localIdx = 0;
 			this._cameraIdx = 0;
@@ -1212,6 +1221,16 @@ namespace g {
 
 		_handleSkippingChanged(isSkipping: boolean): void {
 			this.isSkipping = isSkipping;
+		}
+
+		_handleJoinedPlayerIds(event: JoinEvent | LeaveEvent): void {
+			if (event instanceof JoinEvent) {
+				if (this.joinedPlayerIds.indexOf(event.player.id) !== 0) return;
+				this.joinedPlayerIds.push(event.player.id);
+			}
+			if (event instanceof LeaveEvent) {
+				this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
+			}
 		}
 
 		private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
