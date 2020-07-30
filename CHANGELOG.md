@@ -3,7 +3,7 @@
 ## 2.6.4
 
 機能追加
- * `g.Game#joinedPlayerIds ` を追加
+ * `g.Game#joinedPlayerIds` を追加
 
 ### ゲーム開発者への影響
 

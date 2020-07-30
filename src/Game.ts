@@ -301,7 +301,7 @@ namespace g {
 		isSkipping: boolean;
 
 		/**
-		 * ゲームにjoinしているプレイヤーの一覧。
+		 * ゲームにjoinしているプレイヤーIDの一覧。
 		 */
 		joinedPlayerIds: string[];
 
@@ -965,8 +965,8 @@ namespace g {
 			this.skippingChanged.add(this._handleSkippingChanged, this);
 
 			this.joinedPlayerIds = [];
-			this.join.add(this._handleJoinedPlayerIds, this);
-			this.leave.add(this._handleJoinedPlayerIds, this);
+			this.join.add(this._handleJoinEvent, this);
+			this.leave.add(this._handleLeaveEvent, this);
 
 			this._idx = 0;
 			this._localIdx = 0;
@@ -1224,14 +1224,13 @@ namespace g {
 			this.isSkipping = isSkipping;
 		}
 
-		_handleJoinedPlayerIds(event: JoinEvent | LeaveEvent): void {
-			if (event instanceof JoinEvent) {
-				if (this.joinedPlayerIds.indexOf(event.player.id) !== 0) return;
-				this.joinedPlayerIds.push(event.player.id);
-			}
-			if (event instanceof LeaveEvent) {
-				this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
-			}
+		_handleJoinEvent(event: JoinEvent | LeaveEvent): void {
+			if (this.joinedPlayerIds.indexOf(event.player.id) !== 0) return;
+			this.joinedPlayerIds.push(event.player.id);
+		}
+
+		_handleLeaveEvent(event: JoinEvent | LeaveEvent): void {
+			this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
 		}
 
 		private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
