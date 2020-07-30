@@ -1224,12 +1224,12 @@ namespace g {
 			this.isSkipping = isSkipping;
 		}
 
-		_handleJoinEvent(event: JoinEvent | LeaveEvent): void {
+		_handleJoinEvent(event: JoinEvent): void {
 			if (this.joinedPlayerIds.indexOf(event.player.id) !== -1) return;
 			this.joinedPlayerIds.push(event.player.id);
 		}
 
-		_handleLeaveEvent(event: JoinEvent | LeaveEvent): void {
+		_handleLeaveEvent(event: LeaveEvent): void {
 			this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
 		}
 
