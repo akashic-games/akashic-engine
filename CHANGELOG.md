@@ -7,7 +7,7 @@
 
 ### ゲーム開発者への影響
 
- * `g.Game#joinedPlayerIds ` を追加
+ * `g.Game#joinedPlayerIds` を追加
     * ゲーム開発者は、このプロパティを参照することで、joinしているプレイヤー一覧を取得することができます。
 
 
