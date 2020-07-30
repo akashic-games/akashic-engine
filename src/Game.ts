@@ -966,6 +966,7 @@ namespace g {
 
 			this.joinedPlayerIds = [];
 			this.join.add(this._handleJoinedPlayerIds, this);
+			this.leave.add(this._handleJoinedPlayerIds, this);
 
 			this._idx = 0;
 			this._localIdx = 0;
