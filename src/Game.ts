@@ -1225,7 +1225,7 @@ namespace g {
 		}
 
 		_handleJoinEvent(event: JoinEvent | LeaveEvent): void {
-			if (this.joinedPlayerIds.indexOf(event.player.id) !== 0) return;
+			if (this.joinedPlayerIds.indexOf(event.player.id) !== -1) return;
 			this.joinedPlayerIds.push(event.player.id);
 		}
 
