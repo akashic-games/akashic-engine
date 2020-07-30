@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 3.0.0-beta.29
+
+機能追加
+ * `g.Game#joinedPlayerIds` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#joinedPlayerIds` を追加
+    * ゲーム開発者は、このプロパティを参照することで、joinしているプレイヤーIDの一覧を取得することができます。
+
+
 ## 3.0.0-beta.28
 
 その他変更
