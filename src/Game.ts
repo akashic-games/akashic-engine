@@ -1324,8 +1324,8 @@ export class Game {
 		this.onSkipChange.add(this._handleSkipChange, this);
 
 		this.joinedPlayerIds = [];
-		this.join.add(this._handleJoinEvent, this);
-		this.leave.add(this._handleLeaveEvent, this);
+		this.onJoin.add(this._handleJoinEvent, this);
+		this.onLeave.add(this._handleLeaveEvent, this);
 
 		this._idx = 0;
 		this._localIdx = 0;
@@ -1626,7 +1626,6 @@ export class Game {
 	_handleLeaveEvent(event: LeaveEvent): void {
 		this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
 	}
-
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
 		const scene = this.scenes.pop();

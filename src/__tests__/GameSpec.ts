@@ -1,3 +1,4 @@
+import * as pl from "@akashic/playlog";
 import {
 	AssetConfiguration,
 	Camera2D,
@@ -30,6 +31,7 @@ describe("test Game", () => {
 		expect(game.width).toBe(320);
 		expect(game.height).toBe(270);
 		expect(game.selfId).toBe("foo");
+		expect(game.joinedPlayerIds).toEqual([]);
 		expect(game.playId).toBeUndefined();
 		expect(game.onSkipChange).not.toBeUndefined();
 		expect(game.onSceneChange).not.toBeUndefined();
@@ -1029,5 +1031,24 @@ describe("test Game", () => {
 		game._modified = false;
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
+	});
+
+	it("joinedPlayerIds", () => {
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+		const scene = new Scene({ game: game });
+		scene.onLoad.add(() => {
+			const joinPlaylogEvent: pl.JoinEvent = [0, 2, "1234", "nicotaro"];
+			game.tick(true, 0, [joinPlaylogEvent]);
+			expect(game.joinedPlayerIds).toEqual(["1234"]);
+
+			const leavePlaylogEvent: pl.LeaveEvent = [1, 2, "1234"];
+			game.tick(true, 0, [leavePlaylogEvent]);
+			expect(game.joinedPlayerIds).toEqual([]);
+
+			game.tick(true, 0, [joinPlaylogEvent]);
+			(game as any)._reset({ age: 0 });
+			expect(game.joinedPlayerIds).toEqual([]);
+		});
+		game.pushScene(scene);
 	});
 });
