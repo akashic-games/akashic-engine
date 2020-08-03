@@ -531,6 +531,11 @@ export class Game {
 	isSkipping: boolean;
 
 	/**
+	 * ゲームにjoinしているプレイヤーIDの一覧。
+	 */
+	joinedPlayerIds: string[];
+
+	/**
 	 * イベントとTriggerのマップ。
 	 * @private
 	 */
@@ -768,6 +773,7 @@ export class Game {
 		this._postTickTasks = undefined!;
 		this.playId = undefined;
 		this.isSkipping = false;
+		this.joinedPlayerIds = [];
 		this.audio = new AudioSystemManager(this.resourceFactory);
 
 		this.defaultAudioSystemId = "sound";
@@ -1317,6 +1323,10 @@ export class Game {
 		this.isSkipping = false;
 		this.onSkipChange.add(this._handleSkipChange, this);
 
+		this.joinedPlayerIds = [];
+		this.onJoin.add(this._handleJoinEvent, this);
+		this.onLeave.add(this._handleLeaveEvent, this);
+
 		this._idx = 0;
 		this._localIdx = 0;
 		this._cameraIdx = 0;
@@ -1600,6 +1610,21 @@ export class Game {
 	 */
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
+	}
+
+	/**
+	 * @ignore
+	 */
+	_handleJoinEvent(event: JoinEvent): void {
+		if (this.joinedPlayerIds.indexOf(event.player.id) !== -1) return;
+		this.joinedPlayerIds.push(event.player.id);
+	}
+
+	/**
+	 * @ignore
+	 */
+	_handleLeaveEvent(event: LeaveEvent): void {
+		this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
 	}
 
 	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
