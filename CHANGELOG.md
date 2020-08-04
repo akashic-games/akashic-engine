@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.30
+
+その他変更
+ * @akashic/playlog@3.1.0 に追従
+
 ## 3.0.0-beta.29
 
 機能追加
