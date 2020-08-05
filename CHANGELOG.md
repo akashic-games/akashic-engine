@@ -8,7 +8,7 @@
 ### ゲーム開発者への影響
 
  * `g.AudioSystemManager#stopAll` を追加
-    * ゲーム開発者は、`g.game.audio.stopAll()` を使うことで、再生中のオーディオシステム群全てを停止することができます。
+    * ゲーム開発者は、`g.game.audio.stopAll()` を使うことで、全てのオーディオシステムを停止することができます。
 
 ## 3.0.0-beta.30
 
