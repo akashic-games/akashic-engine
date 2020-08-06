@@ -73,4 +73,9 @@ export class AudioSystemManager {
 			resourceFactory: resourceFactory
 		});
 	}
+
+	stopAll(): void {
+		this.music.stopAll();
+		this.sound.stopAll();
+	}
 }
