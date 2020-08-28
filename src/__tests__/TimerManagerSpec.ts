@@ -559,7 +559,7 @@ describe("test TimerManager", () => {
 		expect(m._identifiers).toBeUndefined();
 	});
 
-	it("Nothing happens when _handleElapse () is executed after destruction", function() {
+	it("TimerIdentifier#_fire() is executed after destroy", () => {
 		const m = new TimerManager(trigger, 10);
 		let cnt1 = 0;
 		let cnt2 = 0;
