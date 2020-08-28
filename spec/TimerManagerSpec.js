@@ -520,4 +520,14 @@ describe("test TimerManager", function () {
 		expect(m._identifiers).toBeUndefined();
 	});
 
+	it("Nothing happens when you run _fire() after destroy", function () {
+		var m = new g.TimerManager(trigger, 10);
+		var count1 = 0;
+		var interval1 = m.setInterval(function () {
+			count1++;
+		}, 100);
+		interval1.destroy();
+		interval1._fire();
+		expect(count1).toBe(0);
+	});
 });
