@@ -1,5 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import { Timer, TimerManager } from "..";
+import { Timer, TimerManager, TimerIdentifier } from "..";
 import { customMatchers } from "./helpers";
 
 expect.extend(customMatchers);
@@ -557,5 +557,24 @@ describe("test TimerManager", () => {
 		expect(timer2.destroyed()).toBe(true);
 		expect(timer3.destroyed()).toBe(true);
 		expect(m._identifiers).toBeUndefined();
+	});
+
+	it("Nothing happens when _handleElapse () is executed after destruction", function() {
+		const m = new TimerManager(trigger, 10);
+		let cnt1 = 0;
+		let cnt2 = 0;
+		let timer2: TimerIdentifier;
+
+		const timer1 = m.setInterval(() => {
+			if (!timer2.destroyed()) m.clearInterval(timer2);
+			cnt1++;
+		}, 200);
+		timer2 = m.setInterval(() => {
+			cnt2++;
+		}, 200);
+		loopFire(5); // 500ms
+		m.clearInterval(timer1);
+		expect(cnt1).toBe(2);
+		expect(cnt2).toBe(0);
 	});
 });
