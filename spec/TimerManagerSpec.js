@@ -520,14 +520,22 @@ describe("test TimerManager", function () {
 		expect(m._identifiers).toBeUndefined();
 	});
 
-	it("Nothing happens when you run _fire() after destroy", function () {
+	it("TimerIdentifier#_fire() is executed after destroy", function () {
 		var m = new g.TimerManager(trigger, 10);
-		var count1 = 0;
-		var interval1 = m.setInterval(function () {
-			count1++;
-		}, 100);
-		interval1.destroy();
-		interval1._fire();
-		expect(count1).toBe(0);
+		let cnt1 = 0;
+		let cnt2 = 0;
+		let timer2;
+
+		const timer1 = m.setInterval(() => {
+			if (!timer2.destroyed()) m.clearInterval(timer2);
+			cnt1++;
+		}, 200);
+		timer2 = m.setInterval(() => {
+			cnt2++;
+		}, 200);
+		loopFire(5); // 500ms
+		m.clearInterval(timer1);
+		expect(cnt1).toBe(2);
+		expect(cnt2).toBe(0);
 	});
 });
