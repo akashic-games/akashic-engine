@@ -560,14 +560,13 @@ describe("test TimerManager", () => {
 	});
 
 	it("TimerManager#setInterval() does not run after clearInterval()", () => {
-		// 同タイミングでタイマが完了した場合、先行するタイマの処理でもうひとつのタイマを clearInterval() するとクリアしたのにハンドラを実行してエラーとなる。
-		// このテストは clearInterval() 後にハンドラが実行されない事を期待する。
 		const m = new TimerManager(trigger, 10);
 		let cnt1 = 0;
 		let cnt2 = 0;
 		let timer2: TimerIdentifier;
 
 		const timer1 = m.setInterval(() => {
+			// 同タイミングでタイマが完了した場合、先行するタイマの処理でもうひとつのタイマを clearInterval() するとクリアしたのにハンドラを実行してエラーとなる。
 			if (!timer2.destroyed()) m.clearInterval(timer2);
 			cnt1++;
 		}, 200);
@@ -577,6 +576,6 @@ describe("test TimerManager", () => {
 		loopFire(5); // 500ms
 		m.clearInterval(timer1);
 		expect(cnt1).toBe(2);
-		expect(cnt2).toBe(0);
+		expect(cnt2).toBe(0); // clearInterval() 後にハンドラが実行されない事を期待する。
 	});
 });
