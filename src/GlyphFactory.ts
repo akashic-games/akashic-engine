@@ -12,7 +12,7 @@ namespace g {
 		 *
 		 * この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 		 */
-		fontFamily: FontFamily|string|(g.FontFamily|string)[];
+		fontFamily: FontFamily | string | (g.FontFamily | string)[];
 
 		/**
 		 * フォントサイズ。
@@ -74,9 +74,16 @@ namespace g {
 		 * @param strokeOnly 輪郭を描画するか否か
 		 * @param fontWeight フォントウェイト
 		 */
-		constructor(fontFamily: FontFamily|string|(g.FontFamily|string)[], fontSize: number, baselineHeight: number = fontSize,
-		            fontColor: string = "black", strokeWidth: number = 0, strokeColor: string = "black", strokeOnly: boolean = false,
-		            fontWeight: FontWeight = FontWeight.Normal) {
+		constructor(
+			fontFamily: FontFamily | string | (g.FontFamily | string)[],
+			fontSize: number,
+			baselineHeight: number = fontSize,
+			fontColor: string = "black",
+			strokeWidth: number = 0,
+			strokeColor: string = "black",
+			strokeOnly: boolean = false,
+			fontWeight: FontWeight = FontWeight.Normal
+		) {
 			this.fontFamily = fontFamily;
 			this.fontSize = fontSize;
 			this.fontWeight = fontWeight;

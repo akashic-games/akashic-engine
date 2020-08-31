@@ -108,16 +108,14 @@ namespace g {
 		 * @returns 作成したTimer
 		 */
 		createTimer(interval: number): Timer {
-			if (! this._registered) {
+			if (!this._registered) {
 				this._trigger.add(this._tick, this);
 				this._registered = true;
 			}
 
-			if (interval < 0)
-				throw ExceptionFactory.createAssertionError("TimerManager#createTimer: invalid interval");
+			if (interval < 0) throw ExceptionFactory.createAssertionError("TimerManager#createTimer: invalid interval");
 			// NODE: intervalが0の場合に、Timer#tick()で無限ループとなるためintervalの最小値を1とする。
-			if (interval < 1)
-				interval = 1;
+			if (interval < 1) interval = 1;
 
 			// NOTE: Timerの_scaledElapsedと比較するため、this.fps倍した値を用いる
 			// Math.min(1000 / this._fps * this.fps, interval * this._fps);
@@ -141,19 +139,16 @@ namespace g {
 		 * @param timer 削除するTimer
 		 */
 		deleteTimer(timer: Timer): void {
-			if (! timer.canDelete())
-				return;
+			if (!timer.canDelete()) return;
 
 			var index = this._timers.indexOf(timer);
-			if (index < 0)
-				throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: can not find timer");
+			if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: can not find timer");
 
 			this._timers.splice(index, 1);
 			timer.destroy();
 
-			if (! this._timers.length) {
-				if (! this._registered)
-					throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: handler is not handled");
+			if (!this._timers.length) {
+				if (!this._registered) throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: handler is not handled");
 				this._trigger.remove(this._tick, this);
 				this._registered = false;
 			}
@@ -187,8 +182,7 @@ namespace g {
 		 */
 		_tick(): void {
 			var timers = this._timers.concat();
-			for (var i = 0; i < timers.length; ++i)
-				timers[i].tick();
+			for (var i = 0; i < timers.length; ++i) timers[i].tick();
 		}
 
 		/**
@@ -196,8 +190,7 @@ namespace g {
 		 */
 		_onTimeoutFired(identifier: TimerIdentifier): void {
 			var index = this._identifiers.indexOf(identifier);
-			if (index < 0)
-				throw ExceptionFactory.createAssertionError("TimerManager#_onTimeoutFired: can not find identifier");
+			if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#_onTimeoutFired: can not find identifier");
 
 			this._identifiers.splice(index, 1);
 
@@ -211,11 +204,9 @@ namespace g {
 		 */
 		_clear(identifier: TimerIdentifier): void {
 			var index = this._identifiers.indexOf(identifier);
-			if (index < 0)
-				throw ExceptionFactory.createAssertionError("TimerManager#_clear: can not find identifier");
+			if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#_clear: can not find identifier");
 
-			if (identifier.destroyed())
-				throw ExceptionFactory.createAssertionError("TimerManager#_clear: invalid identifier");
+			if (identifier.destroyed()) throw ExceptionFactory.createAssertionError("TimerManager#_clear: invalid identifier");
 
 			this._identifiers.splice(index, 1);
 

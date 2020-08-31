@@ -17,12 +17,10 @@ namespace g {
 		export function resolvePath(base: string, path: string): string {
 			function split(str: string): string[] {
 				var ret = str.split("/");
-				if (ret[ret.length - 1] === "")
-					ret.pop();
+				if (ret[ret.length - 1] === "") ret.pop();
 				return ret;
 			}
-			if (path === "")
-				return base;
+			if (path === "") return base;
 			var baseComponents = PathUtil.splitPath(base);
 			var parts = split(baseComponents.path).concat(split(path));
 			var resolved: string[] = [];
@@ -55,8 +53,7 @@ namespace g {
 		 */
 		export function resolveDirname(path: string): string {
 			var index = path.lastIndexOf("/");
-			if (index === -1)
-				return path;
+			if (index === -1) return path;
 
 			return path.substr(0, index);
 		}
@@ -92,11 +89,10 @@ namespace g {
 
 			var parts = path.split("/");
 			var firstDir = parts.indexOf("node_modules");
-			var root = (firstDir > 0) ? firstDir - 1 : 0;
+			var root = firstDir > 0 ? firstDir - 1 : 0;
 			var dirs: string[] = [];
 			for (var i = parts.length - 1; i >= root; --i) {
-				if (parts[i] === "node_modules")
-					continue;
+				if (parts[i] === "node_modules") continue;
 				var dirParts = parts.slice(0, i + 1);
 				dirParts.push("node_modules");
 				var dir = dirParts.join("/");
@@ -130,15 +126,15 @@ namespace g {
 				var hostSlashIndex = path.indexOf("/", doubleSlashIndex + 2); // 2 === "//".length
 				if (hostSlashIndex >= 0) {
 					host = path.slice(0, hostSlashIndex);
-					path = path.slice(hostSlashIndex);  // 先頭に "/" を残して絶対パス扱いさせる
+					path = path.slice(hostSlashIndex); // 先頭に "/" を残して絶対パス扱いさせる
 				} else {
 					host = path;
-					path = "/";  // path全体がホストだったので、絶対パス扱いさせる
+					path = "/"; // path全体がホストだったので、絶対パス扱いさせる
 				}
 			} else {
 				host = "";
 			}
-			return {host: host, path: path};
+			return { host: host, path: path };
 		}
 	}
 }

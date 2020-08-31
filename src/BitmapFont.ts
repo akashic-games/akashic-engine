@@ -7,12 +7,12 @@ namespace g {
 		/**
 		 * 文字データとして利用する画像を表す `Surface` または `Asset`。文字を敷き詰めたもの。
 		 */
-		src: Surface|Asset;
+		src: Surface | Asset;
 
 		/**
 		 * 各文字から画像上の位置・サイズなどを特定する情報。コードポイントから `GlyphArea` への写像。
 		 */
-		map: {[key: string]: GlyphArea};
+		map: { [key: string]: GlyphArea };
 
 		/**
 		 * `map` で指定を省略した文字に使われる、デフォルトの文字の幅。
@@ -38,7 +38,7 @@ namespace g {
 		surface: Surface;
 		defaultGlyphWidth: number;
 		defaultGlyphHeight: number;
-		map: {[key: string]: GlyphArea};
+		map: { [key: string]: GlyphArea };
 		missingGlyph: GlyphArea;
 		size: number;
 
@@ -63,7 +63,7 @@ namespace g {
 		glyphForCharacter(code: number): Glyph {
 			var g = this.map[code] || this.missingGlyph;
 
-			if (! g) {
+			if (!g) {
 				return null;
 			}
 
@@ -72,7 +72,7 @@ namespace g {
 			var offsetX = g.offsetX || 0;
 			var offsetY = g.offsetY || 0;
 			var advanceWidth = g.advanceWidth === undefined ? w : g.advanceWidth;
-			var surface = (w === 0 || h === 0) ? undefined : this.surface;
+			var surface = w === 0 || h === 0 ? undefined : this.surface;
 
 			return new Glyph(code, g.x, g.y, w, h, offsetX, offsetY, advanceWidth, surface, true);
 		}

@@ -1,5 +1,4 @@
 namespace g {
-
 	/**
 	 * Assetの設定の共通部分。
 	 */
@@ -90,12 +89,12 @@ namespace g {
 	/**
 	 * アセット宣言
 	 */
-	export type AssetConfigurationMap = {[key: string]: AssetConfiguration};
+	export type AssetConfigurationMap = { [key: string]: AssetConfiguration };
 
 	/**
 	 * require()解決用のエントリポイント
 	 */
-	export type ModuleMainScriptsMap = {[path: string]: string};
+	export type ModuleMainScriptsMap = { [path: string]: string };
 
 	/**
 	 * AudioSystemの設定を表すインターフェース。
@@ -108,7 +107,7 @@ namespace g {
 	/**
 	 * オーディオシステム宣言
 	 */
-	export type AudioSystemConfigurationMap = {[key: string]: AudioSystemConfiguration};
+	export type AudioSystemConfigurationMap = { [key: string]: AudioSystemConfiguration };
 
 	/**
 	 * AudioSystemの設定を表すインターフェース。

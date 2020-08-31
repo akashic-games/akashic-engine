@@ -10,7 +10,7 @@ namespace g {
 		/**
 		 * 画像として使う `Surface` または `ImageAsset` 。
 		 */
-		src: Surface|Asset;
+		src: Surface | Asset;
 
 		/**
 		 * `surface` の描画対象部分の幅。
@@ -95,10 +95,8 @@ namespace g {
 		constructor(param: SpriteParameterObject) {
 			super(param);
 			this.surface = Util.asSurface(param.src);
-			if (!("width" in param))
-				this.width = this.surface.width;
-			if (!("height" in param))
-				this.height = this.surface.height;
+			if (!("width" in param)) this.width = this.surface.width;
+			if (!("height" in param)) this.height = this.surface.height;
 			this.srcWidth = "srcWidth" in param ? param.srcWidth : this.width;
 			this.srcHeight = "srcHeight" in param ? param.srcHeight : this.height;
 			this.srcX = param.srcX || 0;
@@ -120,7 +118,7 @@ namespace g {
 		 * @private
 		 */
 		_onAnimatingStarted(): void {
-			if (! this.update.contains(this._onUpdate, this)) {
+			if (!this.update.contains(this._onUpdate, this)) {
 				this.update.add(this._onUpdate, this);
 			}
 		}
@@ -129,7 +127,7 @@ namespace g {
 		 * @private
 		 */
 		_onAnimatingStopped(): void {
-			if (! this.destroyed()) {
+			if (!this.destroyed()) {
 				this.update.remove(this._onUpdate, this);
 			}
 		}
@@ -147,18 +145,9 @@ namespace g {
 				renderer.transform(this._stretchMatrix._matrix);
 			}
 
-			renderer.drawImage(
-				this.surface,
-				this.srcX,
-				this.srcY,
-				this.srcWidth,
-				this.srcHeight,
-				0,
-				0
-			);
+			renderer.drawImage(this.surface, this.srcX, this.srcY, this.srcWidth, this.srcHeight, 0, 0);
 
-			if (this._stretchMatrix)
-				renderer.restore();
+			if (this._stretchMatrix) renderer.restore();
 
 			return true;
 		}

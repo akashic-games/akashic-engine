@@ -26,14 +26,18 @@ namespace g {
 		}
 
 		renderSelf(renderer: Renderer, camera?: Camera): boolean {
-			if (!this.children)
-				return false;
+			if (!this.children) return false;
 
 			if (camera) {
 				var c = <Camera2D>camera;
 				var canceller = this._canceller;
-				if (c.x !== canceller.x || c.y !== canceller.y || c.angle !== canceller.angle ||
-				    c.scaleX !== canceller.scaleX || c.scaleY !== canceller.scaleY) {
+				if (
+					c.x !== canceller.x ||
+					c.y !== canceller.y ||
+					c.angle !== canceller.angle ||
+					c.scaleX !== canceller.scaleX ||
+					c.scaleY !== canceller.scaleY
+				) {
 					canceller.x = c.x;
 					canceller.y = c.y;
 					canceller.angle = c.angle;
@@ -49,8 +53,7 @@ namespace g {
 
 			// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
 			var children = this.children;
-			for (var i = 0; i < children.length; ++i)
-				children[i].render(renderer, camera);
+			for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 
 			if (camera) {
 				renderer.restore();
@@ -93,35 +96,37 @@ namespace g {
 		 */
 		_onLoaded(): boolean {
 			var gauge: FilledRect;
-			this.append(new CameraCancellingE({
-				scene: this,
-				children: [
-					new FilledRect({
-						scene: this,
-						width: this.game.width,
-						height: this.game.height,
-						cssColor: "rgba(0, 0, 0, 0.8)",
-						children: [
-							new FilledRect({
-								scene: this,
-								x: (this.game.width - this._barWidth) / 2,
-								y: (this.game.height - this._barHeight) / 2,
-								width: this._barWidth,
-								height: this._barHeight,
-								cssColor: "gray",
-								children: [
-									gauge = new FilledRect({
-										scene: this,
-										width: 0,
-										height: this._barHeight,
-										cssColor: "white"
-									})
-								]
-							})
-						]
-					})
-				]
-			}));
+			this.append(
+				new CameraCancellingE({
+					scene: this,
+					children: [
+						new FilledRect({
+							scene: this,
+							width: this.game.width,
+							height: this.game.height,
+							cssColor: "rgba(0, 0, 0, 0.8)",
+							children: [
+								new FilledRect({
+									scene: this,
+									x: (this.game.width - this._barWidth) / 2,
+									y: (this.game.height - this._barHeight) / 2,
+									width: this._barWidth,
+									height: this._barHeight,
+									cssColor: "gray",
+									children: [
+										(gauge = new FilledRect({
+											scene: this,
+											width: 0,
+											height: this._barHeight,
+											cssColor: "white"
+										}))
+									]
+								})
+							]
+						})
+					]
+				})
+			);
 			gauge.update.handle(this, this._onUpdateGuage);
 			this._gauge = gauge;
 			return true; // Trigger 登録を解除する
@@ -136,8 +141,9 @@ namespace g {
 			++this._gaugeUpdateCount;
 
 			// 白を上限に sin 波で明滅させる (updateしていることの確認)
-			var c = Math.round((255 - BLINK_RANGE)
-			                    + Math.sin((this._gaugeUpdateCount / this.game.fps * BLINK_PER_SEC) * (2 * Math.PI)) * BLINK_RANGE);
+			var c = Math.round(
+				255 - BLINK_RANGE + Math.sin((this._gaugeUpdateCount / this.game.fps) * BLINK_PER_SEC * (2 * Math.PI)) * BLINK_RANGE
+			);
 			this._gauge.cssColor = "rgb(" + c + "," + c + "," + c + ")";
 			this._gauge.modified();
 		}

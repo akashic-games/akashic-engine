@@ -188,7 +188,7 @@ namespace g {
 		 * `false` を指定した場合、文字全体と輪郭が描画される。
 		 * この値を変更した場合、 `this.modified()` を呼び出す必要がある。
 		 */
-		 strokeOnly: boolean;
+		strokeOnly: boolean;
 
 		/**
 		 * 各種パラメータを指定して `SystemLabel` のインスタンスを生成する。
@@ -198,14 +198,14 @@ namespace g {
 			super(param);
 			this.text = param.text;
 			this.fontSize = param.fontSize;
-			this.textAlign = ("textAlign" in param) ? param.textAlign : TextAlign.Left;
-			this.textBaseline = ("textBaseline" in param) ? param.textBaseline : TextBaseline.Alphabetic;
+			this.textAlign = "textAlign" in param ? param.textAlign : TextAlign.Left;
+			this.textBaseline = "textBaseline" in param ? param.textBaseline : TextBaseline.Alphabetic;
 			this.maxWidth = param.maxWidth;
-			this.textColor = ("textColor" in param) ? param.textColor : "black";
-			this.fontFamily = ("fontFamily" in param) ? param.fontFamily : FontFamily.SansSerif;
-			this.strokeWidth = ("strokeWidth" in param) ? param.strokeWidth : 0;
-			this.strokeColor = ("strokeColor" in param) ? param.strokeColor : "black";
-			this.strokeOnly = ("strokeOnly" in param) ? param.strokeOnly : false;
+			this.textColor = "textColor" in param ? param.textColor : "black";
+			this.fontFamily = "fontFamily" in param ? param.fontFamily : FontFamily.SansSerif;
+			this.strokeWidth = "strokeWidth" in param ? param.strokeWidth : 0;
+			this.strokeColor = "strokeColor" in param ? param.strokeColor : "black";
+			this.strokeOnly = "strokeOnly" in param ? param.strokeOnly : false;
 		}
 
 		renderSelf(renderer: Renderer, camera?: Camera): boolean {

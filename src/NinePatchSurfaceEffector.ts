@@ -25,10 +25,10 @@ namespace g {
 		 * @param game このインスタンスが属する `Game`
 		 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 		 */
-		constructor(game: Game, borderWidth: CommonRect|number = 4) {
+		constructor(game: Game, borderWidth: CommonRect | number = 4) {
 			this.game = game;
 			if (typeof borderWidth === "number") {
-				this.borderWidth = {top: borderWidth, bottom: borderWidth, left: borderWidth, right: borderWidth};
+				this.borderWidth = { top: borderWidth, bottom: borderWidth, left: borderWidth, right: borderWidth };
 			} else {
 				this.borderWidth = borderWidth;
 			}
@@ -39,8 +39,12 @@ namespace g {
 		 */
 		render(srcSurface: Surface, width: number, height: number): Surface {
 			var isCreateSurface = true;
-			if (!this._surface || this._surface.width !== width ||
-					this._surface.height !== height || this._beforeSrcSurface !== srcSurface) {
+			if (
+				!this._surface ||
+				this._surface.width !== width ||
+				this._surface.height !== height ||
+				this._beforeSrcSurface !== srcSurface
+			) {
 				this._surface = this.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 				this._beforeSrcSurface = srcSurface;
 			} else {
@@ -49,8 +53,7 @@ namespace g {
 
 			var renderer = this._surface.renderer();
 			renderer.begin();
-			if (!isCreateSurface)
-				renderer.clear();
+			if (!isCreateSurface) renderer.clear();
 			//    x0  x1                          x2
 			// y0 +-----------------------------------+
 			//    | 1 |             5             | 2 |
@@ -78,45 +81,37 @@ namespace g {
 
 			// Draw corners
 			var srcCorners: CommonArea[] = [
-				{x: 0, y: 0, width: this.borderWidth.left, height: this.borderWidth.top},
-				{x: sx2, y: 0, width: this.borderWidth.right, height: this.borderWidth.top},
-				{x: 0, y: sy2, width: this.borderWidth.left, height: this.borderWidth.bottom},
-				{x: sx2, y: sy2, width: this.borderWidth.right, height: this.borderWidth.bottom}
+				{ x: 0, y: 0, width: this.borderWidth.left, height: this.borderWidth.top },
+				{ x: sx2, y: 0, width: this.borderWidth.right, height: this.borderWidth.top },
+				{ x: 0, y: sy2, width: this.borderWidth.left, height: this.borderWidth.bottom },
+				{ x: sx2, y: sy2, width: this.borderWidth.right, height: this.borderWidth.bottom }
 			];
 			var destCorners: CommonOffset[] = [
-				{x: 0, y: 0},
-				{x: dx2, y: 0},
-				{x: 0, y: dy2},
-				{x: dx2, y: dy2}
+				{ x: 0, y: 0 },
+				{ x: dx2, y: 0 },
+				{ x: 0, y: dy2 },
+				{ x: dx2, y: dy2 }
 			];
 			var i = 0;
 			for (i = 0; i < srcCorners.length; ++i) {
 				var c = srcCorners[i];
 				renderer.save();
 				renderer.translate(destCorners[i].x, destCorners[i].y);
-				renderer.drawImage(
-					srcSurface,
-					c.x,
-					c.y,
-					c.width,
-					c.height,
-					0,
-					0
-				);
+				renderer.drawImage(srcSurface, c.x, c.y, c.width, c.height, 0, 0);
 				renderer.restore();
 			}
 			// Draw borders
 			var srcBorders: CommonArea[] = [
-				{x: sx1, y: 0, width: sx2 - sx1, height: this.borderWidth.top},
-				{x: 0, y: sy1, width: this.borderWidth.left, height: sy2 - sy1},
-				{x: sx2, y: sy1, width: this.borderWidth.right, height: sy2 - sy1},
-				{x: sx1, y: sy2, width: sx2 - sx1, height: this.borderWidth.bottom}
+				{ x: sx1, y: 0, width: sx2 - sx1, height: this.borderWidth.top },
+				{ x: 0, y: sy1, width: this.borderWidth.left, height: sy2 - sy1 },
+				{ x: sx2, y: sy1, width: this.borderWidth.right, height: sy2 - sy1 },
+				{ x: sx1, y: sy2, width: sx2 - sx1, height: this.borderWidth.bottom }
 			];
 			var destBorders: CommonArea[] = [
-				{x: dx1, y: 0, width: dx2 - dx1, height: this.borderWidth.top},
-				{x: 0, y: dy1, width: this.borderWidth.left, height: dy2 - dy1},
-				{x: dx2, y: dy1, width: this.borderWidth.right, height: dy2 - dy1},
-				{x: dx1, y: dy2, width: dx2 - dx1, height: this.borderWidth.bottom}
+				{ x: dx1, y: 0, width: dx2 - dx1, height: this.borderWidth.top },
+				{ x: 0, y: dy1, width: this.borderWidth.left, height: dy2 - dy1 },
+				{ x: dx2, y: dy1, width: this.borderWidth.right, height: dy2 - dy1 },
+				{ x: dx1, y: dy2, width: dx2 - dx1, height: this.borderWidth.bottom }
 			];
 			for (i = 0; i < srcBorders.length; ++i) {
 				var s = srcBorders[i];
@@ -124,15 +119,7 @@ namespace g {
 				renderer.save();
 				renderer.translate(d.x, d.y);
 				renderer.transform([d.width / s.width, 0, 0, d.height / s.height, 0, 0]);
-				renderer.drawImage(
-					srcSurface,
-					s.x,
-					s.y,
-					s.width,
-					s.height,
-					0,
-					0
-				);
+				renderer.drawImage(srcSurface, s.x, s.y, s.width, s.height, 0, 0);
 				renderer.restore();
 			}
 			// Draw center
@@ -143,15 +130,7 @@ namespace g {
 			renderer.save();
 			renderer.translate(dx1, dy1);
 			renderer.transform([dw / sw, 0, 0, dh / sh, 0, 0]);
-			renderer.drawImage(
-				srcSurface,
-				sx1,
-				sy1,
-				sw,
-				sh,
-				0,
-				0
-			);
+			renderer.drawImage(srcSurface, sx1, sy1, sw, sh, 0, 0);
 			renderer.restore();
 
 			renderer.end();

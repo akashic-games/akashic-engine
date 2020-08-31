@@ -46,13 +46,7 @@ namespace g {
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
 		renderSelf(renderer: Renderer): boolean {
-			renderer.fillRect(
-				0,
-				0,
-				this.width,
-				this.height,
-				this.cssColor
-			);
+			renderer.fillRect(0, 0, this.width, this.height, this.cssColor);
 			return true;
 		}
 	}

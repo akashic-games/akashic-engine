@@ -85,7 +85,7 @@ namespace g {
 				this._cacheSize = this.calculateCacheSize();
 				var w = Math.ceil(this._cacheSize.width) + padding * 2;
 				var h = Math.ceil(this._cacheSize.height) + padding * 2;
-				var isNew = !this._cache || (this._cache.width < w) || (this._cache.height < h);
+				var isNew = !this._cache || this._cache.width < w || this._cache.height < h;
 				if (isNew) {
 					if (this._cache && !this._cache.destroyed()) {
 						this._cache.destroy();
@@ -96,7 +96,7 @@ namespace g {
 
 				var cacheRenderer = this._renderer;
 				cacheRenderer.begin();
-				if (! isNew) {
+				if (!isNew) {
 					cacheRenderer.clear();
 				}
 
@@ -122,7 +122,14 @@ namespace g {
 		 */
 		renderSelfFromCache(renderer: Renderer): void {
 			renderer.drawImage(
-				this._cache, 0, 0, this._cacheSize.width + CacheableE.PADDING, this._cacheSize.height + CacheableE.PADDING, 0, 0);
+				this._cache,
+				0,
+				0,
+				this._cacheSize.width + CacheableE.PADDING,
+				this._cacheSize.height + CacheableE.PADDING,
+				0,
+				0
+			);
 		}
 
 		/**

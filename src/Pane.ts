@@ -25,7 +25,7 @@ namespace g {
 		 * 子孫エンティティの描画位置・クリッピングサイズを決めるパディング。
 		 * @default 0
 		 */
-		padding?: CommonRect|number;
+		padding?: CommonRect | number;
 
 		/**
 		 * 背景画像の描画方法を指定する `SurfaceEffector` 。
@@ -57,7 +57,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_padding: CommonRect|number;
+		_padding: CommonRect | number;
 
 		/**
 		 * @private
@@ -89,7 +89,6 @@ namespace g {
 		 * @private
 		 */
 		_oldHeight: number;
-
 
 		/**
 		 * @private
@@ -129,12 +128,12 @@ namespace g {
 		 * このエンティティの子孫は、パディングに指定された分だけ右・下にずれた場所に描画され、またパディングの矩形サイズでクリッピングされる。
 		 */
 		// NOTE: paddingの変更は頻繁に行われるものでは無いと思われるので、フラグを立てるためにアクセサを使う
-		set padding(padding: CommonRect|number) {
+		set padding(padding: CommonRect | number) {
 			this._padding = padding;
 			this._paddingChanged = true;
 		}
 
-		get padding(): CommonRect|number {
+		get padding(): CommonRect | number {
 			return this._padding;
 		}
 
@@ -145,8 +144,7 @@ namespace g {
 		 * 詳細は `E#modified()` のドキュメントを参照。
 		 */
 		modified(isBubbling?: boolean): void {
-			if (isBubbling)
-				this.state &= ~EntityStateFlags.Cached;
+			if (isBubbling) this.state &= ~EntityStateFlags.Cached;
 			super.modified();
 		}
 
@@ -186,7 +184,7 @@ namespace g {
 		 * ただし、 `backgroundImage` に利用している `Surface` の破棄は行わない。
 		 * @param destroySurface trueを指定した場合、 `backgroundImage` に利用している `Surface` も合わせて破棄する。
 		 */
-		 destroy(destroySurface?: boolean): void {
+		destroy(destroySurface?: boolean): void {
 			if (destroySurface && this.backgroundImage && !this.backgroundImage.destroyed()) {
 				this.backgroundImage.destroy();
 			}
@@ -200,7 +198,7 @@ namespace g {
 			this._bgSurface = undefined;
 			this._childrenSurface = undefined;
 			super.destroy();
-		 }
+		}
 
 		/**
 		 * @private
@@ -231,7 +229,7 @@ namespace g {
 				this._oldHeight = this.height;
 			}
 			this._childrenRenderer.begin();
-			if (! isNew) {
+			if (!isNew) {
 				this._childrenRenderer.clear();
 			}
 
@@ -252,7 +250,7 @@ namespace g {
 			var p = this._padding === undefined ? 0 : this._padding;
 			var r: CommonRect;
 			if (typeof p === "number") {
-				r = {top: p, bottom: p, left: p, right: p};
+				r = { top: p, bottom: p, left: p, right: p };
 			} else {
 				r = this._padding as CommonRect;
 			}
@@ -266,8 +264,10 @@ namespace g {
 			if (this._childrenSurface && !this._childrenSurface.destroyed()) {
 				this._childrenSurface.destroy();
 			}
-			this._childrenSurface =
-				resourceFactory.createSurface(Math.ceil(this._childrenArea.width), Math.ceil(this._childrenArea.height));
+			this._childrenSurface = resourceFactory.createSurface(
+				Math.ceil(this._childrenArea.width),
+				Math.ceil(this._childrenArea.height)
+			);
 			this._childrenRenderer = this._childrenSurface.renderer();
 			this._normalizedPadding = r;
 		}
@@ -287,27 +287,23 @@ namespace g {
 				return undefined;
 			}
 
-			var thisBoundingRect: CommonRect = {left: 0, right: this.width, top: 0, bottom: this.height};
+			var thisBoundingRect: CommonRect = { left: 0, right: this.width, top: 0, bottom: this.height };
 
 			var targetCoordinates: CommonOffset[] = [
-				{x: thisBoundingRect.left, y: thisBoundingRect.top},
-				{x: thisBoundingRect.left, y: thisBoundingRect.bottom},
-				{x: thisBoundingRect.right, y: thisBoundingRect.top},
-				{x: thisBoundingRect.right, y: thisBoundingRect.bottom}
+				{ x: thisBoundingRect.left, y: thisBoundingRect.top },
+				{ x: thisBoundingRect.left, y: thisBoundingRect.bottom },
+				{ x: thisBoundingRect.right, y: thisBoundingRect.top },
+				{ x: thisBoundingRect.right, y: thisBoundingRect.bottom }
 			];
 
 			var convertedPoint = matrix.multiplyPoint(targetCoordinates[0]);
-			var result: CommonRect  = {left: convertedPoint.x, right: convertedPoint.x, top: convertedPoint.y, bottom: convertedPoint.y};
+			var result: CommonRect = { left: convertedPoint.x, right: convertedPoint.x, top: convertedPoint.y, bottom: convertedPoint.y };
 			for (var i = 1; i < targetCoordinates.length; ++i) {
 				convertedPoint = matrix.multiplyPoint(targetCoordinates[i]);
-				if (result.left > convertedPoint.x)
-					result.left = convertedPoint.x;
-				if (result.right < convertedPoint.x)
-					result.right = convertedPoint.x;
-				if (result.top > convertedPoint.y)
-					result.top = convertedPoint.y;
-				if (result.bottom < convertedPoint.y)
-					result.bottom = convertedPoint.y;
+				if (result.left > convertedPoint.x) result.left = convertedPoint.x;
+				if (result.right < convertedPoint.x) result.right = convertedPoint.x;
+				if (result.top > convertedPoint.y) result.top = convertedPoint.y;
+				if (result.bottom < convertedPoint.y) result.bottom = convertedPoint.y;
 			}
 			return result;
 		}

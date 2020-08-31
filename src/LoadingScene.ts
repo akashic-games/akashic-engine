@@ -118,8 +118,7 @@ namespace g {
 		 * @private
 		 */
 		_clearTargetScene(): void {
-			if (!this._targetScene)
-				return;
+			if (!this._targetScene) return;
 			this._targetScene._ready.removeAll({ owner: this });
 			this._targetScene.assetLoaded.removeAll({ owner: this });
 			this._targetScene = undefined;
