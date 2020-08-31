@@ -559,7 +559,9 @@ describe("test TimerManager", () => {
 		expect(m._identifiers).toBeUndefined();
 	});
 
-	it("TimerIdentifier#_fire() is executed after destroy", () => {
+	it("TimerManager#setInterval() does not run after clearInterval()", () => {
+		// 同タイミングでタイマが完了した場合、先行するタイマの処理でもうひとつのタイマを clearInterval() するとクリアしたのにハンドラを実行してエラーとなる。
+		// このテストは clearInterval() 後にハンドラが実行されない事を期待する。
 		const m = new TimerManager(trigger, 10);
 		let cnt1 = 0;
 		let cnt2 = 0;
