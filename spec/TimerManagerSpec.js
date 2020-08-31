@@ -520,15 +520,14 @@ describe("test TimerManager", function () {
 		expect(m._identifiers).toBeUndefined();
 	});
 
-	it("TimerManager#setInterval() does not run after clearInterval", function () {
+	it("clearInterval - same time", function () {
 		const m = new g.TimerManager(trigger, 10);
 		let cnt1 = 0;
 		let cnt2 = 0;
 		let timer2;
 
 		const timer1 = m.setInterval(() => {
-			// 同タイミングでタイマが完了した場合、先行するタイマの処理でもうひとつのタイマを clearInterval() するとクリアしたのにハンドラを実行してエラーとなっていた。
-			// clearInterval() 後に timer2 のハンドラが実行されない事を確認する。
+			// 同タイミングでタイマが完了した場合、先行する timer1 の処理で timer2 を clearInterval() しても timer2 のハンドラが実行されない事を確認する。
 			if (!timer2.destroyed()) m.clearInterval(timer2);
 			cnt1++;
 		}, 200);
