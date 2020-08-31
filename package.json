@@ -9,6 +9,7 @@
     "@akashic/trigger": "~1.0.0"
   },
   "devDependencies": {
+    "@akashic/eslint-config": "0.1.0",
     "@akashic/pdi-common-impl": "0.0.3",
     "@types/jest": "^25.1.2",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
@@ -42,7 +43,7 @@
     "lint": "npm run format && npm run eslint && npm run textlint",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
-    "eslint": "eslint -c .eslintrc.js \"src/**/*.ts\" --fix",
+    "eslint": "eslint -c .eslintrc \"src/**/*.ts\" --fix",
     "doc": "typedoc --out doc/html/ --mode file --gaID UA-162208211-1 --includeDeclarations --exclude **/lib.es5.d.ts --exclude typings/**/* --exclude **/amflow/**/* --name 'Akashic Engine'"
   },
   "files": [
