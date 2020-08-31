@@ -527,7 +527,8 @@ describe("test TimerManager", function () {
 		let timer2;
 
 		const timer1 = m.setInterval(() => {
-			// 同タイミングでタイマが完了した場合、先行するタイマの処理でもうひとつのタイマを clearInterval() するとクリアしたのにハンドラを実行してエラーとなる。
+			// 同タイミングでタイマが完了した場合、先行するタイマの処理でもうひとつのタイマを clearInterval() するとクリアしたのにハンドラを実行してエラーとなっていた。
+			// clearInterval() 後に timer2 のハンドラが実行されない事を確認する。
 			if (!timer2.destroyed()) m.clearInterval(timer2);
 			cnt1++;
 		}, 200);
@@ -537,6 +538,6 @@ describe("test TimerManager", function () {
 		loopFire(5); // 500ms
 		m.clearInterval(timer1);
 		expect(cnt1).toBe(2);
-		expect(cnt2).toBe(0); // clearInterval() 後にハンドラが実行されない事を期待する。
+		expect(cnt2).toBe(0);
 	});
 });
