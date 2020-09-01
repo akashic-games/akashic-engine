@@ -9,11 +9,10 @@
     "@akashic/trigger": "~1.0.0"
   },
   "devDependencies": {
-    "@akashic/eslint-config": "0.1.0",
+    "@akashic/eslint-config": "../eslint-config",
     "@akashic/pdi-common-impl": "0.0.3",
     "@types/jest": "^25.1.2",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
-    "@typescript-eslint/parser": "^2.19.2",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.2",
     "jest": "^25.1.0",
