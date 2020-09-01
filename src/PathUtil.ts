@@ -27,21 +27,21 @@ namespace g {
 			for (var i = 0; i < parts.length; ++i) {
 				var part = parts[i];
 				switch (part) {
-				case "..":
-					var popped = resolved.pop();
-					if (popped === undefined || popped === "" || popped === ".")
-						throw ExceptionFactory.createAssertionError("PathUtil.resolvePath: invalid arguments");
-					break;
-				case ".":
-					if (resolved.length === 0) {
-						resolved.push(".");
-					}
-					break;
-				case "": // 絶対パス
-					resolved = [""];
-					break;
-				default:
-					resolved.push(part);
+					case "..":
+						var popped = resolved.pop();
+						if (popped === undefined || popped === "" || popped === ".")
+							throw ExceptionFactory.createAssertionError("PathUtil.resolvePath: invalid arguments");
+						break;
+					case ".":
+						if (resolved.length === 0) {
+							resolved.push(".");
+						}
+						break;
+					case "": // 絶対パス
+						resolved = [""];
+						break;
+					default:
+						resolved.push(part);
 				}
 			}
 			return baseComponents.host + resolved.join("/");

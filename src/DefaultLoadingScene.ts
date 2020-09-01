@@ -162,7 +162,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_onTargetAssetLoaded(asset: Asset): void {
+		_onTargetAssetLoaded(_asset: Asset): void {
 			var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
 			this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
 			this._gauge.modified();

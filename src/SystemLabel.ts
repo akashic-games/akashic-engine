@@ -208,18 +208,18 @@ namespace g {
 			this.strokeOnly = "strokeOnly" in param ? param.strokeOnly : false;
 		}
 
-		renderSelf(renderer: Renderer, camera?: Camera): boolean {
+		renderSelf(renderer: Renderer, _camera?: Camera): boolean {
 			if (this.text) {
 				var offsetX: number;
 				switch (this.textAlign) {
-				case TextAlign.Right:
-					offsetX = this.width;
-					break;
-				case TextAlign.Center:
-					offsetX = this.width / 2;
-					break;
-				default:
-					offsetX = 0;
+					case TextAlign.Right:
+						offsetX = this.width;
+						break;
+					case TextAlign.Center:
+						offsetX = this.width / 2;
+						break;
+					default:
+						offsetX = 0;
 				}
 				renderer.drawSystemText(
 					this.text,

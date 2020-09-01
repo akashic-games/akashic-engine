@@ -136,7 +136,7 @@ namespace g {
 		 * このエンティティ自身の描画を行う。
 		 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 		 */
-		renderSelf(renderer: Renderer, camera?: Camera): boolean {
+		renderSelf(renderer: Renderer, _camera?: Camera): boolean {
 			if (this.srcWidth <= 0 || this.srcHeight <= 0) {
 				return true;
 			}

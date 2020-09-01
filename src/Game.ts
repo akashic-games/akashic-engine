@@ -980,13 +980,13 @@ namespace g {
 			this.surfaceAtlasSet = new SurfaceAtlasSet({ game: this });
 
 			switch (this._configuration.defaultLoadingScene) {
-			case "none":
-				// Note: 何も描画しない実装として利用している
-				this._defaultLoadingScene = new LoadingScene({ game: this });
-				break;
-			default:
-				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
-				break;
+				case "none":
+					// Note: 何も描画しない実装として利用している
+					this._defaultLoadingScene = new LoadingScene({ game: this });
+					break;
+				default:
+					this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
+					break;
 			}
 		}
 
@@ -1174,32 +1174,32 @@ namespace g {
 				for (var i = 0; i < reqs.length; ++i) {
 					var req = reqs[i];
 					switch (req.type) {
-					case SceneChangeType.Push:
-						var oldScene = this.scene();
-						if (oldScene) {
-							oldScene._deactivate();
-						}
-						this._doPushScene(req.scene);
-						break;
-					case SceneChangeType.Replace:
-						// Note: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
-						this._doPopScene(req.preserveCurrent, false);
-						this._doPushScene(req.scene);
-						break;
-					case SceneChangeType.Pop:
-						this._doPopScene(req.preserveCurrent, true);
-						break;
-					case SceneChangeType.FireReady:
-						if (!req.scene.destroyed()) req.scene._fireReady();
-						break;
-					case SceneChangeType.FireLoaded:
-						if (!req.scene.destroyed()) req.scene._fireLoaded();
-						break;
-					case SceneChangeType.CallAssetHolderHandler:
-						if (!req.assetHolder.destroyed()) req.assetHolder.callHandler();
-						break;
-					default:
-						throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
+						case SceneChangeType.Push:
+							var oldScene = this.scene();
+							if (oldScene) {
+								oldScene._deactivate();
+							}
+							this._doPushScene(req.scene);
+							break;
+						case SceneChangeType.Replace:
+							// Note: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
+							this._doPopScene(req.preserveCurrent, false);
+							this._doPushScene(req.scene);
+							break;
+						case SceneChangeType.Pop:
+							this._doPopScene(req.preserveCurrent, true);
+							break;
+						case SceneChangeType.FireReady:
+							if (!req.scene.destroyed()) req.scene._fireReady();
+							break;
+						case SceneChangeType.FireLoaded:
+							if (!req.scene.destroyed()) req.scene._fireLoaded();
+							break;
+						case SceneChangeType.CallAssetHolderHandler:
+							if (!req.assetHolder.destroyed()) req.assetHolder.callHandler();
+							break;
+						default:
+							throw ExceptionFactory.createAssertionError("Game#_flushSceneChangeRequests: unknown scene change request.");
 					}
 				}
 			} while (this._sceneChangeRequests.length > 0); // flush中に追加される限りflushを続行する

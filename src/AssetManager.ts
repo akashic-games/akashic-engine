@@ -330,33 +330,33 @@ namespace g {
 			var resourceFactory = this.game.resourceFactory;
 			if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 			switch (conf.type) {
-			case "image":
-				var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
-				asset.initialize(<ImageAssetHint>conf.hint);
-				return asset;
-			case "audio":
-				var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
-			case "text":
-				return resourceFactory.createTextAsset(id, uri);
-			case "script":
-				return resourceFactory.createScriptAsset(id, uri);
-			case "video":
-				// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
-				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
-				return resourceFactory.createVideoAsset(
-					id,
-					uri,
-					conf.width,
-					conf.height,
-					new VideoSystem(),
-					conf.loop,
-					conf.useRealSize
-				);
-			default:
-				throw ExceptionFactory.createAssertionError(
-					"AssertionError#_createAssetFor: unknown asset type " + conf.type + " for asset ID: " + id
-				);
+				case "image":
+					var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+					asset.initialize(<ImageAssetHint>conf.hint);
+					return asset;
+				case "audio":
+					var system = conf.systemId ? this.game.audio[conf.systemId] : this.game.audio[this.game.defaultAudioSystemId];
+					return resourceFactory.createAudioAsset(id, uri, conf.duration, system, conf.loop, <AudioAssetHint>conf.hint);
+				case "text":
+					return resourceFactory.createTextAsset(id, uri);
+				case "script":
+					return resourceFactory.createScriptAsset(id, uri);
+				case "video":
+					// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
+					// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
+					return resourceFactory.createVideoAsset(
+						id,
+						uri,
+						conf.width,
+						conf.height,
+						new VideoSystem(),
+						conf.loop,
+						conf.useRealSize
+					);
+				default:
+					throw ExceptionFactory.createAssertionError(
+						"AssertionError#_createAssetFor: unknown asset type " + conf.type + " for asset ID: " + id
+					);
 			}
 		}
 

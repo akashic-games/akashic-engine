@@ -133,7 +133,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_onAssetError(asset: Asset, error: AssetLoadError, assetManager: AssetManager): void {
+		_onAssetError(asset: Asset, error: AssetLoadError, _assetManager: AssetManager): void {
 			if (this.destroyed() || this._scene.destroyed()) return;
 			var failureInfo = {
 				asset: asset,
@@ -504,10 +504,10 @@ namespace g {
 				param.local === undefined
 					? LocalTickMode.NonLocal
 					: param.local === false
-						? LocalTickMode.NonLocal
-						: param.local === true
-							? LocalTickMode.FullLocal
-							: <LocalTickMode>param.local;
+					? LocalTickMode.NonLocal
+					: param.local === true
+					? LocalTickMode.FullLocal
+					: <LocalTickMode>param.local;
 			tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
 			this.name = param.name;
 
@@ -560,7 +560,7 @@ namespace g {
 		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 * @param isBubbling この関数をこのシーンの子の `modified()` から呼び出す場合、真を渡さなくてはならない。省略された場合、偽。
 		 */
-		modified(isBubbling?: boolean): void {
+		modified(_isBubbling?: boolean): void {
 			this.game.modified = true;
 		}
 
@@ -984,7 +984,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_onStorageLoadError(error: StorageLoadError): void {
+		_onStorageLoadError(_error: StorageLoadError): void {
 			this.game.terminateGame();
 			this.game._abortGame();
 		}

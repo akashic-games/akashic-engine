@@ -190,15 +190,15 @@ namespace g {
 			// glyphのはみ出し量に応じて、描画先のX座標を調整する。
 			var destOffsetX;
 			switch (this.textAlign) {
-			case g.TextAlign.Center:
-				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
-				break;
-			case g.TextAlign.Right:
-				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
-				break;
-			default:
-				destOffsetX = this._overhangLeft;
-				break;
+				case g.TextAlign.Center:
+					destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
+					break;
+				case g.TextAlign.Right:
+					destOffsetX = this.widthAutoAdjust ? this._overhangLeft : this._overhangRight;
+					break;
+				default:
+					destOffsetX = this._overhangLeft;
+					break;
 			}
 
 			renderer.drawImage(
@@ -220,15 +220,15 @@ namespace g {
 			var scale = this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
 			var offsetX = 0;
 			switch (this.textAlign) {
-			case TextAlign.Center:
-				offsetX = this.width / 2 - ((this._textWidth + this._overhangLeft) / 2) * scale;
-				break;
-			case TextAlign.Right:
-				offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
-				break;
-			default:
-				offsetX -= this._overhangLeft * scale;
-				break;
+				case TextAlign.Center:
+					offsetX = this.width / 2 - ((this._textWidth + this._overhangLeft) / 2) * scale;
+					break;
+				case TextAlign.Right:
+					offsetX = this.width - (this._textWidth + this._overhangLeft) * scale;
+					break;
+				default:
+					offsetX -= this._overhangLeft * scale;
+					break;
 			}
 
 			renderer.translate(offsetX, 0);
