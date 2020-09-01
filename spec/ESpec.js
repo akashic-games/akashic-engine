@@ -156,8 +156,7 @@ describe("test E", function () {
 		var runtime2 = skeletonRuntime();
 		expect(runtime2.game).not.toBeFalsy();
 		expect(runtime2.scene).not.toBeFalsy();
-		expect(runtime2.scene.children).not.toBeFalsy();
-		expect(runtime2.scene.children.length).toBe(0);
+		expect(runtime2.scene.children).toBeFalsy();
 	});
 
 	it("scene", function () {
@@ -175,7 +174,7 @@ describe("test E", function () {
 	it("append", function () {
 		var e2 = new g.E({ scene: runtime.scene });
 		e.append(e2);
-		expect(e.parent).toEqual(runtime.scene);
+		expect(e.parent).toEqual(runtime.scene.root);
 		expect(e2.parent).toEqual(e);
 	});
 
@@ -208,11 +207,11 @@ describe("test E", function () {
 		expect(runtime.game.db[e3.id]).toBe(e3);
 
 		e.append(e2);
-		expect(e.parent).toBe(runtime.scene);
+		expect(e.parent).toBe(runtime.scene.root);
 		expect(e2.parent).toBe(e);
 
 		e2.remove();
-		expect(e.parent).toBe(runtime.scene);
+		expect(e.parent).toBe(runtime.scene.root);
 		expect(e2.parent).toBeUndefined();
 		expect(runtime.game.db[e.id]).toBe(e);
 		expect(runtime.game.db[e2.id]).toBe(e2);
@@ -222,7 +221,7 @@ describe("test E", function () {
 		expect(e2.destroyed()).toBe(true);
 
 		runtime.scene.append(e3);
-		expect(e3.parent).toBe(runtime.scene);
+		expect(e3.parent).toBe(runtime.scene.root);
 
 		runtime.scene.remove(e3);
 		expect(e3.parent).toBeUndefined();

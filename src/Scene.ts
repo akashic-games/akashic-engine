@@ -283,11 +283,11 @@ namespace g {
 	 */
 	export class Scene implements Destroyable, Registrable<E>, StorageLoaderHandler {
 		/**
-		 * このシーンの子エンティティ。
-		 *
-		 * エンティティは `Scene#append()` によって追加され、 `Scene#remove()` によって削除される。
+		 * このシーンの子エンティティを束ねる親エンティティ。
+		 * 
+		 * `Scene#append()`された子エンティティは、このエンティティに append される。
 		 */
-		children: E[];
+		root: g.E;
 
 		/**
 		 * このシーンで利用できるアセット。
@@ -541,7 +541,6 @@ namespace g {
 			this.pointUpCapture = new Trigger<PointUpEvent>();
 			this.operation = new Trigger<OperationEvent>();
 
-			this.children = [];
 			this.state = SceneState.Standby;
 			this.stateChanged = new Trigger<SceneState>();
 
@@ -553,6 +552,10 @@ namespace g {
 				handler: this._onSceneAssetsLoad,
 				handlerOwner: this,
 				direct: true
+			});
+
+			this.loaded.add(() => {
+				this.root = new E({ scene: this });
 			});
 		}
 
@@ -822,31 +825,7 @@ namespace g {
 		 * @param e 子エンティティとして追加するエンティティ
 		 */
 		append(e: E): void {
-			this.insertBefore(e, undefined);
-		}
-
-		/**
-		 * 子エンティティを挿入する。
-		 *
-		 * `this.children` の`target`の位置に `e` を挿入する。
-		 * `target` が`this` の子でない場合、`append(e)`と同じ動作となる。
-		 *
-		 * @param e 子エンティティとして追加するエンティティ
-		 * @param target 挿入位置にある子エンティティ
-		 */
-		insertBefore(e: E, target: E): void {
-			if (e.parent)
-				e.remove();
-
-			e.parent = this;
-
-			var index = -1;
-			if (target !== undefined && (index = this.children.indexOf(target)) > -1) {
-				this.children.splice(index, 0, e);
-			} else {
-				this.children.push(e);
-			}
-			this.modified(true);
+			this.root.append(e);
 		}
 
 		/**
@@ -855,12 +834,11 @@ namespace g {
 		 * @param e 削除する子エンティティ
 		 */
 		remove(e: E): void {
-			var index = this.children.indexOf(e);
-			if (index === -1)
-				return;
-			this.children[index].parent = undefined;
-			this.children.splice(index, 1);
-			this.modified(true);
+			this.root.remove(e);
+		}
+
+		insertBefore(e: E, target: E): void {
+			this.root.insertBefore(e, target);
 		}
 
 		/**
@@ -871,13 +849,11 @@ namespace g {
 		 */
 		findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
 			var mayConsumeLocalTick = (this.local !== LocalTickMode.NonLocal);
-			var children = this.children;
 			var m: Matrix = undefined;
 			if (camera && camera instanceof Camera2D)
 				m = camera.getMatrix();
 
-			for (var i = children.length - 1; i >= 0; --i) {
-				var ret = children[i].findPointSourceByPoint(
+				var ret = this.root.findPointSourceByPoint(
 					point,
 					m,
 					force,
@@ -886,9 +862,9 @@ namespace g {
 				if (ret) {
 					ret.local = ret.target.local || mayConsumeLocalTick;
 					return ret;
+				} else {
+					return {target: undefined, point: undefined, local: mayConsumeLocalTick};
 				}
-			}
-			return {target: undefined, point: undefined, local: mayConsumeLocalTick};
 		}
 
 		/**
@@ -938,6 +914,14 @@ namespace g {
 			});
 			this._assetHolders.push(holder);
 			holder.request();
+		}
+
+		get children(): E[] {
+			return this.root.children;
+		}
+
+		set children(children) {
+			this.root.children = children;
 		}
 
 		/**

@@ -128,9 +128,7 @@ namespace g {
 			var renderer = surface.renderer();
 			renderer.begin();
 
-			var children = fromScene.children;
-			for (var i = 0; i < children.length; ++i)
-				children[i].render(renderer, camera);
+			fromScene.root.render(renderer, camera);
 
 			renderer.end();
 

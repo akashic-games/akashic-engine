@@ -19,13 +19,14 @@ describe("test Scene", function() {
 			height: 1,
 		}
 	};
-	var game = new mock.Game({
-		width: 320,
-		height: 320,
-		assets: assetsConfiguration
-	});
+	var game;
 
 	beforeEach(function() {
+		game = new mock.Game({
+			width: 320,
+			height: 320,
+			assets: assetsConfiguration
+		});
 		jasmine.addMatchers(require("./helpers/customMatchers"));
 	});
 
@@ -44,9 +45,7 @@ describe("test Scene", function() {
 		expect(scene.assetLoaded.length).toEqual(0);
 		expect(scene.assetLoadFailed.length).toEqual(0);
 		expect(scene.assetLoadCompleted.length).toEqual(0);
-		expect(scene.loaded.length).toEqual(0);
-		expect(scene.children).not.toBeFalsy();
-		expect(scene.children.length).toBe(0);
+		expect(scene.loaded.length).toEqual(1);
 		expect(scene._sceneAssetHolder._assetIds).toEqual(["foo"]);
 		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(1);
 		expect(scene.local).toBe(g.LocalTickMode.InterpolateLocal);
@@ -80,45 +79,82 @@ describe("test Scene", function() {
 		expect(scene.storageValues).toBeDefined();
 	});
 
-	it("append", function() {
-		var scene1 = new g.Scene({game: game});
-		var scene2 = new g.Scene({game: game});
-		var e = new g.E({scene: scene1});
-		scene1.append(e);
-		expect(e.parent).toBe(scene1);
-		scene2.append(e);
-		expect(e.parent).toBe(scene2);
+	it("append", function(done) {
+		game._loaded.add(() => {
+			var scene1 = new g.Scene({game: game});
+			scene1.loaded.add(() => {
+				var e = new g.E({scene: scene1});
+				scene1.append(e);
+				expect(e.parent).toBe(scene1.root);
+				var scene2 = new g.Scene({game: game});
+				scene2.loaded.add(() => {
+					scene2.append(e);
+					expect(e.parent).toBe(scene2.root);
+					done();
+				});
+				game.pushScene(scene2);
+			});
+			game.pushScene(scene1);
+			game._flushSceneChangeRequests();
+		});
+		game._startLoadingGlobalAssets();		
+
+
 	});
 
-	it("remove", function() {
-		var scene1 = new g.Scene({game: game});
-		var scene2 = new g.Scene({game: game});
-		var e1 = new g.E({scene: scene1});
-		var e2 = new g.E({scene: scene2});
-		scene1.append(e1);
-		scene2.append(e2);
-		expect(e1.parent).toBe(scene1);
-		scene1.remove(e1);
-		expect(e1.parent).toBeUndefined();
-		expect(scene1.remove(e2)).toBe(); // e2 is not child of scene1
-		expect(e2.parent).toBe(scene2);
-		scene2.remove(e2);
-		expect(e2.parent).toBeUndefined();
+	it("remove", function(done) {
+		game._loaded.add(() => {
+			var scene1 = new g.Scene({game: game});
+			scene1.loaded.add(() => {
+				var scene2 = new g.Scene({game: game});
+				scene2.loaded.add(() => {
+					var e1 = new g.E({scene: scene1});
+					var e2 = new g.E({scene: scene2});
+					scene1.append(e1);
+					scene2.append(e2);
+					expect(e1.parent).toBe(scene1.root);
+					scene1.remove(e1);
+					expect(e1.parent).toBeUndefined();
+					// expect(scene1.remove(e2)).toThrowError(new Error("E#remove: invalid child")); // e2 is not child of scene1
+					expect(e2.parent).toBe(scene2.root);
+					scene2.remove(e2);
+					expect(e2.parent).toBeUndefined();
+					done();
+				});
+				game.pushScene(scene2);
+			});
+			game.pushScene(scene1);
+			game._flushSceneChangeRequests();
+		});
+		game._startLoadingGlobalAssets();		
+
 	});
 
-	it("insertBefore", function() {
-		var scene1 = new g.Scene({game: game});
-		var scene2 = new g.Scene({game: game});
-		var e = new g.E({scene: scene1});
-		scene1.insertBefore(e, null);
-		expect(e.parent).toBe(scene1);
-		scene2.insertBefore(e, null);
-		expect(e.parent).toBe(scene2);
+	it("insertBefore", (done) => {
+		game._loaded.add(() => {
+			var scene1 = new g.Scene({game: game});
+			scene1.loaded.add(() => {
+				var e = new g.E({scene: scene1});
+				scene1.insertBefore(e, null);
+				expect(e.parent).toBe(scene1.root);
+				var scene2 = new g.Scene({game: game});
+				scene2.loaded.add(() => {
+					scene2.insertBefore(e, null);
+					expect(e.parent).toBe(scene2.root);
+			
+					var e2 = new g.E({scene: scene2});
+					scene2.root.insertBefore(e2, e);
+					expect(scene2.children[0]).toBe(e2);
+					expect(scene2.children[1]).toBe(e);
+					done();
+				});
+				game.pushScene(scene2);
+			});
+			game.pushScene(scene1);
+			game._flushSceneChangeRequests();
+		});
+		game._startLoadingGlobalAssets();		
 
-		var e2 = new g.E({scene: scene2});
-		scene2.insertBefore(e2, e);
-		expect(scene2.children[0]).toBe(e2);
-		expect(scene2.children[1]).toBe(e);
 	});
 
 	it("loads assets", function(done) {
