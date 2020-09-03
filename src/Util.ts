@@ -29,9 +29,7 @@ namespace g {
 		 * @param {CommonArea} p2 矩形2
 		 */
 		export function distanceBetweenAreas(p1: CommonArea, p2: CommonArea): number {
-			return Util.distance(
-				p1.x + p1.width / 2, p1.y + p1.height / 2,
-				p2.x + p2.width / 2, p2.y + p2.height / 2);
+			return Util.distance(p1.x + p1.width / 2, p1.y + p1.height / 2, p2.x + p2.width / 2, p2.y + p2.height / 2);
 		}
 
 		/**
@@ -51,15 +49,28 @@ namespace g {
 		 * @param anchorX アンカーの横位置。単位は相対値(左端が 0、中央が 0.5、右端が 1.0)である。
 		 * @param anchorY アンカーの縦位置。単位は相対値(上端が 0、中央が 0.5、下端が 1.0)である。
 		 */
-		export function createMatrix(width: number, height: number,
-		                             scaleX: number, scaleY: number, angle: number, anchorX?: number, anchorY?: number): Matrix;
+		export function createMatrix(
+			width: number,
+			height: number,
+			scaleX: number,
+			scaleY: number,
+			angle: number,
+			anchorX?: number,
+			anchorY?: number
+		): Matrix;
 
 		// Note: オーバーロードされているのでjsdoc省略
-		export function createMatrix(width?: number, height?: number,
-		                             scaleX?: number, scaleY?: number, angle?: number, anchorX?: number, anchorY?: number): Matrix {
+		export function createMatrix(
+			width?: number,
+			height?: number,
+			scaleX?: number,
+			scaleY?: number,
+			angle?: number,
+			anchorX?: number,
+			anchorY?: number
+		): Matrix {
 			// Note: asm.js対応環境ではasm.js対応のMatrixを生成するなどしたいため、オーバーヘッドを許容する
-			if (width === undefined)
-				return new PlainMatrix();
+			if (width === undefined) return new PlainMatrix();
 
 			return new PlainMatrix(width, height, scaleX, scaleY, angle, anchorX, anchorY);
 		}
@@ -86,15 +97,12 @@ namespace g {
 			width = boundingRect.right - boundingRect.left;
 			height = boundingRect.bottom - boundingRect.top;
 
-			if (boundingRect.left < e.x)
-				x = e.x - boundingRect.left;
-			if (boundingRect.top < e.y)
-				y = e.y - boundingRect.top;
+			if (boundingRect.left < e.x) x = e.x - boundingRect.left;
+			if (boundingRect.top < e.y) y = e.y - boundingRect.top;
 
 			e.moveTo(x, y);
 			// 再描画フラグを立てたくないために e._matrix を直接触っている
-			if (e._matrix)
-				e._matrix._modified = true;
+			if (e._matrix) e._matrix._modified = true;
 
 			var surface = scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 			var renderer = surface.renderer();
@@ -111,8 +119,7 @@ namespace g {
 			s.moveTo(boundingRect.left, boundingRect.top);
 
 			e.moveTo(oldX, oldY);
-			if (e._matrix)
-				e._matrix._modified = true;
+			if (e._matrix) e._matrix._modified = true;
 
 			return s;
 		}
@@ -129,8 +136,7 @@ namespace g {
 			renderer.begin();
 
 			var children = fromScene.children;
-			for (var i = 0; i < children.length; ++i)
-				children[i].render(renderer, camera);
+			for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 
 			renderer.end();
 
@@ -148,14 +154,11 @@ namespace g {
 		 *
 		 * @param src
 		 */
-		export function asSurface(src: Asset|Surface): Surface {
+		export function asSurface(src: Asset | Surface): Surface {
 			// Note: TypeScriptのtype guardを活用するため、あえて1つのifで1つの型しか判定していない
-			if (!src)
-				return <Surface>src;
-			if (src instanceof Surface)
-				return src;
-			if (src instanceof ImageAsset)
-				return src.asSurface();
+			if (!src) return <Surface>src;
+			if (src instanceof Surface) return src;
+			if (src instanceof ImageAsset) return src.asSurface();
 			throw ExceptionFactory.createTypeMismatchError("Util#asSurface", "ImageAsset|Surface", src);
 		}
 
@@ -167,11 +170,9 @@ namespace g {
 		 * @param resolvedPath パス文字列
 		 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 		 */
-		export function findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset {
-			if (liveAssetPathTable.hasOwnProperty(resolvedPath))
-				return liveAssetPathTable[resolvedPath];
-			if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js"))
-				return liveAssetPathTable[resolvedPath + ".js"];
+		export function findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset {
+			if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return liveAssetPathTable[resolvedPath];
+			if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return liveAssetPathTable[resolvedPath + ".js"];
 			return undefined;
 		}
 
@@ -185,20 +186,18 @@ namespace g {
 		 * @param resolvedPath パス文字列
 		 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 		 */
-		export function findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: {[key: string]: Asset}): Asset {
+		export function findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset {
 			var path: string;
 			path = resolvedPath + "/package.json";
 			if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path] instanceof TextAsset) {
 				var pkg = JSON.parse((<TextAsset>liveAssetPathTable[path]).data);
 				if (pkg && typeof pkg.main === "string") {
 					var asset = Util.findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
-					if (asset)
-						return asset;
+					if (asset) return asset;
 				}
 			}
 			path = resolvedPath + "/index.js";
-			if (liveAssetPathTable.hasOwnProperty(path))
-				return liveAssetPathTable[path];
+			if (liveAssetPathTable.hasOwnProperty(path)) return liveAssetPathTable[path];
 			return undefined;
 		}
 
@@ -216,13 +215,14 @@ namespace g {
 		export function charCodeAt(str: string, idx: number): number {
 			var code = str.charCodeAt(idx);
 
-			if (0xD800 <= code && code <= 0xDBFF) {
+			if (0xd800 <= code && code <= 0xdbff) {
 				var hi = code;
 				var low = str.charCodeAt(idx + 1);
 				return (hi << 16) | low;
 			}
 
-			if (0xDC00 <= code && code <= 0xDFFF) { // Low surrogate
+			if (0xdc00 <= code && code <= 0xdfff) {
+				// Low surrogate
 				return null;
 			}
 
@@ -238,7 +238,7 @@ namespace g {
 			/**
 			 * @private
 			 */
-			_onAnimatingStopped: () => void
+			_onAnimatingStopped: () => void;
 		};
 
 		/**
@@ -249,8 +249,7 @@ namespace g {
 		 * @param animatingHandler アニメーティングハンドラ
 		 * @param surface サーフェス
 		 */
-		export function setupAnimatingHandler(animatingHandler: AnimatingHandler,
-		                                      surface: Surface): void {
+		export function setupAnimatingHandler(animatingHandler: AnimatingHandler, surface: Surface): void {
 			if (surface.isDynamic) {
 				surface.animatingStarted.add(animatingHandler._onAnimatingStarted, animatingHandler);
 				surface.animatingStopped.add(animatingHandler._onAnimatingStopped, animatingHandler);

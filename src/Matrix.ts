@@ -142,7 +142,6 @@ namespace g {
 		 * @param point この変換行列との積を求める座標
 		 */
 		multiplyPoint(point: CommonOffset): CommonOffset;
-
 	}
 
 	/**
@@ -183,7 +182,7 @@ namespace g {
 		constructor(src: Matrix);
 
 		constructor(
-			widthOrSrc?: number|Matrix,
+			widthOrSrc?: number | Matrix,
 			height?: number,
 			scaleX?: number,
 			scaleY?: number,
@@ -197,7 +196,7 @@ namespace g {
 				this._matrix = [1, 0, 0, 1, 0, 0];
 			} else if (typeof widthOrSrc === "number") {
 				this._modified = false;
-				this._matrix = (new Array<number>(6) as [number, number, number, number, number, number]);
+				this._matrix = new Array<number>(6) as [number, number, number, number, number, number];
 				if (anchorX != null && anchorY != null) {
 					this.updateWithAnchor(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, anchorX, anchorY);
 				} else {
@@ -232,7 +231,7 @@ namespace g {
 			// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
 			// (ただし theta = angle * PI / 180)、w = (width / 2), h = (height / 2) である。
 			// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
-			var r = angle * Math.PI / 180;
+			var r = (angle * Math.PI) / 180;
 			var _cos = Math.cos(r);
 			var _sin = Math.sin(r);
 			var a = _cos * scaleX;
@@ -275,7 +274,7 @@ namespace g {
 			// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
 			// (ただし theta = angle * PI / 180)、w = anchorX * width, h = anchorY * height である。
 			// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
-			const r = angle * Math.PI / 180;
+			const r = (angle * Math.PI) / 180;
 			const _cos = Math.cos(r);
 			const _sin = Math.sin(r);
 			const a = _cos * scaleX;
@@ -303,7 +302,7 @@ namespace g {
 			//              0    0    1                0     0    1               0    0    1               0    0    1
 			// ここで各変数は update() のコメントのものと同様である。
 			// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
-			var r = angle * Math.PI / 180;
+			var r = (angle * Math.PI) / 180;
 			var _cos = Math.cos(r);
 			var _sin = Math.sin(r);
 			var a = _cos / scaleX;
@@ -317,7 +316,7 @@ namespace g {
 			this._matrix[2] = c;
 			this._matrix[3] = d;
 			this._matrix[4] = -a * (w + x) - c * (h + y) + w;
-			this._matrix[5] =  b * (w + x) - d * (h + y) + h;
+			this._matrix[5] = b * (w + x) - d * (h + y) + h;
 		}
 
 		updateByInverseWithAnchor(
@@ -341,7 +340,7 @@ namespace g {
 			//              0    0    1                0     0    1               0    0    1               0    0    1
 			// ここで各変数は updateWithAnchor() のコメントのものと同様である。
 			// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
-			const r = angle * Math.PI / 180;
+			const r = (angle * Math.PI) / 180;
 			const _cos = Math.cos(r);
 			const _sin = Math.sin(r);
 			const a = _cos / scaleX;
@@ -355,7 +354,7 @@ namespace g {
 			this._matrix[2] = c;
 			this._matrix[3] = d;
 			this._matrix[4] = -a * x - c * y + w;
-			this._matrix[5] =  b * x - d * y + h;
+			this._matrix[5] = b * x - d * y + h;
 		}
 
 		multiply(matrix: Matrix): void {
@@ -417,8 +416,7 @@ namespace g {
 			var m = this._matrix;
 			var x = m[0] * point.x + m[2] * point.y + m[4];
 			var y = m[1] * point.x + m[3] * point.y + m[5];
-			return {x: x, y: y};
+			return { x: x, y: y };
 		}
-
 	}
 }

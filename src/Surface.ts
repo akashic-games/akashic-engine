@@ -63,8 +63,7 @@ namespace g {
 
 			this.width = width;
 			this.height = height;
-			if (drawable)
-				this._drawable = drawable;
+			if (drawable) this._drawable = drawable;
 			// this._destroyedは破棄時に一度だけ代入する特殊なフィールドなため、コンストラクタで初期値を代入しない
 			this.isDynamic = isDynamic;
 			if (this.isDynamic) {

@@ -135,8 +135,16 @@ namespace g {
 		startDelta: CommonOffset;
 		prevDelta: CommonOffset;
 
-		constructor(pointerId: number, target: E, point: CommonOffset,
-		            prevDelta: CommonOffset, startDelta: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+		constructor(
+			pointerId: number,
+			target: E,
+			point: CommonOffset,
+			prevDelta: CommonOffset,
+			startDelta: CommonOffset,
+			player?: Player,
+			local?: boolean,
+			priority?: number
+		) {
 			super(pointerId, target, point, player, local, priority);
 			this.prevDelta = prevDelta;
 			this.startDelta = startDelta;
@@ -159,8 +167,16 @@ namespace g {
 		startDelta: CommonOffset;
 		prevDelta: CommonOffset;
 
-		constructor(pointerId: number, target: E, point: CommonOffset,
-		            prevDelta: CommonOffset, startDelta: CommonOffset, player?: Player, local?: boolean, priority?: number) {
+		constructor(
+			pointerId: number,
+			target: E,
+			point: CommonOffset,
+			prevDelta: CommonOffset,
+			startDelta: CommonOffset,
+			player?: Player,
+			local?: boolean,
+			priority?: number
+		) {
 			super(pointerId, target, point, player, local, priority);
 			this.prevDelta = prevDelta;
 			this.startDelta = startDelta;

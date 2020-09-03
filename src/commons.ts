@@ -29,5 +29,4 @@ namespace g {
 		top: number;
 		bottom: number;
 	}
-
 }

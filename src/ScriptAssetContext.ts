@@ -40,8 +40,7 @@ namespace g {
 		 * @private
 		 */
 		_cachedValue(): any {
-			if (!this._started)
-				throw ExceptionFactory.createAssertionError("ScriptAssetContext#_cachedValue: not executed yet.");
+			if (!this._started) throw ExceptionFactory.createAssertionError("ScriptAssetContext#_cachedValue: not executed yet.");
 			return this._module.exports;
 		}
 
@@ -49,8 +48,7 @@ namespace g {
 		 * @private
 		 */
 		_executeScript(currentModule?: Module): any {
-			if (this._started)
-				return this._module.exports;
+			if (this._started) return this._module.exports;
 
 			if (currentModule) {
 				// Node.js 互換挙動: Module#parent は一番最初に require() した module になる

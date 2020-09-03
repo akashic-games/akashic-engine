@@ -1,5 +1,4 @@
 namespace g {
-
 	/**
 	 * SceneAssetHolder のコンストラクタに指定できるパラメータ。
 	 * 通常、ゲーム開発者が利用する必要はない。
@@ -105,10 +104,8 @@ namespace g {
 		}
 
 		request(): boolean {
-			if (this.waitingAssetsCount === 0)
-				return false;
-			if (this._requested)
-				return true;
+			if (this.waitingAssetsCount === 0) return false;
+			if (this._requested) return true;
 			this._requested = true;
 			this._assetManager.requestAssets(this._assetIds, this);
 			return true;
@@ -136,9 +133,8 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_onAssetError(asset: Asset, error: AssetLoadError, assetManager: AssetManager): void {
-			if (this.destroyed() || this._scene.destroyed())
-				return;
+		_onAssetError(asset: Asset, error: AssetLoadError, _assetManager: AssetManager): void {
+			if (this.destroyed() || this._scene.destroyed()) return;
 			var failureInfo = {
 				asset: asset,
 				error: error,
@@ -161,8 +157,7 @@ namespace g {
 		 * @private
 		 */
 		_onAssetLoad(asset: Asset): void {
-			if (this.destroyed() || this._scene.destroyed())
-				return;
+			if (this.destroyed() || this._scene.destroyed()) return;
 
 			this._scene.assets[asset.id] = asset;
 			this._scene.assetLoaded.fire(asset);
@@ -172,8 +167,7 @@ namespace g {
 			--this.waitingAssetsCount;
 			if (this.waitingAssetsCount < 0)
 				throw ExceptionFactory.createAssertionError("SceneAssetHolder#_onAssetLoad: broken waitingAssetsCount");
-			if (this.waitingAssetsCount > 0)
-				return;
+			if (this.waitingAssetsCount > 0) return;
 
 			if (this._direct) {
 				this.callHandler();
@@ -295,7 +289,7 @@ namespace g {
 		 * アセットID をkeyに、対応するアセットのインスタンスを得ることができる。
 		 * keyはこのシーンの生成時、コンストラクタの第二引数 `assetIds` に渡された配列に含まれる文字列でなければならない。
 		 */
-		assets: {[key: string]: Asset};
+		assets: { [key: string]: Asset };
 
 		/**
 		 * このシーンの属するゲーム。
@@ -506,15 +500,18 @@ namespace g {
 				this.storageValues = this._storageLoader._valueStore;
 			}
 
-			local = (param.local === undefined) ? LocalTickMode.NonLocal
-			          : (param.local === false) ? LocalTickMode.NonLocal
-			           : (param.local === true) ? LocalTickMode.FullLocal
-			                                    : <LocalTickMode>param.local;
-			tickGenerationMode = (param.tickGenerationMode !== undefined) ? param.tickGenerationMode : TickGenerationMode.ByClock;
+			local =
+				param.local === undefined
+					? LocalTickMode.NonLocal
+					: param.local === false
+					? LocalTickMode.NonLocal
+					: param.local === true
+					? LocalTickMode.FullLocal
+					: <LocalTickMode>param.local;
+			tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : TickGenerationMode.ByClock;
 			this.name = param.name;
 
-			if (!assetIds)
-				assetIds = [];
+			if (!assetIds) assetIds = [];
 
 			this.game = game;
 			this.local = local;
@@ -563,7 +560,7 @@ namespace g {
 		 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 		 * @param isBubbling この関数をこのシーンの子の `modified()` から呼び出す場合、真を渡さなくてはならない。省略された場合、偽。
 		 */
-		modified(isBubbling?: boolean): void {
+		modified(_isBubbling?: boolean): void {
 			this.game.modified = true;
 		}
 
@@ -585,13 +582,11 @@ namespace g {
 			// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
 			var gameDb = this.game.db;
 			for (var p in gameDb) {
-				if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this)
-					gameDb[p].destroy();
+				if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
 			}
 			var gameDb = this.game._localDb;
 			for (var p in gameDb) {
-				if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this)
-					gameDb[p].destroy();
+				if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
 			}
 
 			this._timer.destroy();
@@ -608,8 +603,7 @@ namespace g {
 			this.assets = {};
 
 			// アセットを参照しているEより先に解放しないよう最後に解放する
-			for (var i = 0; i < this._assetHolders.length; ++i)
-				this._assetHolders[i].destroy();
+			for (var i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();
 			this._sceneAssetHolder.destroy();
 
 			this._storageLoader = undefined;
@@ -682,9 +676,11 @@ namespace g {
 			const t = this._timer;
 			if (typeof handler === "number") {
 				this.game.logger.warn(
-					"[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first.");
-				return (owner != null) ? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
-				                       : t.setInterval(interval /* 1 */, handler /* 0 */, null);
+					"[deprecated] Scene#setInterval(): this arguments ordering is now deprecated. Specify the function first."
+				);
+				return owner != null
+					? t.setInterval(owner /* 2 */, handler /* 0 */, interval /* 1 */)
+					: t.setInterval(interval /* 1 */, handler /* 0 */, null);
 			}
 			return t.setInterval(handler, interval, owner);
 		}
@@ -737,9 +733,11 @@ namespace g {
 			const t = this._timer;
 			if (typeof handler === "number") {
 				this.game.logger.warn(
-					"[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first.");
-				return (owner != null) ? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
-				                       : t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
+					"[deprecated] Scene#setTimeout(): this arguments ordering is now deprecated. Specify the function first."
+				);
+				return owner != null
+					? t.setTimeout(owner /* 2 */, handler /* 0 */, milliseconds /* 1 */)
+					: t.setTimeout(milliseconds /* 1 */, handler /* 0 */, null);
 			}
 			return t.setTimeout(handler, milliseconds, owner);
 		}
@@ -769,8 +767,7 @@ namespace g {
 		 * @param toPush 現在のシーンを残したままにするなら真、削除して遷移するなら偽を指定する。省略された場合偽
 		 */
 		gotoScene(next: Scene, toPush?: boolean): void {
-			if (! this.isCurrentScene())
-				throw ExceptionFactory.createAssertionError("Scene#gotoScene: this scene is not the current scene");
+			if (!this.isCurrentScene()) throw ExceptionFactory.createAssertionError("Scene#gotoScene: this scene is not the current scene");
 			if (toPush) {
 				this.game.pushScene(next);
 			} else {
@@ -786,8 +783,7 @@ namespace g {
 		 * このシーンが現在のシーンでない場合、 `AssertionError` がthrowされる。
 		 */
 		end(): void {
-			if (! this.isCurrentScene())
-				throw ExceptionFactory.createAssertionError("Scene#end: this scene is not the current scene");
+			if (!this.isCurrentScene()) throw ExceptionFactory.createAssertionError("Scene#end: this scene is not the current scene");
 
 			this.game.popScene();
 		}
@@ -835,8 +831,7 @@ namespace g {
 		 * @param target 挿入位置にある子エンティティ
 		 */
 		insertBefore(e: E, target: E): void {
-			if (e.parent)
-				e.remove();
+			if (e.parent) e.remove();
 
 			e.parent = this;
 
@@ -856,8 +851,7 @@ namespace g {
 		 */
 		remove(e: E): void {
 			var index = this.children.indexOf(e);
-			if (index === -1)
-				return;
+			if (index === -1) return;
 			this.children[index].parent = undefined;
 			this.children.splice(index, 1);
 			this.modified(true);
@@ -870,25 +864,19 @@ namespace g {
 		 * @param camera 対象のカメラ。指定されなかった場合undefined
 		 */
 		findPointSourceByPoint(point: CommonOffset, force?: boolean, camera?: Camera): PointSource {
-			var mayConsumeLocalTick = (this.local !== LocalTickMode.NonLocal);
+			var mayConsumeLocalTick = this.local !== LocalTickMode.NonLocal;
 			var children = this.children;
 			var m: Matrix = undefined;
-			if (camera && camera instanceof Camera2D)
-				m = camera.getMatrix();
+			if (camera && camera instanceof Camera2D) m = camera.getMatrix();
 
 			for (var i = children.length - 1; i >= 0; --i) {
-				var ret = children[i].findPointSourceByPoint(
-					point,
-					m,
-					force,
-					camera
-				);
+				var ret = children[i].findPointSourceByPoint(point, m, force, camera);
 				if (ret) {
 					ret.local = ret.target.local || mayConsumeLocalTick;
 					return ret;
 				}
 			}
-			return {target: undefined, point: undefined, local: mayConsumeLocalTick};
+			return { target: undefined, point: undefined, local: mayConsumeLocalTick };
 		}
 
 		/**
@@ -906,8 +894,7 @@ namespace g {
 				// _load() 呼び出し後に prefetch() する意味はない(先読みではない)。
 				return;
 			}
-			if (this._prefetchRequested)
-				return;
+			if (this._prefetchRequested) return;
 			this._prefetchRequested = true;
 			this._sceneAssetHolder.request();
 		}
@@ -918,8 +905,7 @@ namespace g {
 		 * `Scene#storageValues` の内容をシリアライズする。
 		 */
 		serializeStorageValues(): StorageValueStoreSerialization {
-			if (!this._storageLoader)
-				return undefined;
+			if (!this._storageLoader) return undefined;
 			return this._storageLoader._valueStoreSerialization;
 		}
 
@@ -967,8 +953,7 @@ namespace g {
 		 * @private
 		 */
 		_load(): void {
-			if (this._loaded)
-				return;
+			if (this._loaded) return;
 			this._loaded = true;
 
 			var needsWait = this._sceneAssetHolder.request();
@@ -976,8 +961,7 @@ namespace g {
 				this._storageLoader._load(this);
 				needsWait = true;
 			}
-			if (!needsWait)
-				this._notifySceneReady();
+			if (!needsWait) this._notifySceneReady();
 		}
 
 		/**
@@ -1000,7 +984,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_onStorageLoadError(error: StorageLoadError): void {
+		_onStorageLoadError(_error: StorageLoadError): void {
 			this.game.terminateGame();
 			this.game._abortGame();
 		}
@@ -1009,8 +993,7 @@ namespace g {
 		 * @private
 		 */
 		_onStorageLoaded(): void {
-			if (this._sceneAssetHolder.waitingAssetsCount === 0)
-				this._notifySceneReady();
+			if (this._sceneAssetHolder.waitingAssetsCount === 0) this._notifySceneReady();
 		}
 
 		/**

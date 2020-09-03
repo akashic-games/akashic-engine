@@ -40,8 +40,7 @@ namespace g {
 					throw ExceptionFactory.createAssertionError("g._require: require from DynamicAsset is not supported");
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
-				if (!(/^\.\//.test(path)))
-					throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
+				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
 				resolvedPath = path.substring(2);
 			}
 
@@ -52,12 +51,9 @@ namespace g {
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
-			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+			if (!targetScriptAsset) targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
-			if (!targetScriptAsset)
-				targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-
+			if (!targetScriptAsset) targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 			// `path` は node module の名前であると仮定して探す
@@ -68,36 +64,32 @@ namespace g {
 				targetScriptAsset = game._assetManager._liveAssetVirtualPathTable[resolvedPath];
 			}
 
-			if (! targetScriptAsset) {
+			if (!targetScriptAsset) {
 				var dirs = currentModule ? currentModule.paths : [];
 				dirs.push("node_modules");
 				for (var i = 0; i < dirs.length; ++i) {
 					var dir = dirs[i];
 					resolvedPath = PathUtil.resolvePath(dir, path);
 					targetScriptAsset = Util.findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset)
-						break;
+					if (targetScriptAsset) break;
 					targetScriptAsset = Util.findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset)
-						break;
+					if (targetScriptAsset) break;
 				}
 			}
 		}
 
 		if (targetScriptAsset) {
-			if (game._scriptCaches.hasOwnProperty(resolvedPath))
-				return game._scriptCaches[resolvedPath]._cachedValue();
+			if (game._scriptCaches.hasOwnProperty(resolvedPath)) return game._scriptCaches[resolvedPath]._cachedValue();
 
 			if (targetScriptAsset instanceof ScriptAsset) {
 				var context = new ScriptAssetContext(game, targetScriptAsset);
 				game._scriptCaches[resolvedPath] = context;
 				return context._executeScript(currentModule);
-
 			} else if (targetScriptAsset instanceof TextAsset) {
 				// JSONの場合の特殊挙動をトレースするためのコード。node.jsの仕様に準ずる
 				if (targetScriptAsset && PathUtil.resolveExtname(path) === ".json") {
 					// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
-					var cache = game._scriptCaches[resolvedPath] = new RequireCachedValue(JSON.parse(targetScriptAsset.data));
+					var cache = (game._scriptCaches[resolvedPath] = new RequireCachedValue(JSON.parse(targetScriptAsset.data)));
 					return cache._cachedValue();
 				}
 			}
@@ -207,7 +199,7 @@ namespace g {
 
 			// メソッドとしてではなく単体で呼ばれるのでメソッドにせずここで実体を代入する
 			this.require = (path: string) => {
-				return (path === "g") ? _g : g._require(game, path, this);
+				return path === "g" ? _g : g._require(game, path, this);
 			};
 		}
 	}

@@ -131,8 +131,15 @@ namespace g {
 		 */
 		_useRealSize: boolean;
 
-		constructor(id: string, assetPath: string, width: number, height: number,
-		    system: VideoSystem, loop: boolean, useRealSize: boolean) {
+		constructor(
+			id: string,
+			assetPath: string,
+			width: number,
+			height: number,
+			system: VideoSystem,
+			loop: boolean,
+			useRealSize: boolean
+		) {
 			super(id, assetPath, width, height);
 			this.realWidth = 0;
 			this.realHeight = 0;
@@ -143,7 +150,7 @@ namespace g {
 
 		abstract asSurface(): Surface;
 
-		play(loop?: boolean): VideoPlayer {
+		play(_loop?: boolean): VideoPlayer {
 			this.getPlayer().play(this);
 			return this.getPlayer();
 		}
@@ -202,8 +209,7 @@ namespace g {
 
 		stop(): void {
 			var players = this._system.findPlayers(this);
-			for (var i = 0; i < players.length; ++i)
-				players[i].stop();
+			for (var i = 0; i < players.length; ++i) players[i].stop();
 		}
 
 		inUse(): boolean {
@@ -211,8 +217,7 @@ namespace g {
 		}
 
 		destroy(): void {
-			if (this._system)
-				this.stop();
+			if (this._system) this.stop();
 
 			this.data = undefined;
 			this._system = undefined;

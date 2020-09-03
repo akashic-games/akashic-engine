@@ -16,7 +16,7 @@ namespace g {
 		/**
 		 * @private
 		 */
-		_destroyRequestedAssets:  {[key: string]: Asset};
+		_destroyRequestedAssets: { [key: string]: Asset };
 
 		/**
 		 * @private
@@ -85,7 +85,8 @@ namespace g {
 		_setPlaybackRate(value: number): void {
 			if (value < 0 || isNaN(value) || typeof value !== "number")
 				throw ExceptionFactory.createAssertionError(
-					"AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
+					"AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value
+				);
 
 			var before = this._playbackRate;
 			this._playbackRate = value;
@@ -128,7 +129,7 @@ namespace g {
 
 		// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 		get player(): AudioPlayer {
-			if (! this._player) {
+			if (!this._player) {
 				this._player = this.game.resourceFactory.createAudioPlayer(this);
 				this._player.played.handle(this, this._onPlayerPlayed);
 				this._player.stopped.handle(this, this._onPlayerStopped);
@@ -146,8 +147,7 @@ namespace g {
 		}
 
 		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			if (this.player.currentAudio && this.player.currentAudio.id === asset.id)
-				return [this.player];
+			if (this.player.currentAudio && this.player.currentAudio.id === asset.id) return [this.player];
 			return [];
 		}
 
@@ -221,8 +221,7 @@ namespace g {
 			if (e.player !== this._player)
 				throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
 
-			if (e.player._supportsPlaybackRate())
-				return;
+			if (e.player._supportsPlaybackRate()) return;
 
 			// 再生速度非対応の場合のフォールバック: 鳴らさず即ミュートにする
 			if (this._playbackRate !== 1.0) {
@@ -256,8 +255,7 @@ namespace g {
 
 		createPlayer(): AudioPlayer {
 			var player = this.game.resourceFactory.createAudioPlayer(this);
-			if (player.canHandleStopped())
-				this.players.push(player);
+			if (player.canHandleStopped()) this.players.push(player);
 
 			player.played.handle(this, this._onPlayerPlayed);
 			player.stopped.handle(this, this._onPlayerStopped);
@@ -268,8 +266,7 @@ namespace g {
 		findPlayers(asset: AudioAsset): AudioPlayer[] {
 			var ret: AudioPlayer[] = [];
 			for (var i = 0; i < this.players.length; ++i) {
-				if (this.players[i].currentAudio && this.players[i].currentAudio.id === asset.id)
-					ret.push(this.players[i]);
+				if (this.players[i].currentAudio && this.players[i].currentAudio.id === asset.id) ret.push(this.players[i]);
 			}
 			return ret;
 		}
@@ -277,7 +274,7 @@ namespace g {
 		stopAll(): void {
 			var players = this.players.concat();
 			for (var i = 0; i < players.length; ++i) {
-				players[i].stop();	// auto remove
+				players[i].stop(); // auto remove
 			}
 		}
 
@@ -323,8 +320,7 @@ namespace g {
 		 * @private
 		 */
 		_onPlayerPlayed(e: AudioPlayerEvent): void {
-			if (e.player._supportsPlaybackRate())
-				return;
+			if (e.player._supportsPlaybackRate()) return;
 
 			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
 			if (this._playbackRate !== 1.0) {
@@ -337,8 +333,7 @@ namespace g {
 		 */
 		_onPlayerStopped(e: AudioPlayerEvent): void {
 			var index = this.players.indexOf(e.player);
-			if (index < 0)
-				return;
+			if (index < 0) return;
 
 			e.player.stopped.remove({ owner: this, func: this._onPlayerStopped });
 			this.players.splice(index, 1);

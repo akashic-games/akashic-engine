@@ -1,0 +1,15 @@
+{
+	"extends": "@akashic/eslint-config",
+	"rules": {
+		// override rules
+		"@typescript-eslint/no-unused-vars": [
+			"error",
+			{
+				"vars": "all",
+				"args": "all",
+				"varsIgnorePattern": "^g$",
+				"argsIgnorePattern": "^_"
+			}
+		]
+	}
+}
