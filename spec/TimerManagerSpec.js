@@ -520,4 +520,23 @@ describe("test TimerManager", function () {
 		expect(m._identifiers).toBeUndefined();
 	});
 
+	it("clearInterval - same time", function () {
+		const m = new g.TimerManager(trigger, 10);
+		let cnt1 = 0;
+		let cnt2 = 0;
+		let timer2;
+
+		const timer1 = m.setInterval(() => {
+			// 同タイミングでタイマが完了した場合、先行する timer1 の処理で timer2 を clearInterval() しても timer2 のハンドラが実行されない事を確認する。
+			if (!timer2.destroyed()) m.clearInterval(timer2);
+			cnt1++;
+		}, 200);
+		timer2 = m.setInterval(() => {
+			cnt2++;
+		}, 200);
+		loopFire(5); // 500ms
+		m.clearInterval(timer1);
+		expect(cnt1).toBe(2);
+		expect(cnt2).toBe(0);
+	});
 });
