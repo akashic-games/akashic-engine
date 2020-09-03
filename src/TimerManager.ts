@@ -59,6 +59,7 @@ export class TimerIdentifier {
 	 * @private
 	 */
 	_handleElapse(): void {
+		if (this.destroyed()) return;
 		this._handler.call(this._handlerOwner);
 		if (this._fired) {
 			this._fired.call(this._firedOwner, this);
