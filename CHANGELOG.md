@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.33
+
+不具合修正
+ * export 出来ていなかった `g.AssetLoadFailureInfo` を追加。
+
 ## 3.0.0-beta.32
 
 不具合修正
