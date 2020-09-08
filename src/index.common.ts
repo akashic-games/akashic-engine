@@ -21,6 +21,7 @@ export * from "./entities/Pane";
 export * from "./entities/Sprite";
 export * from "./AssetAccessor";
 export * from "./AssetConfiguration";
+export * from "./AssetLoadFailureInfo";
 export * from "./AssetManager";
 export * from "./AssetManagerLoadHandler";
 export * from "./AudioSystemManager";
