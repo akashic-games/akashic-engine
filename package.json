@@ -40,8 +40,6 @@
     "minify:browser": "uglifyjs lib/main.js -o ./lib/main.min.js",
     "lint": "npm run format && npm run eslint && npm run textlint",
     "eslint": "eslint -c .eslintrc src/**/*.ts  --fix",
-    "eslint2": "eslint -c .eslintrc src/Asset.ts  --fix",
-    "eslint3": "eslint -c .eslintrc src/Xorshift.ts  --fix",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts --gaID UA-162208211-1"
   },
