@@ -220,10 +220,10 @@ describe("test Module", () => {
 		].join("\n"),
 		"/node_modules/moduleUsesA/node_modules/libraryA/index.js": [
 			"const foo = require('./lib/foo/foo');",
-			"module.exports = { 'me': 'moduleUsesA_libraryA-index', thisModule: module, foo: foo };"
+			"module.exports = { 'me': 'moduleUsesALibraryA-index', thisModule: module, foo: foo };"
 		].join("\n"),
 		"/node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js":
-			"module.exports = { me: 'moduleUsesA_libraryA-lib-foo-foo', thisModule: module };",
+			"module.exports = { me: 'moduleUsesALibraryA-lib-foo-foo', thisModule: module };",
 		"/node_modules/libraryA/index.js": "module.exports = { me: 'libraryA-index', thisModule: module };",
 
 		// cyclic
@@ -579,19 +579,19 @@ describe("test Module", () => {
 			expect(moduleUsesA.thisModule.children[0].exports).toBe(moduleUsesA.libraryA);
 			expect(moduleUsesA.thisModule.loaded).toBe(true);
 
-			const moduleUsesA_libraryA = moduleUsesA.libraryA;
-			expect(moduleUsesA_libraryA.me).toBe("moduleUsesA_libraryA-index");
-			expect(moduleUsesA_libraryA.thisModule.parent).toBe(moduleUsesA.thisModule);
-			expect(moduleUsesA_libraryA.thisModule.children.length).toBe(1);
-			expect(moduleUsesA_libraryA.thisModule.children[0] instanceof Module).toBe(true);
-			expect(moduleUsesA_libraryA.thisModule.children[0].exports).toBe(moduleUsesA_libraryA.foo);
-			expect(moduleUsesA_libraryA.thisModule.loaded).toBe(true);
+			const moduleUsesALibraryA = moduleUsesA.libraryA;
+			expect(moduleUsesALibraryA.me).toBe("moduleUsesALibraryA-index");
+			expect(moduleUsesALibraryA.thisModule.parent).toBe(moduleUsesA.thisModule);
+			expect(moduleUsesALibraryA.thisModule.children.length).toBe(1);
+			expect(moduleUsesALibraryA.thisModule.children[0] instanceof Module).toBe(true);
+			expect(moduleUsesALibraryA.thisModule.children[0].exports).toBe(moduleUsesALibraryA.foo);
+			expect(moduleUsesALibraryA.thisModule.loaded).toBe(true);
 
-			const moduleUsesA_libraryA_foo = moduleUsesA_libraryA.foo;
-			expect(moduleUsesA_libraryA_foo.me).toBe("moduleUsesA_libraryA-lib-foo-foo");
-			expect(moduleUsesA_libraryA_foo.thisModule.parent).toBe(moduleUsesA_libraryA.thisModule);
-			expect(moduleUsesA_libraryA_foo.thisModule.children.length).toBe(0);
-			expect(moduleUsesA_libraryA_foo.thisModule.loaded).toBe(true);
+			const moduleUsesALibraryAFoo = moduleUsesALibraryA.foo;
+			expect(moduleUsesALibraryAFoo.me).toBe("moduleUsesALibraryA-lib-foo-foo");
+			expect(moduleUsesALibraryAFoo.thisModule.parent).toBe(moduleUsesALibraryA.thisModule);
+			expect(moduleUsesALibraryAFoo.thisModule.children.length).toBe(0);
+			expect(moduleUsesALibraryAFoo.thisModule.loaded).toBe(true);
 
 			const libraryA = useA.libraryA;
 			expect(libraryA.me).toBe("libraryA-index");
@@ -599,7 +599,7 @@ describe("test Module", () => {
 			expect(libraryA.thisModule.children.length).toBe(0);
 			expect(libraryA.thisModule.loaded).toBe(true);
 
-			expect(moduleUsesA_libraryA).not.toBe(libraryA);
+			expect(moduleUsesALibraryA).not.toBe(libraryA);
 			done();
 		});
 		game._startLoadingGlobalAssets();
@@ -639,19 +639,19 @@ describe("test Module", () => {
 			expect(moduleUsesA.me).toBe("moduleUsesA-index");
 			expect(moduleUsesA.thisModule.children[0].exports).toBe(moduleUsesA.libraryA);
 
-			const moduleUsesA_libraryA = moduleUsesA.libraryA;
-			expect(moduleUsesA_libraryA.me).toBe("moduleUsesA_libraryA-index");
-			expect(moduleUsesA_libraryA.thisModule.children[0].exports).toBe(moduleUsesA_libraryA.foo);
+			const moduleUsesALibraryA = moduleUsesA.libraryA;
+			expect(moduleUsesALibraryA.me).toBe("moduleUsesALibraryA-index");
+			expect(moduleUsesALibraryA.thisModule.children[0].exports).toBe(moduleUsesALibraryA.foo);
 
-			const moduleUsesA_libraryA_foo = moduleUsesA_libraryA.foo;
-			expect(moduleUsesA_libraryA_foo.me).toBe("moduleUsesA_libraryA-lib-foo-foo");
-			expect(moduleUsesA_libraryA_foo.thisModule.children.length).toBe(0);
+			const moduleUsesALibraryAFoo = moduleUsesALibraryA.foo;
+			expect(moduleUsesALibraryAFoo.me).toBe("moduleUsesALibraryA-lib-foo-foo");
+			expect(moduleUsesALibraryAFoo.thisModule.children.length).toBe(0);
 
 			const libraryA = useA.libraryA;
 			expect(libraryA.me).toBe("libraryA-index");
 			expect(libraryA.thisModule.children.length).toBe(0);
 
-			expect(moduleUsesA_libraryA).not.toBe(libraryA);
+			expect(moduleUsesALibraryA).not.toBe(libraryA);
 			done();
 		});
 		game._startLoadingGlobalAssets();

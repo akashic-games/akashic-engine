@@ -57,7 +57,7 @@ describe("test OperationPluginManager", () => {
 		};
 		game = new Game(conf, "/", "foo", dummyViewInfo);
 		const manager = game._moduleManager;
-		const require_original = manager._require;
+		const requireOriginal = manager._require;
 		manager._require = (path: string, currentModule?: Module) => {
 			switch (path) {
 				case "/script/op-plugin.js":
@@ -65,7 +65,7 @@ describe("test OperationPluginManager", () => {
 				case "/script/op-plugin-unsupported.js":
 					return TestOperationPluginUnsupported;
 				default:
-					return require_original.call(manager, path, currentModule);
+					return requireOriginal.call(manager, path, currentModule);
 			}
 		};
 	});

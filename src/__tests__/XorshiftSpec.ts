@@ -1,6 +1,6 @@
 import { Xorshift } from "..";
 import { customMatchers } from "./helpers";
-const RefXorshift = require("xorshift").constructor;
+const RefXorshift = require("xorshift").constructor; // eslint-disable-line
 
 expect.extend(customMatchers);
 
