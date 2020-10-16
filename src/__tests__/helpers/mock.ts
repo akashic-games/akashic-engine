@@ -370,8 +370,8 @@ export class TextAsset extends pci.TextAsset {
 	_load(loader: AssetLoadHandler): void {
 		if (this._failureController.tryLoad(this, loader)) {
 			setTimeout(() => {
-				if ((<ResourceFactory> this.game.resourceFactory).scriptContents.hasOwnProperty(this.path)) {
-					this.data = (<ResourceFactory> this.game.resourceFactory).scriptContents[this.path];
+				if ((<ResourceFactory>this.game.resourceFactory).scriptContents.hasOwnProperty(this.path)) {
+					this.data = (<ResourceFactory>this.game.resourceFactory).scriptContents[this.path];
 				} else {
 					this.data = "";
 				}
@@ -400,7 +400,7 @@ export class ScriptAsset extends pci.ScriptAsset {
 	}
 
 	execute(env: ScriptAssetRuntimeValue): any {
-		if (!(<ResourceFactory> this.game.resourceFactory).scriptContents.hasOwnProperty(env.module.filename)) {
+		if (!(<ResourceFactory>this.game.resourceFactory).scriptContents.hasOwnProperty(env.module.filename)) {
 			// 特にスクリプトの内容指定がないケース:
 			// ScriptAssetは任意の値を返してよいが、シーンを記述したスクリプトは
 			// シーンを返す関数を返すことを期待するのでここでは関数を返しておく
@@ -410,7 +410,7 @@ export class ScriptAsset extends pci.ScriptAsset {
 		} else {
 			const prefix = "(function(exports, require, module, __filename, __dirname) {";
 			const suffix = "})(g.module.exports, g.module.require, g.module, g.filename, g.dirname);";
-			const content = (<ResourceFactory> this.game.resourceFactory).scriptContents[env.module.filename];
+			const content = (<ResourceFactory>this.game.resourceFactory).scriptContents[env.module.filename];
 			const f = new Function("g", prefix + content + suffix);
 			f(env);
 			return env.module.exports;
