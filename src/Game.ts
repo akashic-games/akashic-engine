@@ -269,7 +269,7 @@ export class Game {
 	 */
 	random: RandomGenerator;
 	/**
-	 * このGameで利用可能なローカルシーン用の乱数生成機群。
+	 * このGameで利用可能なローカルイベント用の乱数生成機群。
 	 */
 	localRandom: RandomGenerator;
 	/**
