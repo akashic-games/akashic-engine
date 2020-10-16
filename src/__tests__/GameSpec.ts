@@ -24,6 +24,7 @@ describe("test Game", () => {
 		expect(game.renderers.length).toBe(0);
 		expect(game.scenes.length).toBe(0);
 		expect(game.random).toBeUndefined();
+		expect(game.localRandom).toBeDefined();
 		expect(game._modified).toBe(true);
 		expect(game.external).toEqual({});
 		expect(game.age).toBe(0);
@@ -47,6 +48,7 @@ describe("test Game", () => {
 		expect(game.renderers).toBeUndefined();
 		expect(game.scenes).toBeUndefined();
 		expect(game.random).toBeUndefined();
+		expect(game.localRandom).toBeDefined();
 		expect(game._modified).toBe(false);
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
@@ -1050,5 +1052,18 @@ describe("test Game", () => {
 			expect(game.joinedPlayerIds).toEqual([]);
 		});
 		game.pushScene(scene);
+	});
+
+	it("localRandom", () => {
+		const game1 = new Game({ width: 320, height: 320, main: "", assets: {} });
+		const game2 = new Game({ width: 320, height: 320, main: "", assets: {} });
+		// 異なるGameインスタンスのlocalRandomが生成する乱数が異なる値になる
+		const randoms1: number[] = [];
+		const randoms2: number[] = [];
+		for (let i = 0; i < 10; i++) {
+			randoms1[i] = game1.localRandom.generate();
+			randoms2[i] = game2.localRandom.generate();
+		}
+		expect(randoms1).not.toEqual(randoms2);
 	});
 });

@@ -269,6 +269,10 @@ export class Game {
 	 */
 	random: RandomGenerator;
 	/**
+	 * このGameで利用可能なローカルシーン用の乱数生成機群。
+	 */
+	localRandom: RandomGenerator;
+	/**
 	 * プレイヤーがゲームに参加したことを表すイベント。
 	 */
 	onJoin: Trigger<JoinEvent>;
@@ -761,6 +765,8 @@ export class Game {
 		this.loadingScene = undefined!;
 		this.operationPlugins = undefined!;
 		this.random = undefined!;
+		// 再現性の無い乱数を生成するのが目的なので、シード値として乱数を用いる
+		this.localRandom = new XorshiftRandomGenerator(Math.floor(Math.pow(2, 32) * Math.random()));
 		this._defaultLoadingScene = undefined!;
 		this._eventConverter = undefined!;
 		this._pointEventResolver = undefined!;
@@ -1386,7 +1392,7 @@ export class Game {
 			this._defaultLoadingScene.destroy();
 		}
 
-		// NOTE: fps, width, height, external, vars はそのまま保持しておく
+		// NOTE: fps, width, height, external, vars, localRandom はそのまま保持しておく
 		this.db = undefined!;
 		this.renderers = undefined!;
 		this.scenes = undefined!;
