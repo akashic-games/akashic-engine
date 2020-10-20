@@ -265,11 +265,11 @@ export class Game {
 	 */
 	scenes: Scene[];
 	/**
-	 * このGameで利用可能な乱数生成機群。
+	 * このGameで利用可能な乱数生成器。
 	 */
 	random: RandomGenerator;
 	/**
-	 * このGameで利用可能なローカルイベント用の乱数生成機群。
+	 * このGameで利用可能なローカル処理用の乱数生成器。
 	 */
 	localRandom: RandomGenerator;
 	/**
@@ -765,8 +765,8 @@ export class Game {
 		this.loadingScene = undefined!;
 		this.operationPlugins = undefined!;
 		this.random = undefined!;
-		// 再現性の無い乱数を生成するのが目的なので、シード値として乱数を用いる
-		this.localRandom = new XorshiftRandomGenerator(Math.floor(Math.pow(2, 32) * Math.random()));
+		// 再現性の無い乱数を生成するのが目的なので、シード値として乱数を用いる。また、ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値である 2^53 - 1 を直接かける
+		this.localRandom = new XorshiftRandomGenerator(Math.floor((Math.pow(2, 53) - 1) * Math.random()));
 		this._defaultLoadingScene = undefined!;
 		this._eventConverter = undefined!;
 		this._pointEventResolver = undefined!;
@@ -1347,6 +1347,8 @@ export class Game {
 		this._postTickTasks = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
+		// 再現性の無い乱数を生成するのが目的なので、シード値として乱数を用いる。また、ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値である 2^53 - 1 を直接かける
+		this.localRandom = new XorshiftRandomGenerator(Math.floor((Math.pow(2, 53) - 1) * Math.random()));
 
 		this._isTerminated = false;
 		this.vars = {};
@@ -1392,7 +1394,7 @@ export class Game {
 			this._defaultLoadingScene.destroy();
 		}
 
-		// NOTE: fps, width, height, external, vars, localRandom はそのまま保持しておく
+		// NOTE: fps, width, height, external, vars はそのまま保持しておく
 		this.db = undefined!;
 		this.renderers = undefined!;
 		this.scenes = undefined!;
@@ -1409,6 +1411,7 @@ export class Game {
 		this.audio = undefined!;
 		this.defaultAudioSystemId = undefined!;
 		this.handlerSet = undefined!;
+		this.localRandom = undefined!;
 
 		this.onJoin.destroy();
 		this.onJoin = undefined!;

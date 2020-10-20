@@ -48,7 +48,7 @@ describe("test Game", () => {
 		expect(game.renderers).toBeUndefined();
 		expect(game.scenes).toBeUndefined();
 		expect(game.random).toBeUndefined();
-		expect(game.localRandom).toBeDefined();
+		expect(game.localRandom).toBeUndefined();
 		expect(game._modified).toBe(false);
 		expect(game.external).toEqual({}); // external は触らない
 		expect(game.vars).toEqual({}); // vars も触らない
