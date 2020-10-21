@@ -765,8 +765,7 @@ export class Game {
 		this.loadingScene = undefined!;
 		this.operationPlugins = undefined!;
 		this.random = undefined!;
-		// 再現性の無い乱数を生成するのが目的なので、シード値として乱数を用いる。また、ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値である 2^53 - 1 を直接かける
-		this.localRandom = new XorshiftRandomGenerator(Math.floor((Math.pow(2, 53) - 1) * Math.random()));
+		this.localRandom = undefined!;
 		this._defaultLoadingScene = undefined!;
 		this._eventConverter = undefined!;
 		this._pointEventResolver = undefined!;
@@ -1347,8 +1346,8 @@ export class Game {
 		this._postTickTasks = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
-		// 再現性の無い乱数を生成するのが目的なので、シード値として乱数を用いる。また、ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値である 2^53 - 1 を直接かける
-		this.localRandom = new XorshiftRandomGenerator(Math.floor((Math.pow(2, 53) - 1) * Math.random()));
+		// ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値(9007199254740991)を直接かける
+		this.localRandom = new XorshiftRandomGenerator(Math.floor(9007199254740991 * Math.random()));
 
 		this._isTerminated = false;
 		this.vars = {};
