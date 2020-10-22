@@ -265,9 +265,13 @@ export class Game {
 	 */
 	scenes: Scene[];
 	/**
-	 * このGameで利用可能な乱数生成機群。
+	 * このGameで利用可能な乱数生成器。
 	 */
 	random: RandomGenerator;
+	/**
+	 * このGameで利用可能なローカル処理用の乱数生成器。
+	 */
+	localRandom: RandomGenerator;
 	/**
 	 * プレイヤーがゲームに参加したことを表すイベント。
 	 */
@@ -761,6 +765,7 @@ export class Game {
 		this.loadingScene = undefined!;
 		this.operationPlugins = undefined!;
 		this.random = undefined!;
+		this.localRandom = undefined!;
 		this._defaultLoadingScene = undefined!;
 		this._eventConverter = undefined!;
 		this._pointEventResolver = undefined!;
@@ -1341,6 +1346,8 @@ export class Game {
 		this._postTickTasks = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
+		// ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値(9007199254740991)を直接かける
+		this.localRandom = new XorshiftRandomGenerator(Math.floor(9007199254740991 * Math.random()));
 
 		this._isTerminated = false;
 		this.vars = {};
@@ -1403,6 +1410,7 @@ export class Game {
 		this.audio = undefined!;
 		this.defaultAudioSystemId = undefined!;
 		this.handlerSet = undefined!;
+		this.localRandom = undefined!;
 
 		this.onJoin.destroy();
 		this.onJoin = undefined!;

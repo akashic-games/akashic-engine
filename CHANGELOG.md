@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.34
+
+機能追加
+ * `g.Game#localRandom` を追加
+
 ## 3.0.0-beta.33
 
 不具合修正
