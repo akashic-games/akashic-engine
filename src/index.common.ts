@@ -36,6 +36,7 @@ export * from "./EntityStateFlags";
 export * from "./Event";
 export * from "./EventConverter";
 export * from "./EventFilter";
+export * from "./EventFilterController";
 export * from "./EventIndex";
 export * from "./EventPriority";
 export * from "./ExceptionFactory";
