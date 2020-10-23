@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 3.0.0-beta.35
+
+機能追加
+* `g.EventFilterController` を追加
+* `g.EventFilter` の第2引数に `g.EventFilterController` を追加
+
 ## 3.0.0-beta.34
 
 機能追加
