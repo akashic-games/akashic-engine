@@ -3,5 +3,9 @@
     "parserOptions": {
         "project": "tsconfig.eslint.json",
         "sourceType": "module"
-    }
+    },
+    "ignorePatterns": [
+        "*.js",
+        "**/*.d.ts"
+    ]
 }
