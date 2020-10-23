@@ -19,6 +19,7 @@ import {
 } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import * as g from "../..";
+import { EventFilter } from "../../EventFilter";
 
 declare global {
 	namespace NodeJS {
@@ -579,7 +580,7 @@ export class ResourceFactory extends pci.ResourceFactory {
 export class GameHandlerSet implements g.GameHandlerSet {
 	raisedEvents: pl.Event[] = [];
 	raisedTicks: pl.Event[][] = [];
-	eventFilters: ((events: pl.Event[]) => pl.Event[])[] = [];
+	eventFilters: EventFilter[] = [];
 	modeHistry: g.SceneMode[] = [];
 
 	raiseTick(events?: pl.Event[]): void {
@@ -588,10 +589,10 @@ export class GameHandlerSet implements g.GameHandlerSet {
 	raiseEvent(event: pl.Event): void {
 		this.raisedEvents.push(event);
 	}
-	addEventFilter(func: (pevs: pl.Event[]) => pl.Event[], _handleEmpty?: boolean): void {
+	addEventFilter(func: EventFilter, _handleEmpty?: boolean): void {
 		this.eventFilters.push(func);
 	}
-	removeEventFilter(func: (pevs: pl.Event[]) => pl.Event[]): void {
+	removeEventFilter(func: EventFilter): void {
 		this.eventFilters = this.eventFilters.filter(f => f !== func);
 	}
 	removeAllEventFilters(): void {

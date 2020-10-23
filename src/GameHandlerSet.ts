@@ -1,4 +1,5 @@
 import * as pl from "@akashic/playlog";
+import { EventFilter } from "./EventFilter";
 import { LocalTickModeString } from "./LocalTickModeString";
 import { TickGenerationModeString } from "./TickGenerationModeString";
 
@@ -30,13 +31,13 @@ export interface GameHandlerSet {
 	 * @param func イベントフィルタ
 	 * @param handleEmpty イベントが存在しない場合でも定期的にフィルタを呼び出すか否か。省略された場合、偽。
 	 */
-	addEventFilter(func: (pevs: pl.Event[]) => pl.Event[], handleEmpty?: boolean): void;
+	addEventFilter(func: EventFilter, handleEmpty?: boolean): void;
 
 	/**
 	 * イベントフィルタを削除する
 	 * @param func イベントフィルタ
 	 */
-	removeEventFilter(func: (pevs: pl.Event[]) => pl.Event[]): void;
+	removeEventFilter(func: EventFilter): void;
 
 	/**
 	 * 全てのイベントフィルタを削除する
