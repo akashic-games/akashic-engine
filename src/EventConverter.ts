@@ -279,7 +279,7 @@ export class EventConverter {
 		let eventFlags = op.priority != null ? (op.priority & pl.EventFlagsMask.Priority ): 0;
 		return [
 			pl.EventCode.Operation, // 0: イベントコード
-			eventFlags, //               1: 優先度
+			eventFlags, //             1: イベントフラグ値
 			playerId, //               2: プレイヤーID
 			op._code, //               3: 操作プラグインコード
 			op.data, //                4: 操作プラグインデータ
