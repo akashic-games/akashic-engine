@@ -40,14 +40,10 @@ export interface Event {
 	 */
 	type: EventTypeString;
 	/**
-	 * イベントの優先度。
-	 * 非常に多くのイベントが発生した場合、この値の低いイベントは、高いイベントよりも優先的に破棄・遅延される。
-	 *
-	 * ゲーム開発者がイベントを生成する場合、この値に 0 以上 2 以下の整数を指定することができる。
-	 * ただしその値は単に参考値としてのみ利用される。
-	 * エンジンはイベントの生成した主体などに応じて、この値を任意に変更する可能性がある。
+	 * イベントフラグ値。
+	 * 詳細な仕様は @akashic/playlog を参照のこと。
 	 */
-	priority: number;
+	eventFlags: number;
 	/**
 	 * このイベントがローカルであるか否か。
 	 */
@@ -86,16 +82,16 @@ export class PointEventBase<T extends PointTarget> implements Event {
 	 */
 	// @ts-ignore
 	type: "point-down" | "point-move" | "point-up";
-	priority: number;
+	eventFlags: number;
 	local: boolean;
 	player: Player | undefined;
 	pointerId: number;
 	point: CommonOffset;
 	target: T | undefined;
 
-	constructor(pointerId: number, target: T | undefined, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(pointerId: number, target: T | undefined, point: CommonOffset, player?: Player, local?: boolean, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.local = !!local;
 		this.player = player;
 		this.pointerId = pointerId;
@@ -109,10 +105,6 @@ export class PointEventBase<T extends PointTarget> implements Event {
  */
 export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
 	type: "point-down" = "point-down";
-
-	constructor(pointerId: number, target: T | undefined, point: CommonOffset, player?: Player, local?: boolean, priority?: number) {
-		super(pointerId, target, point, player, local, priority);
-	}
 }
 
 /**
@@ -136,9 +128,9 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
 		startDelta: CommonOffset,
 		player?: Player,
 		local?: boolean,
-		priority?: number
+		eventFlags?: number
 	) {
-		super(pointerId, target, point, player, local, priority);
+		super(pointerId, target, point, player, local, eventFlags);
 		this.prevDelta = prevDelta;
 		this.startDelta = startDelta;
 	}
@@ -168,9 +160,9 @@ export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T>
 		startDelta: CommonOffset,
 		player?: Player,
 		local?: boolean,
-		priority?: number
+		eventFlags?: number
 	) {
-		super(pointerId, target, point, player, local, priority);
+		super(pointerId, target, point, player, local, eventFlags);
 		this.prevDelta = prevDelta;
 		this.startDelta = startDelta;
 	}
@@ -182,14 +174,14 @@ export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T>
  */
 export class MessageEvent implements Event {
 	type: "message" = "message";
-	priority: number;
+	eventFlags: number;
 	local: boolean;
 	player: Player | undefined;
 	data: any;
 
-	constructor(data: any, player?: Player, local?: boolean, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(data: any, player?: Player, local?: boolean, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.local = !!local;
 		this.player = player;
 		this.data = data;
@@ -202,15 +194,15 @@ export class MessageEvent implements Event {
  */
 export class OperationEvent implements Event {
 	type: "operation" = "operation";
-	priority: number;
+	eventFlags: number;
 	local: boolean;
 	player: Player | undefined;
 	code: number;
 	data: any;
 
-	constructor(code: number, data: any, player?: Player, local?: boolean, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(code: number, data: any, player?: Player, local?: boolean, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.local = !!local;
 		this.player = player;
 		this.code = code;
@@ -224,13 +216,13 @@ export class OperationEvent implements Event {
  */
 export class JoinEvent implements Event {
 	type: "join" = "join";
-	priority: number;
+	eventFlags: number;
 	player: Player;
 	storageValues: StorageValueStore | undefined;
 
-	constructor(player: Player, storageValues?: StorageValueStore, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(player: Player, storageValues?: StorageValueStore, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.player = player;
 		this.storageValues = storageValues;
 	}
@@ -242,12 +234,12 @@ export class JoinEvent implements Event {
  */
 export class LeaveEvent implements Event {
 	type: "leave" = "leave";
-	priority: number;
+	eventFlags: number;
 	player: Player;
 
-	constructor(player: Player, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(player: Player, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.player = player;
 	}
 }
@@ -257,13 +249,13 @@ export class LeaveEvent implements Event {
  */
 export class TimestampEvent implements Event {
 	type: "timestamp" = "timestamp";
-	priority: number;
+	eventFlags: number;
 	player: Player;
 	timestamp: number;
 
-	constructor(timestamp: number, player: Player, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(timestamp: number, player: Player, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.player = player;
 		this.timestamp = timestamp;
 	}
@@ -275,14 +267,14 @@ export class TimestampEvent implements Event {
  */
 export class PlayerInfoEvent implements Event {
 	type: "player-info" = "player-info";
-	priority: number;
+	eventFlags: number;
 	playerId: string;
 	playerName: string;
 	userData: any;
 
-	constructor(playerId: string, playerName: string, userData?: any, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(playerId: string, playerName: string, userData?: any, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.playerId = playerId;
 		this.playerName = playerName;
 		this.userData = userData;
@@ -295,12 +287,12 @@ export class PlayerInfoEvent implements Event {
  */
 export class SeedEvent implements Event {
 	type: "seed" = "seed";
-	priority: number;
+	eventFlags: number;
 	generator: RandomGenerator;
 
-	constructor(generator: RandomGenerator, priority?: number) {
-		// @ts-ignore TODO: priority のデフォルト値の扱い
-		this.priority = priority;
+	constructor(generator: RandomGenerator, eventFlags?: number) {
+		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
+		this.eventFlags = eventFlags;
 		this.generator = generator;
 	}
 }

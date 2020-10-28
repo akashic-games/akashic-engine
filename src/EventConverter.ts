@@ -52,7 +52,7 @@ export class EventConverter {
 		let timestamp: number;
 
 		const eventCode = pev[EventIndex.General.Code];
-		const prio = pev[EventIndex.General.Priority];
+		const prio = pev[EventIndex.General.EventFlags];
 		const playerId = pev[EventIndex.General.PlayerId];
 		// @ts-ignore
 		let player = this._playerTable[playerId] || { id: playerId };
@@ -184,7 +184,7 @@ export class EventConverter {
 				playerId = preservePlayer ? ts.player.id : this._playerId;
 				return [
 					pl.EventCode.Timestamp, // 0: イベントコード
-					ts.priority, //            1: 優先度
+					ts.eventFlags, //          1: イベントフラグ値
 					playerId, //               2: プレイヤーID
 					ts.timestamp //            3: タイムスタンプ
 				];
@@ -193,7 +193,7 @@ export class EventConverter {
 				playerId = preservePlayer ? playerInfo.playerId : this._playerId;
 				return [
 					pl.EventCode.PlayerInfo, // 0: イベントコード
-					playerInfo.priority, //     1: 優先度
+					playerInfo.eventFlags, //   1: イベントフラグ値
 					playerId, //                2: プレイヤーID
 					playerInfo.playerName, //   3: プレイヤー名
 					playerInfo.userData //      4: ユーザデータ
@@ -204,7 +204,7 @@ export class EventConverter {
 				playerId = preservePlayer && pointDown.player ? pointDown.player.id : this._playerId;
 				return [
 					pl.EventCode.PointDown, // 0: イベントコード
-					pointDown.priority, //     1: 優先度
+					pointDown.eventFlags, //   1: イベントフラグ値
 					playerId, //               2: プレイヤーID
 					pointDown.pointerId, //    3: ポインターID
 					pointDown.point.x, //      4: X座標
@@ -218,7 +218,7 @@ export class EventConverter {
 				playerId = preservePlayer && pointMove.player ? pointMove.player.id : this._playerId;
 				return [
 					pl.EventCode.PointMove, // 0: イベントコード
-					pointMove.priority, //     1: 優先度
+					pointMove.eventFlags, //   1: イベントフラグ値
 					playerId, //               2: プレイヤーID
 					pointMove.pointerId, //    3: ポインターID
 					pointMove.point.x, //      4: X座標
@@ -236,7 +236,7 @@ export class EventConverter {
 				playerId = preservePlayer && pointUp.player ? pointUp.player.id : this._playerId;
 				return [
 					pl.EventCode.PointUp, // 0: イベントコード
-					pointUp.priority, //     1: 優先度
+					pointUp.eventFlags, //   1: イベントフラグ値
 					playerId, //             2: プレイヤーID
 					pointUp.pointerId, //    3: ポインターID
 					pointUp.point.x, //      4: X座標
@@ -253,7 +253,7 @@ export class EventConverter {
 				playerId = preservePlayer && message.player ? message.player.id : this._playerId;
 				return [
 					pl.EventCode.Message, // 0: イベントコード
-					message.priority, //     1: 優先度
+					message.eventFlags, //   1: イベントフラグ値
 					playerId, //             2: プレイヤーID
 					message.data, //         3: 汎用的なデータ
 					!!message.local //       4?: ローカル
@@ -263,7 +263,7 @@ export class EventConverter {
 				playerId = preservePlayer && op.player ? op.player.id : this._playerId;
 				return [
 					pl.EventCode.Operation, // 0: イベントコード
-					op.priority, //            1: 優先度
+					op.eventFlags, //          1: イベントフラグ値
 					playerId, //               2: プレイヤーID
 					op.code, //                3: 操作プラグインコード
 					op.data, //                4: 操作プラグインデータ
@@ -276,10 +276,10 @@ export class EventConverter {
 
 	makePlaylogOperationEvent(op: InternalOperationPluginOperation): pl.Event {
 		let playerId = this._playerId;
-		let priority = op.priority != null ? op.priority : 0;
+		let eventFlags = op.priority != null ? (op.priority & pl.EventFlagsMask.Priority ): 0;
 		return [
 			pl.EventCode.Operation, // 0: イベントコード
-			priority, //               1: 優先度
+			eventFlags, //             1: イベントフラグ値
 			playerId, //               2: プレイヤーID
 			op._code, //               3: 操作プラグインコード
 			op.data, //                4: 操作プラグインデータ

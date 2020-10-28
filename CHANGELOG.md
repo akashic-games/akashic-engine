@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.0.0-beta.36
+
+仕様変更
+ * `g.Event#priority` を `g.Event#eventFlags` に変更
+
 ## 3.0.0-beta.35
 
 機能追加
