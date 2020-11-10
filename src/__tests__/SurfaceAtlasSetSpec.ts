@@ -3,18 +3,18 @@ import { skeletonRuntime, Surface } from "./helpers";
 
 describe("test SurfaceAtlasSet", () => {
 	let surfaceAtlasSet: SurfaceAtlasSet;
-	const createGlyph = (code: number, x: number, y: number, width: number, height: number): Glyph => {
+	const createGlyph = (code: number, x: number, y: number, width: number, height: number, surface?: Surface): Glyph => {
 		return {
 			code,
 			x,
 			y,
 			width,
 			height,
-			surface: undefined,
+			surface,
 			offsetX: 0,
 			offsetY: 0,
 			advanceWidth: width,
-			isSurfaceValid: false,
+			isSurfaceValid: !!surface,
 			_atlas: null
 		};
 	};
@@ -32,8 +32,8 @@ describe("test SurfaceAtlasSet", () => {
 		const surfaceAtlasSetParams: SurfaceAtlasSetParameterObject = {
 			resourceFactory: runtime.game.resourceFactory,
 			hint: {
-				initialAtlasWidth: 1,
-				initialAtlasHeight: 1,
+				initialAtlasWidth: 2, // このテストでは 1x1 のグリフしか入れいないが、内部的に幅・高さを1pxずつ拡張して管理するので最低 2x2 は必要
+				initialAtlasHeight: 2,
 				maxAtlasWidth: 2,
 				maxAtlasHeight: 3,
 				maxAtlasNum: 111
@@ -42,7 +42,7 @@ describe("test SurfaceAtlasSet", () => {
 		surfaceAtlasSet = new SurfaceAtlasSet(surfaceAtlasSetParams);
 		expect(surfaceAtlasSet._surfaceAtlases).toEqual([]);
 		expect(surfaceAtlasSet.getMaxAtlasNum()).toEqual(111);
-		expect(surfaceAtlasSet.getAtlasUsedSize()).toEqual({ width: 1, height: 1 });
+		expect(surfaceAtlasSet.getAtlasUsedSize()).toEqual({ width: 2, height: 2 });
 	});
 
 	describe("_spliceLeastFrequentlyUsedAtlas", () => {
@@ -71,8 +71,7 @@ describe("test SurfaceAtlasSet", () => {
 			expect(ret).toBe(false);
 		});
 		it("正常にグリフが追加された場合、trueが返る", () => {
-			const glyph = createGlyph(300, 0, 0, 1, 1);
-			glyph.surface = new Surface(1, 1);
+			const glyph = createGlyph(300, 0, 0, 1, 1, new Surface(1, 1));
 			const ret = surfaceAtlasSet.addGlyph(glyph);
 			expect(ret).toBe(true);
 		});
@@ -101,6 +100,42 @@ describe("test SurfaceAtlasSet", () => {
 		it("現在のSurfaceAtlasの保持数より値が小さい場合、maxAtlasNumの値が設定される", () => {
 			surfaceAtlasSet.changeMaxAtlasNum(5);
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(5);
+		});
+	});
+
+	describe("touchGlyph", () => {
+		it("touch された glyph のある atlas は「最も利用されていない」ではなくなる", () => {
+			const runtime = skeletonRuntime();
+			const surfaceAtlasSet = new SurfaceAtlasSet({
+				resourceFactory: runtime.game.resourceFactory,
+				hint: {
+					initialAtlasWidth: 10,
+					initialAtlasHeight: 10,
+					maxAtlasNum: 5
+				}
+			});
+
+			// 1 グリフ 1 枚のアトラスを占有する
+			// (SurfaceAtlas が内部的に幅・高さを 1px ずつ拡張して管理するので、
+			// 10x10 のグリフは入らないことに注意。ここでは 8x8 で一枚ずつ占有させている)
+			const glyph0 = createGlyph(300, 0, 0, 8, 8, new Surface(8, 8));
+			expect(surfaceAtlasSet.addGlyph(glyph0)).toBe(true);
+			const glyph1 = createGlyph(301, 0, 0, 8, 8, new Surface(8, 8));
+			expect(surfaceAtlasSet.addGlyph(glyph1)).toBe(true);
+			const glyph2 = createGlyph(301, 0, 0, 8, 8, new Surface(8, 8));
+			expect(surfaceAtlasSet.addGlyph(glyph2)).toBe(true);
+
+			expect(glyph0._atlas).toBe(surfaceAtlasSet._surfaceAtlases[0]);
+			expect(glyph1._atlas).toBe(surfaceAtlasSet._surfaceAtlases[1]);
+			expect(glyph2._atlas).toBe(surfaceAtlasSet._surfaceAtlases[2]);
+
+			surfaceAtlasSet.touchGlyph(glyph0);
+			surfaceAtlasSet.touchGlyph(glyph2);
+			expect(surfaceAtlasSet._findLeastFrequentlyUsedAtlasIndex()).toBe(1);
+			surfaceAtlasSet.touchGlyph(glyph1);
+			expect(surfaceAtlasSet._findLeastFrequentlyUsedAtlasIndex()).toBe(0);
+			surfaceAtlasSet.touchGlyph(glyph0);
+			expect(surfaceAtlasSet._findLeastFrequentlyUsedAtlasIndex()).toBe(2);
 		});
 	});
 });

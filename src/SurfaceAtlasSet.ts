@@ -159,7 +159,7 @@ export class SurfaceAtlasSet {
 		const idx = this._findLeastFrequentlyUsedAtlasIndex();
 		if (idx === -1) return null;
 
-		if (this._currentAtlasIndex > idx) --this._currentAtlasIndex;
+		if (this._currentAtlasIndex >= idx) --this._currentAtlasIndex;
 
 		const spliced = this._surfaceAtlases.splice(idx, 1)[0];
 		const glyphs = this._atlasGlyphsTable.splice(idx, 1)[0];
@@ -207,6 +207,7 @@ export class SurfaceAtlasSet {
 		let atlas: SurfaceAtlas = null!;
 		if (this._surfaceAtlases.length >= this._maxAtlasNum) {
 			atlas = this._spliceLeastFrequentlyUsedAtlas()!;
+			atlas.reset();
 		} else {
 			atlas = new SurfaceAtlas(this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height));
 		}
@@ -281,12 +282,11 @@ export class SurfaceAtlasSet {
 			return false;
 		}
 
-		if (!this._moveGlyphSurface(glyph)) {
-			// retry
-			this._reallocateAtlas();
-			this._moveGlyphSurface(glyph);
-		}
-		return true;
+		if (this._moveGlyphSurface(glyph)) return true;
+
+		// retry
+		this._reallocateAtlas();
+		return this._moveGlyphSurface(glyph);
 	}
 
 	/**
