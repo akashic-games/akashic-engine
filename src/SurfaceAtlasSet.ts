@@ -177,6 +177,8 @@ export class SurfaceAtlasSet {
 	 * 空き領域のある SurfaceAtlas を探索する。
 	 * glyph が持つ情報を SurfaceAtlas へ移動し、移動した SurfaceAtlas の情報で glyph を置き換える。
 	 * glyph が持っていた surface は破棄される。
+	 *
+	 * 移動に成功した場合 `true` を、失敗した (空き領域が見つからなかった) 場合 `false` を返す。
 	 * @private
 	 */
 	_moveGlyphSurface(glyph: Glyph): boolean {
@@ -270,6 +272,7 @@ export class SurfaceAtlasSet {
 	 * グリフを追加する。
 	 *
 	 * glyph が持っていたサーフェスは破棄され、このクラスが管理するいずれかの (サーフェスアトラスの) サーフェスに紐づけられる。
+	 * 追加に成功した場合 `true` を、失敗した (空き領域が見つからなかった) 場合 `false` を返す。
 	 *
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ

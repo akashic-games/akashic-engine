@@ -32,7 +32,7 @@ describe("test SurfaceAtlasSet", () => {
 		const surfaceAtlasSetParams: SurfaceAtlasSetParameterObject = {
 			resourceFactory: runtime.game.resourceFactory,
 			hint: {
-				initialAtlasWidth: 2, // このテストでは 1x1 のグリフしか入れいないが、内部的に幅・高さを1pxずつ拡張して管理するので最低 2x2 は必要
+				initialAtlasWidth: 2, // このテストでは 1x1 のグリフしか入れないが、内部的に幅・高さを1pxずつ拡張して管理するので最低 2x2 は必要
 				initialAtlasHeight: 2,
 				maxAtlasWidth: 2,
 				maxAtlasHeight: 3,
