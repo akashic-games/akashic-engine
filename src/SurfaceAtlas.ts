@@ -48,6 +48,17 @@ export class SurfaceAtlas {
 		this._usedRectangleAreaSize = { width: 0, height: 0 };
 	}
 
+	reset(): void {
+		const renderer = this._surface.renderer();
+		renderer.begin();
+		renderer.clear();
+		renderer.end();
+		this._emptySurfaceAtlasSlotHead = new SurfaceAtlasSlot(0, 0, this._surface.width, this._surface.height);
+		this._accessScore = 0;
+		this._usedRectangleAreaSize.width = 0;
+		this._usedRectangleAreaSize.height = 0;
+	}
+
 	/**
 	 * @private
 	 */

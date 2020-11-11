@@ -1,4 +1,5 @@
-import { CommonSize, Glyph, ResourceFactory } from "@akashic/pdi-types";
+import { CommonSize, ResourceFactory } from "@akashic/pdi-types";
+import { Glyph } from "./Glyph";
 import { SurfaceAtlas } from "./SurfaceAtlas";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
@@ -43,21 +44,6 @@ export interface SurfaceAtlasSetHint {
 }
 
 /**
- * 削除対象のデータ
- */
-export interface RemoveAtlasData {
-	/**
-	 * 削除対象のSurfaceAtlas
-	 */
-	surfaceAtlases: SurfaceAtlas[];
-
-	/**
-	 * 削除対象のグリフ
-	 */
-	glyphs: Glyph[][];
-}
-
-/**
  * SurfaceAtlasSet のコンストラクタに渡すことができるパラメータ。
  */
 export interface SurfaceAtlasSetParameterObject {
@@ -75,7 +61,9 @@ export interface SurfaceAtlasSetParameterObject {
 }
 
 /**
- * DynamicFontで使用される、SurfaceAtlasを管理する。
+ * DynamicFont で使用される SurfaceAtlas を管理するクラス。
+ *
+ * 歴史的経緯のため、名前に反して DynamicFont 専用のクラスであり、汎用の SurfaceAtlas 管理クラスではない点に注意。
  */
 export class SurfaceAtlasSet {
 	/**
@@ -135,44 +123,65 @@ export class SurfaceAtlasSet {
 	 * @private
 	 */
 	_deleteAtlas(delteNum: number): void {
-		const removedObject = this._removeLeastFrequentlyUsedAtlas(delteNum);
-		const removedAtlases = removedObject.surfaceAtlases;
-		for (let i = 0; i < removedAtlases.length; ++i) {
-			removedAtlases[i].destroy();
+		for (let i = 0; i < delteNum; ++i) {
+			const atlas = this._spliceLeastFrequentlyUsedAtlas();
+			if (!atlas) return;
+			atlas.destroy();
 		}
 	}
 
 	/**
-	 * 使用度の低いサーフェスアトラスを配列から削除する。
+	 * surfaceAtlases の最も利用されていない SurfaceAtlas を探し、 そのインデックスを返す。
+	 *
+	 * _surfaceAtlases の長さが 0 の場合、 -1 を返す。
 	 * @private
 	 */
-	_removeLeastFrequentlyUsedAtlas(removedNum: number): RemoveAtlasData {
-		const removedAtlases = [];
-		const removedGlyphs = [];
-
-		for (var n = 0; n < removedNum; ++n) {
-			var minScore = Number.MAX_VALUE;
-			var lowScoreAtlasIndex = -1;
-			for (var i = 0; i < this._surfaceAtlases.length; ++i) {
-				if (this._surfaceAtlases[i]._accessScore <= minScore) {
-					minScore = this._surfaceAtlases[i]._accessScore;
-					lowScoreAtlasIndex = i;
-				}
+	_findLeastFrequentlyUsedAtlasIndex(): number {
+		let minScore = Number.MAX_VALUE;
+		let lowScoreAtlasIndex = -1;
+		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
+			if (this._surfaceAtlases[i]._accessScore <= minScore) {
+				minScore = this._surfaceAtlases[i]._accessScore;
+				lowScoreAtlasIndex = i;
 			}
-			const removedAtlas = this._surfaceAtlases.splice(lowScoreAtlasIndex, 1)[0];
-			removedAtlases.push(removedAtlas);
-			removedGlyphs.push(this._atlasGlyphsTable.splice(lowScoreAtlasIndex, 1)[0]);
 		}
-
-		return { surfaceAtlases: removedAtlases, glyphs: removedGlyphs };
+		return lowScoreAtlasIndex;
 	}
 
 	/**
-	 * 空き領域のあるSurfaceAtlasを探索する。
-	 * glyphが持つ情報をSurfaceAtlasへ移動し、移動したSurfaceAtlasの情報でglyphを置き換える。
+	 * surfaceAtlases の最も利用されていない SurfaceAtlas を切り離して返す。
+	 *
+	 * 返された SurfaceAtlas に紐づいていたすべての Glyph はサーフェスを失う (_isSurfaceValid が偽になる) 。
+	 * _surfaceAtlases の長さが 0 の場合、 何もせず null を返す。
 	 * @private
 	 */
-	_moveGlyphSurface(glyph: Glyph): SurfaceAtlas | null {
+	_spliceLeastFrequentlyUsedAtlas(): SurfaceAtlas | null {
+		const idx = this._findLeastFrequentlyUsedAtlasIndex();
+		if (idx === -1) return null;
+
+		if (this._currentAtlasIndex >= idx) --this._currentAtlasIndex;
+
+		const spliced = this._surfaceAtlases.splice(idx, 1)[0];
+		const glyphs = this._atlasGlyphsTable.splice(idx, 1)[0];
+
+		for (let i = 0; i < glyphs.length; i++) {
+			const glyph = glyphs[i];
+			glyph.surface = undefined;
+			glyph.isSurfaceValid = false;
+			glyph._atlas = null;
+		}
+		return spliced;
+	}
+
+	/**
+	 * 空き領域のある SurfaceAtlas を探索する。
+	 * glyph が持つ情報を SurfaceAtlas へ移動し、移動した SurfaceAtlas の情報で glyph を置き換える。
+	 * glyph が持っていた surface は破棄される。
+	 *
+	 * 移動に成功した場合 `true` を、失敗した (空き領域が見つからなかった) 場合 `false` を返す。
+	 * @private
+	 */
+	_moveGlyphSurface(glyph: Glyph): boolean {
 		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			const index = (this._currentAtlasIndex + i) % this._surfaceAtlases.length;
 			const atlas = this._surfaceAtlases[index];
@@ -184,12 +193,12 @@ export class SurfaceAtlasSet {
 				glyph.surface = atlas._surface;
 				glyph.x = slot.x;
 				glyph.y = slot.y;
-				if (!this._atlasGlyphsTable[index]) this._atlasGlyphsTable[index] = [];
+				glyph._atlas = atlas;
 				this._atlasGlyphsTable[index].push(glyph);
-				return atlas;
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	/**
@@ -197,47 +206,21 @@ export class SurfaceAtlasSet {
 	 * @private
 	 */
 	_reallocateAtlas(): void {
+		let atlas: SurfaceAtlas = null!;
 		if (this._surfaceAtlases.length >= this._maxAtlasNum) {
-			const removedObject = this._removeLeastFrequentlyUsedAtlas(1);
-			const atlas = removedObject.surfaceAtlases[0];
-			const glyphs = removedObject.glyphs[0];
-
-			for (let i = 0; i < glyphs.length; i++) {
-				const glyph = glyphs[i];
-				glyph.surface = undefined;
-				glyph.isSurfaceValid = false;
-				glyph._atlas = null;
-			}
-			atlas.destroy();
+			atlas = this._spliceLeastFrequentlyUsedAtlas()!;
+			atlas.reset();
+		} else {
+			atlas = new SurfaceAtlas(this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height));
 		}
-
-		const surface = this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height);
-		this._surfaceAtlases.push(new SurfaceAtlas(surface));
+		this._surfaceAtlases.push(atlas);
+		this._atlasGlyphsTable.push([]);
 		this._currentAtlasIndex = this._surfaceAtlases.length - 1;
-	}
-
-	/**
-	 * サーフェスアトラスを追加する。
-	 *
-	 * 保持している_surfaceAtlasesの数が最大値以上の場合、削除してから追加する。
-	 *
-	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `constructor` から暗黙に呼び出される。
-	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
-	 */
-	addAtlas(): void {
-		// removeLeastFrequentlyUsedAtlas()では、SurfaceAtlas#_accessScoreの一番小さい値を持つSurfaceAtlasを削除するため、
-		// SurfaceAtlas作成時は_accessScoreは0となっているため、削除判定後に作成,追加処理を行う。
-		if (this._surfaceAtlases.length >= this._maxAtlasNum) {
-			this._deleteAtlas(1);
-		}
-		const surface = this._resourceFactory.createSurface(this._atlasSize.width, this._atlasSize.height);
-		this._surfaceAtlases.push(new SurfaceAtlas(surface));
 	}
 
 	/**
 	 * 引数で指定されたindexのサーフェスアトラスを取得する。
 	 *
-	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param index 取得対象のインデックス
 	 */
@@ -248,7 +231,6 @@ export class SurfaceAtlasSet {
 	/**
 	 * サーフェスアトラスの保持数を取得する。
 	 *
-	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
 	getAtlasNum(): number {
@@ -280,7 +262,6 @@ export class SurfaceAtlasSet {
 	/**
 	 * サーフェスアトラスのサイズを取得する。
 	 *
-	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 */
 	getAtlasUsedSize(): CommonSize {
@@ -288,28 +269,47 @@ export class SurfaceAtlasSet {
 	}
 
 	/**
-	 * サーフェスアトラスにグリフを追加する。
+	 * グリフを追加する。
 	 *
-	 * このメソッドは、このSurfaceAtlasSetに紐づいている `DynamnicFont` の `glyphForCharacter()` から暗黙に呼び出される。
+	 * glyph が持っていたサーフェスは破棄され、このクラスが管理するいずれかの (サーフェスアトラスの) サーフェスに紐づけられる。
+	 * 追加に成功した場合 `true` を、失敗した (空き領域が見つからなかった) 場合 `false` を返す。
+	 *
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
 	 * @param glyph グリフ
 	 */
-	addGlyph(glyph: Glyph): SurfaceAtlas | null {
+	addGlyph(glyph: Glyph): boolean {
 		// グリフがアトラスより大きいとき、`_atlasSet.addGlyph()`は失敗する。
 		// `_reallocateAtlas()`でアトラス増やしてもこれは解決できない。
 		// 無駄な空き領域探索とアトラスの再確保を避けるためにここでリターンする。
 		if (glyph.width > this._atlasSize.width || glyph.height > this._atlasSize.height) {
-			return null;
+			return false;
 		}
 
-		let atlas = this._moveGlyphSurface(glyph);
-		if (!atlas) {
-			// retry
-			this._reallocateAtlas();
-			atlas = this._moveGlyphSurface(glyph);
-		}
+		if (this._moveGlyphSurface(glyph)) return true;
 
-		return atlas;
+		// retry
+		this._reallocateAtlas();
+		return this._moveGlyphSurface(glyph);
+	}
+
+	/**
+	 * グリフの利用を通知する。
+	 *
+	 * サーフェスが不足した時、このクラスは最も利用頻度の低いサーフェスを解放して再利用する。
+	 * このメソッドによるグリフの利用通知は、利用頻度の低いサーフェスを特定するために利用される。
+	 *
+	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
+	 * @param glyph グリフ
+	 */
+	touchGlyph(glyph: Glyph): void {
+		// スコア更新
+		// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
+		// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
+		if (glyph._atlas) glyph._atlas._accessScore += 1;
+		for (var i = 0; i < this._surfaceAtlases.length; i++) {
+			var atlas = this._surfaceAtlases[i];
+			atlas._accessScore /= 2;
+		}
 	}
 
 	/**

@@ -261,8 +261,6 @@ export class DynamicFont extends Font {
 			this._atlasSet = game.surfaceAtlasSet;
 		}
 
-		if (this._atlasSet) this._atlasSet.addAtlas();
-
 		if (this.hint.presetChars) {
 			for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
 				let code = Util.charCodeAt(this.hint.presetChars, i);
@@ -293,25 +291,14 @@ export class DynamicFont extends Font {
 
 			if (glyph.surface) {
 				// 空白文字でなければアトラス化する
-				const atlas = this._atlasSet.addGlyph(glyph);
-				if (!atlas) {
+				if (!this._atlasSet.addGlyph(glyph)) {
 					return null;
 				}
-				glyph._atlas = atlas;
-				glyph._atlas._accessScore += 1;
 			}
-
 			this._glyphs[code] = glyph;
 		}
 
-		// スコア更新
-		// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
-		// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
-		for (var i = 0; i < this._atlasSet.getAtlasNum(); i++) {
-			var atlas = this._atlasSet.getAtlas(i);
-			atlas._accessScore /= 2;
-		}
-
+		this._atlasSet.touchGlyph(glyph);
 		return glyph;
 	}
 
