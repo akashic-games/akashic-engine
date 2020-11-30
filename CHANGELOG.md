@@ -138,7 +138,7 @@ v2 系ゲーム開発者への影響や追加機能については、
 新旧トリガー名対応表
 
 |v2のトリガー名 (v3 系で非推奨)|v3 のトリガー名|
-|:---:|:---:|
+|:---|:---|
 |`g.Game#join`|`g.Game#onJoin`|
 |`g.Game#leave`|`g.Game#onLeave`|
 |N/A|`g.Game#onPlayerInfo`|
@@ -161,7 +161,7 @@ v2 系ゲーム開発者への影響や追加機能については、
 enum と文字列定数の対応表
 
 |enum (v3 系で非推奨)|v３でサポートする文字列定数|
-|:---:|:---:|
+|:---|:---|
 |`g.CompositeOperation`|`"source-over"`, `"source-atop"`, `"lighter"`, `"copy"`, `"experimental-source-in"`, `"experimental-source-out"`, `"experimental-destination-atop"`, `"experimental-destination-in"`, `"destination-out"`, `"destination-over"`, `"xor"`<br>(TypeScript での型名は `g.CompositeOperationString`)|
 |`g.TextAlign`|`"left"`, `"center"`, `"right"`<br>(TypeScript での型名は `g.TextAlignString`)|
 |`g.FontWeight`|`"normal"`, `"bold"`<br>(TypeScript での型名は `g.FontWeightString`)|
