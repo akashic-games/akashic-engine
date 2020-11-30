@@ -6,7 +6,6 @@ v3.0.0-beta.X の正式リリース版です。
 
 v3.0.0-beta.37 から変更はありません。
 以下は v2.6.6 からの変更点です (v3.0.0-beta.X での変更のうち、v2.X に対応するものがないものをまとめています)。
-
 v2 系ゲーム開発者への影響や追加機能については、
 チュートリアル文書 [v2 からの移行](https://akashic-games.github.io/tutorial/v3/v3-migration-guide.html) を併せて参照してください。
 
@@ -163,10 +162,10 @@ enum と文字列定数の対応表
 
 |enum (v3 系で非推奨)|v３でサポートする文字列定数|
 |:---:|:---:|
-|`g.CompositeOperation`|`"source-over" | "destination-in" | ... | "xor"`<br>(TypeScript での型名は `g.CompositeOperationString`)|
-|`g.TextAlign`|`"left" | "center" | "right"`<br>(TypeScript での型名は `g.TextAlignString`)|
-|`g.FontWeight`|`"normal" | "bold"`<br>(TypeScript での型名は `g.FontWeightString`)|
-|`g.FontFamily`|`"serif" | "sans-serif" | "monospace"`<br>(`g.FontFamily` を指定できる箇所は、以前から任意のフォント名 (string) を動作保証なしで受け取っていたため、型として `g.FontFamilyString` は追加されません。)|
+|`g.CompositeOperation`|`"source-over"`, `"source-atop"`, `"lighter"`, `"copy"`, `"experimental-source-in"`, `"experimental-source-out"`, `"experimental-destination-atop"`, `"experimental-destination-in"`, `"destination-out"`, `"destination-over"`, `"xor"`<br>(TypeScript での型名は `g.CompositeOperationString`)|
+|`g.TextAlign`|`"left"`, `"center"`, `"right"`<br>(TypeScript での型名は `g.TextAlignString`)|
+|`g.FontWeight`|`"normal"`, `"bold"`<br>(TypeScript での型名は `g.FontWeightString`)|
+|`g.FontFamily`|`"serif"`, `"sans-serif"`, `"monospace"`<br>(`g.FontFamily` を指定できる箇所は、以前から任意のフォント名 (string) を動作保証なしで受け取っていたため、対応する型は追加されません)|
 
 ### エンジン開発者への影響
 
