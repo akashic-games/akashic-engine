@@ -56,8 +56,7 @@
     "url": "akashic-games/akashic-engine.git"
   },
   "publishConfig": {
-    "@akashic:registry": "https://registry.npmjs.org/",
-    "tag": "next"
+    "@akashic:registry": "https://registry.npmjs.org/"
   },
   "typings": "lib/index.d.ts",
   "author": "DWANGO Co., Ltd.",
