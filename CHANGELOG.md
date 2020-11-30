@@ -1,5 +1,191 @@
 # ChangeLog
 
+## 3.0.0
+
+v3.0.0-beta.X の正式リリース版です。
+
+v3.0.0-beta.37 から変更はありません。
+以下は v2.6.6 からの変更点です (v3.0.0-beta.X での変更のうち、v2.X に対応するものがないものをまとめています)。
+
+v2 系ゲーム開発者への影響や追加機能については、
+チュートリアル文書 [v2 からの移行](https://akashic-games.github.io/tutorial/v3/v3-migration-guide.html) を併せて参照してください。
+
+機能追加
+ * `g.Scene` のコンストラクタ引数に `assetPaths` を追加
+ * `g.Scene#asset` を追加
+ * `g.PlayerInfoEvent` と `g.Game#onPlayerInfo` を追加
+ * `g.AudioSystemManager#stopAll` を追加
+ * `g.Game#localRandom` を追加
+ * `g.Game#onSceneChange` を追加
+ * `g.Game#popScene()`で popする数を指定できるように
+ * `g.E#localToGlobal()` と `g.E#globalToLocal()` を追加
+ * `g.EventFilterController` を追加
+ * `g.SurfaceUtil.drawNinePatch()` を追加
+ * `g.OperationPluginManager` に `register()`, `start()`, `stop()` を追加
+ * game.json の`defaultLoadingScene` に `compact` を追加
+
+仕様変更
+ * `g.E` の `anchorX`, `anchorY` の初期値を (0, 0) (エンティティ左上端) に変更
+ * `g.Util` の一部メソッドを移動・廃止
+    * `createSpriteFromE()` を `g.SpriteFactory.createSpriteFromE()` に移動
+    * `createSpriteFromScene()` を `g.SpriteFactory.createSpriteFromScene()` に移動
+    * `asSurface()`: `g.SurfaceUtil.asSurface()` に移動
+    * `createMatrix()` を廃止
+ * TypeScript 利用時の型定義ファイルを `lib/main.d.ts` から `index.runtime.d.ts` に変更
+ * TypeScript 利用時、tsconfig.json に `allowUmdGlobalAccess: true` が必要に
+ * `g.SystemLabel`, `g.TextBaseline` を廃止
+ * `g.TickGenerationMode` を廃止。代替型 `g.TickGenerationModeString` を追加
+ * `g.LocalTickMode` を廃止。代替型 `g.LocalTickModeString` を追加
+ * `g.SceneState` を廃止。代替型 `g.SceneStateString` を追加
+ * `ResourceFactory#createTrimmedSurface()` を廃止
+ * `g.Event#priority` を `g.Event#eventFlags` に変更
+
+非推奨機能の廃止
+ * `g.game.random[0]` を廃止
+ * `g.Scene#setTimeout()`, `g.Scene#setInterval()` の非推奨だった引数順を廃止
+
+非推奨機能の追加
+ * 以下のトリガー名を非推奨に
+ * `g.RandomGenerator#get()` を非推奨に
+ * `g.CompositeOperaiton` を非推奨に。代替型 `g.CompositeOperationModeString` を追加
+ * `g.TextAlign` を非推奨に。代替型 `g.TextAlginString` を追加
+ * `g.FontWeight` を非推奨に。代替型 `g.FontWeightString` を追加
+ * `g.FontFamily` を非推奨に
+ * `g.RandomGenerator#get()` を非推奨に
+ * `g.NinePatchSurfaceEffector` を非推奨に
+
+その他変更
+ * 内部でしか使われない変数・メソッドを API リファレンスに出力しない (@ignore) ように
+ * 内部構造を整理
+   * 環境依存部分の型定義を interface として整理し、 `@akashic/pdi-types` として分離
+   * 環境依存部分の共通実装を `@akashic/pdi-common-impls` として分離
+ * @akashic/playlog@3.1.0 に依存するように
+
+
+### ゲーム開発者への影響
+
+仕様変更
+ * `g.E` の `anchorX`, `anchorY` の初期値を (0, 0) (エンティティ左上端) に変更
+    * 歴史的経緯のため、これまで未指定時は「移動 (`x`, `y`) の基準はエンティティ左上端、回転・拡縮の基準はエンティティ中央」という挙動でしたが、単純化されます。
+    * 従来の挙動は `anchorX`, `anchorY` に `null` すると再現できますが、非推奨です。将来的にこの挙動は削除されます。
+ * `g.Util` の一部メソッドを移動・廃止
+    * `createSpriteFromE()`: `g.SpriteFactory.createSpriteFromE()` を利用してください。
+    * `createSpriteFromScene()`: `g.SpriteFactory.createSpriteFromScene()` を利用してください。
+    * `asSurface()`: `g.SurfaceUtil.asSurface()` を利用してください。
+    * `createMatrix()`: 廃止されました。 `new g.PlainMatrix()` を利用してください。
+ * `ResourceFactory#createTrimmedSurface()` を廃止
+ * TypeScript 利用時の型定義ファイルを `lib/main.d.ts` から `index.runtime.d.ts` に変更
+ * TypeScript 利用時、tsconfig.json に `allowUmdGlobalAccess: true` が必要に
+ * `g.SystemLabel`, `g.TextBaseline` を廃止
+ * enum `g.TickGenerationMode` を廃止
+    * 利用している場合、代わりに `g.TickGenerationModeString` (`"by-clock" | "manual"`) を利用してください。
+    * `g.Scene#tickGenerationMode` の型が `g.TickGenerationModeString` になります。
+ * enum `g.LocalTickMode` を廃止
+    * 利用している場合、代わりに `g.LocalTickModeString` (`"full-local" | "non-local" | "interpolate-local"`) を利用してください。
+    * `g.Scene#local` の型が `g.LocalTickModeString` になります。
+    * これにより、 `g.Scene#local` が boolean だった当時 (v1 系) のコードとは互換性がなくなります。
+ * enum `g.SceneState` を廃止
+    * `g.Scene#state` の型, `g.Scene#onStateChange` の通知する型が `g.SceneStateString` (`"destroyed" | "standby" | "active" | "deactive" | "before-destroyed"`) になります。
+ * 非推奨機能 `g.game.random[0]` を廃止
+    * `g.game.random` を利用してください。
+ * `g.Scene#setTimeout()`, `g.Scene#setInterval()` の非推奨だった引数順を廃止
+    * 第一引数に関数を渡す `window.setTimeout()` 互換の引数順を利用してください。
+
+機能追加
+ * `g.Scene` のコンストラクタ引数に `assetPaths` を追加
+ * `g.Scene#asset` を追加
+ * `g.E#localToGlobal()` と `g.E#globalToLocal()` を追加
+    * 複雑な親子関係を持つエンティティの座標 (`x`, `y`) を、ゲーム画面の座標系に変換できます (`localToGlobal()`) 。
+    * ゲーム画面の座標系を、特定のエンティティから見た座標系に変換できます (`globalToLocal()`) 。
+ * `g.PlayerInfoEvent` と `g.Game#onPlayerInfo` を追加
+    * 現時点では利用されていません。将来プレイヤー名情報を通知するために予約されます。
+ * `g.AudioSystemManager#stopAll` を追加
+    * ゲーム開発者は、`g.game.audio.stopAll()` を使うことで、全てのオーディオシステムを停止することができます。
+ * `g.Game#localRandom` を追加
+    * マルチプレイの各プレイヤー間で共有されない (異なるシードを持つ) 乱数生成器 `localRandom` が追加されます。
+    * マルチプレイにおいて、プレイヤー全員で同じように使うための乱数生成器 `g.Game#random` と異なり、
+      各プレイヤー固有の乱数が必要な場合に利用できます。
+    * ローカル処理 (`local: true` を指定したエンティティのイベントハンドラ (`onPointDown` など) またはそこから呼び出された処理) の中でのみ利用してください。(ゲームのグローバルな実行状態を破壊しないため)
+ * `g.Game#onSceneChange` を追加
+    * ゲーム開発者は、これを利用することでシーンの変化時に通知を受けることができます。
+    * (v2 系から存在する内部プロパティ `g.Game#_onSceneChange` とは動作が異なります。ゲーム開発者は `onSceneChange` を利用してください)
+ * game.json の`defaultLoadingScene` に `compact` を追加
+    * `"compact"` の場合、ローディング画面の背景は透過され、プログレスバーが (画面中央ではなく) 右下の方に小さく表示されます。
+ * `g.SurfaceUtil.drawNinePatch()` を追加
+    * ボタンやウィンドウなどの画像を 9 分割してスムーズに拡大描画する、いわゆる NinePatch を描画することができます。
+ * `g.Game#popScene()`で pop する数を指定できるように
+    * 複数のシーンを一括して pop できます。
+
+#### 非推奨機能の追加
+
+ * 一部トリガー名を非推奨に
+    * 統一感がないネーミングを非推奨にして、 `on〜` で始まる名前を追加しました。
+    * 新旧のトリガー名の対応は以下の表のとおりです。
+ * `g.RandomGenerator#get()` を非推奨に
+    * `g.RandomGenerator#generate()` を利用してください。
+    * `get(min, max)` は `min` 以上 `max` 以下の整数を、 `generate()` は `0` 以上 `1` 未満の実数を返すので変換が必要です。
+    * `min`, `max` が整数で `min < max` であれば、
+      `g.game.random.get(min, max)` は `min + Math.floor(g.game.random.generate() * (max + 1 - min))` と等価です。
+ * 各種 enum を非推奨に
+    * `g.CompositeOperation.SourceOver` の代わりに `"source-over"` など、より簡潔な文字列定数を導入します。
+      これに伴い `g.CompositeOperation`, `g.TextAlign`, `g.FontWeight`, `g.FontFamily` を非推奨にします。
+    * `enum` と文字列定数の対応は以下の表のとおりです。
+    * これに伴う互換性維持のため、一部の型が変化します。
+       * `g.E#compositeOperation`: `g.CompositeOperation | g.CompositeOperationString` になります (指定値をそのまま反映)。将来的には `g.CompositeOperationString` に一本化します。
+       * `g.Label#textAlign`: `g.TextAlign | g.TextAlignString` になります (指定値をそのまま反映)。将来的には `g.TextAlignString` に一本化します。
+       * `g.Label#fontWeight`: g.FontWeight | g.FontWeightString になります (指定値をそのまま反映)。将来的には `g.FontWeightString` に一本化します。
+       * `g.DynamicFont#fontFamily` の型は変化しません (`g.FontFamily` を含め、引き続き指定値をそのまま反映)。将来的には `string | string[]` に一本化します。
+
+新旧トリガー名対応表
+
+|v2のトリガー名 (v3 系で非推奨)|v3 のトリガー名|
+|:---:|:---:|
+|`g.Game#join`|`g.Game#onJoin`|
+|`g.Game#leave`|`g.Game#onLeave`|
+|N/A|`g.Game#onPlayerInfo`|
+|`g.Game#skippingChanged`|`g.Game#onSkipChange`|
+|`g.Scene#update`|`g.Scene#onUpdate`|
+|`g.Scene#loaded`|`g.Scene#onLoad`|
+|`g.Scene#assetLoaded`|`g.Scene#onAssetLoad`|
+|`g.Scene#assetLoadFailed`|`g.Scene#onAssetLoadFailure`|
+|`g.Scene#assetLoadCompleted`|`g.Scene#onAssetLoadComplete`|
+|`g.Scene#stateChanged`|`g.Scene#onStateChange`|
+|`g.Scene#message`|`g.Scene#onMessage`|
+|`g.Scene#pointDownCapture`|`g.Scene#onPointDownCapture`|
+|`g.Scene#pointMoveCapture`|`g.Scene#onPointMoveCapture`|
+|`g.Scene#pointUpCapture`|`g.Scene#onPointUpCapture`|
+|`g.Scene#operation`|`g.Scene#onOperation`|
+|`g.E#pointDown`|`g.E#onPointDown`|
+|`g.E#pointMove`|`g.E#onPointMove`|
+|`g.E#pointUp`|`g.E#onPointUp`|
+
+enum と文字列定数の対応表
+
+|enum (v3 系で非推奨)|v３でサポートする文字列定数|
+|:---:|:---:|
+|`g.CompositeOperation`|`"source-over" | "destination-in" | ... | "xor"`<br>(TypeScript での型名は `g.CompositeOperationString`)|
+|`g.TextAlign`|`"left" | "center" | "right"`<br>(TypeScript での型名は `g.TextAlignString`)|
+|`g.FontWeight`|`"normal" | "bold"`<br>(TypeScript での型名は `g.FontWeightString`)|
+|`g.FontFamily`|`"serif" | "sans-serif" | "monospace"`<br>(`g.FontFamily` を指定できる箇所は、以前から任意のフォント名 (string) を動作保証なしで受け取っていたため、型として `g.FontFamilyString` は追加されません。)|
+
+### エンジン開発者への影響
+
+* `g.AssetLoadErrorType` を非推奨に
+   * `g.ExceptionFactory.createAssertionError()` の引数の一つでしたが、事実上参照されていませんでした。代わりに `null` を渡してください
+   * (そもそも `g.AssetErrorLike` など interface を整理したため、本当はもはや `g.ExceptionFactory` を参照する必要もありません)
+* `g.Renderer#setCompositeOperation()` の引数を変更
+   * enum `g.CompositeOperation` に代えて `g.CompositeOperationString` (`"source-over" | "destination-in" | ... | "xor"`) が渡されるようになります
+   * 対応する変更:
+      *  対応する interface `g.RendererLike` も同様に変わります。(利用されていないはずです)
+* `g.ResourceFactory#createGlyphFactory()` の引数型を変更
+   * 第一引数 `fontFamily` の型から `g.FontFamily` がなくなり `string | string[]` に単純化されます
+      * ただしこの string において `"serif" | "sans-serif" | "monospace"` はサポートされる必要があります
+   * 第八引数 `fontWeight` の型が `g.FontWeightString` (`"normal" | "bold"`) に変わります
+   * 対応する変更:
+      * `g.GlyphFactory` のコンストラクタ引数が同様に変更されます
+      * プロパティ `g.GlyphFactory#fontFamily`, `fontWeight` が同様に変更されます
+      *  対応する interface `g.GlyphFactoryLike` も同様に変わります。(利用されていないはずです)
+
 ## 3.0.0-beta.37
 
 不具合修正
@@ -196,6 +382,55 @@
     * `createSpriteFromScene()`: `g.SpriteFactory.createSpriteFromScene()` を利用してください。
     * `asSurface()`: `g.SurfaceUtil.asSurface()` を利用してください。
     * `createMatrix()`: 廃止されました。 `new g.PlainMatrix()` を利用してください。
+
+## 2.6.6
+
+不具合修正
+ * `g.DynamicFont` の文字が欠けることがある問題を修正
+
+## 2.6.5
+
+不具合修正
+ * クリアされた `g.Scene` のタイマが同タイミングにより実行されてしまう不具合の修正。
+
+## 2.6.4
+
+機能追加
+ * `g.Game#joinedPlayerIds` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#joinedPlayerIds` を追加
+    * ゲーム開発者は、このプロパティを参照することで、joinしているプレイヤーIDの一覧を取得することができます。
+
+
+## 2.6.3
+
+不具合修正
+ * `g.Scene#requestAssets()` を利用するコンテンツで、リセット時に `g.SceenAssetHolder#callHandler()` が例外を起こすことがある問題を修正
+
+## 2.6.2
+
+機能追加
+ * `g.Game#isSkipping` を追加
+
+### ゲーム開発者への影響
+
+ * `g.Game#isSkipping` を追加
+    * ゲーム開発者は、このプロパティを参照することで、コンテンツのスキップ状態を取得することができます。
+
+## 2.6.1
+
+その他変更
+ * TypeScript3.6でコンパイルするように修正
+
+## 2.6.0
+
+不具合修正
+* `Game#terminateGame()` を直接呼ぶとエラーが発生する不具合の修正
+
+### エンジン開発者への影響
+* `Game#_terminateGame()` を `Game#_abortGame()` にリネームしたので、このメソッドに依存している箇所の修正が必要です。
 
 ## 2.5.4
 
