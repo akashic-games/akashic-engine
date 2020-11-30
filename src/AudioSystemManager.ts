@@ -1,71 +1,81 @@
-namespace g {
+import { ResourceFactory } from "@akashic/pdi-types";
+import { AudioSystem, MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
+
+/**
+ * `AudioSystem` の管理クラス。
+ *
+ * 複数の `AudioSystem` に一括で必要な状態設定を行う。
+ * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+ */
+export class AudioSystemManager {
 	/**
-	 * `Game#audio` の管理クラス。
-	 *
-	 * 複数の `AudioSystem` に一括で必要な状態設定を行う。
-	 * 本クラスのインスタンスをゲーム開発者が直接生成することはなく、ゲーム開発者が利用する必要もない。
+	 * ループ再生可能な AudioSystem
 	 */
-	export class AudioSystemManager {
-		/**
-		 * @private
-		 */
-		_game: Game;
+	// @ts-ignore
+	music: AudioSystem;
 
-		/**
-		 * @private
-		 */
-		_muted: boolean;
+	/**
+	 * 効果音を扱う AudioSystem
+	 */
+	// @ts-ignore
+	sound: AudioSystem;
 
-		/**
-		 * @private
-		 */
-		_playbackRate: number;
+	/**
+	 * @private
+	 */
+	_muted: boolean;
 
-		constructor(game: Game) {
-			this._game = game;
-			this._muted = false;
-			this._playbackRate = 1.0;
-		}
+	constructor(resourceFactory: ResourceFactory) {
+		this._muted = false;
+		this._initializeAudioSystems(resourceFactory);
+	}
 
-		/**
-		 * @private
-		 */
-		_reset(): void {
-			this._muted = false;
-			this._playbackRate = 1.0;
-			var systems = this._game.audio;
-			for (var id in systems) {
-				if (!systems.hasOwnProperty(id)) continue;
-				systems[id]._reset();
-			}
-		}
+	/**
+	 * @private
+	 */
+	_reset(): void {
+		this._muted = false;
+		this.music._reset();
+		this.sound._reset();
+	}
 
-		/**
-		 * @private
-		 */
-		_setMuted(muted: boolean): void {
-			if (this._muted === muted) return;
+	/**
+	 * @private
+	 */
+	_setMuted(muted: boolean): void {
+		if (this._muted === muted) return;
 
-			this._muted = muted;
-			var systems = this._game.audio;
-			for (var id in systems) {
-				if (!systems.hasOwnProperty(id)) continue;
-				systems[id]._setMuted(muted);
-			}
-		}
+		this._muted = muted;
+		this.music._setMuted(muted);
+		this.sound._setMuted(muted);
+	}
 
-		/**
-		 * @private
-		 */
-		_setPlaybackRate(rate: number): void {
-			if (this._playbackRate === rate) return;
+	/**
+	 * @private
+	 */
+	_setPlaybackRate(rate: number): void {
+		this.music._setPlaybackRate(rate);
+		this.sound._setPlaybackRate(rate);
+	}
 
-			this._playbackRate = rate;
-			var systems = this._game.audio;
-			for (var id in systems) {
-				if (!systems.hasOwnProperty(id)) continue;
-				systems[id]._setPlaybackRate(rate);
-			}
-		}
+	/**
+	 * @private
+	 */
+	_initializeAudioSystems(resourceFactory: ResourceFactory): void {
+		this.music = new MusicAudioSystem({
+			id: "music",
+			muted: this._muted,
+			resourceFactory: resourceFactory
+		});
+		this.sound = new SoundAudioSystem({
+			id: "sound",
+			muted: this._muted,
+			resourceFactory: resourceFactory
+		});
+	}
+
+	stopAll(): void {
+		this.music.stopAll();
+		this.sound.stopAll();
 	}
 }

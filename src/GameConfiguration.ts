@@ -1,196 +1,72 @@
-namespace g {
+import { AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
+import { OperationPluginInfo } from "./OperationPluginInfo";
+
+/**
+ * ゲームの設定を表すインターフェース。
+ * game.jsonによって定義される。
+ */
+export interface GameConfiguration {
 	/**
-	 * Assetの設定の共通部分。
+	 * ゲーム画面の幅。
 	 */
-	export interface AssetConfigurationBase {
-		/**
-		 * Assetの種類。"image", "audio", "script", "text" のいずれか。
-		 */
-		type: string;
-
-		/**
-		 * 幅。 `type` が `"image"`, `"video"` の場合にのみ存在。
-		 */
-		width?: number;
-
-		/**
-		 * 高さ。 `type` が `"image"`, `"video"` の場合にのみ存在。
-		 */
-		height?: number;
-
-		/**
-		 * AudioAssetのsystem指定。 `type` が `"audio"` の場合にのみ存在。
-		 */
-		systemId?: string;
-
-		/**
-		 * 再生時間。 `type` が `"audio"` の場合にのみ存在。
-		 */
-		duration?: number;
-
-		/**
-		 * ループ。 `type` が `"audio"` または `"video"` の場合にのみ存在。
-		 */
-		loop?: boolean;
-
-		/**
-		 * width,heightではなく実サイズを用いる指定。 `type` が `"video"` の場合にのみ存在。
-		 */
-		useRealSize?: boolean;
-
-		/**
-		 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。`type` が `"audio"` または `"image"` の場合にのみ存在。
-		 */
-		hint?: AudioAssetHint | ImageAssetHint;
-	}
+	width: number;
 
 	/**
-	 * Assetの設定を表すインターフェース。
-	 * game.json の "assets" の各プロパティに記述される値の型。
+	 * ゲーム画面の高さ。
 	 */
-	export interface AssetConfiguration extends AssetConfigurationBase {
-		/**
-		 * Assetを表すファイルへの絶対パス。
-		 */
-		path: string;
-
-		/**
-		 * Assetを表すファイルのrequire解決用の仮想ツリーにおけるパス。
-		 * `type` が `"script"` の場合にのみ存在する。
-		 * 省略するとエンジンにより自動的に設定される。
-		 */
-		// エンジン開発者は `Game` オブジェクト作成前に、省略された `virtualPath` を補完する必要がある。
-		virtualPath?: string;
-
-		/**
-		 * グローバルアセットか否か。省略された場合、偽。
-		 * この値が真であるアセットは、ゲームコンテンツから常に `Game#assets` 経由で参照できる。`Scene` のコンストラクタで利用を宣言する必要がない。
-		 */
-		global?: boolean;
-	}
+	height: number;
 
 	/**
-	 * (実行時に定義される)Assetの設定を表すインターフェース。
-	 * game.jsonに記述される値の型ではない点に注意。
+	 * ゲームのFPS。省略時は30。
 	 */
-	export interface DynamicAssetConfiguration extends AssetConfigurationBase {
-		/**
-		 * このアセットのIDとして用いる値。
-		 * この値はひとつのAssetManagerの中でユニークでなければならない。
-		 */
-		id: string;
-
-		/**
-		 * Assetを表すファイルのURI。
-		 */
-		uri: string;
-	}
+	fps?: number;
 
 	/**
-	 * アセット宣言
+	 * エントリポイント。require() できるパス。
 	 */
-	export type AssetConfigurationMap = { [key: string]: AssetConfiguration };
+	main: string;
 
 	/**
-	 * require()解決用のエントリポイント
+	 * AudioSystemの追加定義。キーにsystem名を書く。不要(デフォルトの "sound" と "music" しか使わない)なら省略してよい。
 	 */
-	export type ModuleMainScriptsMap = { [path: string]: string };
+	audio?: AudioSystemConfigurationMap;
 
 	/**
-	 * AudioSystemの設定を表すインターフェース。
+	 * アセット宣言。
 	 */
-	export interface AudioSystemConfiguration {
-		loop?: boolean;
-		hint?: AudioAssetHint;
-	}
+	assets: AssetConfigurationMap;
 
 	/**
-	 * オーディオシステム宣言
+	 * 操作プラグインの情報。
 	 */
-	export type AudioSystemConfigurationMap = { [key: string]: AudioSystemConfiguration };
+	operationPlugins?: OperationPluginInfo[];
 
 	/**
-	 * AudioSystemの設定を表すインターフェース。
+	 * スクリプトアセットの簡略記述用テーブル。
+	 *
+	 * グローバルアセットである *.js ファイル、*.json ファイルに限り、この配列にファイル名(コンテンツルートディレクトリから相対パス)を書くことができる。
+	 * ここにファイル名を書いた場合、 `assets` でのアセット定義は不要であり、拡張子 js であれば `ScriptAsset` として、
+	 * 拡張子 json であれば `TextAsset` として扱われる。また常に "global": true として扱われる。
+	 * ここに記述されたファイルのアセットIDは不定である。ゲーム開発者がこのファイルを読み込むためには、相対パスによる (`require()` を用いねばならない)
 	 */
-	export interface AudioAssetHint {
-		streaming?: boolean;
-	}
+	// akashic-engine はこのフィールドを認識しないので、エンジンユーザはあらかじめ
+	// `globalScripts` を相当する `assets` 定義に変換する必要がある。
+	globalScripts?: string[];
 
 	/**
-	 * ImageAssetの設定を表すインターフェース。
+	 * require()解決用ののエントリポイントを格納したテーブル。
+	 *
+	 * require()の第一引数をキーとした値が本テーブルに存在した場合、require()時にその値をパスとしたスクリプトアセットを評価する。
 	 */
-	export interface ImageAssetHint {
-		untainted?: boolean;
-	}
+	moduleMainScripts?: ModuleMainScriptsMap;
 
 	/**
-	 * ゲームの設定を表すインターフェース。
-	 * game.jsonによって定義される。
+	 * デフォルトローディングシーンについての指定。
+	 * 省略時または "default" を指定すると `DefaultLoadingScene` を表示する。
+	 * "compact"を指定すると以下のようなローディングシーンを表示する。
+	 *   * 背景が透過
+	 *   * プログレスバーが画面中央ではなく右下の方に小さく表示される
+	 * デフォルトローディングシーンを非表示にしたい場合は "none" を指定する。
 	 */
-	export interface GameConfiguration {
-		/**
-		 * ゲーム画面の幅。
-		 */
-		width: number;
-
-		/**
-		 * ゲーム画面の高さ。
-		 */
-		height: number;
-
-		/**
-		 * ゲームのFPS。省略時は30。
-		 */
-		fps?: number;
-
-		/**
-		 * エントリポイント。require() できるパス。
-		 *
-		 * 省略された場合、アセット mainScene (典型的には script/mainScene.js)と
-		 * スナップショットローダ snapshotLoader (典型的には script/snapshotLoader.js; 必要なら)を使う従来の挙動が採用される。
-		 * 省略可能だが、省略は非推奨である。
-		 */
-		main?: string;
-
-		/**
-		 * AudioSystemの追加定義。キーにsystem名を書く。不要(デフォルトの "sound" と "music" しか使わない)なら省略してよい。
-		 */
-		audio?: AudioSystemConfigurationMap;
-
-		/**
-		 * アセット宣言。ユニットテスト記述の都合上省略を許すが、通常非undefinedでしか使わない。
-		 */
-		assets?: AssetConfigurationMap;
-
-		/**
-		 * 操作プラグインの情報。
-		 */
-		operationPlugins?: OperationPluginInfo[];
-
-		/**
-		 * スクリプトアセットの簡略記述用テーブル。
-		 *
-		 * グローバルアセットである *.js ファイル、*.json ファイルに限り、この配列にファイル名(コンテンツルートディレクトリから相対パス)を書くことができる。
-		 * ここにファイル名を書いた場合、 `assets` でのアセット定義は不要であり、拡張子 js であれば `ScriptAsset` として、
-		 * 拡張子 json であれば `TextAsset` として扱われる。また常に "global": true として扱われる。
-		 * ここに記述されたファイルのアセットIDは不定である。ゲーム開発者がこのファイルを読み込むためには、相対パスによる (`require()` を用いねばならない)
-		 */
-		// akashic-engine はこのフィールドを認識しないので、エンジンユーザはあらかじめ
-		// `globalScripts` を相当する `assets` 定義に変換する必要がある。
-		globalScripts?: string[];
-
-		/**
-		 * require()解決用ののエントリポイントを格納したテーブル。
-		 *
-		 * require()の第一引数をキーとした値が本テーブルに存在した場合、require()時にその値をパスとしたスクリプトアセットを評価する。
-		 */
-		moduleMainScripts?: ModuleMainScriptsMap;
-
-		/**
-		 * デフォルトローディングシーンについての指定。
-		 * 省略時または "default" を指定すると `DefaultLoadingScene` を表示する。
-		 * デフォルトローディングシーンを非表示にしたい場合は "none" を指定する。
-		 */
-		defaultLoadingScene?: "default" | "none";
-	}
+	defaultLoadingScene?: "default" | "compact" | "none";
 }

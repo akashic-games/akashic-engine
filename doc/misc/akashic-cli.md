@@ -351,30 +351,6 @@ $ akashic stat size --raw
 
 慣習として、各 Scene を実装するファイルは、このディレクトリ内に
 "Scene.js" という接尾辞をつけて配置される事が推奨されます（例: titleScene.js, battleScene.js）。
-
-### <a name="mainScene.jsファイル"></a> mainScene.jsファイル
-
-メインシーン。Akashicのゲームのエントリポイントであり、ゲームは必ず本シーンから実行されます。
-
-akashic initを実行した直後は以下の内容になっています。
-
-```
-var game = g.game;
-module.exports = function() {
-    var scene = new g.Scene({game: game});
-    scene.loaded.handle(function() {
-        // ここにゲームのコードを記述します
-        // sample
-        var hello = new g.FilledRect({scene: scene, cssColor: "#ff0000", width: 32, height: 32});
-        scene.append(hello);
-        hello.update.handle(function() {
-            hello.x++;
-            hello.modified();
-        });
-    });
-    return scene;
-}
-```
  
 ### <a name="node_modulesディレクトリ"></a> node_modulesディレクトリ
 
@@ -388,17 +364,18 @@ module.exports = function() {
 ゲームの各種情報を記述するファイル。
 
 akashic initを実行した直後は以下のような内容になっています。
-(ただし width, height, fps は init で指定した値)
+(ただし width, height, fps, main は init で指定した値)
 
 ```
 {
     "width": 480,
     "height": 480,
     "fps": 30,
+    "main": "./script/main.js",
     "assets": {
-        "mainScene": {
+        "main": {
             "type": "script",
-            "path": "script/mainScene.js",
+            "path": "script/main.js",
             "global": true
         }
     }

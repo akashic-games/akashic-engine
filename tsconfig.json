@@ -1,18 +1,22 @@
 {
-    "compilerOptions": {
-        "module": "system",
-        "target": "es5",
-        "lib": ["es5"],
-        "noImplicitAny": true,
-        "declaration": true,
-        "outDir": "tmp",
-        "outFile": "tmp/tmp.js",
-        "rootDir": ".",
-        "sourceMap": false,
-        "types": []
-    },
-    "files": [
-        "typings/console.d.ts",
-        "src/index.ts"
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es5"],
+    "strict": true,
+    "declaration": true,
+    "outDir": "lib",
+    "sourceMap": false,
+    "types": ["console"],
+    "typeRoots": [
+      "node_modules/@types",
+      "./typings"
     ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/__tests__/**/*.ts"
+  ]
 }

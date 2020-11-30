@@ -1,8 +1,9 @@
-namespace g {
-	/**
-	 * イベントフィルタ。
-	 *
-	 * このシグネチャは試験的なものであり、将来的に互換性なく変更される可能性がある。
-	 */
-	export type EventFilter = (events: any[]) => any[];
-}
+import { Event } from "@akashic/playlog";
+import { EventFilterController } from "./EventFilterController";
+
+/**
+ * イベントフィルタ。
+ *
+ * 詳細は `Game#addEventFilter()` のドキュメントを参照。
+ */
+export type EventFilter = (events: Event[], controller: EventFilterController) => Event[];

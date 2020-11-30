@@ -1,355 +1,341 @@
-namespace g {
-	export abstract class AudioSystem {
-		id: string;
-		game: Game;
+import { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory } from "@akashic/pdi-types";
+import { ExceptionFactory } from "./ExceptionFactory";
 
-		/**
-		 * @private
-		 */
-		_volume: number;
+export interface AudioSystemParameterObject {
+	/**
+	 * オーディオシステムのID
+	 */
+	id: string;
 
-		/**
-		 * @private
-		 */
-		_muted: boolean;
+	/**
+	 * オーディオのボリューム
+	 */
+	volume?: number;
 
-		/**
-		 * @private
-		 */
-		_destroyRequestedAssets: { [key: string]: Asset };
+	/**
+	 * ミュート中か否か。
+	 */
+	muted?: boolean;
 
-		/**
-		 * @private
-		 */
-		_playbackRate: number;
+	/**
+	 * 各種リソースのファクトリ
+	 */
+	resourceFactory: ResourceFactory;
+}
 
-		// volumeの変更時には通知が必要なのでアクセサを使う。
-		// 呼び出し頻度が少ないため許容。
-		get volume(): number {
-			return this._volume;
-		}
+export abstract class AudioSystem implements AudioSystem {
+	id: string;
 
-		set volume(value: number) {
-			if (value < 0 || value > 1 || isNaN(value) || typeof value !== "number")
-				throw ExceptionFactory.createAssertionError("AudioSystem#volume: expected: 0.0-1.0, actual: " + value);
+	/**
+	 * @private
+	 */
+	_volume: number;
 
-			this._volume = value;
-			this._onVolumeChanged();
-		}
+	/**
+	 * @private
+	 */
+	_muted: boolean;
 
-		constructor(id: string, game: Game) {
-			var audioSystemManager = game._audioSystemManager;
-			this.id = id;
-			this.game = game;
-			this._volume = 1;
-			this._destroyRequestedAssets = {};
-			this._muted = audioSystemManager._muted;
-			this._playbackRate = audioSystemManager._playbackRate;
-		}
+	/**
+	 * @private
+	 */
+	_destroyRequestedAssets: { [key: string]: AudioAsset };
 
-		abstract stopAll(): void;
+	/**
+	 * 再生速度が等倍以外に指定された等の要因により、音声再生が抑制されているかどうか。
+	 * @private
+	 */
+	_suppressed: boolean;
 
-		abstract findPlayers(asset: AudioAsset): AudioPlayer[];
+	/**
+	 * @private
+	 */
+	_resourceFactory: ResourceFactory;
 
-		abstract createPlayer(): AudioPlayer;
+	/**
+	 * 明示的に設定された、ミュート中か否か。
+	 * @private
+	 */
+	_explicitMuted: boolean;
 
-		requestDestroy(asset: Asset): void {
-			this._destroyRequestedAssets[asset.id] = asset;
-		}
-
-		/**
-		 * @private
-		 */
-		_reset(): void {
-			this.stopAll();
-			this._volume = 1;
-			this._destroyRequestedAssets = {};
-			this._muted = this.game._audioSystemManager._muted;
-			this._playbackRate = this.game._audioSystemManager._playbackRate;
-		}
-
-		/**
-		 * @private
-		 */
-		_setMuted(value: boolean): void {
-			var before = this._muted;
-			this._muted = !!value;
-			if (this._muted !== before) {
-				this._onMutedChanged();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_setPlaybackRate(value: number): void {
-			if (value < 0 || isNaN(value) || typeof value !== "number")
-				throw ExceptionFactory.createAssertionError(
-					"AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value
-				);
-
-			var before = this._playbackRate;
-			this._playbackRate = value;
-			if (this._playbackRate !== before) {
-				this._onPlaybackRateChanged();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		abstract _onVolumeChanged(): void;
-
-		/**
-		 * @private
-		 */
-		abstract _onMutedChanged(): void;
-
-		/**
-		 * @private
-		 */
-		abstract _onPlaybackRateChanged(): void;
+	// volumeの変更時には通知が必要なのでアクセサを使う。
+	// 呼び出し頻度が少ないため許容。
+	get volume(): number {
+		return this._volume;
 	}
 
-	export class MusicAudioSystem extends AudioSystem {
-		/**
-		 * @private
-		 */
-		_player: AudioPlayer;
+	set volume(value: number) {
+		if (value < 0 || value > 1 || isNaN(value) || typeof value !== "number")
+			throw ExceptionFactory.createAssertionError("AudioSystem#volume: expected: 0.0-1.0, actual: " + value);
 
-		/**
-		 * 再生を抑止されている `AudioAsset` 。
-		 *
-		 * 再生速度に非対応の `AudioPlayer` の場合に、等倍速でない速度で再生を試みたアセット。
-		 * 再生速度が戻された場合に改めて再生されなおす。
-		 * この値は、 `this._player._supportsPlaybackRate()` が偽ある場合にのみ利用される。
-		 * @private
-		 */
-		_suppressingAudio: AudioAsset;
+		this._volume = value;
+		this._onVolumeChanged();
+	}
 
-		// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
-		get player(): AudioPlayer {
-			if (!this._player) {
-				this._player = this.game.resourceFactory.createAudioPlayer(this);
-				this._player.played.handle(this, this._onPlayerPlayed);
-				this._player.stopped.handle(this, this._onPlayerStopped);
-			}
-			return this._player;
-		}
-		set player(v: AudioPlayer) {
-			this._player = v;
-		}
+	constructor(param: AudioSystemParameterObject) {
+		this.id = param.id;
+		this._volume = param.volume || 1;
+		this._destroyRequestedAssets = {};
+		this._explicitMuted = param.muted || false;
+		this._suppressed = false;
+		this._muted = false;
+		this._resourceFactory = param.resourceFactory;
+		this._updateMuted();
+	}
 
-		constructor(id: string, game: Game) {
-			super(id, game);
-			this._player = undefined;
-			this._suppressingAudio = undefined;
-		}
+	abstract stopAll(): void;
 
-		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			if (this.player.currentAudio && this.player.currentAudio.id === asset.id) return [this.player];
-			return [];
-		}
+	abstract findPlayers(asset: AudioAsset): AudioPlayer[];
 
-		createPlayer(): AudioPlayer {
-			return this.player;
-		}
+	abstract createPlayer(): AudioPlayer;
 
-		stopAll(): void {
-			if (!this._player) return;
-			this._player.stop();
-		}
+	requestDestroy(asset: AudioAsset): void {
+		this._destroyRequestedAssets[asset.id] = asset;
+	}
 
-		/**
-		 * @private
-		 */
-		_reset(): void {
-			super._reset();
-			if (this._player) {
-				this._player.played.remove({ owner: this, func: this._onPlayerPlayed });
-				this._player.stopped.remove({ owner: this, func: this._onPlayerStopped });
-			}
-			this._player = undefined;
-			this._suppressingAudio = undefined;
-		}
+	/**
+	 * @private
+	 */
+	_reset(): void {
+		this.stopAll();
+		this._volume = 1;
+		this._destroyRequestedAssets = {};
+		this._muted = false;
+		this._suppressed = false;
+		this._explicitMuted = false;
+	}
 
-		/**
-		 * @private
-		 */
-		_onVolumeChanged(): void {
-			this.player.changeVolume(this._volume);
-		}
-
-		/**
-		 * @private
-		 */
-		_onMutedChanged(): void {
-			this.player._changeMuted(this._muted);
-		}
-
-		/**
-		 * @private
-		 */
-		_onPlaybackRateChanged(): void {
-			var player = this.player;
-			player._changePlaybackRate(this._playbackRate);
-			if (!player._supportsPlaybackRate()) {
-				this._onUnsupportedPlaybackRateChanged();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onUnsupportedPlaybackRateChanged(): void {
-			// 再生速度非対応の場合のフォールバック: 鳴らそうとしてミュートしていた音があれば鳴らし直す
-			if (this._playbackRate === 1.0) {
-				if (this._suppressingAudio) {
-					var audio = this._suppressingAudio;
-					this._suppressingAudio = undefined;
-					if (!audio.destroyed()) {
-						this.player._changeMuted(false);
-					}
-				}
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onPlayerPlayed(e: AudioPlayerEvent): void {
-			if (e.player !== this._player)
-				throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
-
-			if (e.player._supportsPlaybackRate()) return;
-
-			// 再生速度非対応の場合のフォールバック: 鳴らさず即ミュートにする
-			if (this._playbackRate !== 1.0) {
-				e.player._changeMuted(true);
-				this._suppressingAudio = e.audio;
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onPlayerStopped(e: AudioPlayerEvent): void {
-			if (this._suppressingAudio) {
-				this._suppressingAudio = undefined;
-				this.player._changeMuted(false);
-			}
-			if (this._destroyRequestedAssets[e.audio.id]) {
-				delete this._destroyRequestedAssets[e.audio.id];
-				e.audio.destroy();
-			}
+	/**
+	 * @private
+	 */
+	_setMuted(value: boolean): void {
+		var before = this._explicitMuted;
+		this._explicitMuted = !!value;
+		if (this._explicitMuted !== before) {
+			this._updateMuted();
+			this._onMutedChanged();
 		}
 	}
 
-	export class SoundAudioSystem extends AudioSystem {
-		players: AudioPlayer[];
+	/**
+	 * @private
+	 */
+	_setPlaybackRate(value: number): void {
+		if (value < 0 || isNaN(value) || typeof value !== "number")
+			throw ExceptionFactory.createAssertionError("AudioSystem#playbackRate: expected: greater or equal to 0.0, actual: " + value);
 
-		constructor(id: string, game: Game) {
-			super(id, game);
-			this.players = [];
+		this._suppressed = value !== 1.0;
+		this._updateMuted();
+	}
+
+	/**
+	 * @private
+	 */
+	_updateMuted(): void {
+		this._muted = this._explicitMuted || this._suppressed;
+	}
+
+	/**
+	 * @private
+	 */
+	abstract _onVolumeChanged(): void;
+
+	/**
+	 * @private
+	 */
+	abstract _onMutedChanged(): void;
+}
+
+export class MusicAudioSystem extends AudioSystem {
+	/**
+	 * @private
+	 */
+	_player: AudioPlayer | undefined;
+
+	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
+	get player(): AudioPlayer {
+		if (!this._player) {
+			this._player = this._resourceFactory.createAudioPlayer(this);
+			this._player.onPlay.add(this._handlePlay, this);
+			this._player.onStop.add(this._handleStop, this);
 		}
+		return this._player;
+	}
+	set player(v: AudioPlayer) {
+		this._player = v;
+	}
 
-		createPlayer(): AudioPlayer {
-			var player = this.game.resourceFactory.createAudioPlayer(this);
-			if (player.canHandleStopped()) this.players.push(player);
+	constructor(param: AudioSystemParameterObject) {
+		super(param);
+		this._player = undefined;
+	}
 
-			player.played.handle(this, this._onPlayerPlayed);
-			player.stopped.handle(this, this._onPlayerStopped);
+	findPlayers(asset: AudioAsset): AudioPlayer[] {
+		if (this.player.currentAudio && this.player.currentAudio.id === asset.id) return [this.player];
+		return [];
+	}
 
-			return player;
+	createPlayer(): AudioPlayer {
+		return this.player;
+	}
+
+	stopAll(): void {
+		if (!this._player) return;
+		this._player.stop();
+	}
+
+	/**
+	 * @private
+	 */
+	_reset(): void {
+		super._reset();
+		if (this._player) {
+			this._player.onPlay.remove(this._handlePlay, this);
+			this._player.onStop.remove(this._handleStop, this);
 		}
+		this._player = undefined;
+	}
 
-		findPlayers(asset: AudioAsset): AudioPlayer[] {
-			var ret: AudioPlayer[] = [];
-			for (var i = 0; i < this.players.length; ++i) {
-				if (this.players[i].currentAudio && this.players[i].currentAudio.id === asset.id) ret.push(this.players[i]);
-			}
-			return ret;
+	/**
+	 * @private
+	 */
+	_onVolumeChanged(): void {
+		this.player._notifyVolumeChanged();
+	}
+
+	/**
+	 * @private
+	 */
+	_onMutedChanged(): void {
+		this.player._changeMuted(this._muted);
+	}
+
+	/**
+	 * @private
+	 */
+	_setPlaybackRate(rate: number): void {
+		super._setPlaybackRate(rate);
+		this.player._changeMuted(this._muted);
+	}
+
+	/**
+	 * @private
+	 */
+	_handlePlay(e: AudioPlayerEvent): void {
+		if (e.player !== this._player)
+			throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
+	}
+
+	/**
+	 * @private
+	 */
+	_handleStop(e: AudioPlayerEvent): void {
+		if (this._destroyRequestedAssets[e.audio.id]) {
+			delete this._destroyRequestedAssets[e.audio.id];
+			e.audio.destroy();
 		}
+	}
+}
 
-		stopAll(): void {
-			var players = this.players.concat();
+export class SoundAudioSystem extends AudioSystem {
+	players: AudioPlayer[];
+
+	constructor(param: AudioSystemParameterObject) {
+		super(param);
+		this.players = [];
+	}
+
+	createPlayer(): AudioPlayer {
+		var player = this._resourceFactory.createAudioPlayer(this);
+		if (player.canHandleStopped()) this.players.push(player);
+
+		player.onPlay.add(this._handlePlay, this);
+		player.onStop.add(this._handleStop, this);
+
+		return player;
+	}
+
+	findPlayers(asset: AudioAsset): AudioPlayer[] {
+		var ret: AudioPlayer[] = [];
+		for (var i = 0; i < this.players.length; ++i) {
+			const currentAudio = this.players[i].currentAudio;
+			if (currentAudio && currentAudio.id === asset.id) ret.push(this.players[i]);
+		}
+		return ret;
+	}
+
+	stopAll(): void {
+		var players = this.players.concat();
+		for (var i = 0; i < players.length; ++i) {
+			players[i].stop(); // auto remove
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_reset(): void {
+		super._reset();
+		for (var i = 0; i < this.players.length; ++i) {
+			var player = this.players[i];
+			player.onPlay.remove(this._handlePlay, this);
+			player.onStop.remove(this._handleStop, this);
+		}
+		this.players = [];
+	}
+
+	/**
+	 * @private
+	 */
+	_onMutedChanged(): void {
+		var players = this.players;
+		for (var i = 0; i < players.length; ++i) {
+			players[i]._changeMuted(this._muted);
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_setPlaybackRate(rate: number): void {
+		super._setPlaybackRate(rate);
+
+		var players = this.players;
+		if (this._suppressed) {
 			for (var i = 0; i < players.length; ++i) {
-				players[i].stop(); // auto remove
+				players[i]._changeMuted(true);
 			}
 		}
+	}
 
-		/**
-		 * @private
-		 */
-		_reset(): void {
-			super._reset();
-			for (var i = 0; i < this.players.length; ++i) {
-				var player = this.players[i];
-				player.played.remove({ owner: this, func: this._onPlayerPlayed });
-				player.stopped.remove({ owner: this, func: this._onPlayerStopped });
-			}
-			this.players = [];
+	/**
+	 * @private
+	 */
+	_handlePlay(_e: AudioPlayerEvent): void {
+		// do nothing
+	}
+
+	/**
+	 * @private
+	 */
+	_handleStop(e: AudioPlayerEvent): void {
+		var index = this.players.indexOf(e.player);
+		if (index < 0) return;
+
+		e.player.onStop.remove(this._handleStop, this);
+		this.players.splice(index, 1);
+		if (this._destroyRequestedAssets[e.audio.id]) {
+			delete this._destroyRequestedAssets[e.audio.id];
+			e.audio.destroy();
 		}
+	}
 
-		/**
-		 * @private
-		 */
-		_onMutedChanged(): void {
-			var players = this.players;
-			for (var i = 0; i < players.length; ++i) {
-				players[i]._changeMuted(this._muted);
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onPlaybackRateChanged(): void {
-			var players = this.players;
-			for (var i = 0; i < players.length; ++i) {
-				players[i]._changePlaybackRate(this._playbackRate);
-
-				// 再生速度非対応の場合のフォールバック: 即止める
-				if (!players[i]._supportsPlaybackRate() && this._playbackRate !== 1.0) {
-					players[i].stop();
-				}
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onPlayerPlayed(e: AudioPlayerEvent): void {
-			if (e.player._supportsPlaybackRate()) return;
-
-			// 再生速度非対応の場合のフォールバック: 鳴らさず即止める
-			if (this._playbackRate !== 1.0) {
-				e.player.stop();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onPlayerStopped(e: AudioPlayerEvent): void {
-			var index = this.players.indexOf(e.player);
-			if (index < 0) return;
-
-			e.player.stopped.remove({ owner: this, func: this._onPlayerStopped });
-			this.players.splice(index, 1);
-			if (this._destroyRequestedAssets[e.audio.id]) {
-				delete this._destroyRequestedAssets[e.audio.id];
-				e.audio.destroy();
-			}
-		}
-
-		/**
-		 * @private
-		 */
-		_onVolumeChanged(): void {
-			for (var i = 0; i < this.players.length; ++i) {
-				this.players[i].changeVolume(this._volume);
-			}
+	/**
+	 * @private
+	 */
+	_onVolumeChanged(): void {
+		for (var i = 0; i < this.players.length; ++i) {
+			this.players[i]._notifyVolumeChanged();
 		}
 	}
 }
