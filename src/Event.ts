@@ -263,21 +263,17 @@ export class TimestampEvent implements Event {
 
 /**
  * プレイヤー情報を表すイベント。
- * PointInfoEvent#playerNameによってプレイヤー名を、PlayerInfoEvent#userData によってユーザ情報を取得できる。
+ * PointInfoEvent#player.nameによってプレイヤー名を、PlayerInfoEvent#player.userDataによって送信者依存の追加データを取得できる。
  */
 export class PlayerInfoEvent implements Event {
 	type: "player-info" = "player-info";
 	eventFlags: number;
-	playerId: string;
-	playerName: string;
-	userData: any;
+	player: Player;
 
-	constructor(playerId: string, playerName: string, userData?: any, eventFlags?: number) {
+	constructor(player: Player, eventFlags?: number) {
 		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
 		this.eventFlags = eventFlags;
-		this.playerId = playerId;
-		this.playerName = playerName;
-		this.userData = userData;
+		this.player = player;
 	}
 }
 

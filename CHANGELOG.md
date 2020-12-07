@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Unreleased Changes
+
+仕様変更
+ * `PlayerInfoEvent#player` を追加、 `PlayerInfoEvent` の `playerId`, `playerName`, `userData` を削除
+   * 将来のために予約されている未使用の機能のため、ゲーム開発者に影響はありません。
+
 ## 3.0.0
 
 v3.0.0-beta.X の正式リリース版です。

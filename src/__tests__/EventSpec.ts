@@ -91,14 +91,13 @@ describe("test Event", () => {
 	});
 
 	it("初期化 - PlayerInfo", () => {
-		const player = { id: "3", name: "p" };
-		const userData = { hoge: "foo" };
-		const playerInfoEvent = new PlayerInfoEvent(player.id, player.name, userData, 1);
+		const player = { id: "3", name: "p", userData: { hoge: "foo" } };
+		const playerInfoEvent = new PlayerInfoEvent(player, 1);
 		expect(playerInfoEvent.type).toBe("player-info");
 		expect(playerInfoEvent.eventFlags).toBe(1);
-		expect(playerInfoEvent.userData).toEqual(userData);
-		expect(playerInfoEvent.playerId).toBe(player.id);
-		expect(playerInfoEvent.playerName).toBe(player.name);
+		expect(playerInfoEvent.player.userData).toEqual(player.userData);
+		expect(playerInfoEvent.player.id).toBe(player.id);
+		expect(playerInfoEvent.player.name).toBe(player.name);
 	});
 
 	it("初期化 - Seed", () => {
