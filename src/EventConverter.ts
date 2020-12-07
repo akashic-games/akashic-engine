@@ -93,14 +93,14 @@ export class EventConverter {
 			case pl.EventCode.PlayerInfo:
 				let playerName = pev[EventIndex.PlayerInfo.PlayerName];
 				let userData: any = pev[EventIndex.PlayerInfo.UserData];
-				// @ts-ignore
-				this._playerTable[playerId] = {
+				player = {
 					id: playerId,
 					name: playerName,
 					userData
 				};
 				// @ts-ignore
-				return new PlayerInfoEvent(this._playerTable[playerId]!, prio);
+				this._playerTable[playerId] = player;
+				return new PlayerInfoEvent(player, prio);
 
 			case pl.EventCode.Message:
 				local = pev[EventIndex.Message.Local];
