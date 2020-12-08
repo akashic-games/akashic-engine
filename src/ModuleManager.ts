@@ -127,7 +127,8 @@ export class ModuleManager {
 					id: targetScriptAsset.id,
 					path: targetScriptAsset.path,
 					virtualPath: this._assetManager._liveAssetPathTable[targetScriptAsset.path],
-					require: (path: string, mod?: Module) => this._require(path, mod)
+					requireFunc: (path: string, mod?: Module) => this._require(path, mod),
+					resolveFunc: (path: string, mod?: Module) => this._resolvePath(path, mod)
 				});
 				const script = new ScriptAssetContext(targetScriptAsset as ScriptAsset, module);
 				// @ts-ignore
@@ -146,6 +147,78 @@ export class ModuleManager {
 			}
 		}
 		throw ExceptionFactory.createAssertionError("g._require: can not find module: " + path);
+	}
+
+	/**
+	 * 対象のモジュールの指定されたパスを game.json を基準とした相対パスとして解決する。
+	 * `this._require()` と違い `path` にアセットIDが指定されても解決しない点に注意。
+	 * 通常、ゲーム開発者が利用するのは `require.resolve()` であり、このメソッドはその内部実装を提供する。
+	 *
+	 * @ignore
+	 * @param path resolve する対象のパス。相対パスを利用することができる。
+	 * @param currentModule この require を実行した Module 。
+	 * @returns {string} パス
+	 */
+	_resolvePath(path: string, currentModule?: Module): string {
+		let resolvedPath: string | null = null;
+		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
+		const moduleMainScripts = this._assetManager._moduleMainScripts;
+
+		// require(X) from module at path Y
+		// 1. If X is a core module,
+		// (何もしない。コアモジュールには対応していない。ゲーム開発者は自分でコアモジュールへの依存を解決する必要がある)
+
+		if (/^\.\/|^\.\.\/|^\//.test(path)) {
+			// 2. If X begins with './' or '/' or '../'
+
+			if (currentModule) {
+				if (!currentModule._virtualDirname) {
+					throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle path without virtualPath");
+				}
+				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
+			} else {
+				throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle without currentModule");
+			}
+
+			// 2.a. LOAD_AS_FILE(Y + X)
+			let targetPath = this._resolveModulePathByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+			if (targetPath) {
+				return targetPath;
+			}
+
+			// 2.b. LOAD_AS_DIRECTORY(Y + X)
+			targetPath = this._resolveModulePathByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+			if (targetPath) {
+				return targetPath;
+			}
+		} else {
+			// 3. LOAD_NODE_MODULES(X, dirname(Y))
+
+			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを返す
+			if (moduleMainScripts[path]) {
+				return moduleMainScripts[path];
+			}
+
+			// 3.a LOAD_NODE_MODULES(X, START)
+			const dirs = currentModule ? currentModule.paths.concat() : [];
+			dirs.push("node_modules");
+			for (let i = 0; i < dirs.length; ++i) {
+				const dir = dirs[i];
+				const targetPath = PathUtil.resolvePath(dir, path);
+
+				resolvedPath = this._resolveModulePathByPathAsFile(targetPath, liveAssetVirtualPathTable);
+				if (resolvedPath) {
+					return resolvedPath;
+				}
+
+				resolvedPath = this._resolveModulePathByPathAsDirectory(targetPath, liveAssetVirtualPathTable);
+				if (resolvedPath) {
+					return resolvedPath;
+				}
+			}
+		}
+
+		throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the path: " + path);
 	}
 
 	/**
@@ -187,5 +260,49 @@ export class ModuleManager {
 		path = resolvedPath + "/index.js";
 		if (liveAssetPathTable.hasOwnProperty(path)) return liveAssetPathTable[path];
 		return undefined;
+	}
+
+	/**
+	 * 与えられたパス文字列がファイルパスであると仮定して、対応するアセットのパスを解決する。
+	 * アセットが存在した場合はそのパスを、そうでない場合 `undefined` を返す。
+	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
+	 *
+	 * @ignore
+	 * @param resolvedPath パス文字列
+	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
+	 */
+	_resolveModulePathByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
+		if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return resolvedPath;
+		if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return resolvedPath + ".js";
+		return null;
+	}
+
+	/**
+	 * 与えられたパス文字列がディレクトリパスであると仮定して、対応するアセットのパスを解決する。
+	 * アセットが存在した場合はそのパスを、そうでない場合 `undefined` を返す。
+	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
+	 * ディレクトリ内に package.json が存在する場合、package.json 自体もアセットとして
+	 * `liveAssetPathTable` から参照可能でなければならないことに注意。
+	 *
+	 * @ignore
+	 * @param resolvedPath パス文字列
+	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
+	 */
+	_resolveModulePathByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
+		let path = resolvedPath + "/package.json";
+		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
+			var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
+			if (pkg && typeof pkg.main === "string") {
+				const targetPath = this._resolveModulePathByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
+				if (targetPath) {
+					return targetPath;
+				}
+			}
+		}
+		path = resolvedPath + "/index.js";
+		if (liveAssetPathTable.hasOwnProperty(path)) {
+			return path;
+		}
+		return null;
 	}
 }

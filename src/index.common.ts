@@ -59,6 +59,7 @@ export * from "./PathUtil";
 export * from "./Player";
 export * from "./PointEventResolver";
 export * from "./RandomGenerator";
+export * from "./Require";
 export * from "./RequireCacheable";
 export * from "./RequireCachedValue";
 export * from "./ScriptAssetContext";

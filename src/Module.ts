@@ -1,12 +1,14 @@
 import { Module as PdiModule, ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/pdi-types";
 import { PathUtil } from "./PathUtil";
+import { Require } from "./Require";
 
 export interface ModuleParameterObject {
 	runtimeValueBase: ScriptAssetRuntimeValueBase;
 	id: string;
 	path: string;
 	virtualPath?: string;
-	require: (path: string, currentModule?: Module) => any;
+	requireFunc: (path: string, currentModule?: Module) => any;
+	resolveFunc: (path: string, currentModule?: Module) => string;
 }
 
 /**
@@ -54,7 +56,7 @@ export class Module implements PdiModule {
 	/**
 	 * このモジュールの評価時に与えられる `require()` 関数。
 	 */
-	require: (path: string) => any;
+	require: Require;
 
 	/**
 	 * @private
@@ -77,7 +79,8 @@ export class Module implements PdiModule {
 		// `virtualPath` と `virtualDirname` は　`DynamicAsset` の場合は `undefined` になる。
 		const virtualPath = param.virtualPath;
 		const virtualDirname = virtualPath ? PathUtil.resolveDirname(virtualPath) : undefined;
-		const require = param.require;
+		const requireFunc = param.requireFunc;
+		const resolveFunc = param.resolveFunc;
 
 		this._runtimeValue = Object.create(param.runtimeValueBase, {
 			filename: {
@@ -107,8 +110,14 @@ export class Module implements PdiModule {
 		this._virtualDirname = virtualDirname;
 
 		// メソッドとしてではなく単体で呼ばれるのでメソッドにせずここで実体を代入する
-		this.require = (path: string) => {
-			return require(path, this);
+		const require = ((path: string): any => {
+			return requireFunc(path, this);
+		}) as Require;
+
+		require.resolve = (path: string): string => {
+			return resolveFunc(path, this);
 		};
+
+		this.require = require;
 	}
 }
