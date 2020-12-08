@@ -119,9 +119,12 @@ describe("EventConverter", () => {
 			EventPriority.System,
 			"dummyPlayerId",
 			"dummyName",
-			{ userData: "dummy" }
+			{ userDataProp: "dummy" }
 		];
-		const playerInfo = new PlayerInfoEvent("dummyPlayerId", "dummyName", { userData: "dummy" }, EventPriority.System);
+		const playerInfo = new PlayerInfoEvent(
+			{ id: "dummyPlayerId", name: "dummyName", userData: { userDataProp: "dummy" } },
+			EventPriority.System
+		);
 		const playerInfo2 = self.toGameEvent(pPlayerInfo);
 		expect(playerInfo).toEqual(playerInfo2);
 
@@ -130,7 +133,7 @@ describe("EventConverter", () => {
 		const pointDown = self.toGameEvent(pdown) as PointDownEvent;
 		expect(pointDown.player!.id).toBe("dummyPlayerId");
 		expect(pointDown.player!.name).toBe("dummyName");
-		expect(pointDown.player!.userData).toEqual({ userData: "dummy" });
+		expect(pointDown.player!.userData).toEqual({ userDataProp: "dummy" });
 
 		// JoinEvent 送信後にユーザデータが上書きされていないことを確認
 		const pjoin2: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id, player.name!, sds];
@@ -139,6 +142,6 @@ describe("EventConverter", () => {
 		const pointDown2 = self.toGameEvent(pdown2) as PointDownEvent;
 		expect(pointDown2.player!.id).toBe("dummyPlayerId");
 		expect(pointDown2.player!.name).toBe("dummyName");
-		expect(pointDown2.player!.userData).toEqual({ userData: "dummy" });
+		expect(pointDown2.player!.userData).toEqual({ userDataProp: "dummy" });
 	});
 });

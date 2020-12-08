@@ -93,14 +93,14 @@ export class EventConverter {
 			case pl.EventCode.PlayerInfo:
 				let playerName = pev[EventIndex.PlayerInfo.PlayerName];
 				let userData: any = pev[EventIndex.PlayerInfo.UserData];
-				// @ts-ignore
-				this._playerTable[playerId] = {
+				player = {
 					id: playerId,
 					name: playerName,
 					userData
 				};
 				// @ts-ignore
-				return new PlayerInfoEvent(playerId, playerName, userData, prio);
+				this._playerTable[playerId] = player;
+				return new PlayerInfoEvent(player, prio);
 
 			case pl.EventCode.Message:
 				local = pev[EventIndex.Message.Local];
@@ -190,13 +190,13 @@ export class EventConverter {
 				];
 			case "player-info":
 				let playerInfo = <PlayerInfoEvent>e;
-				playerId = preservePlayer ? playerInfo.playerId : this._playerId;
+				playerId = preservePlayer ? playerInfo.player.id : this._playerId;
 				return [
-					pl.EventCode.PlayerInfo, // 0: イベントコード
-					playerInfo.eventFlags, //   1: イベントフラグ値
-					playerId, //                2: プレイヤーID
-					playerInfo.playerName, //   3: プレイヤー名
-					playerInfo.userData //      4: ユーザデータ
+					pl.EventCode.PlayerInfo, //   0: イベントコード
+					playerInfo.eventFlags, //     1: イベントフラグ値
+					playerId, //                  2: プレイヤーID
+					playerInfo.player.name, //    3: プレイヤー名
+					playerInfo.player.userData // 4: ユーザデータ
 				];
 			case "point-down":
 				let pointDown = <PointDownEvent>e;
@@ -276,7 +276,7 @@ export class EventConverter {
 
 	makePlaylogOperationEvent(op: InternalOperationPluginOperation): pl.Event {
 		let playerId = this._playerId;
-		let eventFlags = op.priority != null ? (op.priority & pl.EventFlagsMask.Priority ): 0;
+		let eventFlags = op.priority != null ? op.priority & pl.EventFlagsMask.Priority : 0;
 		return [
 			pl.EventCode.Operation, // 0: イベントコード
 			eventFlags, //             1: イベントフラグ値
