@@ -291,7 +291,7 @@ describe("test Module", () => {
 			"  require.resolve('libraryA'),", // external module
 			"  require('externalResolvedModule').resolvedPathAsDirectory,", // as a directory path in the external module
 			"  require('externalResolvedModule').resolvedPathAsFile,", // as a file path in the external module
-			"  require('externalResolvedModule').resolvedPathAsCoreModule,", // as a external module in the external module
+			"  require('externalResolvedModule').resolvedPathAsExtModule,", // as a external module in the external module
 			"];"
 		].join("\n"),
 		"/script/resolve2.js": "module.exports = {};",
@@ -299,7 +299,7 @@ describe("test Module", () => {
 			"module.exports = {",
 			"  resolvedPathAsDirectory: require.resolve('./'),",
 			"  resolvedPathAsFile: require.resolve('./index.js'),",
-			"  resolvedPathAsCoreModule: require.resolve('libraryA'),",
+			"  resolvedPathAsExtModule: require.resolve('libraryA'),",
 			"};"
 		].join("\n"),
 		"/text/dummydata.txt": "dummydata"
@@ -856,7 +856,7 @@ describe("test Module", () => {
 		game._startLoadingGlobalAssets();
 	});
 
-	it("_resolveRequiredPath", done => {
+	it("_resolvePath", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
 		const path = "/script/dummypath.js";
