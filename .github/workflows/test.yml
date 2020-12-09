@@ -1,0 +1,39 @@
+name: test
+
+on: [push, pull_request]
+
+env:
+  cache-version: v1
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    name: "Node ${{ matrix.node }} / ${{ matrix.os }}"
+    strategy:
+      max-parallel: 4
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [12.x, 14.x]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ env.cache-version }}-${{ runner.os }}-build-
+            ${{ env.cache-version }}-${{ runner.os }}-
+      - name: Checkout code
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+      - name: Run test
+        run: |
+          npm install
+          npm test

@@ -186,10 +186,35 @@ describe("test Module", () => {
 				path: "/node_modules/noPackageJsonModule/real_fuga.js",
 				virtualPath: "node_modules/noPackageJsonModule/fuga.js",
 				global: true
+			},
+			// require.resolve
+			"script/resolve1.js": {
+				type: "script",
+				path: "/script/resolve1.js",
+				virtualPath: "script/resolve1.js",
+				global: true
+			},
+			"script/resolve2.js": {
+				type: "script",
+				path: "/script/resolve2.js",
+				virtualPath: "script/resolve2.js",
+				global: true
+			},
+			"node_modules/externalResolvedModule/index.js": {
+				type: "script",
+				path: "/node_modules/externalResolvedModule/index.js",
+				virtualPath: "node_modules/externalResolvedModule/index.js",
+				global: true
+			},
+			dummydata: {
+				type: "text",
+				path: "/text/dummydata.txt",
+				virtualPath: "text/dummydata.txt"
 			}
 		},
 		moduleMainScripts: {
-			noPackageJsonModule: "node_modules/noPackageJsonModule/hoge.js"
+			noPackageJsonModule: "node_modules/noPackageJsonModule/hoge.js",
+			externalResolvedModule: "node_modules/externalResolvedModule/index.js"
 		}
 	};
 
@@ -256,7 +281,28 @@ describe("test Module", () => {
 		"/script/cache1.js":
 			"module.exports = { v1: require('randomnumber'), v2: require('randomnumber'), cache2: require('./cache2.js') };",
 		"/script/cache2.js": "module.exports = { v1: require('randomnumber'), v2: require('randomnumber') };",
-		"/node_modules/randomnumber/index.js": "module.exports = g.game.random.generate();"
+		"/node_modules/randomnumber/index.js": "module.exports = g.game.random.generate();",
+
+		// require.resolve
+		"/script/resolve1.js": [
+			"module.exports = [",
+			"  require.resolve('./resolve2'),", // relative file path (.js)
+			"  require.resolve('../text/dummydata.txt'),", // relative file path
+			"  require.resolve('libraryA'),", // external module
+			"  require('externalResolvedModule').resolvedPathAsDirectory,", // as a directory path in the external module
+			"  require('externalResolvedModule').resolvedPathAsFile,", // as a file path in the external module
+			"  require('externalResolvedModule').resolvedPathAsExtModule,", // as a external module in the external module
+			"];"
+		].join("\n"),
+		"/script/resolve2.js": "module.exports = {};",
+		"/node_modules/externalResolvedModule/index.js": [
+			"module.exports = {",
+			"  resolvedPathAsDirectory: require.resolve('./'),",
+			"  resolvedPathAsFile: require.resolve('./index.js'),",
+			"  resolvedPathAsExtModule: require.resolve('libraryA'),",
+			"};"
+		].join("\n"),
+		"/text/dummydata.txt": "dummydata"
 	};
 
 	it("初期化", done => {
@@ -270,7 +316,8 @@ describe("test Module", () => {
 				id: "moduleid",
 				path,
 				virtualPath: path,
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule),
 				runtimeValueBase: game._runtimeValueBase
 			});
 
@@ -282,6 +329,9 @@ describe("test Module", () => {
 			expect(module.children).toEqual([]);
 			expect(module.paths).toEqual(["/path/to/the/node_modules", "/path/to/node_modules", "/path/node_modules", "/node_modules"]);
 			expect(module.require instanceof Function).toBe(true);
+			expect(() => {
+				module.require.resolve("../not/exists");
+			}).toThrowError("AssertionError");
 			expect(module._dirname).toBe(dirname);
 			expect(module._runtimeValue.game).toBe(game);
 			expect(module._runtimeValue.filename).toBe(path);
@@ -318,7 +368,8 @@ describe("test Module", () => {
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
 				runtimeValueBase: game._runtimeValueBase,
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 
 			let mod = module.require("./foo");
@@ -422,7 +473,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 
 			let mod = module.require("./foo");
@@ -494,7 +546,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 
 			let mod = module.require("./foo");
@@ -556,7 +609,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 
 			const useA = module.require("./useA.js");
@@ -626,7 +680,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 
 			const useA = module.require("./useA.js");
@@ -668,7 +723,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 			const c1 = module.require("cyclic1");
 			expect(c1.me).toBe("cyclic1");
@@ -708,7 +764,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 			const mod = module.require("../../foo"); // virtualPath: /script/some/deep/vpath.js からのrequire()
 			expect(mod.me).toBe("script-foo");
@@ -734,7 +791,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 
 			const cache1 = module.require("./cache1");
@@ -757,7 +815,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 			const mod = module.require("./cascaded");
 			expect(mod.me).toBe("script-cascaded");
@@ -782,7 +841,8 @@ describe("test Module", () => {
 				id: "dummymod",
 				path,
 				virtualPath: game._assetManager._liveAssetPathTable[path],
-				require: (path: string, currentModule?: Module) => manager._require(path, currentModule)
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
 			});
 			const mod = module.require("./dummypath");
 			expect(mod.me).toBe("script-dummymod");
@@ -792,6 +852,42 @@ describe("test Module", () => {
 			expect(mod.thisModule.children).toEqual([]);
 			expect(mod.thisModule.loaded).toBe(true);
 			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("_resolvePath", done => {
+		const game = new Game(gameConfiguration, "/");
+		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
+		game.resourceFactory.scriptContents = scriptContents;
+		game._onLoad.addOnce(() => {
+			const scene = new Scene({
+				game: game,
+				assetIds: ["dummydata"]
+			});
+			scene.onLoad.add(() => {
+				const module = new Module({
+					runtimeValueBase: game._runtimeValueBase,
+					id: "dummymod",
+					path,
+					virtualPath: game._assetManager._liveAssetPathTable[path],
+					requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+					resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
+				});
+				const mod = module.require("./resolve1");
+				expect(mod).toEqual([
+					"script/resolve2.js",
+					"text/dummydata.txt",
+					"node_modules/libraryA/index.js",
+					"node_modules/externalResolvedModule/index.js",
+					"node_modules/externalResolvedModule/index.js",
+					"node_modules/libraryA/index.js"
+				]);
+				done();
+			});
+			game.pushScene(scene);
+			game._flushPostTickTasks();
 		});
 		game._startLoadingGlobalAssets();
 	});
