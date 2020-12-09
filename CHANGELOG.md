@@ -2,6 +2,10 @@
 
 ## Unreleased Changes
 
+機能追加
+ * `g.Module#_resolvePath()` を追加
+   * ゲーム開発者は、 `require.resolve()` を利用することで game.json からみた相対パスを取得することができます。
+
 仕様変更
  * `PlayerInfoEvent#player` を追加、 `PlayerInfoEvent` の `playerId`, `playerName`, `userData` を削除
    * 将来のために予約されている未使用の機能のため、ゲーム開発者に影響はありません。
