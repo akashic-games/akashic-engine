@@ -558,7 +558,30 @@ describe("test AssetManager", () => {
 					virtualPath: "assets/chara01/image.png",
 					width: 32,
 					height: 32
+				},
+				"node_modules/@akashic-extension/some-library/lib/index.js": {
+					type: "script",
+					path: "node_modules/@akashic-extension/some-library/lib/index.js",
+					virtualPath: "node_modules/@akashic-extension/some-library/lib/index.js",
+					global: true
+				},
+				"node_modules/@akashic-extension/some-library/assets/image.png": {
+					type: "image",
+					path: "node_modules/@akashic-extension/some-library/assets/image.png",
+					virtualPath: "node_modules/@akashic-extension/some-library/assets/image.png",
+					width: 2048,
+					height: 1024
+				},
+				"node_modules/@akashic-extension/some-library/assets/boss.png": {
+					type: "image",
+					path: "node_modules/@akashic-extension/some-library/assets/boss.png",
+					virtualPath: "node_modules/@akashic-extension/some-library/assets/boss.png",
+					width: 324,
+					height: 196
 				}
+			},
+			moduleMainScripts: {
+				"@akashic-extension/some-library": "node_modules/@akashic-extension/some-library/lib/index.js"
 			}
 		};
 
@@ -572,6 +595,12 @@ describe("test AssetManager", () => {
 				"id-assets/stage01/boss.png",
 				"id-assets/stage01/map.json",
 				"id-assets/chara01/image.png"
+			]);
+
+			expect(manager.resolvePatternsToAssetIds(["@akashic-extension/some-library/**/*"])).toEqual([
+				"node_modules/@akashic-extension/some-library/lib/index.js",
+				"node_modules/@akashic-extension/some-library/assets/image.png",
+				"node_modules/@akashic-extension/some-library/assets/boss.png"
 			]);
 		});
 
@@ -601,10 +630,13 @@ describe("test AssetManager", () => {
 		it("can resolve multiple patterns/filters to asset IDs", () => {
 			const game = new Game(gameConfiguration);
 			const manager = game._assetManager;
-			expect(manager.resolvePatternsToAssetIds(["**/*.js", s => /\/bgm\d+$/.test(s)])).toEqual([
-				"id-script/main.js",
-				"id-assets/stage01/bgm01"
-			]);
+			expect(manager.resolvePatternsToAssetIds(["**/*.js", s => /\/bgm\d+$/.test(s)])).toEqual(
+				[
+					"id-script/main.js",
+					"node_modules/@akashic-extension/some-library/lib/index.js",
+					"id-assets/stage01/bgm01"
+				]
+			);
 		});
 
 		function setupAssetLoadedGame(
@@ -654,7 +686,12 @@ describe("test AssetManager", () => {
 		});
 
 		it("can peek live assets by accessorPath", done => {
-			const assetIds = ["id-script/main.js", "id-assets/stage01/se01", "id-assets/chara01/image.png"];
+			const assetIds = [
+				"id-script/main.js",
+				"id-assets/stage01/se01",
+				"id-assets/chara01/image.png",
+				"node_modules/@akashic-extension/some-library/assets/boss.png"
+			];
 			setupAssetLoadedGame(
 				assetIds,
 				s => done.fail(s),
@@ -676,6 +713,15 @@ describe("test AssetManager", () => {
 					expect(se01.path).toBe("assets/stage01/se01");
 					expect(se01.duration).toBe(10000);
 
+					const boss = manager.peekLiveAssetByAccessorPath(
+						"@akashic-extension/some-library/assets/boss.png",
+						"image"
+					) as ImageAsset;
+					expect(boss.type).toBe("image");
+					expect(boss.path).toBe("node_modules/@akashic-extension/some-library/assets/boss.png");
+					expect(boss.width).toBe(324);
+					expect(boss.height).toBe(196);
+
 					// "/" 始まりでないのはエラー
 					expect(() => manager.peekLiveAssetByAccessorPath("assets/stage01/se01", "audio")).toThrowError("AssertionError");
 					done();
@@ -694,7 +740,9 @@ describe("test AssetManager", () => {
 				"id-assets/stage01/se01",
 				"id-assets/stage01/boss.png",
 				"id-assets/stage01/map.json",
-				"id-assets/chara01/image.png"
+				"id-assets/chara01/image.png",
+				"node_modules/@akashic-extension/some-library/assets/image.png",
+				"node_modules/@akashic-extension/some-library/assets/boss.png"
 			];
 			setupAssetLoadedGame(
 				assetIds,
@@ -721,6 +769,22 @@ describe("test AssetManager", () => {
 					expect(result3.length).toEqual(2);
 					expect(result3[0]).toEqual({ id: "id-assets/stage01/boss.png", type: "image", path: "assets/stage01/boss.png" });
 					expect(result3[1]).toEqual({ id: "id-assets/chara01/image.png", type: "image", path: "assets/chara01/image.png" });
+
+					const result4 = manager
+						.peekAllLiveAssetsByPattern("@akashic-extension/some-library/*/*.png", "image")
+						.map(extractAssetProps);
+					expect(result4).toEqual([
+						{
+							id: "node_modules/@akashic-extension/some-library/assets/image.png",
+							type: "image",
+							path: "node_modules/@akashic-extension/some-library/assets/image.png"
+						},
+						{
+							id: "node_modules/@akashic-extension/some-library/assets/boss.png",
+							type: "image",
+							path: "node_modules/@akashic-extension/some-library/assets/boss.png"
+						}
+					]);
 					done();
 				}
 			);
@@ -733,7 +797,9 @@ describe("test AssetManager", () => {
 				"id-assets/stage01/se01",
 				"id-assets/stage01/boss.png",
 				"id-assets/stage01/map.json",
-				"id-assets/chara01/image.png"
+				"id-assets/chara01/image.png",
+				"node_modules/@akashic-extension/some-library/assets/image.png",
+				"node_modules/@akashic-extension/some-library/assets/boss.png"
 			];
 			setupAssetLoadedGame(
 				assetIds,
@@ -757,9 +823,28 @@ describe("test AssetManager", () => {
 					expect(result2[1]).toEqual({ id: "id-assets/stage01/se01", type: "audio", path: "assets/stage01/se01" });
 
 					const result3 = manager.peekAllLiveAssetsByPattern(s => /\.png$/.test(s), "image").map(extractAssetProps);
-					expect(result3.length).toEqual(2);
-					expect(result3[0]).toEqual({ id: "id-assets/stage01/boss.png", type: "image", path: "assets/stage01/boss.png" });
-					expect(result3[1]).toEqual({ id: "id-assets/chara01/image.png", type: "image", path: "assets/chara01/image.png" });
+					expect(result3).toEqual([
+						{
+							id: "id-assets/stage01/boss.png",
+							type: "image",
+							path: "assets/stage01/boss.png"
+						},
+						{
+							id: "id-assets/chara01/image.png",
+							type: "image",
+							path: "assets/chara01/image.png"
+						},
+						{
+							id: "node_modules/@akashic-extension/some-library/assets/image.png",
+							type: "image",
+							path: "node_modules/@akashic-extension/some-library/assets/image.png"
+						},
+						{
+							id: "node_modules/@akashic-extension/some-library/assets/boss.png",
+							type: "image",
+							path: "node_modules/@akashic-extension/some-library/assets/boss.png"
+						}
+					]);
 					done();
 				}
 			);

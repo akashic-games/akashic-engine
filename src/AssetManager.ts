@@ -289,7 +289,7 @@ export class AssetManager implements AssetLoadHandler {
 		const ret: string[] = [];
 		for (let i = 0; i < patternOrFilters.length; ++i) {
 			const patternOrFilter = patternOrFilters[i];
-			const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
+			const filter = typeof patternOrFilter === "string" ? patternToFilter(this._replacePathTo(patternOrFilter)) : patternOrFilter;
 			for (let j = 0; j < vpaths.length; ++j) {
 				const vpath = vpaths[j];
 				const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
@@ -387,6 +387,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
 	peekLiveAssetByAccessorPath<T extends OneOfAsset>(accessorPath: string, type: string): T {
+		accessorPath = this._replacePathTo(accessorPath);
 		if (accessorPath[0] !== "/")
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
 		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
@@ -423,7 +424,7 @@ export class AssetManager implements AssetLoadHandler {
 		type: string | null
 	): T[] {
 		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
-		const filter = typeof patternOrFilter === "string" ? patternToFilter(patternOrFilter) : patternOrFilter;
+		const filter = typeof patternOrFilter === "string" ? patternToFilter(this._replacePathTo(patternOrFilter)) : patternOrFilter;
 		let ret: T[] = [];
 		for (let i = 0; i < vpaths.length; ++i) {
 			const vpath = vpaths[i];
@@ -620,5 +621,21 @@ export class AssetManager implements AssetLoadHandler {
 
 		var hs = loadingInfo.handlers;
 		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetLoad(asset);
+	}
+
+	/**
+	 *
+	 * @private
+	 */
+	_replacePathTo(accessorPath: string): string {
+		// accessorPath の先頭が moduleMainScripts に含まれていたら
+		for (const moduleName in this._moduleMainScripts) {
+			if (!this._moduleMainScripts.hasOwnProperty(moduleName)) continue;
+			if (accessorPath.lastIndexOf(moduleName, 0) === 0) {
+				accessorPath = accessorPath.replace(moduleName, "/node_modules/" + moduleName);
+				break;
+			}
+		}
+		return accessorPath;
 	}
 }
