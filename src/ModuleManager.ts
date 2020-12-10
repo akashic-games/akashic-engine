@@ -150,14 +150,14 @@ export class ModuleManager {
 	}
 
 	/**
-	 * 対象のモジュールの指定されたパスを game.json を基準とした相対パスとして解決する。
+	 * 対象のモジュールからの相対パスを、 game.json のディレクトリをルート (`/`) とする `/` 区切りの絶対パス形式として解決する。
 	 * `this._require()` と違い `path` にアセットIDが指定されても解決しない点に注意。
 	 * 通常、ゲーム開発者が利用するのは `require.resolve()` であり、このメソッドはその内部実装を提供する。
 	 *
 	 * @ignore
 	 * @param path resolve する対象のパス。相対パスを利用することができる。
 	 * @param currentModule この require を実行した Module 。
-	 * @returns {string} パス
+	 * @returns {string} 絶対パス
 	 */
 	_resolvePath(path: string, currentModule?: Module): string {
 		let resolvedPath: string | null = null;
@@ -181,13 +181,13 @@ export class ModuleManager {
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
-			let targetPath = this._resolveModulePathByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+			let targetPath = this._resolveAbsolutePathAsFile(resolvedPath, liveAssetVirtualPathTable);
 			if (targetPath) {
 				return targetPath;
 			}
 
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
-			targetPath = this._resolveModulePathByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+			targetPath = this._resolveAbsolutePathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 			if (targetPath) {
 				return targetPath;
 			}
@@ -206,12 +206,12 @@ export class ModuleManager {
 				const dir = dirs[i];
 				const targetPath = PathUtil.resolvePath(dir, path);
 
-				resolvedPath = this._resolveModulePathByPathAsFile(targetPath, liveAssetVirtualPathTable);
+				resolvedPath = this._resolveAbsolutePathAsFile(targetPath, liveAssetVirtualPathTable);
 				if (resolvedPath) {
 					return resolvedPath;
 				}
 
-				resolvedPath = this._resolveModulePathByPathAsDirectory(targetPath, liveAssetVirtualPathTable);
+				resolvedPath = this._resolveAbsolutePathAsDirectory(targetPath, liveAssetVirtualPathTable);
 				if (resolvedPath) {
 					return resolvedPath;
 				}
@@ -263,7 +263,7 @@ export class ModuleManager {
 	}
 
 	/**
-	 * 与えられたパス文字列がファイルパスであると仮定して、対応するアセットのパスを解決する。
+	 * 与えられたパス文字列がファイルパスであると仮定して、対応するアセットの絶対パスを解決する。
 	 * アセットが存在した場合はそのパスを、そうでない場合 `null` を返す。
 	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
 	 *
@@ -271,14 +271,14 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_resolveModulePathByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
-		if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return resolvedPath;
-		if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return resolvedPath + ".js";
+	_resolveAbsolutePathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
+		if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return "/" + resolvedPath;
+		if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return "/" + resolvedPath + ".js";
 		return null;
 	}
 
 	/**
-	 * 与えられたパス文字列がディレクトリパスであると仮定して、対応するアセットのパスを解決する。
+	 * 与えられたパス文字列がディレクトリパスであると仮定して、対応するアセットの絶対パスを解決する。
 	 * アセットが存在した場合はそのパスを、そうでない場合 `null` を返す。
 	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
 	 * ディレクトリ内に package.json が存在する場合、package.json 自体もアセットとして
@@ -288,20 +288,20 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_resolveModulePathByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
+	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
 		let path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
 			var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 			if (pkg && typeof pkg.main === "string") {
-				const targetPath = this._resolveModulePathByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
+				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (targetPath) {
-					return targetPath;
+					return "/" + targetPath;
 				}
 			}
 		}
 		path = resolvedPath + "/index.js";
 		if (liveAssetPathTable.hasOwnProperty(path)) {
-			return path;
+			return "/" + path;
 		}
 		return null;
 	}

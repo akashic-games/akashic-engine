@@ -877,12 +877,12 @@ describe("test Module", () => {
 				});
 				const mod = module.require("./resolve1");
 				expect(mod).toEqual([
-					"script/resolve2.js",
-					"text/dummydata.txt",
-					"node_modules/libraryA/index.js",
-					"node_modules/externalResolvedModule/index.js",
-					"node_modules/externalResolvedModule/index.js",
-					"node_modules/libraryA/index.js"
+					"/script/resolve2.js",
+					"/text/dummydata.txt",
+					"/node_modules/libraryA/index.js",
+					"/node_modules/externalResolvedModule/index.js",
+					"/node_modules/externalResolvedModule/index.js",
+					"/node_modules/libraryA/index.js"
 				]);
 				done();
 			});

@@ -4,7 +4,8 @@
 
 機能追加
  * `g.Module#_resolvePath()` を追加
-   * ゲーム開発者は、 `require.resolve()` を利用することで game.json からみた相対パスを取得することができます。
+   * ゲーム開発者は、 `require.resolve()` を利用することで game.json をルートとする絶対パスを取得することができます。
+ * パス形式でのアセットの取得時に、パスにモジュール名が含まれていたら絶対パスへと読み替えるように変更
 
 仕様変更
  * `PlayerInfoEvent#player` を追加、 `PlayerInfoEvent` の `playerId`, `playerName`, `userData` を削除
