@@ -68,10 +68,17 @@ describe("test AssetAccessor", () => {
 				virtualPath: "node_modules/@akashic-extension/some-library/assets/boss.png",
 				width: 324,
 				height: 196
+			},
+			"node_modules/another-extension/lib/index.js": {
+				type: "script",
+				path: "node_modules/another-extension/lib/index.js",
+				virtualPath: "node_modules/another-extension/lib/index.js",
+				global: true
 			}
 		},
 		moduleMainScripts: {
-			"@akashic-extension/some-library": "node_modules/@akashic-extension/some-library/lib/index.js"
+			"@akashic-extension/some-library": "node_modules/@akashic-extension/some-library/lib/index.js",
+			"another-extension": "node_modules/another-extension/lib/index.js"
 		}
 	};
 
@@ -88,7 +95,8 @@ describe("test AssetAccessor", () => {
 		"id-assets/chara01/image.png",
 		"node_modules/@akashic-extension/some-library/lib/index.js",
 		"node_modules/@akashic-extension/some-library/assets/image.png",
-		"node_modules/@akashic-extension/some-library/assets/boss.png"
+		"node_modules/@akashic-extension/some-library/assets/boss.png",
+		"node_modules/another-extension/lib/index.js"
 	];
 
 	function setupAssetAccessor(assetIds: string[], fail: (arg: any) => void, callback: (accessor: AssetAccessor) => void): void {
@@ -213,6 +221,11 @@ describe("test AssetAccessor", () => {
 						id: "node_modules/@akashic-extension/some-library/lib/index.js",
 						type: "script",
 						path: "node_modules/@akashic-extension/some-library/lib/index.js"
+					},
+					{
+						id: "node_modules/another-extension/lib/index.js",
+						type: "script",
+						path: "node_modules/another-extension/lib/index.js"
 					}
 				]);
 
@@ -286,6 +299,14 @@ describe("test AssetAccessor", () => {
 					type: "script",
 					path: "node_modules/@akashic-extension/some-library/lib/index.js"
 				});
+				expect(extractAssetProps(accessor.getScript("another-extension/lib/index.js"))).toEqual({
+					id: "node_modules/another-extension/lib/index.js",
+					type: "script",
+					path: "node_modules/another-extension/lib/index.js"
+				});
+				expect(() => {
+					accessor.getScript("not-exists-library/index.js");
+				}).toThrowError();
 				done();
 			}
 		);
