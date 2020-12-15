@@ -634,7 +634,7 @@ export class AssetManager implements AssetLoadHandler {
 		for (const moduleName in this._moduleMainScripts) {
 			if (!this._moduleMainScripts.hasOwnProperty(moduleName)) continue;
 			if (accessorPath.lastIndexOf(moduleName, 0) === 0) {
-				return accessorPath.replace(moduleName, "/node_modules/" + moduleName);
+				return "/node_modules/" + accessorPath;
 			}
 		}
 		return accessorPath;
