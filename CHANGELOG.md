@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased Changes
+## 3.0.1
 
 機能追加
  * `g.Module#_resolvePath()` を追加
