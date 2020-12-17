@@ -629,7 +629,12 @@ export class AssetManager implements AssetLoadHandler {
 	 * @private
 	 */
 	_replaceModulePathToAbsolute(accessorPath: string): string {
-		if (accessorPath[0] === "/") return accessorPath;
+		if (
+			accessorPath[0] === "/" ||
+			accessorPath[0] === "*" // パスに `**/*` が指定された場合
+		) {
+			return accessorPath;
+		}
 
 		for (const moduleName in this._moduleMainScripts) {
 			if (!this._moduleMainScripts.hasOwnProperty(moduleName)) continue;
