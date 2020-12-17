@@ -48,7 +48,37 @@ describe("test AssetAccessor", () => {
 				virtualPath: "assets/chara01/image.png",
 				width: 32,
 				height: 32
+			},
+			"node_modules/@akashic-extension/some-library/lib/index.js": {
+				type: "script",
+				path: "node_modules/@akashic-extension/some-library/lib/index.js",
+				virtualPath: "node_modules/@akashic-extension/some-library/lib/index.js",
+				global: true
+			},
+			"node_modules/@akashic-extension/some-library/assets/image.png": {
+				type: "image",
+				path: "node_modules/@akashic-extension/some-library/assets/image.png",
+				virtualPath: "node_modules/@akashic-extension/some-library/assets/image.png",
+				width: 2048,
+				height: 1024
+			},
+			"node_modules/@akashic-extension/some-library/assets/boss.png": {
+				type: "image",
+				path: "node_modules/@akashic-extension/some-library/assets/boss.png",
+				virtualPath: "node_modules/@akashic-extension/some-library/assets/boss.png",
+				width: 324,
+				height: 196
+			},
+			"node_modules/another-extension/lib/index.js": {
+				type: "script",
+				path: "node_modules/another-extension/lib/index.js",
+				virtualPath: "node_modules/another-extension/lib/index.js",
+				global: true
 			}
+		},
+		moduleMainScripts: {
+			"@akashic-extension/some-library": "node_modules/@akashic-extension/some-library/lib/index.js",
+			"another-extension": "node_modules/another-extension/lib/index.js"
 		}
 	};
 
@@ -62,7 +92,11 @@ describe("test AssetAccessor", () => {
 		"id-assets/stage01/se01",
 		"id-assets/stage01/boss.png",
 		"id-assets/stage01/map.json",
-		"id-assets/chara01/image.png"
+		"id-assets/chara01/image.png",
+		"node_modules/@akashic-extension/some-library/lib/index.js",
+		"node_modules/@akashic-extension/some-library/assets/image.png",
+		"node_modules/@akashic-extension/some-library/assets/boss.png",
+		"node_modules/another-extension/lib/index.js"
 	];
 
 	function setupAssetAccessor(assetIds: string[], fail: (arg: any) => void, callback: (accessor: AssetAccessor) => void): void {
@@ -151,6 +185,16 @@ describe("test AssetAccessor", () => {
 						id: "id-assets/chara01/image.png",
 						type: "image",
 						path: "assets/chara01/image.png"
+					},
+					{
+						id: "node_modules/@akashic-extension/some-library/assets/image.png",
+						type: "image",
+						path: "node_modules/@akashic-extension/some-library/assets/image.png"
+					},
+					{
+						id: "node_modules/@akashic-extension/some-library/assets/boss.png",
+						type: "image",
+						path: "node_modules/@akashic-extension/some-library/assets/boss.png"
 					}
 				]);
 
@@ -172,6 +216,16 @@ describe("test AssetAccessor", () => {
 						id: "id-script/main.js",
 						type: "script",
 						path: "script/main.js"
+					},
+					{
+						id: "node_modules/@akashic-extension/some-library/lib/index.js",
+						type: "script",
+						path: "node_modules/@akashic-extension/some-library/lib/index.js"
+					},
+					{
+						id: "node_modules/another-extension/lib/index.js",
+						type: "script",
+						path: "node_modules/another-extension/lib/index.js"
 					}
 				]);
 
@@ -218,6 +272,41 @@ describe("test AssetAccessor", () => {
 
 				expect(accessor.getTextContentById("id-assets/stage01/map.json")).toBe(sampleJSONFileContent);
 				expect(accessor.getJSONContentById("id-assets/stage01/map.json")).toEqual(JSON.parse(sampleJSONFileContent));
+				done();
+			}
+		);
+	});
+
+	it("can get assets by path contains the module name", done => {
+		setupAssetAccessor(
+			assetIds,
+			s => done.fail(s),
+			accessor => {
+				expect(accessor.getAllImages("@akashic-extension/some-library/assets/*.png").map(extractAssetProps)).toEqual([
+					{
+						id: "node_modules/@akashic-extension/some-library/assets/image.png",
+						type: "image",
+						path: "node_modules/@akashic-extension/some-library/assets/image.png"
+					},
+					{
+						id: "node_modules/@akashic-extension/some-library/assets/boss.png",
+						type: "image",
+						path: "node_modules/@akashic-extension/some-library/assets/boss.png"
+					}
+				]);
+				expect(extractAssetProps(accessor.getScript("@akashic-extension/some-library/lib/index.js"))).toEqual({
+					id: "node_modules/@akashic-extension/some-library/lib/index.js",
+					type: "script",
+					path: "node_modules/@akashic-extension/some-library/lib/index.js"
+				});
+				expect(extractAssetProps(accessor.getScript("another-extension/lib/index.js"))).toEqual({
+					id: "node_modules/another-extension/lib/index.js",
+					type: "script",
+					path: "node_modules/another-extension/lib/index.js"
+				});
+				expect(() => {
+					accessor.getScript("not-exists-library/index.js");
+				}).toThrowError();
 				done();
 			}
 		);
