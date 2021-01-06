@@ -1624,7 +1624,9 @@ export class Game {
 	 * @ignore
 	 */
 	_handleJoinEvent(event: JoinEvent): void {
-		if (this.joinedPlayerIds.indexOf(event.player.id) !== -1) return;
+		if (!event.player.id || this.joinedPlayerIds.indexOf(event.player.id) !== -1) {
+			return;
+		}
 		this.joinedPlayerIds.push(event.player.id);
 	}
 
