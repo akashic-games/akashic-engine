@@ -536,6 +536,9 @@ export class Game {
 
 	/**
 	 * ゲームにjoinしているプレイヤーIDの一覧。
+	 *
+	 * 歴史的経緯により `undefined` は含まれないことに注意。
+	 * `undefined` は特殊はプレイヤーIDであり通常 join しないため、ゲーム開発者がこの仕様を考慮する必要はない。
 	 */
 	joinedPlayerIds: string[];
 
