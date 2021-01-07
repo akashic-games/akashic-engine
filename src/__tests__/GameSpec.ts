@@ -813,8 +813,8 @@ describe("test Game", () => {
 		game.raiseEvent(ev);
 		game.raiseEvent(ev2);
 		expect(game.handlerSet.raisedEvents.length).toBe(2);
-		expect(game.handlerSet.raisedEvents[0]).toEqual([32, undefined, undefined, "data", false]);
-		expect(game.handlerSet.raisedEvents[1]).toEqual([32, undefined, undefined, "foo", false]);
+		expect(game.handlerSet.raisedEvents[0]).toEqual([32, undefined, null, "data", false]);
+		expect(game.handlerSet.raisedEvents[1]).toEqual([32, undefined, null, "foo", false]);
 	});
 
 	it("vars", () => {

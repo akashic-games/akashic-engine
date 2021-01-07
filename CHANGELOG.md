@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.0.2
+* @akashic/pdi-types@1.1.1 に更新
+* `g.Player#id` の型を `string | undefined` に修正
+
 ## 3.0.1
 
 機能追加
