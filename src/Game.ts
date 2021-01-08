@@ -1354,6 +1354,7 @@ export class Game {
 
 		this._isTerminated = false;
 		this.vars = {};
+		this._moduleManager._scriptCaches = {};
 
 		this.surfaceAtlasSet.destroy();
 		this.surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: this.resourceFactory });

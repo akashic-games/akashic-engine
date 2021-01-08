@@ -1,5 +1,8 @@
 # ChangeLog
 
+## Unreleased chnages
+* `g.Game#_reset()` 実行時に `g.ModuleManager#_scriptCaches` を初期化する処理を追加
+
 ## 3.0.2
 * @akashic/pdi-types@1.1.1 に更新
 * `g.Player#id` の型を `string | undefined` に修正

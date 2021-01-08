@@ -885,6 +885,9 @@ describe("test Game", () => {
 				local: "interpolate-local",
 				tickGenerationMode: "by-clock"
 			}); // scene2
+			// ScriptAssetのrequire後にキャッシュができていることを確認
+			game._moduleManager._require("./script/mainScene.js");
+			expect(game._moduleManager._scriptCaches).toHaveProperty("script/mainScene.js");
 
 			const randGen1 = new XorshiftRandomGenerator(10);
 			game._pointEventResolver.pointDown({
@@ -913,6 +916,8 @@ describe("test Game", () => {
 			// reset で Game#onSceneChange は removeAll() されるが、Game#_onSceneChange は removeAll() されないことを確認
 			expect(game.onSceneChange.length).toBe(0);
 			expect(game._onSceneChange.length).not.toBe(0);
+			// reset後、ScriptAssetのキャッシュが消えていることを確認
+			expect(game._moduleManager._scriptCaches).toEqual({});
 			done();
 		});
 		game._loadAndStart();
