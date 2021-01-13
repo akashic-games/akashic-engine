@@ -58,6 +58,28 @@ describe("test Game", () => {
 		expect(game._onSceneChange).toBeUndefined();
 	});
 
+	it("global scripts", done => {
+		const game = new Game({
+			width: 320,
+			height: 270,
+			main: "",
+			assets: {},
+			globalScripts: ["node_modules/some-library/index.js", "node_modules/some-library/lib/index.js"]
+		});
+
+		game._onLoad.add(() => {
+			const a1 = game.assets["node_modules/some-library/index.js"];
+			const a2 = game.assets["node_modules/some-library/lib/index.js"];
+			expect(a1.path).toBe("node_modules/some-library/index.js");
+			expect(a1.type).toBe("script");
+			expect(a2.path).toBe("node_modules/some-library/lib/index.js");
+			expect(a2.type).toBe("script");
+			expect(game._configuration.globalScripts).toBeUndefined();
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("global assets", done => {
 		const game = new Game({
 			width: 320,
@@ -81,9 +103,40 @@ describe("test Game", () => {
 		});
 
 		game._onLoad.add(() => {
-			expect(game.assets.foo).not.toBe(undefined);
+			expect(game.assets.foo).not.toBeUndefined();
 			expect(game.assets.foo instanceof ImageAsset).toBe(true);
 			expect(game.assets).not.toHaveProperty("bar");
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("converts asset array to object", done => {
+		const game = new Game({
+			width: 320,
+			height: 270,
+			main: "",
+			assets: [
+				{
+					type: "image",
+					path: "/dummypath.png",
+					virtualPath: "dummypath.png",
+					global: true,
+					width: 1,
+					height: 1
+				},
+				{
+					type: "text",
+					path: "/dummypath.txt",
+					virtualPath: "dummypath.txt"
+				}
+			]
+		});
+
+		game._onLoad.add(() => {
+			expect(game.assets["/dummypath.png"]).not.toBe(undefined);
+			expect(game.assets["/dummypath.png"] instanceof ImageAsset).toBe(true);
+			expect(game.assets).not.toHaveProperty("/dummypath.txt");
 			done();
 		});
 		game._startLoadingGlobalAssets();

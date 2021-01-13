@@ -1,5 +1,6 @@
 import { Trigger } from "@akashic/trigger";
-import { GameConfiguration, InternalOperationPluginOperation, Module, OperationPluginViewInfo } from "..";
+import { InternalOperationPluginOperation, Module, OperationPluginViewInfo } from "..";
+import { GameJSON } from "../GameConfiguration";
 import { Game } from "./helpers";
 
 // テスト用ダミー操作プラグイン
@@ -44,7 +45,7 @@ describe("test OperationPluginManager", () => {
 	let game: Game;
 
 	beforeEach(() => {
-		const conf: GameConfiguration = {
+		const conf: GameJSON = {
 			width: 320,
 			height: 270,
 			assets: {},

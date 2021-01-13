@@ -621,7 +621,7 @@ export class Game extends g.Game {
 	handlerSet!: GameHandlerSet; // NOTE: 継承元クラスで代入
 
 	constructor(
-		configuration: g.GameConfiguration,
+		configuration: g.GameJSON,
 		assetBase?: string,
 		selfId?: string,
 		operationPluginViewInfo?: OperationPluginViewInfo,

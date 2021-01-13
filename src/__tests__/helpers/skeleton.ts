@@ -1,4 +1,4 @@
-import { GameConfiguration, Scene } from "../../";
+import { GameJSON, Scene } from "../../";
 import { Game } from "./mock";
 
 export interface Runtime {
@@ -6,7 +6,7 @@ export interface Runtime {
 	scene: Scene;
 }
 
-export function skeletonRuntime(gameConfiguration?: GameConfiguration): Runtime {
+export function skeletonRuntime(gameConfiguration?: GameJSON): Runtime {
 	if (!gameConfiguration) gameConfiguration = { width: 320, height: 320, main: "", assets: {} };
 	const game = new Game(gameConfiguration);
 	const scene = new Scene({ game });

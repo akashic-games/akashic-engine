@@ -57,7 +57,6 @@ export interface AssetConfigurationBase extends AssetConfigurationCommonBase {
 	 * `type` が `"script"` の場合にのみ存在する。
 	 * 省略するとエンジンにより自動的に設定される。
 	 */
-	// エンジン開発者は `Game` オブジェクト作成前に、省略された `virtualPath` を補完する必要がある。
 	virtualPath?: string;
 
 	/**

@@ -11,6 +11,7 @@ import {
 } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
+import { AssetConfiguration } from "./AssetConfiguration";
 import { AssetManager } from "./AssetManager";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { Camera } from "./Camera";
@@ -20,7 +21,7 @@ import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent,
 import { EventConverter } from "./EventConverter";
 import { EventFilter } from "./EventFilter";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { GameConfiguration } from "./GameConfiguration";
+import { GameConfiguration, GameJSON } from "./GameConfiguration";
 import { GameHandlerSet } from "./GameHandlerSet";
 import { GameMainParameterObject } from "./GameMainParameterObject";
 import { LoadingScene } from "./LoadingScene";
@@ -194,7 +195,7 @@ export interface GameParameterObject {
 	/**
 	 * この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
 	 */
-	configuration: GameConfiguration;
+	configuration: GameConfiguration | GameJSON;
 
 	/**
 	 * この `Game` が用いる、リソースのファクトリ
@@ -754,7 +755,7 @@ export class Game {
 	 */
 	constructor(param: GameParameterObject) {
 		const gameConfiguration = this._normalizeConfiguration(param.configuration);
-		this.fps = gameConfiguration.fps!;
+		this.fps = gameConfiguration.fps;
 		this.width = gameConfiguration.width;
 		this.height = gameConfiguration.height;
 		this.renderers = [];
@@ -1253,9 +1254,8 @@ export class Game {
 	/**
 	 * @private
 	 */
-	_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
+	_normalizeConfiguration(gameConfiguration: GameJSON | GameConfiguration): GameConfiguration {
 		if (!gameConfiguration) throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
-		if (gameConfiguration.assets == null) gameConfiguration.assets = {};
 		if (gameConfiguration.fps == null) gameConfiguration.fps = 30;
 		if (typeof gameConfiguration.fps !== "number")
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: fps must be given as a number");
@@ -1265,7 +1265,47 @@ export class Game {
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: width must be given as a number");
 		if (typeof gameConfiguration.height !== "number")
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: height must be given as a number");
-		return gameConfiguration;
+		return this._normalizeAssets(gameConfiguration);
+	}
+
+	/**
+	 * @private
+	 */
+	_normalizeAssets(configuration: GameJSON): GameConfiguration {
+		const assets: { [assetId: string]: AssetConfiguration } = {};
+
+		function addAsset(assetId: string, asset: AssetConfiguration): void {
+			if (assets.hasOwnProperty(assetId)) throw new Error("Game#_normalizeAssets: asset ID already exists: " + assetId);
+			asset.virtualPath = asset.virtualPath ?? asset.path;
+			assets[assetId] = asset;
+		}
+
+		if (Array.isArray(configuration.assets)) {
+			configuration.assets.forEach(asset => {
+				addAsset(asset.path, asset);
+			});
+		} else if (typeof configuration.assets === "object") {
+			for (let assetId in configuration.assets) {
+				if (!configuration.assets.hasOwnProperty(assetId)) continue;
+				addAsset(assetId, configuration.assets[assetId]);
+			}
+		}
+
+		if (configuration.globalScripts) {
+			configuration.globalScripts.forEach(path => {
+				addAsset(path, {
+					type: /\.json$/i.test(path) ? "text" : "script",
+					virtualPath: path,
+					path,
+					global: true
+				});
+			});
+			delete configuration.globalScripts;
+		}
+
+		configuration.assets = assets ?? {};
+
+		return configuration as GameConfiguration;
 	}
 
 	/**
@@ -1484,7 +1524,7 @@ export class Game {
 	 * ゲームを開始する。
 	 *
 	 * 存在するシーンをすべて(_initialScene以外; あるなら)破棄し、グローバルアセットを読み込み、完了後ゲーム開発者の実装コードの実行を開始する。
-	 * このメソッドの二度目以降の呼び出しの前には、 `this._reset()` を呼び出す必要がある。
+	 * このメソッドの呼び出しの前には `this._reset()` を呼び出す必要がある。
 	 * @param param ゲームのエントリポイントに渡す値
 	 * @private
 	 */
