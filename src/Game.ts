@@ -1303,7 +1303,7 @@ export class Game {
 			delete configuration.globalScripts;
 		}
 
-		configuration.assets = assets ?? {};
+		configuration.assets = assets;
 
 		return configuration as GameConfiguration;
 	}
