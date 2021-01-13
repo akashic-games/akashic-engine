@@ -134,7 +134,7 @@ describe("test Game", () => {
 		});
 
 		game._onLoad.add(() => {
-			expect(game.assets["/dummypath.png"]).not.toBe(undefined);
+			expect(game.assets["/dummypath.png"]).toBeDefined();
 			expect(game.assets["/dummypath.png"] instanceof ImageAsset).toBe(true);
 			expect(game.assets).not.toHaveProperty("/dummypath.txt");
 			done();
