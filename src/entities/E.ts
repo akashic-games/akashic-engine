@@ -697,7 +697,6 @@ export class E extends Object2D implements CommonArea {
 	 */
 	localToGlobal(offset: CommonOffset): CommonOffset {
 		let point = offset;
-		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
 		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			point = entity.getMatrix().multiplyPoint(point);
 		}
@@ -710,11 +709,30 @@ export class E extends Object2D implements CommonArea {
 	 */
 	globalToLocal(offset: CommonOffset): CommonOffset {
 		let matrix: Matrix = new PlainMatrix();
-		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
 		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
 		}
 		return matrix.multiplyInverseForPoint(offset);
+	}
+
+	calculateMatrixTo(target?: E | Scene): Matrix {
+		let matrix: Matrix = new PlainMatrix();
+		for (let entity: E | Scene | undefined = this; entity instanceof E && entity !== target; entity = entity.parent) {
+			matrix.multiplyLeft(entity.getMatrix());
+		}
+		return matrix;
+	}
+
+	findLowestCommonAncestorWith(target: E): E | Scene | undefined {
+		const seen: { [id: number]: boolean } = {};
+		for (let p: E | Scene | undefined = this; p instanceof E; p = p.parent) {
+			seen[p.id] = true;
+		}
+		let ret: E | Scene | undefined = target;
+		for (; ret instanceof E; ret = ret.parent) {
+			if (seen.hasOwnProperty(ret.id)) break;
+		}
+		return ret;
 	}
 
 	/**
