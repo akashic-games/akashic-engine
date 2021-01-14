@@ -59,20 +59,23 @@ describe("test Game", () => {
 	});
 
 	it("global scripts", done => {
-		const game = new Game({
-			width: 320,
-			height: 270,
-			main: "",
-			assets: {},
-			globalScripts: ["node_modules/some-library/index.js", "node_modules/some-library/lib/index.js"]
-		});
+		const game = new Game(
+			{
+				width: 320,
+				height: 270,
+				main: "",
+				assets: {},
+				globalScripts: ["node_modules/some-library/index.js", "node_modules/some-library/lib/index.js"]
+			},
+			"asset-dir/"
+		);
 
 		game._onLoad.add(() => {
 			const a1 = game.assets["node_modules/some-library/index.js"];
 			const a2 = game.assets["node_modules/some-library/lib/index.js"];
-			expect(a1.path).toBe("node_modules/some-library/index.js");
+			expect(a1.path).toBe("asset-dir/node_modules/some-library/index.js");
 			expect(a1.type).toBe("script");
-			expect(a2.path).toBe("node_modules/some-library/lib/index.js");
+			expect(a2.path).toBe("asset-dir/node_modules/some-library/lib/index.js");
 			expect(a2.type).toBe("script");
 			expect(game._configuration.globalScripts).toBeUndefined();
 			done();
@@ -112,31 +115,35 @@ describe("test Game", () => {
 	});
 
 	it("converts asset array to object", done => {
-		const game = new Game({
-			width: 320,
-			height: 270,
-			main: "",
-			assets: [
-				{
-					type: "image",
-					path: "/dummypath.png",
-					virtualPath: "dummypath.png",
-					global: true,
-					width: 1,
-					height: 1
-				},
-				{
-					type: "text",
-					path: "/dummypath.txt",
-					virtualPath: "dummypath.txt"
-				}
-			]
-		});
+		const game = new Game(
+			{
+				width: 320,
+				height: 270,
+				main: "",
+				assets: [
+					{
+						type: "image",
+						path: "./dummypath.png",
+						virtualPath: "dummypath.png",
+						global: true,
+						width: 1,
+						height: 1
+					},
+					{
+						type: "text",
+						path: "./dummypath.txt",
+						virtualPath: "dummypath.txt"
+					}
+				]
+			},
+			"some-dir/"
+		);
 
 		game._onLoad.add(() => {
-			expect(game.assets["/dummypath.png"]).toBeDefined();
-			expect(game.assets["/dummypath.png"] instanceof ImageAsset).toBe(true);
-			expect(game.assets).not.toHaveProperty("/dummypath.txt");
+			expect(game.assets["./dummypath.png"]).toBeDefined();
+			expect(game.assets["./dummypath.png"] instanceof ImageAsset).toBe(true);
+			expect(game.assets["./dummypath.png"].path).toBe("some-dir/dummypath.png");
+			expect(game.assets).not.toHaveProperty("./dummypath.txt");
 			done();
 		});
 		game._startLoadingGlobalAssets();

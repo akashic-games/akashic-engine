@@ -30,6 +30,7 @@ import { ModuleManager } from "./ModuleManager";
 import { OperationPlugin } from "./OperationPlugin";
 import { OperationPluginManager } from "./OperationPluginManager";
 import { InternalOperationPluginOperation } from "./OperationPluginOperation";
+import { PathUtil } from "./PathUtil";
 import { PointEventResolver } from "./PointEventResolver";
 import { RandomGenerator } from "./RandomGenerator";
 import { Scene } from "./Scene";
@@ -754,14 +755,15 @@ export class Game {
 	 * @param param この `Game` に指定するパラメータ
 	 */
 	constructor(param: GameParameterObject) {
-		const gameConfiguration = this._normalizeConfiguration(param.configuration);
+		const assetBase = param.assetBase ?? "";
+		const gameConfiguration = this._normalizeConfiguration(param.configuration, assetBase);
 		this.fps = gameConfiguration.fps;
 		this.width = gameConfiguration.width;
 		this.height = gameConfiguration.height;
 		this.renderers = [];
 		this.scenes = [];
 		this.age = 0;
-		this.assetBase = param.assetBase || "";
+		this.assetBase = assetBase;
 		this.resourceFactory = param.resourceFactory;
 		this.handlerSet = param.handlerSet;
 		this.selfId = param.selfId;
@@ -1254,7 +1256,7 @@ export class Game {
 	/**
 	 * @private
 	 */
-	_normalizeConfiguration(gameConfiguration: GameJSON | GameConfiguration): GameConfiguration {
+	_normalizeConfiguration(gameConfiguration: GameJSON | GameConfiguration, assetBase: string): GameConfiguration {
 		if (!gameConfiguration) throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
 		if (gameConfiguration.fps == null) gameConfiguration.fps = 30;
 		if (typeof gameConfiguration.fps !== "number")
@@ -1265,13 +1267,13 @@ export class Game {
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: width must be given as a number");
 		if (typeof gameConfiguration.height !== "number")
 			throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: height must be given as a number");
-		return this._normalizeAssets(gameConfiguration);
+		return this._normalizeAssets(gameConfiguration, assetBase);
 	}
 
 	/**
 	 * @private
 	 */
-	_normalizeAssets(configuration: GameJSON): GameConfiguration {
+	_normalizeAssets(configuration: GameJSON, assetBase: string): GameConfiguration {
 		const assets: { [assetId: string]: AssetConfiguration } = {};
 
 		function addAsset(assetId: string, asset: AssetConfiguration): void {
@@ -1282,11 +1284,15 @@ export class Game {
 
 		if (Array.isArray(configuration.assets)) {
 			configuration.assets.forEach(asset => {
-				addAsset(asset.path, asset);
+				const path = asset.path;
+				asset.path = PathUtil.resolvePath(assetBase, path);
+				addAsset(path, asset);
 			});
 		} else if (typeof configuration.assets === "object") {
 			for (let assetId in configuration.assets) {
 				if (!configuration.assets.hasOwnProperty(assetId)) continue;
+				// NOTE: アセット情報が object の場合、既にエンジンモジュール (主に game-driver) で assetBase が解決されているため、パスは素通しする。
+				// TODO: この箇所で assetBase を考慮したアセットのパス変換を行うように修正 (要破壊的変更)
 				addAsset(assetId, configuration.assets[assetId]);
 			}
 		}
@@ -1296,7 +1302,7 @@ export class Game {
 				addAsset(path, {
 					type: /\.json$/i.test(path) ? "text" : "script",
 					virtualPath: path,
-					path,
+					path: PathUtil.resolvePath(assetBase, path),
 					global: true
 				});
 			});
