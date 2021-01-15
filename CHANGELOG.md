@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased chnages
+## 3.0.3
 * `g.Game#_reset()` 実行時に `g.Game#_moduleManager` を初期化する処理を追加
 
 ## 3.0.2
