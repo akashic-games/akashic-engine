@@ -39,6 +39,7 @@ describe("test Game", () => {
 		expect(game._onSceneChange).not.toBeUndefined();
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
+		expect(game._moduleManager).toBeDefined();
 	});
 
 	it("_destroy()", () => {
@@ -56,6 +57,7 @@ describe("test Game", () => {
 		expect(game.onSkipChange).toBeUndefined();
 		expect(game.onSceneChange).toBeUndefined();
 		expect(game._onSceneChange).toBeUndefined();
+		expect(game._moduleManager).toBeUndefined();
 	});
 
 	it("global assets", done => {
