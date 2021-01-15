@@ -39,6 +39,7 @@ describe("test Game", () => {
 		expect(game._onSceneChange).not.toBeUndefined();
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
+		expect(game._moduleManager).toBeDefined();
 	});
 
 	it("_destroy()", () => {
@@ -56,6 +57,7 @@ describe("test Game", () => {
 		expect(game.onSkipChange).toBeUndefined();
 		expect(game.onSceneChange).toBeUndefined();
 		expect(game._onSceneChange).toBeUndefined();
+		expect(game._moduleManager).toBeUndefined();
 	});
 
 	it("global assets", done => {
@@ -892,6 +894,7 @@ describe("test Game", () => {
 				identifier: 0,
 				offset: { x: 0, y: 0 }
 			});
+			const moduleManager = game._moduleManager;
 			game._reset({
 				age: 3,
 				randSeed: 10,
@@ -913,6 +916,8 @@ describe("test Game", () => {
 			// reset で Game#onSceneChange は removeAll() されるが、Game#_onSceneChange は removeAll() されないことを確認
 			expect(game.onSceneChange.length).toBe(0);
 			expect(game._onSceneChange.length).not.toBe(0);
+			// reset後、Game#_moduleManagerが作り直されていることを確認
+			expect(game._moduleManager).not.toBe(moduleManager);
 			done();
 		});
 		game._loadAndStart();
