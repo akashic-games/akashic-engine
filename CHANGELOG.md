@@ -5,6 +5,8 @@
 機能追加
  * `g.Collision.intersectEntities()` を追加
    * 同一シーン内の任意のエンティティ同士の矩形が重なっているかどうか判定することができます。
+ * `g.Collision.intersectLineSegments()` を追加
+   * 線分同士の衝突 (交差) を判定することができます。
 
 ## 3.0.1
 

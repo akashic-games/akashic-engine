@@ -1,6 +1,24 @@
 import { E, Collision } from "..";
 import { skeletonRuntime } from "./helpers";
 
+describe("Collision.intersectEdges()", () => {
+	it("is true for crossing edges", () => {
+		expect(Collision.intersectEdges({ x: 2, y: 1 }, { x: 3, y: 4 }, { x: 1, y: 3 }, { x: 3, y: 3 })).toBe(true);
+	});
+	it("is true for identical edges", () => {
+		expect(Collision.intersectEdges({ x: 2, y: 1 }, { x: 3, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 1 })).toBe(true);
+	});
+	it("is true for contacting edges", () => {
+		expect(Collision.intersectEdges({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: 3 }, { x: 3, y: 4 })).toBe(true);
+	});
+	it("is false for horizontally non-crossing edges", () => {
+		expect(Collision.intersectEdges({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: 3 }, { x: 2, y: 2 })).toBe(false);
+	});
+	it("is false for vertically non-crossing edges", () => {
+		expect(Collision.intersectEdges({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: -1 }, { x: 4, y: 1 })).toBe(false);
+	});
+});
+
 describe("Collision.intersectEntities()", () => {
 	const runtime = skeletonRuntime();
 	const scene = runtime.scene;
@@ -91,7 +109,7 @@ describe("Collision.intersectEntities()", () => {
 
 		const e2h = e2.height;
 		expect(Collision.intersectEntities(e1, e2, null, { x: 0, y: e2h / 2, width: e2.width, height: e2h })).toBe(false);
-		expect(Collision.intersectEntities(e1, e2, { x: 0, y: 0, width: e1.width / 2, height: e1.height } , null)).toBe(false);
+		expect(Collision.intersectEntities(e1, e2, { x: 0, y: 0, width: e1.width / 2, height: e1.height }, null)).toBe(false);
 	});
 });
 
