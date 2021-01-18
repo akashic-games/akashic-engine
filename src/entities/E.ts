@@ -715,6 +715,14 @@ export class E extends Object2D implements CommonArea {
 		return matrix.multiplyInverseForPoint(offset);
 	}
 
+	/**
+	 * このエンティティの座標系を、指定された祖先エンティティ (またはシーン) の座標系に変換する行列を求める。
+	 *
+	 * 指定されたエンティティが、このエンティティの祖先でない時、その値は無視される。
+	 * 指定されたシーンが、このエンティティの属するシーン出ない時、その値は無視される。
+	 *
+	 * @param target 座標系の変換先エンティティまたはシーン。省略した場合、このエンティティの属するシーン(グローバル座標系への変換行列になる)
+	 */
 	calculateMatrixTo(target?: E | Scene): Matrix {
 		let matrix: Matrix = new PlainMatrix();
 		for (let entity: E | Scene | undefined = this; entity instanceof E && entity !== target; entity = entity.parent) {
@@ -723,6 +731,12 @@ export class E extends Object2D implements CommonArea {
 		return matrix;
 	}
 
+	/**
+	 * このエンティティと与えられたエンティティの共通祖先のうち、もっとも子孫側にあるものを探す。
+	 * 共通祖先がない場合、 `undfined` を返す。
+	 *
+	 * @param target このエンティティとの共通祖先を探すエンティティ
+	 */
 	findLowestCommonAncestorWith(target: E): E | Scene | undefined {
 		const seen: { [id: number]: boolean } = {};
 		for (let p: E | Scene | undefined = this; p instanceof E; p = p.parent) {

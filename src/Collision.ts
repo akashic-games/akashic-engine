@@ -2,7 +2,7 @@ import { CommonArea, CommonOffset } from "@akashic/pdi-types";
 import { E } from "./entities/E";
 import { Util } from "./Util";
 
-// TODO collision-js を部分的に統合する？
+// TODO @akashic/collision-js を部分的に統合する？
 type Vec2 = CommonOffset;
 
 function dot(v1: Vec2, v2: Vec2): number {
@@ -18,10 +18,10 @@ function normalize(v: Vec2): Vec2 {
 
 /**
  * 線分と、線分に重なる直線に投影した矩形の交差判定。
- * @param lt 矩形の頂点の一つ
- * @param rt 矩形の頂点の一つ
- * @param lb 矩形の頂点の一つ
- * @param rb 矩形の頂点の一つ
+ * @param lt 矩形の頂点の一つ(左上端)
+ * @param rt 矩形の頂点の一つ(右上端)
+ * @param lb 矩形の頂点の一つ(左下端)
+ * @param rb 矩形の頂点の一つ(右下端)
  * @param p0 線分の一端
  * @param p1 線分の一端
  */
@@ -55,55 +55,37 @@ export module Collision {
 	 * 親が同じで回転や拡大を行わないエンティティ同士の場合は、より軽量な Collision.intersectAreas() を利用すること。
 	 * 親が同じで中心座標同士の距離だけで判定してよい場合は、より軽量な Collision.withinAreas() を利用すること。
 	 *
-	 * エンティティの座標などを変更した場合、そのエンティティの modified() を呼び出しておく必要がある。
+	 * 対象のエンティティの座標や大きさなどを変更した場合、
+	 * この関数の呼び出し前にそのエンティティの modified() を呼び出しておく必要がある。
 	 *
 	 * @param e1 衝突判定するエンティティ
 	 * @param e2 衝突判定するエンティティ
-	 * @param area1 e1 の当たり判定領域。省略された場合、{ x: 0, y: 0, width: e1.width, hegiht: e1.height }
-	 * @param area2 e2 の当たり判定領域。省略された場合、{ x: 0, y: 0, width: e2.width, hegiht: e2.height }
+	 * @param area1 e1 の当たり判定領域。省略された場合、`{ x: 0, y: 0, width: e1.width, hegiht: e1.height }`
+	 * @param area2 e2 の当たり判定領域。省略された場合、`{ x: 0, y: 0, width: e2.width, hegiht: e2.height }`
 	 */
-	export function intersectEntities(e1: E, e2: E, area1?: CommonArea, area2?: CommonArea): boolean {
+	export function intersectEntities(e1: E, e2: E, area1?: CommonArea | null, area2?: CommonArea | null): boolean {
 		const lca = e1.findLowestCommonAncestorWith(e2);
 		if (!lca) return false;
 
-		let l1 = 0,
-			t1 = 0,
-			r1: number,
-			b1: number;
-		let l2 = 0,
-			t2 = 0,
-			r2: number,
-			b2: number;
-		if (area1) {
-			l1 = area1.x;
-			t1 = area1.y;
-			r1 = l1 + area1.width;
-			b1 = t1 + area1.height;
-		} else {
-			r1 = e1.width;
-			b1 = e1.height;
-		}
-		if (area2) {
-			l2 = area2.x;
-			t2 = area2.y;
-			r2 = l2 + area2.width;
-			b2 = t2 + area2.height;
-		} else {
-			r2 = e2.width;
-			b2 = e2.height;
-		}
 		const mat1 = e1.calculateMatrixTo(lca);
 		const mat2 = e2.calculateMatrixTo(lca);
 
+		const r1 = area1
+			? { left: area1.x, top: area1.y, right: area1.x + area1.width, bottom: area1.y + area1.height }
+			: { left: 0, top: 0, right: e1.width, bottom: e1.height };
+		const r2 = area2
+			? { left: area2.x, top: area2.y, right: area2.x + area2.width, bottom: area2.y + area2.height }
+			: { left: 0, top: 0, right: e2.width, bottom: e2.height };
+
 		// LCA の座標系に合わせたそれぞれの四隅の点
-		const lt1 = mat1.multiplyPoint({ x: l1, y: t1 });
-		const rt1 = mat1.multiplyPoint({ x: r1, y: t1 });
-		const lb1 = mat1.multiplyPoint({ x: l1, y: b1 });
-		const rb1 = mat1.multiplyPoint({ x: r1, y: b1 });
-		const lt2 = mat2.multiplyPoint({ x: l2, y: t2 });
-		const rt2 = mat2.multiplyPoint({ x: r2, y: t2 });
-		const lb2 = mat2.multiplyPoint({ x: l2, y: b2 });
-		const rb2 = mat2.multiplyPoint({ x: r2, y: b2 });
+		const lt1 = mat1.multiplyPoint({ x: r1.left, y: r1.top });
+		const rt1 = mat1.multiplyPoint({ x: r1.right, y: r1.top });
+		const lb1 = mat1.multiplyPoint({ x: r1.left, y: r1.bottom });
+		const rb1 = mat1.multiplyPoint({ x: r1.right, y: r1.bottom });
+		const lt2 = mat2.multiplyPoint({ x: r2.left, y: r2.top });
+		const rt2 = mat2.multiplyPoint({ x: r2.right, y: r2.top });
+		const lb2 = mat2.multiplyPoint({ x: r2.left, y: r2.bottom });
+		const rb2 = mat2.multiplyPoint({ x: r2.right, y: r2.bottom });
 
 		return (
 			overlapBoxAndSegment(lt1, rt1, lb1, rb1, lt2, rt2) &&

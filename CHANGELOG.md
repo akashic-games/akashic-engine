@@ -1,5 +1,11 @@
 # ChangeLog
 
+## unreleased changes
+
+機能追加
+ * `g.Collision.intersectEntities()` を追加
+   * 同一シーン内の任意のエンティティ同士の矩形が重なっているかどうか判定することができます。
+
 ## 3.0.1
 
 機能追加
