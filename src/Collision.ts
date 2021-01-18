@@ -12,9 +12,7 @@ function sub(v1: CommonOffset, v2: CommonOffset): CommonOffset {
 }
 
 /**
- * オブジェクトの衝突判定機能を提供する。
- *
- * 距離による判定・矩形交差による判定、エンティティの親子関係を踏まえた低速だが厳密な判定
+ * オブジェクトなどの衝突判定機能を提供する。
  */
 export module Collision {
 	/**

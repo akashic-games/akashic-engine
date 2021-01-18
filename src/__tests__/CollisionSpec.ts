@@ -1,21 +1,21 @@
 import { E, Collision } from "..";
 import { skeletonRuntime } from "./helpers";
 
-describe("Collision.intersectEdges()", () => {
+describe("Collision.intersectLineSegments()", () => {
 	it("is true for crossing edges", () => {
-		expect(Collision.intersectEdges({ x: 2, y: 1 }, { x: 3, y: 4 }, { x: 1, y: 3 }, { x: 3, y: 3 })).toBe(true);
+		expect(Collision.intersectLineSegments({ x: 2, y: 1 }, { x: 3, y: 4 }, { x: 1, y: 3 }, { x: 3, y: 3 })).toBe(true);
 	});
 	it("is true for identical edges", () => {
-		expect(Collision.intersectEdges({ x: 2, y: 1 }, { x: 3, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 1 })).toBe(true);
+		expect(Collision.intersectLineSegments({ x: 2, y: 1 }, { x: 3, y: 4 }, { x: 3, y: 4 }, { x: 2, y: 1 })).toBe(true);
 	});
 	it("is true for contacting edges", () => {
-		expect(Collision.intersectEdges({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: 3 }, { x: 3, y: 4 })).toBe(true);
+		expect(Collision.intersectLineSegments({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: 3 }, { x: 3, y: 4 })).toBe(true);
 	});
 	it("is false for horizontally non-crossing edges", () => {
-		expect(Collision.intersectEdges({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: 3 }, { x: 2, y: 2 })).toBe(false);
+		expect(Collision.intersectLineSegments({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: 3 }, { x: 2, y: 2 })).toBe(false);
 	});
 	it("is false for vertically non-crossing edges", () => {
-		expect(Collision.intersectEdges({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: -1 }, { x: 4, y: 1 })).toBe(false);
+		expect(Collision.intersectLineSegments({ x: 3, y: 4 }, { x: 2, y: 1 }, { x: 1, y: -1 }, { x: 4, y: 1 })).toBe(false);
 	});
 });
 
