@@ -21,7 +21,7 @@ import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent,
 import { EventConverter } from "./EventConverter";
 import { EventFilter } from "./EventFilter";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { GameConfiguration, GameJSON } from "./GameConfiguration";
+import { GameConfiguration, NormalizedGameConfiguration } from "./GameConfiguration";
 import { GameHandlerSet } from "./GameHandlerSet";
 import { GameMainParameterObject } from "./GameMainParameterObject";
 import { LoadingScene } from "./LoadingScene";
@@ -196,7 +196,7 @@ export interface GameParameterObject {
 	/**
 	 * この `Game` の設定。典型的には game.json の内容をパースしたものを期待する
 	 */
-	configuration: GameConfiguration | GameJSON;
+	configuration: GameConfiguration;
 
 	/**
 	 * この `Game` が用いる、リソースのファクトリ
@@ -1256,7 +1256,7 @@ export class Game {
 	/**
 	 * @private
 	 */
-	_normalizeConfiguration(gameConfiguration: GameJSON | GameConfiguration, assetBase: string): GameConfiguration {
+	_normalizeConfiguration(gameConfiguration: GameConfiguration, assetBase: string): NormalizedGameConfiguration {
 		if (!gameConfiguration) throw ExceptionFactory.createAssertionError("Game#_normalizeConfiguration: invalid arguments");
 		if (gameConfiguration.fps == null) gameConfiguration.fps = 30;
 		if (typeof gameConfiguration.fps !== "number")
@@ -1273,7 +1273,7 @@ export class Game {
 	/**
 	 * @private
 	 */
-	_normalizeAssets(configuration: GameJSON, assetBase: string): GameConfiguration {
+	_normalizeAssets(configuration: GameConfiguration, assetBase: string): NormalizedGameConfiguration {
 		const assets: { [assetId: string]: AssetConfiguration } = {};
 
 		function addAsset(assetId: string, asset: AssetConfiguration): void {
@@ -1311,7 +1311,7 @@ export class Game {
 
 		configuration.assets = assets;
 
-		return configuration as GameConfiguration;
+		return configuration as NormalizedGameConfiguration;
 	}
 
 	/**

@@ -1,4 +1,5 @@
 import {
+	AssetConfigurationMap,
 	AssetManager,
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
@@ -81,13 +82,14 @@ describe("test AssetManager", () => {
 	it("初期化", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
+		const assets = gameConfiguration.assets as AssetConfigurationMap;
 
-		expect(manager.configuration.foo.path).toBe(gameConfiguration.assets.foo.path);
-		expect(manager.configuration.bar.path).toBe(gameConfiguration.assets.bar.path);
-		expect(manager.configuration.zoo.path).toBe(gameConfiguration.assets.zoo.path);
-		expect(manager.configuration.baz.path).toBe(gameConfiguration.assets.baz.path);
-		expect(manager.configuration.qux.path).toBe(gameConfiguration.assets.qux.path);
-		expect(manager.configuration.quux.path).toBe(gameConfiguration.assets.quux.path);
+		expect(manager.configuration.foo.path).toBe(assets.foo.path);
+		expect(manager.configuration.bar.path).toBe(assets.bar.path);
+		expect(manager.configuration.zoo.path).toBe(assets.zoo.path);
+		expect(manager.configuration.baz.path).toBe(assets.baz.path);
+		expect(manager.configuration.qux.path).toBe(assets.qux.path);
+		expect(manager.configuration.quux.path).toBe(assets.quux.path);
 
 		expect(Object.keys(manager._assets).length).toEqual(0);
 		expect(Object.keys(manager._liveAssetVirtualPathTable).length).toEqual(0);
@@ -96,22 +98,22 @@ describe("test AssetManager", () => {
 		expect(Object.keys((manager as any)._loadings).length).toEqual(0);
 
 		expect(manager.configuration.zoo.systemId).toEqual("music");
-		expect(manager.configuration.zoo.duration).toEqual((gameConfiguration.assets.zoo as AudioAssetConfigurationBase).duration);
+		expect(manager.configuration.zoo.duration).toEqual((assets.zoo as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.zoo.loop).toEqual(true);
 		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
 
 		expect(manager.configuration.baz.systemId).toEqual("music");
-		expect(manager.configuration.baz.duration).toEqual((gameConfiguration.assets.baz as AudioAssetConfigurationBase).duration);
+		expect(manager.configuration.baz.duration).toEqual((assets.baz as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.baz.loop).toEqual(false);
 		expect(manager.configuration.baz.hint).toEqual({ streaming: false });
 
 		expect(manager.configuration.qux.systemId).toEqual("sound");
-		expect(manager.configuration.qux.duration).toEqual((gameConfiguration.assets.qux as AudioAssetConfigurationBase).duration);
+		expect(manager.configuration.qux.duration).toEqual((assets.qux as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.qux.loop).toEqual(false);
 		expect(manager.configuration.qux.hint).toEqual({ streaming: false });
 
 		expect(manager.configuration.quux.systemId).toEqual("sound");
-		expect(manager.configuration.quux.duration).toEqual((gameConfiguration.assets.quux as AudioAssetConfigurationBase).duration);
+		expect(manager.configuration.quux.duration).toEqual((assets.quux as AudioAssetConfigurationBase).duration);
 		expect(manager.configuration.quux.loop).toEqual(true);
 		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
 	});

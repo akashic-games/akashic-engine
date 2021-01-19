@@ -2,9 +2,10 @@ import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap,
 import { OperationPluginInfo } from "./OperationPluginInfo";
 
 /**
- * game.jsonによって定義される値。
+ * ゲームの設定を表すインターフェース。
+ * game.jsonによって定義される。
  */
-export interface GameJSON {
+export interface GameConfiguration {
 	/**
 	 * ゲーム画面の幅。
 	 */
@@ -68,10 +69,7 @@ export interface GameJSON {
 	defaultLoadingScene?: "default" | "compact" | "none";
 }
 
-/**
- * ゲームの設定を表すインターフェース。
- */
-export interface GameConfiguration extends GameJSON {
+export interface NormalizedGameConfiguration extends GameConfiguration {
 	fps: number;
 	assets: AssetConfigurationMap;
 }
