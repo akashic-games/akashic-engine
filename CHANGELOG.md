@@ -4,6 +4,9 @@
 * `GameConfiguration#assets` に配列が指定された場合、パスをIDとしたマップ情報に変換するように
 * `GameConfiguration#globalScripts` が指定された場合、それをアセット情報に変換するように
 
+## 3.0.3
+* `g.Game#_reset()` 実行時に `g.Game#_moduleManager` を初期化する処理を追加
+
 ## 3.0.2
 * @akashic/pdi-types@1.1.1 に更新
 * `g.Player#id` の型を `string | undefined` に修正
