@@ -733,7 +733,7 @@ export class E extends Object2D implements CommonArea {
 
 	/**
 	 * このエンティティと与えられたエンティティの共通祖先のうち、もっとも子孫側にあるものを探す。
-	 * 共通祖先がない場合、 `undfined` を返す。
+	 * 共通祖先がない場合、 `undefined` を返す。
 	 *
 	 * @param target このエンティティとの共通祖先を探すエンティティ
 	 */

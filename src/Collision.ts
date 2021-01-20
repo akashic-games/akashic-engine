@@ -7,6 +7,7 @@ function absCross(v1: CommonOffset, v2: CommonOffset): number {
 	return v1.x * v2.y - v1.y * v2.x;
 }
 
+// 二次元ベクトルの減算
 function sub(v1: CommonOffset, v2: CommonOffset): CommonOffset {
 	return { x: v1.x - v2.x, y: v1.y - v2.y };
 }
