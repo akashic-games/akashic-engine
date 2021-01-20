@@ -8,6 +8,13 @@
  * `g.Collision.intersectLineSegments()` を追加
    * 線分同士の衝突 (交差) を判定することができます。
 
+## 3.0.3
+* `g.Game#_reset()` 実行時に `g.Game#_moduleManager` を初期化する処理を追加
+
+## 3.0.2
+* @akashic/pdi-types@1.1.1 に更新
+* `g.Player#id` の型を `string | undefined` に修正
+
 ## 3.0.1
 
 機能追加

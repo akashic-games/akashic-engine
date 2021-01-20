@@ -20,7 +20,7 @@ interface EventConverterParameterObejctGameLike {
 
 export interface EventConverterParameterObejct {
 	game: EventConverterParameterObejctGameLike;
-	playerId: string;
+	playerId?: string;
 }
 
 /**
@@ -29,12 +29,12 @@ export interface EventConverterParameterObejct {
  */
 export class EventConverter {
 	_game: EventConverterParameterObejctGameLike;
-	_playerId: string;
+	_playerId: string | null;
 	_playerTable: { [key: string]: Player };
 
 	constructor(param: EventConverterParameterObejct) {
 		this._game = param.game;
-		this._playerId = param.playerId;
+		this._playerId = param.playerId ?? null;
 		this._playerTable = {};
 	}
 
@@ -173,15 +173,15 @@ export class EventConverter {
 	 */
 	toPlaylogEvent(e: Event, preservePlayer?: boolean): pl.Event {
 		let targetId: number | null;
-		let playerId: string;
+		let playerId: string | null;
 		switch (e.type) {
 			case "join":
 			case "leave":
 				// akashic-engine は決して Join と Leave を生成しない
 				throw ExceptionFactory.createAssertionError("EventConverter#toPlaylogEvent: Invalid type: " + e.type);
 			case "timestamp":
-				let ts = <TimestampEvent>e;
-				playerId = preservePlayer ? ts.player.id : this._playerId;
+				let ts = e as TimestampEvent;
+				playerId = preservePlayer ? ts.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.Timestamp, // 0: イベントコード
 					ts.eventFlags, //          1: イベントフラグ値
@@ -189,8 +189,8 @@ export class EventConverter {
 					ts.timestamp //            3: タイムスタンプ
 				];
 			case "player-info":
-				let playerInfo = <PlayerInfoEvent>e;
-				playerId = preservePlayer ? playerInfo.player.id : this._playerId;
+				let playerInfo = e as PlayerInfoEvent;
+				playerId = preservePlayer ? playerInfo.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.PlayerInfo, //   0: イベントコード
 					playerInfo.eventFlags, //     1: イベントフラグ値
@@ -199,9 +199,9 @@ export class EventConverter {
 					playerInfo.player.userData // 4: ユーザデータ
 				];
 			case "point-down":
-				let pointDown = <PointDownEvent>e;
+				let pointDown = e as PointDownEvent;
 				targetId = pointDown.target ? pointDown.target.id : null;
-				playerId = preservePlayer && pointDown.player ? pointDown.player.id : this._playerId;
+				playerId = preservePlayer && pointDown.player ? pointDown.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.PointDown, // 0: イベントコード
 					pointDown.eventFlags, //   1: イベントフラグ値
@@ -213,9 +213,9 @@ export class EventConverter {
 					!!pointDown.local //       7?: 直前のポイントムーブイベントからのY座標の差
 				];
 			case "point-move":
-				let pointMove = <PointMoveEvent>e;
+				let pointMove = e as PointMoveEvent;
 				targetId = pointMove.target ? pointMove.target.id : null;
-				playerId = preservePlayer && pointMove.player ? pointMove.player.id : this._playerId;
+				playerId = preservePlayer && pointMove.player ? pointMove.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.PointMove, // 0: イベントコード
 					pointMove.eventFlags, //   1: イベントフラグ値
@@ -231,9 +231,9 @@ export class EventConverter {
 					!!pointMove.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
 			case "point-up":
-				let pointUp = <PointUpEvent>e;
+				let pointUp = e as PointUpEvent;
 				targetId = pointUp.target ? pointUp.target.id : null;
-				playerId = preservePlayer && pointUp.player ? pointUp.player.id : this._playerId;
+				playerId = preservePlayer && pointUp.player ? pointUp.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.PointUp, // 0: イベントコード
 					pointUp.eventFlags, //   1: イベントフラグ値
@@ -249,8 +249,8 @@ export class EventConverter {
 					!!pointUp.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
 			case "message":
-				let message = <MessageEvent>e;
-				playerId = preservePlayer && message.player ? message.player.id : this._playerId;
+				let message = e as MessageEvent;
+				playerId = preservePlayer && message.player ? message.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.Message, // 0: イベントコード
 					message.eventFlags, //   1: イベントフラグ値
@@ -259,8 +259,8 @@ export class EventConverter {
 					!!message.local //       4?: ローカル
 				];
 			case "operation":
-				let op = <OperationEvent>e;
-				playerId = preservePlayer && op.player ? op.player.id : this._playerId;
+				let op = e as OperationEvent;
+				playerId = preservePlayer && op.player ? op.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.Operation, // 0: イベントコード
 					op.eventFlags, //          1: イベントフラグ値
