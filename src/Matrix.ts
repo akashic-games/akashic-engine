@@ -219,8 +219,8 @@ export class PlainMatrix {
 		//    R: angle度だけ回転する変換
 		//    T: x, yの値だけ平行移動する変換
 		// それらは次のように表せる:
-		//           1    0   -w           sx    0    0            c   -s    0            1    0    x-w
-		//    A = [  0    1   -h]    S = [  0   sy    0]    R = [  s    c    0]    T = [  0    1    y-h]
+		//           1    0   -w           sx    0    0            c   -s    0            1    0    x
+		//    A = [  0    1   -h]    S = [  0   sy    0]    R = [  s    c    0]    T = [  0    1    y]
 		//           0    0    1            0    0    1            0    0    1            0    0    1
 		// ここで sx, sy は scaleX, scaleY であり、c, s は cos(theta), sin(theta)
 		// (ただし theta = angle * PI / 180)、w = anchorX * width, h = anchorY * height である。

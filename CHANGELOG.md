@@ -1,5 +1,13 @@
 # ChangeLog
 
+## unreleased changes
+
+機能追加
+ * `g.Collision.intersectEntities()` を追加
+   * 同一シーン内の任意のエンティティ同士の矩形が重なっているかどうか判定することができます。
+ * `g.Collision.intersectLineSegments()` を追加
+   * 線分同士の衝突 (交差) を判定することができます。
+
 ## 3.0.3
 * `g.Game#_reset()` 実行時に `g.Game#_moduleManager` を初期化する処理を追加
 

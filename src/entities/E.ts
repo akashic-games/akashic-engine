@@ -697,7 +697,6 @@ export class E extends Object2D implements CommonArea {
 	 */
 	localToGlobal(offset: CommonOffset): CommonOffset {
 		let point = offset;
-		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
 		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			point = entity.getMatrix().multiplyPoint(point);
 		}
@@ -710,11 +709,44 @@ export class E extends Object2D implements CommonArea {
 	 */
 	globalToLocal(offset: CommonOffset): CommonOffset {
 		let matrix: Matrix = new PlainMatrix();
-		// TODO: Scene#root が追加されたらループ継続判定文を書き換える
 		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
 		}
 		return matrix.multiplyInverseForPoint(offset);
+	}
+
+	/**
+	 * このエンティティの座標系を、指定された祖先エンティティ (またはシーン) の座標系に変換する行列を求める。
+	 *
+	 * 指定されたエンティティが、このエンティティの祖先でない時、その値は無視される。
+	 * 指定されたシーンが、このエンティティの属するシーン出ない時、その値は無視される。
+	 *
+	 * @param target 座標系の変換先エンティティまたはシーン。省略した場合、このエンティティの属するシーン(グローバル座標系への変換行列になる)
+	 */
+	calculateMatrixTo(target?: E | Scene): Matrix {
+		let matrix: Matrix = new PlainMatrix();
+		for (let entity: E | Scene | undefined = this; entity instanceof E && entity !== target; entity = entity.parent) {
+			matrix.multiplyLeft(entity.getMatrix());
+		}
+		return matrix;
+	}
+
+	/**
+	 * このエンティティと与えられたエンティティの共通祖先のうち、もっとも子孫側にあるものを探す。
+	 * 共通祖先がない場合、 `undefined` を返す。
+	 *
+	 * @param target このエンティティとの共通祖先を探すエンティティ
+	 */
+	findLowestCommonAncestorWith(target: E): E | Scene | undefined {
+		const seen: { [id: number]: boolean } = {};
+		for (let p: E | Scene | undefined = this; p instanceof E; p = p.parent) {
+			seen[p.id] = true;
+		}
+		let ret: E | Scene | undefined = target;
+		for (; ret instanceof E; ret = ret.parent) {
+			if (seen.hasOwnProperty(ret.id)) break;
+		}
+		return ret;
 	}
 
 	/**

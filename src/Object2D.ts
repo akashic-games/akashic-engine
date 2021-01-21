@@ -146,7 +146,7 @@ export class Object2D implements CommonArea {
 	scaleY: number;
 
 	/**
-	 * オブジェクトの回転。度数で指定する。
+	 * オブジェクトの回転。度数 (時計回り) で指定する。
 	 * 初期値は `0` である。
 	 * `E` や `Camera2D` においてこの値を変更した場合、 `modified()` を呼び出す必要がある。
 	 */
