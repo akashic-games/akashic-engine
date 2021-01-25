@@ -9,8 +9,8 @@
    * 線分同士の衝突 (交差) を判定することができます。
 
 仕様変更
- * `g.LabelParameterObject#fontSize` を optional なプロパティに変更
-   * デフォルト値は `g.LabelParameterObject#font.size` と同じ値になります
+ * `g.Label` の生成時、 fontSize (`g.LabelParameterObject#fontSize`) プロパティを省略可能に
+   * デフォルト値は `g.Label` の生成時に指定された font (`g.LabelParameterObject#font`) プロパティの font.size と同じ値になります
 
 ## 3.0.3
 * `g.Game#_reset()` 実行時に `g.Game#_moduleManager` を初期化する処理を追加

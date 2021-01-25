@@ -160,7 +160,7 @@ export class Label extends CacheableE {
 		this.font = param.font;
 		this.textAlign = param.textAlign != null ? param.textAlign : TextAlign.Left;
 		this.glyphs = new Array(param.text.length);
-		this.fontSize = param.fontSize != null ? param.fontSize : this.font.size;
+		this.fontSize = param.fontSize != null ? param.fontSize : param.font.size;
 		this.maxWidth = param.maxWidth;
 		this.widthAutoAdjust = param.widthAutoAdjust != null ? param.widthAutoAdjust : true;
 		this.textColor = param.textColor;
