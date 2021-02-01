@@ -33,7 +33,7 @@ export module Collision {
 	 * @param area2 e2 の当たり判定領域。省略された場合、`{ x: 0, y: 0, width: e2.width, hegiht: e2.height }`
 	 */
 	export function intersectEntities(e1: E, e2: E, area1?: CommonArea | null, area2?: CommonArea | null): boolean {
-		const lca = e1.findLowestCommonAncestorWith(e2);
+		const lca = e1._findLowestCommonAncestorWith(e2);
 		if (!lca) return false;
 
 		const r1 = area1
@@ -43,8 +43,8 @@ export module Collision {
 			? { left: area2.x, top: area2.y, right: area2.x + area2.width, bottom: area2.y + area2.height }
 			: { left: 0, top: 0, right: e2.width, bottom: e2.height };
 
-		const mat1 = e1.calculateMatrixTo(lca);
-		const mat2 = e2.calculateMatrixTo(lca);
+		const mat1 = e1._calculateMatrixTo(lca);
+		const mat2 = e2._calculateMatrixTo(lca);
 
 		// 座標系を合わせる: 共通祖先の座標系に合わせたそれぞれの四隅の点を求める。
 		const lt1 = mat1.multiplyPoint({ x: r1.left, y: r1.top });
