@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.0.4
 
 機能追加
  * `g.Collision.intersectEntities()` を追加
