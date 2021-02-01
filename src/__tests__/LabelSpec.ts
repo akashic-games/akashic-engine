@@ -91,6 +91,29 @@ describe("test Label", () => {
 		expect(label.height).toBe(0);
 	});
 
+	it("初期化 - default fontSize is same as font.size", () => {
+		const runtime = skeletonRuntime();
+		const width = 32;
+		const height = 64;
+		const imageAsset = runtime.game.resourceFactory.createImageAsset("testId", "testAssetPath", width, height);
+		const map = { "37564": { x: 0, y: 1 } };
+		const missingGlyph: GlyphArea = { x: 2, y: 3 };
+
+		const bmpfont = new BitmapFont({
+			src: imageAsset,
+			map: map,
+			defaultGlyphWidth: width,
+			defaultGlyphHeight: height,
+			missingGlyph: missingGlyph
+		});
+		const label = new Label({
+			scene: runtime.scene,
+			text: "a",
+			font: bmpfont
+		});
+		expect(label.fontSize).toBe(bmpfont.size);
+	});
+
 	it("glyphForCharacter", () => {
 		const runtime = skeletonRuntime();
 		const width = 32;

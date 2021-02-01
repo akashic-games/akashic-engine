@@ -28,8 +28,9 @@ export interface LabelParameterObject extends CacheableEParameterObject {
 	 * 与えられたフォントを `fontSize` フォントサイズ相当で描画するよう指示する値である。
 	 * 歴史的経緯によりフォントサイズと説明されているが、実際には拡大縮小率を求めるため
 	 * に用いられている。
+	 * @default LabelParameterObject#font.size
 	 */
-	fontSize: number;
+	fontSize?: number;
 
 	/**
 	 * 文字列の描画位置。
@@ -99,6 +100,8 @@ export class Label extends CacheableE {
 	 * フォントサイズ。
 	 * 0 以上の数値でなければならない。そうでない場合、動作は不定である。
 	 * この値を変更した場合、 `this.invalidate()` を呼び出す必要がある。
+	 *
+	 * @default Label#font.size
 	 */
 	fontSize: number;
 
@@ -157,7 +160,7 @@ export class Label extends CacheableE {
 		this.font = param.font;
 		this.textAlign = param.textAlign != null ? param.textAlign : TextAlign.Left;
 		this.glyphs = new Array(param.text.length);
-		this.fontSize = param.fontSize;
+		this.fontSize = param.fontSize != null ? param.fontSize : param.font.size;
 		this.maxWidth = param.maxWidth;
 		this.widthAutoAdjust = param.widthAutoAdjust != null ? param.widthAutoAdjust : true;
 		this.textColor = param.textColor;
