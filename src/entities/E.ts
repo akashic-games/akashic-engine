@@ -722,8 +722,9 @@ export class E extends Object2D implements CommonArea {
 	 * 指定されたシーンが、このエンティティの属するシーン出ない時、その値は無視される。
 	 *
 	 * @param target 座標系の変換先エンティティまたはシーン。省略した場合、このエンティティの属するシーン(グローバル座標系への変換行列になる)
+	 * @private
 	 */
-	calculateMatrixTo(target?: E | Scene): Matrix {
+	_calculateMatrixTo(target?: E | Scene): Matrix {
 		let matrix: Matrix = new PlainMatrix();
 		for (let entity: E | Scene | undefined = this; entity instanceof E && entity !== target; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
@@ -736,8 +737,9 @@ export class E extends Object2D implements CommonArea {
 	 * 共通祖先がない場合、 `undefined` を返す。
 	 *
 	 * @param target このエンティティとの共通祖先を探すエンティティ
+	 * @private
 	 */
-	findLowestCommonAncestorWith(target: E): E | Scene | undefined {
+	_findLowestCommonAncestorWith(target: E): E | Scene | undefined {
 		const seen: { [id: number]: boolean } = {};
 		for (let p: E | Scene | undefined = this; p instanceof E; p = p.parent) {
 			seen[p.id] = true;
