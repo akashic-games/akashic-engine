@@ -192,6 +192,12 @@ export class E extends Object2D implements CommonArea {
 	 */
 	_hasTouchableChildren: boolean;
 
+	/**
+	 * グローバル座標系から見た変換行列のキャッシュ。
+	 * @private
+	 */
+	_globalMatrix: Matrix | undefined;
+
 	private _onUpdate: Trigger<void> | undefined;
 	private _onMessage: Trigger<MessageEvent> | undefined;
 	private _onPointDown: Trigger<PointDownEvent> | undefined;
@@ -387,13 +393,7 @@ export class E extends Object2D implements CommonArea {
 		}
 
 		renderer.save();
-		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX !== 0 || this.anchorY !== 0) {
-			// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
-			renderer.transform(this.getMatrix()._matrix);
-		} else {
-			// Note: 変形なしのオブジェクトはキャッシュもとらずtranslateのみで処理
-			renderer.translate(this.x, this.y);
-		}
+		renderer.setTransform(this.getGlobalMatrix()._matrix);
 
 		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
@@ -566,8 +566,9 @@ export class E extends Object2D implements CommonArea {
 	 * @param isBubbling 通常ゲーム開発者が指定する必要はない。この変更通知が、(このエンティティ自身のみならず)子孫の変更の通知を含む場合、真を渡さなければならない。省略された場合、偽。
 	 */
 	modified(_isBubbling?: boolean): void {
-		// _matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
+		// matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
 		if (this._matrix) this._matrix._modified = true;
+		if (this._globalMatrix) this._globalMatrix._modified = true;
 
 		if (
 			this.angle ||
@@ -713,6 +714,25 @@ export class E extends Object2D implements CommonArea {
 			matrix.multiplyLeft(entity.getMatrix());
 		}
 		return matrix.multiplyInverseForPoint(offset);
+	}
+
+	getGlobalMatrix(): Matrix {
+		if (!this._globalMatrix) {
+			this._globalMatrix = new PlainMatrix();
+		} else if (!this._globalMatrix._modified) {
+			return this._globalMatrix;
+		}
+		this._updateGlobalMatrix();
+		this._globalMatrix._modified = false;
+		return this._globalMatrix;
+	}
+
+	_updateGlobalMatrix(): void {
+		const matrix = this._globalMatrix!;
+		matrix.reset();
+		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
+			matrix.multiplyLeft(entity.getMatrix());
+		}
 	}
 
 	/**

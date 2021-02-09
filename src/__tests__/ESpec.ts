@@ -939,7 +939,7 @@ describe("test E", () => {
 		const e2 = new E({ scene: runtime.scene });
 		e.children = [e2];
 		e.render(r, c);
-		expect(r.methodCallHistory).toEqual(["translate", "save", "translate", "restore", "translate"]);
+		expect(r.methodCallHistory).toEqual(["translate", "save", "setTransform", "restore", "translate"]);
 	});
 
 	it("render without camera", () => {
@@ -971,7 +971,7 @@ describe("test E", () => {
 		const e2 = new E({ scene: runtime.scene });
 		e.children = [e2];
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["translate", "save", "translate", "restore", "translate"]);
+		expect(r.methodCallHistory).toEqual(["translate", "save", "setTransform", "restore", "translate"]);
 	});
 
 	it("renderSelf with camera", () => {
@@ -1072,12 +1072,12 @@ describe("test E", () => {
 		const e = new E({ scene: runtime.scene });
 		const r = new Renderer();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "setTransform", "restore"]);
 
 		e.compositeOperation = "xor";
 		r.clearMethodCallHistory();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "setTransform", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
 			operation: "xor"
 		});
@@ -1085,7 +1085,7 @@ describe("test E", () => {
 		e.compositeOperation = CompositeOperation.SourceAtop;
 		r.clearMethodCallHistory();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "setTransform", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
 			operation: "source-atop"
 		});
@@ -1093,7 +1093,7 @@ describe("test E", () => {
 		e.compositeOperation = undefined;
 		r.clearMethodCallHistory();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "setTransform", "restore"]);
 	});
 
 	it("calculateBoundingRect", () => {
@@ -1220,6 +1220,36 @@ describe("test E", () => {
 		e.modified();
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.ContextLess);
 	});
+
+	it("globalMatrix", () => {
+		const runtime = skeletonRuntime();
+		const scene = runtime.scene;
+		const e1 = new E({ scene, width: 100, height: 200 });
+		const e2 = new E({ scene, width: 100, height: 200 });
+		const e3 = new E({ scene, width: 100, height: 200 });
+
+		scene.append(e1);
+		e1.append(e2);
+		e2.append(e3);
+
+		e1.moveTo(50, 150);
+		e1.anchor(0.5, 0.5);
+		e2.angle = 45;
+		e3.scale(1.2);
+		e3.modified();
+
+		const m = new PlainMatrix();
+		m.reset(50, 150);
+		const m1 = m.multiplyNew(new PlainMatrix(100, 200, 1, 1, 0, 0.5, 0.5));
+		expect(e1.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m1.multiplyPoint({ x: 50, y: 50 }));
+
+		const m2 = m1.multiplyNew(new PlainMatrix(100, 200, 1, 1, 45, 0, 0));
+		expect(e2.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m2.multiplyPoint({ x: 50, y: 50 }));
+
+		const m3 = m2.multiplyNew(new PlainMatrix(100, 200, 1.2, 1.2, 0, 0, 0));
+		expect(e3.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m3.multiplyPoint({ x: 50, y: 50 }));
+	});
+
 	describe("localToGlobal, globalToLocal", () => {
 		let p: E;
 		let p2: E;

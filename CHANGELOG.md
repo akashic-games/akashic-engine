@@ -1,5 +1,11 @@
 # ChangeLog
 
+## unreleased changes
+
+機能追加
+ * `g.E#getGlobalMatrix()` を追加
+   * 対象の `g.E` のグローバル座標から見た変換行列が取得できます。
+
 ## 3.0.4
 
 機能追加

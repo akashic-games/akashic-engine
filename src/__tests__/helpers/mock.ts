@@ -178,12 +178,22 @@ export class Renderer extends pci.Renderer {
 		});
 	}
 
-	setTransform(_matrix: number[]): void {
-		throw new Error("not implemented");
+	setTransform(matrix: number[]): void {
+		this.methodCallHistoryWithParams.push({
+			methodName: "setTransform",
+			params: {
+				matrix
+			}
+		});
 	}
 
-	setOpacity(_opacity: number): void {
-		throw new Error("not implemented");
+	setOpacity(opacity: number): void {
+		this.methodCallHistoryWithParams.push({
+			methodName: "setOpacity",
+			params: {
+				opacity
+			}
+		});
 	}
 
 	setShaderProgram(_shaderProgram: g.ShaderProgram): void {

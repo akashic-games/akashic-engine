@@ -203,7 +203,7 @@ describe("test Sprite", () => {
 			height: 48
 		});
 		sprite.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "translate", "drawImage", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "setTransform", "drawImage", "restore"]);
 	});
 	it("キャッシュのテスト - zero srcWidth/srcHeight", () => {
 		const runtime = skeletonRuntime();
@@ -222,7 +222,7 @@ describe("test Sprite", () => {
 		sprite.render(r);
 		expect(r.methodCallHistory).toEqual([
 			"save",
-			"translate",
+			"setTransform",
 			"drawImage",
 			"restore",
 			"translate",
@@ -242,7 +242,7 @@ describe("test Sprite", () => {
 			srcHeight: 24
 		});
 		sprite.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "translate", "save", "transform", "drawImage", "restore", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "setTransform", "save", "transform", "drawImage", "restore", "restore"]);
 	});
 
 	it("停止中の動画サーフェスへの切り替え", () => {
