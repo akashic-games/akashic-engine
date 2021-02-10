@@ -772,8 +772,13 @@ export class E extends Object2D implements CommonArea {
 	_updateGlobalMatrix(): void {
 		const matrix = this._globalMatrix!;
 		matrix.reset();
-		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
-			matrix.multiplyLeft(entity.getMatrix());
+		if (this.parent instanceof E && !this.parent._needsCalculateGlobalMatrix()) {
+			matrix.multiplyLeft(this.getMatrix());
+			matrix.multiplyLeft(this.parent.getGlobalMatrix());
+		} else {
+			for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
+				matrix.multiplyLeft(entity.getMatrix());
+			}
 		}
 	}
 
