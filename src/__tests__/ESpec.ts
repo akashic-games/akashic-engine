@@ -1239,15 +1239,25 @@ describe("test E", () => {
 		e3.modified();
 
 		const m = new PlainMatrix();
-		m.reset(50, 150);
-		const m1 = m.multiplyNew(new PlainMatrix(100, 200, 1, 1, 0, 0.5, 0.5));
+		m.reset(50, 150); // moveTo
+		const m1 = m.multiplyNew(new PlainMatrix(100, 200, 1, 1, 0, 0.5, 0.5)); // anchor
 		expect(e1.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m1.multiplyPoint({ x: 50, y: 50 }));
 
-		const m2 = m1.multiplyNew(new PlainMatrix(100, 200, 1, 1, 45, 0, 0));
+		const m2 = m1.multiplyNew(new PlainMatrix(100, 200, 1, 1, 45, 0, 0)); // angle
 		expect(e2.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m2.multiplyPoint({ x: 50, y: 50 }));
 
-		const m3 = m2.multiplyNew(new PlainMatrix(100, 200, 1.2, 1.2, 0, 0, 0));
+		const m3 = m2.multiplyNew(new PlainMatrix(100, 200, 1.2, 1.2, 0, 0, 0)); // scale
 		expect(e3.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m3.multiplyPoint({ x: 50, y: 50 }));
+
+		// 祖先エンティティのみ更新しても globalMatrix が更新されているか確認
+		e1.moveTo(100, 200);
+		e1.modified();
+		const m4 = new PlainMatrix();
+		m4.reset(100, 200); // moveTo
+		m4.multiply(new PlainMatrix(100, 200, 1, 1, 0, 0.5, 0.5)); // anchor
+		m4.multiply(new PlainMatrix(100, 200, 1, 1, 45, 0, 0)); // angle
+		m4.multiply(new PlainMatrix(100, 200, 1.2, 1.2, 0, 0, 0)); // scale
+		expect(e3.getGlobalMatrix().multiplyPoint({ x: 50, y: 50 })).toEqual(m4.multiplyPoint({ x: 50, y: 50 }));
 	});
 
 	describe("localToGlobal, globalToLocal", () => {

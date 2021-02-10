@@ -719,7 +719,7 @@ export class E extends Object2D implements CommonArea {
 	getGlobalMatrix(): Matrix {
 		if (!this._globalMatrix) {
 			this._globalMatrix = new PlainMatrix();
-		} else if (!this._globalMatrix._modified) {
+		} else if (!this._needsCalculateGlobalMatrix()) {
 			return this._globalMatrix;
 		}
 		this._updateGlobalMatrix();
@@ -733,6 +733,15 @@ export class E extends Object2D implements CommonArea {
 		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
 		}
+	}
+
+	_needsCalculateGlobalMatrix(): boolean {
+		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
+			if (entity._globalMatrix && entity._globalMatrix._modified) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
