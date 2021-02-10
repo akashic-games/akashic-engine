@@ -716,6 +716,9 @@ export class E extends Object2D implements CommonArea {
 		return matrix.multiplyInverseForPoint(offset);
 	}
 
+	/**
+	 * このエンティティのグローバル座標系から見た変換行列を得る。
+	 */
 	getGlobalMatrix(): Matrix {
 		if (!this._globalMatrix) {
 			this._globalMatrix = new PlainMatrix();
@@ -725,23 +728,6 @@ export class E extends Object2D implements CommonArea {
 		this._updateGlobalMatrix();
 		this._globalMatrix._modified = false;
 		return this._globalMatrix;
-	}
-
-	_updateGlobalMatrix(): void {
-		const matrix = this._globalMatrix!;
-		matrix.reset();
-		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
-			matrix.multiplyLeft(entity.getMatrix());
-		}
-	}
-
-	_needsCalculateGlobalMatrix(): boolean {
-		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
-			if (entity._globalMatrix && entity._globalMatrix._modified) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -778,6 +764,29 @@ export class E extends Object2D implements CommonArea {
 			if (seen.hasOwnProperty(ret.id)) break;
 		}
 		return ret;
+	}
+
+	/**
+	 * @private
+	 */
+	_updateGlobalMatrix(): void {
+		const matrix = this._globalMatrix!;
+		matrix.reset();
+		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
+			matrix.multiplyLeft(entity.getMatrix());
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_needsCalculateGlobalMatrix(): boolean {
+		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
+			if (entity._globalMatrix && entity._globalMatrix._modified) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

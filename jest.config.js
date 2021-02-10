@@ -21,6 +21,6 @@ module.exports = {
 		}
 	},
 	testMatch: [
-		"<rootDir>/src/__tests__/*Spec.ts"
+		"<rootDir>/src/__tests__/ESpec.ts"
 	]
 };
