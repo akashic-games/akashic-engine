@@ -393,7 +393,7 @@ export class E extends Object2D implements CommonArea {
 		}
 
 		renderer.save();
-		renderer.setTransform(this.getGlobalMatrix()._matrix);
+		renderer.setTransform(this._getSelfGlobalMatrix()._matrix);
 
 		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
@@ -780,6 +780,26 @@ export class E extends Object2D implements CommonArea {
 				matrix.multiplyLeft(entity.getMatrix());
 			}
 		}
+	}
+
+	/**
+	 * 祖先エンティティの変換行列が確定していることを前提として自身の変換行列を取得する。
+	 * このメソッドは、レンダリングのトラバースの過程など限定的な箇所でのみ利用することに注意すること。
+	 * @private
+	 */
+	_getSelfGlobalMatrix(): Matrix {
+		if (!this._globalMatrix) {
+			this._globalMatrix = new PlainMatrix();
+		} else if (!this._globalMatrix._modified) {
+			return this._globalMatrix;
+		}
+		const matrix = this._globalMatrix;
+		matrix.reset();
+		matrix.multiplyLeft(this.getMatrix());
+		if (this.parent instanceof E) {
+			matrix.multiplyLeft(this.parent.getGlobalMatrix());
+		}
+		return matrix;
 	}
 
 	/**
