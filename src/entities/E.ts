@@ -769,14 +769,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_updateGlobalMatrix(): boolean {
-		let hasModified: boolean;
-
-		if (this.parent instanceof E) {
-			hasModified = this.parent._updateGlobalMatrix();
-		} else {
-			hasModified = this._globalMatrix._modified;
-		}
-
+		const hasModified = this.parent instanceof E && this.parent._updateGlobalMatrix();
 		return this._updateOwnGlobalMatrix(hasModified);
 	}
 
