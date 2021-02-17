@@ -108,7 +108,7 @@ export interface Matrix {
 
 	/**
 	 * 変換行列の値を複製する。
-	 * @param matrix 
+	 * @param matrix
 	 */
 	copy(matrix: Matrix): void;
 

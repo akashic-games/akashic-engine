@@ -939,7 +939,7 @@ describe("test E", () => {
 		const e2 = new E({ scene: runtime.scene });
 		e.children = [e2];
 		e.render(r, c);
-		expect(r.methodCallHistory).toEqual(["translate", "save", "transform", "restore", "translate"]);
+		expect(r.methodCallHistory).toEqual(["translate", "save", "translate", "restore", "translate"]);
 	});
 
 	it("render without camera", () => {
@@ -971,7 +971,7 @@ describe("test E", () => {
 		const e2 = new E({ scene: runtime.scene });
 		e.children = [e2];
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["translate", "save", "transform", "restore", "translate"]);
+		expect(r.methodCallHistory).toEqual(["translate", "save", "translate", "restore", "translate"]);
 	});
 
 	it("renderSelf with camera", () => {
@@ -1072,12 +1072,12 @@ describe("test E", () => {
 		const e = new E({ scene: runtime.scene });
 		const r = new Renderer();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "transform", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
 
 		e.compositeOperation = "xor";
 		r.clearMethodCallHistory();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "transform", "setCompositeOperation", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
 			operation: "xor"
 		});
@@ -1085,7 +1085,7 @@ describe("test E", () => {
 		e.compositeOperation = CompositeOperation.SourceAtop;
 		r.clearMethodCallHistory();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "transform", "setCompositeOperation", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "translate", "setCompositeOperation", "restore"]);
 		expect(r.methodCallParamsHistory("setCompositeOperation")[0]).toEqual({
 			operation: "source-atop"
 		});
@@ -1093,7 +1093,7 @@ describe("test E", () => {
 		e.compositeOperation = undefined;
 		r.clearMethodCallHistory();
 		e.render(r);
-		expect(r.methodCallHistory).toEqual(["save", "transform", "restore"]);
+		expect(r.methodCallHistory).toEqual(["save", "translate", "restore"]);
 	});
 
 	it("calculateBoundingRect", () => {

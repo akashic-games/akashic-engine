@@ -395,8 +395,13 @@ export class E extends Object2D implements CommonArea {
 		}
 
 		renderer.save();
-		this._updateOwnGlobalMatrix(true);
-		renderer.transform(this._globalMatrix._matrix);
+		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX !== 0 || this.anchorY !== 0) {
+			// Note: this.scaleX/scaleYが0の場合描画した結果何も表示されない事になるが、特殊扱いはしない
+			renderer.transform(this.getMatrix()._matrix);
+		} else {
+			// Note: 変形なしのオブジェクトはキャッシュもとらずtranslateのみで処理
+			renderer.translate(this.x, this.y);
+		}
 
 		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
