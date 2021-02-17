@@ -107,6 +107,12 @@ export interface Matrix {
 	clone(): Matrix;
 
 	/**
+	 * 変換行列の値を複製する。
+	 * @param matrix 
+	 */
+	copy(matrix: Matrix): void;
+
+	/**
 	 * 拡縮を変換行列に反映させる。
 	 * @param x X方向の拡縮律
 	 * @param y y方向の拡縮律
@@ -409,6 +415,16 @@ export class PlainMatrix {
 
 	clone(): Matrix {
 		return new PlainMatrix(this);
+	}
+
+	copy(matrix: Matrix): void {
+		const m = matrix._matrix;
+		this._matrix[0] = m[0];
+		this._matrix[1] = m[1];
+		this._matrix[2] = m[2];
+		this._matrix[3] = m[3];
+		this._matrix[4] = m[4];
+		this._matrix[5] = m[5];
 	}
 
 	multiplyInverseForPoint(point: CommonOffset): CommonOffset {

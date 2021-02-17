@@ -785,7 +785,7 @@ export class E extends Object2D implements CommonArea {
 		}
 
 		if (this.parent instanceof E) {
-			this._globalMatrix = this.parent._globalMatrix.clone();
+			this._globalMatrix.copy(this.parent._globalMatrix);
 		} else {
 			this._globalMatrix.reset();
 		}
