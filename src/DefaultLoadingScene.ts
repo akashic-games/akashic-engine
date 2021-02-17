@@ -50,9 +50,7 @@ class CameraCancellingE extends E {
 				canceller.angle = c.angle;
 				canceller.scaleX = c.scaleX;
 				canceller.scaleY = c.scaleY;
-				if (canceller._matrix) {
-					canceller._matrix._modified = true;
-				}
+				canceller._matrix._modified = true;
 			}
 			renderer.save();
 			renderer.transform(canceller.getMatrix()._matrix);

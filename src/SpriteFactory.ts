@@ -32,7 +32,7 @@ export class SpriteFactory {
 
 		e.moveTo(x, y);
 		// 再描画フラグを立てたくないために e._matrix を直接触っている
-		if (e._matrix) e._matrix._modified = true;
+		e._matrix._modified = true;
 
 		var surface = scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
 		var renderer = surface.renderer();
@@ -49,7 +49,7 @@ export class SpriteFactory {
 		s.moveTo(boundingRect.left, boundingRect.top);
 
 		e.moveTo(oldX, oldY);
-		if (e._matrix) e._matrix._modified = true;
+		e._matrix._modified = true;
 
 		return s;
 	}

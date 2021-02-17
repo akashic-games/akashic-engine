@@ -196,7 +196,7 @@ export class E extends Object2D implements CommonArea {
 	 * グローバル座標系から見た変換行列のキャッシュ。
 	 * @private
 	 */
-	_globalMatrix: Matrix | undefined;
+	_globalMatrix: Matrix;
 
 	private _onUpdate: Trigger<void> | undefined;
 	private _onMessage: Trigger<MessageEvent> | undefined;
@@ -347,6 +347,8 @@ export class E extends Object2D implements CommonArea {
 		this._onPointUp = undefined;
 		this.tag = param.tag;
 		this.shaderProgram = param.shaderProgram;
+		this._globalMatrix = new PlainMatrix();
+		this._globalMatrix._modified = true;
 
 		// local は Scene#register() や this.append() の呼び出しよりも先に立てなければならない
 		// ローカルシーン・ローカルティック補間シーンのエンティティは強制的に local (ローカルティックが来て他プレイヤーとずれる可能性がある)
@@ -393,7 +395,8 @@ export class E extends Object2D implements CommonArea {
 		}
 
 		renderer.save();
-		renderer.setTransform(this._getSelfGlobalMatrix()._matrix);
+		this._updateOwnGlobalMatrix(true);
+		renderer.transform(this._globalMatrix._matrix);
 
 		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
@@ -567,8 +570,8 @@ export class E extends Object2D implements CommonArea {
 	 */
 	modified(_isBubbling?: boolean): void {
 		// matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
-		if (this._matrix) this._matrix._modified = true;
-		if (this._globalMatrix) this._globalMatrix._modified = true;
+		this._matrix._modified = true;
+		this._globalMatrix._modified = true;
 
 		if (
 			this.angle ||
@@ -720,13 +723,7 @@ export class E extends Object2D implements CommonArea {
 	 * このエンティティのグローバル座標系から見た変換行列を得る。
 	 */
 	getGlobalMatrix(): Matrix {
-		if (!this._globalMatrix) {
-			this._globalMatrix = new PlainMatrix();
-		} else if (!this._needsCalculateGlobalMatrix()) {
-			return this._globalMatrix;
-		}
 		this._updateGlobalMatrix();
-		this._globalMatrix._modified = false;
 		return this._globalMatrix;
 	}
 
@@ -767,51 +764,42 @@ export class E extends Object2D implements CommonArea {
 	}
 
 	/**
+	 * 自身の globalMatrix を更新する。
+	 * このメソッドの呼び出し前後で globalMatrix に変更があった場合は `true` を、そうでない場合は `false` を返す。
 	 * @private
 	 */
-	_updateGlobalMatrix(): void {
-		const matrix = this._globalMatrix!;
-		matrix.reset();
-		if (this.parent instanceof E && !this.parent._needsCalculateGlobalMatrix()) {
-			matrix.multiplyLeft(this.getMatrix());
-			matrix.multiplyLeft(this.parent.getGlobalMatrix());
-		} else {
-			for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
-				matrix.multiplyLeft(entity.getMatrix());
-			}
-		}
-	}
+	_updateGlobalMatrix(): boolean {
+		let hasModified: boolean;
 
-	/**
-	 * 祖先エンティティの変換行列が確定していることを前提として自身の変換行列を取得する。
-	 * このメソッドは、レンダリングのトラバースの過程など限定的な箇所でのみ利用することに注意すること。
-	 * @private
-	 */
-	_getSelfGlobalMatrix(): Matrix {
-		if (!this._globalMatrix) {
-			this._globalMatrix = new PlainMatrix();
-		} else if (!this._globalMatrix._modified) {
-			return this._globalMatrix;
-		}
-		const matrix = this._globalMatrix;
-		matrix.reset();
-		matrix.multiplyLeft(this.getMatrix());
 		if (this.parent instanceof E) {
-			matrix.multiplyLeft(this.parent.getGlobalMatrix());
+			hasModified = this.parent._updateGlobalMatrix();
+		} else {
+			hasModified = this._globalMatrix._modified;
 		}
-		return matrix;
+
+		return this._updateOwnGlobalMatrix(hasModified);
 	}
 
 	/**
+	 * 親の globalMatrix を基に自身の globalMatrix を更新する。
+	 * このメソッドの呼び出しにより自身の globalMatrix が更新された場合は `true` を、そうでない場合は `false` を返す。
+	 * @param hasModifiedParent 親の globalMatrix が更新されているかどうか。
 	 * @private
 	 */
-	_needsCalculateGlobalMatrix(): boolean {
-		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
-			if (entity._globalMatrix && entity._globalMatrix._modified) {
-				return true;
-			}
+	_updateOwnGlobalMatrix(hasModifiedParent: boolean): boolean {
+		if (!hasModifiedParent && !this._globalMatrix._modified) {
+			return false;
 		}
-		return false;
+
+		if (this.parent instanceof E) {
+			this._globalMatrix = this.parent._globalMatrix.clone();
+		} else {
+			this._globalMatrix.reset();
+		}
+		this._globalMatrix.multiply(this.getMatrix());
+		this._globalMatrix._modified = false;
+
+		return true;
 	}
 
 	/**

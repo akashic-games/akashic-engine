@@ -80,7 +80,7 @@ export class Camera2D extends Object2D implements Camera {
 	 */
 	modified(): void {
 		this._modifiedCount = (this._modifiedCount + 1) % 32768;
-		if (this._matrix) this._matrix._modified = true;
+		this._matrix._modified = true;
 	}
 
 	/**

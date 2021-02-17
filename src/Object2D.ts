@@ -187,15 +187,13 @@ export class Object2D implements CommonArea {
 
 	/**
 	 * 変換行列のキャッシュ。 `Object2D` は状態に変更があった時、本値の_modifiedをtrueにする必要がある。
-	 * 初期値は `undefined` であり、 `getMatrix()` によって必要な時に生成されるため、
-	 * `if (this._matrix) this._matrix._modified = true` という式で記述する必要がある。
 	 *
 	 * エンジンに組み込まれているSprite等のエンティティ群は、
 	 * すでに本処理を組み込んでいるため通常ゲーム開発者はこの値を意識する必要はない。
 	 * `Object2D` を継承したクラスを新たに作る場合には、本フィールドを適切に操作しなければならない。
 	 * @private
 	 */
-	_matrix: Matrix | undefined;
+	_matrix: Matrix;
 
 	/**
 	 * デフォルト値で `Object2D` のインスタンスを生成する。
@@ -220,7 +218,8 @@ export class Object2D implements CommonArea {
 			this.compositeOperation = undefined;
 			this.anchorX = 0;
 			this.anchorY = 0;
-			this._matrix = undefined;
+			this._matrix = new PlainMatrix();
+			this._matrix._modified = true;
 		} else {
 			this.x = param.x || 0;
 			this.y = param.y || 0;
@@ -234,7 +233,8 @@ export class Object2D implements CommonArea {
 			// `null` に後方互換性のための意味を持たせているので、 `=== undefined` で比較する
 			this.anchorX = param.anchorX === undefined ? 0 : param.anchorX;
 			this.anchorY = param.anchorY === undefined ? 0 : param.anchorY;
-			this._matrix = undefined;
+			this._matrix = new PlainMatrix();
+			this._matrix._modified = true;
 		}
 	}
 
@@ -346,9 +346,7 @@ export class Object2D implements CommonArea {
 	 * このオブジェクトの変換行列を得る。
 	 */
 	getMatrix(): Matrix {
-		if (!this._matrix) {
-			this._matrix = new PlainMatrix();
-		} else if (!this._matrix._modified) {
+		if (!this._matrix._modified) {
 			return this._matrix;
 		}
 		this._updateMatrix();

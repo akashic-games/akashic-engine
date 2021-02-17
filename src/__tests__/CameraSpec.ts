@@ -52,12 +52,10 @@ describe("test Camera", () => {
 		expect(cam._modifiedCount).toBe(0);
 		cam.modified();
 		expect(cam._modifiedCount).toBe(1);
-		const matrix = cam._matrix;
 		cam.getMatrix();
 		cam.modified();
 		expect(cam._modifiedCount).toBe(2);
-		expect(cam._matrix!._modified).toBe(true);
-		expect(cam._matrix).not.toEqual(matrix);
+		expect(cam._matrix._modified).toBe(true);
 	});
 
 	it("x, y, angle", () => {
