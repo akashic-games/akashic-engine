@@ -24,7 +24,8 @@
     "uglify-js": "^2.6.0"
   },
   "scripts": {
-    "prepare": "npm run minify && npm run doc",
+    "prepublish": "npm run minify && npm run doc",
+    "prepare": "npm run prepublish",
     "build": "npm run clean && tsc -p ./ && npm run compile:cp && npm run concat:define && npm run concat:node",
     "clean": "rimraf tmp && rimraf lib",
     "compile:cp": "cpx tmp/tmp.d.ts lib && cpx tmp/tmp.js lib && renamer --find tmp --replace main ./lib/*",
