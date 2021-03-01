@@ -33,8 +33,7 @@
     "xorshift": "0.2.0"
   },
   "scripts": {
-    "prepublish": "npm run build && npm run doc",
-    "prepare": "npm run prepublish",
+    "prepare": "npm run build && npm run doc",
     "build": "npm run clean && tsc -p ./ && npm run bundle && npm run format",
     "bundle": "rollup -c rollup.config.js",
     "clean": "rimraf dist && rimraf lib",
