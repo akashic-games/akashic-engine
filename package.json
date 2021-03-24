@@ -45,7 +45,7 @@
     "format": "npm run format:prettier && npm run format:eslint",
     "format:prettier": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
     "format:eslint": "eslint -c .eslintrc \"src/**/*.ts\" --fix",
-    "doc": "typedoc --out doc/html/ --mode file --gaID UA-162208211-1 --includeDeclarations --exclude **/lib.es5.d.ts --exclude typings/**/* --exclude **/amflow/**/* --name 'Akashic Engine'"
+    "doc": "typedoc --out doc/html/ --mode file --includeDeclarations --exclude **/lib.es5.d.ts --exclude typings/**/* --exclude **/amflow/**/* --name 'Akashic Engine'"
   },
   "files": [
     "lib",
