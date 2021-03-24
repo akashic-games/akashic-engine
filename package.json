@@ -40,7 +40,7 @@
     "lint": "npm run format && npm run eslint && npm run textlint",
     "eslint": "eslint -c .eslintrc src/**/*.ts  --fix",
     "format": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
-    "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts --gaID UA-162208211-1"
+    "doc": "typedoc --excludeExternals --externalPattern \"**/node_modules/**\" --out doc/html/ --includeDeclarations lib/main.d.ts typings/console.d.ts"
   },
   "files": [
     "lib",
