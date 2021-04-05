@@ -269,7 +269,15 @@ export class Label extends CacheableE {
 				// 非空白文字
 				renderer.save();
 				renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-				renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
+				renderer.drawImage(
+					glyph.surface,
+					Math.round(glyph.x),
+					Math.round(glyph.y),
+					glyph.width,
+					glyph.height,
+					glyph.offsetX,
+					glyph.offsetY
+				);
 				renderer.restore();
 			}
 			renderer.translate(glyphWidth, 0);
