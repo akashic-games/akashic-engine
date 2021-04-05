@@ -214,14 +214,17 @@ export class Label extends CacheableE {
 				break;
 		}
 
+		const offsetX = Math.round(this.x) -  this.x;
+		const offsetY = Math.round(this.y) -  this.y;
+
 		renderer.drawImage(
 			this._cache!,
 			0,
 			0,
 			this._cacheSize.width + CacheableE.PADDING,
 			this._cacheSize.height + CacheableE.PADDING,
-			destOffsetX,
-			0
+			destOffsetX + offsetX,
+			offsetY
 		);
 	}
 
@@ -271,8 +274,8 @@ export class Label extends CacheableE {
 				renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
 				renderer.drawImage(
 					glyph.surface,
-					Math.round(glyph.x),
-					Math.round(glyph.y),
+					glyph.x,
+					glyph.y,
 					glyph.width,
 					glyph.height,
 					glyph.offsetX,
