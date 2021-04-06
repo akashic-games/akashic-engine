@@ -214,18 +214,14 @@ export class Label extends CacheableE {
 				break;
 		}
 
-		// 描画が平滑化されるよう、エンティティの描画位置を整数値に修正する。
-		const offsetX = Math.round(this.x) - this.x;
-		const offsetY = Math.round(this.y) - this.y;
-
 		renderer.drawImage(
 			this._cache!,
 			0,
 			0,
 			this._cacheSize.width + CacheableE.PADDING,
 			this._cacheSize.height + CacheableE.PADDING,
-			destOffsetX + offsetX,
-			offsetY
+			destOffsetX,
+			0
 		);
 	}
 
@@ -248,7 +244,7 @@ export class Label extends CacheableE {
 				break;
 		}
 
-		renderer.translate(offsetX, 0);
+		renderer.translate(Math.round(offsetX), 0);
 
 		if (scale !== 1) {
 			renderer.transform([scale, 0, 0, 1, 0, 0]);
@@ -284,7 +280,7 @@ export class Label extends CacheableE {
 				);
 				renderer.restore();
 			}
-			renderer.translate(glyphWidth, 0);
+			renderer.translate(Math.round(glyphWidth), 0);
 		}
 		renderer.restore();
 
