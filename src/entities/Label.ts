@@ -252,6 +252,7 @@ export class Label extends CacheableE {
 
 		renderer.save();
 		var glyphScale = this.fontSize / this.font.size;
+		var cumulativeoffset = 0;
 		for (var i = 0; i < this.glyphs.length; ++i) {
 			let glyph: Glyph | null = this.glyphs[i];
 			var glyphWidth = glyph.advanceWidth * glyphScale;
@@ -268,19 +269,12 @@ export class Label extends CacheableE {
 			if (glyph.surface) {
 				// 非空白文字
 				renderer.save();
+				renderer.translate(Math.round(cumulativeoffset), 0);
 				renderer.transform([glyphScale, 0, 0, glyphScale, 0, 0]);
-				renderer.drawImage(
-					glyph.surface,
-					glyph.x,
-					glyph.y,
-					glyph.width,
-					glyph.height,
-					glyph.offsetX,
-					glyph.offsetY
-				);
+				renderer.drawImage(glyph.surface, glyph.x, glyph.y, glyph.width, glyph.height, glyph.offsetX, glyph.offsetY);
 				renderer.restore();
 			}
-			renderer.translate(Math.round(glyphWidth), 0);
+			cumulativeoffset += glyphWidth;
 		}
 		renderer.restore();
 
