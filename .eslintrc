@@ -1,4 +1,5 @@
 {
+    "root": true,
     "extends": [
         "@akashic/eslint-config",
         "prettier",
