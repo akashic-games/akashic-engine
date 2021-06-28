@@ -151,6 +151,12 @@ export interface GameResetParameterObject {
 	age?: number;
 
 	/**
+	 * `Game#_idx` に設定する値。
+	 * 省略された場合、元の値が維持される。
+	 */
+	nextEntityId?: number;
+
+	/**
 	 * `Game#random` に設定するシード値。
 	 * 省略された場合、元の値が維持される。
 	 */
@@ -1216,7 +1222,7 @@ export class Game {
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 	 */
 	saveSnapshot(snapshot: any, timestamp?: number): void {
-		this.handlerSet.saveSnapshot(this.age, snapshot, this.random.serialize(), timestamp);
+		this.handlerSet.saveSnapshot(this.age, snapshot, this.random.serialize(), this._idx, timestamp);
 	}
 
 	/**
@@ -1311,6 +1317,7 @@ export class Game {
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
+			if (param.nextEntityId !== undefined) this._idx = param.nextEntityId;
 			if (param.randGenSer !== undefined) {
 				this.random = XorshiftRandomGenerator.deserialize(param.randGenSer);
 			} else if (param.randSeed !== undefined) {
