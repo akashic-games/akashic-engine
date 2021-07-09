@@ -61,9 +61,10 @@ export interface GameHandlerSet {
 	 * @param frame スナップショットのフレーム。
 	 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 	 * @param randGenSer 乱数生成器のシリアリゼーション。
+	 * @param nextEntityId 次のエンティティID
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 	 */
-	saveSnapshot(frame: number, snapshot: any, randGenSer: any, timestamp?: number): void;
+	saveSnapshot(frame: number, snapshot: any, randGenSer: any, nextEntityId: number, timestamp?: number): void;
 
 	/**
 	 * このインスタンスの種別を取得する
