@@ -1,5 +1,11 @@
 # ChangeLog
 
+## (unreleased changes)
+
+文書修正
+ * `g.Game` のスナップショット関連の API コメントを修正
+   * 動作への影響はありません。
+
 ## 3.1.0
 
 不具合修正

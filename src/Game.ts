@@ -242,16 +242,16 @@ export interface GameParameterObject {
  * コンテンツそのものを表すクラス。
  *
  * 本クラスのインスタンスは暗黙に生成され、ゲーム開発者が生成することはない。
- * ゲーム開発者はg.gameによって本クラスのインスタンスを参照できる。
+ * ゲーム開発者は `g.game` によって本クラスのインスタンスを参照できる。
  *
- * 多くの機能を持つが、本クラスをゲーム開発者が利用するのは以下のようなケースである。
+ * 本クラスをゲーム開発者が利用するのは以下のようなケースである。
  * 1. Sceneの生成時、コンストラクタに引数として渡す
  * 2. Sceneに紐付かないイベント Game#join, Game#leave, Game#playerInfo, Game#seed を処理する
  * 3. 乱数を発生させるため、Game#randomにアクセスしRandomGeneratorを取得する
  * 4. ゲームのメタ情報を確認するため、Game#width, Game#height, Game#fpsにアクセスする
  * 5. グローバルアセットを取得するため、Game#assetsにアクセスする
  * 6. LoadingSceneを変更するため、Game#loadingSceneにゲーム開発者の定義したLoadingSceneを指定する
- * 7. スナップショット機能を作るため、Game#snapshotRequestにアクセスする
+ * 7. スナップショットに対応するため、Game#saveSnapshot()を呼び出す
  * 8. 現在フォーカスされているCamera情報を得るため、Game#focusingCameraにアクセスする
  * 9. AudioSystemを直接制御するため、Game#audioにアクセスする
  * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
@@ -361,7 +361,12 @@ export class Game {
 
 	/**
 	 * スナップショット要求通知。
-	 * ゲーム開発者はこれをhandleして可能ならスナップショットを作成しGame#saveSnapshotを呼び出すべきである。
+	 *
+	 * 実行環境がコンテンツにスナップショット保存を促す場合に通知される。
+	 * その頻度やタイミングは実行環境依存である。
+	 *
+	 * ただし現実には、任意のタイミングでスナップショットを作成することは難しい。
+	 * コンテンツはこの通知に関わらず、作成しやすいタイミングでスナップショットを保存するのが望ましい。
 	 */
 	// NOTE: このクラスはこのTriggerをfireしない。派生クラスがfireせねばならない。
 	onSnapshotRequest: Trigger<void>;
@@ -506,7 +511,6 @@ export class Game {
 
 	/**
 	 * スナップショット要求通知。
-	 * ゲーム開発者はこれをhandleして可能ならスナップショットを作成しGame#saveSnapshotを呼び出すべきである。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onSnapshotRequest` を利用すること。
 	 */
 	// NOTE: このクラスはこのTriggerをfireしない。派生クラスがfireせねばならない。
@@ -1205,18 +1209,13 @@ export class Game {
 	/**
 	 * スナップショットを保存する。
 	 *
-	 * 引数 `snapshot` の値は、スナップショット読み込み関数 (snapshot loader) に引数として渡されるものになる。
-	 * このメソッドを呼び出すゲームは必ずsnapshot loaderを実装しなければならない。
-	 * (snapshot loaderとは、idが "snapshotLoader" であるglobalなScriptAssetに定義された関数である。
-	 * 詳細はスナップショットについてのドキュメントを参照)
-	 *
 	 * このメソッドは `Game#shouldSaveSnapshot()` が真を返す `Game` に対してのみ呼び出されるべきである。
 	 * そうでない場合、このメソッドの動作は不定である。
 	 *
-	 * このメソッドを呼び出す推奨タイミングは、Trigger `Game#snapshotRequest` をhandleすることで得られる。
-	 * ゲームは、 `snapshotRequest` がfireされたとき (それが可能なタイミングであれば) スナップショットを
-	 * 生成してこのメソッドに渡すべきである。ゲーム開発者は推奨タイミング以外でもこのメソッドを呼び出すことができる。
-	 * ただしその頻度は推奨タイミングの発火頻度と同程度に抑えられるべきである。
+	 * このメソッドで保存されたスナップショットは、将来 main スクリプト
+	 * (ゲーム開始時に最初に実行されるスクリプト) の関数に、
+	 * 引数 (の `snapshot` プロパティ) として与えられる場合がある。
+	 * 与えられた場合、ゲームはスナップショットから保存時の実行状態を復元しなければならない。
 	 *
 	 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
