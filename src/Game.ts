@@ -1608,12 +1608,15 @@ export class Game {
 						this._doPushScene(req.scene);
 						break;
 					case PostTickTaskType.ReplaceScene:
-						// Note: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
-						this._doPopScene(req.preserveCurrent, false);
+						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
+						var scene = this._doPopScene(false);
 						this._doPushScene(req.scene);
+						// NOTE: アセットの不要な再ロードを防ぐため、先に遷移先のシーンを生成してから遷移元のシーンを削除する。
+						if (!req.preserveCurrent) scene.destroy();
 						break;
 					case PostTickTaskType.PopScene:
-						this._doPopScene(req.preserveCurrent, true);
+						var scene = this._doPopScene(true);
+						if (!req.preserveCurrent) scene.destroy();
 						break;
 					case PostTickTaskType.Call:
 						req.fun.call(req.owner);
@@ -1649,17 +1652,17 @@ export class Game {
 		this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
 	}
 
-	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
+	private _doPopScene(fireSceneChanged: boolean): Scene {
 		const scene = this.scenes.pop();
 		if (!scene) throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; scene stack underflow");
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
-		if (!preserveCurrent) scene.destroy();
 		if (fireSceneChanged) {
 			const nextScene = this.scene();
 			this.onSceneChange.fire(nextScene);
 			this._onSceneChange.fire(nextScene);
 		}
+		return scene;
 	}
 
 	private _handleLoad(): void {

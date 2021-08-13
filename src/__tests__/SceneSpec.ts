@@ -935,27 +935,26 @@ describe("test Scene", () => {
 	it("state - change order and count", done => {
 		const expected = [
 			["S1", "active"],
+			["S2", "active"],
 			["S1", "before-destroyed"],
 			["S1", "destroyed"],
-			["S2", "active"],
 			["S2", "deactive"],
 			["S3", "active"],
+			["S4", "active"],
 			["S3", "before-destroyed"],
 			["S3", "destroyed"],
-			["S4", "active"],
+			["S2", "active"],
 			["S4", "before-destroyed"],
 			["S4", "destroyed"],
-			["S2", "active"],
 			["S2", "before-destroyed"],
 			["S2", "destroyed"]
 		];
 		const actual: [string, string][] = [];
-		function stateChangeHandler(this: any, state: SceneStateString): void {
-			actual.push([this._testName, state]);
+		function stateChangeHandler(this: Scene, state: SceneStateString): void {
+			actual.push([this.name!, state]);
 		}
 		function makeScene(name: string): Scene {
-			const scene = new Scene({ game: game });
-			(scene as any)._testName = name;
+			const scene = new Scene({ game: game, name });
 			scene.onStateChange.add(stateChangeHandler, scene);
 			return scene;
 		}
