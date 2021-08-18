@@ -935,17 +935,17 @@ describe("test Scene", () => {
 	it("state - change order and count", done => {
 		const expected = [
 			["S1", "active"],
-			["S2", "active"],
 			["S1", "before-destroyed"],
 			["S1", "destroyed"],
+			["S2", "active"],
 			["S2", "deactive"],
 			["S3", "active"],
-			["S4", "active"],
 			["S3", "before-destroyed"],
 			["S3", "destroyed"],
-			["S2", "active"],
+			["S4", "active"],
 			["S4", "before-destroyed"],
 			["S4", "destroyed"],
+			["S2", "active"],
 			["S2", "before-destroyed"],
 			["S2", "destroyed"]
 		];
