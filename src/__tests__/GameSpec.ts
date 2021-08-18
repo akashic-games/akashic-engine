@@ -1,3 +1,4 @@
+import { Asset } from "@akashic/pdi-common-impl";
 import * as pl from "@akashic/playlog";
 import {
 	AssetConfiguration,
@@ -222,19 +223,40 @@ describe("test Game", () => {
 	});
 
 	it("pushScene", done => {
-		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
-			const scene = new Scene({ game: game });
-			game.pushScene(scene);
-			game._flushPostTickTasks();
-			expect(game.scenes).toEqual([game._initialScene, scene]);
-			const scene2 = new Scene({ game: game });
-			game.pushScene(scene2);
-			game._flushPostTickTasks();
-			expect(game.scenes).toEqual([game._initialScene, scene, scene2]);
-			done();
+			const scene1 = new Scene({ game, assetIds: ["foo"] });
+			const scene2 = new Scene({ game, assetIds: ["foo"] });
+			game.pushScene(scene1);
+
+			let scene1foo: Asset;
+
+			scene1.onLoad.addOnce(() => {
+				expect(game.scenes).toEqual([game._initialScene, scene1]);
+				scene1foo = scene1.assets.foo;
+				game.pushScene(scene2);
+			});
+			scene2.onLoad.addOnce(() => {
+				expect(game.scenes).toEqual([game._initialScene, scene1, scene2]);
+				// 同一IDのアセットを前のシーンで読み込んでいた場合はアセットの再読み込みが発生しない （= 同一インスタンスである） ことを確認
+				expect(scene1foo).toBe(scene2.assets.foo);
+				done();
+			});
 		});
 		game._startLoadingGlobalAssets();
 	});
@@ -295,17 +317,39 @@ describe("test Game", () => {
 	});
 
 	it("replaceScene", done => {
-		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
-			const scene = new Scene({ game: game });
-			const scene2 = new Scene({ game: game });
-			game.pushScene(scene);
-			game.replaceScene(scene2);
-			game._flushPostTickTasks();
-			expect(game.scenes).toEqual([game._initialScene, scene2]);
-			done();
+			const scene1 = new Scene({ game, assetIds: ["foo"] });
+			const scene2 = new Scene({ game, assetIds: ["foo"] });
+			game.pushScene(scene1);
+
+			let scene1foo: Asset;
+
+			scene1.onLoad.addOnce(() => {
+				scene1foo = scene1.assets.foo;
+				game.replaceScene(scene2);
+			});
+			scene2.onLoad.addOnce(() => {
+				expect(game.scenes).toEqual([game._initialScene, scene2]);
+				// 同一IDのアセットを前のシーンで読み込んでいた場合はアセットの再読み込みが発生しない （= 同一インスタンスである） ことを確認
+				expect(scene1foo).toBe(scene2.assets.foo);
+				done();
+			});
 		});
 		game._startLoadingGlobalAssets();
 	});
