@@ -1608,7 +1608,7 @@ export class Game {
 						this._doPushScene(req.scene);
 						break;
 					case PostTickTaskType.ReplaceScene:
-						// NOTE: アセットの不要な再ロードを防ぐため、先に遷移先のシーンのアセットを先読みする。
+						// NOTE: アセットの不要なロードを防ぐため、あらかじめ遷移先のシーンのアセットを先読みする。
 						req.scene.prefetch();
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false);
