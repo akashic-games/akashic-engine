@@ -1,6 +1,9 @@
 # ChangeLog
 
-## (unreleased changes)
+## 3.1.1
+
+不具合修正
+ * `g.Game#replaceScene()` で遷移先のシーンのアセットを prefetch するように修正
 
 文書修正
  * `g.Game` のスナップショット関連の API コメントを修正

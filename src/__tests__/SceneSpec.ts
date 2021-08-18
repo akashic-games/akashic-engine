@@ -950,12 +950,11 @@ describe("test Scene", () => {
 			["S2", "destroyed"]
 		];
 		const actual: [string, string][] = [];
-		function stateChangeHandler(this: any, state: SceneStateString): void {
-			actual.push([this._testName, state]);
+		function stateChangeHandler(this: Scene, state: SceneStateString): void {
+			actual.push([this.name!, state]);
 		}
 		function makeScene(name: string): Scene {
-			const scene = new Scene({ game: game });
-			(scene as any)._testName = name;
+			const scene = new Scene({ game: game, name });
 			scene.onStateChange.add(stateChangeHandler, scene);
 			return scene;
 		}
