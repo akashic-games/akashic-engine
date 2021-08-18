@@ -1,6 +1,6 @@
-import { Asset } from "@akashic/pdi-common-impl";
 import * as pl from "@akashic/playlog";
 import {
+	Asset,
 	AssetConfiguration,
 	Camera2D,
 	E,
