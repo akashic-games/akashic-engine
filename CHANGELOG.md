@@ -1,9 +1,9 @@
 # ChangeLog
 
-## (unreleased changes)
+## 3.1.1
 
 不具合修正
- * `g.Game#replaceScene()` で遷移元のシーンの破棄を遷移先のシーンの読み込み後に行うように修正
+ * `g.Game#replaceScene()` で遷移先のシーンのアセットを prefetch するように修正
 
 文書修正
  * `g.Game` のスナップショット関連の API コメントを修正
