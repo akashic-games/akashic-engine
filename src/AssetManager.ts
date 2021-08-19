@@ -1,3 +1,4 @@
+import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "@akashic/game-configuration";
 import {
 	Asset,
 	AssetLoadHandler,
@@ -11,7 +12,6 @@ import {
 	TextAsset,
 	VideoAsset
 } from "@akashic/pdi-types";
-import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "./AssetConfiguration";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
