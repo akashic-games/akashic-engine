@@ -1,5 +1,10 @@
 # ChangeLog
 
+## unreleased changes
+
+その他変更
+ * @akashic/game-configuration を利用するように変更
+
 ## 3.1.1
 
 不具合修正
