@@ -1,3 +1,4 @@
+export * from "@akashic/game-configuration";
 export * from "@akashic/trigger";
 
 // pdi-types 由来の型を g 直下から reexport する。
@@ -20,7 +21,6 @@ export * from "./entities/Label";
 export * from "./entities/Pane";
 export * from "./entities/Sprite";
 export * from "./AssetAccessor";
-export * from "./AssetConfiguration";
 export * from "./AssetLoadFailureInfo";
 export * from "./AssetManager";
 export * from "./AssetManagerLoadHandler";
@@ -41,8 +41,8 @@ export * from "./EventIndex";
 export * from "./EventPriority";
 export * from "./ExceptionFactory";
 export * from "./Font";
-export * from "./GameConfiguration";
 export * from "./GameMainParameterObject";
+export * from "./InternalOperationPluginInfo";
 export * from "./LoadingScene";
 export * from "./LocalTickModeString";
 export * from "./Matrix";
@@ -51,7 +51,6 @@ export * from "./ModuleManager";
 export * from "./NinePatchSurfaceEffector";
 export * from "./Object2D";
 export * from "./OperationPlugin";
-export * from "./OperationPluginInfo";
 export * from "./OperationPluginManager";
 export * from "./OperationPluginOperation";
 export * from "./OperationPluginStatic";

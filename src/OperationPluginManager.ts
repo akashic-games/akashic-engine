@@ -1,8 +1,8 @@
 import { OperationPluginViewInfo } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { Game } from "./Game";
+import { InternalOperationPluginInfo } from "./InternalOperationPluginInfo";
 import { OperationPlugin } from "./OperationPlugin";
-import { InternalOperationPluginInfo } from "./OperationPluginInfo";
 import { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
 import { OperationPluginStatic } from "./OperationPluginStatic";
 

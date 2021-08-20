@@ -1,3 +1,4 @@
+import { AssetConfigurationMap, GameConfiguration } from "@akashic/game-configuration";
 import {
 	Asset,
 	CommonOffset,
@@ -20,7 +21,6 @@ import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent,
 import { EventConverter } from "./EventConverter";
 import { EventFilter } from "./EventFilter";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { GameConfiguration } from "./GameConfiguration";
 import { GameHandlerSet } from "./GameHandlerSet";
 import { GameMainParameterObject } from "./GameMainParameterObject";
 import { LoadingScene } from "./LoadingScene";
@@ -854,7 +854,12 @@ export class Game {
 		this._mainFunc = param.mainFunc;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
-		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
+		this._assetManager = new AssetManager(
+			this,
+			gameConfiguration.assets as AssetConfigurationMap,
+			gameConfiguration.audio,
+			gameConfiguration.moduleMainScripts
+		);
 		this._moduleManager = undefined!;
 
 		const operationPluginsField = gameConfiguration.operationPlugins || [];
