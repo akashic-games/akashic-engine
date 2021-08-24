@@ -1,0 +1,45 @@
+name: Publish and Release
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: 14
+  cache-version: v1
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Publish and Release
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ env.cache-version }}-${{ runner.os }}-build-
+            ${{ env.cache-version }}-${{ runner.os }}-
+      - name: Prepare
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+          npm test
+      - name: Publish and Release
+        uses: akashic-games/action-release@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          npm_token: ${{ secrets.NPM_TOKEN }}
