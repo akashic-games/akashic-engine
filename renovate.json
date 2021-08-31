@@ -8,17 +8,21 @@
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "separateMinorPatch": true,
+  "pin": false,
+  "rangeStrategy": "bump",
   "packageRules": [
     {
-      "packagePatterns": ["^@akashic/"],
+      "matchPackagePatterns": ["^@akashic/"],
       "groupName": "all dependencies (akashic)"
     },
     {
       "matchUpdateTypes": ["minor"],
+      "excludePackagePatterns": ["^@akashic/"],
       "groupName": "all dependencies"
     },
     {
       "matchUpdateTypes": ["patch"],
+      "excludePackagePatterns": ["^@akashic/"],
       "groupName": "all dependencies"
     },
     {
