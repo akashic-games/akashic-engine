@@ -20,6 +20,10 @@
     {
       "matchUpdateTypes": ["patch"],
       "groupName": "all dependencies"
+    },
+    {
+      "matchPackageNames": ["xorshift"],
+      "enabled": false
     }
   ]
 }
