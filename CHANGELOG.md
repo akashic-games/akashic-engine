@@ -1,9 +1,10 @@
 # ChangeLog
 
-## unreleased changes
+## 3.1.2
 
 その他変更
  * @akashic/game-configuration を利用するように変更
+ * @akashic/amflow@1.2.0 に更新
 
 ## 3.1.1
 
