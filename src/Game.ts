@@ -1223,22 +1223,11 @@ export class Game {
 	 * (e.g. マルチプレイのゲームプレイ画面を途中から開いた場合)
 	 * スナップショットが与えられた場合、ゲームはそのスナップショットから保存時の実行状態を復元しなければならない。
 	 *
-	 * スナップショットは、このメソッドを呼び出したその瞬間の状態ではなく、
-	 * そのフレームが "終わった後" の状態を保持しなければならない。
-	 * すなわちこのメソッドを呼び出す時、その後そのフレーム内で他の処理を行うべきではない。
-	 *
-	 * 同じ理由から、このメソッドは通常 `onUpdate` の通知中でのみ呼び出されるべきである。
-	 * その他の通知 (例えば `onPointDown`) の場合、その後に他の `onPointDown` や
-	 * `onMessage` などの通知が行われない保証がなく、「フレームが終わった状態」を保存できない恐れがある。
-	 *
 	 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
 	 */
 	saveSnapshot(snapshot: any, timestamp?: number): void {
-		// frame は、このスナップショットで復元したあと、次に消化する tick を指すので (非ローカルなら) age + 1 である。
-		// (裏返せば、非公開 API _pushPostTickTask() の関数呼び出し中 (age インクリメントの後) には絶対に呼び出してはならない)
-		const frame = this.age + (this.isLastTickLocal ? 0 : 1);
-		this.handlerSet.saveSnapshot(frame, snapshot, this.random.serialize(), this._idx, timestamp);
+		this.handlerSet.saveSnapshot(this.age, snapshot, this.random.serialize(), this._idx, timestamp);
 	}
 
 	/**
