@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: 15
+  NODE_VERSION: 16
   cache-version: v1
 
 jobs:
