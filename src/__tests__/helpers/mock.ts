@@ -436,6 +436,56 @@ export class VideoAsset extends pci.VideoAsset {
 	}
 }
 
+export class VectorImageAsset extends pci.VectorImageAsset {
+	id: string;
+	path: string;
+	originalPath: string;
+	type: "vector-image" = "vector-image";
+	width: number;
+	height: number;
+	hint: g.VectorImageAssetHint | undefined;
+
+	onDestroyed: g.Trigger<g.Asset> = new g.Trigger();
+
+	constructor(id: string, path: string, width: number, height: number, hint?: g.VectorImageAssetHint) {
+		super(id, path, width, height, hint);
+		this.id = id;
+		this.path = path;
+		this.originalPath = path;
+		this.width = width;
+		this.height = height;
+		this.hint = hint;
+	}
+
+	createSurface(_width: number, _height: number, _sx?: number, _sy?: number, _sWidth?: number, _sHeight?: number): Surface | null {
+		return null;
+	}
+
+	inUse(): boolean {
+		return false;
+	}
+
+	destroy(): void {
+		if (this.destroyed()) {
+			return;
+		}
+		this.onDestroyed.destroy();
+		this.onDestroyed = undefined!;
+	}
+
+	destroyed(): boolean {
+		return !this.onDestroyed;
+	}
+
+	_load(loader: AssetLoadHandler): void {
+		loader._onAssetLoad(this);
+	}
+
+	_assetPathFilter(path: string): string {
+		return path;
+	}
+}
+
 export class AudioPlayer extends pci.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
@@ -522,6 +572,10 @@ export class ResourceFactory extends pci.ResourceFactory {
 		} else {
 			return new ImageAsset(this._necessaryRetryCount, id, assetPath, width, height);
 		}
+	}
+
+	createVectorImageAsset(id: string, assetPath: string, width: number, height: number): VectorImageAsset {
+		return new VectorImageAsset(id, assetPath, width, height);
 	}
 
 	createAudioAsset(
