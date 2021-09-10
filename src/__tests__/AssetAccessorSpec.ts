@@ -49,6 +49,13 @@ describe("test AssetAccessor", () => {
 				width: 32,
 				height: 32
 			},
+			"id-assets/icon/icon01.svg": {
+				type: "vector-image",
+				path: "assets/icon/icon01.svg",
+				virtualPath: "assets/icon/icon01.svg",
+				width: 64,
+				height: 64
+			},
 			"node_modules/@akashic-extension/some-library/lib/index.js": {
 				type: "script",
 				path: "node_modules/@akashic-extension/some-library/lib/index.js",
@@ -93,6 +100,7 @@ describe("test AssetAccessor", () => {
 		"id-assets/stage01/boss.png",
 		"id-assets/stage01/map.json",
 		"id-assets/chara01/image.png",
+		"id-assets/icon/icon01.svg",
 		"node_modules/@akashic-extension/some-library/lib/index.js",
 		"node_modules/@akashic-extension/some-library/assets/image.png",
 		"node_modules/@akashic-extension/some-library/assets/boss.png",
@@ -148,6 +156,12 @@ describe("test AssetAccessor", () => {
 					id: "id-assets/stage01/map.json",
 					type: "text",
 					path: "assets/stage01/map.json"
+				});
+
+				expect(extractAssetProps(accessor.getVectorImage("/assets/icon/icon01.svg"))).toEqual({
+					id: "id-assets/icon/icon01.svg",
+					type: "vector-image",
+					path: "assets/icon/icon01.svg"
 				});
 
 				expect(accessor.getTextContent("/assets/stage01/map.json")).toBe(sampleJSONFileContent);
@@ -236,6 +250,23 @@ describe("test AssetAccessor", () => {
 						path: "assets/stage01/map.json"
 					}
 				]);
+
+				expect(accessor.getAllVectorImages("/assets/**/*").map(extractAssetProps)).toEqual([
+					{
+						id: "id-assets/icon/icon01.svg",
+						type: "vector-image",
+						path: "assets/icon/icon01.svg"
+					}
+				]);
+
+				expect(accessor.getAllVectorImages().map(extractAssetProps)).toEqual([
+					{
+						id: "id-assets/icon/icon01.svg",
+						type: "vector-image",
+						path: "assets/icon/icon01.svg"
+					}
+				]);
+
 				done();
 			}
 		);
@@ -268,6 +299,12 @@ describe("test AssetAccessor", () => {
 					id: "id-assets/stage01/map.json",
 					type: "text",
 					path: "assets/stage01/map.json"
+				});
+
+				expect(extractAssetProps(accessor.getVectorImageById("id-assets/icon/icon01.svg"))).toEqual({
+					id: "id-assets/icon/icon01.svg",
+					type: "vector-image",
+					path: "assets/icon/icon01.svg"
 				});
 
 				expect(accessor.getTextContentById("id-assets/stage01/map.json")).toBe(sampleJSONFileContent);
