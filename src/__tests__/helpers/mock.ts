@@ -642,8 +642,7 @@ export class Game extends g.Game {
 		return this.tick(!!advance);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	_pushPostTickTask<T>(fun: () => void, owner: any): void {
+	_pushPostTickTask(fun: () => void, owner: any): void {
 		super._pushPostTickTask(fun, owner);
 		if (this.autoTickForInternalEvents) {
 			setTimeout(() => {
