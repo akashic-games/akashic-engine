@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@akashic/eslint-config": "0.1.1",
-    "@akashic/pdi-common-impl": "0.0.4",
+    "@akashic/pdi-common-impl": "0.1.0",
     "@types/jest": "^25.2.3",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "eslint": "^7.9.0",
