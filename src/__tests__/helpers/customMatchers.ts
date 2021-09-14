@@ -1,5 +1,6 @@
 declare global {
 	namespace jest {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		interface Matchers<R, T> {
 			toHaveProperty(...properties: string[]): R;
 			toHaveUndefinedValue(...properties: string[]): R;
