@@ -1,4 +1,4 @@
-import { AudioAsset, ImageAsset, ScriptAsset, TextAsset } from "@akashic/pdi-types";
+import { AudioAsset, ImageAsset, ScriptAsset, TextAsset, VectorImageAsset } from "@akashic/pdi-types";
 import { AssetManager } from "./AssetManager";
 
 /**
@@ -97,6 +97,18 @@ export class AssetAccessor {
 	}
 
 	/**
+	 * パスから読み込み済みのベクタ画像アセットを取得する。
+	 *
+	 * パスはgame.jsonのあるディレクトリをルート (`/`) とする、 `/` 区切りの絶対パスでなければならない。
+	 * 当該のベクタ画像アセットが読み込まれていない場合、エラー。
+	 *
+	 * @param path 取得する画像アセットのパス
+	 */
+	getVectorImage(path: string): VectorImageAsset {
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "vector-image") as VectorImageAsset;
+	}
+
+	/**
 	 * 与えられたパターンまたはフィルタにマッチするパスを持つ、読み込み済みの全画像アセットを取得する。
 	 *
 	 * ここでパスはgame.jsonのあるディレクトリをルート (`/`) とする、 `/` 区切りの絶対パスである。
@@ -143,6 +155,16 @@ export class AssetAccessor {
 	 */
 	getAllTexts(patternOrFilter?: string | ((path: string) => boolean)): TextAsset[] {
 		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "text") as TextAsset[];
+	}
+
+	/**
+	 * 与えられたパターンまたはフィルタにマッチするパスを持つ、読み込み済みの全ベクタ画像アセットを取得する。
+	 * 引数の仕様については `AssetAccessor#getAllImages()` の仕様を参照のこと。
+	 *
+	 * @param patternOrFilter 取得するベクタ画像アセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
+	 */
+	getAllVectorImages(patternOrFilter?: string | ((path: string) => boolean)): VectorImageAsset[] {
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "vector-image") as VectorImageAsset[];
 	}
 
 	/**
@@ -203,5 +225,15 @@ export class AssetAccessor {
 	 */
 	getJSONContentById(assetId: string): any {
 		return JSON.parse(this.getTextById(assetId).data);
+	}
+
+	/**
+	 * アセットIDから読み込み済みのベクタ画像アセットを取得する。
+	 * 当該のベクタ画像アセットが読み込まれていない場合、エラー。
+	 *
+	 * @param assetId 取得するベクタ画像アセットのID
+	 */
+	getVectorImageById(assetId: string): VectorImageAsset {
+		return this._assetManager.peekLiveAssetById(assetId, "vector-image") as VectorImageAsset;
 	}
 }

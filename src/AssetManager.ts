@@ -10,15 +10,17 @@ import {
 	ResourceFactory,
 	ScriptAsset,
 	TextAsset,
-	VideoAsset
+	VideoAsset,
+	VectorImageAsset
 } from "@akashic/pdi-types";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystemManager } from "./AudioSystemManager";
+import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
 
-export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset;
+export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset | VectorImageAsset;
 
 export interface AssetManagerParameterGameLike {
 	resourceFactory: ResourceFactory;
@@ -487,6 +489,16 @@ export class AssetManager implements AssetLoadHandler {
 					conf.useRealSize = false;
 				}
 			}
+			if (conf.type === "vector-image") {
+				if (typeof conf.width !== "number")
+					throw ExceptionFactory.createAssertionError(
+						"AssetManager#_normalize: wrong width given for the vector-image asset: " + p
+					);
+				if (typeof conf.height !== "number")
+					throw ExceptionFactory.createAssertionError(
+						"AssetManager#_normalize: wrong height given for the vector-image asset: " + p
+					);
+			}
 			if (!conf.global) conf.global = false;
 			ret[p] = conf;
 		}
@@ -529,6 +541,11 @@ export class AssetManager implements AssetLoadHandler {
 				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
 				const videoSystem = new VideoSystem();
 				return resourceFactory.createVideoAsset(id, uri, conf.width, conf.height, videoSystem, !!conf.loop, !!conf.useRealSize);
+			case "vector-image":
+				if (!resourceFactory.createVectorImageAsset) {
+					return new EmptyVectorImageAsset(id, uri, conf.width, conf.height, conf.hint);
+				}
+				return resourceFactory.createVectorImageAsset(id, uri, conf.width, conf.height, conf.hint);
 			default:
 				throw ExceptionFactory.createAssertionError(
 					"AssertionError#_createAssetFor: unknown asset type " + (conf as Asset).type + " for asset ID: " + id
