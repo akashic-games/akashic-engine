@@ -437,15 +437,7 @@ export class VideoAsset extends pci.VideoAsset {
 }
 
 export class VectorImageAsset extends pci.VectorImageAsset {
-
-	createSurface(
-		_width: number,
-		_height: number,
-		_sx?: number,
-		_sy?: number,
-		_sWidth?: number,
-		_sHeight?: number
-	): Surface | null {
+	createSurface(_width: number, _height: number, _sx?: number, _sy?: number, _sWidth?: number, _sHeight?: number): Surface | null {
 		return null;
 	}
 
