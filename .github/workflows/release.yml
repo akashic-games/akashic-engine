@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/*
 
 env:
   NODE_VERSION: 16
