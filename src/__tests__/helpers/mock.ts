@@ -436,6 +436,16 @@ export class VideoAsset extends pci.VideoAsset {
 	}
 }
 
+export class VectorImageAsset extends pci.VectorImageAsset {
+	createSurface(_width: number, _height: number, _sx?: number, _sy?: number, _sWidth?: number, _sHeight?: number): Surface | null {
+		return null;
+	}
+
+	_load(loader: AssetLoadHandler): void {
+		loader._onAssetLoad(this);
+	}
+}
+
 export class AudioPlayer extends pci.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
@@ -522,6 +532,10 @@ export class ResourceFactory extends pci.ResourceFactory {
 		} else {
 			return new ImageAsset(this._necessaryRetryCount, id, assetPath, width, height);
 		}
+	}
+
+	createVectorImageAsset(id: string, assetPath: string, width: number, height: number): VectorImageAsset {
+		return new VectorImageAsset(id, assetPath, width, height);
 	}
 
 	createAudioAsset(
