@@ -404,7 +404,7 @@ export class ScriptAsset extends pci.ScriptAsset {
 			// 特にスクリプトの内容指定がないケース:
 			// ScriptAssetは任意の値を返してよいが、シーンを記述したスクリプトは
 			// シーンを返す関数を返すことを期待するのでここでは関数を返しておく
-			return (env.module.exports = function(): g.Scene {
+			return (env.module.exports = function (): g.Scene {
 				return new g.Scene({ game: env.game });
 			});
 		} else {
