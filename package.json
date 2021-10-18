@@ -19,7 +19,7 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jest": "^24.4.3",
     "jest": "^25.5.4",
-    "prettier": "^1.19.1",
+    "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "rollup": "^1.32.1",
     "rollup-plugin-commonjs": "^10.1.0",
