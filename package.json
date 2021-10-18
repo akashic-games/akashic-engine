@@ -12,7 +12,7 @@
   "devDependencies": {
     "@akashic/eslint-config": "0.1.2",
     "@akashic/pdi-common-impl": "~0.2.0",
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^7.0.0",
