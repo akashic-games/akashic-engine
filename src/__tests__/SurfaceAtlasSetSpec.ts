@@ -86,9 +86,9 @@ describe("test SurfaceAtlasSet", () => {
 			expect(surfaceAtlasSet.getAtlasNum()).toEqual(currentLength + 1);
 		});
 		it("SurfaceAtlasの保持数が最大値の場合、削除処理が呼ばれる。", () => {
-			spyOn(surfaceAtlasSet, "_spliceLeastFrequentlyUsedAtlas").and.callThrough();
+			const method = jest.spyOn(surfaceAtlasSet, "_spliceLeastFrequentlyUsedAtlas");
 			surfaceAtlasSet._reallocateAtlas();
-			expect(surfaceAtlasSet._spliceLeastFrequentlyUsedAtlas).toHaveBeenCalled();
+			expect(method).toHaveBeenCalled();
 		});
 	});
 
