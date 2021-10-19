@@ -1124,7 +1124,7 @@ describe("test Scene", () => {
 		const owner = {};
 		let callCount = 0;
 		scene.setTimeout(
-			function(this: any): void {
+			function (this: any): void {
 				expect(this).toBe(owner);
 				callCount++;
 			},
@@ -1211,7 +1211,7 @@ describe("test Scene", () => {
 		const owner = {};
 		let callCount = 0;
 		scene.setInterval(
-			function(this: any): void {
+			function (this: any): void {
 				expect(this).toBe(owner);
 				callCount++;
 			},
