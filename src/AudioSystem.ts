@@ -99,7 +99,6 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 */
 	// NOTE: akashic-engine の独自仕様
 	cancelRequestDestroy(asset: AudioAsset): void {
-		console.log("cancel requested: " + asset.id);
 		delete this._destroyRequestedAssets[asset.id];
 	}
 
