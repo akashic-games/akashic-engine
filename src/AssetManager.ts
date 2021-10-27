@@ -328,7 +328,7 @@ export class AssetManager implements AssetLoadHandler {
 			waiting = true;
 		} else {
 			var system = this._getAudioSystemByAssetId(assetId);
-			var audioAsset = system?.getAssetFromDestroyRequested(assetId);
+			var audioAsset = system?.getDestroyRequestedAsset(assetId);
 			if (system && audioAsset) {
 				system.cancelRequestDestroy(audioAsset);
 				this._assets[assetId] = audioAsset;

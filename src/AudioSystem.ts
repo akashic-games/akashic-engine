@@ -108,7 +108,7 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 * @param assetId アセットID。
 	 */
 	// NOTE: akashic-engine の独自仕様
-	getAssetFromDestroyRequested(assetId: string): AudioAsset | null {
+	getDestroyRequestedAsset(assetId: string): AudioAsset | null {
 		return this._destroyRequestedAssets[assetId] ?? null;
 	}
 
