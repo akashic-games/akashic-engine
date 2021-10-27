@@ -109,7 +109,11 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 */
 	// NOTE: akashic-engine の独自仕様
 	getDestroyRequestedAsset(assetId: string): AudioAsset | null {
-		return this._destroyRequestedAssets[assetId] ?? null;
+		if (this._destroyRequestedAssets.hasOwnProperty(assetId)) {
+			return this._destroyRequestedAssets[assetId];
+		}
+
+		return null;
 	}
 
 	/**
