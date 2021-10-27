@@ -103,7 +103,7 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	}
 
 	/**
-	 * `this.requestDestroy()` により破棄要求されているアセットであればそのアセットを返す。
+	 * `this.requestDestroy()` により破棄要求されていて、まだ実際には破棄されていないアセット。
 	 * 対象のアセットが破棄要求されていなければ `null` を返す。
 	 * @param assetId アセットID。
 	 */
