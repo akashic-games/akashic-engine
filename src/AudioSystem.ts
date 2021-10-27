@@ -1,4 +1,4 @@
-import { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory } from "@akashic/pdi-types";
+import { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory, AudioSystem as PdiAudioSystem } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 
 export interface AudioSystemParameterObject {
@@ -23,7 +23,7 @@ export interface AudioSystemParameterObject {
 	resourceFactory: ResourceFactory;
 }
 
-export abstract class AudioSystem implements AudioSystem {
+export abstract class AudioSystem implements PdiAudioSystem {
 	id: string;
 
 	/**
@@ -91,6 +91,26 @@ export abstract class AudioSystem implements AudioSystem {
 
 	requestDestroy(asset: AudioAsset): void {
 		this._destroyRequestedAssets[asset.id] = asset;
+	}
+
+	/**
+	 * `this.requestDestroy()` により破棄要求されているアセットの破棄を取り消す。
+	 * @param asset アセット。
+	 */
+	// NOTE: akashic-engine の独自仕様
+	cancelRequestDestroy(asset: AudioAsset): void {
+		console.log("cancel requested: " + asset.id);
+		delete this._destroyRequestedAssets[asset.id];
+	}
+
+	/**
+	 * `this.requestDestroy()` により破棄要求されているアセットであればそのアセットを返す。
+	 * 対象のアセットが破棄要求されていなければは `null` を返す。
+	 * @param assetId アセットID。
+	 */
+	// NOTE: akashic-engine の独自仕様
+	getAssetFromDestroyRequested(assetId: string): AudioAsset | null {
+		return this._destroyRequestedAssets[assetId] ?? null;
 	}
 
 	/**

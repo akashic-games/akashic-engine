@@ -14,6 +14,7 @@ import {
 	VectorImageAsset
 } from "@akashic/pdi-types";
 import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
+import { AudioSystem } from "./AudioSystem";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
@@ -326,13 +327,22 @@ export class AssetManager implements AssetLoadHandler {
 			++this._refCounts[assetId];
 			waiting = true;
 		} else {
-			var a = this._createAssetFor(assetIdOrConf);
-			loadingInfo = new AssetLoadingInfo(a, handler);
-			this._loadings[assetId] = loadingInfo;
-			this._refCounts[assetId] = 1;
-			waiting = true;
-			loadingInfo.loading = true;
-			a._load(this);
+			var system = this._getAudioSystemByAssetId(assetId);
+			var audioAsset = system?.getAssetFromDestroyRequested(assetId);
+			if (system && audioAsset) {
+				system.cancelRequestDestroy(audioAsset);
+				this._assets[assetId] = audioAsset;
+				this._refCounts[assetId] = 1;
+				handler._onAssetLoad(audioAsset);
+			} else {
+				var a = this._createAssetFor(assetIdOrConf);
+				loadingInfo = new AssetLoadingInfo(a, handler);
+				this._loadings[assetId] = loadingInfo;
+				this._refCounts[assetId] = 1;
+				waiting = true;
+				loadingInfo.loading = true;
+				a._load(this);
+			}
 		}
 		return waiting;
 	}
@@ -660,5 +670,20 @@ export class AssetManager implements AssetLoadHandler {
 			}
 		}
 		return accessorPath;
+	}
+
+	/**
+	 * @private
+	 */
+	_getAudioSystemByAssetId(assetId: string): AudioSystem | null {
+		const conf: AssetConfiguration = this.configuration[assetId];
+		if (!conf) {
+			return null;
+		}
+		if (conf.type !== "audio") {
+			return null;
+		}
+
+		return conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
 	}
 }
