@@ -36,8 +36,14 @@ describe("test AudioPlayer", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const system = game.audio.music;
 		const audio = new ResourceFactory().createAudioAsset("testId", "testAssetPath", 0, system, false, {});
+
 		system.requestDestroy(audio);
 		expect(system._destroyRequestedAssets[audio.id]).toEqual(audio);
+		expect(system.getDestroyRequestedAsset(audio.id)).toEqual(audio);
+
+		system.cancelRequestDestroy(audio);
+		expect(system.getDestroyRequestedAsset(audio.id)).toBeNull();
+		expect(system._destroyRequestedAssets[audio.id]).toBeUndefined();
 	});
 
 	it("AudioSystem#_setPlaybackRate", () => {
