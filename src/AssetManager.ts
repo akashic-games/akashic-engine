@@ -327,7 +327,7 @@ export class AssetManager implements AssetLoadHandler {
 			++this._refCounts[assetId];
 			waiting = true;
 		} else {
-			var system = this._getAudioSystemByAssetId(assetId);
+			var system = this._getAudioSystem(assetIdOrConf);
 			var audioAsset = system?.getDestroyRequestedAsset(assetId);
 			if (system && audioAsset) {
 				system.cancelRequestDestroy(audioAsset);
@@ -675,8 +675,18 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_getAudioSystemByAssetId(assetId: string): AudioSystem | null {
-		const conf: AssetConfiguration = this.configuration[assetId];
+	_getAudioSystem(assetIdOrConf: string | DynamicAssetConfiguration): AudioSystem | null {
+		let id: string;
+		let conf: AssetConfiguration | DynamicAssetConfiguration;
+		if (typeof assetIdOrConf === "string") {
+			id = assetIdOrConf;
+			conf = this.configuration[id];
+		} else {
+			let dynConf = assetIdOrConf;
+			id = dynConf.id;
+			conf = dynConf;
+		}
+
 		if (!conf) {
 			return null;
 		}
