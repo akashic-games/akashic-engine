@@ -3,12 +3,14 @@ import {
 	AssetManager,
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
+	AudioSystem,
 	GameConfiguration,
 	Asset,
 	ScriptAsset,
 	AudioAsset,
 	ImageAsset,
-	ImageAssetConfigurationBase
+	ImageAssetConfigurationBase,
+	DynamicAssetConfiguration,
 } from "..";
 import { customMatchers, Game, Surface } from "./helpers";
 
@@ -509,6 +511,46 @@ describe("test AssetManager", () => {
 					expect(manager.destroyed()).toBe(true);
 					expect(asset.destroyed()).toBe(true);
 					done();
+				}
+			}
+		);
+	});
+
+	it("reuse instantiated asset if it's in destroyRequested", done => {
+		const game = new Game(gameConfiguration);
+		const manager = new AssetManager(game);
+		const assetConfig: DynamicAssetConfiguration = {
+			id: "testDynamicAsset",
+			type: "audio",
+			systemId: "music",
+			duration: 1230,
+			uri: "http://dummy.example/unused-name"
+		};
+		manager.requestAsset(
+			assetConfig,
+			{
+				_onAssetError: () => {
+					done.fail();
+				},
+				_onAssetLoad: (asset: AudioAsset) => {
+					let _asset = asset;
+					const system = asset._system as AudioSystem;
+					system.requestDestroy(asset);
+					expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();
+					manager.unrefAsset("testDynamicAsset");
+					manager.requestAsset(
+						assetConfig,
+						{
+							_onAssetError: () => {
+								done.fail();
+							},
+							_onAssetLoad: (asset: AudioAsset) => {
+								expect(asset).toBe(_asset);
+								expect(system.getDestroyRequestedAsset(asset.id)).toBeNull();
+								done();
+							}
+						}
+					)
 				}
 			}
 		);
