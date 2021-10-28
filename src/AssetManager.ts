@@ -676,14 +676,11 @@ export class AssetManager implements AssetLoadHandler {
 	 * @private
 	 */
 	_getAudioSystem(assetIdOrConf: string | DynamicAssetConfiguration): AudioSystem | null {
-		let id: string;
 		let conf: AssetConfiguration | DynamicAssetConfiguration;
 		if (typeof assetIdOrConf === "string") {
-			id = assetIdOrConf;
-			conf = this.configuration[id];
+			conf = this.configuration[assetIdOrConf];
 		} else {
 			let dynConf = assetIdOrConf;
-			id = dynConf.id;
 			conf = dynConf;
 		}
 
