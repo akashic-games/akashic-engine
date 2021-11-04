@@ -129,8 +129,8 @@ export class LoadingScene extends Scene {
 	 */
 	end(): void {
 		if (!this._targetScene || this._targetScene._loadingState === "initial") {
-			var state = this._targetScene ? this._targetScene._loadingState : "(no scene)";
-			var msg = "LoadingScene#end(): the target scene is in invalid state: " + state;
+			const state = this._targetScene ? this._targetScene._loadingState : "(no scene)";
+			const msg = "LoadingScene#end(): the target scene is in invalid state: " + state;
 			throw ExceptionFactory.createAssertionError(msg);
 		}
 

@@ -201,7 +201,7 @@ export class Label extends CacheableE {
 	 */
 	renderSelfFromCache(renderer: Renderer): void {
 		// glyphのはみ出し量に応じて、描画先のX座標を調整する。
-		var destOffsetX;
+		let destOffsetX;
 		switch (this._realTextAlign) {
 			case "center":
 				destOffsetX = this.widthAutoAdjust ? this._overhangLeft : 0;
@@ -230,8 +230,8 @@ export class Label extends CacheableE {
 			return;
 		}
 
-		var scale = this.maxWidth && this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
-		var offsetX = 0;
+		const scale = this.maxWidth && this.maxWidth > 0 && this.maxWidth < this._textWidth ? this.maxWidth / this._textWidth : 1;
+		let offsetX = 0;
 		switch (this._realTextAlign) {
 			case "center":
 				offsetX = this.width / 2 - ((this._textWidth + this._overhangLeft) / 2) * scale;
@@ -251,13 +251,13 @@ export class Label extends CacheableE {
 		}
 
 		renderer.save();
-		var glyphScale = this.fontSize / this.font.size;
-		var cumulativeOffset = 0;
-		for (var i = 0; i < this.glyphs.length; ++i) {
+		const glyphScale = this.fontSize / this.font.size;
+		let cumulativeOffset = 0;
+		for (let i = 0; i < this.glyphs.length; ++i) {
 			let glyph: Glyph | null = this.glyphs[i];
-			var glyphWidth = glyph.advanceWidth * glyphScale;
+			const glyphWidth = glyph.advanceWidth * glyphScale;
 
-			var code = glyph.code;
+			const code = glyph.code;
 			if (!glyph.isSurfaceValid) {
 				glyph = this.font.glyphForCharacter(code);
 				if (!glyph) {
@@ -306,29 +306,29 @@ export class Label extends CacheableE {
 			return;
 		}
 
-		var effectiveTextLastIndex = this.text.length - 1;
+		let effectiveTextLastIndex = this.text.length - 1;
 		// 右のはみだし量を求めるため、text内での有効な最後の glyph のindexを解決する。
-		for (var i = this.text.length - 1; i >= 0; --i) {
-			var code = Util.charCodeAt(this.text, i);
+		for (let i = this.text.length - 1; i >= 0; --i) {
+			const code = Util.charCodeAt(this.text, i);
 			if (!code) {
 				continue;
 			}
-			var glyph = this.font.glyphForCharacter(code);
+			const glyph = this.font.glyphForCharacter(code);
 			if (glyph && glyph.width !== 0 && glyph.advanceWidth !== 0) {
 				effectiveTextLastIndex = i;
 				break;
 			}
 		}
 
-		var maxHeight = 0;
-		var glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
-		for (var i = 0; i <= effectiveTextLastIndex; ++i) {
+		let maxHeight = 0;
+		const glyphScale = this.font.size > 0 ? this.fontSize / this.font.size : 0;
+		for (let i = 0; i <= effectiveTextLastIndex; ++i) {
 			const code = Util.charCodeAt(this.text, i);
 			if (!code) {
 				continue;
 			}
 
-			var glyph = this.font.glyphForCharacter(code);
+			const glyph = this.font.glyphForCharacter(code);
 			if (!glyph) {
 				this._outputOfWarnLogWithNoGlyph(code, "_invalidateSelf()");
 				continue;
@@ -357,7 +357,7 @@ export class Label extends CacheableE {
 
 			this._textWidth += (glyph.advanceWidth + overhang) * glyphScale;
 
-			var height = glyph.offsetY + glyph.height;
+			const height = glyph.offsetY + glyph.height;
 			if (maxHeight < height) {
 				maxHeight = height;
 			}

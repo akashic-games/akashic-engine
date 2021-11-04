@@ -1600,13 +1600,13 @@ export class Game {
 	 */
 	_flushPostTickTasks(): void {
 		do {
-			var reqs = this._postTickTasks;
+			const reqs = this._postTickTasks;
 			this._postTickTasks = [];
-			for (var i = 0; i < reqs.length; ++i) {
-				var req = reqs[i];
+			for (let i = 0; i < reqs.length; ++i) {
+				const req = reqs[i];
 				switch (req.type) {
 					case PostTickTaskType.PushScene:
-						var oldScene = this.scene();
+						const oldScene = this.scene();
 						if (oldScene) {
 							oldScene._deactivate();
 						}

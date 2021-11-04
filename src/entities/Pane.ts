@@ -166,7 +166,7 @@ export class Pane extends CacheableE {
 	}
 
 	shouldFindChildrenByPoint(point: CommonOffset): boolean {
-		var p = this._normalizedPadding;
+		const p = this._normalizedPadding;
 		if (p.left < point.x && this.width - p.right > point.x && p.top < point.y && this.height - p.bottom > point.y) {
 			return true;
 		}
@@ -244,7 +244,7 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	_renderChildren(camera?: Camera): void {
-		var isNew = this._oldWidth !== this.width || this._oldHeight !== this.height || this._paddingChanged;
+		const isNew = this._oldWidth !== this.width || this._oldHeight !== this.height || this._paddingChanged;
 		if (isNew) {
 			this._initialize();
 			this._paddingChanged = false;
@@ -258,8 +258,8 @@ export class Pane extends CacheableE {
 
 		if (this.children) {
 			// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
-			var children = this.children;
-			for (var i = 0; i < children.length; ++i) {
+			const children = this.children;
+			for (let i = 0; i < children.length; ++i) {
 				children[i].render(this._childrenRenderer, camera);
 			}
 		}
@@ -270,8 +270,8 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	_initialize(): void {
-		var p = this._padding;
-		var r: CommonRect;
+		const p = this._padding;
+		let r: CommonRect;
 		if (typeof p === "number") {
 			r = { top: p, bottom: p, left: p, right: p };
 		} else {
@@ -283,7 +283,7 @@ export class Pane extends CacheableE {
 			width: this.width - r.left - r.right,
 			height: this.height - r.top - r.bottom
 		};
-		var resourceFactory = this.scene.game.resourceFactory;
+		const resourceFactory = this.scene.game.resourceFactory;
 		if (this._childrenSurface && !this._childrenSurface.destroyed()) {
 			this._childrenSurface.destroy();
 		}
@@ -298,7 +298,7 @@ export class Pane extends CacheableE {
 	 * @private
 	 */
 	_calculateBoundingRect(m?: Matrix): CommonRect | undefined {
-		var matrix = this.getMatrix();
+		let matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);
 		}
@@ -307,28 +307,28 @@ export class Pane extends CacheableE {
 			return undefined;
 		}
 
-		var thisBoundingRect: CommonRect = {
+		const thisBoundingRect: CommonRect = {
 			left: 0,
 			right: this.width,
 			top: 0,
 			bottom: this.height
 		};
 
-		var targetCoordinates: CommonOffset[] = [
+		const targetCoordinates: CommonOffset[] = [
 			{ x: thisBoundingRect.left, y: thisBoundingRect.top },
 			{ x: thisBoundingRect.left, y: thisBoundingRect.bottom },
 			{ x: thisBoundingRect.right, y: thisBoundingRect.top },
 			{ x: thisBoundingRect.right, y: thisBoundingRect.bottom }
 		];
 
-		var convertedPoint = matrix.multiplyPoint(targetCoordinates[0]);
-		var result: CommonRect = {
+		let convertedPoint = matrix.multiplyPoint(targetCoordinates[0]);
+		const result: CommonRect = {
 			left: convertedPoint.x,
 			right: convertedPoint.x,
 			top: convertedPoint.y,
 			bottom: convertedPoint.y
 		};
-		for (var i = 1; i < targetCoordinates.length; ++i) {
+		for (let i = 1; i < targetCoordinates.length; ++i) {
 			convertedPoint = matrix.multiplyPoint(targetCoordinates[i]);
 			if (result.left > convertedPoint.x) result.left = convertedPoint.x;
 			if (result.right < convertedPoint.x) result.right = convertedPoint.x;

@@ -131,7 +131,7 @@ export class FrameSprite extends Sprite {
 	 * @param hegith 作成されるエンティティの高さ。省略された場合、 `sprite.height`
 	 */
 	static createBySprite(sprite: Sprite, width?: number, height?: number): FrameSprite {
-		var frameSprite = new FrameSprite({
+		const frameSprite = new FrameSprite({
 			scene: sprite.scene,
 			src: sprite.src,
 			width: width === undefined ? sprite.width : width,
@@ -230,8 +230,8 @@ export class FrameSprite extends Sprite {
 	 * @private
 	 */
 	_changeFrame(): void {
-		var frame = this.frames[this.frameNumber];
-		var sep = Math.floor(this._surface.width / this.srcWidth);
+		const frame = this.frames[this.frameNumber];
+		const sep = Math.floor(this._surface.width / this.srcWidth);
 		this.srcX = (frame % sep) * this.srcWidth;
 		this.srcY = Math.floor(frame / sep) * this.srcHeight;
 		this._lastUsedIndex = frame;

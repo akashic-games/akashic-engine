@@ -347,7 +347,7 @@ export class E extends Object2D implements CommonArea {
 		this.local = param.scene.local !== "non-local" || !!param.local;
 
 		if (param.children) {
-			for (var i = 0; i < param.children.length; ++i) this.append(param.children[i]);
+			for (let i = 0; i < param.children.length; ++i) this.append(param.children[i]);
 		}
 		if (param.parent) {
 			param.parent.append(this);
@@ -376,11 +376,11 @@ export class E extends Object2D implements CommonArea {
 
 		if (this.state & EntityStateFlags.ContextLess) {
 			renderer.translate(this.x, this.y);
-			var goDown = this.renderSelf(renderer, camera);
+			const goDown = this.renderSelf(renderer, camera);
 			if (goDown && this.children) {
-				var children = this.children;
-				var len = children.length;
-				for (var i = 0; i < len; ++i) children[i].render(renderer, camera);
+				const children = this.children;
+				const len = children.length;
+				for (let i = 0; i < len; ++i) children[i].render(renderer, camera);
 			}
 			renderer.translate(-this.x, -this.y);
 			return;
@@ -404,12 +404,12 @@ export class E extends Object2D implements CommonArea {
 
 		if (this.shaderProgram !== undefined && renderer.isSupportedShaderProgram()) renderer.setShaderProgram(this.shaderProgram);
 
-		var goDown = this.renderSelf(renderer, camera);
+		const goDown = this.renderSelf(renderer, camera);
 
 		if (goDown && this.children) {
 			// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
-			var children = this.children;
-			for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
+			const children = this.children;
+			for (let i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 		}
 		renderer.restore();
 	}
@@ -461,7 +461,7 @@ export class E extends Object2D implements CommonArea {
 
 		e.parent = this;
 
-		var index = -1;
+		let index = -1;
 		if (target !== undefined && (index = this.children.indexOf(target)) > -1) {
 			this.children.splice(index, 0, e);
 		} else {
@@ -488,7 +488,7 @@ export class E extends Object2D implements CommonArea {
 			return;
 		}
 
-		var index = this.children ? this.children.indexOf(e) : -1;
+		const index = this.children ? this.children.indexOf(e) : -1;
 		if (index < 0) throw ExceptionFactory.createAssertionError("E#remove: invalid child");
 		this.children![index].parent = undefined;
 		this.children!.splice(index, 1);
@@ -512,7 +512,7 @@ export class E extends Object2D implements CommonArea {
 		if (this.parent) this.remove();
 
 		if (this.children) {
-			for (var i = this.children.length - 1; i >= 0; --i) {
+			for (let i = this.children.length - 1; i >= 0; --i) {
 				this.children[i].destroy();
 			}
 			if (this.children.length !== 0)
@@ -755,7 +755,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_calculateBoundingRect(m?: Matrix): CommonRect | undefined {
-		var matrix = this.getMatrix();
+		let matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);
 		}
@@ -764,28 +764,28 @@ export class E extends Object2D implements CommonArea {
 			return undefined;
 		}
 
-		var thisBoundingRect: CommonRect = {
+		const thisBoundingRect: CommonRect = {
 			left: 0,
 			right: this.width,
 			top: 0,
 			bottom: this.height
 		};
 
-		var targetCoordinates: CommonOffset[] = [
+		const targetCoordinates: CommonOffset[] = [
 			{ x: thisBoundingRect.left, y: thisBoundingRect.top },
 			{ x: thisBoundingRect.left, y: thisBoundingRect.bottom },
 			{ x: thisBoundingRect.right, y: thisBoundingRect.top },
 			{ x: thisBoundingRect.right, y: thisBoundingRect.bottom }
 		];
 
-		var convertedPoint = matrix.multiplyPoint(targetCoordinates[0]);
-		var result: CommonRect = {
+		let convertedPoint = matrix.multiplyPoint(targetCoordinates[0]);
+		const result: CommonRect = {
 			left: convertedPoint.x,
 			right: convertedPoint.x,
 			top: convertedPoint.y,
 			bottom: convertedPoint.y
 		};
-		for (var i = 1; i < targetCoordinates.length; ++i) {
+		for (let i = 1; i < targetCoordinates.length; ++i) {
 			convertedPoint = matrix.multiplyPoint(targetCoordinates[i]);
 			if (result.left > convertedPoint.x) result.left = convertedPoint.x;
 			if (result.right < convertedPoint.x) result.right = convertedPoint.x;
@@ -794,8 +794,8 @@ export class E extends Object2D implements CommonArea {
 		}
 
 		if (this.children !== undefined) {
-			for (var i = 0; i < this.children.length; ++i) {
-				var nowResult = this.children[i]._calculateBoundingRect(matrix);
+			for (let i = 0; i < this.children.length; ++i) {
+				const nowResult = this.children[i]._calculateBoundingRect(matrix);
 				if (nowResult) {
 					if (result.left > nowResult.left) result.left = nowResult.left;
 					if (result.right < nowResult.right) result.right = nowResult.right;
@@ -811,7 +811,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_enableTouchPropagation(): void {
-		var p: E = this.parent as E;
+		let p: E = this.parent as E;
 		while (p instanceof E && !p._hasTouchableChildren) {
 			p._hasTouchableChildren = true;
 			p = p.parent as E;
@@ -822,7 +822,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_disableTouchPropagation(): void {
-		var p: E = this.parent as E;
+		let p: E = this.parent as E;
 		while (p instanceof E && p._hasTouchableChildren) {
 			if (this._findTouchableChildren(p)) break;
 			p._hasTouchableChildren = false;
@@ -842,9 +842,9 @@ export class E extends Object2D implements CommonArea {
 
 	private _findTouchableChildren(e: E): E | undefined {
 		if (e.children) {
-			for (var i = 0; i < e.children.length; ++i) {
+			for (let i = 0; i < e.children.length; ++i) {
 				if (e.children[i].touchable) return e.children[i];
-				var tmp = this._findTouchableChildren(e.children[i]);
+				const tmp = this._findTouchableChildren(e.children[i]);
 				if (tmp) return tmp;
 			}
 		}

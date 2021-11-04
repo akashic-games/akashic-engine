@@ -12,12 +12,12 @@ export class SpriteFactory {
 	 * @param camera 使用カメラ
 	 */
 	static createSpriteFromE(scene: Scene, e: E, camera?: Camera): Sprite {
-		var oldX = e.x;
-		var oldY = e.y;
-		var x = 0;
-		var y = 0;
-		var width = e.width;
-		var height = e.height;
+		const oldX = e.x;
+		const oldY = e.y;
+		let x = 0;
+		let y = 0;
+		let width = e.width;
+		let height = e.height;
 
 		const boundingRect = e.calculateBoundingRect();
 		if (!boundingRect) {
@@ -34,13 +34,13 @@ export class SpriteFactory {
 		// 再描画フラグを立てたくないために e._matrix を直接触っている
 		if (e._matrix) e._matrix._modified = true;
 
-		var surface = scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
-		var renderer = surface.renderer();
+		const surface = scene.game.resourceFactory.createSurface(Math.ceil(width), Math.ceil(height));
+		const renderer = surface.renderer();
 		renderer.begin();
 		e.render(renderer, camera);
 		renderer.end();
 
-		var s = new Sprite({
+		const s = new Sprite({
 			scene: scene,
 			src: surface,
 			width: width,
@@ -61,12 +61,12 @@ export class SpriteFactory {
 	 * @param camera 使用カメラ
 	 */
 	static createSpriteFromScene(toScene: Scene, fromScene: Scene, camera?: Camera): Sprite {
-		var surface = toScene.game.resourceFactory.createSurface(Math.ceil(fromScene.game.width), Math.ceil(fromScene.game.height));
-		var renderer = surface.renderer();
+		const surface = toScene.game.resourceFactory.createSurface(Math.ceil(fromScene.game.width), Math.ceil(fromScene.game.height));
+		const renderer = surface.renderer();
 		renderer.begin();
 
-		var children = fromScene.children;
-		for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
+		const children = fromScene.children;
+		for (let i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 
 		renderer.end();
 

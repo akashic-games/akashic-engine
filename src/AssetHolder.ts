@@ -150,7 +150,7 @@ export class AssetHolder<UserData> {
 	_onAssetError(asset: Asset, error: AssetLoadError): void {
 		const hs = this._handlerSet;
 		if (this.destroyed() || hs.owner.destroyed()) return;
-		var failureInfo = {
+		const failureInfo = {
 			asset: asset,
 			error: error,
 			cancelRetry: false

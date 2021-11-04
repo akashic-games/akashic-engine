@@ -432,8 +432,8 @@ export class Scene implements StorageLoaderHandler {
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
 	constructor(param: SceneParameterObject) {
-		var game = param.game;
-		var local =
+		const game = param.game;
+		const local =
 			param.local === undefined
 				? "non-local"
 				: param.local === false
@@ -441,7 +441,7 @@ export class Scene implements StorageLoaderHandler {
 				: param.local === true
 				? "full-local"
 				: param.local;
-		var tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
+		const tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
 
 		if (!param.storageKeys) {
 			this._storageLoader = undefined;
@@ -535,12 +535,12 @@ export class Scene implements StorageLoaderHandler {
 		this.onStateChange.fire(this.state);
 
 		// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
-		var gameDb = this.game.db;
-		for (var p in gameDb) {
+		let gameDb = this.game.db;
+		for (const p in gameDb) {
 			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
 		}
-		var gameDb = this.game._localDb;
-		for (var p in gameDb) {
+		gameDb = this.game._localDb;
+		for (const p in gameDb) {
 			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
 		}
 
@@ -558,7 +558,7 @@ export class Scene implements StorageLoaderHandler {
 		this.assets = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
-		for (var i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();
+		for (let i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();
 		this._sceneAssetHolder.destroy();
 
 		this._storageLoader = undefined;
@@ -733,7 +733,7 @@ export class Scene implements StorageLoaderHandler {
 
 		e.parent = this;
 
-		var index = -1;
+		let index = -1;
 		if (target !== undefined && (index = this.children.indexOf(target)) > -1) {
 			this.children.splice(index, 0, e);
 		} else {
@@ -748,7 +748,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @param e 削除する子エンティティ
 	 */
 	remove(e: E): void {
-		var index = this.children.indexOf(e);
+		const index = this.children.indexOf(e);
 		if (index === -1) return;
 		this.children[index].parent = undefined;
 		this.children.splice(index, 1);
@@ -766,7 +766,7 @@ export class Scene implements StorageLoaderHandler {
 		const children = this.children;
 		const m = camera && camera instanceof Camera2D ? camera.getMatrix() : undefined;
 
-		for (var i = children.length - 1; i >= 0; --i) {
+		for (let i = children.length - 1; i >= 0; --i) {
 			const ret = children[i].findPointSourceByPoint(point, m, force);
 			if (ret) {
 				ret.local = (ret.target && ret.target.local) || mayConsumeLocalTick;
@@ -813,7 +813,7 @@ export class Scene implements StorageLoaderHandler {
 			throw ExceptionFactory.createAssertionError("Scene#requestAsset(): can be called after loaded.");
 		}
 
-		var holder = new AssetHolder<SceneRequestAssetHandler>({
+		const holder = new AssetHolder<SceneRequestAssetHandler>({
 			assetManager: this.game._assetManager,
 			assetIds: assetIds,
 			handlerSet: {
@@ -861,7 +861,7 @@ export class Scene implements StorageLoaderHandler {
 		if (this._loaded) return;
 		this._loaded = true;
 
-		var needsWait = this._sceneAssetHolder.request();
+		let needsWait = this._sceneAssetHolder.request();
 		if (this._storageLoader) {
 			this._storageLoader._load(this);
 			needsWait = true;
