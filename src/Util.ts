@@ -45,11 +45,11 @@ export module Util {
 	 */
 	// highly based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
 	export function charCodeAt(str: string, idx: number): number | null {
-		var code = str.charCodeAt(idx);
+		const code = str.charCodeAt(idx);
 
 		if (0xd800 <= code && code <= 0xdbff) {
-			var hi = code;
-			var low = str.charCodeAt(idx + 1);
+			const hi = code;
+			const low = str.charCodeAt(idx + 1);
 			return (hi << 16) | low;
 		}
 

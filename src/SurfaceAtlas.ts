@@ -69,16 +69,16 @@ export class SurfaceAtlas {
 		width += 1;
 		height += 1;
 
-		var slot = getSurfaceAtlasSlot(this._emptySurfaceAtlasSlotHead, width, height);
+		const slot = getSurfaceAtlasSlot(this._emptySurfaceAtlasSlotHead, width, height);
 
 		if (!slot) {
 			return null;
 		}
 
-		var remainWidth = slot.width - width;
-		var remainHeight = slot.height - height;
-		var left: SurfaceAtlasSlot;
-		var right: SurfaceAtlasSlot;
+		const remainWidth = slot.width - width;
+		const remainHeight = slot.height - height;
+		let left: SurfaceAtlasSlot;
+		let right: SurfaceAtlasSlot;
 		if (remainWidth <= remainHeight) {
 			left = new SurfaceAtlasSlot(slot.x + width, slot.y, remainWidth, height);
 			right = new SurfaceAtlasSlot(slot.x, slot.y + height, slot.width, remainHeight);

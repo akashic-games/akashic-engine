@@ -10,7 +10,7 @@ import {
 	AudioAsset,
 	ImageAsset,
 	ImageAssetConfigurationBase,
-	DynamicAssetConfiguration,
+	DynamicAssetConfiguration
 } from "..";
 import { customMatchers, Game, Surface } from "./helpers";
 
@@ -526,34 +526,28 @@ describe("test AssetManager", () => {
 			duration: 1230,
 			uri: "http://dummy.example/unused-name"
 		};
-		manager.requestAsset(
-			assetConfig,
-			{
-				_onAssetError: () => {
-					done.fail();
-				},
-				_onAssetLoad: (asset: AudioAsset) => {
-					let _asset = asset;
-					const system = asset._system as AudioSystem;
-					system.requestDestroy(asset);
-					expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();
-					manager.unrefAsset("testDynamicAsset");
-					manager.requestAsset(
-						assetConfig,
-						{
-							_onAssetError: () => {
-								done.fail();
-							},
-							_onAssetLoad: (asset: AudioAsset) => {
-								expect(asset).toBe(_asset);
-								expect(system.getDestroyRequestedAsset(asset.id)).toBeNull();
-								done();
-							}
-						}
-					)
-				}
+		manager.requestAsset(assetConfig, {
+			_onAssetError: () => {
+				done.fail();
+			},
+			_onAssetLoad: (asset: AudioAsset) => {
+				let _asset = asset;
+				const system = asset._system as AudioSystem;
+				system.requestDestroy(asset);
+				expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();
+				manager.unrefAsset("testDynamicAsset");
+				manager.requestAsset(assetConfig, {
+					_onAssetError: () => {
+						done.fail();
+					},
+					_onAssetLoad: (asset: AudioAsset) => {
+						expect(asset).toBe(_asset);
+						expect(system.getDestroyRequestedAsset(asset.id)).toBeNull();
+						done();
+					}
+				});
 			}
-		);
+		});
 	});
 
 	describe("accessorPath", () => {

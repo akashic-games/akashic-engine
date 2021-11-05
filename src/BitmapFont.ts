@@ -92,18 +92,18 @@ export class BitmapFont extends Font {
 	 * @param code コードポイント
 	 */
 	glyphForCharacter(code: number): Glyph | null {
-		var g = this.map[code] || this.missingGlyph;
+		const g = this.map[code] || this.missingGlyph;
 
 		if (!g) {
 			return null;
 		}
 
-		var w = g.width === undefined ? this.defaultGlyphWidth : g.width;
-		var h = g.height === undefined ? this.defaultGlyphHeight : g.height;
-		var offsetX = g.offsetX || 0;
-		var offsetY = g.offsetY || 0;
-		var advanceWidth = g.advanceWidth === undefined ? w : g.advanceWidth;
-		var surface = w === 0 || h === 0 ? undefined : this.surface;
+		const w = g.width === undefined ? this.defaultGlyphWidth : g.width;
+		const h = g.height === undefined ? this.defaultGlyphHeight : g.height;
+		const offsetX = g.offsetX || 0;
+		const offsetY = g.offsetY || 0;
+		const advanceWidth = g.advanceWidth === undefined ? w : g.advanceWidth;
+		const surface = w === 0 || h === 0 ? undefined : this.surface;
 
 		return {
 			code,

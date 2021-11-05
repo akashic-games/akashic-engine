@@ -36,8 +36,8 @@ class CameraCancellingE extends E {
 		if (!this.children) return false;
 
 		if (camera) {
-			var c = <Camera2D>camera;
-			var canceller = this._canceller;
+			const c = <Camera2D>camera;
+			const canceller = this._canceller;
 			if (
 				c.x !== canceller.x ||
 				c.y !== canceller.y ||
@@ -59,8 +59,8 @@ class CameraCancellingE extends E {
 		}
 
 		// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
-		var children = this.children;
-		for (var i = 0; i < children.length; ++i) children[i].render(renderer, camera);
+		const children = this.children;
+		for (let i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 
 		if (camera) {
 			renderer.restore();
@@ -121,7 +121,7 @@ export class DefaultLoadingScene extends LoadingScene {
 			barY = (this.game.height - this._barHeight) / 2;
 			bgColor = "rgba(0, 0, 0, 0.8)";
 		}
-		var gauge: FilledRect;
+		let gauge: FilledRect;
 		this.append(
 			new CameraCancellingE({
 				scene: this,
@@ -162,12 +162,12 @@ export class DefaultLoadingScene extends LoadingScene {
 	 * @private
 	 */
 	_handleUpdate(): void {
-		var BLINK_RANGE = 50;
-		var BLINK_PER_SEC = 2 / 3;
+		const BLINK_RANGE = 50;
+		const BLINK_PER_SEC = 2 / 3;
 		++this._gaugeUpdateCount;
 
 		// 白を上限に sin 波で明滅させる (updateしていることの確認)
-		var c = Math.round(
+		const c = Math.round(
 			255 - BLINK_RANGE + Math.sin((this._gaugeUpdateCount / this.game.fps) * BLINK_PER_SEC * (2 * Math.PI)) * BLINK_RANGE
 		);
 		this._gauge.cssColor = "rgb(" + c + "," + c + "," + c + ")";
@@ -189,7 +189,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	 * @private
 	 */
 	_handleTargetAssetLoad(_asset: Asset): void {
-		var waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
+		const waitingAssetsCount = this._targetScene._sceneAssetHolder.waitingAssetsCount;
 		this._gauge.width = Math.ceil((1 - waitingAssetsCount / this._totalWaitingAssetCount) * this._barWidth);
 		this._gauge.modified();
 	}

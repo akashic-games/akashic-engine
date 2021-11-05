@@ -248,12 +248,12 @@ export class ModuleManager {
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
 	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
-		var path: string;
+		let path: string;
 		path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
-			var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
+			const pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 			if (pkg && typeof pkg.main === "string") {
-				var asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
+				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (asset) return asset;
 			}
 		}
@@ -291,7 +291,7 @@ export class ModuleManager {
 	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
 		let path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
-			var pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
+			const pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (targetPath) {
