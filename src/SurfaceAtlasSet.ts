@@ -4,9 +4,9 @@ import { SurfaceAtlas } from "./SurfaceAtlas";
 
 function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 	// @ts-ignore
-	var width = Math.ceil(Math.min(hint.initialAtlasWidth!, hint.maxAtlasWidth));
+	const width = Math.ceil(Math.min(hint.initialAtlasWidth!, hint.maxAtlasWidth));
 	// @ts-ignore
-	var height = Math.ceil(Math.min(hint.initialAtlasHeight!, hint.maxAtlasHeight));
+	const height = Math.ceil(Math.min(hint.initialAtlasHeight!, hint.maxAtlasHeight));
 	return { width: width, height: height };
 }
 
@@ -306,8 +306,8 @@ export class SurfaceAtlasSet {
 		// NOTE: LRUを捨てる方式なら単純なタイムスタンプのほうがわかりやすいかもしれない
 		// NOTE: 正確な時刻は必要ないはずで、インクリメンタルなカウンタで代用すればDate()生成コストは省略できる
 		if (glyph._atlas) glyph._atlas._accessScore += 1;
-		for (var i = 0; i < this._surfaceAtlases.length; i++) {
-			var atlas = this._surfaceAtlases[i];
+		for (let i = 0; i < this._surfaceAtlases.length; i++) {
+			const atlas = this._surfaceAtlases[i];
 			atlas._accessScore /= 2;
 		}
 	}
@@ -316,7 +316,7 @@ export class SurfaceAtlasSet {
 	 * このインスタンスを破棄する。
 	 */
 	destroy(): void {
-		for (var i = 0; i < this._surfaceAtlases.length; ++i) {
+		for (let i = 0; i < this._surfaceAtlases.length; ++i) {
 			this._surfaceAtlases[i].destroy();
 		}
 		this._surfaceAtlases = undefined!;

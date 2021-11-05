@@ -81,16 +81,16 @@ export abstract class CacheableE extends E {
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
 	renderSelf(renderer: Renderer, camera?: Camera): boolean {
-		var padding = CacheableE.PADDING;
+		const padding = CacheableE.PADDING;
 		if (this._renderedCamera !== camera) {
 			this.state &= ~EntityStateFlags.Cached;
 			this._renderedCamera = camera;
 		}
 		if (!(this.state & EntityStateFlags.Cached)) {
 			this._cacheSize = this.calculateCacheSize();
-			var w = Math.ceil(this._cacheSize.width) + padding * 2;
-			var h = Math.ceil(this._cacheSize.height) + padding * 2;
-			var isNew = !this._cache || this._cache.width < w || this._cache.height < h;
+			const w = Math.ceil(this._cacheSize.width) + padding * 2;
+			const h = Math.ceil(this._cacheSize.height) + padding * 2;
+			const isNew = !this._cache || this._cache.width < w || this._cache.height < h;
 			if (isNew) {
 				if (this._cache && !this._cache.destroyed()) {
 					this._cache.destroy();
@@ -99,7 +99,7 @@ export abstract class CacheableE extends E {
 				this._renderer = this._cache.renderer();
 			}
 
-			var cacheRenderer = this._renderer!;
+			const cacheRenderer = this._renderer!;
 			cacheRenderer.begin();
 			if (!isNew) {
 				cacheRenderer.clear();

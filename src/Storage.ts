@@ -203,12 +203,12 @@ export class StorageValueStore {
 		if (typeof keyOrIndex === "number") {
 			return this._values[keyOrIndex];
 		} else {
-			var index = this._keys.indexOf(keyOrIndex);
+			const index = this._keys.indexOf(keyOrIndex);
 			if (index !== -1) {
 				return this._values[index];
 			}
-			for (var i = 0; i < this._keys.length; ++i) {
-				var target = this._keys[i];
+			for (let i = 0; i < this._keys.length; ++i) {
+				const target = this._keys[i];
 				if (
 					target.region === keyOrIndex.region &&
 					target.regionKey === keyOrIndex.regionKey &&
@@ -229,7 +229,7 @@ export class StorageValueStore {
 	 * @param keyOrIndex `StorageKey` 又はインデックス
 	 */
 	getOne(keyOrIndex: StorageReadKey | number): StorageValue | undefined {
-		var values = this.get(keyOrIndex);
+		const values = this.get(keyOrIndex);
 		if (!values) return undefined;
 
 		return values[0];

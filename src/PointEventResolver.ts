@@ -91,10 +91,10 @@ export class PointEventResolver {
 	pointMove(e: PlatformPointEvent): pl.PointMoveEvent | null {
 		const holder = this._pointEventMap[e.identifier];
 		if (!holder) return null;
-		var prev = { x: 0, y: 0 };
-		var start = { x: 0, y: 0 };
+		const prev = { x: 0, y: 0 };
+		const start = { x: 0, y: 0 };
 		this._pointMoveAndUp(holder, e.offset, prev, start);
-		var ret: pl.PointMoveEvent = [
+		const ret: pl.PointMoveEvent = [
 			pl.EventCode.PointMove, // 0: イベントコード
 			EventPriority.Joined, //   1: 優先度
 			this._playerId, //         2: プレイヤーID
@@ -118,7 +118,7 @@ export class PointEventResolver {
 		const start = { x: 0, y: 0 };
 		this._pointMoveAndUp(holder, e.offset, prev, start);
 		delete this._pointEventMap[e.identifier];
-		var ret: pl.PointUpEvent = [
+		const ret: pl.PointUpEvent = [
 			pl.EventCode.PointUp, // 0: イベントコード
 			EventPriority.Joined, // 1: 優先度
 			this._playerId, //       2: プレイヤーID

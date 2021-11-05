@@ -17,19 +17,19 @@ export module PathUtil {
 	 */
 	export function resolvePath(base: string, path: string): string {
 		function split(str: string): string[] {
-			var ret = str.split("/");
+			const ret = str.split("/");
 			if (ret[ret.length - 1] === "") ret.pop();
 			return ret;
 		}
 		if (path === "") return base;
-		var baseComponents = PathUtil.splitPath(base);
-		var parts = split(baseComponents.path).concat(split(path));
-		var resolved: string[] = [];
-		for (var i = 0; i < parts.length; ++i) {
-			var part = parts[i];
+		const baseComponents = PathUtil.splitPath(base);
+		const parts = split(baseComponents.path).concat(split(path));
+		let resolved: string[] = [];
+		for (let i = 0; i < parts.length; ++i) {
+			let part = parts[i];
 			switch (part) {
 				case "..":
-					var popped = resolved.pop();
+					const popped = resolved.pop();
 					if (popped === undefined || popped === "" || popped === ".")
 						throw ExceptionFactory.createAssertionError("PathUtil.resolvePath: invalid arguments");
 					break;
@@ -53,7 +53,7 @@ export module PathUtil {
 	 * @param path パス文字列
 	 */
 	export function resolveDirname(path: string): string {
-		var index = path.lastIndexOf("/");
+		const index = path.lastIndexOf("/");
 		if (index === -1) return path;
 
 		return path.substr(0, index);
@@ -64,8 +64,8 @@ export module PathUtil {
 	 * @param path パス文字列
 	 */
 	export function resolveExtname(path: string): string {
-		for (var i = path.length - 1; i >= 0; --i) {
-			var c = path.charAt(i);
+		for (let i = path.length - 1; i >= 0; --i) {
+			const c = path.charAt(i);
 			if (c === ".") {
 				return path.substr(i);
 			} else if (c === "/") {
@@ -80,23 +80,23 @@ export module PathUtil {
 	 * @param path ディレクトリを表すパス文字列
 	 */
 	export function makeNodeModulePaths(path: string): string[] {
-		var pathComponents = PathUtil.splitPath(path);
-		var host = pathComponents.host;
+		const pathComponents = PathUtil.splitPath(path);
+		const host = pathComponents.host;
 		path = pathComponents.path;
 
 		if (path[path.length - 1] === "/") {
 			path = path.slice(0, path.length - 1);
 		}
 
-		var parts = path.split("/");
-		var firstDir = parts.indexOf("node_modules");
-		var root = firstDir > 0 ? firstDir - 1 : 0;
-		var dirs: string[] = [];
-		for (var i = parts.length - 1; i >= root; --i) {
+		const parts = path.split("/");
+		const firstDir = parts.indexOf("node_modules");
+		const root = firstDir > 0 ? firstDir - 1 : 0;
+		const dirs: string[] = [];
+		for (let i = parts.length - 1; i >= root; --i) {
 			if (parts[i] === "node_modules") continue;
-			var dirParts = parts.slice(0, i + 1);
+			const dirParts = parts.slice(0, i + 1);
 			dirParts.push("node_modules");
-			var dir = dirParts.join("/");
+			const dir = dirParts.join("/");
 			dirs.push(host + dir);
 		}
 		return dirs;
@@ -107,10 +107,10 @@ export module PathUtil {
 	 * @param path パス文字列
 	 */
 	export function splitPath(path: string): PathComponents {
-		var host = "";
-		var doubleSlashIndex = path.indexOf("//");
+		let host = "";
+		const doubleSlashIndex = path.indexOf("//");
 		if (doubleSlashIndex >= 0) {
-			var hostSlashIndex = path.indexOf("/", doubleSlashIndex + 2); // 2 === "//".length
+			const hostSlashIndex = path.indexOf("/", doubleSlashIndex + 2); // 2 === "//".length
 			if (hostSlashIndex >= 0) {
 				host = path.slice(0, hostSlashIndex);
 				path = path.slice(hostSlashIndex); // 先頭に "/" を残して絶対パス扱いさせる

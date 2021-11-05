@@ -362,13 +362,13 @@ export class PlainMatrix {
 	}
 
 	multiply(matrix: Matrix): void {
-		var m1 = this._matrix;
-		var m2 = matrix._matrix;
+		const m1 = this._matrix;
+		const m2 = matrix._matrix;
 
-		var m10 = m1[0];
-		var m11 = m1[1];
-		var m12 = m1[2];
-		var m13 = m1[3];
+		const m10 = m1[0];
+		const m11 = m1[1];
+		const m12 = m1[2];
+		const m13 = m1[3];
 		m1[0] = m10 * m2[0] + m12 * m2[1];
 		m1[1] = m11 * m2[0] + m13 * m2[1];
 		m1[2] = m10 * m2[2] + m12 * m2[3];
@@ -378,12 +378,12 @@ export class PlainMatrix {
 	}
 
 	multiplyLeft(matrix: Matrix): void {
-		var m1 = matrix._matrix;
-		var m2 = this._matrix;
+		const m1 = matrix._matrix;
+		const m2 = this._matrix;
 
-		var m20 = m2[0];
-		var m22 = m2[2];
-		var m24 = m2[4];
+		const m20 = m2[0];
+		const m22 = m2[2];
+		const m24 = m2[4];
 		m2[0] = m1[0] * m20 + m1[2] * m2[1];
 		m2[1] = m1[1] * m20 + m1[3] * m2[1];
 		m2[2] = m1[0] * m22 + m1[2] * m2[3];
@@ -393,7 +393,7 @@ export class PlainMatrix {
 	}
 
 	multiplyNew(matrix: Matrix): Matrix {
-		var ret = this.clone();
+		const ret = this.clone();
 		ret.multiply(matrix);
 		return ret;
 	}
@@ -412,9 +412,9 @@ export class PlainMatrix {
 	}
 
 	multiplyInverseForPoint(point: CommonOffset): CommonOffset {
-		var m = this._matrix;
+		const m = this._matrix;
 		// id = inverse of the determinant
-		var _id = 1 / (m[0] * m[3] + m[2] * -m[1]);
+		const _id = 1 / (m[0] * m[3] + m[2] * -m[1]);
 		return {
 			x: m[3] * _id * point.x + -m[2] * _id * point.y + (m[5] * m[2] - m[4] * m[3]) * _id,
 			y: m[0] * _id * point.y + -m[1] * _id * point.x + (-m[5] * m[0] + m[4] * m[1]) * _id
@@ -422,7 +422,7 @@ export class PlainMatrix {
 	}
 
 	scale(x: number, y: number): void {
-		var m = this._matrix;
+		const m = this._matrix;
 		m[0] *= x;
 		m[1] *= y;
 		m[2] *= x;
@@ -432,9 +432,9 @@ export class PlainMatrix {
 	}
 
 	multiplyPoint(point: CommonOffset): CommonOffset {
-		var m = this._matrix;
-		var x = m[0] * point.x + m[2] * point.y + m[4];
-		var y = m[1] * point.x + m[3] * point.y + m[5];
+		const m = this._matrix;
+		const x = m[0] * point.x + m[2] * point.y + m[4];
+		const y = m[1] * point.x + m[3] * point.y + m[5];
 		return { x: x, y: y };
 	}
 }

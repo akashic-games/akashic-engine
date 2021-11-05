@@ -109,7 +109,7 @@ export abstract class AudioSystem implements AudioSystem {
 	 * @private
 	 */
 	_setMuted(value: boolean): void {
-		var before = this._explicitMuted;
+		const before = this._explicitMuted;
 		this._explicitMuted = !!value;
 		if (this._explicitMuted !== before) {
 			this._updateMuted();
@@ -246,7 +246,7 @@ export class SoundAudioSystem extends AudioSystem {
 	}
 
 	createPlayer(): AudioPlayer {
-		var player = this._resourceFactory.createAudioPlayer(this);
+		const player = this._resourceFactory.createAudioPlayer(this);
 		if (player.canHandleStopped()) this.players.push(player);
 
 		player.onPlay.add(this._handlePlay, this);
@@ -256,8 +256,8 @@ export class SoundAudioSystem extends AudioSystem {
 	}
 
 	findPlayers(asset: AudioAsset): AudioPlayer[] {
-		var ret: AudioPlayer[] = [];
-		for (var i = 0; i < this.players.length; ++i) {
+		const ret: AudioPlayer[] = [];
+		for (let i = 0; i < this.players.length; ++i) {
 			const currentAudio = this.players[i].currentAudio;
 			if (currentAudio && currentAudio.id === asset.id) ret.push(this.players[i]);
 		}
@@ -265,8 +265,8 @@ export class SoundAudioSystem extends AudioSystem {
 	}
 
 	stopAll(): void {
-		var players = this.players.concat();
-		for (var i = 0; i < players.length; ++i) {
+		const players = this.players.concat();
+		for (let i = 0; i < players.length; ++i) {
 			players[i].stop(); // auto remove
 		}
 	}
@@ -276,8 +276,8 @@ export class SoundAudioSystem extends AudioSystem {
 	 */
 	_reset(): void {
 		super._reset();
-		for (var i = 0; i < this.players.length; ++i) {
-			var player = this.players[i];
+		for (let i = 0; i < this.players.length; ++i) {
+			const player = this.players[i];
 			player.onPlay.remove(this._handlePlay, this);
 			player.onStop.remove(this._handleStop, this);
 		}
@@ -288,8 +288,8 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
-		var players = this.players;
-		for (var i = 0; i < players.length; ++i) {
+		const players = this.players;
+		for (let i = 0; i < players.length; ++i) {
 			players[i]._changeMuted(this._muted);
 		}
 	}
@@ -300,9 +300,9 @@ export class SoundAudioSystem extends AudioSystem {
 	_setPlaybackRate(rate: number): void {
 		super._setPlaybackRate(rate);
 
-		var players = this.players;
+		const players = this.players;
 		if (this._suppressed) {
-			for (var i = 0; i < players.length; ++i) {
+			for (let i = 0; i < players.length; ++i) {
 				players[i]._changeMuted(true);
 			}
 		}
@@ -319,7 +319,7 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_handleStop(e: AudioPlayerEvent): void {
-		var index = this.players.indexOf(e.player);
+		const index = this.players.indexOf(e.player);
 		if (index < 0) return;
 
 		e.player.onStop.remove(this._handleStop, this);
@@ -334,7 +334,7 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onVolumeChanged(): void {
-		for (var i = 0; i < this.players.length; ++i) {
+		for (let i = 0; i < this.players.length; ++i) {
 			this.players[i]._notifyVolumeChanged();
 		}
 	}

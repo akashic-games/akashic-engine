@@ -222,8 +222,8 @@ export class AssetManager implements AssetLoadHandler {
 	 * このインスタンスを破棄する。
 	 */
 	destroy(): void {
-		var assetIds = Object.keys(this._refCounts);
-		for (var i = 0; i < assetIds.length; ++i) {
+		const assetIds = Object.keys(this._refCounts);
+		for (let i = 0; i < assetIds.length; ++i) {
 			this._releaseAsset(assetIds[i]);
 		}
 		this.configuration = undefined!;
@@ -251,7 +251,7 @@ export class AssetManager implements AssetLoadHandler {
 		if (!this._loadings.hasOwnProperty(asset.id))
 			throw ExceptionFactory.createAssertionError("AssetManager#retryLoad: invalid argument.");
 
-		var loadingInfo = this._loadings[asset.id];
+		const loadingInfo = this._loadings[asset.id];
 		if (loadingInfo.errorCount > AssetManager.MAX_ERROR_COUNT) {
 			// DynamicAsset はエラーが規定回数超えた場合は例外にせず諦める。
 			if (!this.configuration[asset.id]) return;
@@ -268,9 +268,9 @@ export class AssetManager implements AssetLoadHandler {
 	 * グローバルアセットのIDを全て返す。
 	 */
 	globalAssetIds(): string[] {
-		var ret: string[] = [];
-		var conf = this.configuration;
-		for (var p in conf) {
+		const ret: string[] = [];
+		const conf = this.configuration;
+		for (let p in conf) {
 			if (!conf.hasOwnProperty(p)) continue;
 			if (conf[p].global) ret.push(p);
 		}
@@ -314,9 +314,9 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param handler 要求結果を受け取るハンドラ
 	 */
 	requestAsset(assetIdOrConf: string | DynamicAssetConfiguration, handler: AssetManagerLoadHandler): boolean {
-		var assetId = typeof assetIdOrConf === "string" ? assetIdOrConf : (<DynamicAssetConfiguration>assetIdOrConf).id;
-		var waiting = false;
-		var loadingInfo: AssetLoadingInfo;
+		const assetId = typeof assetIdOrConf === "string" ? assetIdOrConf : (<DynamicAssetConfiguration>assetIdOrConf).id;
+		let waiting = false;
+		let loadingInfo: AssetLoadingInfo;
 		if (this._assets.hasOwnProperty(assetId)) {
 			++this._refCounts[assetId];
 			handler._onAssetLoad(this._assets[assetId]);
@@ -326,7 +326,7 @@ export class AssetManager implements AssetLoadHandler {
 			++this._refCounts[assetId];
 			waiting = true;
 		} else {
-			var a = this._createAssetFor(assetIdOrConf);
+			const a = this._createAssetFor(assetIdOrConf);
 			loadingInfo = new AssetLoadingInfo(a, handler);
 			this._loadings[assetId] = loadingInfo;
 			this._refCounts[assetId] = 1;
@@ -344,7 +344,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetOrId 参照カウントを減らすアセットまたはアセットID
 	 */
 	unrefAsset(assetOrId: string | Asset): void {
-		var assetId = typeof assetOrId === "string" ? assetOrId : assetOrId.id;
+		const assetId = typeof assetOrId === "string" ? assetOrId : assetOrId.id;
 		if (--this._refCounts[assetId] > 0) return;
 		this._releaseAsset(assetId);
 	}
@@ -357,8 +357,8 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param handler 取得の結果を受け取るハンドラ
 	 */
 	requestAssets(assetIdOrConfs: (string | DynamicAssetConfiguration)[], handler: AssetManagerLoadHandler): number {
-		var waitingCount = 0;
-		for (var i = 0, len = assetIdOrConfs.length; i < len; ++i) {
+		let waitingCount = 0;
+		for (let i = 0, len = assetIdOrConfs.length; i < len; ++i) {
 			if (this.requestAsset(assetIdOrConfs[i], handler)) {
 				++waitingCount;
 			}
@@ -374,7 +374,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @private
 	 */
 	unrefAssets(assetOrIds: (string | Asset)[]): void {
-		for (var i = 0, len = assetOrIds.length; i < len; ++i) {
+		for (let i = 0, len = assetOrIds.length; i < len; ++i) {
 			this.unrefAsset(assetOrIds[i]);
 		}
 	}
@@ -444,11 +444,11 @@ export class AssetManager implements AssetLoadHandler {
 	 * @ignore
 	 */
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
-		var ret: { [key: string]: AssetConfiguration } = {};
+		const ret: { [key: string]: AssetConfiguration } = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
-		for (var p in configuration) {
+		for (let p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
-			var conf = <AssetConfiguration>Object.create(configuration[p]);
+			const conf = <AssetConfiguration>Object.create(configuration[p]);
 			if (!conf.path) {
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
 			}
@@ -509,28 +509,30 @@ export class AssetManager implements AssetLoadHandler {
 	 * @private
 	 */
 	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAsset {
-		var id: string;
-		var uri: string;
-		var conf: AssetConfiguration | DynamicAssetConfiguration;
+		let id: string;
+		let uri: string;
+		let conf: AssetConfiguration | DynamicAssetConfiguration;
 		if (typeof idOrConf === "string") {
 			id = idOrConf;
 			conf = this.configuration[id];
 			uri = this.configuration[id].path;
 		} else {
-			var dynConf = idOrConf;
+			let dynConf = idOrConf;
 			id = dynConf.id;
 			conf = dynConf;
 			uri = dynConf.uri;
 		}
-		var resourceFactory = this._resourceFactory;
+		const resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 		switch (conf.type) {
 			case "image":
-				var asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+				const asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 				asset.initialize(<ImageAssetHint>conf.hint);
 				return asset;
 			case "audio":
-				var system = conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
+				const system = conf.systemId
+					? this._audioSystemManager[conf.systemId]
+					: this._audioSystemManager[this._defaultAudioSystemId];
 				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, !!conf.loop, <AudioAssetHint>conf.hint);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
@@ -601,8 +603,8 @@ export class AssetManager implements AssetLoadHandler {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
-		var loadingInfo = this._loadings[asset.id];
-		var hs = loadingInfo.handlers;
+		const loadingInfo = this._loadings[asset.id];
+		const hs = loadingInfo.handlers;
 		loadingInfo.loading = false;
 		++loadingInfo.errorCount;
 
@@ -610,7 +612,7 @@ export class AssetManager implements AssetLoadHandler {
 			error = ExceptionFactory.createAssetLoadError("Retry limit exceeded", false, null, error);
 		}
 		if (!error.retriable) delete this._loadings[asset.id];
-		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetError(asset, error, this.retryLoad.bind(this));
+		for (let i = 0; i < hs.length; ++i) hs[i]._onAssetError(asset, error, this.retryLoad.bind(this));
 	}
 
 	/**
@@ -620,7 +622,7 @@ export class AssetManager implements AssetLoadHandler {
 		// ロード中に Scene が破棄されていた場合などで、asset が破棄済みになることがある
 		if (this.destroyed() || asset.destroyed()) return;
 
-		var loadingInfo = this._loadings[asset.id];
+		const loadingInfo = this._loadings[asset.id];
 		loadingInfo.loading = false;
 
 		delete this._loadings[asset.id];
@@ -638,8 +640,8 @@ export class AssetManager implements AssetLoadHandler {
 			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = virtualPath;
 		}
 
-		var hs = loadingInfo.handlers;
-		for (var i = 0; i < hs.length; ++i) hs[i]._onAssetLoad(asset);
+		const hs = loadingInfo.handlers;
+		for (let i = 0; i < hs.length; ++i) hs[i]._onAssetLoad(asset);
 	}
 
 	/**

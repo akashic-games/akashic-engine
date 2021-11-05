@@ -106,11 +106,11 @@ export class TimerManager {
 	}
 
 	destroy(): void {
-		for (var i = 0; i < this._identifiers.length; ++i) {
+		for (let i = 0; i < this._identifiers.length; ++i) {
 			this._identifiers[i].destroy();
 		}
 
-		for (var i = 0; i < this._timers.length; ++i) {
+		for (let i = 0; i < this._timers.length; ++i) {
 			this._timers[i].destroy();
 		}
 
@@ -142,8 +142,8 @@ export class TimerManager {
 
 		// NOTE: Timerの_scaledElapsedと比較するため、this.fps倍した値を用いる
 		// Math.min(1000 / this._fps * this.fps, interval * this._fps);
-		var acceptableMargin = Math.min(1000, interval * this._fps);
-		for (var i = 0; i < this._timers.length; ++i) {
+		const acceptableMargin = Math.min(1000, interval * this._fps);
+		for (let i = 0; i < this._timers.length; ++i) {
 			if (this._timers[i].interval === interval) {
 				if (this._timers[i]._scaledElapsed < acceptableMargin) {
 					return this._timers[i];
@@ -151,7 +151,7 @@ export class TimerManager {
 			}
 		}
 
-		var timer = new Timer(interval, this._fps);
+		const timer = new Timer(interval, this._fps);
 		this._timers.push(timer);
 
 		return timer;
@@ -164,7 +164,7 @@ export class TimerManager {
 	deleteTimer(timer: Timer): void {
 		if (!timer.canDelete()) return;
 
-		var index = this._timers.indexOf(timer);
+		const index = this._timers.indexOf(timer);
 		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: can not find timer");
 
 		this._timers.splice(index, 1);
@@ -178,8 +178,8 @@ export class TimerManager {
 	}
 
 	setTimeout(handler: () => void, milliseconds: number, owner?: any): TimerIdentifier {
-		var timer = this.createTimer(milliseconds);
-		var identifier = new TimerIdentifier(timer, handler, owner, this._onTimeoutFired, this);
+		const timer = this.createTimer(milliseconds);
+		const identifier = new TimerIdentifier(timer, handler, owner, this._onTimeoutFired, this);
 		this._identifiers.push(identifier);
 		return identifier;
 	}
@@ -189,8 +189,8 @@ export class TimerManager {
 	}
 
 	setInterval(handler: () => void, interval: number, owner?: any): TimerIdentifier {
-		var timer = this.createTimer(interval);
-		var identifier = new TimerIdentifier(timer, handler, owner);
+		const timer = this.createTimer(interval);
+		const identifier = new TimerIdentifier(timer, handler, owner);
 		this._identifiers.push(identifier);
 		return identifier;
 	}
@@ -204,20 +204,20 @@ export class TimerManager {
 	 * @private
 	 */
 	_tick(): void {
-		var timers = this._timers.concat();
-		for (var i = 0; i < timers.length; ++i) timers[i].tick();
+		const timers = this._timers.concat();
+		for (let i = 0; i < timers.length; ++i) timers[i].tick();
 	}
 
 	/**
 	 * @private
 	 */
 	_onTimeoutFired(identifier: TimerIdentifier): void {
-		var index = this._identifiers.indexOf(identifier);
+		const index = this._identifiers.indexOf(identifier);
 		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#_onTimeoutFired: can not find identifier");
 
 		this._identifiers.splice(index, 1);
 
-		var timer = identifier._timer;
+		const timer = identifier._timer;
 		identifier.destroy();
 		this.deleteTimer(timer);
 	}
@@ -226,14 +226,14 @@ export class TimerManager {
 	 * @private
 	 */
 	_clear(identifier: TimerIdentifier): void {
-		var index = this._identifiers.indexOf(identifier);
+		const index = this._identifiers.indexOf(identifier);
 		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#_clear: can not find identifier");
 
 		if (identifier.destroyed()) throw ExceptionFactory.createAssertionError("TimerManager#_clear: invalid identifier");
 
 		this._identifiers.splice(index, 1);
 
-		var timer = identifier._timer;
+		const timer = identifier._timer;
 		identifier.destroy();
 		this.deleteTimer(timer);
 	}
