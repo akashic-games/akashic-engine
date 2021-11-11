@@ -1255,7 +1255,7 @@ export class Game {
 	 * @param owner fun の呼び出し時に `this` として使われる値。指定しなかった場合、 `undefined` 。
 	 */
 	requestSaveSnapshot(fun: () => SnapshotSaveRequest | null, owner?: any): void {
-		// 他の箇所と異なりpush でなく unshift しているのは、他の処理 (シーン遷移処理) と重なった時に先行するため。
+		// 他の箇所と異なり push でなく unshift しているのは、他の処理 (シーン遷移処理) と重なった時に先行するため。
 		// 効率はよくないが、このメソッドの利用頻度が低いこと、シーン遷移処理などと重なる可能性も低いことから許容。
 		this._postTickTasks.unshift({
 			type: PostTickTaskType.Call,
