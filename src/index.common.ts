@@ -63,6 +63,7 @@ export * from "./RequireCacheable";
 export * from "./RequireCachedValue";
 export * from "./ScriptAssetContext";
 export * from "./ShaderProgram";
+export * from "./SnapshotSaveRequest";
 export * from "./SpriteFactory";
 export * from "./Storage";
 export * from "./SurfaceAtlas";

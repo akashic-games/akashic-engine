@@ -32,6 +32,7 @@ import { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import { PointEventResolver } from "./PointEventResolver";
 import { RandomGenerator } from "./RandomGenerator";
 import { Scene } from "./Scene";
+import { SnapshotSaveRequest } from "./SnapshotSaveRequest";
 import { Storage } from "./Storage";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { TickGenerationModeString } from "./TickGenerationModeString";
@@ -251,7 +252,7 @@ export interface GameParameterObject {
  * 4. ゲームのメタ情報を確認するため、Game#width, Game#height, Game#fpsにアクセスする
  * 5. グローバルアセットを取得するため、Game#assetsにアクセスする
  * 6. LoadingSceneを変更するため、Game#loadingSceneにゲーム開発者の定義したLoadingSceneを指定する
- * 7. スナップショットに対応するため、Game#saveSnapshot()を呼び出す
+ * 7. スナップショットに対応するため、Game#requestSaveSnapshot()を呼び出す
  * 8. 現在フォーカスされているCamera情報を得るため、Game#focusingCameraにアクセスする
  * 9. AudioSystemを直接制御するため、Game#audioにアクセスする
  * 10.Sceneのスタック情報を調べるため、Game#scenesにアクセスする
@@ -1206,6 +1207,8 @@ export class Game {
 	 *
 	 * スナップショット保存に対応するゲームは、このメソッドが真を返す時にのみ `Game#saveSnapshot()` を呼び出すべきである。
 	 * 戻り値は、スナップショットの保存を行うべきであれば真、でなければ偽である。
+	 *
+	 * @deprecated 非推奨。非推奨の `saveSnapshot()` 利用時にしか必要ないため。アクティブインスタンスの判定には `isActiveInstance()` を用いること。
 	 */
 	shouldSaveSnapshot(): boolean {
 		return this.handlerSet.shouldSaveSnapshot();
@@ -1225,9 +1228,41 @@ export class Game {
 	 *
 	 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
+	 * @deprecated 非推奨。互換性のために残されているが、この API では適切なタイミングのスナップショット保存ができない場合があることがわかっている。代わりに `requestSaveSnapshot()` を利用すること。
 	 */
 	saveSnapshot(snapshot: any, timestamp?: number): void {
 		this.handlerSet.saveSnapshot(this.age, snapshot, this.random.serialize(), this._idx, timestamp);
+	}
+
+	/**
+	 * スナップショットの保存を要求する。
+	 *
+	 * 引数として与えた関数 `fun()` がフレームの終了時に呼び出される。
+	 * `fun()` の返した値に基づいてスナップショットが保存される。
+	 * 1 フレーム中に複数回呼び出した時、引数に与えた関数 `fun()` の呼び出し順は保証されない。
+	 *
+	 * このメソッドで保存されたスナップショットは、
+	 * main スクリプト (ゲーム開始時に最初に実行されるスクリプト) の関数に、
+	 * 引数 (の `snapshot` プロパティ) として与えられる場合がある。
+	 * (e.g. マルチプレイのゲームプレイ画面を途中から開いた場合)
+	 * スナップショットが与えられた場合、ゲームはそのスナップショットから保存時の実行状態を復元しなければならない。
+	 *
+	 * @param fun フレーム終了時に呼び出す関数。
+	 * @param owner fun の呼び出し時に `this` として使われる値。指定しなかった場合、 `undefined` 。
+	 */
+	requestSaveSnapshot(fun: () => SnapshotSaveRequest, owner?: any): void {
+		// 他の箇所と異なりpush でなく unshift しているのは、他の処理 (シーン遷移処理) と重なった時に先行するため。
+		// 効率はよくないが、このメソッドの利用頻度が低いこと、シーン遷移処理などと重なる可能性も低いことから許容。
+		this._postTickTasks.unshift({
+			type: PostTickTaskType.Call,
+			fun: () => {
+				if (!this.handlerSet.shouldSaveSnapshot()) return;
+				const req = fun.call(owner);
+				if (!req) return;
+				this.handlerSet.saveSnapshot(this.age, req.snapshot, this.random.serialize(), this._idx, req.timestamp);
+			},
+			owner: null
+		});
 	}
 
 	/**
