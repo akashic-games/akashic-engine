@@ -1,5 +1,14 @@
 # ChangeLog
 
+## (unreleased changes)
+
+機能追加
+ * `g.Game#requestSaveSnapshot()` を追加
+
+非推奨機能の追加
+ * `g.Game#shouldSaveSnapshot()` を非推奨に
+ * `g.Game#saveSnapshot()` を非推奨に
+
 ## 3.2.1
 
 不具合修正
