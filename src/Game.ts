@@ -1208,7 +1208,7 @@ export class Game {
 	 * スナップショット保存に対応するゲームは、このメソッドが真を返す時にのみ `Game#saveSnapshot()` を呼び出すべきである。
 	 * 戻り値は、スナップショットの保存を行うべきであれば真、でなければ偽である。
 	 *
-	 * @deprecated 非推奨。`saveSnapshot()` (非推奨) の利用時にしか必要ないため。アクティブインスタンスの判定には `isActiveInstance()` を用いること。
+	 * @deprecated 非推奨である。`saveSnapshot()` (非推奨) の利用時にしか必要ないため。アクティブインスタンスの判定には `isActiveInstance()` を用いること。
 	 */
 	shouldSaveSnapshot(): boolean {
 		return this.handlerSet.shouldSaveSnapshot();
@@ -1228,7 +1228,7 @@ export class Game {
 	 *
 	 * @param snapshot 保存するスナップショット。JSONとして妥当な値でなければならない。
 	 * @param timestamp 保存時の時刻。 `g.TimestampEvent` を利用するゲームの場合、それらと同じ基準の時間情報を与えなければならない。
-	 * @deprecated 非推奨。互換性のために残されているが、この関数では適切なタイミングのスナップショット保存ができない場合がある。代わりに `requestSaveSnapshot()` を利用すること。
+	 * @deprecated 非推奨である。互換性のために残されているが、この関数では適切なタイミングのスナップショット保存ができない場合がある。代わりに `requestSaveSnapshot()` を利用すること。
 	 */
 	saveSnapshot(snapshot: any, timestamp?: number): void {
 		this.handlerSet.saveSnapshot(this.age, snapshot, this.random.serialize(), this._idx, timestamp);
