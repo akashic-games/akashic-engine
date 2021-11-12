@@ -1239,30 +1239,27 @@ export class Game {
 	 *
 	 * (`saveSnapshot()` と同じ機能だが、インターフェースが異なる。こちらを利用すること。)
 	 *
-	 * 引数として与えた関数 `fun()` がフレームの終了時に呼び出される。
-	 * エンジンは、`fun()` の返した値に基づいて、実行環境にスナップショットの保存に要求する。
+	 * 引数として与えた関数 `func()` がフレームの終了時に呼び出される。
+	 * エンジンは、`func()` の返した値に基づいて、実行環境にスナップショットの保存を要求する。
 	 *
-	 * このメソッドで保存されたスナップショットは、
-	 * main スクリプト (ゲーム開始時に最初に実行されるスクリプト) の関数に、
-	 * 引数 (の `snapshot` プロパティ) として与えられる場合がある。
-	 * (e.g. マルチプレイのゲームプレイ画面を途中から開いた場合)
-	 * スナップショットが与えられた場合、ゲームはそのスナップショットから保存時の実行状態を復元しなければならない。
+	 * 保存されたスナップショットは、必要に応じてゲームの起動時に与えられる。
+	 * 詳細は `g.GameMainParameterObject` を参照のこと。
 	 *
-	 * このメソッドを 1 フレーム中に複数回呼び出した場合、引数に与えた関数 `fun()` の呼び出し順は保証されない。
+	 * このメソッドを 1 フレーム中に複数回呼び出した場合、引数に与えた関数 `func()` の呼び出し順は保証されない。
 	 * (スナップショットはフレームごとに定まるので、1フレーム中に複数回呼び出す必要はない。)
 	 *
-	 * @param fun フレーム終了時に呼び出す関数。 `SnapshotSaveRequest` を返した場合、スナップショット保存が要求される。
-	 * @param owner fun の呼び出し時に `this` として使われる値。指定しなかった場合、 `undefined` 。
+	 * @param func フレーム終了時に呼び出す関数。 `SnapshotSaveRequest` を返した場合、スナップショット保存が要求される。
+	 * @param owner func の呼び出し時に `this` として使われる値。指定しなかった場合、 `undefined` 。
 	 */
-	requestSaveSnapshot(fun: () => SnapshotSaveRequest | null, owner?: any): void {
+	requestSaveSnapshot(func: () => SnapshotSaveRequest | null, owner?: any): void {
 		// 他の箇所と異なり push でなく unshift しているのは、他の処理 (シーン遷移処理) と重なった時に先行するため。
-		// 効率はよくないが、このメソッドの利用頻度が低いこと、シーン遷移処理などと重なる可能性も低いことから許容。
+		// 効率はよくないが、このメソッドの利用頻度は高くないので許容。
 		this._postTickTasks.unshift({
 			type: PostTickTaskType.Call,
 			fun: () => {
 				if (!this.handlerSet.shouldSaveSnapshot()) return;
-				const req = fun.call(owner);
-				if (!req) return;
+				const req = func.call(owner);
+				if (!req) return; // (null に限らず) falsy は全部弾く。空の値を保存しても不具合の温床にしかならないため。
 				this.handlerSet.saveSnapshot(this.age, req.snapshot, this.random.serialize(), this._idx, req.timestamp);
 			},
 			owner: null
