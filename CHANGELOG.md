@@ -1,6 +1,6 @@
 # ChangeLog
 
-## (unreleased changes)
+## 3.2.2
 
 機能追加
  * `g.Game#requestSaveSnapshot()` を追加
