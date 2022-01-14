@@ -334,6 +334,7 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 
 export class AudioAsset extends pci.AudioAsset {
 	_failureController: LoadFailureController;
+	_inUse: boolean = false;
 
 	constructor(
 		necessaryRetryCount: number,
@@ -346,6 +347,10 @@ export class AudioAsset extends pci.AudioAsset {
 	) {
 		super(id, assetPath, duration, system, loop, hint);
 		this._failureController = new LoadFailureController(necessaryRetryCount);
+	}
+
+	inUse(): boolean {
+		return this._inUse;
 	}
 
 	_load(loader: AssetLoadHandler): void {

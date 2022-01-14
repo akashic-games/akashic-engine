@@ -331,7 +331,7 @@ export class AssetManager implements AssetLoadHandler {
 			const audioAsset = system?.getDestroyRequestedAsset(assetId);
 			if (system && audioAsset) {
 				system.cancelRequestDestroy(audioAsset);
-				this._assets[assetId] = audioAsset;
+				this._addAssetToTables(audioAsset);
 				this._refCounts[assetId] = 1;
 				handler._onAssetLoad(audioAsset);
 			} else {
@@ -636,19 +636,7 @@ export class AssetManager implements AssetLoadHandler {
 		loadingInfo.loading = false;
 
 		delete this._loadings[asset.id];
-		this._assets[asset.id] = asset;
-
-		// DynamicAsset の場合は configuration に書かれていないので以下の判定が偽になる
-		if (this.configuration[asset.id]) {
-			const virtualPath = this.configuration[asset.id].virtualPath;
-			if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
-				this._liveAssetVirtualPathTable[virtualPath] = asset;
-			} else {
-				if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
-					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
-			}
-			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = virtualPath;
-		}
+		this._addAssetToTables(asset);
 
 		const hs = loadingInfo.handlers;
 		for (let i = 0; i < hs.length; ++i) hs[i]._onAssetLoad(asset);
@@ -694,5 +682,24 @@ export class AssetManager implements AssetLoadHandler {
 		}
 
 		return conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
+	}
+
+	/**
+	 * @private
+	 */
+	_addAssetToTables(asset: OneOfAsset): void {
+		this._assets[asset.id] = asset;
+
+		// DynamicAsset の場合は configuration に書かれていないので以下の判定が偽になる
+		if (this.configuration[asset.id]) {
+			const virtualPath = this.configuration[asset.id].virtualPath;
+			if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
+				this._liveAssetVirtualPathTable[virtualPath] = asset;
+			} else {
+				if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
+					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+			}
+			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = virtualPath;
+		}
 	}
 }
