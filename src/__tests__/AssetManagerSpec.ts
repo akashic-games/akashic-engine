@@ -537,9 +537,8 @@ describe("test AssetManager", () => {
 				asset._inUse = true; // NOTE: AudioSystem#requestDestroy() 時に破棄されないように inUse() フラグを立てる
 				let _asset = asset;
 				const system = asset._system as AudioSystem;
-				system.requestDestroy(asset);
-				expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();
 				manager.unrefAsset("testAsset");
+				expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();
 				manager.requestAsset("testAsset", {
 					_onAssetError: () => {
 						done.fail();
