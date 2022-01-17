@@ -534,7 +534,7 @@ describe("test AssetManager", () => {
 			},
 			_onAssetLoad: () => {
 				const asset = manager.peekLiveAssetByAccessorPath("/path/to/virtual/file", "audio") as AudioAsset;
-				asset._inUse = true; // NOTE: inUse() フラグを立てないと AudioSystem#requestDestroy() 時に破棄されてしまう
+				asset._inUse = true; // NOTE: AudioSystem#requestDestroy() 時に破棄されないように inUse() フラグを立てる
 				let _asset = asset;
 				const system = asset._system as AudioSystem;
 				system.requestDestroy(asset);
