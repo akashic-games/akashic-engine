@@ -4,6 +4,9 @@
         "@akashic/eslint-config",
         "prettier"
     ],
+    "plugins": [
+        "prettier"
+    ],
     "parserOptions": {
         "project": "tsconfig.eslint.json",
         "sourceType": "module"
