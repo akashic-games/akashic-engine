@@ -63,7 +63,7 @@ describe("test AssetManager", () => {
 			sliced2: {
 				type: "image",
 				path: "/path3.png",
-				virtualPath: "path3.png",
+				virtualPath: "path3-slice1.png",
 				width: 10,
 				height: 10,
 				slice: [3, 1, 6, 8]
