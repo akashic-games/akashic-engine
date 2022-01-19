@@ -1,10 +1,17 @@
-import { AssetConfiguration, AssetConfigurationMap, AudioSystemConfigurationMap, ModuleMainScriptsMap } from "@akashic/game-configuration";
+import {
+	AssetConfiguration,
+	AssetConfigurationMap,
+	AudioSystemConfigurationMap,
+	ModuleMainScriptsMap,
+	ShortenedCommonArea
+} from "@akashic/game-configuration";
 import {
 	Asset,
 	AssetLoadHandler,
 	AudioAssetHint,
 	AudioAsset,
 	AssetLoadError,
+	CommonArea,
 	ImageAssetHint,
 	ImageAsset,
 	ResourceFactory,
@@ -17,6 +24,7 @@ import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import { AudioSystem } from "./AudioSystem";
 import { AudioSystemManager } from "./AudioSystemManager";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
+import { PartialImageAsset } from "./auxiliary/PartialImageAsset";
 import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
@@ -473,6 +481,7 @@ export class AssetManager implements AssetLoadHandler {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong width given for the image asset: " + p);
 				if (typeof conf.height !== "number")
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong height given for the image asset: " + p);
+				conf.slice = conf.slice ? normalizeCommonArea(conf.slice) : undefined;
 			}
 			if (conf.type === "audio") {
 				// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
@@ -536,7 +545,9 @@ export class AssetManager implements AssetLoadHandler {
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
 		switch (conf.type) {
 			case "image":
-				const asset = resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
+				const asset = conf.slice
+					? new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, conf.slice as CommonArea) // _normalize() で CommonArea になっている
+					: resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 				asset.initialize(<ImageAssetHint>conf.hint);
 				return asset;
 			case "audio":
@@ -695,4 +706,8 @@ export class AssetManager implements AssetLoadHandler {
 
 		return conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
 	}
+}
+
+function normalizeCommonArea(area: CommonArea | ShortenedCommonArea): CommonArea {
+	return Array.isArray(area) ? { x: area[0], y: area[1], width: area[2], height: area[3] } : area;
 }
