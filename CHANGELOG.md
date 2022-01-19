@@ -1,5 +1,10 @@
 # ChangeLog
 
+## (unreleased changes)
+
+機能追加
+ * `PartialImageAsset` を追加。game.json の画像アセット定義に `slice` が指定されていた時、その部分のみを画像アセットとして使うように
+
 ## 3.2.2
 
 機能追加
