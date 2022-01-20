@@ -7,13 +7,11 @@ import {
 	GameConfiguration,
 	Asset,
 	ScriptAsset,
-	AudioAsset,
 	ImageAsset,
-	ImageAssetConfigurationBase,
-	DynamicAssetConfiguration
+	ImageAssetConfigurationBase
 } from "..";
 import { PartialImageAsset } from "../auxiliary/PartialImageAsset";
-import { customMatchers, Game, Surface } from "./helpers";
+import { AudioAsset, customMatchers, Game, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -505,7 +503,7 @@ describe("test AssetManager", () => {
 		});
 	});
 
-	it("can be instanciated without configuration", () => {
+	it("can be instantiated without configuration", () => {
 		const game = new Game(gameConfiguration);
 		const manager = new AssetManager(game);
 		expect(manager.configuration).toEqual({});
@@ -587,30 +585,36 @@ describe("test AssetManager", () => {
 	});
 
 	it("reuse instantiated asset if it's in destroyRequested", done => {
-		const game = new Game(gameConfiguration);
-		const manager = new AssetManager(game);
-		const assetConfig: DynamicAssetConfiguration = {
-			id: "testDynamicAsset",
-			type: "audio",
-			systemId: "music",
-			duration: 1230,
-			uri: "http://dummy.example/unused-name"
+		const assetMap: AssetConfigurationMap = {
+			testAsset: {
+				type: "audio",
+				duration: 100,
+				path: "/path/to/real/file",
+				virtualPath: "path/to/virtual/file",
+				systemId: "sound"
+			}
 		};
-		manager.requestAsset(assetConfig, {
+
+		const game = new Game(gameConfiguration);
+		const manager = new AssetManager(game, assetMap);
+
+		manager.requestAsset("testAsset", {
 			_onAssetError: () => {
 				done.fail();
 			},
-			_onAssetLoad: (asset: AudioAsset) => {
+			_onAssetLoad: () => {
+				const asset = manager.peekLiveAssetByAccessorPath("/path/to/virtual/file", "audio") as AudioAsset;
+				asset._inUse = true; // NOTE: AudioSystem#requestDestroy() 時に破棄されないように inUse() フラグを立てる
 				let _asset = asset;
 				const system = asset._system as AudioSystem;
-				system.requestDestroy(asset);
+				manager.unrefAsset("testAsset");
 				expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();
-				manager.unrefAsset("testDynamicAsset");
-				manager.requestAsset(assetConfig, {
+				manager.requestAsset("testAsset", {
 					_onAssetError: () => {
 						done.fail();
 					},
-					_onAssetLoad: (asset: AudioAsset) => {
+					_onAssetLoad: () => {
+						const asset = manager.peekLiveAssetByAccessorPath("/path/to/virtual/file", "audio") as AudioAsset;
 						expect(asset).toBe(_asset);
 						expect(system.getDestroyRequestedAsset(asset.id)).toBeNull();
 						done();
