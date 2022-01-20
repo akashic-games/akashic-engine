@@ -359,9 +359,11 @@ describe("test AssetManager", () => {
 			_onAssetLoad: (a: ImageAsset) => {
 				expect(a.id).toBe("sliced");
 				expect(a).toBeInstanceOf(PartialImageAsset);
+				expect(a.width).toBe(4); // 値は gameConfiguration.assets.sliced2 に由来。width ではなく slice.width が入る
+				expect(a.height).toBe(5); // 同上
 				const surface = a.asSurface();
-				expect(surface.width).toBe(4); // 値は gameConfiguration.assets.sliced に由来
-				expect(surface.height).toBe(5); // 同上
+				expect(surface.width).toBe(4);
+				expect(surface.height).toBe(5);
 				done();
 			},
 			_onAssetError: () => {
@@ -380,9 +382,11 @@ describe("test AssetManager", () => {
 			_onAssetLoad: (a: ImageAsset) => {
 				expect(a.id).toBe("sliced2");
 				expect(a).toBeInstanceOf(PartialImageAsset);
+				expect(a.width).toBe(6); // 値は gameConfiguration.assets.sliced2 に由来。width ではなく slice.width が入る
+				expect(a.height).toBe(8); // 同上
 				const surface = a.asSurface();
-				expect(surface.width).toBe(6); // 値は gameConfiguration.assets.sliced2 に由来
-				expect(surface.height).toBe(8); // 同上
+				expect(surface.width).toBe(6);
+				expect(surface.height).toBe(8);
 				done();
 			},
 			_onAssetError: () => {

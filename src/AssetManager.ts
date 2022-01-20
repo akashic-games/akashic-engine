@@ -3,7 +3,7 @@ import {
 	AssetConfigurationMap,
 	AudioSystemConfigurationMap,
 	ModuleMainScriptsMap,
-	ShortenedCommonArea
+	CommonAreaShortened
 } from "@akashic/game-configuration";
 import {
 	Asset,
@@ -73,6 +73,10 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap = {}):
 	}
 
 	return confMap;
+}
+
+function normalizeCommonArea(area: CommonArea | CommonAreaShortened): CommonArea {
+	return Array.isArray(area) ? { x: area[0], y: area[1], width: area[2], height: area[3] } : area;
 }
 
 /**
@@ -706,8 +710,4 @@ export class AssetManager implements AssetLoadHandler {
 
 		return conf.systemId ? this._audioSystemManager[conf.systemId] : this._audioSystemManager[this._defaultAudioSystemId];
 	}
-}
-
-function normalizeCommonArea(area: CommonArea | ShortenedCommonArea): CommonArea {
-	return Array.isArray(area) ? { x: area[0], y: area[1], width: area[2], height: area[3] } : area;
 }

@@ -14,7 +14,7 @@ import { ExceptionFactory } from "../ExceptionFactory";
 /**
  * 部分画像アセット。
  *
- * `resourceFacotory.createImageAsset()` で生成されるアセットをラップし、`slice` で指定される領域の画像アセットとして振る舞う。
+ * `resourceFacotory.createImageAsset()` で生成したアセットをラップし、`slice` で指定される領域の画像アセットとして振る舞う。
  * 通常、ゲーム開発者がこのクラスを生成する必要はない。
  */
 export class PartialImageAsset implements ImageAsset {
@@ -34,12 +34,19 @@ export class PartialImageAsset implements ImageAsset {
 	_surface: Surface | null = null;
 	_loadHandler: AssetLoadHandler | null = null;
 
+	/**
+	 * 部分画像アセットを生成する。
+	 *
+	 * `createImageAsset()` と異なり、 `slice` で指定された領域の画像アセットとして振る舞うため、
+	 * `this.width`, `this.height` が引数の `width`, height` ではなく `slice` の値で初期化される点に注意。
+	 * (`width`, `height` は元になる画像アセットの生成に使われる)
+	 */
 	constructor(resourceFactory: ResourceFactory, id: string, uri: string, width: number, height: number, slice: CommonArea) {
 		this.id = id;
 		this.path = uri;
 		this.originalPath = uri;
-		this.width = width;
-		this.height = height;
+		this.width = slice.width;
+		this.height = slice.height;
 		this._slice = slice;
 		this._resourceFactory = resourceFactory;
 
@@ -48,7 +55,7 @@ export class PartialImageAsset implements ImageAsset {
 	}
 
 	initialize(hint: ImageAssetHint | undefined): void {
-		this.hint = hint;
+		this.hint = hint; // 自分では使わないが、外部観測的に `ImageAsset` と合うように代入しておく
 		this._src.initialize(hint);
 	}
 
