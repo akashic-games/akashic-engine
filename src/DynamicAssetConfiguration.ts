@@ -1,4 +1,4 @@
-import { AssetConfigurationCommonBase, ShortenedCommonArea } from "@akashic/game-configuration";
+import { AssetConfigurationCommonBase, CommonAreaShortened } from "@akashic/game-configuration";
 import { AudioAssetHint, ImageAssetHint, CommonArea } from "@akashic/pdi-types";
 
 export type DynamicAssetConfiguration =
@@ -53,7 +53,7 @@ export interface DynamicImageAssetConfigurationBase extends DynamicAssetConfigur
 	 * 切り出す領域。
 	 * 指定した場合、その部分だけの画像アセットとして扱う。
 	 */
-	slice?: CommonArea | ShortenedCommonArea;
+	slice?: CommonArea | CommonAreaShortened;
 }
 
 /**
