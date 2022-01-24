@@ -69,6 +69,7 @@ export class PartialImageAsset implements ImageAsset {
 		}
 		this.onDestroyed.fire(this);
 		this._src.destroy();
+		this._src = null!;
 		this._slice = null!;
 		this._resourceFactory = null!;
 		this._surface = null;
@@ -78,7 +79,7 @@ export class PartialImageAsset implements ImageAsset {
 	}
 
 	destroyed(): boolean {
-		return this._src.destroyed();
+		return !this._src;
 	}
 
 	asSurface(): Surface {

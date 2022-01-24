@@ -11,7 +11,7 @@ import {
 	ImageAssetConfigurationBase
 } from "..";
 import { PartialImageAsset } from "../auxiliary/PartialImageAsset";
-import { AudioAsset, customMatchers, Game, Surface } from "./helpers";
+import { AudioAsset, customMatchers, Game, Surface, Renderer } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -357,11 +357,22 @@ describe("test AssetManager", () => {
 			_onAssetLoad: (a: ImageAsset) => {
 				expect(a.id).toBe("sliced");
 				expect(a).toBeInstanceOf(PartialImageAsset);
-				expect(a.width).toBe(4); // 値は gameConfiguration.assets.sliced2 に由来。width ではなく slice.width が入る
+				expect(a.width).toBe(4); // 値は gameConfiguration.assets.sliced に由来。width ではなく slice.width が入る
 				expect(a.height).toBe(5); // 同上
 				const surface = a.asSurface();
 				expect(surface.width).toBe(4);
 				expect(surface.height).toBe(5);
+				const history = (surface.renderer() as Renderer).methodCallParamsHistory("drawImage");
+				expect(history.length).toBe(1);
+				expect(history[0].surface).toBe((a as PartialImageAsset)._src.asSurface());
+				expect(history[0]).toMatchObject({
+					offsetX: 2,
+					offsetY: 3,
+					width: 4,
+					height: 5,
+					canvasOffsetX: 0,
+					canvasOffsetY: 0
+				});
 				done();
 			},
 			_onAssetError: () => {
@@ -385,6 +396,17 @@ describe("test AssetManager", () => {
 				const surface = a.asSurface();
 				expect(surface.width).toBe(6);
 				expect(surface.height).toBe(8);
+				const history = (surface.renderer() as Renderer).methodCallParamsHistory("drawImage");
+				expect(history.length).toBe(1);
+				expect(history[0].surface).toBe((a as PartialImageAsset)._src.asSurface());
+				expect(history[0]).toMatchObject({
+					offsetX: 3,
+					offsetY: 1,
+					width: 6,
+					height: 8,
+					canvasOffsetX: 0,
+					canvasOffsetY: 0
+				});
 				done();
 			},
 			_onAssetError: () => {
