@@ -10,7 +10,8 @@ import {
 	ImageAsset,
 	ImageAssetConfigurationBase
 } from "..";
-import { AudioAsset, customMatchers, Game, Surface } from "./helpers";
+import { PartialImageAsset } from "../auxiliary/PartialImageAsset";
+import { AudioAsset, customMatchers, Game, Surface, Renderer } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -43,6 +44,27 @@ describe("test AssetManager", () => {
 				hint: {
 					untainted: true
 				}
+			},
+			sliced: {
+				type: "image",
+				path: "/path3.png",
+				virtualPath: "path3.png",
+				width: 10,
+				height: 10,
+				slice: {
+					x: 2,
+					y: 3,
+					width: 4,
+					height: 5
+				}
+			},
+			sliced2: {
+				type: "image",
+				path: "/path3.png",
+				virtualPath: "path3-slice1.png",
+				width: 10,
+				height: 10,
+				slice: [3, 1, 6, 8]
 			},
 			zoo: {
 				type: "audio",
@@ -86,6 +108,8 @@ describe("test AssetManager", () => {
 
 		expect(manager.configuration.foo.path).toBe(assets.foo.path);
 		expect(manager.configuration.bar.path).toBe(assets.bar.path);
+		expect(manager.configuration.sliced.path).toBe(assets.sliced.path);
+		expect(manager.configuration.sliced2.path).toBe(assets.sliced2.path);
 		expect(manager.configuration.zoo.path).toBe(assets.zoo.path);
 		expect(manager.configuration.baz.path).toBe(assets.baz.path);
 		expect(manager.configuration.qux.path).toBe(assets.qux.path);
@@ -323,6 +347,74 @@ describe("test AssetManager", () => {
 			}
 		};
 		manager.requestAssets(outerAssets, handlerOuter);
+	});
+
+	it("can instantiate PartialImageAsset", done => {
+		const game = new Game(gameConfiguration);
+		const manager = game._assetManager;
+
+		const handler: AssetManagerLoadHandler = {
+			_onAssetLoad: (a: ImageAsset) => {
+				expect(a.id).toBe("sliced");
+				expect(a).toBeInstanceOf(PartialImageAsset);
+				expect(a.width).toBe(4); // 値は gameConfiguration.assets.sliced に由来。width ではなく slice.width が入る
+				expect(a.height).toBe(5); // 同上
+				const surface = a.asSurface();
+				expect(surface.width).toBe(4);
+				expect(surface.height).toBe(5);
+				const history = (surface.renderer() as Renderer).methodCallParamsHistory("drawImage");
+				expect(history.length).toBe(1);
+				expect(history[0].surface).toBe((a as PartialImageAsset)._src.asSurface());
+				expect(history[0]).toMatchObject({
+					offsetX: 2,
+					offsetY: 3,
+					width: 4,
+					height: 5,
+					canvasOffsetX: 0,
+					canvasOffsetY: 0
+				});
+				done();
+			},
+			_onAssetError: () => {
+				fail("asset load error: should not fail");
+				done();
+			}
+		};
+		manager.requestAssets(["sliced"], handler);
+	});
+
+	it("can instantiate PartialImageAsset with shortened form", done => {
+		const game = new Game(gameConfiguration);
+		const manager = game._assetManager;
+
+		const handler: AssetManagerLoadHandler = {
+			_onAssetLoad: (a: ImageAsset) => {
+				expect(a.id).toBe("sliced2");
+				expect(a).toBeInstanceOf(PartialImageAsset);
+				expect(a.width).toBe(6); // 値は gameConfiguration.assets.sliced2 に由来。width ではなく slice.width が入る
+				expect(a.height).toBe(8); // 同上
+				const surface = a.asSurface();
+				expect(surface.width).toBe(6);
+				expect(surface.height).toBe(8);
+				const history = (surface.renderer() as Renderer).methodCallParamsHistory("drawImage");
+				expect(history.length).toBe(1);
+				expect(history[0].surface).toBe((a as PartialImageAsset)._src.asSurface());
+				expect(history[0]).toMatchObject({
+					offsetX: 3,
+					offsetY: 1,
+					width: 6,
+					height: 8,
+					canvasOffsetX: 0,
+					canvasOffsetY: 0
+				});
+				done();
+			},
+			_onAssetError: () => {
+				fail("asset load error: should not fail");
+				done();
+			}
+		};
+		manager.requestAssets(["sliced2"], handler);
 	});
 
 	it("handles loading failure", done => {
