@@ -84,7 +84,6 @@ export class PartialImageAsset implements ImageAsset {
 
 	asSurface(): Surface {
 		if (this._surface) return this._surface;
-		if (this._src.destroyed()) throw ExceptionFactory.createAssertionError("PartialImageAsset#asSurface(): src lost");
 		const { x, y, width, height } = this._slice;
 		const surface = this._resourceFactory.createSurface(width, height);
 		const r = surface.renderer();
