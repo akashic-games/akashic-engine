@@ -9,7 +9,6 @@ import {
 	Surface
 } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
-import { ExceptionFactory } from "../ExceptionFactory";
 
 /**
  * 部分画像アセット。
