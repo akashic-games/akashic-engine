@@ -15,7 +15,7 @@ jobs:
     name: Publish and Release
     steps:
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Checkout code
