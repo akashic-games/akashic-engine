@@ -1,5 +1,10 @@
 # ChangeLog
 
+## unreleased changes
+
+その他変更
+ * `AssetManage` 内の `any` の型を修正。
+
 ## 3.3.0
 
 機能追加
