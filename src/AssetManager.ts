@@ -468,7 +468,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @ignore
 	 */
 	_normalize(configuration: AssetConfigurationMap, audioSystemConfMap: AudioSystemConfigurationMap): AssetConfigurationMap {
-		const ret: { [key: string]: AssetConfiguration } = {};
+		const ret: AssetConfigurationMap = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 		for (let p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
@@ -711,7 +711,6 @@ export class AssetManager implements AssetLoadHandler {
 		if (this.configuration[asset.id]) {
 			const virtualPath = this.configuration[asset.id].virtualPath;
 			if (!virtualPath) return;
-
 			if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
 				this._liveAssetVirtualPathTable[virtualPath] = asset;
 			} else {
