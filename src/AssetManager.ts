@@ -227,9 +227,7 @@ export class AssetManager implements AssetLoadHandler {
 		for (let i = 0; i < assetIds.length; ++i) {
 			const assetId = assetIds[i];
 			const conf = this.configuration[assetId];
-			if (conf.virtualPath) {
-				this._virtualPathToIdTable[conf.virtualPath] = assetId;
-			}
+			this._virtualPathToIdTable[conf.virtualPath!] = assetId; // _normalize() で virtualPath が存在しない場合エラーとなるため非 null アサーションとする
 		}
 	}
 
@@ -468,7 +466,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @ignore
 	 */
 	_normalize(configuration: AssetConfigurationMap, audioSystemConfMap: AudioSystemConfigurationMap): AssetConfigurationMap {
-		const ret: AssetConfigurationMap = {};
+		const ret: { [key: string]: AssetConfiguration } = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 		for (let p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
@@ -709,8 +707,7 @@ export class AssetManager implements AssetLoadHandler {
 
 		// DynamicAsset の場合は configuration に書かれていないので以下の判定が偽になる
 		if (this.configuration[asset.id]) {
-			const virtualPath = this.configuration[asset.id].virtualPath;
-			if (!virtualPath) return;
+			const virtualPath = this.configuration[asset.id].virtualPath!; // _normalize() で virtualPath が存在しない場合エラーとなるため非 null アサーションとする
 			if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
 				this._liveAssetVirtualPathTable[virtualPath] = asset;
 			} else {
