@@ -3,7 +3,7 @@
 ## unreleased changes
 
 その他変更
- * `AssetManage` 内の `any` の型を修正。
+ * `any` 型の利用箇所を削減
 
 ## 3.3.0
 
