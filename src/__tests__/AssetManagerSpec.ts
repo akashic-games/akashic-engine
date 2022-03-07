@@ -121,25 +121,33 @@ describe("test AssetManager", () => {
 		expect(Object.keys(manager._refCounts).length).toEqual(0);
 		expect(Object.keys((manager as any)._loadings).length).toEqual(0);
 
-		expect(manager.configuration.zoo.systemId).toEqual("music");
-		expect(manager.configuration.zoo.duration).toEqual((assets.zoo as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.zoo.loop).toEqual(true);
-		expect(manager.configuration.zoo.hint).toEqual({ streaming: true });
+		expect(manager.configuration.zoo.type).toEqual("audio");
+		const zooAsset = manager.configuration.zoo as AudioAssetConfigurationBase;
+		expect(zooAsset.systemId).toEqual("music");
+		expect(zooAsset.duration).toEqual((assets.zoo as AudioAssetConfigurationBase).duration);
+		expect(zooAsset.loop).toEqual(true);
+		expect(zooAsset.hint).toEqual({ streaming: true });
 
-		expect(manager.configuration.baz.systemId).toEqual("music");
-		expect(manager.configuration.baz.duration).toEqual((assets.baz as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.baz.loop).toEqual(false);
-		expect(manager.configuration.baz.hint).toEqual({ streaming: false });
+		expect(manager.configuration.baz.type).toEqual("audio");
+		const bazAsset = manager.configuration.baz as AudioAssetConfigurationBase;
+		expect(bazAsset.systemId).toEqual("music");
+		expect(bazAsset.duration).toEqual((assets.baz as AudioAssetConfigurationBase).duration);
+		expect(bazAsset.loop).toEqual(false);
+		expect(bazAsset.hint).toEqual({ streaming: false });
 
-		expect(manager.configuration.qux.systemId).toEqual("sound");
-		expect(manager.configuration.qux.duration).toEqual((assets.qux as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.qux.loop).toEqual(false);
-		expect(manager.configuration.qux.hint).toEqual({ streaming: false });
+		expect(manager.configuration.qux.type).toEqual("audio");
+		const quxAsset = manager.configuration.qux as AudioAssetConfigurationBase;
+		expect(quxAsset.systemId).toEqual("sound");
+		expect(quxAsset.duration).toEqual((assets.qux as AudioAssetConfigurationBase).duration);
+		expect(quxAsset.loop).toEqual(false);
+		expect(quxAsset.hint).toEqual({ streaming: false });
 
-		expect(manager.configuration.quux.systemId).toEqual("sound");
-		expect(manager.configuration.quux.duration).toEqual((assets.quux as AudioAssetConfigurationBase).duration);
-		expect(manager.configuration.quux.loop).toEqual(true);
-		expect(manager.configuration.quux.hint).toEqual({ streaming: true });
+		expect(manager.configuration.quux.type).toEqual("audio");
+		const quuxAsset = manager.configuration.quux as AudioAssetConfigurationBase;
+		expect(quuxAsset.systemId).toEqual("sound");
+		expect(quuxAsset.duration).toEqual((assets.quux as AudioAssetConfigurationBase).duration);
+		expect(quuxAsset.loop).toEqual(true);
+		expect(quuxAsset.hint).toEqual({ streaming: true });
 	});
 
 	it("rejects illegal configuration", () => {
