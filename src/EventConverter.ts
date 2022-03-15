@@ -1,11 +1,13 @@
-import { CommonOffset } from "@akashic/pdi-types";
+import type { CommonOffset } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
-import { E, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
-import { Event, JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
+import type { E } from "./entities/E";
+import { PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
+import type { Event } from "./Event";
+import { JoinEvent, LeaveEvent, MessageEvent, OperationEvent, PlayerInfoEvent, TimestampEvent } from "./Event";
 import { EventIndex } from "./EventIndex";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { InternalOperationPluginOperation } from "./OperationPluginOperation";
-import { Player } from "./Player";
+import type { InternalOperationPluginOperation } from "./OperationPluginOperation";
+import type { Player } from "./Player";
 import { StorageValueStore } from "./Storage";
 
 /**
@@ -72,8 +74,8 @@ export class EventConverter {
 
 				let store: StorageValueStore | undefined = undefined;
 				if (pev[EventIndex.Join.StorageData]) {
-					let keys: pl.StorageReadKey[] = [];
-					let values: pl.StorageValue[][] = [];
+					const keys: pl.StorageReadKey[] = [];
+					const values: pl.StorageValue[][] = [];
 					pev[EventIndex.Join.StorageData].map((data: pl.StorageData) => {
 						keys.push(data.readKey);
 						values.push(data.values);
@@ -91,8 +93,8 @@ export class EventConverter {
 				return new TimestampEvent(timestamp, player, prio);
 
 			case pl.EventCode.PlayerInfo:
-				let playerName = pev[EventIndex.PlayerInfo.PlayerName];
-				let userData: any = pev[EventIndex.PlayerInfo.UserData];
+				const playerName = pev[EventIndex.PlayerInfo.PlayerName];
+				const userData: any = pev[EventIndex.PlayerInfo.UserData];
 				player = {
 					id: playerId,
 					name: playerName,
@@ -157,9 +159,9 @@ export class EventConverter {
 
 			case pl.EventCode.Operation:
 				local = pev[EventIndex.Operation.Local];
-				let operationCode = pev[EventIndex.Operation.OperationCode];
-				let operationData = pev[EventIndex.Operation.OperationData];
-				let decodedData = this._game._decodeOperationPluginOperation(operationCode, operationData);
+				const operationCode = pev[EventIndex.Operation.OperationCode];
+				const operationData = pev[EventIndex.Operation.OperationData];
+				const decodedData = this._game._decodeOperationPluginOperation(operationCode, operationData);
 				return new OperationEvent(operationCode, decodedData, player, local, prio);
 
 			default:
@@ -180,7 +182,7 @@ export class EventConverter {
 				// akashic-engine は決して Join と Leave を生成しない
 				throw ExceptionFactory.createAssertionError("EventConverter#toPlaylogEvent: Invalid type: " + e.type);
 			case "timestamp":
-				let ts = e as TimestampEvent;
+				const ts = e as TimestampEvent;
 				playerId = preservePlayer ? ts.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.Timestamp, // 0: イベントコード
@@ -189,7 +191,7 @@ export class EventConverter {
 					ts.timestamp //            3: タイムスタンプ
 				];
 			case "player-info":
-				let playerInfo = e as PlayerInfoEvent;
+				const playerInfo = e as PlayerInfoEvent;
 				playerId = preservePlayer ? playerInfo.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.PlayerInfo, //   0: イベントコード
@@ -199,7 +201,7 @@ export class EventConverter {
 					playerInfo.player.userData // 4: ユーザデータ
 				];
 			case "point-down":
-				let pointDown = e as PointDownEvent;
+				const pointDown = e as PointDownEvent;
 				targetId = pointDown.target ? pointDown.target.id : null;
 				playerId = preservePlayer && pointDown.player ? pointDown.player.id ?? null : this._playerId;
 				return [
@@ -213,7 +215,7 @@ export class EventConverter {
 					!!pointDown.local //       7?: 直前のポイントムーブイベントからのY座標の差
 				];
 			case "point-move":
-				let pointMove = e as PointMoveEvent;
+				const pointMove = e as PointMoveEvent;
 				targetId = pointMove.target ? pointMove.target.id : null;
 				playerId = preservePlayer && pointMove.player ? pointMove.player.id ?? null : this._playerId;
 				return [
@@ -231,7 +233,7 @@ export class EventConverter {
 					!!pointMove.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
 			case "point-up":
-				let pointUp = e as PointUpEvent;
+				const pointUp = e as PointUpEvent;
 				targetId = pointUp.target ? pointUp.target.id : null;
 				playerId = preservePlayer && pointUp.player ? pointUp.player.id ?? null : this._playerId;
 				return [
@@ -249,7 +251,7 @@ export class EventConverter {
 					!!pointUp.local //       11?: 直前のポイントムーブイベントからのY座標の差
 				];
 			case "message":
-				let message = e as MessageEvent;
+				const message = e as MessageEvent;
 				playerId = preservePlayer && message.player ? message.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.Message, // 0: イベントコード
@@ -259,7 +261,7 @@ export class EventConverter {
 					!!message.local //       4?: ローカル
 				];
 			case "operation":
-				let op = e as OperationEvent;
+				const op = e as OperationEvent;
 				playerId = preservePlayer && op.player ? op.player.id ?? null : this._playerId;
 				return [
 					pl.EventCode.Operation, // 0: イベントコード
@@ -275,8 +277,8 @@ export class EventConverter {
 	}
 
 	makePlaylogOperationEvent(op: InternalOperationPluginOperation): pl.Event {
-		let playerId = this._playerId;
-		let eventFlags = op.priority != null ? op.priority & pl.EventFlagsMask.Priority : 0;
+		const playerId = this._playerId;
+		const eventFlags = op.priority != null ? op.priority & pl.EventFlagsMask.Priority : 0;
 		return [
 			pl.EventCode.Operation, // 0: イベントコード
 			eventFlags, //             1: イベントフラグ値

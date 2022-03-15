@@ -1,12 +1,13 @@
-import { Asset, Renderer } from "@akashic/pdi-types";
-import { Camera } from "./Camera";
-import { Camera2D } from "./Camera2D";
-import { E, EParameterObject } from "./entities/E";
+import type { Asset, Renderer } from "@akashic/pdi-types";
+import type { Camera } from "./Camera";
+import type { Camera2D } from "./Camera2D";
+import type { EParameterObject } from "./entities/E";
+import { E } from "./entities/E";
 import { FilledRect } from "./entities/FilledRect";
-import { Game } from "./Game";
+import type { Game } from "./Game";
 import { LoadingScene } from "./LoadingScene";
 import { Object2D } from "./Object2D";
-import { Scene } from "./Scene";
+import type { Scene } from "./Scene";
 
 /**
  * `DeafultLoadingScene` のコンストラクタに渡すことができるパラメータ。

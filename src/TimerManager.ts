@@ -1,4 +1,4 @@
-import { Trigger } from "@akashic/trigger";
+import type { Trigger } from "@akashic/trigger";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Timer } from "./Timer";
 

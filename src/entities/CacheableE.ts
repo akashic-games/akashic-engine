@@ -1,7 +1,8 @@
-import { CommonSize, Renderer, Surface } from "@akashic/pdi-types";
-import { Camera } from "../Camera";
+import type { CommonSize, Renderer, Surface } from "@akashic/pdi-types";
+import type { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
-import { E, EParameterObject } from "./E";
+import type { EParameterObject } from "./E";
+import { E } from "./E";
 
 /**
  * `CacheableE` のコンストラクタに渡すことができるパラメータ。

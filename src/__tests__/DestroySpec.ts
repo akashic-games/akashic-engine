@@ -1,5 +1,7 @@
-import { BitmapFont, E, FilledRect, FrameSprite, Label, Pane, Scene, Sprite, SpriteFactory } from "..";
-import { ImageAsset, Renderer, Runtime, skeletonRuntime, Surface } from "./helpers";
+import type { Scene } from "..";
+import { BitmapFont, E, FilledRect, FrameSprite, Label, Pane, Sprite, SpriteFactory } from "..";
+import type { ImageAsset, Runtime } from "./helpers";
+import { Renderer, skeletonRuntime, Surface } from "./helpers";
 
 describe("test Destroy", () => {
 	let runtime: Runtime;

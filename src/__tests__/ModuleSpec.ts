@@ -1,4 +1,5 @@
-import { GameConfiguration, Module, PathUtil, Scene, XorshiftRandomGenerator } from "..";
+import type { GameConfiguration } from "..";
+import { Module, PathUtil, Scene, XorshiftRandomGenerator } from "..";
 import { customMatchers, Game } from "./helpers";
 
 expect.extend(customMatchers);

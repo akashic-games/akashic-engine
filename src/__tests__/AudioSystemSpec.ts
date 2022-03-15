@@ -1,4 +1,5 @@
-import { AudioPlayer, customMatchers, Game, ResourceFactory } from "./helpers";
+import type { AudioPlayer } from "./helpers";
+import { customMatchers, Game, ResourceFactory } from "./helpers";
 
 expect.extend(customMatchers);
 

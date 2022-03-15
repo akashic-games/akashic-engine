@@ -1,6 +1,5 @@
-import { AssetConfigurationMap } from "@akashic/game-configuration";
-import {
-	AssetManager,
+import type { AssetConfigurationMap } from "@akashic/game-configuration";
+import type {
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	AudioSystem,
@@ -10,8 +9,10 @@ import {
 	ImageAsset,
 	ImageAssetConfigurationBase
 } from "..";
+import { AssetManager } from "..";
 import { PartialImageAsset } from "../auxiliary/PartialImageAsset";
-import { AudioAsset, customMatchers, Game, Surface, Renderer } from "./helpers";
+import type { AudioAsset, Renderer } from "./helpers";
+import { customMatchers, Game, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -627,7 +628,7 @@ describe("test AssetManager", () => {
 			_onAssetLoad: () => {
 				const asset = manager.peekLiveAssetByAccessorPath("/path/to/virtual/file", "audio") as AudioAsset;
 				asset._inUse = true; // NOTE: AudioSystem#requestDestroy() 時に破棄されないように inUse() フラグを立てる
-				let _asset = asset;
+				const _asset = asset;
 				const system = asset._system as AudioSystem;
 				manager.unrefAsset("testAsset");
 				expect(system.getDestroyRequestedAsset(asset.id)).not.toBeNull();

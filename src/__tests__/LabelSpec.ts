@@ -1,5 +1,7 @@
-import { BitmapFont, GlyphArea, Label } from "..";
-import { Renderer, skeletonRuntime, Surface } from "./helpers";
+import type { GlyphArea } from "..";
+import { BitmapFont, Label } from "..";
+import type { Surface } from "./helpers";
+import { Renderer, skeletonRuntime } from "./helpers";
 
 describe("test Label", () => {
 	it("初期化", () => {

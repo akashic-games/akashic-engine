@@ -1,5 +1,5 @@
-import { OperationPluginInfo } from "@akashic/game-configuration";
-import { OperationPlugin } from "./OperationPlugin";
+import type { OperationPluginInfo } from "@akashic/game-configuration";
+import type { OperationPlugin } from "./OperationPlugin";
 
 /**
  * エンジン内部で用いる、操作プラグインの管理情報

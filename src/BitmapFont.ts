@@ -1,4 +1,4 @@
-import { GlyphArea, Glyph, ImageAsset, Surface } from "@akashic/pdi-types";
+import type { GlyphArea, Glyph, ImageAsset, Surface } from "@akashic/pdi-types";
 import { Font } from "./Font";
 import { SurfaceUtil } from "./SurfaceUtil";
 

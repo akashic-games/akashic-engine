@@ -1,6 +1,7 @@
-import { ImageAsset as PdiImageAsset } from "@akashic/pdi-types";
+import type { ImageAsset as PdiImageAsset } from "@akashic/pdi-types";
 import { SurfaceUtil } from "..";
-import { customMatchers, Game, Renderer, skeletonRuntime, Surface } from "./helpers";
+import type { Renderer } from "./helpers";
+import { customMatchers, Game, skeletonRuntime, Surface } from "./helpers";
 
 expect.extend(customMatchers);
 

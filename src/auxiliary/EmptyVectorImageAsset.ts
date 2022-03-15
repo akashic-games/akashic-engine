@@ -1,4 +1,4 @@
-import { Asset, AssetLoadHandler, Surface, VectorImageAsset, VectorImageAssetHint } from "@akashic/pdi-types";
+import type { Asset, AssetLoadHandler, Surface, VectorImageAsset, VectorImageAssetHint } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 
 export class EmptyVectorImageAsset implements VectorImageAsset {

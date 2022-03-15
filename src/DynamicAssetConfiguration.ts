@@ -1,5 +1,5 @@
-import { AssetConfigurationCommonBase, CommonAreaShortened } from "@akashic/game-configuration";
-import { AudioAssetHint, ImageAssetHint, CommonArea } from "@akashic/pdi-types";
+import type { AssetConfigurationCommonBase, CommonAreaShortened } from "@akashic/game-configuration";
+import type { AudioAssetHint, ImageAssetHint, CommonArea } from "@akashic/pdi-types";
 
 export type DynamicAssetConfiguration =
 	| DynamicAudioAssetConfigurationBase

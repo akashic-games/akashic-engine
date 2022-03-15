@@ -1,5 +1,5 @@
-import * as pdi from "@akashic/pdi-types";
-import { SurfaceAtlas } from "./SurfaceAtlas";
+import type * as pdi from "@akashic/pdi-types";
+import type { SurfaceAtlas } from "./SurfaceAtlas";
 
 export interface Glyph extends pdi.Glyph {
 	/**

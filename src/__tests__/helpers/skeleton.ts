@@ -1,4 +1,5 @@
-import { GameConfiguration, Scene } from "../../";
+import type { GameConfiguration } from "../../";
+import { Scene } from "../../";
 import { Game } from "./mock";
 
 export interface Runtime {
