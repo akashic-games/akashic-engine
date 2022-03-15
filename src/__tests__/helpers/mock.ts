@@ -709,3 +709,7 @@ export class CacheableE extends g.CacheableE {
 export interface AudioSystem extends PdiAudioSystem {
 	_destroyRequestedAssets: { [key: string]: g.AudioAsset };
 }
+
+export class FilledRect extends g.FilledRect {
+	//
+}

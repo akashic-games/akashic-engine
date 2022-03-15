@@ -2,6 +2,10 @@
 
 ## unreleased changes
 
+機能追加
+ * `g.Game#skippingScene` を追加
+   * ゲームが早送りとなった際に描画される特殊なシーンが利用可能に
+
 その他変更
  * `any` 型の利用箇所を削減
 
