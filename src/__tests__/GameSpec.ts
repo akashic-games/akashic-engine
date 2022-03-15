@@ -1085,7 +1085,7 @@ describe("test Game", () => {
 	});
 
 	describe("skippingScene", () => {
-		it("throw error if given non-local scene as a skippingScene", () => {
+		it("throw error if the non-local scene is given as a skippingScene", () => {
 			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 			const scene = new Scene({ game });
 			game.pushScene(scene);
