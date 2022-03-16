@@ -1731,7 +1731,6 @@ export class Game {
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
 		if (isSkipping && this._skippingScene && !this._skippingScene._loaded) {
-			console.log("_load()");
 			this._skippingScene._load();
 			this._skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
 		}
