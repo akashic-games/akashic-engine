@@ -1079,7 +1079,7 @@ describe("test Game", () => {
 	});
 
 	describe("skippingScene", () => {
-		it("throw error if given non-local scene as a skippingScene", () => {
+		it("throw error if non-local scene is given as a skippingScene", () => {
 			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 			const scene = new Scene({ game });
 			game.pushScene(scene);
@@ -1087,10 +1087,34 @@ describe("test Game", () => {
 
 			expect(() => {
 				game.skippingScene = new Scene({ game, local: "interpolate-local" });
-			}).toThrow("Game#skippingScene: only 'full-local' scene is supported");
+			}).toThrow("Game#skippingScene: only 'full-local' scene is supported.");
 			expect(() => {
 				game.skippingScene = new Scene({ game, local: "non-local" });
-			}).toThrow("Game#skippingScene: only 'full-local' scene is supported");
+			}).toThrow("Game#skippingScene: only 'full-local' scene is supported.");
+		});
+
+		it("throw error if the scene with any assets is given as a skippingScene", () => {
+			const game = new Game({
+				width: 320,
+				height: 320,
+				main: "",
+				assets: {
+					foo: {
+						type: "image",
+						path: "/path1.png",
+						virtualPath: "path1.png",
+						width: 1,
+						height: 1
+					}
+				}
+			});
+			const scene = new Scene({ game });
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			expect(() => {
+				game.skippingScene = new Scene({ game, local: "full-local", assetIds: ["foo"] });
+			}).toThrow("Game#skippingScene: must not depend on any assets/storages.");
 		});
 
 		it("render skippingScene if the game has been skipping", () => {
@@ -1161,27 +1185,14 @@ describe("test Game", () => {
 		});
 
 		it("fire skippingScene#onLoad if the skippingScene is set to Game#skippingScene and enter the skipping state", done => {
-			const game = new Game({
-				width: 320,
-				height: 320,
-				main: "",
-				assets: {
-					foo: {
-						type: "image",
-						path: "/path1.png",
-						virtualPath: "path1.png",
-						width: 1,
-						height: 1
-					}
-				}
-			});
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 			const r = new Renderer();
 			game.renderers.push(r);
 			const scene = new Scene({ game });
 			game.pushScene(scene);
 			game._flushPostTickTasks();
 
-			const skippingScene = new Scene({ game, local: "full-local", assetIds: ["foo"] });
+			const skippingScene = new Scene({ game, local: "full-local" });
 			skippingScene.onLoad.addOnce(() => {
 				done();
 			});

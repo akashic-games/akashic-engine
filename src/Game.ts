@@ -769,7 +769,7 @@ export class Game {
 	 * ゲームが早送りとなった際に描画される特殊なシーンであり、以下の制限を持つ。
 	 *
 	 * * サポートするシーンの種別は "full-local" のみ
-	 * * 非グローバルアセットを利用する場合はその読み込みまで描画処理が行われない
+	 * * 非グローバルアセットを利用してはならない
 	 * * シーン内で発生した一切のイベントは処理されない
 	 * * 早送りが複数回発生した場合でも、対象のシーンの onLoad は2度目以降発火せずにインスタンスが使い回される
 	 *
@@ -783,7 +783,10 @@ export class Game {
 		if (scene === this._skippingScene) return;
 		if (scene) {
 			if (scene.local !== "full-local") {
-				throw ExceptionFactory.createAssertionError("Game#skippingScene: only 'full-local' scene is supported");
+				throw ExceptionFactory.createAssertionError("Game#skippingScene: only 'full-local' scene is supported.");
+			}
+			if (scene._needsLoading()) {
+				throw ExceptionFactory.createAssertionError("Game#skippingScene: must not depend on any assets/storages.");
 			}
 		}
 		this._skippingScene = scene;
@@ -1728,6 +1731,7 @@ export class Game {
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
 		if (isSkipping && this._skippingScene && !this._skippingScene._loaded) {
+			console.log("_load()");
 			this._skippingScene._load();
 			this._skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
 		}
