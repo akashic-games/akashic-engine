@@ -1394,6 +1394,9 @@ export class Game {
 				this.scenes.pop();
 			}
 		}
+		if (this._skippingScene && !this._skippingScene.destroyed()) {
+			this._skippingScene.destroy();
+		}
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
@@ -1429,6 +1432,7 @@ export class Game {
 		this._localDb = {};
 		this._modified = true;
 		this.loadingScene = undefined!;
+		this._skippingScene = undefined;
 		this._focusingCamera = undefined;
 		this.lastLocalTickMode = null;
 		this.lastTickGenerationMode = null;
@@ -1482,6 +1486,9 @@ export class Game {
 		}
 		if (!this._defaultLoadingScene.destroyed()) {
 			this._defaultLoadingScene.destroy();
+		}
+		if (this._skippingScene && !this._skippingScene.destroyed()) {
+			this._skippingScene.destroy();
 		}
 
 		// NOTE: fps, width, height, external, vars はそのまま保持しておく

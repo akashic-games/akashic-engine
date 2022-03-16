@@ -920,6 +920,10 @@ describe("test Game", () => {
 				tickGenerationMode: "by-clock"
 			}); // scene2
 
+			const skippingScene = new Scene({ game, local: "full-local" });
+			game.skippingScene = skippingScene;
+			expect(skippingScene.destroyed()).toBe(false);
+
 			const randGen1 = new XorshiftRandomGenerator(10);
 			game._pointEventResolver.pointDown({
 				type: PlatformPointType.Down,
@@ -950,6 +954,8 @@ describe("test Game", () => {
 			expect(game._onSceneChange.length).not.toBe(0);
 			// reset後、Game#_moduleManagerが作り直されていることを確認
 			expect(game._moduleManager).not.toBe(moduleManager);
+			expect(game.skippingScene).toBeUndefined();
+			expect(skippingScene.destroyed()).toBe(true);
 			done();
 		});
 		game._loadAndStart();
@@ -1155,14 +1161,27 @@ describe("test Game", () => {
 		});
 
 		it("fire skippingScene#onLoad if the skippingScene is set to Game#skippingScene and enter the skipping state", done => {
-			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const game = new Game({
+				width: 320,
+				height: 320,
+				main: "",
+				assets: {
+					foo: {
+						type: "image",
+						path: "/path1.png",
+						virtualPath: "path1.png",
+						width: 1,
+						height: 1
+					}
+				}
+			});
 			const r = new Renderer();
 			game.renderers.push(r);
 			const scene = new Scene({ game });
 			game.pushScene(scene);
 			game._flushPostTickTasks();
 
-			const skippingScene = new Scene({ game, local: "full-local" });
+			const skippingScene = new Scene({ game, local: "full-local", assetIds: ["foo"] });
 			skippingScene.onLoad.addOnce(() => {
 				done();
 			});
