@@ -1034,13 +1034,11 @@ export class Game {
 		if (this._skippingScene && this.isSkipping) {
 			scene = this._skippingScene;
 			scene.onUpdate.fire();
+		} else {
+			scene = this.scene();
 		}
 
 		if (!this._modified) return;
-
-		if (!scene) {
-			scene = this.scene();
-		}
 
 		if (!scene) return;
 
