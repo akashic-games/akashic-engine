@@ -1,7 +1,7 @@
-import { ScriptAsset } from "@akashic/pdi-types";
+import type { ScriptAsset } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { Module } from "./Module";
-import { RequireCacheable } from "./RequireCacheable";
+import type { Module } from "./Module";
+import type { RequireCacheable } from "./RequireCacheable";
 
 /**
  * `ScriptAsset` の実行コンテキスト。

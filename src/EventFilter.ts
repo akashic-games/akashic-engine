@@ -1,5 +1,5 @@
-import { Event } from "@akashic/playlog";
-import { EventFilterController } from "./EventFilterController";
+import type { Event } from "@akashic/playlog";
+import type { EventFilterController } from "./EventFilterController";
 
 /**
  * イベントフィルタ。

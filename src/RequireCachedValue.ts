@@ -1,4 +1,4 @@
-import { RequireCacheable } from "./RequireCacheable";
+import type { RequireCacheable } from "./RequireCacheable";
 
 export class RequireCachedValue implements RequireCacheable {
 	/**

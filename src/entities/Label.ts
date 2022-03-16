@@ -1,9 +1,10 @@
-import { Glyph, Renderer } from "@akashic/pdi-types";
-import { Font } from "../Font";
+import type { Glyph, Renderer } from "@akashic/pdi-types";
+import type { Font } from "../Font";
 import { TextAlign } from "../TextAlign";
-import { TextAlignString } from "../TextAlignString";
+import type { TextAlignString } from "../TextAlignString";
 import { Util } from "../Util";
-import { CacheableE, CacheableEParameterObject } from "./CacheableE";
+import type { CacheableEParameterObject } from "./CacheableE";
+import { CacheableE } from "./CacheableE";
 
 /**
  * `Label` のコンストラクタに渡すことができるパラメータ。

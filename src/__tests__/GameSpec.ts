@@ -1,18 +1,6 @@
-import * as pl from "@akashic/playlog";
-import {
-	Asset,
-	AssetConfiguration,
-	Camera2D,
-	E,
-	GameConfiguration,
-	LoadingScene,
-	LoadingSceneParameterObject,
-	LocalTickModeString,
-	MessageEvent,
-	PlatformPointType,
-	Scene,
-	XorshiftRandomGenerator
-} from "..";
+import type * as pl from "@akashic/playlog";
+import type { Asset, AssetConfiguration, GameConfiguration, LoadingSceneParameterObject, LocalTickModeString } from "..";
+import { Camera2D, E, LoadingScene, MessageEvent, PlatformPointType, Scene, XorshiftRandomGenerator } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, ImageAsset, ScriptAsset } from "./helpers";
 
 expect.extend(customMatchers);

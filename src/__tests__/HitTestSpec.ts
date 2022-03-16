@@ -1,5 +1,6 @@
 import { E } from "..";
-import { Runtime, skeletonRuntime } from "./helpers";
+import type { Runtime } from "./helpers";
+import { skeletonRuntime } from "./helpers";
 
 describe("test E", () => {
 	let runtime: Runtime, e: E;

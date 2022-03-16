@@ -1,7 +1,7 @@
-import * as pl from "@akashic/playlog";
-import { EventFilter } from "./EventFilter";
-import { LocalTickModeString } from "./LocalTickModeString";
-import { TickGenerationModeString } from "./TickGenerationModeString";
+import type * as pl from "@akashic/playlog";
+import type { EventFilter } from "./EventFilter";
+import type { LocalTickModeString } from "./LocalTickModeString";
+import type { TickGenerationModeString } from "./TickGenerationModeString";
 
 export interface SceneMode {
 	local: LocalTickModeString;

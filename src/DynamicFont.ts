@@ -1,9 +1,11 @@
-import { FontFamily, FontWeight, FontWeightString, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
+import type { FontWeightString, GlyphArea, GlyphFactory, ResourceFactory } from "@akashic/pdi-types";
+import { FontFamily, FontWeight } from "@akashic/pdi-types";
 import { BitmapFont } from "./BitmapFont";
 import { Font } from "./Font";
-import { Game } from "./Game";
-import { Glyph } from "./Glyph";
-import { SurfaceAtlasSetHint, SurfaceAtlasSet } from "./SurfaceAtlasSet";
+import type { Game } from "./Game";
+import type { Glyph } from "./Glyph";
+import type { SurfaceAtlasSetHint } from "./SurfaceAtlasSet";
+import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import { Util } from "./Util";
 
 /**
@@ -263,7 +265,7 @@ export class DynamicFont extends Font {
 
 		if (this.hint.presetChars) {
 			for (let i = 0, len = this.hint.presetChars.length; i < len; i++) {
-				let code = Util.charCodeAt(this.hint.presetChars, i);
+				const code = Util.charCodeAt(this.hint.presetChars, i);
 				if (!code) {
 					continue;
 				}

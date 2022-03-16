@@ -1,6 +1,7 @@
-import { Renderer } from "@akashic/pdi-types";
+import type { Renderer } from "@akashic/pdi-types";
 import { ExceptionFactory } from "../ExceptionFactory";
-import { E, EParameterObject } from "./E";
+import type { EParameterObject } from "./E";
+import { E } from "./E";
 
 /**
  * `FilledRect` のコンストラクタに渡すことができるパラメータ。

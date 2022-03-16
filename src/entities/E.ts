@@ -1,14 +1,18 @@
-import { CommonArea, CommonOffset, CommonRect, Renderer } from "@akashic/pdi-types";
-import { ChainTrigger, Trigger } from "@akashic/trigger";
-import { Camera } from "../Camera";
+import type { CommonArea, CommonOffset, CommonRect, Renderer } from "@akashic/pdi-types";
+import type { Trigger } from "@akashic/trigger";
+import { ChainTrigger } from "@akashic/trigger";
+import type { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
-import { MessageEvent, PointDownEventBase, PointEventBase, PointMoveEventBase, PointSourceBase, PointUpEventBase } from "../Event";
+import type { MessageEvent, PointSourceBase } from "../Event";
+import { PointDownEventBase, PointEventBase, PointMoveEventBase, PointUpEventBase } from "../Event";
 import { ExceptionFactory } from "../ExceptionFactory";
-import { Game } from "../Game";
-import { Matrix, PlainMatrix } from "../Matrix";
-import { Object2D, Object2DParameterObject } from "../Object2D";
-import { Scene } from "../Scene";
-import { ShaderProgram } from "../ShaderProgram";
+import type { Game } from "../Game";
+import type { Matrix } from "../Matrix";
+import { PlainMatrix } from "../Matrix";
+import type { Object2DParameterObject } from "../Object2D";
+import { Object2D } from "../Object2D";
+import type { Scene } from "../Scene";
+import type { ShaderProgram } from "../ShaderProgram";
 import { Util } from "../Util";
 
 /**
@@ -397,7 +401,7 @@ export class E extends Object2D implements CommonArea {
 
 		if (this.opacity !== 1) renderer.opacity(this.opacity);
 
-		let op = this.compositeOperation;
+		const op = this.compositeOperation;
 		if (op !== undefined) {
 			renderer.setCompositeOperation(typeof op === "string" ? op : Util.compositeOperationStringTable[op]);
 		}
@@ -708,7 +712,7 @@ export class E extends Object2D implements CommonArea {
 	 * @param offset ゲームの左上端を基準とした座標
 	 */
 	globalToLocal(offset: CommonOffset): CommonOffset {
-		let matrix: Matrix = new PlainMatrix();
+		const matrix: Matrix = new PlainMatrix();
 		for (let entity: E | Scene | undefined = this; entity instanceof E; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
 		}
@@ -725,7 +729,7 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_calculateMatrixTo(target?: E | Scene): Matrix {
-		let matrix: Matrix = new PlainMatrix();
+		const matrix: Matrix = new PlainMatrix();
 		for (let entity: E | Scene | undefined = this; entity instanceof E && entity !== target; entity = entity.parent) {
 			matrix.multiplyLeft(entity.getMatrix());
 		}

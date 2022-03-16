@@ -1,17 +1,18 @@
+import type { PointSource } from "..";
 import {
 	Camera2D,
 	CompositeOperation,
 	E,
 	PlainMatrix,
 	PointDownEvent,
-	PointSource,
 	Scene,
 	MessageEvent,
 	PlatformPointType,
 	PointUpEvent,
 	PointMoveEvent
 } from "..";
-import { customMatchers, EntityStateFlags, Game, Renderer, Runtime, skeletonRuntime } from "./helpers";
+import type { Runtime } from "./helpers";
+import { customMatchers, EntityStateFlags, Game, Renderer, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -762,8 +763,7 @@ describe("test E", () => {
 		e.width = e.height = 100;
 		runtime.scene.append(e);
 
-		let found;
-		found = runtime.game.findPointSource({ x: 150, y: 150 });
+		const found = runtime.game.findPointSource({ x: 150, y: 150 });
 		expect(found).toEqual({ target: e, point: { x: 50, y: 50 }, local: true });
 	});
 

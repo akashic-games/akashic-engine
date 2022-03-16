@@ -1,15 +1,5 @@
-import {
-	AssetConfiguration,
-	Scene,
-	Storage,
-	StorageCondition,
-	StorageCountsOperation,
-	StorageKey,
-	StorageLoader,
-	StorageRegion,
-	StorageValue,
-	StorageWriteOption
-} from "..";
+import type { AssetConfiguration, StorageKey, StorageLoader, StorageValue, StorageWriteOption } from "..";
+import { Scene, Storage, StorageCondition, StorageCountsOperation, StorageRegion } from "..";
 import { Game } from "./helpers";
 
 describe("test Storage", () => {

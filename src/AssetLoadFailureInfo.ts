@@ -1,4 +1,4 @@
-import { Asset, AssetLoadError } from "@akashic/pdi-types";
+import type { Asset, AssetLoadError } from "@akashic/pdi-types";
 
 /**
  * `Asset` の読み込み失敗を通知するインターフェース。
