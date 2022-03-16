@@ -1,5 +1,5 @@
-import { Trigger } from "@akashic/trigger";
-import { OperationPluginOperation } from "./OperationPluginOperation";
+import type { Trigger } from "@akashic/trigger";
+import type { OperationPluginOperation } from "./OperationPluginOperation";
 
 /**
  * 操作プラグインの実装すべきインターフェース。

@@ -1,5 +1,7 @@
-import { Asset, GameConfiguration, AssetAccessor } from "..";
-import { customMatchers, Game, ResourceFactory } from "./helpers";
+import type { Asset, GameConfiguration } from "..";
+import { AssetAccessor } from "..";
+import type { ResourceFactory } from "./helpers";
+import { customMatchers, Game } from "./helpers";
 
 expect.extend(customMatchers);
 

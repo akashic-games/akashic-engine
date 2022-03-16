@@ -26,7 +26,7 @@ export module PathUtil {
 		const parts = split(baseComponents.path).concat(split(path));
 		let resolved: string[] = [];
 		for (let i = 0; i < parts.length; ++i) {
-			let part = parts[i];
+			const part = parts[i];
 			switch (part) {
 				case "..":
 					const popped = resolved.pop();

@@ -1,10 +1,10 @@
-import { OperationPluginViewInfo } from "@akashic/pdi-types";
+import type { OperationPluginViewInfo } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
-import { Game } from "./Game";
-import { InternalOperationPluginInfo } from "./InternalOperationPluginInfo";
-import { OperationPlugin } from "./OperationPlugin";
-import { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
-import { OperationPluginStatic } from "./OperationPluginStatic";
+import type { Game } from "./Game";
+import type { InternalOperationPluginInfo } from "./InternalOperationPluginInfo";
+import type { OperationPlugin } from "./OperationPlugin";
+import type { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
+import type { OperationPluginStatic } from "./OperationPluginStatic";
 
 /**
  * 操作プラグインからの通知をハンドルするクラス。

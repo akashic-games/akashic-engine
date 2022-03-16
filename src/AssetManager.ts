@@ -1,11 +1,11 @@
-import {
+import type {
 	AssetConfiguration,
 	AssetConfigurationMap,
 	AudioSystemConfigurationMap,
 	ModuleMainScriptsMap,
 	CommonAreaShortened
 } from "@akashic/game-configuration";
-import {
+import type {
 	Asset,
 	AssetLoadHandler,
 	AudioAssetHint,
@@ -20,12 +20,12 @@ import {
 	VideoAsset,
 	VectorImageAsset
 } from "@akashic/pdi-types";
-import { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
-import { AudioSystem } from "./AudioSystem";
-import { AudioSystemManager } from "./AudioSystemManager";
+import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
+import type { AudioSystem } from "./AudioSystem";
+import type { AudioSystemManager } from "./AudioSystemManager";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { PartialImageAsset } from "./auxiliary/PartialImageAsset";
-import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
+import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
 
@@ -66,7 +66,7 @@ function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap = {}):
 		}
 	};
 
-	for (let key in systemDefaults) {
+	for (const key in systemDefaults) {
 		if (!(key in confMap)) {
 			confMap[key] = systemDefaults[key];
 		}
@@ -283,7 +283,7 @@ export class AssetManager implements AssetLoadHandler {
 	globalAssetIds(): string[] {
 		const ret: string[] = [];
 		const conf = this.configuration;
-		for (let p in conf) {
+		for (const p in conf) {
 			if (!conf.hasOwnProperty(p)) continue;
 			if (conf[p].global) ret.push(p);
 		}
@@ -451,7 +451,7 @@ export class AssetManager implements AssetLoadHandler {
 		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
 		const filter =
 			typeof patternOrFilter === "string" ? patternToFilter(this._replaceModulePathToAbsolute(patternOrFilter)) : patternOrFilter;
-		let ret: T[] = [];
+		const ret: T[] = [];
 		for (let i = 0; i < vpaths.length; ++i) {
 			const vpath = vpaths[i];
 			const asset = this._liveAssetVirtualPathTable[vpath];
@@ -468,7 +468,7 @@ export class AssetManager implements AssetLoadHandler {
 	_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
 		const ret: { [key: string]: AssetConfiguration } = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
-		for (let p in configuration) {
+		for (const p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
 			const conf = <AssetConfiguration>Object.create(configuration[p]);
 			if (!conf.path) {
@@ -540,7 +540,7 @@ export class AssetManager implements AssetLoadHandler {
 			conf = this.configuration[id];
 			uri = this.configuration[id].path;
 		} else {
-			let dynConf = idOrConf;
+			const dynConf = idOrConf;
 			id = dynConf.id;
 			conf = dynConf;
 			uri = dynConf.uri;
@@ -685,7 +685,7 @@ export class AssetManager implements AssetLoadHandler {
 		if (typeof assetIdOrConf === "string") {
 			conf = this.configuration[assetIdOrConf];
 		} else {
-			let dynConf = assetIdOrConf;
+			const dynConf = assetIdOrConf;
 			conf = dynConf;
 		}
 

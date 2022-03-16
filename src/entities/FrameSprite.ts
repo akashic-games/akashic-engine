@@ -1,7 +1,8 @@
-import { ImageAsset, Surface } from "@akashic/pdi-types";
+import type { ImageAsset, Surface } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
-import { Timer } from "../Timer";
-import { Sprite, SpriteParameterObject } from "./Sprite";
+import type { Timer } from "../Timer";
+import type { SpriteParameterObject } from "./Sprite";
+import { Sprite } from "./Sprite";
 
 /**
  * `FrameSprite` のコンストラクタに渡すことができるパラメータ。

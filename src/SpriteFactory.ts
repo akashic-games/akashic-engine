@@ -1,8 +1,8 @@
-import { Camera } from "./Camera";
-import { E } from "./entities/E";
+import type { Camera } from "./Camera";
+import type { E } from "./entities/E";
 import { Sprite } from "./entities/Sprite";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { Scene } from "./Scene";
+import type { Scene } from "./Scene";
 
 export class SpriteFactory {
 	/**

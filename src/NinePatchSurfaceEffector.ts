@@ -1,6 +1,6 @@
-import { CommonRect, Surface } from "@akashic/pdi-types";
-import { Game } from "./Game";
-import { SurfaceEffector } from "./SurfaceEffector";
+import type { CommonRect, Surface } from "@akashic/pdi-types";
+import type { Game } from "./Game";
+import type { SurfaceEffector } from "./SurfaceEffector";
 import { SurfaceUtil } from "./SurfaceUtil";
 
 /**

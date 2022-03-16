@@ -1,20 +1,21 @@
-import { Asset, CommonOffset, StorageLoadError } from "@akashic/pdi-types";
+import type { Asset, CommonOffset, StorageLoadError } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { AssetAccessor } from "./AssetAccessor";
 import { AssetHolder } from "./AssetHolder";
-import { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
-import { Camera } from "./Camera";
+import type { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
+import type { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
-import { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
-import { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./entities/E";
-import { MessageEvent, OperationEvent } from "./Event";
+import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
+import type { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./entities/E";
+import type { MessageEvent, OperationEvent } from "./Event";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { Game } from "./Game";
-import { LocalTickModeString } from "./LocalTickModeString";
-import { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
-import { TickGenerationModeString } from "./TickGenerationModeString";
-import { Timer } from "./Timer";
-import { TimerIdentifier, TimerManager } from "./TimerManager";
+import type { Game } from "./Game";
+import type { LocalTickModeString } from "./LocalTickModeString";
+import type { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
+import type { TickGenerationModeString } from "./TickGenerationModeString";
+import type { Timer } from "./Timer";
+import type { TimerIdentifier } from "./TimerManager";
+import { TimerManager } from "./TimerManager";
 
 export type SceneRequestAssetHandler = () => void;
 

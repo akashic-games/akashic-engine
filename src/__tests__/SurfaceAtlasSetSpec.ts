@@ -1,4 +1,5 @@
-import { Glyph, SurfaceAtlasSet, SurfaceAtlasSetParameterObject } from "..";
+import type { Glyph, SurfaceAtlasSetParameterObject } from "..";
+import { SurfaceAtlasSet } from "..";
 import { skeletonRuntime, Surface } from "./helpers";
 
 describe("test SurfaceAtlasSet", () => {

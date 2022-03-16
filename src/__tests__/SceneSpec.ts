@@ -1,5 +1,6 @@
 import { Trigger } from "@akashic/trigger";
-import { AssetConfiguration, AssetManager, E, Scene, SceneStateString, StorageRegion } from "..";
+import type { AssetConfiguration, SceneStateString } from "..";
+import { AssetManager, E, Scene, StorageRegion } from "..";
 import { customMatchers, Game, skeletonRuntime, ImageAsset, AudioAsset } from "./helpers";
 
 expect.extend(customMatchers);

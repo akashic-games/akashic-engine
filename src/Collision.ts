@@ -1,5 +1,5 @@
-import { CommonArea, CommonOffset } from "@akashic/pdi-types";
-import { E } from "./entities/E";
+import type { CommonArea, CommonOffset } from "@akashic/pdi-types";
+import type { E } from "./entities/E";
 import { Util } from "./Util";
 
 // 外積の絶対値
