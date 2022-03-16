@@ -1,5 +1,4 @@
-import type { AssetConfigurationCommonBase, CommonAreaShortened } from "@akashic/game-configuration";
-import type { AudioAssetHint, ImageAssetHint, CommonArea } from "@akashic/pdi-types";
+import type { AssetConfigurationCommonBase, AudioAssetConfigurationBase, ImageAssetConfigurationBase, ScriptAssetConfigurationBase, TextAssetConfigurationBase, VideoAssetConfigurationBase } from "@akashic/game-configuration";
 
 export type DynamicAssetConfiguration =
 	| DynamicAudioAssetConfigurationBase
@@ -25,113 +24,39 @@ export interface DynamicAssetConfigurationBase extends AssetConfigurationCommonB
 	uri: string;
 }
 
+type OmitProperties = "type" | "path" | "virtualPath"| "global";
+
 /**
  * ImageAssetの設定。
  */
-export interface DynamicImageAssetConfigurationBase extends DynamicAssetConfigurationBase {
-	/**
-	 * Assetの種類。
-	 */
-	type: "image";
-
-	/**
-	 * 幅。
-	 */
-	width: number;
-
-	/**
-	 * 高さ。
-	 */
-	height: number;
-
-	/**
-	 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。
-	 */
-	hint?: ImageAssetHint;
-
-	/**
-	 * 切り出す領域。
-	 * 指定した場合、その部分だけの画像アセットとして扱う。
-	 */
-	slice?: CommonArea | CommonAreaShortened;
-}
-
+ export interface DynamicImageAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<ImageAssetConfigurationBase, OmitProperties> {
+	 type: "image";
+ }
+ 
 /**
  * VideoAssetの設定。
  */
-export interface DynamicVideoAssetConfigurationBase extends DynamicAssetConfigurationBase {
-	/**
-	 * Assetの種類。
-	 */
+export interface DynamicVideoAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<VideoAssetConfigurationBase, OmitProperties> {
 	type: "video";
-
-	/**
-	 * 幅。
-	 */
-	width: number;
-
-	/**
-	 * 高さ。
-	 */
-	height: number;
-
-	/**
-	 * ループ。
-	 */
-	loop?: boolean;
-
-	/**
-	 * width,heightではなく実サイズを用いる指定。
-	 */
-	useRealSize?: boolean;
 }
 
 /**
  * AudioAssetの設定。
  */
-export interface DynamicAudioAssetConfigurationBase extends DynamicAssetConfigurationBase {
-	/**
-	 * Assetの種類。
-	 */
+export interface DynamicAudioAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<AudioAssetConfigurationBase, OmitProperties> {
 	type: "audio";
-
-	/**
-	 * AudioAssetのsystem指定。
-	 */
-	systemId: "music" | "sound";
-
-	/**
-	 * 再生時間。
-	 */
-	duration: number;
-
-	/**
-	 * ループ。
-	 */
-	loop?: boolean;
-
-	/**
-	 * ヒント。akashic-engineが最適なパフォーマンスを発揮するための情報。
-	 */
-	hint?: AudioAssetHint;
 }
 
 /**
  * TextAssetの設定。
  */
-export interface DynamicTextAssetConfigurationBase extends DynamicAssetConfigurationBase {
-	/**
-	 * Assetの種類。
-	 */
+export interface DynamicTextAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<TextAssetConfigurationBase, OmitProperties> {
 	type: "text";
 }
 
 /**
  * ScriptAssetの設定。
  */
-export interface DynamicScriptAssetConfigurationBase extends DynamicAssetConfigurationBase {
-	/**
-	 * Assetの種類。
-	 */
+export interface DynamicScriptAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<ScriptAssetConfigurationBase, OmitProperties> {
 	type: "script";
 }
