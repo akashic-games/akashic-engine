@@ -1,5 +1,5 @@
 import * as pci from "@akashic/pdi-common-impl";
-import {
+import type {
 	AssetLoadHandler,
 	AssetLoadError,
 	AudioAssetHint,
@@ -17,7 +17,7 @@ import {
 	VideoPlayer as PdiVideoPlayer,
 	VideoSystem as PdiVideoSystem
 } from "@akashic/pdi-types";
-import * as pl from "@akashic/playlog";
+import type * as pl from "@akashic/playlog";
 import * as g from "../..";
 
 declare global {

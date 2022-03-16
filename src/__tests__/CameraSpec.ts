@@ -1,5 +1,7 @@
-import { Camera2D, Matrix, PlainMatrix } from "..";
-import { Game, Renderer } from "./helpers";
+import type { Matrix } from "..";
+import { Camera2D, PlainMatrix } from "..";
+import type { Renderer } from "./helpers";
+import { Game } from "./helpers";
 
 describe("test Camera", () => {
 	it("初期化", () => {

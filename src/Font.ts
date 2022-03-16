@@ -1,5 +1,5 @@
-import { Glyph } from "@akashic/pdi-types";
-import { TextMetrics } from "./TextMetrics";
+import type { Glyph } from "@akashic/pdi-types";
+import type { TextMetrics } from "./TextMetrics";
 import { Util } from "./Util";
 
 /**

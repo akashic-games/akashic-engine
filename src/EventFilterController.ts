@@ -1,4 +1,4 @@
-import { Event } from "@akashic/playlog";
+import type { Event } from "@akashic/playlog";
 
 /**
  * イベントフィルタ内で利用可能なコントローラ。

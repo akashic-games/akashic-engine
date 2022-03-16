@@ -1,10 +1,11 @@
-import { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "@akashic/pdi-types";
-import { Camera } from "../Camera";
+import type { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "@akashic/pdi-types";
+import type { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
-import { Matrix } from "../Matrix";
-import { SurfaceEffector } from "../SurfaceEffector";
+import type { Matrix } from "../Matrix";
+import type { SurfaceEffector } from "../SurfaceEffector";
 import { SurfaceUtil } from "../SurfaceUtil";
-import { CacheableE, CacheableEParameterObject } from "./CacheableE";
+import type { CacheableEParameterObject } from "./CacheableE";
+import { CacheableE } from "./CacheableE";
 
 /**
  * `Pane` のコンストラクタに渡すことができるパラメータ。

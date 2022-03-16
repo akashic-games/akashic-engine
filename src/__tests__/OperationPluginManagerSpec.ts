@@ -1,5 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import { GameConfiguration, InternalOperationPluginOperation, Module, OperationPluginViewInfo } from "..";
+import type { GameConfiguration, InternalOperationPluginOperation, Module, OperationPluginViewInfo } from "..";
 import { Game } from "./helpers";
 
 // テスト用ダミー操作プラグイン

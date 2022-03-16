@@ -1,18 +1,6 @@
-import * as pl from "@akashic/playlog";
-import {
-	Asset,
-	AssetConfiguration,
-	Camera2D,
-	E,
-	GameConfiguration,
-	LoadingScene,
-	LoadingSceneParameterObject,
-	LocalTickModeString,
-	MessageEvent,
-	PlatformPointType,
-	Scene,
-	XorshiftRandomGenerator
-} from "..";
+import type * as pl from "@akashic/playlog";
+import type { Asset, AssetConfiguration, GameConfiguration, LoadingSceneParameterObject, LocalTickModeString } from "..";
+import { Camera2D, E, LoadingScene, MessageEvent, PlatformPointType, Scene, XorshiftRandomGenerator } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, ImageAsset, ScriptAsset, FilledRect } from "./helpers";
 
 expect.extend(customMatchers);
@@ -1085,7 +1073,7 @@ describe("test Game", () => {
 	});
 
 	describe("skippingScene", () => {
-		it("throw error if the non-local scene is given as a skippingScene", () => {
+		it("throw error if given non-local scene as a skippingScene", () => {
 			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 			const scene = new Scene({ game });
 			game.pushScene(scene);

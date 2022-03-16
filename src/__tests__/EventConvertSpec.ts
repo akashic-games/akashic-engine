@@ -4,7 +4,7 @@ import { FilledRect } from "../entities/FilledRect";
 import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent, PlayerInfoEvent } from "../Event";
 import { EventConverter } from "../EventConverter";
 import { EventPriority } from "../EventPriority";
-import { Player } from "../Player";
+import type { Player } from "../Player";
 import { StorageRegion, StorageValueStore } from "../Storage";
 import { Game, skeletonRuntime } from "./helpers";
 

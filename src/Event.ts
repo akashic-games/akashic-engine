@@ -1,7 +1,7 @@
-import { CommonOffset } from "@akashic/pdi-types";
-import { Player } from "./Player";
-import { RandomGenerator } from "./RandomGenerator";
-import { StorageValueStore } from "./Storage";
+import type { CommonOffset } from "@akashic/pdi-types";
+import type { Player } from "./Player";
+import type { RandomGenerator } from "./RandomGenerator";
+import type { StorageValueStore } from "./Storage";
 
 /**
  * イベントの種別。

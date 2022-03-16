@@ -1,41 +1,41 @@
-import { AssetConfigurationMap, GameConfiguration } from "@akashic/game-configuration";
-import {
+import type { AssetConfigurationMap, GameConfiguration } from "@akashic/game-configuration";
+import type {
 	Asset,
 	CommonOffset,
 	CommonSize,
 	Renderer,
 	ResourceFactory,
 	ScriptAssetRuntimeValueBase,
-	PlatformPointType,
 	PlatformPointEvent,
 	OperationPluginViewInfo
 } from "@akashic/pdi-types";
-import * as pl from "@akashic/playlog";
+import { PlatformPointType } from "@akashic/pdi-types";
+import type * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
 import { AssetManager } from "./AssetManager";
 import { AudioSystemManager } from "./AudioSystemManager";
-import { Camera } from "./Camera";
+import type { Camera } from "./Camera";
 import { DefaultLoadingScene } from "./DefaultLoadingScene";
-import { E, PointSource, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
-import { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent, OperationEvent } from "./Event";
+import type { E, PointSource, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
+import type { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent, OperationEvent } from "./Event";
 import { EventConverter } from "./EventConverter";
-import { EventFilter } from "./EventFilter";
+import type { EventFilter } from "./EventFilter";
 import { ExceptionFactory } from "./ExceptionFactory";
-import { GameHandlerSet } from "./GameHandlerSet";
-import { GameMainParameterObject } from "./GameMainParameterObject";
+import type { GameHandlerSet } from "./GameHandlerSet";
+import type { GameMainParameterObject } from "./GameMainParameterObject";
 import { LoadingScene } from "./LoadingScene";
-import { LocalTickModeString } from "./LocalTickModeString";
+import type { LocalTickModeString } from "./LocalTickModeString";
 import { ModuleManager } from "./ModuleManager";
-import { OperationPlugin } from "./OperationPlugin";
+import type { OperationPlugin } from "./OperationPlugin";
 import { OperationPluginManager } from "./OperationPluginManager";
-import { InternalOperationPluginOperation } from "./OperationPluginOperation";
+import type { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import { PointEventResolver } from "./PointEventResolver";
-import { RandomGenerator } from "./RandomGenerator";
+import type { RandomGenerator } from "./RandomGenerator";
 import { Scene } from "./Scene";
-import { SnapshotSaveRequest } from "./SnapshotSaveRequest";
+import type { SnapshotSaveRequest } from "./SnapshotSaveRequest";
 import { Storage } from "./Storage";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
-import { TickGenerationModeString } from "./TickGenerationModeString";
+import type { TickGenerationModeString } from "./TickGenerationModeString";
 import { XorshiftRandomGenerator } from "./XorshiftRandomGenerator";
 
 /**

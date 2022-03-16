@@ -1,8 +1,10 @@
-import { ImageAsset, Renderer, Surface } from "@akashic/pdi-types";
-import { Camera } from "../Camera";
-import { Matrix, PlainMatrix } from "../Matrix";
+import type { ImageAsset, Renderer, Surface } from "@akashic/pdi-types";
+import type { Camera } from "../Camera";
+import type { Matrix } from "../Matrix";
+import { PlainMatrix } from "../Matrix";
 import { SurfaceUtil } from "../SurfaceUtil";
-import { E, EParameterObject } from "./E";
+import type { EParameterObject } from "./E";
+import { E } from "./E";
 
 /**
  * `Sprite` のコンストラクタに渡すことができるパラメータ。
