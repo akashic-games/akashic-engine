@@ -1,4 +1,11 @@
-import type { AssetConfigurationCommonBase, AudioAssetConfigurationBase, ImageAssetConfigurationBase, ScriptAssetConfigurationBase, TextAssetConfigurationBase, VideoAssetConfigurationBase } from "@akashic/game-configuration";
+import type {
+	AssetConfigurationCommonBase,
+	AudioAssetConfigurationBase,
+	ImageAssetConfigurationBase,
+	ScriptAssetConfigurationBase,
+	TextAssetConfigurationBase,
+	VideoAssetConfigurationBase
+} from "@akashic/game-configuration";
 
 export type DynamicAssetConfiguration =
 	| DynamicAudioAssetConfigurationBase
@@ -25,41 +32,39 @@ export interface DynamicAssetConfigurationBase extends AssetConfigurationCommonB
 }
 
 // type は
-type UnneededKeysForDynamicAsset = "path" | "virtualPath"| "global";
+type UnneededKeysForDynamicAsset = "path" | "virtualPath" | "global";
 
 /**
  * ImageAssetの設定。
  */
- export interface DynamicImageAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<ImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {
- }
- 
- const hoge: DynamicImageAssetConfigurationBase = {
-	 height: 1,
-	 width: 1,
-	 id: "",
-	 type: "image",
-	 uri: ""
- }
+export interface DynamicImageAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<ImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * VideoAssetの設定。
  */
-export interface DynamicVideoAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<VideoAssetConfigurationBase, UnneededKeysForDynamicAsset> {
-}
+export interface DynamicVideoAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<VideoAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * AudioAssetの設定。
  */
-export interface DynamicAudioAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<AudioAssetConfigurationBase, UnneededKeysForDynamicAsset> {
-}
+export interface DynamicAudioAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<AudioAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * TextAssetの設定。
  */
-export interface DynamicTextAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<TextAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+export interface DynamicTextAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<TextAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * ScriptAssetの設定。
  */
-export interface DynamicScriptAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {
-}
+export interface DynamicScriptAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
