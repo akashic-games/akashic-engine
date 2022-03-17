@@ -31,9 +31,6 @@ export interface DynamicAssetConfigurationBase extends AssetConfigurationCommonB
 	uri: string;
 }
 
-// type は
-type UnneededKeysForDynamicAsset = "path" | "virtualPath" | "global";
-
 /**
  * ImageAssetの設定。
  */
@@ -68,3 +65,6 @@ export interface DynamicTextAssetConfigurationBase
 export interface DynamicScriptAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
 		Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+
+// interface メンバは多重継承できないため、 DynamicAssetConfigurationBase の type メンバ を Omit する
+type UnneededKeysForDynamicAsset = "path" | "virtualPath" | "global";
