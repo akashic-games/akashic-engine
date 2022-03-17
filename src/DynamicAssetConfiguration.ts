@@ -24,39 +24,42 @@ export interface DynamicAssetConfigurationBase extends AssetConfigurationCommonB
 	uri: string;
 }
 
-type OmitProperties = "type" | "path" | "virtualPath"| "global";
+// type は
+type UnneededKeysForDynamicAsset = "path" | "virtualPath"| "global";
 
 /**
  * ImageAssetの設定。
  */
- export interface DynamicImageAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<ImageAssetConfigurationBase, OmitProperties> {
-	 type: "image";
+ export interface DynamicImageAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<ImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {
  }
  
+ const hoge: DynamicImageAssetConfigurationBase = {
+	 height: 1,
+	 width: 1,
+	 id: "",
+	 type: "image",
+	 uri: ""
+ }
+
 /**
  * VideoAssetの設定。
  */
-export interface DynamicVideoAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<VideoAssetConfigurationBase, OmitProperties> {
-	type: "video";
+export interface DynamicVideoAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<VideoAssetConfigurationBase, UnneededKeysForDynamicAsset> {
 }
 
 /**
  * AudioAssetの設定。
  */
-export interface DynamicAudioAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<AudioAssetConfigurationBase, OmitProperties> {
-	type: "audio";
+export interface DynamicAudioAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<AudioAssetConfigurationBase, UnneededKeysForDynamicAsset> {
 }
 
 /**
  * TextAssetの設定。
  */
-export interface DynamicTextAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<TextAssetConfigurationBase, OmitProperties> {
-	type: "text";
-}
+export interface DynamicTextAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<TextAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * ScriptAssetの設定。
  */
-export interface DynamicScriptAssetConfigurationBase extends DynamicAssetConfigurationBase, Omit<ScriptAssetConfigurationBase, OmitProperties> {
-	type: "script";
+export interface DynamicScriptAssetConfigurationBase extends Omit<DynamicAssetConfigurationBase, "type">, Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {
 }
