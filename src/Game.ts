@@ -578,6 +578,12 @@ export class Game {
 	_defaultLoadingScene: LoadingScene;
 
 	/**
+	 * スキッピングシーン。
+	 * @private
+	 */
+	_skippingScene: Scene | undefined;
+
+	/**
 	 * `this.onSceneChange` と同様に `this.scenes` の変化時にfireされるTrigger。
 	 * `this.onSceneChange` との相違点は `this.reset()` 時に removeAll() されないことである。
 	 * @private
@@ -684,7 +690,7 @@ export class Game {
 	/**
 	 * 使用中のカメラの実体。
 	 *
-	 * focusingcameraがこの値を暗黙的に生成するので、通常ゲーム開発者はこの値を直接指定する必要はない。
+	 * focusingCameraがこの値を暗黙的に生成するので、通常ゲーム開発者はこの値を直接指定する必要はない。
 	 * @private
 	 */
 	_focusingCamera: Camera | undefined;
@@ -756,6 +762,34 @@ export class Game {
 		if (c === this._focusingCamera) return;
 		if (this._modified) this.render();
 		this._focusingCamera = c;
+	}
+
+	/**
+	 * スキッピングシーン。
+	 * ゲームが早送りとなった際に描画される特殊なシーンであり、以下の制限を持つ。
+	 *
+	 * * サポートするシーンの種別は "full-local" のみ
+	 * * 非グローバルアセットを利用してはならない
+	 * * シーン内で発生した一切のイベントは処理されない
+	 * * 早送りが複数回発生した場合でも、対象のシーンの onLoad は2度目以降発火せずにインスタンスが使い回される
+	 *
+	 * 初期値は `undefined` である。
+	 */
+	get skippingScene(): Scene | undefined {
+		return this._skippingScene;
+	}
+
+	set skippingScene(scene: Scene | undefined) {
+		if (scene === this._skippingScene) return;
+		if (scene) {
+			if (scene.local !== "full-local") {
+				throw ExceptionFactory.createAssertionError("Game#skippingScene: only 'full-local' scene is supported.");
+			}
+			if (scene._needsLoading()) {
+				throw ExceptionFactory.createAssertionError("Game#skippingScene: must not depend on any assets/storages.");
+			}
+		}
+		this._skippingScene = scene;
 	}
 
 	/**
@@ -999,9 +1033,16 @@ export class Game {
 	 * このメソッドは暗黙に呼び出される。ゲーム開発者がこのメソッドを利用する必要はない。
 	 */
 	render(): void {
+		let scene: Scene | undefined;
+		if (this._skippingScene && this.isSkipping) {
+			scene = this._skippingScene;
+			scene.onUpdate.fire();
+		} else {
+			scene = this.scene();
+		}
+
 		if (!this._modified) return;
 
-		const scene = this.scene();
 		if (!scene) return;
 
 		const camera = this.focusingCamera;
@@ -1356,6 +1397,9 @@ export class Game {
 				this.scenes.pop();
 			}
 		}
+		if (this._skippingScene && !this._skippingScene.destroyed()) {
+			this._skippingScene.destroy();
+		}
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
@@ -1391,6 +1435,7 @@ export class Game {
 		this._localDb = {};
 		this._modified = true;
 		this.loadingScene = undefined!;
+		this._skippingScene = undefined;
 		this._focusingCamera = undefined;
 		this.lastLocalTickMode = null;
 		this.lastTickGenerationMode = null;
@@ -1444,6 +1489,9 @@ export class Game {
 		}
 		if (!this._defaultLoadingScene.destroyed()) {
 			this._defaultLoadingScene.destroy();
+		}
+		if (this._skippingScene && !this._skippingScene.destroyed()) {
+			this._skippingScene.destroy();
 		}
 
 		// NOTE: fps, width, height, external, vars はそのまま保持しておく
@@ -1524,6 +1572,7 @@ export class Game {
 		this._cameraIdx = 0;
 		this._isTerminated = true;
 		this._focusingCamera = undefined;
+		this._skippingScene = undefined;
 		this._configuration = undefined!;
 		this._postTickTasks = [];
 		this.surfaceAtlasSet.destroy();
@@ -1620,6 +1669,13 @@ export class Game {
 	}
 
 	/**
+	 * @ignore
+	 */
+	_handleSkippingSceneReady(scene: Scene): void {
+		this._pushPostTickTask(scene._fireLoaded, scene);
+	}
+
+	/**
 	 * @private
 	 */
 	_terminateGame(): void {
@@ -1674,6 +1730,10 @@ export class Game {
 	 */
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
+		if (isSkipping && this._skippingScene && !this._skippingScene._loaded) {
+			this._skippingScene._load();
+			this._skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
+		}
 	}
 
 	/**

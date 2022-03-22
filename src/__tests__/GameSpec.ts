@@ -1,7 +1,7 @@
 import type * as pl from "@akashic/playlog";
 import type { Asset, AssetConfiguration, GameConfiguration, LoadingSceneParameterObject, LocalTickModeString } from "..";
 import { Camera2D, E, LoadingScene, MessageEvent, PlatformPointType, Scene, XorshiftRandomGenerator } from "..";
-import { customMatchers, EntityStateFlags, Game, Renderer, ImageAsset, ScriptAsset } from "./helpers";
+import { customMatchers, EntityStateFlags, Game, Renderer, ImageAsset, ScriptAsset, FilledRect } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -920,6 +920,10 @@ describe("test Game", () => {
 				tickGenerationMode: "by-clock"
 			}); // scene2
 
+			const skippingScene = new Scene({ game, local: "full-local" });
+			game.skippingScene = skippingScene;
+			expect(skippingScene.destroyed()).toBe(false);
+
 			const randGen1 = new XorshiftRandomGenerator(10);
 			game._pointEventResolver.pointDown({
 				type: PlatformPointType.Down,
@@ -950,6 +954,8 @@ describe("test Game", () => {
 			expect(game._onSceneChange.length).not.toBe(0);
 			// reset後、Game#_moduleManagerが作り直されていることを確認
 			expect(game._moduleManager).not.toBe(moduleManager);
+			expect(game.skippingScene).toBeUndefined();
+			expect(skippingScene.destroyed()).toBe(true);
 			done();
 		});
 		game._loadAndStart();
@@ -1070,6 +1076,130 @@ describe("test Game", () => {
 		game._modified = false;
 		game.focusingCamera = camera;
 		expect(game.focusingCamera).toEqual(camera);
+	});
+
+	describe("skippingScene", () => {
+		it("throw error if non-local scene is given as a skippingScene", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const scene = new Scene({ game });
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			expect(() => {
+				game.skippingScene = new Scene({ game, local: "interpolate-local" });
+			}).toThrow("Game#skippingScene: only 'full-local' scene is supported.");
+			expect(() => {
+				game.skippingScene = new Scene({ game, local: "non-local" });
+			}).toThrow("Game#skippingScene: only 'full-local' scene is supported.");
+		});
+
+		it("throw error if the scene with any assets is given as a skippingScene", () => {
+			const game = new Game({
+				width: 320,
+				height: 320,
+				main: "",
+				assets: {
+					foo: {
+						type: "image",
+						path: "/path1.png",
+						virtualPath: "path1.png",
+						width: 1,
+						height: 1
+					}
+				}
+			});
+			const scene = new Scene({ game });
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			expect(() => {
+				game.skippingScene = new Scene({ game, local: "full-local", assetIds: ["foo"] });
+			}).toThrow("Game#skippingScene: must not depend on any assets/storages.");
+		});
+
+		it("render skippingScene if the game has been skipping", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const r = new Renderer();
+			game.renderers.push(r);
+			const scene = new Scene({ game });
+			const red = new FilledRect({
+				scene,
+				cssColor: "red",
+				width: 32,
+				height: 32
+			});
+			scene.append(red);
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			const skippingScene = new Scene({ game, local: "full-local" });
+			const black = new FilledRect({
+				scene: skippingScene,
+				cssColor: "black",
+				width: 32,
+				height: 32
+			});
+			skippingScene.append(black);
+			game.skippingScene = skippingScene;
+
+			game.onSkipChange.fire(true);
+			game.render();
+			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("black");
+
+			r.clearMethodCallHistory();
+			game.onSkipChange.fire(false);
+			game.modified();
+			game.render();
+			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("red");
+		});
+
+		it("fire skippingScene#onUpdate if the Game has been skipping and Game#render() is called each time", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const scene = new Scene({ game });
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			const skippingScene = new Scene({ game, local: "full-local" });
+			game.skippingScene = skippingScene;
+
+			let updateCount = 0;
+			skippingScene.onUpdate.add(() => {
+				updateCount++;
+			});
+
+			game.onSkipChange.fire(true);
+			game.render();
+			expect(updateCount).toBe(1);
+			game.render();
+			expect(updateCount).toBe(2);
+			game.render();
+			expect(updateCount).toBe(3);
+
+			game.onSkipChange.fire(false);
+			game.render();
+			expect(updateCount).toBe(3);
+			game.render();
+			expect(updateCount).toBe(3);
+			game.render();
+			expect(updateCount).toBe(3);
+		});
+
+		it("fire skippingScene#onLoad if the skippingScene is set to Game#skippingScene and enter the skipping state", done => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const r = new Renderer();
+			game.renderers.push(r);
+			const scene = new Scene({ game });
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			const skippingScene = new Scene({ game, local: "full-local" });
+			skippingScene.onLoad.addOnce(() => {
+				done();
+			});
+			game.skippingScene = skippingScene;
+
+			game.onSkipChange.fire(true);
+		});
 	});
 
 	it("joinedPlayerIds", () => {
