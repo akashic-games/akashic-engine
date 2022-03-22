@@ -4,6 +4,7 @@
 
 その他変更
  * `any` 型の利用箇所を削減
+ * `DynamicAssetConfiguration` の継承関係を整理
 
 ## 3.3.0
 
