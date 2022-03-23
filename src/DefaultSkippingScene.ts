@@ -45,7 +45,7 @@ export class DefaultSkippingScene extends Scene {
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
 	constructor(param: DefaultSkippingSceneParameterObject) {
-		super({ game: param.game, name: "akashic:default-skipping-scene" });
+		super({ game: param.game, local: "full-local", name: "akashic:default-skipping-scene" });
 
 		if (param.style === "indicator") {
 			this.onLoad.addOnce(this._handleLoadForIndicator, this);
