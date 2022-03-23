@@ -1,16 +1,12 @@
-import type { Asset, Renderer } from "@akashic/pdi-types";
-import type { Camera } from "./Camera";
-import type { Camera2D } from "./Camera2D";
-import type { EParameterObject } from "./entities/E";
-import { E } from "./entities/E";
+import type { Asset } from "@akashic/pdi-types";
+import { CameraCancellingE } from "./entities/CameraCancellingE";
 import { FilledRect } from "./entities/FilledRect";
 import type { Game } from "./Game";
 import { LoadingScene } from "./LoadingScene";
-import { Object2D } from "./Object2D";
 import type { Scene } from "./Scene";
 
 /**
- * `DeafultLoadingScene` のコンストラクタに渡すことができるパラメータ。
+ * `DefaultLoadingScene` のコンストラクタに渡すことができるパラメータ。
  * 汎用性のあるクラスではなく、カスタマイズすべき余地は大きくないので LoadingSceneParameterObject は継承していない。
  */
 export interface DefaultLoadingSceneParameterObject {
@@ -19,55 +15,6 @@ export interface DefaultLoadingSceneParameterObject {
 	 */
 	game: Game;
 	style?: "default" | "compact";
-}
-
-/**
- * カメラのtransformを戻すエンティティ。
- * LoadingSceneのインジケータがカメラの影響を受けないようにするための内部エンティティ。
- */
-class CameraCancellingE extends E {
-	_canceller: Object2D;
-
-	constructor(param: EParameterObject) {
-		super(param);
-		this._canceller = new Object2D();
-	}
-
-	renderSelf(renderer: Renderer, camera?: Camera): boolean {
-		if (!this.children) return false;
-
-		if (camera) {
-			const c = <Camera2D>camera;
-			const canceller = this._canceller;
-			if (
-				c.x !== canceller.x ||
-				c.y !== canceller.y ||
-				c.angle !== canceller.angle ||
-				c.scaleX !== canceller.scaleX ||
-				c.scaleY !== canceller.scaleY
-			) {
-				canceller.x = c.x;
-				canceller.y = c.y;
-				canceller.angle = c.angle;
-				canceller.scaleX = c.scaleX;
-				canceller.scaleY = c.scaleY;
-				if (canceller._matrix) {
-					canceller._matrix._modified = true;
-				}
-			}
-			renderer.save();
-			renderer.transform(canceller.getMatrix()._matrix);
-		}
-
-		// Note: concatしていないのでunsafeだが、render中に配列の中身が変わる事はない前提とする
-		const children = this.children;
-		for (let i = 0; i < children.length; ++i) children[i].render(renderer, camera);
-
-		if (camera) {
-			renderer.restore();
-		}
-		return false;
-	}
 }
 
 /**
@@ -85,7 +32,7 @@ export class DefaultLoadingScene extends LoadingScene {
 	private _style: "default" | "compact";
 
 	/**
-	 * `DeafultLoadingScene` のインスタンスを生成する。
+	 * `DefaultLoadingScene` のインスタンスを生成する。
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
 	constructor(param: DefaultLoadingSceneParameterObject) {

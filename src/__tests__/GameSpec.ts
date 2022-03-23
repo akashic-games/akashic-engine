@@ -1117,6 +1117,36 @@ describe("test Game", () => {
 			}).toThrow("Game#skippingScene: must not depend on any assets/storages.");
 		});
 
+		it("do not render anything in skipping if the configuration of the 'defaultSkippingScene' field is set to 'none'", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {}, defaultSkippingScene: "none" });
+			const r = new Renderer();
+			game.renderers.push(r);
+			const scene = new Scene({ game });
+			const red = new FilledRect({
+				scene,
+				cssColor: "red",
+				width: 32,
+				height: 32
+			});
+			scene.append(red);
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+
+			r.clearMethodCallHistory();
+			game.onSkipChange.fire(true);
+			game.modified();
+			game.render();
+
+			// 描画に関するメソッド (`fillRect`, `drawImage` など) が呼ばれていないことを確認
+			expect(r.methodCallHistory).toEqual(["save", "clear", "restore"]);
+
+			r.clearMethodCallHistory();
+			game.onSkipChange.fire(false);
+			game.modified();
+			game.render();
+			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("red");
+		});
+
 		it("render skippingScene if the game has been skipping", () => {
 			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 			const r = new Renderer();
@@ -1143,6 +1173,7 @@ describe("test Game", () => {
 			game.skippingScene = skippingScene;
 
 			game.onSkipChange.fire(true);
+			game.modified();
 			game.render();
 			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("black");
 
