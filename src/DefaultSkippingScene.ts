@@ -4,6 +4,9 @@ import { FilledRect } from "./entities/FilledRect";
 import type { SceneParameterObject } from "./Scene";
 import { Scene } from "./Scene";
 
+/**
+ * @ignore
+ */
 function easeInOutQuad(t: number, b: number, c: number, d: number): number {
 	t /= d / 2;
 	if (t < 1) return (c / 2) * t * t + b;
@@ -11,19 +14,70 @@ function easeInOutQuad(t: number, b: number, c: number, d: number): number {
 	return (-c / 2) * (t * (t - 2) - 1) + b;
 }
 
-class AgedFilledRect extends FilledRect {
-	age: number = 0;
+/**
+ * @ignore
+ */
+interface FlickeredFilledRectParameterObject extends FilledRectParameterObject {
+	offsetDurationFrame: number;
+	waitingDurationFrame: number;
+	easingDurationFrame: number;
+	easingFrom: number;
+	easingTo: number;
+	easing: (t: number, b: number, c: number, d: number) => number;
+}
 
-	constructor(param: FilledRectParameterObject) {
+/**
+ * @ignore
+ */
+class FlickeredFilledRect extends FilledRect {
+	offsetDurationFrame: number;
+	easingDurationFrame: number;
+	waitingDurationFrame: number;
+	easingFrom: number;
+	easingTo: number;
+	easing: (t: number, b: number, c: number, d: number) => number;
+
+	private age: number = 0;
+
+	constructor(param: FlickeredFilledRectParameterObject) {
 		super(param);
+		this.offsetDurationFrame = param.offsetDurationFrame;
+		this.easingDurationFrame = param.easingDurationFrame;
+		this.waitingDurationFrame = param.waitingDurationFrame;
+		this.easingFrom = param.easingFrom;
+		this.easingTo = param.easingTo;
+		this.easing = param.easing;
+		this.onUpdate.add(this._incrementAge, this);
 		this.onUpdate.add(this._handleUpdate, this);
 	}
 
-	/**
-	 * @private
-	 */
-	private _handleUpdate(): void {
+	private _incrementAge(): void {
 		this.age++;
+	}
+
+	private _handleUpdate(): void {
+		const cssColor = this._calculateCSSColor();
+		if (this.cssColor !== cssColor) {
+			this.cssColor = cssColor;
+			this.modified();
+		}
+	}
+
+	private _calculateCSSColor(): string {
+		const { age, offsetDurationFrame, easingDurationFrame, waitingDurationFrame, easingFrom, easingTo, easing } = this;
+
+		const remainder = Math.max(age - offsetDurationFrame, 0) % (easingDurationFrame + waitingDurationFrame);
+		let col = easingTo;
+
+		if (0 < remainder && remainder < easingDurationFrame) {
+			const t = remainder;
+			const b = easingFrom;
+			const c = easingTo - easingFrom;
+			const d = easingDurationFrame;
+			col = easing(t, b, c, d);
+		}
+
+		return `rgb(${col}, ${col}, ${col})`;
 	}
 }
 
@@ -57,47 +111,44 @@ export class DefaultSkippingScene extends Scene {
 	 */
 	private _handleLoadForIndicator(): void {
 		const game = this.game;
-		const size = 12;
-		const margin = 12;
-		const marginRight = 12;
-		const marginBottom = 8;
-		const rotationAngle = 180;
-		const offsetFrame = 1800 / game.fps;
-		const rotationFrame = 1500 / game.fps;
-		const waitingFrame = 9000 / game.fps;
+		const rectSize = (Math.min(game.width, game.height) * 0.03) | 0;
+		const margin = (Math.min(game.width, game.height) * 0.03) | 0;
+		const marginRight = (Math.min(game.width, game.height) * 0.05) | 0;
+		const marginBottom = (Math.min(game.width, game.height) * 0.05) | 0;
+		const offsetDurationFrame = 1800 / game.fps;
+		const easingDurationFrame = 1500 / game.fps;
+		const waitingDurationFrame = 9000 / game.fps;
+		const easingFrom = 255 - 50;
+		const easingTo = 255;
+		const easing = easeInOutQuad;
 
 		this.append(
 			new CameraCancellingE({
 				scene: this,
 				children: [
-					{ offsetFrame: offsetFrame * 0 },
-					{ offsetFrame: offsetFrame * 1 },
-					{ offsetFrame: offsetFrame * 2 },
-					{ offsetFrame: offsetFrame * 3 }
+					{ offsetDurationFrame: offsetDurationFrame * 0 },
+					{ offsetDurationFrame: offsetDurationFrame * 1 },
+					{ offsetDurationFrame: offsetDurationFrame * 2 },
+					{ offsetDurationFrame: offsetDurationFrame * 3 }
 				]
 					.reverse()
-					.map(({ offsetFrame }, i) => {
-						const rect = new AgedFilledRect({
+					.map(({ offsetDurationFrame }, i) => {
+						return new FlickeredFilledRect({
 							scene: this,
-							cssColor: "#3F3937",
-							width: size,
-							height: size,
-							x: game.width - size / 2 - i * (size + margin) - marginRight,
-							y: game.height - size / 2 - marginBottom,
+							cssColor: `rgb(${easingTo}, ${easingTo}, ${easingTo})`,
+							width: rectSize,
+							height: rectSize,
+							x: game.width - rectSize / 2 - i * (rectSize + margin) - marginRight,
+							y: game.height - rectSize / 2 - marginBottom,
 							anchorX: 0.5,
-							anchorY: 0.5
+							anchorY: 0.5,
+							offsetDurationFrame,
+							easingDurationFrame,
+							waitingDurationFrame,
+							easingFrom,
+							easingTo,
+							easing
 						});
-						rect.onUpdate.add(() => {
-							const remainder = Math.max(rect.age - offsetFrame, 0) % (rotationFrame + waitingFrame);
-							if (remainder <= 0 || rotationFrame < remainder) return;
-							const t = remainder;
-							const b = 0;
-							const c = rotationAngle;
-							const d = rotationFrame;
-							rect.angle = easeInOutQuad(t, b, c, d);
-							rect.modified();
-						});
-						return rect;
 					})
 			})
 		);
