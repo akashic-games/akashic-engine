@@ -26,7 +26,7 @@ function easingInOutQuadWithSaturation(t: number, b: number, c: number, d: numbe
 /**
  * @ignore
  */
-interface FlickeredFilledRectParameterObject extends FilledRectParameterObject {
+interface EasingFilledRectParameterObject extends FilledRectParameterObject {
 	offsetDurationFrame: number;
 	easingDurationFrame: number;
 	valueFrom: number;
@@ -37,7 +37,7 @@ interface FlickeredFilledRectParameterObject extends FilledRectParameterObject {
 /**
  * @ignore
  */
-class FlickeredFilledRect extends FilledRect {
+class EasingFilledRect extends FilledRect {
 	offsetDurationFrame: number;
 	easingDurationFrame: number;
 	valueFrom: number;
@@ -46,7 +46,7 @@ class FlickeredFilledRect extends FilledRect {
 
 	private age: number = 0;
 
-	constructor(param: FlickeredFilledRectParameterObject) {
+	constructor(param: EasingFilledRectParameterObject) {
 		super(param);
 		this.offsetDurationFrame = param.offsetDurationFrame;
 		this.easingDurationFrame = param.easingDurationFrame;
@@ -126,7 +126,7 @@ export class DefaultSkippingScene extends Scene {
 			new CameraCancellingE({
 				scene: this,
 				children: [3, 2, 1, 0].map((offsetIndex, i) => {
-					return new FlickeredFilledRect({
+					return new EasingFilledRect({
 						scene: this,
 						cssColor: `rgb(${valueTo}, ${valueTo}, ${valueTo})`,
 						width: rectSize,
