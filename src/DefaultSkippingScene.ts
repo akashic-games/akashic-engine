@@ -125,7 +125,7 @@ export class DefaultSkippingScene extends Scene {
 		this.append(
 			new CameraCancellingE({
 				scene: this,
-				children: [3, 2, 1, 0].map(i => {
+				children: [3, 2, 1, 0].map((offsetIndex, i) => {
 					return new FlickeredFilledRect({
 						scene: this,
 						cssColor: `rgb(${valueTo}, ${valueTo}, ${valueTo})`,
@@ -135,7 +135,7 @@ export class DefaultSkippingScene extends Scene {
 						y: game.height - rectSize / 2 - marginBottom,
 						anchorX: 0.5,
 						anchorY: 0.5,
-						offsetDurationFrame: easingDurationFrame - offsetDurationFrame * i,
+						offsetDurationFrame: offsetDurationFrame * offsetIndex,
 						easingDurationFrame,
 						valueFrom,
 						valueTo,
