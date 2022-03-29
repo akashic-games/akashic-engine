@@ -17,9 +17,17 @@ function easeInOutQuad(t: number, b: number, c: number, d: number): number {
 /**
  * @ignore
  */
+function easingInOutQuadWithSaturation(t: number, b: number, c: number, d: number): number {
+	if (t <= 0) return b + c;
+	const threshold = d * 0.15;
+	return t < threshold ? easeInOutQuad(t, b, c, threshold) : b + c;
+}
+
+/**
+ * @ignore
+ */
 interface FlickeredFilledRectParameterObject extends FilledRectParameterObject {
 	offsetDurationFrame: number;
-	waitingDurationFrame: number;
 	easingDurationFrame: number;
 	easingFrom: number;
 	easingTo: number;
@@ -32,7 +40,6 @@ interface FlickeredFilledRectParameterObject extends FilledRectParameterObject {
 class FlickeredFilledRect extends FilledRect {
 	offsetDurationFrame: number;
 	easingDurationFrame: number;
-	waitingDurationFrame: number;
 	easingFrom: number;
 	easingTo: number;
 	easing: (t: number, b: number, c: number, d: number) => number;
@@ -43,7 +50,6 @@ class FlickeredFilledRect extends FilledRect {
 		super(param);
 		this.offsetDurationFrame = param.offsetDurationFrame;
 		this.easingDurationFrame = param.easingDurationFrame;
-		this.waitingDurationFrame = param.waitingDurationFrame;
 		this.easingFrom = param.easingFrom;
 		this.easingTo = param.easingTo;
 		this.easing = param.easing;
@@ -64,18 +70,13 @@ class FlickeredFilledRect extends FilledRect {
 	}
 
 	private _calculateCSSColor(): string {
-		const { age, offsetDurationFrame, easingDurationFrame, waitingDurationFrame, easingFrom, easingTo, easing } = this;
+		const { age, offsetDurationFrame, easingDurationFrame, easingFrom, easingTo, easing } = this;
 
-		const remainder = Math.max(age - offsetDurationFrame, 0) % (easingDurationFrame + waitingDurationFrame);
-		let col = easingTo;
-
-		if (0 < remainder && remainder < easingDurationFrame) {
-			const t = remainder;
-			const b = easingFrom;
-			const c = easingTo - easingFrom;
-			const d = easingDurationFrame;
-			col = easing(t, b, c, d);
-		}
+		const t = Math.max(age - offsetDurationFrame, 0) % easingDurationFrame;
+		const b = easingFrom;
+		const c = easingTo - easingFrom;
+		const d = easingDurationFrame;
+		const col = easing(t, b, c, d);
 
 		return `rgb(${col}, ${col}, ${col})`;
 	}
@@ -115,41 +116,32 @@ export class DefaultSkippingScene extends Scene {
 		const margin = (Math.min(game.width, game.height) * 0.03) | 0;
 		const marginRight = (Math.min(game.width, game.height) * 0.05) | 0;
 		const marginBottom = (Math.min(game.width, game.height) * 0.05) | 0;
-		const offsetDurationFrame = 1800 / game.fps;
-		const easingDurationFrame = 1500 / game.fps;
-		const waitingDurationFrame = 9000 / game.fps;
+		const offsetDurationFrame = 400 / (1000 / game.fps);
+		const easingDurationFrame = 2500 / (1000 / game.fps);
 		const easingFrom = 255 - 50;
 		const easingTo = 255;
-		const easing = easeInOutQuad;
+		const easing = easingInOutQuadWithSaturation;
 
 		this.append(
 			new CameraCancellingE({
 				scene: this,
-				children: [
-					{ offsetDurationFrame: offsetDurationFrame * 0 },
-					{ offsetDurationFrame: offsetDurationFrame * 1 },
-					{ offsetDurationFrame: offsetDurationFrame * 2 },
-					{ offsetDurationFrame: offsetDurationFrame * 3 }
-				]
-					.reverse()
-					.map(({ offsetDurationFrame }, i) => {
-						return new FlickeredFilledRect({
-							scene: this,
-							cssColor: `rgb(${easingTo}, ${easingTo}, ${easingTo})`,
-							width: rectSize,
-							height: rectSize,
-							x: game.width - rectSize / 2 - i * (rectSize + margin) - marginRight,
-							y: game.height - rectSize / 2 - marginBottom,
-							anchorX: 0.5,
-							anchorY: 0.5,
-							offsetDurationFrame,
-							easingDurationFrame,
-							waitingDurationFrame,
-							easingFrom,
-							easingTo,
-							easing
-						});
-					})
+				children: [3, 2, 1, 0].map(i => {
+					return new FlickeredFilledRect({
+						scene: this,
+						cssColor: `rgb(${easingTo}, ${easingTo}, ${easingTo})`,
+						width: rectSize,
+						height: rectSize,
+						x: game.width - rectSize / 2 - i * (rectSize + margin) - marginRight,
+						y: game.height - rectSize / 2 - marginBottom,
+						anchorX: 0.5,
+						anchorY: 0.5,
+						offsetDurationFrame: easingDurationFrame - offsetDurationFrame * i,
+						easingDurationFrame,
+						easingFrom,
+						easingTo,
+						easing
+					});
+				})
 			})
 		);
 	}
