@@ -48,14 +48,14 @@ class FlickeredFilledRect extends FilledRect {
 		this.easingTo = param.easingTo;
 		this.easing = param.easing;
 		this.onUpdate.add(this._incrementAge, this);
-		this.onUpdate.add(this._handleUpdate, this);
+		this.onUpdate.add(this._updateColor, this);
 	}
 
 	private _incrementAge(): void {
 		this.age++;
 	}
 
-	private _handleUpdate(): void {
+	private _updateColor(): void {
 		const cssColor = this._calculateCSSColor();
 		if (this.cssColor !== cssColor) {
 			this.cssColor = cssColor;
