@@ -18,9 +18,8 @@ function easeInOutQuad(t: number, b: number, c: number, d: number): number {
  * @ignore
  */
 function easingInOutQuadWithSaturation(t: number, b: number, c: number, d: number): number {
-	if (t <= 0) return b + c;
 	const threshold = d * 0.15;
-	return t < threshold ? easeInOutQuad(t, b, c, threshold) : b + c;
+	return 0 < t && t < threshold ? easeInOutQuad(t, b, c, threshold) : b + c;
 }
 
 /**
