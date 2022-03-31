@@ -31,6 +31,7 @@ export * from "./Camera";
 export * from "./Camera2D";
 export * from "./Collision";
 export * from "./DefaultLoadingScene";
+export * from "./DefaultSkippingScene";
 export * from "./DynamicAssetConfiguration";
 export * from "./DynamicFont";
 export * from "./EntityStateFlags";
