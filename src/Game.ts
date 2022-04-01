@@ -16,6 +16,7 @@ import { AssetManager } from "./AssetManager";
 import { AudioSystemManager } from "./AudioSystemManager";
 import type { Camera } from "./Camera";
 import { DefaultLoadingScene } from "./DefaultLoadingScene";
+import { DefaultSkippingScene } from "./DefaultSkippingScene";
 import type { E, PointSource, PointDownEvent, PointMoveEvent, PointUpEvent } from "./entities/E";
 import type { Event, JoinEvent, LeaveEvent, SeedEvent, PlayerInfoEvent, MessageEvent, OperationEvent } from "./Event";
 import { EventConverter } from "./EventConverter";
@@ -578,6 +579,14 @@ export class Game {
 	_defaultLoadingScene: LoadingScene;
 
 	/**
+	 * デフォルトスキッピングシーン。
+	 *
+	 * 初期値は `undefined` である。
+	 * @private
+	 */
+	_defaultSkippingScene: Scene | undefined;
+
+	/**
 	 * スキッピングシーン。
 	 * @private
 	 */
@@ -815,6 +824,7 @@ export class Game {
 		this.random = undefined!;
 		this.localRandom = undefined!;
 		this._defaultLoadingScene = undefined!;
+		this._defaultSkippingScene = undefined;
 		this._eventConverter = undefined!;
 		this._pointEventResolver = undefined!;
 		this._idx = undefined!;
@@ -1034,8 +1044,10 @@ export class Game {
 	 */
 	render(): void {
 		let scene: Scene | undefined;
-		if (this._skippingScene && this.isSkipping) {
-			scene = this._skippingScene;
+
+		const skippingScene = this._skippingScene ?? this._defaultSkippingScene;
+		if (skippingScene && this.isSkipping) {
+			scene = skippingScene;
 			scene.onUpdate.fire();
 		} else {
 			scene = this.scene();
@@ -1465,6 +1477,18 @@ export class Game {
 				this._defaultLoadingScene = new DefaultLoadingScene({ game: this });
 				break;
 		}
+
+		switch (this._configuration.defaultSkippingScene) {
+			case "none":
+				this._defaultSkippingScene = new DefaultSkippingScene({ game: this, style: "none" });
+				break;
+			case "indicator":
+				this._defaultSkippingScene = new DefaultSkippingScene({ game: this, style: "indicator" });
+				break;
+			default:
+				this._defaultSkippingScene = undefined;
+				break;
+		}
 	}
 
 	/**
@@ -1489,6 +1513,9 @@ export class Game {
 		}
 		if (!this._defaultLoadingScene.destroyed()) {
 			this._defaultLoadingScene.destroy();
+		}
+		if (this._defaultSkippingScene && !this._defaultSkippingScene.destroyed()) {
+			this._defaultSkippingScene.destroy();
 		}
 		if (this._skippingScene && !this._skippingScene.destroyed()) {
 			this._skippingScene.destroy();
@@ -1730,9 +1757,12 @@ export class Game {
 	 */
 	_handleSkipChange(isSkipping: boolean): void {
 		this.isSkipping = isSkipping;
-		if (isSkipping && this._skippingScene && !this._skippingScene._loaded) {
-			this._skippingScene._load();
-			this._skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
+		if (isSkipping) {
+			const skippingScene = this._skippingScene ?? this._defaultSkippingScene;
+			if (skippingScene && !skippingScene._loaded) {
+				skippingScene._load();
+				skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
+			}
 		}
 	}
 

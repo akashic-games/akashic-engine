@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.4.0
 
 機能追加
  * `g.Game#skippingScene` を追加
