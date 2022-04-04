@@ -1173,13 +1173,15 @@ describe("test Game", () => {
 			game.skippingScene = skippingScene;
 
 			game.onSkipChange.fire(true);
-			game.modified();
+			expect(game._modified).toBe(true);
+
 			game.render();
 			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("black");
 
 			r.clearMethodCallHistory();
 			game.onSkipChange.fire(false);
-			game.modified();
+			expect(game._modified).toBe(true);
+
 			game.render();
 			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("red");
 		});
