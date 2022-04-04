@@ -1764,6 +1764,7 @@ export class Game {
 				skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
 			}
 		}
+		this._modified = true;
 	}
 
 	/**
