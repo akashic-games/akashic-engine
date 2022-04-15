@@ -1,0 +1,77 @@
+name: Deploy API Document on GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: '16'
+  PUBLIC_DIR: public
+  V3_REF: main
+  V2_REF: v2-master
+  V1_REF: v1-master
+  V3_DIR: v3
+  V2_DIR: v2
+  V1_DIR: v1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Checkout (v3)
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.V3_REF }}
+          path: ${{ env.V3_DIR }}
+      - name: Checkout (v2)
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.V2_REF }}
+          path: ${{ env.V2_DIR }}
+      - name: Checkout (v1)
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.V1_REF }}
+          path: ${{ env.V1_DIR }}
+      - name: Install and Build (v3)
+        working-directory: ${{ env.V3_DIR }}
+        run: |
+          npm ci
+          npm run doc
+      - name: Install and Build (v2)
+        working-directory: ${{ env.V2_DIR }}
+        run: |
+          npm ci
+          npm run doc
+      - name: Install and Build (v1)
+        working-directory: ${{ env.V1_DIR }}
+        run: |
+          npm install
+          npm run doc
+      - name: Copy API docs
+        run: |
+          mkdir -p ${{ env.PUBLIC_DIR }}
+          cp -r ${{ env.V3_DIR }}/doc/html/ ${{ env.PUBLIC_DIR }}/${{ env.V3_DIR }}/
+          cp -r ${{ env.V2_DIR }}/doc/html/ ${{ env.PUBLIC_DIR }}/${{ env.V2_DIR }}/
+          cp -r ${{ env.V1_DIR }}/doc/html/ ${{ env.PUBLIC_DIR }}/${{ env.V1_DIR }}/
+      - name: Check API docs
+        run: |
+          for dir in ${{ env.V1_DIR }} ${{ env.V2_DIR }} ${{ env.V3_DIR }}
+          do
+            if [ ! -e ${{ env.PUBLIC_DIR }}/${dir}/index.html ]; then
+              echo "'${{ env.PUBLIC_DIR }}/${dir}/index.html' not found."
+              exit 1;
+            fi
+          done
+      - name: Deploy on gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.PUBLIC_DIR }}
+          user_name: 'github-actions'
+          user_email: '41898282+github-actions[bot]@users.noreply.github.com'
