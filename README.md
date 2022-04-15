@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/akashic-games/akashic-engine/master/img/akashic.png"/>
+<img src="https://raw.githubusercontent.com/akashic-games/akashic-engine/main/img/akashic.png"/>
 </p>
 
 # Akashic Engine
@@ -13,6 +13,11 @@ JavaScriptゲームエンジン [Akashic Engine](https://akashic-games.github.io
 ゲーム開発には [Akashic Sandbox](http://github.com/akashic-games/akashic-sandbox) と
 [Akashic CLI](http://github.com/akashic-games/akashic-cli) をご利用ください。
 Akashic Engineの詳細な利用方法については、 [公式ページ](https://akashic-games.github.io/) を参照してください。
+
+API リファレンスは以下から参照できます。
+- [akashic-engine v3.x](https://akashic-games.github.io/akashic-engine/v3/)
+- [akashic-engine v2.x (旧版)](https://akashic-games.github.io/akashic-engine/v2/modules/_lib_main_d_.g.html)
+- [akashic-engine v1.x (旧版)](https://akashic-games.github.io/akashic-engine/v1/modules/_lib_main_d_.g.html)
 
 ### TypeScript での型定義の利用
 
