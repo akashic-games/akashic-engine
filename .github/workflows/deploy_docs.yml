@@ -1,8 +1,12 @@
 name: Deploy API Document on GitHub Pages
 
 on:
+  workflow_dispatch:
   push:
     branches:
+      # 現状過去バージョンのブランチでは GitHub Actions が有効になっておらず、また過去バージョンを更新することは事実上ほとんどないという理由により、
+      # main ブランチへの push 契機ですべてのバージョンを更新するように意図している。
+      # 万が一過去バージョンのみの更新が発生した場合は workflow_dispatch を手動で実行すること。
       - main
 
 env:
