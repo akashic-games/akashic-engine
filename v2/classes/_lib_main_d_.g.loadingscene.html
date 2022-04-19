@@ -1,0 +1,2389 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>LoadingScene | @akashic/akashic-engine - v2.6.6</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">@akashic/akashic-engine - v2.6.6</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_lib_main_d_.html">&quot;lib/main.d&quot;</a>
+				</li>
+				<li>
+					<a href="../modules/_lib_main_d_.g.html">g</a>
+				</li>
+				<li>
+					<a href="_lib_main_d_.g.loadingscene.html">LoadingScene</a>
+				</li>
+			</ul>
+			<h1>Class LoadingScene</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Assetの読み込み中に表示されるシーン。</p>
+					</div>
+					<p>本シーンは通常のシーンと異なり、ゲーム内時間(<code>Game#age</code>)と独立に実行される。
+						アセットやストレージデータを読み込んでいる間、ゲーム内時間が進んでいない状態でも、
+					<code>LoadingScene</code> は画面に変化を与えることができる(<code>update</code> がfireされる)。</p>
+					<p>ゲーム開発者は、ローディング中の演出を実装した独自の <code>LoadingScene</code> を
+					<code>Game#loadingScene</code> に代入することでエンジンに利用させることができる。</p>
+					<p>ゲーム内時間と独立に処理される <code>LoadingScene</code> での処理には再現性がない(他プレイヤーと状態が共有されない)。
+					そのため <code>Game</code> に対して副作用のある操作を行ってはならない点に注意すること。</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">LoadingScene</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="_lib_main_d_.g.defaultloadingscene.html" class="tsd-signature-type">DefaultLoadingScene</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_lib_main_d_.g.destroyable.html" class="tsd-signature-type">Destroyable</a></li>
+					<li><a href="../interfaces/_lib_main_d_.g.registrable.html" class="tsd-signature-type">Registrable</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/_lib_main_d_.g.storageloaderhandler.html" class="tsd-signature-type">StorageLoaderHandler</a></li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_assetholders" class="tsd-kind-icon">_asset<wbr>Holders</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_explicitend" class="tsd-kind-icon">_explicit<wbr>End</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_loaded" class="tsd-kind-icon">_loaded</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_loadingstate" class="tsd-kind-icon">_loading<wbr>State</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_prefetchrequested" class="tsd-kind-icon">_prefetch<wbr>Requested</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_ready" class="tsd-kind-icon">_ready</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_sceneassetholder" class="tsd-kind-icon">_scene<wbr>Asset<wbr>Holder</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_storageloader" class="tsd-kind-icon">_storage<wbr>Loader</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_targetscene" class="tsd-kind-icon">_target<wbr>Scene</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_timer" class="tsd-kind-icon">_timer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#assetloadcompleted" class="tsd-kind-icon">asset<wbr>Load<wbr>Completed</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#assetloadfailed" class="tsd-kind-icon">asset<wbr>Load<wbr>Failed</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#assetloaded" class="tsd-kind-icon">asset<wbr>Loaded</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#assets" class="tsd-kind-icon">assets</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#children" class="tsd-kind-icon">children</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#game" class="tsd-kind-icon">game</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#loaded" class="tsd-kind-icon">loaded</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#local" class="tsd-kind-icon">local</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#message" class="tsd-kind-icon">message</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#operation" class="tsd-kind-icon">operation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#pointdowncapture" class="tsd-kind-icon">point<wbr>Down<wbr>Capture</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#pointmovecapture" class="tsd-kind-icon">point<wbr>Move<wbr>Capture</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#pointupcapture" class="tsd-kind-icon">point<wbr>UpCapture</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#state" class="tsd-kind-icon">state</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#statechanged" class="tsd-kind-icon">state<wbr>Changed</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#storagevalues" class="tsd-kind-icon">storage<wbr>Values</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#targetassetloaded" class="tsd-kind-icon">target<wbr>Asset<wbr>Loaded</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#targetready" class="tsd-kind-icon">target<wbr>Ready</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#targetreset" class="tsd-kind-icon">target<wbr>Reset</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#tickgenerationmode" class="tsd-kind-icon">tick<wbr>Generation<wbr>Mode</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#update" class="tsd-kind-icon">update</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_activate" class="tsd-kind-icon">_activate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_cleartargetscene" class="tsd-kind-icon">_clear<wbr>Target<wbr>Scene</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_deactivate" class="tsd-kind-icon">_deactivate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_doreset" class="tsd-kind-icon">_do<wbr>Reset</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_fireloaded" class="tsd-kind-icon">_fire<wbr>Loaded</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_fireready" class="tsd-kind-icon">_fire<wbr>Ready</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_firetriggerontargetassetload" class="tsd-kind-icon">_fire<wbr>Trigger<wbr>OnTarget<wbr>Asset<wbr>Load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_firetriggerontargetready" class="tsd-kind-icon">_fire<wbr>Trigger<wbr>OnTarget<wbr>Ready</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_load" class="tsd-kind-icon">_load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_needsloading" class="tsd-kind-icon">_needs<wbr>Loading</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_notifysceneready" class="tsd-kind-icon">_notify<wbr>Scene<wbr>Ready</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_onsceneassetsload" class="tsd-kind-icon">_on<wbr>Scene<wbr>Assets<wbr>Load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_onstorageloaderror" class="tsd-kind-icon">_on<wbr>Storage<wbr>Load<wbr>Error</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#_onstorageloaded" class="tsd-kind-icon">_on<wbr>Storage<wbr>Loaded</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#append" class="tsd-kind-icon">append</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#clearinterval" class="tsd-kind-icon">clear<wbr>Interval</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#cleartimeout" class="tsd-kind-icon">clear<wbr>Timeout</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#createtimer" class="tsd-kind-icon">create<wbr>Timer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#deletetimer" class="tsd-kind-icon">delete<wbr>Timer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#destroy" class="tsd-kind-icon">destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#destroyed" class="tsd-kind-icon">destroyed</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#end" class="tsd-kind-icon">end</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#findpointsourcebypoint" class="tsd-kind-icon">find<wbr>Point<wbr>Source<wbr>ByPoint</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#gettargetwaitingassetscount" class="tsd-kind-icon">get<wbr>Target<wbr>Waiting<wbr>Assets<wbr>Count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#gotoscene" class="tsd-kind-icon">goto<wbr>Scene</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#insertbefore" class="tsd-kind-icon">insert<wbr>Before</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#iscurrentscene" class="tsd-kind-icon">is<wbr>Current<wbr>Scene</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#modified" class="tsd-kind-icon">modified</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#prefetch" class="tsd-kind-icon">prefetch</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#register" class="tsd-kind-icon">register</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#remove" class="tsd-kind-icon">remove</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#requestassets" class="tsd-kind-icon">request<wbr>Assets</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#reset" class="tsd-kind-icon">reset</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#serializestoragevalues" class="tsd-kind-icon">serialize<wbr>Storage<wbr>Values</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#setinterval" class="tsd-kind-icon">set<wbr>Interval</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#settimeout" class="tsd-kind-icon">set<wbr>Timeout</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_lib_main_d_.g.loadingscene.html#unregister" class="tsd-kind-icon">unregister</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Loading<wbr>Scene<span class="tsd-signature-symbol">(</span>param<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_main_d_.g.loadingsceneparameterobject.html" class="tsd-signature-type">LoadingSceneParameterObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.loadingscene.html" class="tsd-signature-type">LoadingScene</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#constructor">constructor</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3379</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><code>LoadingScene</code> のインスタンスを生成する。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>param: <a href="../interfaces/_lib_main_d_.g.loadingsceneparameterobject.html" class="tsd-signature-type">LoadingSceneParameterObject</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>初期化に用いるパラメータのオブジェクト</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.loadingscene.html" class="tsd-signature-type">LoadingScene</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_assetholders" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _asset<wbr>Holders</h3>
+					<div class="tsd-signature tsd-kind-icon">_asset<wbr>Holders<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.sceneassetholder.html" class="tsd-signature-type">SceneAssetHolder</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_assetholders">_assetHolders</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3086</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p><code>Scene#requestAssets()</code> で動的に要求されたアセットの保持者。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+					<a name="_explicitend" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _explicit<wbr>End</h3>
+					<div class="tsd-signature tsd-kind-icon">_explicit<wbr>End<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in lib/main.d.ts:3375</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_loaded" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _loaded</h3>
+					<div class="tsd-signature tsd-kind-icon">_loaded<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_loaded">_loaded</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3059</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>読み込みが開始されたか否か。
+							すなわち、 <code>_load()</code> が呼び出された後か否か。</p>
+						</div>
+						<p>歴史的経緯により、このフラグの意味は「読み込みが終わった後」でも「loadedがfireされた後」でもない点に注意。
+						なお前者「(アセットとストレージの)読み込みが終わった後」は <code>_loadingState === SceneLoadState.Ready</code> に与えられる。</p>
+						<p>シーンの読み込みは概ね次の順で処理が進行する。</p>
+						<ul>
+							<li><code>_loaded</code> が真になる</li>
+							<li>各種読み込みが完了する</li>
+							<li><code>_loadingState</code> が <code>SceneLoadState.Ready</code> になる</li>
+							<li><code>_ready</code> がfireされる</li>
+							<li><code>_loadingState</code> が <code>SceneLoadState.ReadyFired</code> になる</li>
+							<li><code>loaded</code> がfireされる</li>
+							<li><code>_loadingState</code> が <code>SceneLoadState.LoadedFired</code> になる</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_loadingstate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _loading<wbr>State</h3>
+					<div class="tsd-signature tsd-kind-icon">_loading<wbr>State<span class="tsd-signature-symbol">:</span> <a href="../enums/_lib_main_d_.g.sceneloadstate.html" class="tsd-signature-type">SceneLoadState</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_loadingstate">_loadingState</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3071</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>アセットとストレージの読み込みが終わった後か否か。
+							「 <code>loaded</code> がfireされた後」ではない点に注意。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_prefetchrequested" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _prefetch<wbr>Requested</h3>
+					<div class="tsd-signature tsd-kind-icon">_prefetch<wbr>Requested<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_prefetchrequested">_prefetchRequested</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3065</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>先読みが要求されたか否か。
+							すなわち、 <code>prefetch()</code> が呼び出された後か否か。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_ready" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _ready</h3>
+					<div class="tsd-signature tsd-kind-icon">_ready<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_ready">_ready</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3041</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>アセットとストレージの読み込みが終わったことを通知するTrigger。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_sceneassetholder" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _scene<wbr>Asset<wbr>Holder</h3>
+					<div class="tsd-signature tsd-kind-icon">_scene<wbr>Asset<wbr>Holder<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.sceneassetholder.html" class="tsd-signature-type">SceneAssetHolder</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_sceneassetholder">_sceneAssetHolder</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3081</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーンのアセットの保持者。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_storageloader" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _storage<wbr>Loader</h3>
+					<div class="tsd-signature tsd-kind-icon">_storage<wbr>Loader<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.storageloader.html" class="tsd-signature-type">StorageLoader</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_storageloader">_storageLoader</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3036</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+					<a name="_targetscene" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _target<wbr>Scene</h3>
+					<div class="tsd-signature tsd-kind-icon">_target<wbr>Scene<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in lib/main.d.ts:3379</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_timer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _timer</h3>
+					<div class="tsd-signature tsd-kind-icon">_timer<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.timermanager.html" class="tsd-signature-type">TimerManager</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_timer">_timer</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3076</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>タイマー。通常は本変数直接ではなく、createTimer/deleteTimer/setInterval/clearInterval等の機構を利用する。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="assetloadcompleted" class="tsd-anchor"></a>
+					<h3>asset<wbr>Load<wbr>Completed</h3>
+					<div class="tsd-signature tsd-kind-icon">asset<wbr>Load<wbr>Completed<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.asset.html" class="tsd-signature-type">Asset</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#assetloadcompleted">assetLoadCompleted</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2990</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>アセット読み込み完了イベント。</p>
+						</div>
+						<p>このシーンのアセットが一つ読み込みに失敗または成功する度にfireされる。
+						アセット読み込み中の動作をカスタマイズしたい場合に用いる。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="assetloadfailed" class="tsd-anchor"></a>
+					<h3>asset<wbr>Load<wbr>Failed</h3>
+					<div class="tsd-signature tsd-kind-icon">asset<wbr>Load<wbr>Failed<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_lib_main_d_.g.assetloadfailureinfo.html" class="tsd-signature-type">AssetLoadFailureInfo</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#assetloadfailed">assetLoadFailed</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2983</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>アセット読み込み失敗イベント。</p>
+						</div>
+						<p>このシーンのアセットが一つ読み込みに失敗する度にfireされる。
+							アセット読み込み中の動作をカスタマイズしたい場合に用いる。
+						このイベントをhandleする場合、ハンドラは <code>AssetLoadFailureInfo#cancelRetry</code> を真にすることでゲーム続行を断念することができる。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="assetloaded" class="tsd-anchor"></a>
+					<h3>asset<wbr>Loaded</h3>
+					<div class="tsd-signature tsd-kind-icon">asset<wbr>Loaded<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.asset.html" class="tsd-signature-type">Asset</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#assetloaded">assetLoaded</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2975</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>アセット読み込み成功イベント。</p>
+						</div>
+						<p>このシーンのアセットが一つ読み込まれる度にfireされる。
+						アセット読み込み中の動作をカスタマイズしたい場合に用いる。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="assets" class="tsd-anchor"></a>
+					<h3>assets</h3>
+					<div class="tsd-signature tsd-kind-icon">assets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#assets">assets</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2920</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>このシーンで利用できるアセット。</p>
+						</div>
+						<p>アセットID をkeyに、対応するアセットのインスタンスを得ることができる。
+						keyはこのシーンの生成時、コンストラクタの第二引数 <code>assetIds</code> に渡された配列に含まれる文字列でなければならない。</p>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="_lib_main_d_.g.asset.html" class="tsd-signature-type">Asset</a></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="children" class="tsd-anchor"></a>
+					<h3>children</h3>
+					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#children">children</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2913</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>このシーンの子エンティティ。</p>
+						</div>
+						<p>エンティティは <code>Scene#append()</code> によって追加され、 <code>Scene#remove()</code> によって削除される。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="game" class="tsd-anchor"></a>
+					<h3>game</h3>
+					<div class="tsd-signature tsd-kind-icon">game<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.game.html" class="tsd-signature-type">Game</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#game">game</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2926</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>このシーンの属するゲーム。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="loaded" class="tsd-anchor"></a>
+					<h3>loaded</h3>
+					<div class="tsd-signature tsd-kind-icon">loaded<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#loaded">loaded</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2968</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>読み込み完了イベント。</p>
+						</div>
+						<p>このシーンの生成時に(コンストラクタで)指定されたすべてのアセットの読み込みが終了した後、一度だけfireされる。
+						このシーンのアセットを利用するすべての処理は、このイベントのfire後に実行されなければならない。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="local" class="tsd-anchor"></a>
+					<h3>local</h3>
+					<div class="tsd-signature tsd-kind-icon">local<span class="tsd-signature-symbol">:</span> <a href="../enums/_lib_main_d_.g.localtickmode.html" class="tsd-signature-type">LocalTickMode</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#local">local</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2944</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>このシーンのローカルティック消化ポリシー。</p>
+						</div>
+						<ul>
+							<li><code>LocalTickMode.NonLocal</code> が与えられた場合、このシーンは非ローカルシーンと呼ばれる。
+							非ローカルシーンでは、他プレイヤーと共通の時間進行処理((非ローカル)ティックの消化)が行われる(updateがfireされる)。</li>
+							<li><code>LocalTickMode.FullLocal</code> が与えられた場合、このシーンはローカルシーンと呼ばれる。
+							ローカルシーンでは、他プレイヤーと独立な時間進行処理(ローカルティックの消化)が行われる。</li>
+							<li><code>LocalTickMode.InterpolateLocal</code> が与えられた場合、このシーンはローカルティック補間シーンと呼ばれる。
+								ローカルティック補間シーンは、非ローカルシーン同様にティックを消化するが、
+							消化すべき非ローカルティックがない場合にローカルティックが補間され消化される。</li>
+						</ul>
+						<p>ローカルシーンとローカルティック補間シーンに属するエンティティは、
+							すべてローカルである(強制的にローカルエンティティとして生成される)。
+						ローカルシーンは特にアセットロード中のような、他プレイヤーと同期すべきでないシーンのために存在する機能である。</p>
+						<p>この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="message" class="tsd-anchor"></a>
+					<h3>message</h3>
+					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.messageevent.html" class="tsd-signature-type">MessageEvent</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#message">message</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3003</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>汎用メッセージイベント。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#name">name</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2957</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーンの識別用の名前。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="operation" class="tsd-anchor"></a>
+					<h3>operation</h3>
+					<div class="tsd-signature tsd-kind-icon">operation<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.operationevent.html" class="tsd-signature-type">OperationEvent</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#operation">operation</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3028</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーン内での操作イベント。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="pointdowncapture" class="tsd-anchor"></a>
+					<h3>point<wbr>Down<wbr>Capture</h3>
+					<div class="tsd-signature tsd-kind-icon">point<wbr>Down<wbr>Capture<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.pointdownevent.html" class="tsd-signature-type">PointDownEvent</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#pointdowncapture">pointDownCapture</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3010</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーン内でのpoint downイベント。</p>
+						</div>
+						<p>このイベントは <code>E#pointDown</code> とは独立にfireされる。
+						すなわち、シーン内に同じ位置でのpoint downイベントに反応する <code>E</code> がある場合もない場合もこのイベントはfireされる。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="pointmovecapture" class="tsd-anchor"></a>
+					<h3>point<wbr>Move<wbr>Capture</h3>
+					<div class="tsd-signature tsd-kind-icon">point<wbr>Move<wbr>Capture<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.pointmoveevent.html" class="tsd-signature-type">PointMoveEvent</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#pointmovecapture">pointMoveCapture</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3017</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーン内でのpoint moveイベント。</p>
+						</div>
+						<p>このイベントは <code>E#pointMove</code> とは独立にfireされる。
+						すなわち、シーン内に同じ位置でのpoint moveイベントに反応する <code>E</code> がある場合もない場合もこのイベントはfireされる。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="pointupcapture" class="tsd-anchor"></a>
+					<h3>point<wbr>UpCapture</h3>
+					<div class="tsd-signature tsd-kind-icon">point<wbr>UpCapture<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.pointupevent.html" class="tsd-signature-type">PointUpEvent</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#pointupcapture">pointUpCapture</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3024</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーン内でのpoint upイベント。</p>
+						</div>
+						<p>このイベントは <code>E#pointUp</code> とは独立にfireされる。
+						すなわち、シーン内に同じ位置でのpoint upイベントに反応する <code>E</code> がある場合もない場合もこのイベントはfireされる。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="state" class="tsd-anchor"></a>
+					<h3>state</h3>
+					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <a href="../enums/_lib_main_d_.g.scenestate.html" class="tsd-signature-type">SceneState</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#state">state</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2994</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーンの状態。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="statechanged" class="tsd-anchor"></a>
+					<h3>state<wbr>Changed</h3>
+					<div class="tsd-signature tsd-kind-icon">state<wbr>Changed<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="../enums/_lib_main_d_.g.scenestate.html" class="tsd-signature-type">SceneState</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#statechanged">stateChanged</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2999</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーンの状態変更イベント。
+							状態が初期化直後の <code>Standby</code> 状態以外に変化するときfireされる。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="storagevalues" class="tsd-anchor"></a>
+					<h3>storage<wbr>Values</h3>
+					<div class="tsd-signature tsd-kind-icon">storage<wbr>Values<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.storagevaluestore.html" class="tsd-signature-type">StorageValueStore</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#storagevalues">storageValues</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:3032</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>シーン内で利用可能なストレージの値を保持する <code>StorageValueStore</code>。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+					<a name="targetassetloaded" class="tsd-anchor"></a>
+					<h3>target<wbr>Asset<wbr>Loaded</h3>
+					<div class="tsd-signature tsd-kind-icon">target<wbr>Asset<wbr>Loaded<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.asset.html" class="tsd-signature-type">Asset</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in lib/main.d.ts:3371</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ローディングシーンの読み込み待ち対象シーンがアセットを読み込む度にfireされるTrigger。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+					<a name="targetready" class="tsd-anchor"></a>
+					<h3>target<wbr>Ready</h3>
+					<div class="tsd-signature tsd-kind-icon">target<wbr>Ready<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in lib/main.d.ts:3367</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ローディングシーンの読み込みが完了した時にfireされるTrigger。
+								<code>explicitEnd</code> に真を渡して生成した場合、ローディングシーンを終了するには
+							このTriggerのfire後に明示的に <code>end()</code> を呼び出す必要がある。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+					<a name="targetreset" class="tsd-anchor"></a>
+					<h3>target<wbr>Reset</h3>
+					<div class="tsd-signature tsd-kind-icon">target<wbr>Reset<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in lib/main.d.ts:3361</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ローディングシーンの読み込み待ち対象シーンが切り替わった場合にfireされるTrigger。
+							ゲーム開発者は、このTriggerにaddしてローディングシーンの内容を初期化することができる。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="tickgenerationmode" class="tsd-anchor"></a>
+					<h3>tick<wbr>Generation<wbr>Mode</h3>
+					<div class="tsd-signature tsd-kind-icon">tick<wbr>Generation<wbr>Mode<span class="tsd-signature-symbol">:</span> <a href="../enums/_lib_main_d_.g.tickgenerationmode.html" class="tsd-signature-type">TickGenerationMode</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#tickgenerationmode">tickGenerationMode</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2953</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>時間経過の契機(ティック)をどのように生成するか。
+								<code>Manual</code> の場合、 <code>Game#raiseTick()</code> を呼び出さない限りティックが生成されない(時間経過しない)。
+								ただしローカルティック(ローカルシーンの間などの「各プレイヤー間で独立な時間経過処理」)はこの値の影響を受けない。
+							またこのシーンへの遷移直後、一度だけこの値に関わらずティックが生成される。</p>
+						</div>
+						<p>この値は参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<div class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">:</span> <a href="_lib_main_d_.g.trigger.html" class="tsd-signature-type">Trigger</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#update">update</a></p>
+						<ul>
+							<li>Defined in lib/main.d.ts:2961</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_activate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _activate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_activate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_activate">_activate</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3292</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+					<a name="_cleartargetscene" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _clear<wbr>Target<wbr>Scene</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_clear<wbr>Target<wbr>Scene<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/main.d.ts:3410</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_deactivate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _deactivate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_deactivate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_deactivate">_deactivate</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3296</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+					<a name="_doreset" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _do<wbr>Reset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_do<wbr>Reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/main.d.ts:3414</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_fireloaded" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _fire<wbr>Loaded</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_fire<wbr>Loaded<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_fireloaded">_fireLoaded</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3328</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_fireready" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _fire<wbr>Ready</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_fire<wbr>Ready<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_fireready">_fireReady</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3324</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+					<a name="_firetriggerontargetassetload" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _fire<wbr>Trigger<wbr>OnTarget<wbr>Asset<wbr>Load</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_fire<wbr>Trigger<wbr>OnTarget<wbr>Asset<wbr>Load<span class="tsd-signature-symbol">(</span>asset<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.asset.html" class="tsd-signature-type">Asset</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/main.d.ts:3418</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>asset: <a href="_lib_main_d_.g.asset.html" class="tsd-signature-type">Asset</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+					<a name="_firetriggerontargetready" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _fire<wbr>Trigger<wbr>OnTarget<wbr>Ready</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_fire<wbr>Trigger<wbr>OnTarget<wbr>Ready<span class="tsd-signature-symbol">(</span>scene<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/main.d.ts:3422</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>scene: <a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_load" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _load</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_load<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_load">_load</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3304</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_needsloading" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _needs<wbr>Loading</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_needs<wbr>Loading<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_needsloading">_needsLoading</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3300</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_notifysceneready" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _notify<wbr>Scene<wbr>Ready</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_notify<wbr>Scene<wbr>Ready<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_notifysceneready">_notifySceneReady</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3320</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_onsceneassetsload" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _on<wbr>Scene<wbr>Assets<wbr>Load</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_on<wbr>Scene<wbr>Assets<wbr>Load<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_onsceneassetsload">_onSceneAssetsLoad</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3308</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_onstorageloaderror" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _on<wbr>Storage<wbr>Load<wbr>Error</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_on<wbr>Storage<wbr>Load<wbr>Error<span class="tsd-signature-symbol">(</span>_error<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_main_d_.g.storageloaderror.html" class="tsd-signature-type">StorageLoadError</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_lib_main_d_.g.storageloaderhandler.html">StorageLoaderHandler</a>.<a href="../interfaces/_lib_main_d_.g.storageloaderhandler.html#_onstorageloaderror">_onStorageLoadError</a></p>
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_onstorageloaderror">_onStorageLoadError</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3312</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>_error: <a href="../interfaces/_lib_main_d_.g.storageloaderror.html" class="tsd-signature-type">StorageLoadError</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+					<a name="_onstorageloaded" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _on<wbr>Storage<wbr>Loaded</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">_on<wbr>Storage<wbr>Loaded<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_lib_main_d_.g.storageloaderhandler.html">StorageLoaderHandler</a>.<a href="../interfaces/_lib_main_d_.g.storageloaderhandler.html#_onstorageloaded">_onStorageLoaded</a></p>
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#_onstorageloaded">_onStorageLoaded</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3316</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="append" class="tsd-anchor"></a>
+					<h3>append</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">append<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#append">append</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3247</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>子エンティティを追加する。</p>
+								</div>
+								<p><code>this.children</code> の末尾に <code>e</code> を追加する(<code>e</code> はそれまでに追加されたすべての子エンティティより手前に表示される)。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>e: <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>子エンティティとして追加するエンティティ</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="clearinterval" class="tsd-anchor"></a>
+					<h3>clear<wbr>Interval</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">clear<wbr>Interval<span class="tsd-signature-symbol">(</span>identifier<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#clearinterval">clearInterval</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3163</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>setIntervalで作成した定期処理を解除する。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>identifier: <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>解除対象</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="cleartimeout" class="tsd-anchor"></a>
+					<h3>clear<wbr>Timeout</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">clear<wbr>Timeout<span class="tsd-signature-symbol">(</span>identifier<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#cleartimeout">clearTimeout</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3203</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>setTimeoutで作成した処理を削除する。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>identifier: <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>解除対象</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="createtimer" class="tsd-anchor"></a>
+					<h3>create<wbr>Timer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Timer<span class="tsd-signature-symbol">(</span>interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timer.html" class="tsd-signature-type">Timer</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#createtimer">createTimer</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3124</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定間隔で定期的に処理を実行するTimerを作成して返す。</p>
+								</div>
+								<p>戻り値は作成されたTimerである。
+									通常は <code>Scene#setInterval</code> を利用すればよく、ゲーム開発者がこのメソッドを呼び出す必要はない。
+								<code>Timer</code> はフレーム経過処理(<code>Scene#update</code>)で実現される疑似的なタイマーである。実時間の影響は受けない。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>interval: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Timerの実行間隔（ミリ秒）</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timer.html" class="tsd-signature-type">Timer</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="deletetimer" class="tsd-anchor"></a>
+					<h3>delete<wbr>Timer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Timer<span class="tsd-signature-symbol">(</span>timer<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timer.html" class="tsd-signature-type">Timer</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#deletetimer">deleteTimer</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3129</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Timerを削除する。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>timer: <a href="_lib_main_d_.g.timer.html" class="tsd-signature-type">Timer</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>削除するTimer</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+					<a name="destroy" class="tsd-anchor"></a>
+					<h3>destroy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_lib_main_d_.g.destroyable.html">Destroyable</a>.<a href="../interfaces/_lib_main_d_.g.destroyable.html#destroy">destroy</a></p>
+								<p>Overrides <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#destroy">destroy</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3385</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="destroyed" class="tsd-anchor"></a>
+					<h3>destroyed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">destroyed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_lib_main_d_.g.destroyable.html">Destroyable</a>.<a href="../interfaces/_lib_main_d_.g.destroyable.html#destroyed">destroyed</a></p>
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#destroyed">destroyed</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3115</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>破棄済みであるかを返す。</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+					<a name="end" class="tsd-anchor"></a>
+					<h3>end</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">end<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#end">end</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3406</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>ローディングシーンを終了する。</p>
+								</div>
+								<p><code>Scene#end()</code> と異なり、このメソッドの呼び出しはこのシーンを破棄しない。(ローディングシーンは再利用される。)
+								このメソッドが呼び出される時、 <code>targetReady</code> がfireされた後でなければならない。</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="findpointsourcebypoint" class="tsd-anchor"></a>
+					<h3>find<wbr>Point<wbr>Source<wbr>ByPoint</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Point<wbr>Source<wbr>ByPoint<span class="tsd-signature-symbol">(</span>point<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_main_d_.g.commonoffset.html" class="tsd-signature-type">CommonOffset</a>, force<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, camera<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_lib_main_d_.g.camera.html" class="tsd-signature-type">Camera</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_lib_main_d_.g.pointsource.html" class="tsd-signature-type">PointSource</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#findpointsourcebypoint">findPointSourceByPoint</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3270</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>シーン内でその座標に反応する <code>PointSource</code> を返す。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>point: <a href="../interfaces/_lib_main_d_.g.commonoffset.html" class="tsd-signature-type">CommonOffset</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>対象の座標</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> force: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>touchable指定を無視する場合真を指定する。指定されなかった場合偽</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> camera: <a href="../interfaces/_lib_main_d_.g.camera.html" class="tsd-signature-type">Camera</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>対象のカメラ。指定されなかった場合undefined</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_lib_main_d_.g.pointsource.html" class="tsd-signature-type">PointSource</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="gettargetwaitingassetscount" class="tsd-anchor"></a>
+					<h3>get<wbr>Target<wbr>Waiting<wbr>Assets<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Target<wbr>Waiting<wbr>Assets<wbr>Count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/main.d.ts:3399</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>アセットロード待ち対象シーンの残りのロード待ちアセット数を取得する。</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="gotoscene" class="tsd-anchor"></a>
+					<h3>goto<wbr>Scene</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">goto<wbr>Scene<span class="tsd-signature-symbol">(</span>next<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a>, toPush<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#gotoscene">gotoScene</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3217</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>次のシーンへの遷移を要求する。</p>
+								</div>
+								<p>このメソッドは、 <code>toPush</code> が真ならば <code>Game#pushScene()</code> の、でなければ <code>Game#replaceScene</code> のエイリアスである。
+									このメソッドは要求を行うだけである。呼び出し直後にはシーン遷移は行われていないことに注意。
+								このシーンが現在のシーンでない場合、 <code>AssertionError</code> がthrowされる。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>next: <a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>遷移後のシーン</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> toPush: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>現在のシーンを残したままにするなら真、削除して遷移するなら偽を指定する。省略された場合偽</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="insertbefore" class="tsd-anchor"></a>
+					<h3>insert<wbr>Before</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Before<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a>, target<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#insertbefore">insertBefore</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3257</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>子エンティティを挿入する。</p>
+								</div>
+								<p><code>this.children</code> の<code>target</code>の位置に <code>e</code> を挿入する。
+								<code>target</code> が<code>this</code> の子でない場合、<code>append(e)</code>と同じ動作となる。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>e: <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>子エンティティとして追加するエンティティ</p>
+									</div>
+								</li>
+								<li>
+									<h5>target: <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>挿入位置にある子エンティティ</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="iscurrentscene" class="tsd-anchor"></a>
+					<h3>is<wbr>Current<wbr>Scene</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Current<wbr>Scene<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#iscurrentscene">isCurrentScene</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3207</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>このシーンが現在のシーンであるかどうかを返す。</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="modified" class="tsd-anchor"></a>
+					<h3>modified</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">modified<span class="tsd-signature-symbol">(</span>_isBubbling<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#modified">modified</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3099</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>このシーンが変更されたことをエンジンに通知する。</p>
+								</div>
+								<p>このメソッドは、このシーンに紐づいている <code>E</code> の <code>modified()</code> を呼び出すことで暗黙に呼び出される。
+								通常、ゲーム開発者がこのメソッドを呼び出す必要はない。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> _isBubbling: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="prefetch" class="tsd-anchor"></a>
+					<h3>prefetch</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">prefetch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#prefetch">prefetch</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3281</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>アセットの先読みを要求する。</p>
+								</div>
+								<p><code>Scene</code> に必要なアセットは、通常、<code>Game#pushScene()</code> などによるシーン遷移にともなって暗黙に読み込みが開始される。
+									ゲーム開発者はこのメソッドを呼び出すことで、シーン遷移前にアセット読み込みを開始する(先読みする)ことができる。
+								先読み開始後、シーン遷移時までに読み込みが完了していない場合、通常の読み込み処理同様にローディングシーンが表示される。</p>
+								<p>このメソッドは <code>StorageLoader</code> についての先読み処理を行わない点に注意。
+								ストレージの場合、書き込みが行われる可能性があるため、順序を無視して先読みすることはできない。</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="register" class="tsd-anchor"></a>
+					<h3>register</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">register<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#register">register</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3232</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>このSceneにエンティティを登録する。</p>
+								</div>
+								<p>このメソッドは各エンティティに対して暗黙に呼び出される。ゲーム開発者がこのメソッドを明示的に呼び出す必要はない。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>e: <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>登録するエンティティ</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="remove" class="tsd-anchor"></a>
+					<h3>remove</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#remove">remove</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3263</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>子エンティティを削除する。
+									<code>this</code> の子から <code>e</code> を削除する。 <code>e</code> が <code>this</code> の子でない場合、何もしない。</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>e: <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>削除する子エンティティ</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="requestassets" class="tsd-anchor"></a>
+					<h3>request<wbr>Assets</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">request<wbr>Assets<span class="tsd-signature-symbol">(</span>assetIds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_lib_main_d_.g.dynamicassetconfiguration.html" class="tsd-signature-type">DynamicAssetConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#requestassets">requestAssets</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3288</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>assetIds: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_lib_main_d_.g.dynamicassetconfiguration.html" class="tsd-signature-type">DynamicAssetConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="reset" class="tsd-anchor"></a>
+					<h3>reset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span>targetScene<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/main.d.ts:3395</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>アセットロード待ち対象シーンを変更する。</p>
+								</div>
+								<p>このメソッドは、新たにシーンのロード待ちが必要になった場合にエンジンによって呼び出される。
+									(派生クラスはこの処理をオーバーライドしてもよいが、その場合その中で
+								このメソッド自身 (<code>g.LoadingScene.prototype.reset</code>) を呼び出す (<code>call()</code> する) 必要がある。)</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>targetScene: <a href="_lib_main_d_.g.scene.html" class="tsd-signature-type">Scene</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>アセットロード待ちが必要なシーン</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="serializestoragevalues" class="tsd-anchor"></a>
+					<h3>serialize<wbr>Storage<wbr>Values</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">serialize<wbr>Storage<wbr>Values<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_lib_main_d_.g.html#storagevaluestoreserialization" class="tsd-signature-type">StorageValueStoreSerialization</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#serializestoragevalues">serializeStorageValues</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3287</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>シーンが読み込んだストレージの値をシリアライズする。</p>
+								</div>
+								<p><code>Scene#storageValues</code> の内容をシリアライズする。</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_lib_main_d_.g.html#storagevaluestoreserialization" class="tsd-signature-type">StorageValueStoreSerialization</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="setinterval" class="tsd-anchor"></a>
+					<h3>set<wbr>Interval</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Interval<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Interval<span class="tsd-signature-symbol">(</span>interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, owner<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Interval<span class="tsd-signature-symbol">(</span>interval<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#setinterval">setInterval</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3141</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定間隔で定期的に実行される処理を作成する。</p>
+								</div>
+								<p><code>interval</code> ミリ秒おきに <code>owner</code> を <code>this</code> として <code>handler</code> を呼び出す。
+									戻り値は <code>Scene#clearInterval</code> の引数に指定して定期実行を解除するために使える値である。
+									このタイマーはフレーム経過処理(<code>Scene#update</code>)で実現される疑似的なタイマーである。実時間の影響は受けない。
+								関数は指定時間の経過直後ではなく、経過後最初のフレームで呼び出される。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>処理</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>interval: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>実行間隔(ミリ秒)</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> owner: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>handlerの所有者。省略された場合、null</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#setinterval">setInterval</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3150</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定間隔で定期的に実行される処理を作成する。
+									<code>interval</code> ミリ秒おきに <code>owner</code> を <code>this</code> として <code>handler</code> を呼び出す。</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p>この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>interval: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>実行間隔(ミリ秒)</p>
+									</div>
+								</li>
+								<li>
+									<h5>owner: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>handlerの所有者。省略された場合、null</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>処理</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#setinterval">setInterval</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3158</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定間隔で定期的に実行される処理を作成する。
+									<code>interval</code> ミリ秒おきに <code>owner</code> を <code>this</code> として <code>handler</code> を呼び出す。</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p>この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>interval: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>実行間隔(ミリ秒)</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>処理</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="settimeout" class="tsd-anchor"></a>
+					<h3>set<wbr>Timeout</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Timeout<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, milliseconds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Timeout<span class="tsd-signature-symbol">(</span>milliseconds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, owner<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Timeout<span class="tsd-signature-symbol">(</span>milliseconds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#settimeout">setTimeout</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3179</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定時間後に一度だけ実行される処理を作成する。</p>
+								</div>
+								<p><code>milliseconds</code> ミリ秒後(以降)に、一度だけ <code>owner</code> を <code>this</code> として <code>handler</code> を呼び出す。
+								戻り値は <code>Scene#clearTimeout</code> の引数に指定して処理を削除するために使える値である。</p>
+								<p>このタイマーはフレーム経過処理(<code>Scene#update</code>)で実現される疑似的なタイマーである。実時間の影響は受けない。
+									関数は指定時間の経過直後ではなく、経過後最初のフレームで呼び出される。
+									(理想的なケースでは、30FPSなら50msのコールバックは66.6ms時点で呼び出される)
+								時間経過に対して厳密な処理を行う必要があれば、自力で <code>Scene#update</code> 通知を処理すること。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>処理</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>milliseconds: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>時間(ミリ秒)</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> owner: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>handlerの所有者。省略された場合、null</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#settimeout">setTimeout</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3189</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定時間後に一度だけ実行される処理を作成する。</p>
+								</div>
+								<p><code>milliseconds</code> ミリ秒後(以降)に、一度だけ <code>owner</code> を <code>this</code> として <code>handler</code> を呼び出す。</p>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p>この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>milliseconds: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>時間(ミリ秒)</p>
+									</div>
+								</li>
+								<li>
+									<h5>owner: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>handlerの所有者。省略された場合、null</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>処理</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#settimeout">setTimeout</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3198</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>一定時間後に一度だけ実行される処理を作成する。</p>
+								</div>
+								<p><code>milliseconds</code> ミリ秒後(以降)に、一度だけ <code>handler</code> を呼び出す。</p>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p>この引数順は現在非推奨である。関数を先に指定するものを利用すべきである。</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>milliseconds: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>時間(ミリ秒)</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>処理</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_lib_main_d_.g.timeridentifier.html" class="tsd-signature-type">TimerIdentifier</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="unregister" class="tsd-anchor"></a>
+					<h3>unregister</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">unregister<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_lib_main_d_.g.scene.html">Scene</a>.<a href="_lib_main_d_.g.scene.html#unregister">unregister</a></p>
+								<ul>
+									<li>Defined in lib/main.d.ts:3239</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>このSceneからエンティティの登録を削除する。</p>
+								</div>
+								<p>このメソッドは各エンティティに対して暗黙に呼び出される。ゲーム開発者がこのメソッドを明示的に呼び出す必要はない。</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>e: <a href="_lib_main_d_.g.e.html" class="tsd-signature-type">E</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>登録を削除するエンティティ</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module tsd-is-not-exported">
+						<a href="_lib_main_d_.g.loadingscene.html" class="tsd-kind-icon">Loading<wbr>Scene</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_assetholders" class="tsd-kind-icon">_asset<wbr>Holders</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_explicitend" class="tsd-kind-icon">_explicit<wbr>End</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_loaded" class="tsd-kind-icon">_loaded</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_loadingstate" class="tsd-kind-icon">_loading<wbr>State</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_prefetchrequested" class="tsd-kind-icon">_prefetch<wbr>Requested</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_ready" class="tsd-kind-icon">_ready</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_sceneassetholder" class="tsd-kind-icon">_scene<wbr>Asset<wbr>Holder</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_storageloader" class="tsd-kind-icon">_storage<wbr>Loader</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_targetscene" class="tsd-kind-icon">_target<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_timer" class="tsd-kind-icon">_timer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#assetloadcompleted" class="tsd-kind-icon">asset<wbr>Load<wbr>Completed</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#assetloadfailed" class="tsd-kind-icon">asset<wbr>Load<wbr>Failed</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#assetloaded" class="tsd-kind-icon">asset<wbr>Loaded</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#assets" class="tsd-kind-icon">assets</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#children" class="tsd-kind-icon">children</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#game" class="tsd-kind-icon">game</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#loaded" class="tsd-kind-icon">loaded</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#local" class="tsd-kind-icon">local</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#message" class="tsd-kind-icon">message</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#operation" class="tsd-kind-icon">operation</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#pointdowncapture" class="tsd-kind-icon">point<wbr>Down<wbr>Capture</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#pointmovecapture" class="tsd-kind-icon">point<wbr>Move<wbr>Capture</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#pointupcapture" class="tsd-kind-icon">point<wbr>UpCapture</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#state" class="tsd-kind-icon">state</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#statechanged" class="tsd-kind-icon">state<wbr>Changed</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#storagevalues" class="tsd-kind-icon">storage<wbr>Values</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#targetassetloaded" class="tsd-kind-icon">target<wbr>Asset<wbr>Loaded</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#targetready" class="tsd-kind-icon">target<wbr>Ready</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#targetreset" class="tsd-kind-icon">target<wbr>Reset</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#tickgenerationmode" class="tsd-kind-icon">tick<wbr>Generation<wbr>Mode</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#update" class="tsd-kind-icon">update</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_activate" class="tsd-kind-icon">_activate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_cleartargetscene" class="tsd-kind-icon">_clear<wbr>Target<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_deactivate" class="tsd-kind-icon">_deactivate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_doreset" class="tsd-kind-icon">_do<wbr>Reset</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_fireloaded" class="tsd-kind-icon">_fire<wbr>Loaded</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_fireready" class="tsd-kind-icon">_fire<wbr>Ready</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_firetriggerontargetassetload" class="tsd-kind-icon">_fire<wbr>Trigger<wbr>OnTarget<wbr>Asset<wbr>Load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_firetriggerontargetready" class="tsd-kind-icon">_fire<wbr>Trigger<wbr>OnTarget<wbr>Ready</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_load" class="tsd-kind-icon">_load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_needsloading" class="tsd-kind-icon">_needs<wbr>Loading</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_notifysceneready" class="tsd-kind-icon">_notify<wbr>Scene<wbr>Ready</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_onsceneassetsload" class="tsd-kind-icon">_on<wbr>Scene<wbr>Assets<wbr>Load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_onstorageloaderror" class="tsd-kind-icon">_on<wbr>Storage<wbr>Load<wbr>Error</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-private tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#_onstorageloaded" class="tsd-kind-icon">_on<wbr>Storage<wbr>Loaded</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#append" class="tsd-kind-icon">append</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#clearinterval" class="tsd-kind-icon">clear<wbr>Interval</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#cleartimeout" class="tsd-kind-icon">clear<wbr>Timeout</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#createtimer" class="tsd-kind-icon">create<wbr>Timer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#deletetimer" class="tsd-kind-icon">delete<wbr>Timer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#destroy" class="tsd-kind-icon">destroy</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#destroyed" class="tsd-kind-icon">destroyed</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#end" class="tsd-kind-icon">end</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#findpointsourcebypoint" class="tsd-kind-icon">find<wbr>Point<wbr>Source<wbr>ByPoint</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#gettargetwaitingassetscount" class="tsd-kind-icon">get<wbr>Target<wbr>Waiting<wbr>Assets<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#gotoscene" class="tsd-kind-icon">goto<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#insertbefore" class="tsd-kind-icon">insert<wbr>Before</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#iscurrentscene" class="tsd-kind-icon">is<wbr>Current<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#modified" class="tsd-kind-icon">modified</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#prefetch" class="tsd-kind-icon">prefetch</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#register" class="tsd-kind-icon">register</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#remove" class="tsd-kind-icon">remove</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#requestassets" class="tsd-kind-icon">request<wbr>Assets</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#reset" class="tsd-kind-icon">reset</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#serializestoragevalues" class="tsd-kind-icon">serialize<wbr>Storage<wbr>Values</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#setinterval" class="tsd-kind-icon">set<wbr>Interval</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#settimeout" class="tsd-kind-icon">set<wbr>Timeout</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_lib_main_d_.g.loadingscene.html#unregister" class="tsd-kind-icon">unregister</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
