@@ -3,6 +3,7 @@ import type {
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	AudioSystem,
+	DynamicAssetConfiguration,
 	GameConfiguration,
 	Asset,
 	ScriptAsset,
@@ -356,6 +357,39 @@ describe("test AssetManager", () => {
 			}
 		};
 		manager.requestAssets(outerAssets, handlerOuter);
+	});
+
+	it("should normalize the dynamic asset configuration", async () => {
+		const game = new Game(gameConfiguration, "/");
+		const manager = game._assetManager;
+
+		function requestAsset(conf: DynamicAssetConfiguration): Promise<AudioAsset> {
+			return new Promise((resolve, reject) => {
+				manager.requestAsset(conf, { _onAssetError: e => reject(e), _onAssetLoad: (a: AudioAsset) => resolve(a) });
+			});
+		}
+
+		const asset1 = await requestAsset({
+			id: "test-dynamic-audio-asset-1",
+			uri: "test-dynamic-audio-asset-1-uri",
+			type: "audio",
+			duration: 1234,
+			systemId: "sound"
+		});
+		expect(asset1.hint).toEqual({
+			streaming: false // hint 属性が補完されていることを確認
+		});
+
+		const asset2 = await requestAsset({
+			id: "test-dynamic-audio-asset-2",
+			uri: "test-dynamic-audio-asset-2-uri",
+			type: "audio",
+			duration: 1234,
+			systemId: "music"
+		});
+		expect(asset2.hint).toEqual({
+			streaming: true // hint 属性が補完されていることを確認
+		});
 	});
 
 	it("can instantiate PartialImageAsset", done => {
