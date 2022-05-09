@@ -370,7 +370,13 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param handler 要求結果を受け取るハンドラ
 	 */
 	requestAsset(assetIdOrConf: string | DynamicAssetConfiguration, handler: AssetManagerLoadHandler): boolean {
-		const assetId = typeof assetIdOrConf === "string" ? assetIdOrConf : (<DynamicAssetConfiguration>assetIdOrConf).id;
+		let assetId: string;
+		if (typeof assetIdOrConf === "string") {
+			assetId = assetIdOrConf;
+		} else {
+			assetId = assetIdOrConf.id;
+			assetIdOrConf = this._normalizeAssetDeclarationBase(assetId, assetIdOrConf);
+		}
 		let waiting = false;
 		let loadingInfo: AssetLoadingInfo;
 		if (this._assets.hasOwnProperty(assetId)) {
@@ -382,13 +388,6 @@ export class AssetManager implements AssetLoadHandler {
 			++this._refCounts[assetId];
 			waiting = true;
 		} else {
-			let assetId: string;
-			if (typeof assetIdOrConf === "string") {
-				assetId = assetIdOrConf;
-			} else {
-				assetId = assetIdOrConf.id;
-				assetIdOrConf = this._normalizeAssetDeclarationBase(assetIdOrConf.id, assetIdOrConf);
-			}
 			const system = this._getAudioSystem(assetIdOrConf);
 			const audioAsset = system?.getDestroyRequestedAsset(assetId);
 			if (system && audioAsset) {
