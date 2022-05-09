@@ -375,7 +375,7 @@ export class AssetManager implements AssetLoadHandler {
 			assetId = assetIdOrConf;
 		} else {
 			assetId = assetIdOrConf.id;
-			assetIdOrConf = this._normalizeAssetDeclarationBase(assetId, assetIdOrConf);
+			assetIdOrConf = this._normalizeAssetBaseDeclaration(assetId, assetIdOrConf);
 		}
 		let waiting = false;
 		let loadingInfo: AssetLoadingInfo;
@@ -519,7 +519,7 @@ export class AssetManager implements AssetLoadHandler {
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 		for (const p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
-			const conf = Object.create(this._normalizeAssetDeclarationBase<AssetConfiguration>(p, configuration[p]));
+			const conf = Object.create(this._normalizeAssetBaseDeclaration<AssetConfiguration>(p, configuration[p]));
 			if (!conf.path) {
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
 			}
@@ -535,7 +535,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_normalizeAssetDeclarationBase<T extends AssetConfigurationCore>(assetId: string, conf: T): T {
+	_normalizeAssetBaseDeclaration<T extends AssetConfigurationCore>(assetId: string, conf: T): T {
 		if (!conf.type) {
 			throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No type given for: " + assetId);
 		}
