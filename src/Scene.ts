@@ -811,7 +811,7 @@ export class Scene implements StorageLoaderHandler {
 		if (this._loadingState !== "ready-fired" && this._loadingState !== "loaded-fired") {
 			// このメソッドは読み込み完了前には呼び出せない。これは実装上の制限である。
 			// やろうと思えば _load() で読み込む対象として加えることができる。が、その場合 `handler` を呼び出す方法が単純でないので対応を見送る。
-			throw ExceptionFactory.createAssertionError("Scene#requestAsset(): can be called after loaded.");
+			throw ExceptionFactory.createAssertionError("Scene#requestAssets(): can be called after loaded.");
 		}
 
 		const holder = new AssetHolder<SceneRequestAssetHandler>({

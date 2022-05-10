@@ -4,12 +4,14 @@ import type {
 	ImageAssetConfigurationBase,
 	ScriptAssetConfigurationBase,
 	TextAssetConfigurationBase,
+	VectorImageAssetConfigurationBase,
 	VideoAssetConfigurationBase
 } from "@akashic/game-configuration";
 
 export type DynamicAssetConfiguration =
 	| DynamicAudioAssetConfigurationBase
 	| DynamicImageAssetConfigurationBase
+	| DynamicVectorImageAssetConfigurationBase
 	| DynamicTextAssetConfigurationBase
 	| DynamicScriptAssetConfigurationBase
 	| DynamicVideoAssetConfigurationBase;
@@ -37,6 +39,13 @@ export interface DynamicAssetConfigurationBase extends AssetConfigurationCommonB
 export interface DynamicImageAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
 		Omit<ImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+
+/**
+ * VectorImageAssetの設定。
+ */
+export interface DynamicVectorImageAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<VectorImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * VideoAssetの設定。

@@ -1,5 +1,10 @@
 # ChangeLog
 
+## unreleased changes
+
+不具合修正
+* `g.Scene#requestAssets()` で DynamicAsset の読み込みを要求した際に引数が normalize されていなかった不具合を修正
+
 ## 3.4.1
 * 早送りの終了時にスキッピングシーンが描画され続けるケースがある問題の修正
 
