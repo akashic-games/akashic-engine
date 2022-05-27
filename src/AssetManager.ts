@@ -13,6 +13,7 @@ namespace g {
 		}
 	}
 
+	// eslint-disable-next-line no-inner-declarations
 	function normalizeAudioSystemConfMap(confMap: AudioSystemConfigurationMap): AudioSystemConfigurationMap {
 		confMap = confMap || {};
 
@@ -98,6 +99,11 @@ namespace g {
 		private _loadings: { [key: string]: AssetLoadingInfo };
 
 		/**
+		 * オーディオシステムの宣言。
+		 */
+		private _audioSystemConfMap: AudioSystemConfigurationMap;
+
+		/**
 		 * `AssetManager` のインスタンスを生成する。
 		 *
 		 * @param game このインスタンスが属するゲーム
@@ -110,7 +116,8 @@ namespace g {
 			moduleMainScripts?: ModuleMainScriptsMap
 		) {
 			this.game = game;
-			this.configuration = this._normalize(conf || {}, normalizeAudioSystemConfMap(audioSystemConfMap));
+			this._audioSystemConfMap = normalizeAudioSystemConfMap(audioSystemConfMap);
+			this.configuration = this._normalize(conf || {});
 			this._assets = {};
 			this._liveAssetVirtualPathTable = {};
 			this._liveAbsolutePathTable = {};
@@ -191,7 +198,13 @@ namespace g {
 		 * @param handler 要求結果を受け取るハンドラ
 		 */
 		requestAsset(assetIdOrConf: string | DynamicAssetConfiguration, handler: AssetManagerLoadHandler): boolean {
-			var assetId = typeof assetIdOrConf === "string" ? assetIdOrConf : (<DynamicAssetConfiguration>assetIdOrConf).id;
+			let assetId: string;
+			if (typeof assetIdOrConf === "string") {
+				assetId = assetIdOrConf;
+			} else {
+				assetId = assetIdOrConf.id;
+				assetIdOrConf = this._normalizeAssetBaseDeclaration(assetId, Object.create(assetIdOrConf));
+			}
 			var waiting = false;
 			var loadingInfo: AssetLoadingInfo;
 			if (this._assets.hasOwnProperty(assetId)) {
@@ -256,58 +269,68 @@ namespace g {
 			}
 		}
 
-		_normalize(configuration: any, audioSystemConfMap: AudioSystemConfigurationMap): any {
+		_normalize(configuration: any): any {
 			var ret: { [key: string]: AssetConfiguration } = {};
 			if (!(configuration instanceof Object))
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 			for (var p in configuration) {
 				if (!configuration.hasOwnProperty(p)) continue;
-				var conf = <AssetConfiguration>Object.create(configuration[p]);
+				const conf = this._normalizeAssetBaseDeclaration(p, Object.create(configuration[p]));
 				if (!conf.path) {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
 				}
 				if (!conf.virtualPath) {
 					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No virtualPath given for: " + p);
 				}
-				if (!conf.type) {
-					throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No type given for: " + p);
-				}
-				if (conf.type === "image") {
-					if (typeof conf.width !== "number")
-						throw ExceptionFactory.createAssertionError("AssetManager#_normalize: wrong width given for the image asset: " + p);
-					if (typeof conf.height !== "number")
-						throw ExceptionFactory.createAssertionError(
-							"AssetManager#_normalize: wrong height given for the image asset: " + p
-						);
-				}
-				if (conf.type === "audio") {
-					// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
-					if (conf.duration === undefined) conf.duration = 0;
-					const audioSystemConf = audioSystemConfMap[conf.systemId];
-					if (conf.loop === undefined) {
-						conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
-					}
-					if (conf.hint === undefined) {
-						conf.hint = audioSystemConf ? audioSystemConf.hint : {};
-					}
-				}
-				if (conf.type === "video") {
-					if (!conf.useRealSize) {
-						if (typeof conf.width !== "number")
-							throw ExceptionFactory.createAssertionError(
-								"AssetManager#_normalize: wrong width given for the video asset: " + p
-							);
-						if (typeof conf.height !== "number")
-							throw ExceptionFactory.createAssertionError(
-								"AssetManager#_normalize: wrong height given for the video asset: " + p
-							);
-						conf.useRealSize = false;
-					}
-				}
 				if (!conf.global) conf.global = false;
 				ret[p] = conf;
 			}
 			return ret;
+		}
+
+		/**
+		 * @private
+		 */
+		_normalizeAssetBaseDeclaration(assetId: string, conf: any): any {
+			if (!conf.type) {
+				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No type given for: " + assetId);
+			}
+			if (conf.type === "image") {
+				if (typeof conf.width !== "number")
+					throw ExceptionFactory.createAssertionError(
+						"AssetManager#_normalize: wrong width given for the image asset: " + assetId
+					);
+				if (typeof conf.height !== "number")
+					throw ExceptionFactory.createAssertionError(
+						"AssetManager#_normalize: wrong height given for the image asset: " + assetId
+					);
+			}
+			if (conf.type === "audio") {
+				// durationというメンバは後から追加したため、古いgame.jsonではundefinedになる場合がある
+				if (conf.duration === undefined) conf.duration = 0;
+				const audioSystemConf = this._audioSystemConfMap[conf.systemId];
+				if (conf.loop === undefined) {
+					conf.loop = !!audioSystemConf && !!audioSystemConf.loop;
+				}
+				if (conf.hint === undefined) {
+					conf.hint = audioSystemConf ? audioSystemConf.hint : {};
+				}
+			}
+			if (conf.type === "video") {
+				if (!conf.useRealSize) {
+					if (typeof conf.width !== "number")
+						throw ExceptionFactory.createAssertionError(
+							"AssetManager#_normalize: wrong width given for the video asset: " + assetId
+						);
+					if (typeof conf.height !== "number")
+						throw ExceptionFactory.createAssertionError(
+							"AssetManager#_normalize: wrong height given for the video asset: " + assetId
+						);
+					conf.useRealSize = false;
+				}
+			}
+
+			return conf;
 		}
 
 		/**
