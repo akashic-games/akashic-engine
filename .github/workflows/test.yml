@@ -4,18 +4,14 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    name: Node ${{ matrix.node }} / ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node: [10.x, 12.x]
+    runs-on: ubuntu-latest
+    name: Node 12
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: '12'
           cache: npm
       - name: Run test
         run: |
