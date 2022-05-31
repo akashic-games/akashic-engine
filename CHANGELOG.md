@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.6.7
+
+不具合修正
+* `g.Scene#requestAssets()` で DynamicAsset の読み込みを要求した際に引数が normalize されていなかった不具合を修正
+
 ## 2.6.6
 
 不具合修正

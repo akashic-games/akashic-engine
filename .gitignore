@@ -11,3 +11,4 @@ tmp
 .idea
 doc/html
 .alm
+*.tgz

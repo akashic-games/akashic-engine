@@ -22,6 +22,7 @@ namespace g {
 		}
 	}
 
+	// eslint-disable-next-line no-inner-declarations
 	function getSurfaceAtlasSlot(slot: SurfaceAtlasSlot, width: number, height: number): SurfaceAtlasSlot {
 		while (slot) {
 			if (slot.width >= width && slot.height >= height) {
@@ -33,6 +34,7 @@ namespace g {
 		return null;
 	}
 
+	// eslint-disable-next-line no-inner-declarations
 	function calcAtlasSize(hint: SurfaceAtlasSetHint): CommonSize {
 		var width = Math.ceil(Math.min(hint.initialAtlasWidth, hint.maxAtlasWidth));
 		var height = Math.ceil(Math.min(hint.initialAtlasHeight, hint.maxAtlasHeight));

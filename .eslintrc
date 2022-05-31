@@ -2,6 +2,7 @@
 	"extends": "@akashic/eslint-config",
 	"rules": {
 		// override rules
+		"no-undef": "warn",
 		"@typescript-eslint/no-unused-vars": [
 			"error",
 			{
