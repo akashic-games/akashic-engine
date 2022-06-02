@@ -2,9 +2,6 @@ name: reftest
 
 on: [push, pull_request]
 
-env:
-  cache-version: v1
-
 jobs:
   reftest:
     runs-on: ${{ matrix.os }}
@@ -12,24 +9,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [12.x, 14.x]
+        node: [14.x, 16.x]
     steps:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - name: Use npm@7
         run: npm i -g npm@7 --registry=https://registry.npmjs.org
-      - name: Cache node modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ env.cache-version }}-${{ runner.os }}-build-
-            ${{ env.cache-version }}-${{ runner.os }}-
       - name: Checkout akashic-engine repository
         uses: actions/checkout@v3
         with:
@@ -50,8 +36,7 @@ jobs:
         run: |
           npm ci
           npm i ../akashic-engine/${{steps.akashic_engine.outputs.pack_name}} --no-save
-          npm run build:full:parts
-          npm run build:canvas:parts
+          npm run build
           npm test
       - name: Archive artifact
         if: ${{ always() }}
