@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.4.3
+
+不具合修正
+* `g.OperationPluginManager` のゲーム状態リセットでの不具合を修正
+
 ## 3.4.2
 
 不具合修正
