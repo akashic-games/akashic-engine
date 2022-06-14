@@ -181,9 +181,9 @@ describe("test OperationPluginManager", () => {
 			const self = game.operationPluginManager;
 			self.initialize();
 
-			self.reset(game._onOperationPluginOperated);
-			expect(self.onOperate._handlers[0].func).toBe(game._onOperationPluginOperated.fire);
-			expect(self.onOperate._handlers[0].owner).toBe(game._onOperationPluginOperated);
+			self.reset();
+			expect(self.onOperate._handlers.length).toEqual(0);
+			expect(self.onOperate._handlers).toEqual([]);
 			expect(self.operated).toEqual(self.onOperate);
 			expect(self.plugins).toEqual({});
 			done();
