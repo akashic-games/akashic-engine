@@ -175,4 +175,19 @@ describe("test OperationPluginManager", () => {
 		});
 		game._startLoadingGlobalAssets();
 	});
+
+	it("reset", done => {
+		game._onLoad.add(() => {
+			const self = game.operationPluginManager;
+			self.initialize();
+
+			self.reset(game._onOperationPluginOperated);
+			expect(self.onOperate._handlers[0].func).toBe(game._onOperationPluginOperated.fire);
+			expect(self.onOperate._handlers[0].owner).toBe(game._onOperationPluginOperated);
+			expect(self.operated).toEqual(self.onOperate);
+			expect(self.plugins).toEqual({});
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
 });

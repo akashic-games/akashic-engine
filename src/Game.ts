@@ -1398,7 +1398,7 @@ export class Game {
 	 * @private
 	 */
 	_reset(param?: GameResetParameterObject): void {
-		this.operationPluginManager.stopAll();
+		this.operationPluginManager.reset(this._onOperationPluginOperated);
 		if (this.scene()) {
 			while (this.scene() !== this._initialScene) {
 				this.popScene();

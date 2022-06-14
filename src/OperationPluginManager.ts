@@ -131,27 +131,44 @@ export class OperationPluginManager {
 		this._infos = undefined!;
 	}
 
+	reset(onOperationPluginOperated: Trigger<InternalOperationPluginOperation>): void {
+		if (!this._initialized) return;
+		this.stopAll();
+		this.onOperate.destroy();
+		this.onOperate = new Trigger<InternalOperationPluginOperation>();
+		this.onOperate.add(onOperationPluginOperated.fire, onOperationPluginOperated);
+		this.operated = this.onOperate;
+		this.plugins = {};
+		this._infos = [];
+	}
+
 	stopAll(): void {
 		if (!this._initialized) return;
-		for (let i = 0; i < this._infos.length; ++i) {
-			const info = this._infos[i];
-			if (info._plugin) info._plugin.stop();
+		for (const code in this._infos) {
+			if (this._infos.hasOwnProperty(code)) {
+				const info = this._infos[code];
+				if (info._plugin) info._plugin.stop();
+			}
 		}
 	}
 
 	private _doAutoStart(): void {
-		for (let i = 0; i < this._infos.length; ++i) {
-			const info = this._infos[i];
-			if (!info.manualStart && info._plugin) info._plugin.start();
+		for (const code in this._infos) {
+			if (this._infos.hasOwnProperty(code)) {
+				const info = this._infos[code];
+				if (!info.manualStart && info._plugin) info._plugin.start();
+			}
 		}
 	}
 
 	private _loadOperationPlugins(): void {
-		for (let i = 0; i < this._infos.length; ++i) {
-			const info = this._infos[i];
-			if (!info.script) continue;
-			const pluginClass = this._game._moduleManager._require(info.script);
-			info._plugin = this._instantiateOperationPlugin(pluginClass, info.code, info.option);
+		for (const code in this._infos) {
+			if (this._infos.hasOwnProperty(code)) {
+				const info = this._infos[code];
+				if (!info.script) continue;
+				const pluginClass = this._game._moduleManager._require(info.script);
+				info._plugin = this._instantiateOperationPlugin(pluginClass, info.code, info.option);
+			}
 		}
 	}
 
