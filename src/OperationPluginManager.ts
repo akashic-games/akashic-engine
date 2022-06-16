@@ -60,7 +60,7 @@ export class OperationPluginManager {
 
 	private _game: Game;
 	private _viewInfo: OperationPluginViewInfo | null;
-	private _infos: { [code: string]: InternalOperationPluginInfo };
+	private _infoTable: { [code: number]: InternalOperationPluginInfo };
 	private _initialized: boolean;
 
 	constructor(game: Game, viewInfo: OperationPluginViewInfo | null, infos: InternalOperationPluginInfo[]) {
@@ -69,9 +69,9 @@ export class OperationPluginManager {
 		this.plugins = {};
 		this._game = game;
 		this._viewInfo = viewInfo;
-		this._infos = {};
+		this._infoTable = {};
 		for (const info of infos) {
-			this._infos[info.code] = info;
+			this._infoTable[info.code] = info;
 		}
 		this._initialized = false;
 	}
@@ -97,7 +97,7 @@ export class OperationPluginManager {
 	 * @param option 操作プラグインのコンストラクタに渡すパラメータ
 	 */
 	register(pluginClass: OperationPluginStatic, code: number, option?: any): void {
-		this._infos[code] = {
+		this._infoTable[code] = {
 			code,
 			_plugin: this._instantiateOperationPlugin(pluginClass, code, option)
 		};
@@ -108,7 +108,7 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 */
 	start(code: number): void {
-		const info = this._infos[code];
+		const info = this._infoTable[code];
 		if (!info || !info._plugin) return;
 		info._plugin.start();
 	}
@@ -118,7 +118,7 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 */
 	stop(code: number): void {
-		const info = this._infos[code];
+		const info = this._infoTable[code];
 		if (!info || !info._plugin) return;
 		info._plugin.stop();
 	}
@@ -131,7 +131,7 @@ export class OperationPluginManager {
 		this.plugins = undefined!;
 		this._game = undefined!;
 		this._viewInfo = undefined!;
-		this._infos = undefined!;
+		this._infoTable = undefined!;
 	}
 
 	reset(): void {
@@ -140,30 +140,30 @@ export class OperationPluginManager {
 		this.onOperate.removeAll();
 		this.operated = this.onOperate;
 		this.plugins = {};
-		this._infos = {};
+		this._infoTable = {};
 	}
 
 	stopAll(): void {
 		if (!this._initialized) return;
-		for (const code in this._infos) {
-			if (!this._infos.hasOwnProperty(code)) continue;
-			const info = this._infos[code];
+		for (const code in this._infoTable) {
+			if (!this._infoTable.hasOwnProperty(code)) continue;
+			const info = this._infoTable[code];
 			if (info._plugin) info._plugin.stop();
 		}
 	}
 
 	private _doAutoStart(): void {
-		for (const code in this._infos) {
-			if (!this._infos.hasOwnProperty(code)) continue;
-			const info = this._infos[code];
+		for (const code in this._infoTable) {
+			if (!this._infoTable.hasOwnProperty(code)) continue;
+			const info = this._infoTable[code];
 			if (!info.manualStart && info._plugin) info._plugin.start();
 		}
 	}
 
 	private _loadOperationPlugins(): void {
-		for (const code in this._infos) {
-			if (!this._infos.hasOwnProperty(code)) continue;
-			const info = this._infos[code];
+		for (const code in this._infoTable) {
+			if (!this._infoTable.hasOwnProperty(code)) continue;
+			const info = this._infoTable[code];
 			if (!info.script) continue;
 			const pluginClass = this._game._moduleManager._require(info.script);
 			info._plugin = this._instantiateOperationPlugin(pluginClass, info.code, info.option);

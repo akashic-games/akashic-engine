@@ -912,7 +912,6 @@ export class Game {
 		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this._onOperationPluginOperated.add(this._handleOperationPluginOperated, this);
-		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
 		this.onSceneChange = new Trigger();
 		this._onSceneChange = new Trigger();

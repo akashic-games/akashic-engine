@@ -127,23 +127,24 @@ describe("test OperationPluginManager", () => {
 			const self = game.operationPluginManager;
 			self.initialize();
 
-			expect((self as any)._infos[30]).toBeUndefined();
+			expect((self as any)._infoTable[30]).toBeUndefined();
 			// @ts-ignore
 			self.register(TestOperationPlugin, 30, { dummy: true });
 
-			expect((self as any)._infos[30]).toBeDefined();
-			expect((self as any)._infos[30]._plugin).toBeDefined();
+			expect((self as any)._infoTable[30]).toBeDefined();
+			expect((self as any)._infoTable[30]._plugin).toBeDefined();
+
 			const plugin1 = self.plugins[30] as TestOperationPlugin;
 			expect(plugin1._option).toEqual({ dummy: true });
 			expect(plugin1._started).toBe(false);
 			self.start(30);
 			expect(plugin1._started).toBe(true);
 
-			expect((self as any)._infos[60]).toBeUndefined();
+			expect((self as any)._infoTable[60]).toBeUndefined();
 			// @ts-ignore
 			self.register(TestOperationPluginUnsupported, 60, { dummy: false });
-			expect((self as any)._infos[60]).toBeDefined();
-			expect((self as any)._infos[60]._plugin).toBeUndefined();
+			expect((self as any)._infoTable[60]).toBeDefined();
+			expect((self as any)._infoTable[60]._plugin).toBeUndefined();
 			const plugin2 = self.plugins[60] as TestOperationPluginUnsupported;
 			expect(plugin2).toBeUndefined();
 			self.start(60);
@@ -180,12 +181,18 @@ describe("test OperationPluginManager", () => {
 		game._onLoad.add(() => {
 			const self = game.operationPluginManager;
 			self.initialize();
+			expect(self.onOperate._handlers[0]).toBeDefined();
+			expect(self.operated._handlers[0]).toBeDefined();
+			expect(Object.keys((self as any)._infoTable).length).toEqual(3);
+			expect(Object.keys(self.plugins).length).toEqual(1);
 
 			self.reset();
+			expect(self.onOperate._handlers[0]).toBeUndefined();
 			expect(self.onOperate._handlers.length).toEqual(0);
 			expect(self.onOperate._handlers).toEqual([]);
 			expect(self.operated).toEqual(self.onOperate);
 			expect(self.plugins).toEqual({});
+			expect((self as any)._infoTable).toEqual({});
 			done();
 		});
 		game._startLoadingGlobalAssets();
