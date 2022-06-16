@@ -60,7 +60,7 @@ export class OperationPluginManager {
 
 	private _game: Game;
 	private _viewInfo: OperationPluginViewInfo | null;
-	private _infos: InternalOperationPluginInfo[];
+	private _infos: { [code: string]: InternalOperationPluginInfo };
 	private _initialized: boolean;
 
 	constructor(game: Game, viewInfo: OperationPluginViewInfo | null, infos: InternalOperationPluginInfo[]) {
@@ -69,7 +69,10 @@ export class OperationPluginManager {
 		this.plugins = {};
 		this._game = game;
 		this._viewInfo = viewInfo;
-		this._infos = infos;
+		this._infos = {};
+		for (const info of infos) {
+			this._infos[info.code] = info;
+		}
 		this._initialized = false;
 	}
 
@@ -137,7 +140,7 @@ export class OperationPluginManager {
 		this.onOperate.removeAll();
 		this.operated = this.onOperate;
 		this.plugins = {};
-		this._infos = [];
+		this._infos = {};
 	}
 
 	stopAll(): void {
@@ -173,9 +176,6 @@ export class OperationPluginManager {
 		}
 		if (this.plugins[code]) {
 			throw new Error(`Plugin#code conflicted for code: ${code}`);
-		}
-		if (this._infos[code]) {
-			throw new Error(`this plugin (code: ${code}) is already defined in game.json`);
 		}
 		const plugin = new pluginClass(this._game, this._viewInfo, option);
 		this.plugins[code] = plugin;
