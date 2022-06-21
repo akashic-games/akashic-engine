@@ -1,7 +1,6 @@
 import type { OperationPluginViewInfo } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import type { Game } from "./Game";
-import type { InternalOperationPluginInfo } from "./InternalOperationPluginInfo";
 import type { OperationPlugin } from "./OperationPlugin";
 import type { InternalOperationPluginOperation, OperationPluginOperation } from "./OperationPluginOperation";
 import type { OperationPluginStatic } from "./OperationPluginStatic";
@@ -60,32 +59,13 @@ export class OperationPluginManager {
 
 	private _game: Game;
 	private _viewInfo: OperationPluginViewInfo | null;
-	private _infoTable: { [code: number]: InternalOperationPluginInfo };
-	private _initialized: boolean;
 
-	constructor(game: Game, viewInfo: OperationPluginViewInfo | null, infos: InternalOperationPluginInfo[]) {
+	constructor(game: Game, viewInfo: OperationPluginViewInfo | null) {
 		this.onOperate = new Trigger<InternalOperationPluginOperation>();
 		this.operated = this.onOperate;
 		this.plugins = {};
 		this._game = game;
 		this._viewInfo = viewInfo;
-		this._infoTable = {};
-		for (const info of infos) {
-			this._infoTable[info.code] = info;
-		}
-		this._initialized = false;
-	}
-
-	/**
-	 * 初期化する。
-	 * このメソッドの呼び出しは、`this.game._loaded` のfire後でなければならない。
-	 */
-	initialize(): void {
-		if (!this._initialized) {
-			this._initialized = true;
-			this._loadOperationPlugins();
-		}
-		this._doAutoStart();
 	}
 
 	/**
@@ -97,10 +77,7 @@ export class OperationPluginManager {
 	 * @param option 操作プラグインのコンストラクタに渡すパラメータ
 	 */
 	register(pluginClass: OperationPluginStatic, code: number, option?: any): void {
-		this._infoTable[code] = {
-			code,
-			_plugin: this._instantiateOperationPlugin(pluginClass, code, option)
-		};
+		this._instantiateOperationPlugin(pluginClass, code, option);
 	}
 
 	/**
@@ -108,9 +85,9 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 */
 	start(code: number): void {
-		const info = this._infoTable[code];
-		if (!info || !info._plugin) return;
-		info._plugin.start();
+		const plugin = this.plugins[code];
+		if (!plugin) return;
+		plugin.start();
 	}
 
 	/**
@@ -118,9 +95,9 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 */
 	stop(code: number): void {
-		const info = this._infoTable[code];
-		if (!info || !info._plugin) return;
-		info._plugin.stop();
+		const plugin = this.plugins[code];
+		if (!plugin) return;
+		plugin.stop();
 	}
 
 	destroy(): void {
@@ -131,42 +108,20 @@ export class OperationPluginManager {
 		this.plugins = undefined!;
 		this._game = undefined!;
 		this._viewInfo = undefined!;
-		this._infoTable = undefined!;
 	}
 
 	reset(): void {
-		if (!this._initialized) return;
 		this.stopAll();
 		this.onOperate.removeAll();
 		this.operated = this.onOperate;
 		this.plugins = {};
-		this._infoTable = {};
 	}
 
 	stopAll(): void {
-		if (!this._initialized) return;
-		for (const code in this._infoTable) {
-			if (!this._infoTable.hasOwnProperty(code)) continue;
-			const info = this._infoTable[code];
-			if (info._plugin) info._plugin.stop();
-		}
-	}
-
-	private _doAutoStart(): void {
-		for (const code in this._infoTable) {
-			if (!this._infoTable.hasOwnProperty(code)) continue;
-			const info = this._infoTable[code];
-			if (!info.manualStart && info._plugin) info._plugin.start();
-		}
-	}
-
-	private _loadOperationPlugins(): void {
-		for (const code in this._infoTable) {
-			if (!this._infoTable.hasOwnProperty(code)) continue;
-			const info = this._infoTable[code];
-			if (!info.script) continue;
-			const pluginClass = this._game._moduleManager._require(info.script);
-			info._plugin = this._instantiateOperationPlugin(pluginClass, info.code, info.option);
+		for (const code in this.plugins) {
+			if (!this.plugins.hasOwnProperty(code)) continue;
+			const plugin = this.plugins[code];
+			if (plugin) plugin.stop();
 		}
 	}
 

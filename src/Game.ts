@@ -907,8 +907,7 @@ export class Game {
 		);
 		this._moduleManager = undefined!;
 
-		const operationPluginsField = gameConfiguration.operationPlugins || [];
-		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null, operationPluginsField);
+		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null);
 		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this._onOperationPluginOperated.add(this._handleOperationPluginOperated, this);
@@ -1798,7 +1797,16 @@ export class Game {
 	}
 
 	private _handleLoad(): void {
-		this.operationPluginManager.initialize();
+		const operationPluginsField = this._configuration.operationPlugins || [];
+		// `game.json` の `operationPlugins` フィールドの登録は `game._onLoad` のfire後でなければならない。
+		for (const pluginInfo of operationPluginsField) {
+			if (!pluginInfo.script) continue;
+			const pluginClass = this._moduleManager._require(pluginInfo.script);
+			this.operationPluginManager.register(pluginClass, pluginInfo.code, pluginInfo.option);
+			if (!pluginInfo.manualStart && this.operationPluginManager.plugins[pluginInfo.code]) {
+				this.operationPluginManager.plugins[pluginInfo.code].start();
+			}
+		}
 		this.operationPlugins = this.operationPluginManager.plugins;
 
 		if (this._mainFunc) {
