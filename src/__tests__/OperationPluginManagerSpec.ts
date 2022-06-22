@@ -178,16 +178,18 @@ describe("test OperationPluginManager", () => {
 	it("reset", done => {
 		game._onStart.add(() => {
 			const self = game.operationPluginManager;
-			expect(self.onOperate._handlers[0]).toBeDefined();
-			expect(self.operated._handlers[0]).toBeDefined();
-			expect(Object.keys(self.plugins).length).toEqual(2);
+			self.onOperate.add(() => { return });
+			expect(self.plugins[30]).toBeUndefined();
+			// @ts-ignore
+			const plugin = self.register(TestOperationPlugin, 11, { dummy: true });
+			expect(self.plugins[11]).toBeDefined();
+			if (plugin) plugin.start();
+			expect((plugin as any)._started).toBe(true);
 
 			self.reset();
-			expect(self.onOperate._handlers[0]).toBeUndefined();
-			expect(self.onOperate._handlers.length).toEqual(0);
-			expect(self.onOperate._handlers).toEqual([]);
-			expect(self.operated).toEqual(self.onOperate);
+			expect(self.onOperate.length).toBe(0);
 			expect(self.plugins).toEqual({});
+			expect((plugin as any)._started).toBe(false);
 			done();
 		});
 		game._loadAndStart();
