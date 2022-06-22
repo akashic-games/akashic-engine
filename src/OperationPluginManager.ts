@@ -76,8 +76,8 @@ export class OperationPluginManager {
 	 * @param code 操作プラグインの識別コード
 	 * @param option 操作プラグインのコンストラクタに渡すパラメータ
 	 */
-	register(pluginClass: OperationPluginStatic, code: number, option?: any): void {
-		this._instantiateOperationPlugin(pluginClass, code, option);
+	register(pluginClass: OperationPluginStatic, code: number, option?: any): OperationPlugin | undefined {
+		return this._instantiateOperationPlugin(pluginClass, code, option);
 	}
 
 	/**

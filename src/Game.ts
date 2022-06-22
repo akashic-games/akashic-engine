@@ -1802,9 +1802,9 @@ export class Game {
 		for (const pluginInfo of operationPluginsField) {
 			if (!pluginInfo.script) continue;
 			const pluginClass = this._moduleManager._require(pluginInfo.script);
-			this.operationPluginManager.register(pluginClass, pluginInfo.code, pluginInfo.option);
-			if (!pluginInfo.manualStart && this.operationPluginManager.plugins[pluginInfo.code]) {
-				this.operationPluginManager.plugins[pluginInfo.code].start();
+			const plugin = this.operationPluginManager.register(pluginClass, pluginInfo.code, pluginInfo.option);
+			if (!pluginInfo.manualStart && plugin) {
+				plugin.start();
 			}
 		}
 		this.operationPlugins = this.operationPluginManager.plugins;
