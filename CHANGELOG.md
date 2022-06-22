@@ -3,7 +3,7 @@
 ## 3.4.3
 
 不具合修正
-* `g.OperationPluginManager` のゲーム状態リセットでの不具合を修正
+* `g.OperationPluginManager#stopAll()` で登録済みの操作プラグインが正常に停止できなかった不具合を修正
 
 ## 3.4.2
 
