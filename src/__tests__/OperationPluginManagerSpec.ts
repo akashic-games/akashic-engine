@@ -79,13 +79,10 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("初期化", done => {
-		game._onLoad.add(() => {
-			expect(game.operationPluginManager).not.toBeFalsy();
-			expect(game.operationPluginManager.onOperate instanceof Trigger).toBe(true);
-			expect(game.operationPluginManager.plugins).toEqual({});
-			done();
-		});
-		game._startLoadingGlobalAssets();
+		expect(game.operationPluginManager).not.toBeFalsy();
+		expect(game.operationPluginManager.onOperate instanceof Trigger).toBe(true);
+		expect(game.operationPluginManager.plugins).toEqual({});
+		done();
 	});
 
 	it("Register gameConfiguration.operationPlugins with _onStart", done => {
@@ -178,7 +175,9 @@ describe("test OperationPluginManager", () => {
 	it("reset", done => {
 		game._onStart.add(() => {
 			const self = game.operationPluginManager;
-			self.onOperate.add(() => { return });
+			self.onOperate.add(() => {
+				return;
+			});
 			// @ts-ignore
 			const plugin = self.register(TestOperationPlugin, 11, { dummy: true }) as TestOperationPlugin;
 			expect(self.plugins[11]).toBeDefined();
