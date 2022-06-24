@@ -113,7 +113,6 @@ export class OperationPluginManager {
 	reset(): void {
 		this.stopAll();
 		this.onOperate.removeAll();
-		this.operated = this.onOperate;
 		this.plugins = {};
 	}
 
