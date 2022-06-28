@@ -907,12 +907,10 @@ export class Game {
 		);
 		this._moduleManager = undefined!;
 
-		const operationPluginsField = gameConfiguration.operationPlugins || [];
-		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null, operationPluginsField);
+		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null);
 		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();
 		this._operationPluginOperated = this._onOperationPluginOperated;
 		this._onOperationPluginOperated.add(this._handleOperationPluginOperated, this);
-		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 
 		this.onSceneChange = new Trigger();
 		this._onSceneChange = new Trigger();
@@ -1398,7 +1396,8 @@ export class Game {
 	 * @private
 	 */
 	_reset(param?: GameResetParameterObject): void {
-		this.operationPluginManager.stopAll();
+		this.operationPluginManager.reset();
+		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 		if (this.scene()) {
 			while (this.scene() !== this._initialScene) {
 				this.popScene();
@@ -1798,7 +1797,16 @@ export class Game {
 	}
 
 	private _handleLoad(): void {
-		this.operationPluginManager.initialize();
+		const operationPluginsField = this._configuration.operationPlugins || [];
+		// `game.json` の `operationPlugins` フィールドの登録は `game._onLoad` のfire後でなければならない。
+		for (const pluginInfo of operationPluginsField) {
+			if (!pluginInfo.script) continue;
+			const pluginClass = this._moduleManager._require(pluginInfo.script);
+			const plugin = this.operationPluginManager.register(pluginClass, pluginInfo.code, pluginInfo.option);
+			if (!pluginInfo.manualStart && plugin) {
+				plugin.start();
+			}
+		}
 		this.operationPlugins = this.operationPluginManager.plugins;
 
 		if (this._mainFunc) {

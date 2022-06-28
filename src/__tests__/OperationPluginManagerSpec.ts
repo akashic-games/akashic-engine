@@ -47,13 +47,21 @@ describe("test OperationPluginManager", () => {
 		const conf: GameConfiguration = {
 			width: 320,
 			height: 270,
-			assets: {},
+			assets: {
+				mainScene: {
+					type: "script",
+					path: "/dummy/dummy.js",
+					virtualPath: "dummy/dummy.js",
+					global: true
+				}
+			},
 			operationPlugins: [
 				{ code: 42, script: "/script/op-plugin.js" },
 				{ code: 10, script: undefined },
-				{ code: 15, script: "/script/op-plugin-unsupported.js" }
+				{ code: 15, script: "/script/op-plugin-unsupported.js" },
+				{ code: 2, script: "/script/op-plugin.js", manualStart: true }
 			],
-			main: ""
+			main: "./dummy/dummy.js"
 		};
 		game = new Game(conf, "/", "foo", dummyViewInfo);
 		const manager = game._moduleManager;
@@ -71,37 +79,31 @@ describe("test OperationPluginManager", () => {
 	});
 
 	it("初期化", done => {
-		game._onLoad.add(() => {
-			expect(game.operationPluginManager).not.toBeFalsy();
-			expect(game.operationPluginManager.onOperate instanceof Trigger).toBe(true);
-			expect(game.operationPluginManager.plugins).toEqual({});
-			done();
-		});
-		game._startLoadingGlobalAssets();
+		expect(game.operationPluginManager).not.toBeFalsy();
+		expect(game.operationPluginManager.onOperate instanceof Trigger).toBe(true);
+		expect(game.operationPluginManager.plugins).toEqual({});
+		done();
 	});
 
-	it("initialize()", done => {
-		game._onLoad.add(() => {
+	it("Register gameConfiguration.operationPlugins with _onStart", done => {
+		game._onStart.add(() => {
 			const self = game.operationPluginManager;
-			expect((self as any)._initialized).toBe(false);
-			self.initialize();
-			expect((self as any)._initialized).toBe(true);
-			self.initialize(); // 通過パス稼ぎのため二度目の呼び出し
 			expect(self.plugins[42]).not.toBeFalsy();
 			expect((self.plugins[42] as any)._started).toBe(true);
 			expect((self.plugins[42] as any)._game).toBe(game);
 			expect((self.plugins[42] as any)._viewInfo).toBe(dummyViewInfo);
+			expect(self.plugins[2]).not.toBeFalsy();
+			expect((self.plugins[2] as any)._started).toBe(false);
 			expect(self.plugins[10]).toBeFalsy();
 			expect(self.plugins[15]).toBeFalsy();
 			done();
 		});
-		game._startLoadingGlobalAssets();
+		game._loadAndStart();
 	});
 
 	it("operated", done => {
-		game._onLoad.add(() => {
+		game._onStart.add(() => {
 			const self = game.operationPluginManager;
-			self.initialize();
 
 			const ops: InternalOperationPluginOperation[] = [];
 			self.onOperate.add(op => {
@@ -119,35 +121,29 @@ describe("test OperationPluginManager", () => {
 			expect(ops[2]).toEqual({ _code: 42, local: true, data: [] });
 			done();
 		});
-		game._startLoadingGlobalAssets();
+		game._loadAndStart();
 	});
 
 	it("register", done => {
-		game._onLoad.add(() => {
+		game._onStart.add(() => {
 			const self = game.operationPluginManager;
-			self.initialize();
 
-			expect((self as any)._infos[30]).toBeUndefined();
+			expect(self.plugins[30]).toBeUndefined();
 			// @ts-ignore
 			self.register(TestOperationPlugin, 30, { dummy: true });
 
-			expect((self as any)._infos[30]).toBeDefined();
-			expect((self as any)._infos[30]._plugin).toBeDefined();
+			expect(self.plugins[30]).toBeDefined();
+
 			const plugin1 = self.plugins[30] as TestOperationPlugin;
 			expect(plugin1._option).toEqual({ dummy: true });
 			expect(plugin1._started).toBe(false);
 			self.start(30);
 			expect(plugin1._started).toBe(true);
 
-			expect((self as any)._infos[60]).toBeUndefined();
+			expect(self.plugins[60]).toBeUndefined();
 			// @ts-ignore
 			self.register(TestOperationPluginUnsupported, 60, { dummy: false });
-			expect((self as any)._infos[60]).toBeDefined();
-			expect((self as any)._infos[60]._plugin).toBeUndefined();
-			const plugin2 = self.plugins[60] as TestOperationPluginUnsupported;
-			expect(plugin2).toBeUndefined();
-			self.start(60);
-			expect(plugin2).toBeUndefined();
+			expect(self.plugins[60]).toBeUndefined();
 
 			expect(() => {
 				// @ts-ignore
@@ -161,18 +157,39 @@ describe("test OperationPluginManager", () => {
 
 			done();
 		});
-		game._startLoadingGlobalAssets();
+		game._loadAndStart();
 	});
 
 	it("destroy", done => {
-		game._onLoad.add(() => {
+		game._onStart.add(() => {
 			const self = game.operationPluginManager;
-			self.initialize();
+
 			self.destroy();
 			expect(self.onOperate).toBeFalsy();
 			expect(self.plugins).toBeFalsy();
 			done();
 		});
-		game._startLoadingGlobalAssets();
+		game._loadAndStart();
+	});
+
+	it("reset", done => {
+		game._onStart.add(() => {
+			const self = game.operationPluginManager;
+			self.onOperate.add(() => {
+				return;
+			});
+			// @ts-ignore
+			const plugin = self.register(TestOperationPlugin, 11, { dummy: true }) as TestOperationPlugin;
+			expect(self.plugins[11]).toBeDefined();
+			plugin!.start();
+			expect(plugin._started).toBe(true);
+
+			self.reset();
+			expect(self.onOperate.length).toBe(0);
+			expect(self.plugins).toEqual({});
+			expect(plugin._started).toBe(false);
+			done();
+		});
+		game._loadAndStart();
 	});
 });

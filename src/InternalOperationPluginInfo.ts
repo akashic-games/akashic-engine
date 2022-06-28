@@ -4,6 +4,7 @@ import type { OperationPlugin } from "./OperationPlugin";
 /**
  * エンジン内部で用いる、操作プラグインの管理情報
  * 本インターフェースをゲーム開発者が利用する必要はない。
+ * @deprecated 利用しないでください。
  */
 export interface InternalOperationPluginInfo extends OperationPluginInfo {
 	/**
