@@ -2,8 +2,6 @@
   "extends": [
     "github>akashic-games/renovate-config"
   ],
-  "pin": false,
-  "rangeStrategy": "bump",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor"],
