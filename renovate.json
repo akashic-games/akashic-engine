@@ -3,7 +3,11 @@
     "config:base"
   ],
   "timezone": "Asia/Tokyo",
-  "schedule": ["every weekend"],
+  "schedule": [
+    "every weekend",
+    "after 10pm every weekday",
+    "before 6am every weekday"
+  ],
   "labels": ["dependencies"],
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
@@ -13,7 +17,8 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["^@akashic/"],
-      "groupName": "all dependencies (akashic)"
+      "groupName": "all dependencies (akashic)",
+      "schedule": "at any time"
     },
     {
       "matchUpdateTypes": ["minor"],
