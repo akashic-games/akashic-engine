@@ -39,7 +39,7 @@ jobs:
           npm run build
           npm test
       - name: Publish and Release
-        uses: akashic-games/action-release@v1
+        uses: akashic-games/action-release@v2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           npm_token: ${{ secrets.NPM_TOKEN }}
