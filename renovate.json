@@ -1,18 +1,9 @@
 {
   "extends": [
-    "github>akashic-games/renovate-config"
+    "github>akashic-games/renovate-config",
+    "github>akashic-games/renovate-config:groupPatchMinor"
   ],
   "packageRules": [
-    {
-      "matchUpdateTypes": ["minor"],
-      "excludePackagePatterns": ["^@akashic/"],
-      "groupName": "all dependencies"
-    },
-    {
-      "matchUpdateTypes": ["patch"],
-      "excludePackagePatterns": ["^@akashic/"],
-      "groupName": "all dependencies"
-    },
     {
       "matchPackageNames": ["xorshift"],
       "enabled": false
