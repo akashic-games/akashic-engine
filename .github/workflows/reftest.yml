@@ -29,13 +29,13 @@ jobs:
         working-directory: akashic-engine
         id: akashic_engine
         run: |
-          npm ci --ignore-scripts
+          npm ci
           echo "::set-output name=pack_name::$(npm pack)"
       - name: Run engine-files reftest
         working-directory: engine-files
         run: |
           npm ci
-          npm i ../akashic-engine/${{steps.akashic_engine.outputs.pack_name}} --no-save
+          npm i ../akashic-engine/${{steps.akashic_engine.outputs.pack_name}}
           npm run build
           npm test
       - name: Archive artifact
