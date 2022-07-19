@@ -29,7 +29,7 @@ jobs:
         working-directory: akashic-engine
         id: akashic_engine
         run: |
-          npm ci --ignore-scripts
+          npm ci
           echo "::set-output name=pack_name::$(npm pack)"
       - name: Run engine-files reftest
         working-directory: engine-files

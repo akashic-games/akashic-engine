@@ -7,35 +7,22 @@ on:
 
 env:
   NODE_VERSION: 16
-  cache-version: v1
 
 jobs:
   release:
     runs-on: ubuntu-latest
     name: Publish and Release
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - name: Cache node modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ env.cache-version }}-${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ env.cache-version }}-${{ runner.os }}-build-
-            ${{ env.cache-version }}-${{ runner.os }}-
+          cache: npm
       - name: Prepare
         run: |
-          npm ci --ignore-scripts
+          npm ci
           npm run build
           npm test
       - name: Publish and Release
