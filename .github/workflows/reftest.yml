@@ -35,7 +35,7 @@ jobs:
         working-directory: engine-files
         run: |
           npm ci
-          npm i ../akashic-engine/${{steps.akashic_engine.outputs.pack_name}}
+          npm i ../akashic-engine/${{steps.akashic_engine.outputs.pack_name}} --no-save
           npm run build
           npm test
       - name: Archive artifact
