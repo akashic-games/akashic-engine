@@ -20,15 +20,7 @@ import type {
 import type * as pl from "@akashic/playlog";
 import * as g from "../..";
 
-declare global {
-	namespace NodeJS {
-		interface Global {
-			g: any;
-		}
-	}
-}
-
-global.g = g;
+(global as any).g = g;
 
 export class Renderer extends pci.Renderer {
 	methodCallHistoryWithParams: {
