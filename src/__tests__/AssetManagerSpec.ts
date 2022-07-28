@@ -4,6 +4,7 @@ import type {
 	AudioAssetConfigurationBase,
 	AudioSystem,
 	DynamicAssetConfiguration,
+	DynamicGeneratedAssetConfiguration,
 	GameConfiguration,
 	Asset,
 	ScriptAsset,
@@ -390,6 +391,26 @@ describe("test AssetManager", () => {
 		expect(asset2.hint).toEqual({
 			streaming: true // hint 属性が補完されていることを確認
 		});
+	});
+
+	it("can instantiate the dynamic generated asset", async () => {
+		const game = new Game(gameConfiguration, "/");
+		const manager = game._assetManager;
+
+		function requestAsset(conf: DynamicGeneratedAssetConfiguration): Promise<AudioAsset> {
+			return new Promise((resolve, reject) => {
+				manager.requestAsset(conf, { _onAssetError: e => reject(e), _onAssetLoad: (a: AudioAsset) => resolve(a) });
+			});
+		}
+
+		const asset = await requestAsset({
+			type: "vector-image",
+			id: "test-dynamic-generated-vector-image-asset",
+			data: "<svg></svg>"
+		});
+
+		expect(asset.type).toBe("vector-image");
+		expect(asset.id).toBe("test-dynamic-generated-vector-image-asset");
 	});
 
 	it("can instantiate PartialImageAsset", done => {

@@ -6,6 +6,7 @@ import type { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import type { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
+import type { DynamicGeneratedAssetConfiguration } from "./DynamicGeneratedAssetConfiguration";
 import type { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./entities/E";
 import type { MessageEvent, OperationEvent } from "./Event";
 import { ExceptionFactory } from "./ExceptionFactory";
@@ -807,7 +808,10 @@ export class Scene implements StorageLoaderHandler {
 		return this._storageLoader._valueStoreSerialization;
 	}
 
-	requestAssets(assetIds: (string | DynamicAssetConfiguration)[], handler: SceneRequestAssetHandler): void {
+	requestAssets(
+		assetIds: (string | DynamicAssetConfiguration | DynamicGeneratedAssetConfiguration)[],
+		handler: SceneRequestAssetHandler
+	): void {
 		if (this._loadingState !== "ready-fired" && this._loadingState !== "loaded-fired") {
 			// このメソッドは読み込み完了前には呼び出せない。これは実装上の制限である。
 			// やろうと思えば _load() で読み込む対象として加えることができる。が、その場合 `handler` を呼び出す方法が単純でないので対応を見送る。

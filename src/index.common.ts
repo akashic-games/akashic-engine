@@ -33,6 +33,7 @@ export * from "./Collision";
 export * from "./DefaultLoadingScene";
 export * from "./DefaultSkippingScene";
 export * from "./DynamicAssetConfiguration";
+export * from "./DynamicGeneratedAssetConfiguration";
 export * from "./DynamicFont";
 export * from "./EntityStateFlags";
 export * from "./Event";

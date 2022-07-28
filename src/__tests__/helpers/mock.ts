@@ -451,6 +451,23 @@ export class VectorImageAsset extends pci.VectorImageAsset {
 	}
 }
 
+export class DynamicGeneratedVectorImageAsset extends pci.VectorImageAsset {
+	data: string;
+
+	constructor(id: string, data: string) {
+		super(id, id, 0, 0);
+		this.data = data;
+	}
+
+	createSurface(_width: number, _height: number, _sx?: number, _sy?: number, _sWidth?: number, _sHeight?: number): Surface | null {
+		return null;
+	}
+
+	_load(loader: AssetLoadHandler): void {
+		loader._onAssetLoad(this);
+	}
+}
+
 export class AudioPlayer extends pci.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
@@ -592,6 +609,10 @@ export class ResourceFactory extends pci.ResourceFactory {
 		_useRealSize: boolean
 	): VideoAsset {
 		throw new Error("not implemented");
+	}
+
+	createVectorImageAssetFromString(id: string, data: string): VectorImageAsset {
+		return new DynamicGeneratedVectorImageAsset(id, data);
 	}
 }
 
