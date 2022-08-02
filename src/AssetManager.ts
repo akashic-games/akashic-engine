@@ -401,12 +401,7 @@ export class AssetManager implements AssetLoadHandler {
 				this._refCounts[assetId] = 1;
 				handler._onAssetLoad(audioAsset);
 			} else {
-				let a: OneOfAsset;
-				if (typeof assetIdOrConf === "string" || "uri" in assetIdOrConf) {
-					a = this._createAssetFor(assetIdOrConf);
-				} else {
-					a = this._createDynamicGeneratedAssetFor(assetIdOrConf);
-				}
+				const a = this._createAssetFor(assetIdOrConf);
 				loadingInfo = new AssetLoadingInfo(a, handler);
 				this._loadings[assetId] = loadingInfo;
 				this._refCounts[assetId] = 1;
@@ -601,7 +596,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAsset {
+	_createAssetFor(idOrConf: AssetIdOrConf): OneOfAsset {
 		let id: string;
 		let uri: string;
 		let conf: AssetConfiguration | DynamicAssetConfiguration;
@@ -609,11 +604,12 @@ export class AssetManager implements AssetLoadHandler {
 			id = idOrConf;
 			conf = this.configuration[id];
 			uri = this.configuration[id].path;
+		} else if ("uri" in idOrConf) {
+			id = idOrConf.id;
+			conf = idOrConf;
+			uri = idOrConf.uri;
 		} else {
-			const dynConf = idOrConf;
-			id = dynConf.id;
-			conf = dynConf;
-			uri = dynConf.uri;
+			return this._createDynamicGeneratedAssetFor(idOrConf);
 		}
 		const resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
