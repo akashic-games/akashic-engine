@@ -380,6 +380,7 @@ export class AssetManager implements AssetLoadHandler {
 			assetId = assetIdOrConf.id;
 			assetIdOrConf = this._normalizeAssetBaseDeclaration(assetId, Object.create(assetIdOrConf));
 		} else {
+			// TODO: ノーマライズ処理を _normalizeAssetBaseDeclaration() に統合すべき
 			assetId = assetIdOrConf.id;
 		}
 		let waiting = false;
@@ -771,6 +772,8 @@ export class AssetManager implements AssetLoadHandler {
 		} else if ("uri" in assetIdOrConf) {
 			const dynConf = assetIdOrConf;
 			conf = dynConf;
+		} else {
+			// NOTE: DynamicGeneratedAssetConfiguration では一旦非サポート。
 		}
 
 		if (!conf) {
