@@ -149,6 +149,7 @@ export abstract class AudioSystem implements PdiAudioSystem {
 
 		this._suppressed = value !== 1.0;
 		this._updateMuted();
+		this._onMutedChanged();
 	}
 
 	/**
@@ -236,14 +237,6 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_setPlaybackRate(rate: number): void {
-		super._setPlaybackRate(rate);
-		this.player._changeMuted(this._muted);
-	}
-
-	/**
-	 * @private
-	 */
 	_handlePlay(e: AudioPlayerEvent): void {
 		if (e.player !== this._player)
 			throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
@@ -311,22 +304,10 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
-		const players = this.players;
-		for (let i = 0; i < players.length; ++i) {
-			players[i]._changeMuted(this._muted);
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_setPlaybackRate(rate: number): void {
-		super._setPlaybackRate(rate);
-
-		const players = this.players;
-		if (this._suppressed) {
+		if (this._muted) {
+			const players = this.players;
 			for (let i = 0; i < players.length; ++i) {
-				players[i]._changeMuted(true);
+				players[i]._changeMuted(this._muted);
 			}
 		}
 	}

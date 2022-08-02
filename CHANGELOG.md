@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.4.4
+その他変更
+ * `g.AudioSystem#_setPlaybackRate()` の整理
+
 ## 3.4.3
 
 不具合修正
