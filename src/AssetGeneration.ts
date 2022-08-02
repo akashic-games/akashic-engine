@@ -1,11 +1,11 @@
 import type { AssetConfigurationCommonBase } from "@akashic/game-configuration";
 
-export type DynamicGeneratedAssetConfiguration = DynamicGeneratedVectorImageAssetConfigurationBase;
+export type AssetGeneration = VectorImageAssetGeneration;
 
 /**
  * Asset を動的に生成するための設定を表すインターフェース。
  */
-export interface DynamicGeneratedAssetConfigurationBase extends AssetConfigurationCommonBase {
+export interface AssetGenerationBase extends AssetConfigurationCommonBase {
 	/**
 	 * このアセットのIDとして用いる値。
 	 * この値はひとつのAssetManagerの中でユニークでなければならない。
@@ -16,7 +16,7 @@ export interface DynamicGeneratedAssetConfigurationBase extends AssetConfigurati
 /**
  * VectorImageAsset を動的生成するための設定。
  */
-export interface DynamicGeneratedVectorImageAssetConfigurationBase extends Omit<DynamicGeneratedAssetConfigurationBase, "type"> {
+export interface VectorImageAssetGeneration extends Omit<AssetGenerationBase, "type"> {
 	type: "vector-image";
 	data: string;
 }

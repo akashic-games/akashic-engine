@@ -1,10 +1,10 @@
 import type { AssetConfigurationMap } from "@akashic/game-configuration";
 import type {
+	AssetGeneration,
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	AudioSystem,
 	DynamicAssetConfiguration,
-	DynamicGeneratedAssetConfiguration,
 	GameConfiguration,
 	Asset,
 	ScriptAsset,
@@ -393,11 +393,11 @@ describe("test AssetManager", () => {
 		});
 	});
 
-	it("can instantiate the dynamic generated asset", async () => {
+	it("can instantiate the asset from asset generation", async () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
 
-		function requestAsset(conf: DynamicGeneratedAssetConfiguration): Promise<AudioAsset> {
+		function requestAsset(conf: AssetGeneration): Promise<AudioAsset> {
 			return new Promise((resolve, reject) => {
 				manager.requestAsset(conf, { _onAssetError: e => reject(e), _onAssetLoad: (a: AudioAsset) => resolve(a) });
 			});
@@ -405,12 +405,12 @@ describe("test AssetManager", () => {
 
 		const asset = await requestAsset({
 			type: "vector-image",
-			id: "test-dynamic-generated-vector-image-asset",
+			id: "test-vector-image-asset-from-asset-generation",
 			data: "<svg></svg>"
 		});
 
 		expect(asset.type).toBe("vector-image");
-		expect(asset.id).toBe("test-dynamic-generated-vector-image-asset");
+		expect(asset.id).toBe("test-vector-image-asset-from-asset-generation");
 	});
 
 	it("can instantiate PartialImageAsset", done => {

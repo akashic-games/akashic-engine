@@ -27,13 +27,13 @@ import type {
 	VideoAsset,
 	VectorImageAsset
 } from "@akashic/pdi-types";
+import type { AssetGeneration } from "./AssetGeneration";
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { PartialImageAsset } from "./auxiliary/PartialImageAsset";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
-import type { DynamicGeneratedAssetConfiguration } from "./DynamicGeneratedAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
 
@@ -69,7 +69,7 @@ interface ScriptAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
 		Omit<ScriptAssetConfigurationBase, UnneededKeysForAsset> {}
 
-type AssetIdOrConf = string | DynamicAssetConfiguration | DynamicGeneratedAssetConfiguration;
+type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGeneration;
 
 export interface AssetManagerParameterGameLike {
 	resourceFactory: ResourceFactory;
@@ -610,7 +610,7 @@ export class AssetManager implements AssetLoadHandler {
 			conf = idOrConf;
 			uri = idOrConf.uri;
 		} else {
-			return this._createDynamicGeneratedAssetFor(idOrConf);
+			return this._createFromAssetGenerationFor(idOrConf);
 		}
 		const resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
@@ -650,17 +650,17 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createDynamicGeneratedAssetFor(conf: DynamicGeneratedAssetConfiguration): OneOfAsset {
+	_createFromAssetGenerationFor(conf: AssetGeneration): OneOfAsset {
 		const resourceFactory = this._resourceFactory;
 		switch (conf.type) {
 			case "vector-image":
 				if (!resourceFactory.createVectorImageAssetFromString) {
-					throw ExceptionFactory.createAssertionError("AssertionError#_createDynamicGeneratedAssetFor: unsupported");
+					throw ExceptionFactory.createAssertionError("AssertionError#_createFromAssetGenerationFor: unsupported");
 				}
 				return resourceFactory.createVectorImageAssetFromString(conf.id, conf.data);
 			default:
 				throw ExceptionFactory.createAssertionError(
-					`AssertionError#_createDynamicGeneratedAssetFor: unsupported asset type ${conf.type} for asset ID: ${conf.id}`
+					`AssertionError#_createFromAssetGenerationFor: unsupported asset type ${conf.type} for asset ID: ${conf.id}`
 				);
 		}
 	}
@@ -773,7 +773,7 @@ export class AssetManager implements AssetLoadHandler {
 			const dynConf = assetIdOrConf;
 			conf = dynConf;
 		} else {
-			// NOTE: DynamicGeneratedAssetConfiguration では一旦非サポート。
+			// NOTE: AssetGeneration では一旦非サポート。
 		}
 
 		if (!conf) {

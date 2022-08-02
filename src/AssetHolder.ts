@@ -1,8 +1,8 @@
 import type { Asset, AssetLoadError } from "@akashic/pdi-types";
+import type { AssetGeneration } from "./AssetGeneration";
 import type { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import type { AssetManager } from "./AssetManager";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
-import type { DynamicGeneratedAssetConfiguration } from "./DynamicGeneratedAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 
 export interface DestroyedCheckable {
@@ -48,7 +48,7 @@ export interface AssetHolderParameterObject<UserData> {
 	/**
 	 * 読み込むアセット。
 	 */
-	assetIds?: (string | DynamicAssetConfiguration | DynamicGeneratedAssetConfiguration)[];
+	assetIds?: (string | DynamicAssetConfiguration | AssetGeneration)[];
 
 	/**
 	 * 読み込むアセット。
@@ -96,7 +96,7 @@ export class AssetHolder<UserData> {
 	/**
 	 * @private
 	 */
-	_assetIds: (string | DynamicAssetConfiguration | DynamicGeneratedAssetConfiguration)[];
+	_assetIds: (string | DynamicAssetConfiguration | AssetGeneration)[];
 
 	/**
 	 * @private
