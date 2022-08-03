@@ -21,6 +21,7 @@ export * from "./entities/Label";
 export * from "./entities/Pane";
 export * from "./entities/Sprite";
 export * from "./AssetAccessor";
+export * from "./AssetGenerationConfiguration";
 export * from "./AssetHolder";
 export * from "./AssetLoadFailureInfo";
 export * from "./AssetManager";
