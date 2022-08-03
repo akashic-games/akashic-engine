@@ -443,7 +443,7 @@ export class VectorImageAsset extends pci.VectorImageAsset {
 	}
 }
 
-export class AssetGenerationVectorImageAsset extends pci.VectorImageAsset {
+export class GeneratedVectorImageAsset extends pci.VectorImageAsset {
 	data: string;
 
 	constructor(id: string, data: string) {
@@ -604,7 +604,7 @@ export class ResourceFactory extends pci.ResourceFactory {
 	}
 
 	createVectorImageAssetFromString(id: string, data: string): VectorImageAsset {
-		return new AssetGenerationVectorImageAsset(id, data);
+		return new GeneratedVectorImageAsset(id, data);
 	}
 }
 
