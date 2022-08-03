@@ -1,6 +1,6 @@
 import type { AssetConfigurationMap } from "@akashic/game-configuration";
 import type {
-	AssetGeneration,
+	AssetGenerationConfiguration,
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	AudioSystem,
@@ -397,7 +397,7 @@ describe("test AssetManager", () => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._assetManager;
 
-		function requestAsset(conf: AssetGeneration): Promise<AudioAsset> {
+		function requestAsset(conf: AssetGenerationConfiguration): Promise<AudioAsset> {
 			return new Promise((resolve, reject) => {
 				manager.requestAsset(conf, { _onAssetError: e => reject(e), _onAssetLoad: (a: AudioAsset) => resolve(a) });
 			});

@@ -1,5 +1,5 @@
 import type { Asset, AssetLoadError } from "@akashic/pdi-types";
-import type { AssetGeneration } from "./AssetGeneration";
+import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import type { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import type { AssetManager } from "./AssetManager";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
@@ -48,7 +48,7 @@ export interface AssetHolderParameterObject<UserData> {
 	/**
 	 * 読み込むアセット。
 	 */
-	assetIds?: (string | DynamicAssetConfiguration | AssetGeneration)[];
+	assetIds?: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
 
 	/**
 	 * 読み込むアセット。
@@ -96,7 +96,7 @@ export class AssetHolder<UserData> {
 	/**
 	 * @private
 	 */
-	_assetIds: (string | DynamicAssetConfiguration | AssetGeneration)[];
+	_assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
 
 	/**
 	 * @private

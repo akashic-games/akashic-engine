@@ -27,7 +27,7 @@ import type {
 	VideoAsset,
 	VectorImageAsset
 } from "@akashic/pdi-types";
-import type { AssetGeneration } from "./AssetGeneration";
+import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
@@ -69,7 +69,7 @@ interface ScriptAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
 		Omit<ScriptAssetConfigurationBase, UnneededKeysForAsset> {}
 
-type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGeneration;
+type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGenerationConfiguration;
 
 export interface AssetManagerParameterGameLike {
 	resourceFactory: ResourceFactory;
@@ -650,7 +650,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createFromAssetGenerationFor(conf: AssetGeneration): OneOfAsset {
+	_createFromAssetGenerationFor(conf: AssetGenerationConfiguration): OneOfAsset {
 		const resourceFactory = this._resourceFactory;
 		switch (conf.type) {
 			case "vector-image":

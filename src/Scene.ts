@@ -1,7 +1,7 @@
 import type { Asset, CommonOffset, StorageLoadError } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { AssetAccessor } from "./AssetAccessor";
-import type { AssetGeneration } from "./AssetGeneration";
+import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import { AssetHolder } from "./AssetHolder";
 import type { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
 import type { Camera } from "./Camera";
@@ -808,7 +808,10 @@ export class Scene implements StorageLoaderHandler {
 		return this._storageLoader._valueStoreSerialization;
 	}
 
-	requestAssets(assetIds: (string | DynamicAssetConfiguration | AssetGeneration)[], handler: SceneRequestAssetHandler): void {
+	requestAssets(
+		assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[],
+		handler: SceneRequestAssetHandler
+	): void {
 		if (this._loadingState !== "ready-fired" && this._loadingState !== "loaded-fired") {
 			// このメソッドは読み込み完了前には呼び出せない。これは実装上の制限である。
 			// やろうと思えば _load() で読み込む対象として加えることができる。が、その場合 `handler` を呼び出す方法が単純でないので対応を見送る。
