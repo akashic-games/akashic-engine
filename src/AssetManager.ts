@@ -610,7 +610,7 @@ export class AssetManager implements AssetLoadHandler {
 			conf = idOrConf;
 			uri = idOrConf.uri;
 		} else {
-			return this._createFromAssetGenerationFor(idOrConf);
+			return this._createGeneratedAssetFor(idOrConf);
 		}
 		const resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
@@ -650,7 +650,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createFromAssetGenerationFor(conf: AssetGenerationConfiguration): OneOfAsset {
+	_createGeneratedAssetFor(conf: AssetGenerationConfiguration): OneOfAsset {
 		const resourceFactory = this._resourceFactory;
 		switch (conf.type) {
 			case "vector-image":
