@@ -446,8 +446,8 @@ export class VectorImageAsset extends pci.VectorImageAsset {
 export class GeneratedVectorImageAsset extends pci.VectorImageAsset {
 	data: string;
 
-	constructor(id: string, data: string) {
-		super(id, id, 0, 0);
+	constructor(id: string, assetPath: string, data: string) {
+		super(id, assetPath, 0, 0);
 		this.data = data;
 	}
 
@@ -603,8 +603,8 @@ export class ResourceFactory extends pci.ResourceFactory {
 		throw new Error("not implemented");
 	}
 
-	createVectorImageAssetFromString(id: string, data: string): VectorImageAsset {
-		return new GeneratedVectorImageAsset(id, data);
+	createVectorImageAssetFromString(id: string, assetPath: string, data: string): VectorImageAsset {
+		return new GeneratedVectorImageAsset(id, assetPath, data);
 	}
 }
 
