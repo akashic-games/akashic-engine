@@ -149,7 +149,7 @@ export abstract class AudioSystem implements PdiAudioSystem {
 
 		this._suppressed = value !== 1.0;
 		this._updateMuted();
-		this._onMutedChanged();
+		this._onPlaybackRateChanged();
 	}
 
 	/**
@@ -168,6 +168,11 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 * @private
 	 */
 	abstract _onMutedChanged(): void;
+
+	/**
+	 * @private
+	 */
+	abstract _onPlaybackRateChanged(): void;
 }
 
 export class MusicAudioSystem extends AudioSystem {
@@ -231,6 +236,13 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
+		this.player._changeMuted(this._muted);
+	}
+
+	/**
+	 * @private
+	 */
+	_onPlaybackRateChanged(): void {
 		this.player._changeMuted(this._muted);
 	}
 
@@ -304,10 +316,20 @@ export class SoundAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_onMutedChanged(): void {
-		if (this._muted) {
-			const players = this.players;
+		const players = this.players;
+		for (let i = 0; i < players.length; ++i) {
+			players[i]._changeMuted(this._muted);
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_onPlaybackRateChanged(): void {
+		const players = this.players;
+		if (this._suppressed) {
 			for (let i = 0; i < players.length; ++i) {
-				players[i]._changeMuted(this._muted);
+				players[i]._changeMuted(true);
 			}
 		}
 	}
