@@ -658,7 +658,7 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	_createGeneratedAssetFor(conf: AssetGenerationConfiguration): OneOfAsset {
 		const resourceFactory = this._resourceFactory;
-		const path = `%akashic%/${this._generatedAssetCount++}`;
+		const path = `%akashic%/generated-asset-${this._generatedAssetCount++}`;
 		switch (conf.type) {
 			case "vector-image":
 				if (!resourceFactory.createVectorImageAssetFromString) {
