@@ -243,6 +243,11 @@ export class AssetManager implements AssetLoadHandler {
 	private _audioSystemConfMap: AudioSystemConfigurationMap;
 
 	/**
+	 * 動的生成アセットを生成した回数。
+	 */
+	private _generatedAssetCount: number;
+
+	/**
 	 * `AssetManager` のインスタンスを生成する。
 	 *
 	 * @param gameParams このインスタンスが属するゲーム。
@@ -268,6 +273,7 @@ export class AssetManager implements AssetLoadHandler {
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
 		this._refCounts = {};
 		this._loadings = {};
+		this._generatedAssetCount = 0;
 
 		const assetIds = Object.keys(this.configuration);
 		for (let i = 0; i < assetIds.length; ++i) {
@@ -652,12 +658,13 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	_createGeneratedAssetFor(conf: AssetGenerationConfiguration): OneOfAsset {
 		const resourceFactory = this._resourceFactory;
+		const path = `%akashic%/generated-asset-${this._generatedAssetCount++}`;
 		switch (conf.type) {
 			case "vector-image":
 				if (!resourceFactory.createVectorImageAssetFromString) {
 					throw ExceptionFactory.createAssertionError("AssertionError#_createFromAssetGenerationFor: unsupported");
 				}
-				return resourceFactory.createVectorImageAssetFromString(conf.id, conf.data);
+				return resourceFactory.createVectorImageAssetFromString(conf.id, path, conf.data);
 			default:
 				throw ExceptionFactory.createAssertionError(
 					`AssertionError#_createFromAssetGenerationFor: unsupported asset type ${conf.type} for asset ID: ${conf.id}`

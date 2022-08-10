@@ -410,6 +410,7 @@ describe("test AssetManager", () => {
 		});
 
 		expect(asset.type).toBe("vector-image");
+		expect(asset.path).toBeDefined();
 		expect(asset.id).toBe("test-vector-image-asset-from-asset-generation");
 	});
 

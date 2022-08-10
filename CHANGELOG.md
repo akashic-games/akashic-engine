@@ -1,7 +1,10 @@
 # ChangeLog
 
+## 3.5.0-beta.1
+* @akashic/pdi-types@1.4.0-beta.1 に追従
+
 ## 3.5.0-beta.0
-* 内部モジュールの更新
+* @akashic/pdi-types@1.4.0-beta.0 に追従
 
 ## 3.4.3
 
