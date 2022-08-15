@@ -31,6 +31,7 @@ import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguratio
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
+import { EmptyGeneratedVectorImageAsset } from "./auxiliary/EmptyGeneratedVectorImageAsset";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { PartialImageAsset } from "./auxiliary/PartialImageAsset";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
@@ -662,7 +663,7 @@ export class AssetManager implements AssetLoadHandler {
 		switch (conf.type) {
 			case "vector-image":
 				if (!resourceFactory.createVectorImageAssetFromString) {
-					throw ExceptionFactory.createAssertionError("AssertionError#_createFromAssetGenerationFor: unsupported");
+					return new EmptyGeneratedVectorImageAsset(conf.id, path, conf.data);
 				}
 				return resourceFactory.createVectorImageAssetFromString(conf.id, path, conf.data);
 			default:
