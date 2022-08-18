@@ -1,4 +1,4 @@
-import type { CommonArea, CommonOffset, CommonRect, ImageAsset, Surface } from "@akashic/pdi-types";
+import type { CommonArea, CommonOffset, CommonRect, ImageAsset, Renderer, Surface } from "@akashic/pdi-types";
 import { ExceptionFactory } from "./ExceptionFactory";
 
 /**
@@ -80,8 +80,32 @@ export module SurfaceUtil {
 	 */
 	export function drawNinePatch(destSurface: Surface, srcSurface: Surface, borderWidth: CommonRect | number = 4): void {
 		const renderer = destSurface.renderer();
-		const width = destSurface.width;
-		const height = destSurface.height;
+		const destArea: CommonArea = { x: 0, y: 0, width: destSurface.width, height: destSurface.height };
+		renderer.begin();
+		renderer.clear();
+		renderNinePatch(renderer, destArea, srcSurface, borderWidth);
+		renderer.end();
+	}
+
+	/**
+	 * 対象の `Renderer` にナインパッチ処理された `Surface` を描画する。
+	 *
+	 * 開発者は以下のような状況でこの関数を利用すべきである。
+	 * * E を継承した独自の Entity を renderSelf() メソッドで描画する場合。この場合描画先の Surface が不明なので drawNinePatch() よりもこの関数の方が適している。
+	 * * Surface全体ではなく部分的に描画したい場合。drawNinePatch() では Surface 全体の描画にしか対応していないため。
+	 *
+	 * @param renderer 描画先 `Renderer`
+	 * @param destArea 描画先の描画範囲
+	 * @param srcSurface 描画元 `Surface`
+	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
+	 */
+	export function renderNinePatch(
+		renderer: Renderer,
+		destArea: CommonArea,
+		srcSurface: Surface,
+		borderWidth: CommonRect | number = 4
+	): void {
+		const { width, height } = destArea;
 
 		let border: CommonRect;
 		if (typeof borderWidth === "number") {
@@ -94,9 +118,6 @@ export module SurfaceUtil {
 		} else {
 			border = borderWidth;
 		}
-
-		renderer.begin();
-		renderer.clear();
 		//    x0  x1                          x2
 		// y0 +-----------------------------------+
 		//    | 1 |             5             | 2 |
@@ -155,6 +176,8 @@ export module SurfaceUtil {
 			{ x: 0, y: dy2 },
 			{ x: dx2, y: dy2 }
 		];
+		renderer.save();
+		renderer.translate(destArea.x, destArea.y);
 		for (let i = 0; i < srcCorners.length; ++i) {
 			const c = srcCorners[i];
 			renderer.save();
@@ -189,12 +212,9 @@ export module SurfaceUtil {
 		const sh = sy2 - sy1;
 		const dw = dx2 - dx1;
 		const dh = dy2 - dy1;
-		renderer.save();
 		renderer.translate(dx1, dy1);
 		renderer.transform([dw / sw, 0, 0, dh / sh, 0, 0]);
 		renderer.drawImage(srcSurface, sx1, sy1, sw, sh, 0, 0);
 		renderer.restore();
-
-		renderer.end();
 	}
 }

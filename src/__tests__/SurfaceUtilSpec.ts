@@ -1,6 +1,6 @@
 import type { ImageAsset as PdiImageAsset } from "@akashic/pdi-types";
 import { SurfaceUtil } from "..";
-import type { Renderer } from "./helpers";
+import { Renderer } from "./helpers";
 import { customMatchers, Game, skeletonRuntime, Surface } from "./helpers";
 
 expect.extend(customMatchers);
@@ -80,5 +80,56 @@ describe("test SurfaceUtil", () => {
 		// center
 		expect(drawImage[8].width).toBe(93);
 		expect(drawImage[8].height).toBe(97);
+	});
+
+	it("SurfaceUtil#rendererNinePatch()", () => {
+		const game = new Game({
+			width: 320,
+			height: 270,
+			main: "",
+			assets: {}
+		});
+		const renderer = new Renderer();
+		const srcSurface = game.resourceFactory.createSurface(200, 200);
+		const destArea = { x: 10, y: 10, width: 100, height: 100 };
+		const borderWidth = {
+			top: 1,
+			bottom: 2,
+			left: 3,
+			right: 4
+		};
+		SurfaceUtil.renderNinePatch(renderer, destArea, srcSurface, borderWidth);
+		const drawImage = renderer.methodCallParamsHistory("drawImage");
+		expect(drawImage.length).toBe(9);
+
+		// corners
+		expect(drawImage[0].width).toBe(3);
+		expect(drawImage[0].height).toBe(1);
+		expect(drawImage[1].width).toBe(4);
+		expect(drawImage[1].height).toBe(1);
+		expect(drawImage[2].width).toBe(3);
+		expect(drawImage[2].height).toBe(2);
+		expect(drawImage[3].width).toBe(4);
+		expect(drawImage[3].height).toBe(2);
+
+		// borders
+		expect(drawImage[4].width).toBe(193);
+		expect(drawImage[4].height).toBe(1);
+		expect(drawImage[5].width).toBe(3);
+		expect(drawImage[5].height).toBe(197);
+		expect(drawImage[6].width).toBe(4);
+		expect(drawImage[6].height).toBe(197);
+		expect(drawImage[7].width).toBe(193);
+		expect(drawImage[7].height).toBe(2);
+
+		// center
+		expect(drawImage[8].width).toBe(193);
+		expect(drawImage[8].height).toBe(197);
+
+		const translate = renderer.methodCallParamsHistory("translate");
+		expect(translate.length).toBe(10);
+		// (destArea.x, destArea.y)への移動
+		expect(translate[0].x).toBe(10);
+		expect(translate[0].y).toBe(10);
 	});
 });

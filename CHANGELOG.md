@@ -1,5 +1,8 @@
 # ChangeLog
 
+## Unreleased changes
+* `SurfaceUtil#renderNinePatch()` の追加
+
 ## 3.5.0
 * @akashic/pdi-types@1.4.0 に追従
 
