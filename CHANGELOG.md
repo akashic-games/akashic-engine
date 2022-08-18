@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 3.5.0
+* @akashic/pdi-types@1.4.0 に追従
+
+## 3.5.0-beta.2
+* 非対応環境での GeneratedAsset の生成時にダミーのアセットを返すように
+
+## 3.5.0-beta.1
+* @akashic/pdi-types@1.4.0-beta.1 に追従
+
+## 3.5.0-beta.0
+* @akashic/pdi-types@1.4.0-beta.0 に追従
+
 ## 3.4.4
 その他変更
  * `g.AudioSystem#_setPlaybackRate()` の整理

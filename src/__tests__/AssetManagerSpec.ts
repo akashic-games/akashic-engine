@@ -1,5 +1,6 @@
 import type { AssetConfigurationMap } from "@akashic/game-configuration";
 import type {
+	AssetGenerationConfiguration,
 	AssetManagerLoadHandler,
 	AudioAssetConfigurationBase,
 	AudioSystem,
@@ -390,6 +391,27 @@ describe("test AssetManager", () => {
 		expect(asset2.hint).toEqual({
 			streaming: true // hint 属性が補完されていることを確認
 		});
+	});
+
+	it("can instantiate the asset from asset generation", async () => {
+		const game = new Game(gameConfiguration, "/");
+		const manager = game._assetManager;
+
+		function requestAsset(conf: AssetGenerationConfiguration): Promise<AudioAsset> {
+			return new Promise((resolve, reject) => {
+				manager.requestAsset(conf, { _onAssetError: e => reject(e), _onAssetLoad: (a: AudioAsset) => resolve(a) });
+			});
+		}
+
+		const asset = await requestAsset({
+			type: "vector-image",
+			id: "test-vector-image-asset-from-asset-generation",
+			data: "<svg></svg>"
+		});
+
+		expect(asset.type).toBe("vector-image");
+		expect(asset.path).toBeDefined();
+		expect(asset.id).toBe("test-vector-image-asset-from-asset-generation");
 	});
 
 	it("can instantiate PartialImageAsset", done => {

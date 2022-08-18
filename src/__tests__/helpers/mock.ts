@@ -20,15 +20,7 @@ import type {
 import type * as pl from "@akashic/playlog";
 import * as g from "../..";
 
-declare global {
-	namespace NodeJS {
-		interface Global {
-			g: any;
-		}
-	}
-}
-
-global.g = g;
+(global as any).g = g;
 
 export class Renderer extends pci.Renderer {
 	methodCallHistoryWithParams: {
@@ -451,6 +443,23 @@ export class VectorImageAsset extends pci.VectorImageAsset {
 	}
 }
 
+export class GeneratedVectorImageAsset extends pci.VectorImageAsset {
+	data: string;
+
+	constructor(id: string, assetPath: string, data: string) {
+		super(id, assetPath, 0, 0);
+		this.data = data;
+	}
+
+	createSurface(_width: number, _height: number, _sx?: number, _sy?: number, _sWidth?: number, _sHeight?: number): Surface | null {
+		return null;
+	}
+
+	_load(loader: AssetLoadHandler): void {
+		loader._onAssetLoad(this);
+	}
+}
+
 export class AudioPlayer extends pci.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
@@ -592,6 +601,10 @@ export class ResourceFactory extends pci.ResourceFactory {
 		_useRealSize: boolean
 	): VideoAsset {
 		throw new Error("not implemented");
+	}
+
+	createVectorImageAssetFromString(id: string, assetPath: string, data: string): VectorImageAsset {
+		return new GeneratedVectorImageAsset(id, assetPath, data);
 	}
 }
 

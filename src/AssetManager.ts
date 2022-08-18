@@ -27,9 +27,11 @@ import type {
 	VideoAsset,
 	VectorImageAsset
 } from "@akashic/pdi-types";
+import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
+import { EmptyGeneratedVectorImageAsset } from "./auxiliary/EmptyGeneratedVectorImageAsset";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { PartialImageAsset } from "./auxiliary/PartialImageAsset";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
@@ -67,6 +69,8 @@ interface TextAssetConfiguration
 interface ScriptAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
 		Omit<ScriptAssetConfigurationBase, UnneededKeysForAsset> {}
+
+type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGenerationConfiguration;
 
 export interface AssetManagerParameterGameLike {
 	resourceFactory: ResourceFactory;
@@ -240,6 +244,11 @@ export class AssetManager implements AssetLoadHandler {
 	private _audioSystemConfMap: AudioSystemConfigurationMap;
 
 	/**
+	 * 動的生成アセットを生成した回数。
+	 */
+	private _generatedAssetCount: number;
+
+	/**
 	 * `AssetManager` のインスタンスを生成する。
 	 *
 	 * @param gameParams このインスタンスが属するゲーム。
@@ -265,6 +274,7 @@ export class AssetManager implements AssetLoadHandler {
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
 		this._refCounts = {};
 		this._loadings = {};
+		this._generatedAssetCount = 0;
 
 		const assetIds = Object.keys(this.configuration);
 		for (let i = 0; i < assetIds.length; ++i) {
@@ -369,13 +379,16 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetIdOrConf 要求するアセットのIDまたは設定
 	 * @param handler 要求結果を受け取るハンドラ
 	 */
-	requestAsset(assetIdOrConf: string | DynamicAssetConfiguration, handler: AssetManagerLoadHandler): boolean {
+	requestAsset(assetIdOrConf: AssetIdOrConf, handler: AssetManagerLoadHandler): boolean {
 		let assetId: string;
 		if (typeof assetIdOrConf === "string") {
 			assetId = assetIdOrConf;
-		} else {
+		} else if ("uri" in assetIdOrConf) {
 			assetId = assetIdOrConf.id;
 			assetIdOrConf = this._normalizeAssetBaseDeclaration(assetId, Object.create(assetIdOrConf));
+		} else {
+			// TODO: ノーマライズ処理を _normalizeAssetBaseDeclaration() に統合すべき
+			assetId = assetIdOrConf.id;
 		}
 		let waiting = false;
 		let loadingInfo: AssetLoadingInfo;
@@ -427,7 +440,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetIdOrConfs 取得するアセットのIDまたはアセット定義
 	 * @param handler 取得の結果を受け取るハンドラ
 	 */
-	requestAssets(assetIdOrConfs: (string | DynamicAssetConfiguration)[], handler: AssetManagerLoadHandler): number {
+	requestAssets(assetIdOrConfs: AssetIdOrConf[], handler: AssetManagerLoadHandler): number {
 		let waitingCount = 0;
 		for (let i = 0, len = assetIdOrConfs.length; i < len; ++i) {
 			if (this.requestAsset(assetIdOrConfs[i], handler)) {
@@ -591,7 +604,7 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_createAssetFor(idOrConf: string | DynamicAssetConfiguration): OneOfAsset {
+	_createAssetFor(idOrConf: AssetIdOrConf): OneOfAsset {
 		let id: string;
 		let uri: string;
 		let conf: AssetConfiguration | DynamicAssetConfiguration;
@@ -599,11 +612,12 @@ export class AssetManager implements AssetLoadHandler {
 			id = idOrConf;
 			conf = this.configuration[id];
 			uri = this.configuration[id].path;
+		} else if ("uri" in idOrConf) {
+			id = idOrConf.id;
+			conf = idOrConf;
+			uri = idOrConf.uri;
 		} else {
-			const dynConf = idOrConf;
-			id = dynConf.id;
-			conf = dynConf;
-			uri = dynConf.uri;
+			return this._createGeneratedAssetFor(idOrConf);
 		}
 		const resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
@@ -636,6 +650,25 @@ export class AssetManager implements AssetLoadHandler {
 			default:
 				throw ExceptionFactory.createAssertionError(
 					"AssertionError#_createAssetFor: unknown asset type " + (conf as Asset).type + " for asset ID: " + id
+				);
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_createGeneratedAssetFor(conf: AssetGenerationConfiguration): OneOfAsset {
+		const resourceFactory = this._resourceFactory;
+		const path = `%akashic%/generated-asset-${this._generatedAssetCount++}`;
+		switch (conf.type) {
+			case "vector-image":
+				if (!resourceFactory.createVectorImageAssetFromString) {
+					return new EmptyGeneratedVectorImageAsset(conf.id, path, conf.data);
+				}
+				return resourceFactory.createVectorImageAssetFromString(conf.id, path, conf.data);
+			default:
+				throw ExceptionFactory.createAssertionError(
+					`AssertionError#_createFromAssetGenerationFor: unsupported asset type ${conf.type} for asset ID: ${conf.id}`
 				);
 		}
 	}
@@ -740,13 +773,15 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @private
 	 */
-	_getAudioSystem(assetIdOrConf: string | DynamicAssetConfiguration): AudioSystem | null {
-		let conf: AssetConfiguration | DynamicAssetConfiguration;
+	_getAudioSystem(assetIdOrConf: AssetIdOrConf): AudioSystem | null {
+		let conf: AssetConfiguration | DynamicAssetConfiguration | null = null;
 		if (typeof assetIdOrConf === "string") {
 			conf = this.configuration[assetIdOrConf];
-		} else {
+		} else if ("uri" in assetIdOrConf) {
 			const dynConf = assetIdOrConf;
 			conf = dynConf;
+		} else {
+			// NOTE: AssetGeneration では一旦非サポート。
 		}
 
 		if (!conf) {
