@@ -1,0 +1,32 @@
+name: Publish and Release
+
+on:
+  push:
+    branches:
+      - v1-main
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Publish and Release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Prepare
+        run: |
+          npm ci
+          npm run build
+          npm test
+      - name: Publish and Release
+        uses: akashic-games/action-release@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          npm_token: ${{ secrets.NPM_TOKEN }}
