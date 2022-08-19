@@ -13,8 +13,8 @@ env:
   NODE_VERSION: '16'
   PUBLIC_DIR: public
   V3_REF: main
-  V2_REF: v2-master
-  V1_REF: v1-master
+  V2_REF: v2-main
+  V1_REF: v1-main
   V3_DIR: v3
   V2_DIR: v2
   V1_DIR: v1
