@@ -80,10 +80,9 @@ export module SurfaceUtil {
 	 */
 	export function drawNinePatch(destSurface: Surface, srcSurface: Surface, borderWidth: CommonRect | number = 4): void {
 		const renderer = destSurface.renderer();
-		const destArea: CommonArea = { x: 0, y: 0, width: destSurface.width, height: destSurface.height };
 		renderer.begin();
 		renderer.clear();
-		renderNinePatch(renderer, destArea, srcSurface, borderWidth);
+		renderNinePatch(renderer, destSurface.width, destSurface.height, srcSurface, borderWidth);
 		renderer.end();
 	}
 
@@ -95,18 +94,18 @@ export module SurfaceUtil {
 	 * * Surface全体ではなく部分的に描画したい場合。drawNinePatch() では Surface 全体の描画にしか対応していないため。
 	 *
 	 * @param renderer 描画先 `Renderer`
-	 * @param destArea 描画先の描画範囲
-	 * @param srcSurface 描画元 `Surface`
+	 * @param width 描画先の横幅
+	 * @param height 描画先の縦幅
+	 * @param surface 描画元 `Surface`
 	 * @param borderWidth 上下左右の「拡大しない」領域の大きさ。すべて同じ値なら数値一つを渡すことができる。省略された場合、 `4`
 	 */
 	export function renderNinePatch(
 		renderer: Renderer,
-		destArea: CommonArea,
-		srcSurface: Surface,
+		width: number,
+		height: number,
+		surface: Surface,
 		borderWidth: CommonRect | number = 4
 	): void {
-		const { width, height } = destArea;
-
 		let border: CommonRect;
 		if (typeof borderWidth === "number") {
 			border = {
@@ -135,9 +134,9 @@ export module SurfaceUtil {
 		// 9  : 全方向へ拡縮
 
 		const sx1 = border.left;
-		const sx2 = srcSurface.width - border.right;
+		const sx2 = surface.width - border.right;
 		const sy1 = border.top;
-		const sy2 = srcSurface.height - border.bottom;
+		const sy2 = surface.height - border.bottom;
 		const dx1 = border.left;
 		const dx2 = width - border.right;
 		const dy1 = border.top;
@@ -177,12 +176,11 @@ export module SurfaceUtil {
 			{ x: dx2, y: dy2 }
 		];
 		renderer.save();
-		renderer.translate(destArea.x, destArea.y);
 		for (let i = 0; i < srcCorners.length; ++i) {
 			const c = srcCorners[i];
 			renderer.save();
 			renderer.translate(destCorners[i].x, destCorners[i].y);
-			renderer.drawImage(srcSurface, c.x, c.y, c.width, c.height, 0, 0);
+			renderer.drawImage(surface, c.x, c.y, c.width, c.height, 0, 0);
 			renderer.restore();
 		}
 		// Draw borders
@@ -204,7 +202,7 @@ export module SurfaceUtil {
 			renderer.save();
 			renderer.translate(d.x, d.y);
 			renderer.transform([d.width / s.width, 0, 0, d.height / s.height, 0, 0]);
-			renderer.drawImage(srcSurface, s.x, s.y, s.width, s.height, 0, 0);
+			renderer.drawImage(surface, s.x, s.y, s.width, s.height, 0, 0);
 			renderer.restore();
 		}
 		// Draw center
@@ -214,7 +212,7 @@ export module SurfaceUtil {
 		const dh = dy2 - dy1;
 		renderer.translate(dx1, dy1);
 		renderer.transform([dw / sw, 0, 0, dh / sh, 0, 0]);
-		renderer.drawImage(srcSurface, sx1, sy1, sw, sh, 0, 0);
+		renderer.drawImage(surface, sx1, sy1, sw, sh, 0, 0);
 		renderer.restore();
 	}
 }

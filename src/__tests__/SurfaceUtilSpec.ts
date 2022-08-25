@@ -91,14 +91,15 @@ describe("test SurfaceUtil", () => {
 		});
 		const renderer = new Renderer();
 		const srcSurface = game.resourceFactory.createSurface(200, 200);
-		const destArea = { x: 10, y: 10, width: 100, height: 100 };
+		const width = 100;
+		const height = 100;
 		const borderWidth = {
 			top: 1,
 			bottom: 2,
 			left: 3,
 			right: 4
 		};
-		SurfaceUtil.renderNinePatch(renderer, destArea, srcSurface, borderWidth);
+		SurfaceUtil.renderNinePatch(renderer, width, height, srcSurface, borderWidth);
 		const drawImage = renderer.methodCallParamsHistory("drawImage");
 		expect(drawImage.length).toBe(9);
 
@@ -125,11 +126,5 @@ describe("test SurfaceUtil", () => {
 		// center
 		expect(drawImage[8].width).toBe(193);
 		expect(drawImage[8].height).toBe(197);
-
-		const translate = renderer.methodCallParamsHistory("translate");
-		expect(translate.length).toBe(10);
-		// (destArea.x, destArea.y)への移動
-		expect(translate[0].x).toBe(10);
-		expect(translate[0].y).toBe(10);
 	});
 });
