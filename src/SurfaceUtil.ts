@@ -175,7 +175,6 @@ export module SurfaceUtil {
 			{ x: 0, y: dy2 },
 			{ x: dx2, y: dy2 }
 		];
-		renderer.save();
 		for (let i = 0; i < srcCorners.length; ++i) {
 			const c = srcCorners[i];
 			renderer.save();
@@ -210,6 +209,7 @@ export module SurfaceUtil {
 		const sh = sy2 - sy1;
 		const dw = dx2 - dx1;
 		const dh = dy2 - dy1;
+		renderer.save();
 		renderer.translate(dx1, dy1);
 		renderer.transform([dw / sw, 0, 0, dh / sh, 0, 0]);
 		renderer.drawImage(surface, sx1, sy1, sw, sh, 0, 0);
