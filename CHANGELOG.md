@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 3.5.1
 * `SurfaceUtil#renderNinePatch()` の追加
 
 ## 3.5.0
