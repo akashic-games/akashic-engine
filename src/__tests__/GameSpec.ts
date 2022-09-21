@@ -9,7 +9,7 @@ describe("test Game", () => {
 	it("初期化", () => {
 		const game = new Game({ width: 320, height: 270, main: "", assets: {} }, undefined, "foo");
 		expect(game._idx).toBe(0);
-		expect(game.db).toEqual({});
+		expect(game.db.keys()).toEqual([]);
 		expect(game.renderers.length).toBe(0);
 		expect(game.scenes.length).toBe(0);
 		expect(game.random).toBeUndefined();
@@ -758,31 +758,33 @@ describe("test Game", () => {
 		const scene = new Scene({ game: game });
 		const e = new E({ scene: scene });
 		expect(e.id).toBe(1);
-		expect(game.db).toEqual({ 1: e });
-		const e2 = new E({ scene: scene });
+		expect(game.db.get(e.id)).toEqual(e);
+		expect(game.db.keys().length).toBe(1);
+		const e2 = new E({ scene });
 		expect(e2.id).toBe(2);
-		expect(game.db).toEqual({ 1: e, 2: e2 });
+		expect(game.db.get(e2.id)).toEqual(e2);
+		expect(game.db.keys().length).toBe(2);
 		const n = { id: undefined as any, age: 100 };
 		game.register(n as any);
-		expect(game.db[n.id]).toEqual(n);
+		expect(game.db.get(n.id)).toEqual(n);
 
 		const e3 = new E({ scene: scene, local: true });
-		expect(game._localDb[e3.id].id).toBe(e3.id);
+		expect(game._localDb.get(e3.id)!.id).toBe(e3.id);
 	});
 
 	it("unregister", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const scene = new Scene({ game: game });
 		const e = new E({ scene: scene });
-		expect(game.db).toEqual({ 1: e });
+		expect(game.db.get(e.id)).toEqual(e);
 		game.unregister(e);
-		expect(game.db).toEqual({});
+		expect(game.db.keys()).toEqual([]);
 
 		const e2 = new E({ scene: scene, local: true });
-		expect(game.db).toEqual({});
-		expect(game._localDb[e2.id]).toBe(e2);
+		expect(game.db.keys()).toEqual([]);
+		expect(game._localDb.get(e2.id)).toBe(e2);
 		game.unregister(e2);
-		expect(game._localDb[e2.id]).toBeUndefined();
+		expect(game._localDb.get(e2.id)).toBeUndefined();
 	});
 
 	it("terminateGame", () => {

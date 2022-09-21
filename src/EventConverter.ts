@@ -9,19 +9,20 @@ import { ExceptionFactory } from "./ExceptionFactory";
 import type { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import type { Player } from "./Player";
 import { StorageValueStore } from "./Storage";
+import type { WeakRefKVS } from "./WeakRefKVS";
 
 /**
  * @ignore
  */
 // TODO: Game を意識しないインターフェース を検討する
-interface EventConverterParameterObejctGameLike {
-	db: { [idx: number]: E };
-	_localDb: { [id: number]: E };
+interface EventConverterParameterObjectGameLike {
+	db: WeakRefKVS<E>;
+	_localDb: WeakRefKVS<E>;
 	_decodeOperationPluginOperation: (code: number, op: (number | string)[]) => any;
 }
 
-export interface EventConverterParameterObejct {
-	game: EventConverterParameterObejctGameLike;
+export interface EventConverterParameterObject {
+	game: EventConverterParameterObjectGameLike;
 	playerId?: string;
 }
 
@@ -30,11 +31,11 @@ export interface EventConverterParameterObejct {
  * @ignore
  */
 export class EventConverter {
-	_game: EventConverterParameterObejctGameLike;
+	_game: EventConverterParameterObjectGameLike;
 	_playerId: string | null;
 	_playerTable: { [key: string]: Player };
 
-	constructor(param: EventConverterParameterObejct) {
+	constructor(param: EventConverterParameterObject) {
 		this._game = param.game;
 		this._playerId = param.playerId ?? null;
 		this._playerTable = {};
@@ -112,7 +113,7 @@ export class EventConverter {
 				local = pev[EventIndex.PointDown.Local];
 				pointerId = pev[EventIndex.PointDown.PointerId];
 				entityId = pev[EventIndex.PointDown.EntityId];
-				target = entityId == null ? undefined : entityId >= 0 ? this._game.db[entityId] : this._game._localDb[entityId];
+				target = entityId == null ? undefined : entityId >= 0 ? this._game.db.get(entityId) : this._game._localDb.get(entityId);
 				point = {
 					x: pev[EventIndex.PointDown.X],
 					y: pev[EventIndex.PointDown.Y]
@@ -123,7 +124,7 @@ export class EventConverter {
 				local = pev[EventIndex.PointMove.Local];
 				pointerId = pev[EventIndex.PointMove.PointerId];
 				entityId = pev[EventIndex.PointMove.EntityId];
-				target = entityId == null ? undefined : entityId >= 0 ? this._game.db[entityId] : this._game._localDb[entityId];
+				target = entityId == null ? undefined : entityId >= 0 ? this._game.db.get(entityId) : this._game._localDb.get(entityId);
 				point = {
 					x: pev[EventIndex.PointMove.X],
 					y: pev[EventIndex.PointMove.Y]
@@ -142,7 +143,7 @@ export class EventConverter {
 				local = pev[EventIndex.PointUp.Local];
 				pointerId = pev[EventIndex.PointUp.PointerId];
 				entityId = pev[EventIndex.PointUp.EntityId];
-				target = entityId == null ? undefined : entityId >= 0 ? this._game.db[entityId] : this._game._localDb[entityId];
+				target = entityId == null ? undefined : entityId >= 0 ? this._game.db.get(entityId) : this._game._localDb.get(entityId);
 				point = {
 					x: pev[EventIndex.PointUp.X],
 					y: pev[EventIndex.PointUp.Y]

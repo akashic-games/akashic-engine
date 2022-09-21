@@ -537,13 +537,13 @@ export class Scene implements StorageLoaderHandler {
 		this.onStateChange.fire(this.state);
 
 		// TODO: (GAMEDEV-483) Sceneスタックがそれなりの量になると重くなるのでScene#dbが必要かもしれない
-		let gameDb = this.game.db;
-		for (const p in gameDb) {
-			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
-		}
-		gameDb = this.game._localDb;
-		for (const p in gameDb) {
-			if (gameDb.hasOwnProperty(p) && gameDb[p].scene === this) gameDb[p].destroy();
+		for (const db of [this.game.db, this.game._localDb]) {
+			for (const key of db.keys()) {
+				const e = db.get(key);
+				if (e?.scene === this) {
+					e.destroy();
+				}
+			}
 		}
 
 		this._timer.destroy();

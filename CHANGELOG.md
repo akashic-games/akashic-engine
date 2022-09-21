@@ -1,5 +1,10 @@
 # ChangeLog
 
+## unreleased changes
+その他変更
+* `WeakRefKVS` の追加
+* `g.Game#db`, `g.Game#_localDb` を `WeakRefKVS` に変更
+
 ## 3.5.1
 * `SurfaceUtil#renderNinePatch()` の追加
 
