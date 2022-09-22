@@ -5,6 +5,10 @@
 * `WeakRefKVS` の追加
 * `g.Game#db`, `g.Game#_localDb` を `WeakRefKVS` に変更
 
+### ゲーム開発者への影響
+`g.Game#db`, `g.Game#_localDb` の型が `WeakRefKVS` に変更されます。
+`g.game.db[e.id]` や `Object.keys(g.game.db)` のようにプロパティを参照していた場合は `g.game.db.get(e.id)` や `g.game.db.keys()` を利用するように修正してください。
+
 ## 3.5.1
 * `SurfaceUtil#renderNinePatch()` の追加
 
