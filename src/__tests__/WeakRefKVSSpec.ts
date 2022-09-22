@@ -1,4 +1,4 @@
-import { WeakRefKVS } from "../WeakRefKVS";
+import { WeakRefKVS } from "..";
 
 describe("WeakRefKVS", () => {
 	it("check the CRUD operations", () => {

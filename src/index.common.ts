@@ -82,6 +82,7 @@ export * from "./Timer";
 export * from "./TimerManager";
 export * from "./Util";
 export * from "./VideoSystem";
+export * from "./WeakRefKVS";
 export * from "./Xorshift";
 export * from "./XorshiftRandomGenerator";
 
