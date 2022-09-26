@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.6.0
 その他変更
 * `WeakRefKVS` の追加
 * `g.Game#db`, `g.Game#_localDb` を `WeakRefKVS` に変更
