@@ -2,11 +2,11 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "lib": ["es5"],
+    "lib": ["ES2021"],
     "strict": true,
     "declaration": true,
     "outDir": "lib",
-    "sourceMap": false,
+    "sourceMap": true,
     "useUnknownInCatchVariables": false,
     "types": ["console"],
     "typeRoots": [

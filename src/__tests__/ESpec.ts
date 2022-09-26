@@ -72,8 +72,8 @@ describe("test E", () => {
 		expect(e.scene).toBe(runtime.scene);
 		expect(e.state).toBe(EntityStateFlags.Modified | EntityStateFlags.Hidden);
 		expect(e._hasTouchableChildren).toBe(false);
-		expect(e.id in runtime.game.db).toBe(false);
-		expect(e.id in runtime.game._localDb).toBe(true);
+		expect(runtime.game.db.get(e.id)).toBeUndefined();
+		expect(runtime.game._localDb.get(e.id)).toBe(e);
 		expect(e.x).toBe(10);
 		expect(e.y).toBe(20);
 		expect(e.width).toBe(5);
@@ -95,7 +95,7 @@ describe("test E", () => {
 			y: 10
 		});
 		expect(e.id).toBe(400);
-		expect(runtime.game.db[e.id]).toBe(e);
+		expect(runtime.game.db.get(e.id)).toBe(e);
 		expect(e.scene).toBe(runtime.scene);
 		expect(e.x).toBe(100);
 		expect(e.y).toBe(10);
@@ -250,9 +250,9 @@ describe("test E", () => {
 		const e3 = new E({ scene: runtime.scene });
 		expect(e2.scene).toBe(runtime.scene);
 		expect(e3.scene).toBe(runtime.scene);
-		expect(runtime.game.db[e.id]).toBe(e);
-		expect(runtime.game.db[e2.id]).toBe(e2);
-		expect(runtime.game.db[e3.id]).toBe(e3);
+		expect(runtime.game.db.get(e.id)).toBe(e);
+		expect(runtime.game.db.get(e2.id)).toBe(e2);
+		expect(runtime.game.db.get(e3.id)).toBe(e3);
 
 		e.append(e2);
 		expect(e.parent).toBe(runtime.scene);
@@ -261,11 +261,11 @@ describe("test E", () => {
 		e2.remove();
 		expect(e.parent).toBe(runtime.scene);
 		expect(e2.parent).toBeUndefined();
-		expect(runtime.game.db[e.id]).toBe(e);
-		expect(runtime.game.db[e2.id]).toBe(e2);
+		expect(runtime.game.db.get(e.id)).toBe(e);
+		expect(runtime.game.db.get(e2.id)).toBe(e2);
 
 		e2.destroy();
-		expect(runtime.game.db[e2.id]).toBeUndefined();
+		expect(runtime.game.db.get(e2.id)).toBeUndefined();
 		expect(e2.destroyed()).toBe(true);
 
 		runtime.scene.append(e3);
@@ -273,10 +273,10 @@ describe("test E", () => {
 
 		runtime.scene.remove(e3);
 		expect(e3.parent).toBeUndefined();
-		expect(runtime.game.db[e3.id]).toBe(e3);
+		expect(runtime.game.db.get(e3.id)).toBe(e3);
 
 		e3.destroy();
-		expect(runtime.game.db[e3.id]).toBeUndefined();
+		expect(runtime.game.db.get(e3.id)).toBeUndefined();
 	});
 
 	it("remove - AssertionError", () => {

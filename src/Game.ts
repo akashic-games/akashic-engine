@@ -37,6 +37,7 @@ import type { SnapshotSaveRequest } from "./SnapshotSaveRequest";
 import { Storage } from "./Storage";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import type { TickGenerationModeString } from "./TickGenerationModeString";
+import { WeakRefKVS } from "./WeakRefKVS";
 import { XorshiftRandomGenerator } from "./XorshiftRandomGenerator";
 
 /**
@@ -263,7 +264,7 @@ export class Game {
 	/**
 	 * このコンテンツに関連付けられるエンティティ。(ローカルなエンティティを除く)
 	 */
-	db: { [idx: number]: E };
+	db: WeakRefKVS<E>;
 	/**
 	 * このコンテンツを描画するためのオブジェクト群。
 	 */
@@ -675,7 +676,7 @@ export class Game {
 	// ローカルエンティティは他のゲームインスタンス(他参加者・視聴者など)とは独立に生成される可能性がある。
 	// そのため `db` (`_idx`) 基準で `id` を与えてしまうと `id` の値がずれることがありうる。
 	// これを避けるため、 `db` からローカルエンティティ用のDBを独立させたものがこの値である。
-	_localDb: { [id: number]: E };
+	_localDb: WeakRefKVS<E>;
 	/**
 	 * ローカルエンティティ用の `this._idx` 。
 	 * @private
@@ -1137,23 +1138,21 @@ export class Game {
 				// register前にidがある: スナップショットからの復元用パス
 				// スナップショットはローカルエンティティを残さないはずだが、実装上はできるようにしておく。
 				if (e.id > 0) throw ExceptionFactory.createAssertionError("Game#register: invalid local id: " + e.id);
-				if (this._localDb.hasOwnProperty(String(e.id)))
-					throw ExceptionFactory.createAssertionError("Game#register: conflicted id: " + e.id);
+				if (this._localDb.has(e.id)) throw ExceptionFactory.createAssertionError("Game#register: conflicted id: " + e.id);
 				if (this._localIdx > e.id) this._localIdx = e.id;
 			}
-			this._localDb[e.id] = e;
+			this._localDb.set(e.id, e);
 		} else {
 			if (e.id === undefined) {
 				e.id = ++this._idx;
 			} else {
 				// register前にidがある: スナップショットからの復元用パス
 				if (e.id < 0) throw ExceptionFactory.createAssertionError("Game#register: invalid non-local id: " + e.id);
-				if (this.db.hasOwnProperty(String(e.id)))
-					throw ExceptionFactory.createAssertionError("Game#register: conflicted id: " + e.id);
+				if (this.db.has(e.id)) throw ExceptionFactory.createAssertionError("Game#register: conflicted id: " + e.id);
 				// _idxがユニークな値を作れるよう更新しておく
 				if (this._idx < e.id) this._idx = e.id;
 			}
-			this.db[e.id] = e;
+			this.db.set(e.id, e);
 		}
 	}
 
@@ -1166,9 +1165,9 @@ export class Game {
 	 */
 	unregister(e: E): void {
 		if (e.local) {
-			delete this._localDb[e.id];
+			this._localDb.delete(e.id);
 		} else {
-			delete this.db[e.id];
+			this.db.delete(e.id);
 		}
 	}
 
@@ -1442,8 +1441,8 @@ export class Game {
 		this._idx = 0;
 		this._localIdx = 0;
 		this._cameraIdx = 0;
-		this.db = {};
-		this._localDb = {};
+		this.db = new WeakRefKVS();
+		this._localDb = new WeakRefKVS();
 		this._modified = true;
 		this.loadingScene = undefined!;
 		this._skippingScene = undefined;
@@ -1593,7 +1592,7 @@ export class Game {
 		this._onOperationPluginOperated.destroy();
 		this._onOperationPluginOperated = undefined!;
 		this._idx = 0;
-		this._localDb = {};
+		this._localDb = undefined!;
 		this._localIdx = 0;
 		this._cameraIdx = 0;
 		this._isTerminated = true;
@@ -1763,6 +1762,7 @@ export class Game {
 				skippingScene._onReady.addOnce(this._handleSkippingSceneReady, this);
 			}
 		}
+		this._cleanDB();
 		this._modified = true;
 	}
 
@@ -1844,5 +1844,10 @@ export class Game {
 			}
 		}
 		this._modified = true;
+	}
+
+	private _cleanDB(): void {
+		this.db.clean();
+		this._localDb.clean();
 	}
 }
