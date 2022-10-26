@@ -737,6 +737,7 @@ describe("test AssetManager", () => {
 					path: "assets/stage01/se01",
 					virtualPath: "assets/stage01/se01",
 					systemId: "sound",
+					offset: 1000,
 					duration: 10000
 				},
 				"id-assets/stage01/boss.png": {
@@ -876,6 +877,7 @@ describe("test AssetManager", () => {
 					const se01 = manager.peekLiveAssetById("id-assets/stage01/se01", "audio") as AudioAsset;
 					expect(se01.type).toBe("audio");
 					expect(se01.path).toBe("assets/stage01/se01");
+					expect(se01.offset).toBe(1000);
 					expect(se01.duration).toBe(10000);
 					done();
 				}
