@@ -10,14 +10,14 @@
     "@akashic/trigger": "~1.0.1"
   },
   "devDependencies": {
-    "@akashic/eslint-config": "1.1.0",
+    "@akashic/eslint-config": "1.1.1",
     "@akashic/pdi-common-impl": "^1.0.0",
     "@types/jest": "^28.1.4",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.5.3",
+    "eslint-plugin-jest": "^27.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^28.1.2",
     "prettier": "^2.7.1",
