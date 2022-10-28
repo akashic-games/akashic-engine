@@ -35,6 +35,7 @@
 <a href="AudioAssetConfigurationBase.html#global" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>global</span></a>
 <a href="AudioAssetConfigurationBase.html#hint" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>hint</span></a>
 <a href="AudioAssetConfigurationBase.html#loop" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>loop</span></a>
+<a href="AudioAssetConfigurationBase.html#offset" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>offset</span></a>
 <a href="AudioAssetConfigurationBase.html#path" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>path</span></a>
 <a href="AudioAssetConfigurationBase.html#systemId" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>system<wbr/>Id</span></a>
 <a href="AudioAssetConfigurationBase.html#type" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>type</span></a>
@@ -45,7 +46,7 @@
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a id="duration" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>duration</span><a href="#duration" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <div class="tsd-signature">duration<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-<div class="tsd-comment tsd-typography"><p>再生時間。</p>
+<div class="tsd-comment tsd-typography"><p>再生時間。単位はミリ秒。</p>
 </div><aside class="tsd-sources">
 <ul>
 <li>Defined in node_modules/@akashic/game-configuration/lib/AssetConfiguration.d.ts:128</li></ul></aside></section>
@@ -72,6 +73,13 @@
 </div><aside class="tsd-sources">
 <ul>
 <li>Defined in node_modules/@akashic/game-configuration/lib/AssetConfiguration.d.ts:132</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a id="offset" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>offset</span><a href="#offset" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">offset<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
+<div class="tsd-comment tsd-typography"><p>再生開始位置。単位はミリ秒。</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in node_modules/@akashic/game-configuration/lib/AssetConfiguration.d.ts:140</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a id="path" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>path</span><a href="#path" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -139,6 +147,7 @@
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="AudioAssetConfigurationBase.html#global" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>global</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="AudioAssetConfigurationBase.html#hint" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>hint</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="AudioAssetConfigurationBase.html#loop" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>loop</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="AudioAssetConfigurationBase.html#offset" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>offset</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="AudioAssetConfigurationBase.html#path" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>path</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="AudioAssetConfigurationBase.html#systemId" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>system<wbr/>Id</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="AudioAssetConfigurationBase.html#type" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>type</a></li>
