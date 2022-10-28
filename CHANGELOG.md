@@ -1,7 +1,15 @@
 # ChangeLog
 
+## 3.7.0
+* @akashic/pdi-types@1.5.0 に追従
+* @akashic/game-configuration@1.6.0 に追従
+
 ## 3.7.0-beta.0
-* 内部モジュールの更新
+* @akashic/pdi-types@1.5.0-beta.0 に追従
+* @akashic/game-configuration@1.6.0-beta.0 に追従
+
+機能追加
+* game.json でオーディオアセットに再生開始位置 `"offset"` を指定できるように
 
 ## 3.6.0
 その他変更
