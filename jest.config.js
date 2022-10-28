@@ -13,12 +13,11 @@ module.exports = {
 		"js"
 	],
 	transform: {
-		"^.+\\.ts$": "ts-jest"
-	},
-	globals: {
-		"ts-jest": {
-			tsconfig: "tsconfig.jest.json"
-		}
+		"^.+\\.ts$": [
+			"ts-jest", {
+				tsconfig: "tsconfig.jest.json"
+			}
+		]
 	},
 	testMatch: [
 		"<rootDir>/src/__tests__/*Spec.ts"
