@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.7.1
+その他変更
+* エントリポイントでexportしている外部モジュールもAPIリファレンスでデフォルト表示されるように
+
 ## 3.7.0
 * @akashic/pdi-types@1.5.0 に追従
 * @akashic/game-configuration@1.6.0 に追従
