@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased Changes
+## 3.7.1
 その他変更
 * エントリポイントでexportしている外部モジュールもAPIリファレンスでデフォルト表示されるように
 
