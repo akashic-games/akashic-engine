@@ -177,40 +177,38 @@ export abstract class AudioSystem implements PdiAudioSystem {
 
 export class MusicAudioSystem extends AudioSystem {
 	/**
+	 * 同時再生可能数。
+	 * この数を超えて鳴らした場合の挙動は不定。
+	 */
+	simultaneous: number = 1;
+
+	/**
 	 * @private
 	 */
-	_player: AudioPlayer | undefined;
-
-	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
-	get player(): AudioPlayer {
-		if (!this._player) {
-			this._player = this._resourceFactory.createAudioPlayer(this);
-			this._player.onPlay.add(this._handlePlay, this);
-			this._player.onStop.add(this._handleStop, this);
-		}
-		return this._player;
-	}
-	set player(v: AudioPlayer) {
-		this._player = v;
-	}
-
-	constructor(param: AudioSystemParameterObject) {
-		super(param);
-		this._player = undefined;
-	}
+	_currentPlayers: AudioPlayer[] = [];
 
 	findPlayers(asset: AudioAsset): AudioPlayer[] {
-		if (this.player.currentAudio && this.player.currentAudio.id === asset.id) return [this.player];
-		return [];
+		return this._currentPlayers.filter(player => player.currentAudio?.id === asset.id);
 	}
 
 	createPlayer(): AudioPlayer {
-		return this.player;
+		if (this.simultaneous <= this._currentPlayers.length) {
+			const p = this._currentPlayers.shift();
+			p?.stop();
+		}
+
+		const player = this._resourceFactory.createAudioPlayer(this);
+		player.onPlay.add(this._handlePlay, this);
+		player.onStop.add(this._handleStop, this);
+		this._currentPlayers.push(player);
+
+		return player;
 	}
 
 	stopAll(): void {
-		if (!this._player) return;
-		this._player.stop();
+		for (const currentPlayer of this._currentPlayers) {
+			currentPlayer.stop();
+		}
 	}
 
 	/**
@@ -218,40 +216,47 @@ export class MusicAudioSystem extends AudioSystem {
 	 */
 	_reset(): void {
 		super._reset();
-		if (this._player) {
-			this._player.onPlay.remove(this._handlePlay, this);
-			this._player.onStop.remove(this._handleStop, this);
+
+		for (const currentPlayer of this._currentPlayers) {
+			currentPlayer.onPlay.remove(this._handlePlay, this);
+			currentPlayer.onStop.remove(this._handleStop, this);
 		}
-		this._player = undefined;
+
+		this._currentPlayers = [];
 	}
 
 	/**
 	 * @private
 	 */
 	_onVolumeChanged(): void {
-		this.player._notifyVolumeChanged();
+		for (const currentPlayer of this._currentPlayers) {
+			currentPlayer._notifyVolumeChanged();
+		}
 	}
 
 	/**
 	 * @private
 	 */
 	_onMutedChanged(): void {
-		this.player._changeMuted(this._muted);
+		for (const currentPlayer of this._currentPlayers) {
+			currentPlayer._changeMuted(this._muted);
+		}
 	}
 
 	/**
 	 * @private
 	 */
 	_onPlaybackRateChanged(): void {
-		this.player._changeMuted(this._muted);
+		for (const currentPlayer of this._currentPlayers) {
+			currentPlayer._changeMuted(this._muted);
+		}
 	}
 
 	/**
 	 * @private
 	 */
-	_handlePlay(e: AudioPlayerEvent): void {
-		if (e.player !== this._player)
-			throw ExceptionFactory.createAssertionError("MusicAudioSystem#_onPlayerPlayed: unexpected audio player");
+	_handlePlay(_e: AudioPlayerEvent): void {
+		// do nothing
 	}
 
 	/**
