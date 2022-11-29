@@ -1,4 +1,5 @@
 import type { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory, AudioSystem as PdiAudioSystem } from "@akashic/pdi-types";
+import { AudioPlayContext } from "./AudioPlayContext";
 import { ExceptionFactory } from "./ExceptionFactory";
 
 export interface AudioSystemParameterObject {
@@ -81,6 +82,24 @@ export abstract class AudioSystem implements PdiAudioSystem {
 		this._muted = false;
 		this._resourceFactory = param.resourceFactory;
 		this._updateMuted();
+	}
+
+	play(asset: AudioAsset): AudioPlayContext {
+		const context = this.create(asset);
+		context.play();
+		return context;
+	}
+
+	create(asset: AudioAsset): AudioPlayContext {
+		// TODO: 依存関係の見直し
+		const context = new AudioPlayContext({
+			resourceFactory: this._resourceFactory,
+			asset,
+			system: this,
+			volume: 1.0,
+			muted: this._muted
+		});
+		return context;
 	}
 
 	abstract stopAll(): void;
