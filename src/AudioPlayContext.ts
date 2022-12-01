@@ -13,7 +13,6 @@ export interface AudioPlayContextParameterObject {
 }
 
 export class AudioPlayContext {
-
 	/**
 	 * この AudioPlayContext に紐づく音声アセット。
 	 */
@@ -68,9 +67,6 @@ export class AudioPlayContext {
 		this._resourceFactory = param.resourceFactory;
 		this._volume = param.volume ?? 1.0;
 		this._muted = !!param.muted;
-
-		this.onPlay.add(this._handlePlay, this);
-		this.onStop.add(this._handleStop, this);
 	}
 
 	play(): void {
@@ -103,24 +99,8 @@ export class AudioPlayContext {
 		const audioPlayer = this._resourceFactory.createAudioPlayer(this._system);
 		audioPlayer.changeVolume(this._volume);
 		audioPlayer._changeMuted(this._muted);
-		audioPlayer.onPlay.add(this._handleAudioPlayerPlay, this);
-		audioPlayer.onStop.add(this._handleAudioPlayerStop, this);
+		audioPlayer.onPlay.add(this.onPlay.fire, this.onPlay);
+		audioPlayer.onStop.add(this.onStop.fire, this.onStop);
 		return audioPlayer;
-	}
-
-	private _handleAudioPlayerPlay(): void {
-		this.onPlay.fire({});
-	}
-
-	private _handleAudioPlayerStop(): void {
-		this.onStop.fire({});
-	}
-
-	private _handlePlay(): void {
-		// do nothing
-	}
-
-	private _handleStop(): void {
-		// do nothing
 	}
 }
