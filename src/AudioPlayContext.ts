@@ -9,7 +9,6 @@ export interface AudioPlayContextParameterObject {
 	system: AudioSystem; // TODO: AudioSystem への依存を削除
 	asset: AudioAsset;
 	volume?: number;
-	muted?: boolean;
 }
 
 export class AudioPlayContext {
@@ -48,17 +47,8 @@ export class AudioPlayContext {
 	 */
 	_volume: number;
 
-	/**
-	 * @private
-	 */
-	_muted: boolean;
-
 	get volume(): number {
 		return this._volume;
-	}
-
-	get muted(): boolean {
-		return this._muted;
 	}
 
 	constructor(param: AudioPlayContextParameterObject) {
@@ -66,7 +56,6 @@ export class AudioPlayContext {
 		this._system = param.system;
 		this._resourceFactory = param.resourceFactory;
 		this._volume = param.volume ?? 1.0;
-		this._muted = !!param.muted;
 	}
 
 	play(): void {
@@ -90,15 +79,9 @@ export class AudioPlayContext {
 		this._player?.changeVolume(vol);
 	}
 
-	changeMute(muted: boolean): void {
-		this._muted = muted;
-		this._player?._changeMuted(muted);
-	}
-
 	private _createPlayer(): AudioPlayer {
 		const audioPlayer = this._resourceFactory.createAudioPlayer(this._system);
 		audioPlayer.changeVolume(this._volume);
-		audioPlayer._changeMuted(this._muted);
 		audioPlayer.onPlay.add(this.onPlay.fire, this.onPlay);
 		audioPlayer.onStop.add(this.onStop.fire, this.onStop);
 		return audioPlayer;

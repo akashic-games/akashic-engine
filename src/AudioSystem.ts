@@ -96,8 +96,7 @@ export abstract class AudioSystem implements PdiAudioSystem {
 			resourceFactory: this._resourceFactory,
 			asset,
 			system: this,
-			volume: 1.0,
-			muted: this._muted
+			volume: 1.0
 		});
 		return context;
 	}
