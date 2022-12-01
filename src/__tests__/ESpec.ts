@@ -454,7 +454,7 @@ describe("test E", () => {
 				identifier: 1,
 				offset: { x: 0, y: 0 }
 			});
-			runtime.game.tick(true, 0, [event]);
+			runtime.game.tick(true, 0, [event!]);
 		};
 
 		let estate = false;

@@ -31,6 +31,11 @@ export interface PointEventResolverParameterObject {
 	 * プレイヤーID
 	 */
 	playerId: string;
+
+	/**
+	 * 同時にタップ可能な上限
+	 */
+	maxPoints?: number;
 }
 
 /**
@@ -48,6 +53,8 @@ export interface PointEventResolverParameterObject {
 export class PointEventResolver {
 	_sourceResolver: PointSourceResolver;
 	_playerId: string;
+	_maxPoints: number | null;
+	private _currentPoints: number = 0;
 
 	// g.Eと関連した座標データ
 	private _pointEventMap: { [key: number]: PointEventHolder } = {};
@@ -55,9 +62,14 @@ export class PointEventResolver {
 	constructor(param: PointEventResolverParameterObject) {
 		this._sourceResolver = param.sourceResolver;
 		this._playerId = param.playerId;
+		this._maxPoints = param.maxPoints ?? null;
 	}
 
-	pointDown(e: PlatformPointEvent): pl.PointDownEvent {
+	pointDown(e: PlatformPointEvent): pl.PointDownEvent | null {
+		if (this._maxPoints != null && this._currentPoints >= this._maxPoints) {
+			return null;
+		}
+
 		const source = this._sourceResolver.findPointSource(e.offset);
 		// @ts-ignore
 		const point = source.point ? source.point : e.offset;
@@ -84,6 +96,7 @@ export class PointEventResolver {
 			point.y, //                5: Y座標
 			targetId //                6?: エンティティID
 		];
+		this._currentPoints++;
 		if (source && source.local) ret.push(source.local); // 7?: ローカル
 		return ret;
 	}
@@ -131,6 +144,7 @@ export class PointEventResolver {
 			prev.y, //               9: 直前のポイントムーブイベントからのY座標の差
 			holder.targetId //       10?: エンティティID
 		];
+		this._currentPoints--;
 		if (holder.local) ret.push(holder.local); // 11?: ローカル
 		return ret;
 	}
