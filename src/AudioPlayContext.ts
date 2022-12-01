@@ -40,7 +40,7 @@ export class AudioPlayContext {
 	/**
 	 * @private
 	 */
-	_player: AudioPlayer | null = null;
+	_player: AudioPlayer;
 
 	/**
 	 * @private
@@ -56,30 +56,23 @@ export class AudioPlayContext {
 		this._system = param.system;
 		this._resourceFactory = param.resourceFactory;
 		this._volume = param.volume ?? 1.0;
+		this._player = this._createAudioPlayer();
 	}
 
 	play(): void {
-		if (this._player) {
-			// 一つの Context で再生できる AudioPlayer は一つまでとする
-			this.stop();
-		}
-
-		this._player = this._createPlayer();
 		this._player.play(this.asset);
 	}
 
 	stop(): void {
-		// NOTE: AudioPlayer#stop() を呼んだ時点で AudioPlayer が開放される
-		this._player?.stop();
-		this._player = null;
+		this._player.stop();
 	}
 
 	changeVolume(vol: number): void {
 		this._volume = vol;
-		this._player?.changeVolume(vol);
+		this._player.changeVolume(vol);
 	}
 
-	private _createPlayer(): AudioPlayer {
+	private _createAudioPlayer(): AudioPlayer {
 		const audioPlayer = this._resourceFactory.createAudioPlayer(this._system);
 		audioPlayer.changeVolume(this._volume);
 		audioPlayer.onPlay.add(this.onPlay.fire, this.onPlay);
