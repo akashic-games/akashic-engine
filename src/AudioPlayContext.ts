@@ -5,6 +5,7 @@ export interface AudioPlayContextPlayEvent {}
 export interface AudioPlayContextStopEvent {}
 
 export interface AudioPlayContextParameterObject {
+	id: string;
 	resourceFactory: ResourceFactory;
 	system: AudioSystem; // TODO: AudioSystem への依存を削除
 	asset: AudioAsset;
@@ -47,6 +48,11 @@ export class AudioPlayContext {
 	 */
 	_volume: number;
 
+	/**
+	 * @private
+	 */
+	_id: string;
+
 	get volume(): number {
 		return this._volume;
 	}
@@ -56,6 +62,7 @@ export class AudioPlayContext {
 		this._system = param.system;
 		this._resourceFactory = param.resourceFactory;
 		this._volume = param.volume ?? 1.0;
+		this._id = param.id;
 		this._player = this._createAudioPlayer();
 	}
 
