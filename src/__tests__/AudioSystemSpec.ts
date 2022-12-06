@@ -232,7 +232,7 @@ describe("test AudioSystem", () => {
 	describe("AudioPlayContext operations", () => {
 		beforeEach(() => {
 			jest.resetAllMocks();
-		})
+		});
 
 		it("MusicAudioSystem#create", () => {
 			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
