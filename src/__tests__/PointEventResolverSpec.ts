@@ -3,7 +3,7 @@ import * as pl from "@akashic/playlog";
 import { FilledRect } from "../entities/FilledRect";
 import { EventPriority } from "../EventPriority";
 import { PointEventResolver } from "../PointEventResolver";
-import { skeletonRuntime } from "./helpers";
+import { expectToBeDefined, skeletonRuntime } from "./helpers";
 
 describe("PointEventResolver", () => {
 	it("can be instantiated", () => {
@@ -50,15 +50,15 @@ describe("PointEventResolver", () => {
 			identifier: 0,
 			offset: { x: 10, y: 20 }
 		});
-		expect(e).not.toBeNull();
-		expect(e!.length).toBe(7);
-		expect(e![0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
-		expect(e![1]).toBe(EventPriority.Joined); //   1: 優先度
-		expect(e![2]).toBe("dummyPlayerId"); //        2: プレイヤーID
-		expect(e![3]).toBe(0); //                      3: ポインターID
-		expect(e![4]).toBe(10); //                     4: X座標
-		expect(e![5]).toBe(20); //                     5: Y座標
-		expect(e![6]).toBeUndefined(); //              6?: エンティティID
+		expectToBeDefined(e);
+		expect(e.length).toBe(7);
+		expect(e[0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
+		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
+		expect(e[2]).toBe("dummyPlayerId"); //        2: プレイヤーID
+		expect(e[3]).toBe(0); //                      3: ポインターID
+		expect(e[4]).toBe(10); //                     4: X座標
+		expect(e[5]).toBe(20); //                     5: Y座標
+		expect(e[6]).toBeUndefined(); //              6?: エンティティID
 
 		// (110, 110) の位置 (50x50の赤いFilledRectが(100, 100)にある)
 		e = resolver.pointDown({
@@ -66,15 +66,15 @@ describe("PointEventResolver", () => {
 			identifier: 0,
 			offset: { x: 110, y: 110 }
 		});
-		expect(e).not.toBeNull();
-		expect(e!.length).toBe(7);
-		expect(e![0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
-		expect(e![1]).toBe(EventPriority.Joined); //   1: 優先度
-		expect(e![2]).toBe("dummyPlayerId"); //        2: プレイヤーID
-		expect(e![3]).toBe(0); //                      3: ポインターID
-		expect(e![4]).toBe(10); //                     4: X座標
-		expect(e![5]).toBe(10); //                     5: Y座標
-		expect(e![6]).toBeGreaterThan(0); //           6?: エンティティID
+		expectToBeDefined(e);
+		expect(e.length).toBe(7);
+		expect(e[0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
+		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
+		expect(e[2]).toBe("dummyPlayerId"); //        2: プレイヤーID
+		expect(e[3]).toBe(0); //                      3: ポインターID
+		expect(e[4]).toBe(10); //                     4: X座標
+		expect(e[5]).toBe(10); //                     5: Y座標
+		expect(e[6]).toBeGreaterThan(0); //           6?: エンティティID
 
 		// (150, 150) の位置 (50x50の青いlocalのFilledRectが(130, 130)にある)
 		e = resolver.pointDown({
@@ -82,16 +82,16 @@ describe("PointEventResolver", () => {
 			identifier: 0,
 			offset: { x: 150, y: 150 }
 		});
-		expect(e).not.toBeNull();
-		expect(e!.length).toBe(8);
-		expect(e![0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
-		expect(e![1]).toBe(EventPriority.Joined); // 1: 優先度
-		expect(e![2]).toBe("dummyPlayerId"); //        2: プレイヤーID
-		expect(e![3]).toBe(0); //                      3: ポインターID
-		expect(e![4]).toBe(20); //                     4: X座標
-		expect(e![5]).toBe(20); //                     5: Y座標
-		expect(e![6]! < 0).toBe(true); //              6?: エンティティID
-		expect(e![7]).toBe(true); //                   7?: ローカル
+		expectToBeDefined(e);
+		expect(e.length).toBe(8);
+		expect(e[0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
+		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
+		expect(e[2]).toBe("dummyPlayerId"); //        2: プレイヤーID
+		expect(e[3]).toBe(0); //                      3: ポインターID
+		expect(e[4]).toBe(20); //                     4: X座標
+		expect(e[5]).toBe(20); //                     5: Y座標
+		expect(e[6]! < 0).toBe(true); //              6?: エンティティID
+		expect(e[7]).toBe(true); //                   7?: ローカル
 	});
 
 	it("makes Point(Move|Up)Event for pointDown()/pointUp()", () => {
@@ -212,7 +212,7 @@ describe("PointEventResolver", () => {
 		).toBeNull();
 	});
 
-	it("can not multi-tap more than maxPoints", () => {
+	it("can not multi-touch more than maxPoints", () => {
 		const runtime = skeletonRuntime();
 		const game = runtime.game;
 		const playerId = "dummyPlayerId";

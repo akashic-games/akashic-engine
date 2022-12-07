@@ -33,7 +33,7 @@ export interface PointEventResolverParameterObject {
 	playerId: string;
 
 	/**
-	 * 同時にタップ可能な上限
+	 * 同時にポイント可能な上限
 	 */
 	maxPoints?: number;
 }
@@ -85,6 +85,7 @@ export class PointEventResolver {
 			start: { x: e.offset.x, y: e.offset.y },
 			prev: { x: e.offset.x, y: e.offset.y }
 		};
+		this._currentPoints++;
 
 		// NOTE: 優先度は機械的にJoinedをつけておく。Joinしていない限りPointDownEventなどはリジェクトされる。
 		const ret: pl.PointDownEvent = [
@@ -96,7 +97,6 @@ export class PointEventResolver {
 			point.y, //                5: Y座標
 			targetId //                6?: エンティティID
 		];
-		this._currentPoints++;
 		if (source && source.local) ret.push(source.local); // 7?: ローカル
 		return ret;
 	}
@@ -131,6 +131,7 @@ export class PointEventResolver {
 		const start = { x: 0, y: 0 };
 		this._pointMoveAndUp(holder, e.offset, prev, start);
 		delete this._pointEventMap[e.identifier];
+		this._currentPoints--;
 		const ret: pl.PointUpEvent = [
 			pl.EventCode.PointUp, // 0: イベントコード
 			EventPriority.Joined, // 1: 優先度
@@ -144,7 +145,6 @@ export class PointEventResolver {
 			prev.y, //               9: 直前のポイントムーブイベントからのY座標の差
 			holder.targetId //       10?: エンティティID
 		];
-		this._currentPoints--;
 		if (holder.local) ret.push(holder.local); // 11?: ローカル
 		return ret;
 	}

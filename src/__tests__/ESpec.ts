@@ -11,8 +11,8 @@ import {
 	PointUpEvent,
 	PointMoveEvent
 } from "..";
-import type { Runtime } from "./helpers";
-import { customMatchers, EntityStateFlags, Game, Renderer, skeletonRuntime } from "./helpers";
+import type { Runtime} from "./helpers";
+import { customMatchers, EntityStateFlags, expectToBeDefined, Game, Renderer, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -454,7 +454,8 @@ describe("test E", () => {
 				identifier: 1,
 				offset: { x: 0, y: 0 }
 			});
-			runtime.game.tick(true, 0, [event!]);
+			expectToBeDefined(event);
+			runtime.game.tick(true, 0, [event]);
 		};
 
 		let estate = false;
