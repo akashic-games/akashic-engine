@@ -11,7 +11,7 @@ import {
 	PointUpEvent,
 	PointMoveEvent
 } from "..";
-import type { Runtime} from "./helpers";
+import type { Runtime } from "./helpers";
 import { customMatchers, EntityStateFlags, expectToBeDefined, Game, Renderer, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
