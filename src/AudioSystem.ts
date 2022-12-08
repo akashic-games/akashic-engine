@@ -1,6 +1,7 @@
 import type { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory, AudioSystem as PdiAudioSystem } from "@akashic/pdi-types";
 import { AudioPlayContext } from "./AudioPlayContext";
 import { ExceptionFactory } from "./ExceptionFactory";
+import { WeakRefKVS } from "./WeakRefKVS";
 
 export interface AudioSystemParameterObject {
 	/**
@@ -59,6 +60,16 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 */
 	_explicitMuted: boolean;
 
+	/**
+	 * @private
+	 */
+	_contextMap: WeakRefKVS<AudioPlayContext>;
+
+	/**
+	 * @private
+	 */
+	_contextCount: number;
+
 	// volumeの変更時には通知が必要なのでアクセサを使う。
 	// 呼び出し頻度が少ないため許容。
 	get volume(): number {
@@ -80,6 +91,8 @@ export abstract class AudioSystem implements PdiAudioSystem {
 		this._explicitMuted = param.muted || false;
 		this._suppressed = false;
 		this._muted = false;
+		this._contextMap = new WeakRefKVS();
+		this._contextCount = 0;
 		this._resourceFactory = param.resourceFactory;
 		this._updateMuted();
 	}
@@ -93,15 +106,23 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	create(asset: AudioAsset): AudioPlayContext {
 		// TODO: 依存関係の見直し
 		const context = new AudioPlayContext({
+			id: this._generateAudioPlayContextId(),
 			resourceFactory: this._resourceFactory,
 			asset,
 			system: this,
 			volume: 1.0
 		});
+		this._contextMap.set(context._id, context);
 		return context;
 	}
 
-	abstract stopAll(): void;
+	stopAll(): void {
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?.stop();
+		}
+		this._contextMap.clean();
+	}
 
 	abstract findPlayers(asset: AudioAsset): AudioPlayer[];
 
@@ -180,6 +201,13 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	/**
 	 * @private
 	 */
+	_generateAudioPlayContextId(): string {
+		return `${this.id}-${this._contextCount++}`;
+	}
+
+	/**
+	 * @private
+	 */
 	abstract _onVolumeChanged(): void;
 
 	/**
@@ -227,6 +255,7 @@ export class MusicAudioSystem extends AudioSystem {
 	}
 
 	stopAll(): void {
+		super.stopAll();
 		if (!this._player) return;
 		this._player.stop();
 	}
@@ -311,6 +340,7 @@ export class SoundAudioSystem extends AudioSystem {
 	}
 
 	stopAll(): void {
+		super.stopAll();
 		const players = this.players.concat();
 		for (let i = 0; i < players.length; ++i) {
 			players[i].stop(); // auto remove
