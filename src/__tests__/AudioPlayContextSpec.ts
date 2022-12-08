@@ -50,7 +50,7 @@ describe("test AudioPlayContext", () => {
 		}
 	};
 
-	const waitSceneLoaded = async (): Promise<{ game: Game; scene: Scene }> => {
+	const prepareLoadedScene = async (): Promise<{ game: Game; scene: Scene }> => {
 		return new Promise(resolve => {
 			const game = new Game(gameConfiguration);
 			const scene = new Scene({ game, assetIds: ["zoo", "baz", "qux", "quux"] });
@@ -64,7 +64,7 @@ describe("test AudioPlayContext", () => {
 	};
 
 	it("初期化", async () => {
-		const { game, scene } = await waitSceneLoaded();
+		const { game, scene } = await prepareLoadedScene();
 
 		const resourceFactory = game.resourceFactory;
 		const music = game.audio.music;
