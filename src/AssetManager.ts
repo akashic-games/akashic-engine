@@ -639,7 +639,7 @@ export class AssetManager implements AssetLoadHandler {
 					system,
 					!!conf.loop,
 					<AudioAssetHint>conf.hint,
-					conf.offset ?? 0
+					conf.offset
 				);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);

@@ -100,6 +100,14 @@ describe("test AssetManager", () => {
 				duration: 5972,
 				loop: true,
 				hint: { streaming: true }
+			},
+			corge: {
+				type: "audio",
+				path: "/path/to/a/file",
+				virtualPath: "path/to/a/file",
+				systemId: "music",
+				duration: 1984,
+				offset: 100
 			}
 		}
 	};
@@ -130,6 +138,7 @@ describe("test AssetManager", () => {
 		expect(zooAsset.duration).toEqual((assets.zoo as AudioAssetConfigurationBase).duration);
 		expect(zooAsset.loop).toEqual(true);
 		expect(zooAsset.hint).toEqual({ streaming: true });
+		expect(zooAsset.offset).toEqual(undefined);
 
 		expect(manager.configuration.baz.type).toEqual("audio");
 		const bazAsset = manager.configuration.baz as AudioAssetConfigurationBase;
@@ -137,6 +146,7 @@ describe("test AssetManager", () => {
 		expect(bazAsset.duration).toEqual((assets.baz as AudioAssetConfigurationBase).duration);
 		expect(bazAsset.loop).toEqual(false);
 		expect(bazAsset.hint).toEqual({ streaming: false });
+		expect(bazAsset.offset).toEqual(undefined);
 
 		expect(manager.configuration.qux.type).toEqual("audio");
 		const quxAsset = manager.configuration.qux as AudioAssetConfigurationBase;
@@ -144,6 +154,7 @@ describe("test AssetManager", () => {
 		expect(quxAsset.duration).toEqual((assets.qux as AudioAssetConfigurationBase).duration);
 		expect(quxAsset.loop).toEqual(false);
 		expect(quxAsset.hint).toEqual({ streaming: false });
+		expect(quxAsset.offset).toEqual(undefined);
 
 		expect(manager.configuration.quux.type).toEqual("audio");
 		const quuxAsset = manager.configuration.quux as AudioAssetConfigurationBase;
@@ -151,6 +162,14 @@ describe("test AssetManager", () => {
 		expect(quuxAsset.duration).toEqual((assets.quux as AudioAssetConfigurationBase).duration);
 		expect(quuxAsset.loop).toEqual(true);
 		expect(quuxAsset.hint).toEqual({ streaming: true });
+		expect(quuxAsset.offset).toEqual(undefined);
+
+		expect(manager.configuration.corge.type).toEqual("audio");
+		const corgeAsset = manager.configuration.corge as AudioAssetConfigurationBase;
+		expect(corgeAsset.systemId).toEqual("music");
+		expect(corgeAsset.duration).toEqual((assets.corge as AudioAssetConfigurationBase).duration);
+		expect(corgeAsset.loop).toEqual(true);
+		expect(corgeAsset.offset).toBe(100);
 	});
 
 	it("rejects illegal configuration", () => {
