@@ -3,6 +3,10 @@ import type { GameConfiguration } from "..";
 import { Game } from "./helpers";
 
 describe("test AudioPlayContext", () => {
+	beforeAll(() => {
+		jest.resetAllMocks();
+	});
+
 	const gameConfiguration: GameConfiguration = {
 		width: 320,
 		height: 320,
@@ -63,7 +67,7 @@ describe("test AudioPlayContext", () => {
 		});
 	};
 
-	it("初期化", async () => {
+	it("initialize", async () => {
 		const { game, scene } = await prepareLoadedScene();
 
 		const resourceFactory = game.resourceFactory;
@@ -101,5 +105,25 @@ describe("test AudioPlayContext", () => {
 		expect(ctx2._system).toEqual(sound);
 		expect(ctx2._volume).toBe(0.8); // AudioSystem とは独立
 		expect(ctx2._player).toBeDefined();
+	});
+
+	it("should stop audio context when its asset has been destroyed", async () => {
+		const { game, scene } = await prepareLoadedScene();
+
+		const resourceFactory = game.resourceFactory;
+		const music = game.audio.music;
+		const zoo = scene.asset.getAudioById("zoo");
+
+		const ctx = new AudioPlayContext({
+			id: "play-context",
+			resourceFactory,
+			system: music,
+			asset: zoo
+		});
+
+		const mockStop = jest.spyOn(ctx._player, "stop");
+		zoo.onDestroyed.fire(zoo);
+
+		expect(mockStop).toBeCalledTimes(1);
 	});
 });
