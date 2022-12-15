@@ -759,6 +759,11 @@ export class Game {
 	private _postTickTasks: PostTickTask[];
 
 	/**
+	 * post-tick タスクの実行後に破棄される Scene の配列。
+	 */
+	private _toBeDestroyedScenes: Scene[];
+
+	/**
 	 * 使用中のカメラ。
 	 *
 	 * `Game#draw()`, `Game#findPointSource()` のデフォルト値として使用される。
@@ -835,6 +840,7 @@ export class Game {
 		this._isTerminated = undefined!;
 		this._modified = undefined!;
 		this._postTickTasks = undefined!;
+		this._toBeDestroyedScenes = [];
 		this.playId = undefined;
 		this.isSkipping = false;
 		this.joinedPlayerIds = [];
@@ -1451,6 +1457,7 @@ export class Game {
 		this.lastTickGenerationMode = null;
 		this.onSnapshotRequest.removeAll();
 		this._postTickTasks = [];
+		this._toBeDestroyedScenes = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
 		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
 		// ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値(9007199254740991)を直接かける
@@ -1599,7 +1606,7 @@ export class Game {
 		this._focusingCamera = undefined;
 		this._skippingScene = undefined;
 		this._configuration = undefined!;
-		this._postTickTasks = [];
+		this._postTickTasks = undefined!;
 		this.surfaceAtlasSet.destroy();
 		this.surfaceAtlasSet = undefined!;
 		this._moduleManager = undefined!;
@@ -1731,8 +1738,6 @@ export class Game {
 						this._doPushScene(req.scene);
 						break;
 					case PostTickTaskType.ReplaceScene:
-						// NOTE: アセットの不要なロードを防ぐため、あらかじめ遷移先のシーンのアセットを先読みする。
-						req.scene.prefetch();
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false);
 						this._doPushScene(req.scene);
@@ -1748,6 +1753,13 @@ export class Game {
 				}
 			}
 		} while (this._postTickTasks.length > 0); // flush中に追加される限りflushを続行する
+
+		if (this._toBeDestroyedScenes.length > 0) {
+			for (const scene of this._toBeDestroyedScenes) {
+				scene.destroy();
+			}
+			this._toBeDestroyedScenes = [];
+		}
 	}
 
 	/**
@@ -1788,7 +1800,11 @@ export class Game {
 		if (!scene) throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; scene stack underflow");
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
-		if (!preserveCurrent) scene.destroy();
+		if (!preserveCurrent) {
+			if (!this._toBeDestroyedScenes.includes(scene)) {
+				this._toBeDestroyedScenes.push(scene);
+			}
+		}
 		if (fireSceneChanged) {
 			const nextScene = this.scene();
 			this.onSceneChange.fire(nextScene);
