@@ -3,7 +3,7 @@ import type { GameConfiguration } from "..";
 import { Game } from "./helpers";
 
 describe("test AudioPlayContext", () => {
-	beforeAll(() => {
+	beforeEach(() => {
 		jest.resetAllMocks();
 	});
 
