@@ -334,7 +334,6 @@ describe("test Game", () => {
 				game.pushScene(scene2);
 			});
 			scene2.onLoad.addOnce(() => {
-				expect(game.scenes).toEqual([game._initialScene, scene2]);
 				// 同一IDのアセットを前のシーンで読み込んでいた場合はアセットの再読み込みが発生しない （= 同一インスタンスである） ことを確認
 				expect(scene1foo).toBe(scene2.assets.foo);
 				done();
