@@ -70,6 +70,13 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 */
 	_contextCount: number;
 
+	/**
+	 * `this._contextMap` から不要な参照を削除する頻度。
+	 * 10 を指定した場合 `AudioPlayContext` を 10 回生成する度に参照の削除が行われる。
+	 * @private
+	 */
+	abstract _contentMapCleaningFrequency: number;
+
 	// volumeの変更時には通知が必要なのでアクセサを使う。
 	// 呼び出し頻度が少ないため許容。
 	get volume(): number {
@@ -112,6 +119,9 @@ export abstract class AudioSystem implements PdiAudioSystem {
 			system: this,
 			volume: 1.0
 		});
+		if (this._contextCount % this._contentMapCleaningFrequency === 0) {
+			this._contextMap.clean();
+		}
 		this._contextMap.set(context._id, context);
 		return context;
 	}
@@ -227,6 +237,11 @@ export class MusicAudioSystem extends AudioSystem {
 	 */
 	_player: AudioPlayer | undefined;
 
+	/**
+	 * @private
+	 */
+	_contentMapCleaningFrequency: number = 5;
+
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 	get player(): AudioPlayer {
 		if (!this._player) {
@@ -314,6 +329,11 @@ export class MusicAudioSystem extends AudioSystem {
 
 export class SoundAudioSystem extends AudioSystem {
 	players: AudioPlayer[];
+
+	/**
+	 * @private
+	 */
+	_contentMapCleaningFrequency: number = 50;
 
 	constructor(param: AudioSystemParameterObject) {
 		super(param);
