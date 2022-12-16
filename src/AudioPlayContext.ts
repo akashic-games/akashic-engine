@@ -64,6 +64,8 @@ export class AudioPlayContext {
 		this._volume = param.volume ?? 1.0;
 		this._id = param.id;
 		this._player = this._createAudioPlayer();
+
+		this.asset.onDestroyed.addOnce(this.stop, this);
 	}
 
 	play(): void {

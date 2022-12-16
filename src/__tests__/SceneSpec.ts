@@ -346,7 +346,7 @@ describe("test Scene", () => {
 	//     a -> b        -- (2)
 	// (1), (2) から
 	//     a -> b -> d   -- (3)
-	// また Assetmanager#requestAssets() の呼び出し箇所から、c は a または b の後にのみ生じる。よって (2) から
+	// また AssetManager#requestAssets() の呼び出し箇所から、c は a または b の後にのみ生じる。よって (2) から
 	//     a -> c        -- (4)
 	// さてここで我々が確認すべきことは「e は常に b, c, d すべての後に生じる」である。
 	// d が存在しないケースを踏まえると、(3), (4) から、確認すべきケースは次の五つである:
@@ -936,17 +936,17 @@ describe("test Scene", () => {
 	it("state - change order and count", done => {
 		const expected = [
 			["S1", "active"],
+			["S2", "active"],
 			["S1", "before-destroyed"],
 			["S1", "destroyed"],
-			["S2", "active"],
 			["S2", "deactive"],
 			["S3", "active"],
+			["S4", "active"],
 			["S3", "before-destroyed"],
 			["S3", "destroyed"],
-			["S4", "active"],
+			["S2", "active"],
 			["S4", "before-destroyed"],
 			["S4", "destroyed"],
-			["S2", "active"],
 			["S2", "before-destroyed"],
 			["S2", "destroyed"]
 		];
