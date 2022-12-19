@@ -333,5 +333,49 @@ describe("test AudioSystem", () => {
 			expect(mockCtx2Stop).toBeCalledTimes(1);
 			expect(mockCtx3Stop).toBeCalledTimes(1);
 		});
+
+		it("MusicAudioSystem: should be cleaned the context map every 5 times an audio context is created", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const mockCleanMap = jest.spyOn(system._contextMap, "clean");
+
+			for (let i = 0; i < 1; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(0);
+
+			for (let i = 0; i < 5; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(1);
+
+			for (let i = 0; i < 5; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(2);
+		});
+
+		it("SoundAudioSystem: should be cleaned the context map every 50 times an audio context is created", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.sound;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const mockCleanMap = jest.spyOn(system._contextMap, "clean");
+
+			for (let i = 0; i < 5; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(0);
+
+			for (let i = 0; i < 50; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(1);
+
+			for (let i = 0; i < 50; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(2);
+		});
 	});
 });
