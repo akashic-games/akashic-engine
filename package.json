@@ -65,8 +65,5 @@
   },
   "typings": "lib/index.d.ts",
   "author": "DWANGO Co., Ltd.",
-  "license": "MIT",
-  "volta": {
-    "node": "18.12.1"
-  }
+  "license": "MIT"
 }
