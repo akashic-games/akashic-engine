@@ -1,6 +1,6 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.8.0",
+  "version": "3.9.0",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
@@ -65,5 +65,8 @@
   },
   "typings": "lib/index.d.ts",
   "author": "DWANGO Co., Ltd.",
-  "license": "MIT"
+  "license": "MIT",
+  "volta": {
+    "node": "18.12.1"
+  }
 }
