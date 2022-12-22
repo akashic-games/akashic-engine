@@ -1,9 +1,10 @@
+import { AudioPlayContext } from "../AudioPlayContext";
 import type { AudioPlayer } from "./helpers";
 import { customMatchers, Game, ResourceFactory } from "./helpers";
 
 expect.extend(customMatchers);
 
-describe("test AudioPlayer", () => {
+describe("test AudioSystem", () => {
 	it("AudioSystem#volumeの入力値チェック", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const system = game.audio.music;
@@ -226,5 +227,155 @@ describe("test AudioPlayer", () => {
 		system.volume = 0.7;
 		expect(player.volume).toBe(0.3);
 		expect(system.volume).toBe(0.7);
+	});
+
+	describe("AudioPlayContext operations", () => {
+		beforeEach(() => {
+			jest.resetAllMocks();
+		});
+
+		it("MusicAudioSystem#create", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const ctx1 = system.create(asset);
+			const ctx2 = system.create(asset);
+			const ctx3 = system.create(asset);
+
+			expect(ctx1.volume).toBe(1.0);
+			expect(ctx1._id).toBe("music-0");
+			expect(ctx2.volume).toBe(1.0);
+			expect(ctx2._id).toBe("music-1");
+			expect(ctx3.volume).toBe(1.0);
+			expect(ctx3._id).toBe("music-2");
+		});
+
+		it("SoundAudioSystem#create", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.sound;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const ctx1 = system.create(asset);
+			const ctx2 = system.create(asset);
+			const ctx3 = system.create(asset);
+
+			expect(ctx1.volume).toBe(1.0);
+			expect(ctx1._id).toBe("sound-0");
+			expect(ctx2.volume).toBe(1.0);
+			expect(ctx2._id).toBe("sound-1");
+			expect(ctx3.volume).toBe(1.0);
+			expect(ctx3._id).toBe("sound-2");
+		});
+
+		it("MusicAudioSystem#play", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const mockPlay = jest.spyOn(AudioPlayContext.prototype, "play");
+			const ctx = system.play(asset);
+
+			expect(ctx.volume).toBe(1.0);
+			expect(ctx._id).toBe("music-0");
+			expect(mockPlay).toBeCalledTimes(1);
+		});
+
+		it("SoundAudioSystem#play", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.sound;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const mockPlay = jest.spyOn(AudioPlayContext.prototype, "play");
+			const ctx = system.play(asset);
+
+			expect(ctx.volume).toBe(1.0);
+			expect(ctx._id).toBe("sound-0");
+			expect(mockPlay).toBeCalledTimes(1);
+		});
+
+		it("MusicAudioSystem#stopAll", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const ctx1 = system.play(asset);
+			const ctx2 = system.play(asset);
+			const ctx3 = system.play(asset);
+
+			const mockCtx1Stop = jest.spyOn(ctx1, "stop");
+			const mockCtx2Stop = jest.spyOn(ctx2, "stop");
+			const mockCtx3Stop = jest.spyOn(ctx3, "stop");
+
+			system.stopAll();
+
+			expect(mockCtx1Stop).toBeCalledTimes(1);
+			expect(mockCtx2Stop).toBeCalledTimes(1);
+			expect(mockCtx3Stop).toBeCalledTimes(1);
+		});
+
+		it("SoundAudioSystem#stopAll", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.sound;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const ctx1 = system.play(asset);
+			const ctx2 = system.play(asset);
+			const ctx3 = system.play(asset);
+
+			const mockCtx1Stop = jest.spyOn(ctx1, "stop");
+			const mockCtx2Stop = jest.spyOn(ctx2, "stop");
+			const mockCtx3Stop = jest.spyOn(ctx3, "stop");
+
+			system.stopAll();
+
+			expect(mockCtx1Stop).toBeCalledTimes(1);
+			expect(mockCtx2Stop).toBeCalledTimes(1);
+			expect(mockCtx3Stop).toBeCalledTimes(1);
+		});
+
+		it("MusicAudioSystem: should be cleaned the context map every 5 times an audio context is created", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const mockCleanMap = jest.spyOn(system._contextMap, "clean");
+
+			for (let i = 0; i < 1; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(0);
+
+			for (let i = 0; i < 5; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(1);
+
+			for (let i = 0; i < 5; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(2);
+		});
+
+		it("SoundAudioSystem: should be cleaned the context map every 50 times an audio context is created", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.sound;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const mockCleanMap = jest.spyOn(system._contextMap, "clean");
+
+			for (let i = 0; i < 5; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(0);
+
+			for (let i = 0; i < 50; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(1);
+
+			for (let i = 0; i < 50; i++) {
+				system.create(asset);
+			}
+			expect(mockCleanMap).toBeCalledTimes(2);
+		});
 	});
 });
