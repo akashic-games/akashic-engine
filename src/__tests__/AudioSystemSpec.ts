@@ -387,9 +387,13 @@ describe("test AudioSystem", () => {
 			const ctx2 = system.create(asset);
 			const ctx3 = system.create(asset);
 
-			expect(ctx1._player.volume).toBe(1.0);
-			expect(ctx2._player.volume).toBe(1.0);
-			expect(ctx3._player.volume).toBe(1.0);
+			ctx1.changeVolume(0.3);
+			ctx2.changeVolume(0.4);
+			ctx3.changeVolume(0.5);
+
+			expect(ctx1._player.volume).toBe(0.3);
+			expect(ctx2._player.volume).toBe(0.4);
+			expect(ctx3._player.volume).toBe(0.5);
 
 			system._startSuppress();
 			expect(ctx1._player.volume).toBe(0);
@@ -397,9 +401,9 @@ describe("test AudioSystem", () => {
 			expect(ctx3._player.volume).toBe(0);
 
 			system._endSuppress();
-			expect(ctx1._player.volume).toBe(1.0);
-			expect(ctx2._player.volume).toBe(1.0);
-			expect(ctx3._player.volume).toBe(1.0);
+			expect(ctx1._player.volume).toBe(0.3);
+			expect(ctx2._player.volume).toBe(0.4);
+			expect(ctx3._player.volume).toBe(0.5);
 		});
 
 		it("SoundAudioSystem: should suppress audio players when AudioSystem#_startSuppress() is called", () => {
