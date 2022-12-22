@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 3.9.0
+* `g.AudioPlayContext` を追加
+* `g.AudioSystemManager#create()`, `g.AudioSystemManager#play()` を追加
+* `g.AudioSystem#create()`, `g.AudioSystem#play()` を追加
+* `g.Game#replaceScene()`, `g.Game#pushScene()` の呼び出しに起因するシーンの破棄順序を変更
+
+### ゲーム開発者への影響
+* `g.Game#replaceScene()`, `g.Game#pushScene()` の呼び出しに起因してシーンが破棄された場合、対象の `g.Scene` の state が `"destroyed"` となるタイミングが遅延されます。
+
 ## 3.8.0
 * @akashic/pdi-types@1.6.0 に追従
 
