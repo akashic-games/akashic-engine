@@ -1382,6 +1382,22 @@ export class Game {
 	/**
 	 * @private
 	 */
+	_startSuppressAudio(): void {
+		// FIXME: this.audio._startSuppress() を直接呼ぶように修正
+		this._setAudioPlaybackRate(100);
+	}
+
+	/**
+	 * @private
+	 */
+	_endSuppressAudio(): void {
+		// FIXME: this.audio._endSuppress() を直接呼ぶように修正
+		this._setAudioPlaybackRate(1.0);
+	}
+
+	/**
+	 * @private
+	 */
 	_setMuted(muted: boolean): void {
 		this.audio._setMuted(muted);
 	}

@@ -1056,9 +1056,6 @@ describe("test Game", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		expect(game.audio._muted).toBe(false);
-		expect(() => {
-			game._setAudioPlaybackRate(-0.5);
-		}).toThrowError("AssertionError");
 
 		expect(game.audio.sound._muted).toBe(false);
 		expect(game.audio.music._muted).toBe(false);

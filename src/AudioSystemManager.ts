@@ -103,8 +103,29 @@ export class AudioSystemManager {
 	 * @private
 	 */
 	_setPlaybackRate(rate: number): void {
-		this.music._setPlaybackRate(rate);
-		this.sound._setPlaybackRate(rate);
+		if (rate !== 1.0) {
+			this._startSuppress();
+		} else {
+			this._endSuppress();
+		}
+	}
+
+	_startSuppress(): void {
+		// NOTE: 既存の AudioSystem は playbackRate に 1.0 以外を指定するとミュートとなる
+		this.music._setPlaybackRate(100);
+		this.sound._setPlaybackRate(100);
+
+		this.music._startSuppress();
+		this.sound._startSuppress();
+	}
+
+	_endSuppress(): void {
+		// NOTE: 既存の AudioSystem は playbackRate に 1.0 を指定するとミュートが解除される
+		this.music._setPlaybackRate(1.0);
+		this.sound._setPlaybackRate(1.0);
+
+		this.music._endSuppress();
+		this.sound._endSuppress();
 	}
 
 	stopAll(): void {

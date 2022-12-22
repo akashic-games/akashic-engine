@@ -126,4 +126,26 @@ describe("test AudioPlayContext", () => {
 
 		expect(mockStop).toBeCalledTimes(1);
 	});
+
+	it("should suppress the audio player when AudioPlayContext#_suppress()", async () => {
+		const { game, scene } = await prepareLoadedScene();
+
+		const resourceFactory = game.resourceFactory;
+		const music = game.audio.music;
+		const zoo = scene.asset.getAudioById("zoo");
+
+		const ctx = new AudioPlayContext({
+			id: "play-context",
+			resourceFactory,
+			system: music,
+			asset: zoo
+		});
+
+		ctx.changeVolume(0.3);
+		ctx._startSuppress();
+		expect(ctx._player.volume).toBe(0);
+
+		ctx._endSuppress();
+		expect(ctx._player.volume).toBe(0.3);
+	});
 });

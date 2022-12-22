@@ -377,5 +377,53 @@ describe("test AudioSystem", () => {
 			}
 			expect(mockCleanMap).toBeCalledTimes(2);
 		});
+
+		it("MusicAudioSystem: should suppress audio players when AudioSystem#_startSuppress() is called", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const ctx1 = system.create(asset);
+			const ctx2 = system.create(asset);
+			const ctx3 = system.create(asset);
+
+			expect(ctx1._player.volume).toBe(1.0);
+			expect(ctx2._player.volume).toBe(1.0);
+			expect(ctx3._player.volume).toBe(1.0);
+
+			system._startSuppress();
+			expect(ctx1._player.volume).toBe(0);
+			expect(ctx2._player.volume).toBe(0);
+			expect(ctx3._player.volume).toBe(0);
+
+			system._endSuppress();
+			expect(ctx1._player.volume).toBe(1.0);
+			expect(ctx2._player.volume).toBe(1.0);
+			expect(ctx3._player.volume).toBe(1.0);
+		});
+
+		it("SoundAudioSystem: should suppress audio players when AudioSystem#_startSuppress() is called", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const system = game.audio.sound;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+
+			const ctx1 = system.create(asset);
+			const ctx2 = system.create(asset);
+			const ctx3 = system.create(asset);
+
+			expect(ctx1._player.volume).toBe(1.0);
+			expect(ctx2._player.volume).toBe(1.0);
+			expect(ctx3._player.volume).toBe(1.0);
+
+			const mockCtx1Stop = jest.spyOn(ctx1._player, "stop");
+			const mockCtx2Stop = jest.spyOn(ctx2._player, "stop");
+			const mockCtx3Stop = jest.spyOn(ctx3._player, "stop");
+
+			system._startSuppress();
+
+			expect(mockCtx1Stop).toBeCalledTimes(1);
+			expect(mockCtx2Stop).toBeCalledTimes(1);
+			expect(mockCtx3Stop).toBeCalledTimes(1);
+		});
 	});
 });

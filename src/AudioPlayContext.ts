@@ -81,6 +81,20 @@ export class AudioPlayContext {
 		this._player.changeVolume(vol);
 	}
 
+	/**
+	 * @private
+	 */
+	_startSuppress(): void {
+		this._player.changeVolume(0);
+	}
+
+	/**
+	 * @private
+	 */
+	_endSuppress(): void {
+		this._player.changeVolume(this._volume);
+	}
+
 	private _createAudioPlayer(): AudioPlayer {
 		const audioPlayer = this._resourceFactory.createAudioPlayer(this._system);
 		audioPlayer.changeVolume(this._volume);
