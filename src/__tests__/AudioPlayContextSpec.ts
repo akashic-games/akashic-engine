@@ -127,7 +127,7 @@ describe("test AudioPlayContext", () => {
 		expect(mockStop).toBeCalledTimes(1);
 	});
 
-	it("should suppress the audio player when AudioPlayContext#_suppress()", async () => {
+	it("should suppress the audio player when AudioPlayContext#_suppress() is called", async () => {
 		const { game, scene } = await prepareLoadedScene();
 
 		const resourceFactory = game.resourceFactory;
