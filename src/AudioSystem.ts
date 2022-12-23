@@ -117,6 +117,7 @@ export abstract class AudioSystem implements PdiAudioSystem {
 			resourceFactory: this._resourceFactory,
 			asset,
 			system: this,
+			systemId: this.id,
 			volume: 1.0
 		});
 		if (this._contextCount % this._contentMapCleaningFrequency === 0) {
@@ -218,12 +219,22 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	/**
 	 * @private
 	 */
-	abstract _startSuppress(): void;
+	_startSuppress(): void {
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?._startSuppress();
+		}
+	}
 
 	/**
 	 * @private
 	 */
-	abstract _endSuppress(): void;
+	_endSuppress(): void {
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?._endSuppress();
+		}
+	}
 
 	/**
 	 * @private
@@ -335,26 +346,6 @@ export class MusicAudioSystem extends AudioSystem {
 			e.audio.destroy();
 		}
 	}
-
-	/**
-	 * @private
-	 */
-	_startSuppress(): void {
-		for (const key of this._contextMap.keys()) {
-			const ctx = this._contextMap.get(key);
-			ctx?._startSuppress();
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_endSuppress(): void {
-		for (const key of this._contextMap.keys()) {
-			const ctx = this._contextMap.get(key);
-			ctx?._endSuppress();
-		}
-	}
 }
 
 export class SoundAudioSystem extends AudioSystem {
@@ -461,22 +452,5 @@ export class SoundAudioSystem extends AudioSystem {
 		for (let i = 0; i < this.players.length; ++i) {
 			this.players[i]._notifyVolumeChanged();
 		}
-	}
-
-	/**
-	 * @private
-	 */
-	_startSuppress(): void {
-		for (const key of this._contextMap.keys()) {
-			const ctx = this._contextMap.get(key);
-			ctx?.stop();
-		}
-	}
-
-	/**
-	 * @private
-	 */
-	_endSuppress(): void {
-		// do nothing
 	}
 }
