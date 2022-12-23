@@ -1383,16 +1383,14 @@ export class Game {
 	 * @private
 	 */
 	_startSuppressAudio(): void {
-		// FIXME: this.audio._startSuppress() を直接呼ぶように修正
-		this._setAudioPlaybackRate(100);
+		this.audio._startSuppress();
 	}
 
 	/**
 	 * @private
 	 */
 	_endSuppressAudio(): void {
-		// FIXME: this.audio._endSuppress() を直接呼ぶように修正
-		this._setAudioPlaybackRate(1.0);
+		this.audio._endSuppress();
 	}
 
 	/**
