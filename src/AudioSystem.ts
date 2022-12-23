@@ -220,6 +220,9 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 * @private
 	 */
 	_startSuppress(): void {
+		// NOTE: 既存の AudioSystem は playbackRate に 1.0 以外を指定するとミュートとなる
+		this._setPlaybackRate(100);
+
 		for (const key of this._contextMap.keys()) {
 			const ctx = this._contextMap.get(key);
 			ctx?._startSuppress();
@@ -230,6 +233,9 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 * @private
 	 */
 	_endSuppress(): void {
+		// NOTE: 既存の AudioSystem は playbackRate に 1.0 を指定するとミュートが解除される
+		this._setPlaybackRate(1.0);
+
 		for (const key of this._contextMap.keys()) {
 			const ctx = this._contextMap.get(key);
 			ctx?._endSuppress();
