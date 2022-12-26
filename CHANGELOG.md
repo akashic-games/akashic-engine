@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.9.1
 * 早送り中に `g.AudioPlayContext` の再生を抑制するように
 
 ## 3.9.0
