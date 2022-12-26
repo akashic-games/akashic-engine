@@ -1382,6 +1382,20 @@ export class Game {
 	/**
 	 * @private
 	 */
+	_startSuppressAudio(): void {
+		this.audio._startSuppress();
+	}
+
+	/**
+	 * @private
+	 */
+	_endSuppressAudio(): void {
+		this.audio._endSuppress();
+	}
+
+	/**
+	 * @private
+	 */
 	_setMuted(muted: boolean): void {
 		this.audio._setMuted(muted);
 	}

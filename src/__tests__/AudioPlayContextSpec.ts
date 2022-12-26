@@ -78,6 +78,7 @@ describe("test AudioPlayContext", () => {
 			id: "play-context-1",
 			resourceFactory,
 			system: music,
+			systemId: music.id,
 			asset: zoo
 		});
 
@@ -96,6 +97,7 @@ describe("test AudioPlayContext", () => {
 			id: "play-context-2",
 			resourceFactory,
 			system: sound,
+			systemId: sound.id,
 			asset: qux,
 			volume: 0.8
 		});
@@ -118,6 +120,7 @@ describe("test AudioPlayContext", () => {
 			id: "play-context",
 			resourceFactory,
 			system: music,
+			systemId: music.id,
 			asset: zoo
 		});
 
@@ -125,5 +128,45 @@ describe("test AudioPlayContext", () => {
 		zoo.onDestroyed.fire(zoo);
 
 		expect(mockStop).toBeCalledTimes(1);
+	});
+
+	it("should suppress the audio player when AudioPlayContext#_suppress() is called", async () => {
+		const { game, scene } = await prepareLoadedScene();
+
+		const resourceFactory = game.resourceFactory;
+		const music = game.audio.music;
+		const sound = game.audio.sound;
+		const zoo = scene.asset.getAudioById("zoo");
+
+		const ctx1 = new AudioPlayContext({
+			id: "play-context-1",
+			resourceFactory,
+			system: music,
+			systemId: music.id,
+			asset: zoo
+		});
+
+		ctx1.changeVolume(0.3);
+		ctx1._startSuppress();
+		expect(ctx1._player.volume).toBe(0);
+
+		ctx1._endSuppress();
+		// systemId: music の場合は endSuppress 後に再生を続ける
+		expect(ctx1._player.volume).toBe(0.3);
+
+		const ctx2 = new AudioPlayContext({
+			id: "play-context-2",
+			resourceFactory,
+			system: sound,
+			systemId: sound.id,
+			asset: zoo
+		});
+
+		const mockCtx2Stop = jest.spyOn(ctx2._player, "stop");
+		ctx2._startSuppress();
+
+		// systemId: music 以外の場合は startSuppress 時点で停止する
+		expect(mockCtx2Stop).toBeCalledTimes(1);
+		ctx2._endSuppress();
 	});
 });

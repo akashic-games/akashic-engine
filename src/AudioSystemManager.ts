@@ -107,6 +107,16 @@ export class AudioSystemManager {
 		this.sound._setPlaybackRate(rate);
 	}
 
+	_startSuppress(): void {
+		this.music._startSuppress();
+		this.sound._startSuppress();
+	}
+
+	_endSuppress(): void {
+		this.music._endSuppress();
+		this.sound._endSuppress();
+	}
+
 	stopAll(): void {
 		this.music.stopAll();
 		this.sound.stopAll();

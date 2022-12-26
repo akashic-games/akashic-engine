@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.9.1
+* 早送り中に `g.AudioPlayContext` の再生を抑制するように
+
 ## 3.9.0
 * `g.AudioPlayContext` を追加
 * `g.AudioSystemManager#create()`, `g.AudioSystemManager#play()` を追加
