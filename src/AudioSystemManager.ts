@@ -1,6 +1,8 @@
-import type { ResourceFactory } from "@akashic/pdi-types";
+import type { AudioAsset, ResourceFactory } from "@akashic/pdi-types";
+import type { AudioPlayContext } from "./AudioPlayContext";
 import type { AudioSystem } from "./AudioSystem";
 import { MusicAudioSystem, SoundAudioSystem } from "./AudioSystem";
+import { ExceptionFactory } from "./ExceptionFactory";
 
 /**
  * `AudioSystem` の管理クラス。
@@ -12,23 +14,69 @@ export class AudioSystemManager {
 	/**
 	 * ループ再生可能な AudioSystem
 	 */
-	// @ts-ignore
 	music: AudioSystem;
 
 	/**
 	 * 効果音を扱う AudioSystem
 	 */
-	// @ts-ignore
 	sound: AudioSystem;
 
 	/**
 	 * @private
 	 */
-	_muted: boolean;
+	_muted: boolean = false;
+
+	/**
+	 * @private
+	 */
+	_resourceFactory: ResourceFactory;
 
 	constructor(resourceFactory: ResourceFactory) {
-		this._muted = false;
-		this._initializeAudioSystems(resourceFactory);
+		this._resourceFactory = resourceFactory;
+		this.music = new MusicAudioSystem({
+			id: "music",
+			muted: this._muted,
+			resourceFactory
+		});
+		this.sound = new SoundAudioSystem({
+			id: "sound",
+			muted: this._muted,
+			resourceFactory
+		});
+	}
+
+	/**
+	 * 対象の音声アセットの AudioPlayContext を生成する。
+	 *
+	 * @param asset 音声アセット
+	 */
+	create(asset: AudioAsset): AudioPlayContext {
+		if (asset._system.id === "music") {
+			return this.music.create(asset);
+		} else if (asset._system.id === "sound") {
+			return this.sound.create(asset);
+		} else {
+			throw ExceptionFactory.createAssertionError(
+				`AudioSystemManager#create(): unknown systemId "${asset._system.id}" for asset ID "${asset.id}"`
+			);
+		}
+	}
+
+	/**
+	 * 対象の音声アセットの AudioPlayContext を生成し、再生する。
+	 *
+	 * @param asset 音声アセット
+	 */
+	play(asset: AudioAsset): AudioPlayContext {
+		if (asset._system.id === "music") {
+			return this.music.play(asset);
+		} else if (asset._system.id === "sound") {
+			return this.sound.play(asset);
+		} else {
+			throw ExceptionFactory.createAssertionError(
+				`AudioSystemManager#play(): unknown systemId "${asset._system.id}" for asset ID "${asset.id}"`
+			);
+		}
 	}
 
 	/**
@@ -59,20 +107,14 @@ export class AudioSystemManager {
 		this.sound._setPlaybackRate(rate);
 	}
 
-	/**
-	 * @private
-	 */
-	_initializeAudioSystems(resourceFactory: ResourceFactory): void {
-		this.music = new MusicAudioSystem({
-			id: "music",
-			muted: this._muted,
-			resourceFactory: resourceFactory
-		});
-		this.sound = new SoundAudioSystem({
-			id: "sound",
-			muted: this._muted,
-			resourceFactory: resourceFactory
-		});
+	_startSuppress(): void {
+		this.music._startSuppress();
+		this.sound._startSuppress();
+	}
+
+	_endSuppress(): void {
+		this.music._endSuppress();
+		this.sound._endSuppress();
 	}
 
 	stopAll(): void {

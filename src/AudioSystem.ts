@@ -1,5 +1,7 @@
 import type { AudioAsset, AudioPlayer, AudioPlayerEvent, ResourceFactory, AudioSystem as PdiAudioSystem } from "@akashic/pdi-types";
+import { AudioPlayContext } from "./AudioPlayContext";
 import { ExceptionFactory } from "./ExceptionFactory";
+import { WeakRefKVS } from "./WeakRefKVS";
 
 export interface AudioSystemParameterObject {
 	/**
@@ -58,6 +60,23 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	 */
 	_explicitMuted: boolean;
 
+	/**
+	 * @private
+	 */
+	_contextMap: WeakRefKVS<AudioPlayContext>;
+
+	/**
+	 * @private
+	 */
+	_contextCount: number;
+
+	/**
+	 * `this._contextMap` から不要な参照を削除する頻度。
+	 * 10 を指定した場合 `AudioPlayContext` を 10 回生成する度に参照の削除が行われる。
+	 * @private
+	 */
+	abstract _contentMapCleaningFrequency: number;
+
 	// volumeの変更時には通知が必要なのでアクセサを使う。
 	// 呼び出し頻度が少ないため許容。
 	get volume(): number {
@@ -79,11 +98,42 @@ export abstract class AudioSystem implements PdiAudioSystem {
 		this._explicitMuted = param.muted || false;
 		this._suppressed = false;
 		this._muted = false;
+		this._contextMap = new WeakRefKVS();
+		this._contextCount = 0;
 		this._resourceFactory = param.resourceFactory;
 		this._updateMuted();
 	}
 
-	abstract stopAll(): void;
+	play(asset: AudioAsset): AudioPlayContext {
+		const context = this.create(asset);
+		context.play();
+		return context;
+	}
+
+	create(asset: AudioAsset): AudioPlayContext {
+		// TODO: 依存関係の見直し
+		const context = new AudioPlayContext({
+			id: this._generateAudioPlayContextId(),
+			resourceFactory: this._resourceFactory,
+			asset,
+			system: this,
+			systemId: this.id,
+			volume: 1.0
+		});
+		if (this._contextCount % this._contentMapCleaningFrequency === 0) {
+			this._contextMap.clean();
+		}
+		this._contextMap.set(context._id, context);
+		return context;
+	}
+
+	stopAll(): void {
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?.stop();
+		}
+		this._contextMap.clean();
+	}
 
 	abstract findPlayers(asset: AudioAsset): AudioPlayer[];
 
@@ -162,6 +212,39 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	/**
 	 * @private
 	 */
+	_generateAudioPlayContextId(): string {
+		return `${this.id}-${this._contextCount++}`;
+	}
+
+	/**
+	 * @private
+	 */
+	_startSuppress(): void {
+		// NOTE: 既存の AudioSystem は playbackRate に 1.0 以外を指定するとミュートとなる
+		this._setPlaybackRate(100);
+
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?._startSuppress();
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	_endSuppress(): void {
+		// NOTE: 既存の AudioSystem は playbackRate に 1.0 を指定するとミュートが解除される
+		this._setPlaybackRate(1.0);
+
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?._endSuppress();
+		}
+	}
+
+	/**
+	 * @private
+	 */
 	abstract _onVolumeChanged(): void;
 
 	/**
@@ -180,6 +263,11 @@ export class MusicAudioSystem extends AudioSystem {
 	 * @private
 	 */
 	_player: AudioPlayer | undefined;
+
+	/**
+	 * @private
+	 */
+	_contentMapCleaningFrequency: number = 5;
 
 	// Note: 音楽のないゲームの場合に無駄なインスタンスを作るのを避けるため、アクセサを使う
 	get player(): AudioPlayer {
@@ -209,6 +297,7 @@ export class MusicAudioSystem extends AudioSystem {
 	}
 
 	stopAll(): void {
+		super.stopAll();
 		if (!this._player) return;
 		this._player.stop();
 	}
@@ -268,6 +357,11 @@ export class MusicAudioSystem extends AudioSystem {
 export class SoundAudioSystem extends AudioSystem {
 	players: AudioPlayer[];
 
+	/**
+	 * @private
+	 */
+	_contentMapCleaningFrequency: number = 50;
+
 	constructor(param: AudioSystemParameterObject) {
 		super(param);
 		this.players = [];
@@ -293,6 +387,7 @@ export class SoundAudioSystem extends AudioSystem {
 	}
 
 	stopAll(): void {
+		super.stopAll();
 		const players = this.players.concat();
 		for (let i = 0; i < players.length; ++i) {
 			players[i].stop(); // auto remove

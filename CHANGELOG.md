@@ -4,6 +4,21 @@
 機能追加
 * game.json の `"maxPoints"` で最大同時タップ数を指定できるように
 
+## 3.9.1
+* 早送り中に `g.AudioPlayContext` の再生を抑制するように
+
+## 3.9.0
+* `g.AudioPlayContext` を追加
+* `g.AudioSystemManager#create()`, `g.AudioSystemManager#play()` を追加
+* `g.AudioSystem#create()`, `g.AudioSystem#play()` を追加
+* `g.Game#replaceScene()`, `g.Game#pushScene()` の呼び出しに起因するシーンの破棄順序を変更
+
+### ゲーム開発者への影響
+* `g.Game#replaceScene()`, `g.Game#pushScene()` の呼び出しに起因してシーンが破棄された場合、対象の `g.Scene` の state が `"destroyed"` となるタイミングが遅延されます。
+
+## 3.8.0
+* @akashic/pdi-types@1.6.0 に追従
+
 ## 3.7.1
 その他変更
 * エントリポイントでexportしている外部モジュールもAPIリファレンスでデフォルト表示されるように

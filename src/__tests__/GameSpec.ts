@@ -304,6 +304,44 @@ describe("test Game", () => {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("popScene & pushScene - reuse asset", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
+
+		game._onLoad.add(() => {
+			// game.scenes テストのため _loaded を待つ必要がある
+			const scene1 = new Scene({ game, assetIds: ["foo"] });
+			const scene2 = new Scene({ game, assetIds: ["foo"] });
+			game.pushScene(scene1);
+
+			let scene1foo: Asset;
+
+			scene1.onLoad.addOnce(() => {
+				scene1foo = scene1.assets.foo;
+				game.popScene();
+				game.pushScene(scene2);
+			});
+			scene2.onLoad.addOnce(() => {
+				// 同一IDのアセットを前のシーンで読み込んでいた場合はアセットの再読み込みが発生しない （= 同一インスタンスである） ことを確認
+				expect(scene1foo).toBe(scene2.assets.foo);
+				done();
+			});
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("replaceScene", done => {
 		const game = new Game({
 			width: 320,
@@ -1018,9 +1056,6 @@ describe("test Game", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
 		expect(game.audio._muted).toBe(false);
-		expect(() => {
-			game._setAudioPlaybackRate(-0.5);
-		}).toThrowError("AssertionError");
 
 		expect(game.audio.sound._muted).toBe(false);
 		expect(game.audio.music._muted).toBe(false);

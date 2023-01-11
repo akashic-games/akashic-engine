@@ -12,7 +12,6 @@ export { Module } from "./Module";
 export { ShaderProgram } from "./ShaderProgram";
 export { VideoSystem } from "./VideoSystem";
 
-export * from "./AudioSystem";
 export * from "./entities/CacheableE";
 export * from "./entities/E";
 export * from "./entities/FilledRect";
@@ -26,6 +25,8 @@ export * from "./AssetHolder";
 export * from "./AssetLoadFailureInfo";
 export * from "./AssetManager";
 export * from "./AssetManagerLoadHandler";
+export * from "./AudioPlayContext";
+export * from "./AudioSystem";
 export * from "./AudioSystemManager";
 export * from "./BitmapFont";
 export * from "./Camera";
