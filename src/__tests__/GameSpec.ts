@@ -26,6 +26,7 @@ describe("test Game", () => {
 		expect(game.onSkipChange).not.toBeUndefined();
 		expect(game.onSceneChange).not.toBeUndefined();
 		expect(game._onSceneChange).not.toBeUndefined();
+		expect(game.onUpdate).toBeDefined();
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
 		expect(game._moduleManager).toBeDefined();
@@ -46,6 +47,7 @@ describe("test Game", () => {
 		expect(game.onSkipChange).toBeUndefined();
 		expect(game.onSceneChange).toBeUndefined();
 		expect(game._onSceneChange).toBeUndefined();
+		expect(game.onUpdate).toBeUndefined();
 		expect(game._moduleManager).toBeUndefined();
 	});
 
@@ -394,19 +396,25 @@ describe("test Game", () => {
 		game._onLoad.add(() => {
 			const scene = new Scene({ game: game });
 			game.pushScene(scene);
+			const mockOnUpdate = jest.fn();
+			game.onUpdate.add(mockOnUpdate);
 			expect(game.age).toBe(0);
 			expect(game.classicTick()).toBe(true);
 			expect(game.scene()!.local).toBe("non-local");
+			expect(mockOnUpdate).toBeCalledTimes(1);
 			expect(game.classicTick()).toBe(false);
 			expect(game.age).toBe(1);
+			expect(mockOnUpdate).toBeCalledTimes(2);
 			expect(game.tick(false, 3)).toBe(false);
 			expect(game.age).toBe(1);
 			expect(game.isLastTickLocal).toBe(true);
 			expect(game.lastOmittedLocalTickCount).toBe(3);
+			expect(mockOnUpdate).toBeCalledTimes(3);
 			expect(game.tick(true)).toBe(false);
 			expect(game.age).toBe(2);
 			expect(game.isLastTickLocal).toBe(false);
 			expect(game.lastOmittedLocalTickCount).toBe(0);
+			expect(mockOnUpdate).toBeCalledTimes(4);
 			done();
 		});
 		game._loadAndStart();
