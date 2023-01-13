@@ -162,8 +162,6 @@ export class TimerManager {
 	 * @param timer 削除するTimer
 	 */
 	deleteTimer(timer: Timer): void {
-		if (!timer.canDelete()) return;
-
 		const index = this._timers.indexOf(timer);
 		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: can not find timer");
 
@@ -219,6 +217,7 @@ export class TimerManager {
 
 		const timer = identifier._timer;
 		identifier.destroy();
+		if (!timer.canDelete()) return;
 		this.deleteTimer(timer);
 	}
 
@@ -235,6 +234,7 @@ export class TimerManager {
 
 		const timer = identifier._timer;
 		identifier.destroy();
+		if (!timer.canDelete()) return;
 		this.deleteTimer(timer);
 	}
 }

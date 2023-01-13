@@ -1,5 +1,10 @@
 # ChangeLog
 
+## Unreleased changes
+
+不具合修正
+* `g.Scene#deleteTimer()` で `Timer#onElapse()` を止められるように
+
 ## 3.9.1
 * 早送り中に `g.AudioPlayContext` の再生を抑制するように
 

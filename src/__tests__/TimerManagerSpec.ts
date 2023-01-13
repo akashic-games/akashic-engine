@@ -106,6 +106,16 @@ describe("test TimerManager", () => {
 		expect(m._trigger.contains(m._tick, m)).toBe(false);
 	});
 
+	it("deleteTimer - also delete onElapse", () => {
+		const m = new TimerManager(trigger, 30);
+
+		const timer = m.createTimer(100);
+		expect(timer.onElapse).toBeDefined();
+		m.deleteTimer(timer);
+		expect(timer.destroyed()).toBe(true);
+		expect(timer.onElapse).toBeUndefined();
+	});
+
 	it("deleteTimer - error (invalid context)", () => {
 		const m = new TimerManager(trigger, 30);
 		const t = new Timer(100, undefined!);
