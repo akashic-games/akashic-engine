@@ -52,4 +52,11 @@ describe("test Util", () => {
 			Math.sqrt(Math.pow(-0.5 - 3, 2) + Math.pow(1 - 3, 2)).toFixed(2)
 		);
 	});
+
+	it("clamp", () => {
+		expect(Util.clamp(0.4, 0, 1)).toBe(0.4);
+		expect(Util.clamp(0, -100, 100)).toBe(0);
+		expect(Util.clamp(-10, -5, 5)).toBe(-5);
+		expect(Util.clamp(200, 10, 100)).toBe(100);
+	});
 });
