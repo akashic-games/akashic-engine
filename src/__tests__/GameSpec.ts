@@ -926,6 +926,9 @@ describe("test Game", () => {
 		game._onSceneChange.add(() => {
 			//
 		});
+		game.onUpdate.add(() => {
+			//
+		});
 		game.resourceFactory.scriptContents["/script/mainScene.js"] =
 			"module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s);}";
 		expect(game.age).toBe(0);
@@ -989,6 +992,7 @@ describe("test Game", () => {
 			expect(game.age).toBe(3);
 			const randGen2 = XorshiftRandomGenerator.deserialize(randGen1.serialize());
 			expect(game.random.generate()).toBe(randGen2.generate());
+			expect(game.onUpdate.length).toBe(0);
 			// reset 前の PointDownEvent の情報が破棄されていることを確認
 			expect(
 				game._pointEventResolver.pointUp({
