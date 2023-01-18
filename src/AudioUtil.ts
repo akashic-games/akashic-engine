@@ -12,7 +12,7 @@ import { Util } from "./Util";
  */
 export type EasingFunction = (t: number, b: number, c: number, d: number) => number;
 
-export type AudioFadeContext = {
+export type AudioTransitionContext = {
 	/**
 	 * フェードを即座に完了する。
 	 * 音量はフェード完了後の値となる。
@@ -49,20 +49,18 @@ export module AudioUtil {
 		duration: number,
 		to: number = 1,
 		easing: EasingFunction = linear
-	): AudioFadeContext {
+	): AudioTransitionContext {
 		context.changeVolume(0);
 		context.play();
-		const cancel = fade(game, context, duration, 0, to, easing);
+		const { complete, cancel } = transitionVolume(game, context, duration, to, easing);
 
 		return {
 			complete: () => {
-				cancel();
-				context.changeVolume(to);
+				complete();
 			},
 			cancel: (revert: boolean = false) => {
-				cancel();
+				cancel(revert);
 				if (revert) {
-					context.changeVolume(0);
 					context.stop();
 				}
 			}
@@ -77,21 +75,21 @@ export module AudioUtil {
 	 * @param duration フェードインの長さ (ms)。
 	 * @param easing イージング関数。省略時は linear が指定される。
 	 */
-	export function fadeOut(game: Game, context: AudioPlayContext, duration: number, easing: EasingFunction = linear): AudioFadeContext {
-		const from = context.volume;
-		const cancel = fade(game, context, duration, from, -from, easing);
+	export function fadeOut(
+		game: Game,
+		context: AudioPlayContext,
+		duration: number,
+		easing: EasingFunction = linear
+	): AudioTransitionContext {
+		const { complete, cancel } = transitionVolume(game, context, duration, 0, easing);
 
 		return {
 			complete: () => {
-				cancel();
-				context.changeVolume(0);
+				complete();
 				context.stop();
 			},
 			cancel: (revert: boolean = false) => {
-				cancel();
-				if (revert) {
-					context.changeVolume(from);
-				}
+				cancel(revert);
 			}
 		};
 	}
@@ -113,7 +111,7 @@ export module AudioUtil {
 		duration: number,
 		to: number = 1,
 		easing: EasingFunction = linear
-	): AudioFadeContext {
+	): AudioTransitionContext {
 		const fadeInFuncs = fadeIn(game, fadeInContext, duration, to, easing);
 		const fadeOutFuncs = fadeOut(game, fadeOutContext, duration, easing);
 
@@ -129,21 +127,55 @@ export module AudioUtil {
 		};
 	}
 
-	function fade(game: Game, context: AudioPlayContext, duration: number, from: number, to: number, easing: EasingFunction): () => void {
+	/**
+	 * 音声を指定のイージングで遷移させる。
+	 *
+	 * @param game 対象の `Game`。
+	 * @param context 対象の `AudioPlayContext` 。
+	 * @param duration 遷移の長さ (ms)。
+	 * @param to 遷移後の音量。0 未満または 1 より大きい値を指定した場合の挙動は不定。
+	 * @param easing イージング関数。フェードインとフェードアウトで共通であることに注意。省略時は linear が指定される。
+	 */
+	export function transitionVolume(
+		game: Game,
+		context: AudioPlayContext,
+		duration: number,
+		to: number,
+		easing: EasingFunction = linear
+	): AudioTransitionContext {
 		const frame = 1000 / game.fps;
+		const from = context.volume;
 		let elapsed = 0;
+		context.changeVolume(Util.clamp(from, 0, 1));
 
 		const handler = (): boolean => {
-			elapsed = Math.min(elapsed + frame, duration);
-			const progress = easing(elapsed, from, to, duration);
-			context.changeVolume(Util.clamp(progress, 0, 1));
-			return duration <= elapsed;
+			elapsed += frame;
+			if (elapsed <= duration) {
+				const progress = easing(elapsed, from, to - from, duration);
+				context.changeVolume(Util.clamp(progress, 0, 1));
+				return false;
+			} else {
+				context.changeVolume(to);
+				return true;
+			}
+		};
+		const remove = (): void => {
+			if (game.onUpdate.contains(handler)) {
+				game.onUpdate.remove(handler);
+			}
 		};
 		game.onUpdate.add(handler);
 
-		return (): void => {
-			if (game.onUpdate.contains(handler)) {
-				game.onUpdate.remove(handler);
+		return {
+			complete: () => {
+				remove();
+				context.changeVolume(to);
+			},
+			cancel: revert => {
+				remove();
+				if (revert) {
+					context.changeVolume(from);
+				}
 			}
 		};
 	}

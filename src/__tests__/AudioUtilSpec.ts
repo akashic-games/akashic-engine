@@ -364,4 +364,126 @@ describe("test AudioUtil", () => {
 			expect(mockFadeOutContextStop).toBeCalledTimes(0);
 		});
 	});
+
+	describe("transitionVolume", () => {
+		it("normal", () => {
+			const { game } = skeletonRuntime();
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const context = system.create(asset);
+
+			context.changeVolume(0.3);
+
+			AudioUtil.transitionVolume(game, context, 1000, 0.8);
+
+			let beforeVolume: number;
+
+			// 音量の変化がなくなるまで手動で tick を進める
+			do {
+				beforeVolume = context.volume;
+
+				game.tick(true);
+
+				expect(context.volume).toBeGreaterThanOrEqual(0.3);
+				expect(context.volume).toBeLessThanOrEqual(0.8);
+			} while (beforeVolume < context.volume);
+
+			expect(context.volume).toBe(0.8);
+
+			AudioUtil.transitionVolume(game, context, 1000, 0.1);
+
+			// 音量の変化がなくなるまで手動で tick を進める
+			do {
+				beforeVolume = context.volume;
+
+				game.tick(true);
+
+				expect(context.volume).toBeGreaterThanOrEqual(0.1);
+				expect(context.volume).toBeLessThanOrEqual(0.8);
+			} while (context.volume < beforeVolume);
+
+			expect(context.volume).toBe(0.1);
+		});
+
+		it("complete", () => {
+			const { game } = skeletonRuntime();
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const context = system.create(asset);
+
+			context.changeVolume(0.3);
+
+			const { complete } = AudioUtil.transitionVolume(game, context, 1000, 0.6);
+
+			let beforeVolume = context.volume;
+
+			game.tick(true);
+			expect(context.volume).toBeGreaterThanOrEqual(beforeVolume);
+			beforeVolume = context.volume;
+
+			game.tick(true);
+			expect(context.volume).toBeGreaterThanOrEqual(beforeVolume);
+			beforeVolume = context.volume;
+
+			// complete 後に tick を進めても音量が変更しないことを確認
+			complete();
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			expect(context.volume).toBe(0.6);
+		});
+
+		it("cancel", () => {
+			const { game } = skeletonRuntime();
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const context = system.create(asset);
+
+			context.changeVolume(0.3);
+
+			const { cancel } = AudioUtil.transitionVolume(game, context, 1000, 0.6);
+
+			game.tick(true);
+			game.tick(true);
+
+			const volume = context.volume;
+
+			// cancel 後に tick を進めても音量が変更しないことを確認
+			cancel();
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			expect(context.volume).toBe(volume);
+		});
+
+		it("cancel (revert)", () => {
+			const { game } = skeletonRuntime();
+			const system = game.audio.music;
+			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+			const context = system.create(asset);
+
+			context.changeVolume(0.3);
+
+			const { cancel } = AudioUtil.transitionVolume(game, context, 1000, 0.6);
+
+			game.tick(true);
+			game.tick(true);
+
+			// cancel 後に tick を進めても音量が変更しないことを確認
+			cancel(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			game.tick(true);
+			expect(context.volume).toBe(0.3);
+		});
+	});
 });
