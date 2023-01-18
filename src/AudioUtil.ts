@@ -14,13 +14,13 @@ export type EasingFunction = (t: number, b: number, c: number, d: number) => num
 
 export type AudioTransitionContext = {
 	/**
-	 * フェードを即座に完了する。
-	 * 音量はフェード完了後の値となる。
+	 * 遷移を即座に完了する。
+	 * 音量は遷移完了後の値となる。
 	 */
 	complete: () => void;
 	/**
-	 * フェードを取り消す。音量はこの関数を実行した時点での値となる。
-	 * @param revert 音量をフェード実行前まで戻すかどうか。省略時は `false` 。
+	 * 遷移を取り消す。音量はこの関数を実行した時点での値となる。
+	 * @param revert 音量を遷移実行前まで戻すかどうか。省略時は `false` 。
 	 */
 	cancel: (revert?: boolean) => void;
 };
@@ -72,7 +72,7 @@ export module AudioUtil {
 	 *
 	 * @param game 対象の `Game`。
 	 * @param context 対象の `AudioPlayContext` 。
-	 * @param duration フェードインの長さ (ms)。
+	 * @param duration フェードアウトの長さ (ms)。
 	 * @param easing イージング関数。省略時は linear が指定される。
 	 */
 	export function fadeOut(
@@ -128,13 +128,13 @@ export module AudioUtil {
 	}
 
 	/**
-	 * 音声を指定のイージングで遷移させる。
+	 * 音量を指定のイージングで遷移させる。
 	 *
 	 * @param game 対象の `Game`。
 	 * @param context 対象の `AudioPlayContext` 。
 	 * @param duration 遷移の長さ (ms)。
 	 * @param to 遷移後の音量。0 未満または 1 より大きい値を指定した場合の挙動は不定。
-	 * @param easing イージング関数。フェードインとフェードアウトで共通であることに注意。省略時は linear が指定される。
+	 * @param easing イージング関数。省略時は linear が指定される。
 	 */
 	export function transitionVolume(
 		game: Game,
