@@ -14,12 +14,13 @@ export type EasingFunction = (t: number, b: number, c: number, d: number) => num
 
 export type AudioFadeContext = {
 	/**
-	 * フェードイン・フェードアウトを即座に完了する。
+	 * フェードを即座に完了する。
+	 * 音量はフェード完了後の値となる。
 	 */
 	complete: () => void;
 	/**
-	 * フェードイン・フェードアウトを取り消す。
-	 * @param revert イージング実行前まで戻すかどうか。省略時は `false` 。
+	 * フェードを取り消す。音量はこの関数を実行した時点での値となる。
+	 * @param revert 音量をフェード実行前まで戻すかどうか。省略時は `false` 。
 	 */
 	cancel: (revert?: boolean) => void;
 };
