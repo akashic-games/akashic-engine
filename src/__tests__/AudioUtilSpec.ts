@@ -8,6 +8,7 @@ describe("test AudioUtil", () => {
 			const system = game.audio.music;
 			const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
 			const context = system.create(asset);
+			const mockContextPlay = jest.spyOn(context, "play");
 			expect(context.volume).toBe(1.0);
 
 			AudioUtil.fadeIn(game, context, 1000, 0.3);
@@ -24,6 +25,7 @@ describe("test AudioUtil", () => {
 			} while (beforeVolume < context.volume);
 
 			expect(context.volume).toBe(0.3);
+			expect(mockContextPlay).toBeCalledTimes(1);
 		});
 
 		it("complete", () => {
