@@ -12,16 +12,13 @@ import { Util } from "./Util";
  */
 export type EasingFunction = (t: number, b: number, c: number, d: number) => number;
 
-/**
- * イージング終了のための関数群。
- */
-export type EasingFinishFunctions = {
+export type AudioFadeContext = {
 	/**
-	 * イージングを即座に完了する。
+	 * フェードイン・フェードアウトを即座に完了する。
 	 */
 	complete: () => void;
 	/**
-	 * イージングを取り消す。
+	 * フェードイン・フェードアウトを取り消す。
 	 * @param revert イージング実行前まで戻すかどうか。省略時は `false` 。
 	 */
 	cancel: (revert?: boolean) => void;
@@ -51,7 +48,7 @@ export module AudioUtil {
 		duration: number,
 		to: number = 1,
 		easing: EasingFunction = linear
-	): EasingFinishFunctions {
+	): AudioFadeContext {
 		context.changeVolume(0);
 		context.play();
 		const cancel = fade(game, context, duration, 0, to, easing);
@@ -79,12 +76,7 @@ export module AudioUtil {
 	 * @param duration フェードインの長さ (ms)。
 	 * @param easing イージング関数。省略時は linear が指定される。
 	 */
-	export function fadeOut(
-		game: Game,
-		context: AudioPlayContext,
-		duration: number,
-		easing: EasingFunction = linear
-	): EasingFinishFunctions {
+	export function fadeOut(game: Game, context: AudioPlayContext, duration: number, easing: EasingFunction = linear): AudioFadeContext {
 		const from = context.volume;
 		const cancel = fade(game, context, duration, from, -from, easing);
 
@@ -120,7 +112,7 @@ export module AudioUtil {
 		duration: number,
 		to: number = 1,
 		easing: EasingFunction = linear
-	): EasingFinishFunctions {
+	): AudioFadeContext {
 		const fadeInFuncs = fadeIn(game, fadeInContext, duration, to, easing);
 		const fadeOutFuncs = fadeOut(game, fadeOutContext, duration, easing);
 
