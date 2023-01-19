@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 3.9.2
+機能追加
+* `g.AudioUtil` を追加
+  * 音声のフェードイン・フェードアウト・クロスフェード等の機能を提供します。
+* `g.Game#onUpdate` を追加
+  * ティックの進行後 (`g.Scene#onUpdate` が発火した後) に発火します。
+* `g.Util#clamp()` を追加
+* `EasingFunction` `AudioTransitionContext` を追加
+
 ## 3.9.1
 * 早送り中に `g.AudioPlayContext` の再生を抑制するように
 
