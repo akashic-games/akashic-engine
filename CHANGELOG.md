@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Unreleased changes
+その他変更
+* `g.Scene#deleteTimer()` に注釈コメント追加
+
 ## 3.9.1
 * 早送り中に `g.AudioPlayContext` の再生を抑制するように
 
