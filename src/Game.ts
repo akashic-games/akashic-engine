@@ -539,6 +539,11 @@ export class Game {
 	skippingChanged: Trigger<boolean>;
 
 	/**
+	 * ティック消化後にfireされるTrigger。
+	 */
+	onUpdate: Trigger<void>;
+
+	/**
 	 * ゲームが早送りに状態にあるかどうか。
 	 *
 	 * スキップ状態であれば真、非スキップ状態であれば偽である。
@@ -924,6 +929,8 @@ export class Game {
 		this._onSceneChange.add(this._handleSceneChanged, this);
 		this._sceneChanged = this._onSceneChange;
 
+		this.onUpdate = new Trigger<void>();
+
 		this._initialScene = new Scene({
 			game: this,
 			assetIds: this._assetManager.globalAssetIds(),
@@ -1032,6 +1039,8 @@ export class Game {
 			scene.onUpdate.fire();
 			if (advanceAge) ++this.age;
 		}
+
+		this.onUpdate.fire();
 
 		if (this._postTickTasks.length) {
 			this._flushPostTickTasks();
@@ -1449,6 +1458,7 @@ export class Game {
 		this.onResized.removeAll();
 		this.onSkipChange.removeAll();
 		this.onSceneChange.removeAll();
+		this.onUpdate.removeAll();
 		this.handlerSet.removeAllEventFilters();
 
 		this.isSkipping = false;
@@ -1573,6 +1583,8 @@ export class Game {
 		this.onSkipChange = undefined!;
 		this.onSceneChange.destroy();
 		this.onSceneChange = undefined!;
+		this.onUpdate.destroy();
+		this.onUpdate = undefined!;
 		this.onSnapshotRequest.destroy();
 		this.onSnapshotRequest = undefined!;
 		this.join = undefined!;

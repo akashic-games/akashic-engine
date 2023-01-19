@@ -28,6 +28,7 @@ export * from "./AssetManagerLoadHandler";
 export * from "./AudioPlayContext";
 export * from "./AudioSystem";
 export * from "./AudioSystemManager";
+export * from "./AudioUtil";
 export * from "./BitmapFont";
 export * from "./Camera";
 export * from "./Camera2D";
