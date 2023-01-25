@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 3.9.3
 機能追加
 * game.json の `"maxPoints"` で最大同時タップ数を指定できるように
 
