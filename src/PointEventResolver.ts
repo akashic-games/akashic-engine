@@ -31,6 +31,11 @@ export interface PointEventResolverParameterObject {
 	 * プレイヤーID
 	 */
 	playerId: string;
+
+	/**
+	 * 同時にポイント可能な上限
+	 */
+	maxPoints?: number;
 }
 
 /**
@@ -48,6 +53,8 @@ export interface PointEventResolverParameterObject {
 export class PointEventResolver {
 	_sourceResolver: PointSourceResolver;
 	_playerId: string;
+	_maxPoints: number | null;
+	private _currentPoints: number = 0;
 
 	// g.Eと関連した座標データ
 	private _pointEventMap: { [key: number]: PointEventHolder } = {};
@@ -55,9 +62,14 @@ export class PointEventResolver {
 	constructor(param: PointEventResolverParameterObject) {
 		this._sourceResolver = param.sourceResolver;
 		this._playerId = param.playerId;
+		this._maxPoints = param.maxPoints ?? null;
 	}
 
-	pointDown(e: PlatformPointEvent): pl.PointDownEvent {
+	pointDown(e: PlatformPointEvent): pl.PointDownEvent | null {
+		if (this._maxPoints != null && this._currentPoints >= this._maxPoints) {
+			return null;
+		}
+
 		const source = this._sourceResolver.findPointSource(e.offset);
 		// @ts-ignore
 		const point = source.point ? source.point : e.offset;
@@ -73,6 +85,7 @@ export class PointEventResolver {
 			start: { x: e.offset.x, y: e.offset.y },
 			prev: { x: e.offset.x, y: e.offset.y }
 		};
+		this._currentPoints++;
 
 		// NOTE: 優先度は機械的にJoinedをつけておく。Joinしていない限りPointDownEventなどはリジェクトされる。
 		const ret: pl.PointDownEvent = [
@@ -118,6 +131,7 @@ export class PointEventResolver {
 		const start = { x: 0, y: 0 };
 		this._pointMoveAndUp(holder, e.offset, prev, start);
 		delete this._pointEventMap[e.identifier];
+		this._currentPoints--;
 		const ret: pl.PointUpEvent = [
 			pl.EventCode.PointUp, // 0: イベントコード
 			EventPriority.Joined, // 1: 優先度

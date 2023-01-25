@@ -3,7 +3,7 @@ import * as pl from "@akashic/playlog";
 import { FilledRect } from "../entities/FilledRect";
 import { EventPriority } from "../EventPriority";
 import { PointEventResolver } from "../PointEventResolver";
-import { skeletonRuntime } from "./helpers";
+import { expectToBeDefined, skeletonRuntime } from "./helpers";
 
 describe("PointEventResolver", () => {
 	it("can be instantiated", () => {
@@ -43,13 +43,14 @@ describe("PointEventResolver", () => {
 		});
 		scene.append(rect2);
 
-		let e: pl.PointDownEvent;
+		let e: pl.PointDownEvent | null;
 		// (10, 20) の位置 (何もない)
 		e = resolver.pointDown({
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 10, y: 20 }
 		});
+		expectToBeDefined(e);
 		expect(e.length).toBe(7);
 		expect(e[0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
@@ -65,6 +66,7 @@ describe("PointEventResolver", () => {
 			identifier: 0,
 			offset: { x: 110, y: 110 }
 		});
+		expectToBeDefined(e);
 		expect(e.length).toBe(7);
 		expect(e[0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
@@ -80,6 +82,7 @@ describe("PointEventResolver", () => {
 			identifier: 0,
 			offset: { x: 150, y: 150 }
 		});
+		expectToBeDefined(e);
 		expect(e.length).toBe(8);
 		expect(e[0]).toBe(pl.EventCode.PointDown); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
@@ -207,5 +210,38 @@ describe("PointEventResolver", () => {
 				offset: { x: 0, y: 0 }
 			})
 		).toBeNull();
+	});
+
+	it("can not multi-touch more than maxPoints", () => {
+		const runtime = skeletonRuntime();
+		const game = runtime.game;
+		const playerId = "dummyPlayerId";
+		const maxPoints = 1;
+		const resolver = new PointEventResolver({ sourceResolver: game, playerId, maxPoints });
+		const pointDownEvent = {
+			type: PlatformPointType.Down,
+			identifier: 0,
+			offset: { x: 10, y: 20 }
+		};
+		const anotherPointDownEvent = {
+			type: PlatformPointType.Down,
+			identifier: 1,
+			offset: { x: 20, y: 10 }
+		};
+
+		expect(resolver.pointDown(pointDownEvent)).not.toBeNull();
+		// maxPointsが1なので2個以上のマルチタップは無効となる
+		expect(resolver.pointDown(anotherPointDownEvent)).toBeNull();
+		expect(
+			resolver.pointUp({
+				type: PlatformPointType.Up,
+				identifier: 0, // pointDownEventと同じidentifier
+				offset: { x: 0, y: 0 }
+			})
+		).not.toBeNull();
+		// pointDownEvent解放後はanotherPointDownEventのタップが有効となる
+		expect(resolver.pointDown(anotherPointDownEvent)).not.toBeNull();
+		// anotherPointDownEventでタップ中のため無効
+		expect(resolver.pointDown(pointDownEvent)).toBeNull();
 	});
 });

@@ -1483,7 +1483,12 @@ export class Game {
 		this._postTickTasks = [];
 		this._toBeDestroyedScenes = [];
 		this._eventConverter = new EventConverter({ game: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
-		this._pointEventResolver = new PointEventResolver({ sourceResolver: this, playerId: this.selfId! }); // TODO: selfId が null のときの挙動
+		// TODO: selfId が null のときの挙動
+		this._pointEventResolver = new PointEventResolver({
+			sourceResolver: this,
+			playerId: this.selfId!,
+			maxPoints: this._configuration.maxPoints
+		});
 		// ES5だとNumber.MAX_SAFE_INTEGERは使えないのでその値(9007199254740991)を直接かける
 		this.localRandom = new XorshiftRandomGenerator(Math.floor(9007199254740991 * Math.random()));
 

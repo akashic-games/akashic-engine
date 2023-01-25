@@ -1,6 +1,9 @@
 # ChangeLog
 
-## Unreleased changes
+## 3.9.3
+機能追加
+* game.json の `"maxPoints"` で最大同時タップ数を指定できるように
+
 その他変更
 * `g.Scene#deleteTimer()` に注釈コメント追加
 

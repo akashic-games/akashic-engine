@@ -12,7 +12,7 @@ import {
 	PointMoveEvent
 } from "..";
 import type { Runtime } from "./helpers";
-import { customMatchers, EntityStateFlags, Game, Renderer, skeletonRuntime } from "./helpers";
+import { customMatchers, EntityStateFlags, expectToBeDefined, Game, Renderer, skeletonRuntime } from "./helpers";
 
 expect.extend(customMatchers);
 
@@ -454,6 +454,7 @@ describe("test E", () => {
 				identifier: 1,
 				offset: { x: 0, y: 0 }
 			});
+			expectToBeDefined(event);
 			runtime.game.tick(true, 0, [event]);
 		};
 
