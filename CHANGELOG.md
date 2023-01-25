@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Unreleased changes
+その他変更
+* `g.Scene#deleteTimer()` に注釈コメント追加
+
 ## 3.9.2
 機能追加
 * `g.AudioUtil` を追加

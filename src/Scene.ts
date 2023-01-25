@@ -593,6 +593,8 @@ export class Scene implements StorageLoaderHandler {
 
 	/**
 	 * Timerを削除する。
+	 * `Scene#createTimer()`と同様に、通常はゲーム開発者がこのメソッドを呼び出す必要はない。
+	 * このメソッドを利用する場合、メソッド実行前に対象のTimerのonElapseに登録したハンドラを全て削除しておく必要がある。
 	 * @param timer 削除するTimer
 	 */
 	deleteTimer(timer: Timer): void {
