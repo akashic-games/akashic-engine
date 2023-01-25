@@ -72,6 +72,16 @@ export module Util {
 	}
 
 	/**
+	 * 数値を範囲内［min, max］に丸める
+	 * @param num 丸める値
+	 * @param min 値の下限
+	 * @param max 値の上限
+	 */
+	export function clamp(num: number, min: number, max: number): number {
+		return Math.min(Math.max(num, min), max);
+	}
+
+	/**
 	 * CompositeOperation を CompositeOperationString に読み替えるテーブル。
 	 * @deprecated 非推奨である。非推奨の機能との互換性のために存在する。ゲーム開発者が使用すべきではない。
 	 */
