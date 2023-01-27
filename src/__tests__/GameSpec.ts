@@ -82,6 +82,56 @@ describe("test Game", () => {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("can execute preload script assets before the entry point executed", done => {
+		const game = new Game({
+			width: 320,
+			height: 270,
+			main: "./main.js",
+			assets: {
+				main: {
+					type: "script",
+					path: "./main.js",
+					virtualPath: "main.js",
+					global: true
+				},
+				preload1: {
+					type: "script",
+					path: "/path/to/preload1",
+					virtualPath: "/path/to/preload1",
+					global: true,
+					preload: true
+				},
+				preload2: {
+					type: "script",
+					path: "/path/to/preload2",
+					virtualPath: "/path/to/preload2",
+					global: true,
+					preload: true
+				}
+			}
+		});
+		game.resourceFactory.scriptContents["./main.js"] = "module.exports = () => g.game.__entry_point__();";
+		game.resourceFactory.scriptContents["/path/to/preload1"] = "module.exports = () => g.game.__preload1__();";
+		game.resourceFactory.scriptContents["/path/to/preload2"] = "module.exports = () => g.game.__preload2__();";
+
+		let executedPreload1 = false;
+		let executedPreload2 = false;
+
+		(game as any).__preload1__ = () => {
+			executedPreload1 = true;
+		};
+		(game as any).__preload2__ = () => {
+			executedPreload2 = true;
+		};
+		(game as any).__entry_point__ = () => {
+			expect(executedPreload1).toBe(true);
+			expect(executedPreload2).toBe(true);
+			done();
+		};
+
+		game._loadAndStart();
+	});
+
 	it("_loadAndStart", done => {
 		const assets: { [id: string]: AssetConfiguration } = {
 			mainScene: {

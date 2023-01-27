@@ -1,5 +1,8 @@
 # ChangeLog
 
+## unreleased changes
+* @akashic/game-configuration@1.9.0 に追従
+
 ## 3.9.3
 機能追加
 * game.json の `"maxPoints"` で最大同時タップ数を指定できるように
