@@ -730,6 +730,57 @@ describe("test AssetManager", () => {
 		});
 	});
 
+	it("can get preload assets", () => {
+		const conf: GameConfiguration = {
+			width: 320,
+			height: 320,
+			fps: 30,
+			main: "",
+			assets: {
+				asset1: {
+					type: "script",
+					path: "/path/to/real/file",
+					virtualPath: "path/to/virtual/file",
+					global: true
+				},
+				asset2: {
+					type: "script",
+					path: "/path/to/real/file",
+					virtualPath: "path/to/virtual/file",
+					global: true,
+					preload: false
+				},
+				asset3: {
+					type: "script",
+					path: "/path/to/real/file",
+					virtualPath: "path/to/virtual/file",
+					global: true,
+					preload: true
+				},
+				asset4: {
+					type: "script",
+					path: "/path/to/real/file",
+					virtualPath: "path/to/virtual/file",
+					global: true,
+					preload: 0 as any
+				},
+				asset5: {
+					type: "script",
+					path: "/path/to/real/file",
+					virtualPath: "path/to/virtual/file",
+					global: true,
+					preload: true
+				}
+			}
+		};
+
+		const game = new Game(conf);
+		const manager = game._assetManager;
+
+		// NOTE: 配列の順序は実装依存であることに注意
+		expect(manager.preloadScriptAssetIds()).toEqual(["asset3", "asset5"]);
+	});
+
 	describe("accessorPath", () => {
 		// AssetManager のメソッドは配列の順序は保証しないので、このテストは全体的に実装依存になっていることに注意。
 		const gameConfiguration: GameConfiguration = {

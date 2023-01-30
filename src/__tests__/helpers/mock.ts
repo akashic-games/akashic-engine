@@ -494,7 +494,7 @@ export class GlyphFactory extends pci.GlyphFactory {
 
 export class ResourceFactory extends pci.ResourceFactory {
 	_game: g.Game;
-	scriptContents: { [key: string]: string };
+	scriptContents: { [path: string]: string };
 
 	// 真である限り createXXAsset() が DelayedAsset を生成する(現在は createImageAsset() のみ)。
 	// DelayedAsset は、flushDelayedAssets() 呼び出しまで読み込み完了(またはエラー)通知を遅延するアセットである。
