@@ -344,6 +344,15 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
+	 * プリロードすべきスクリプトアセットのIDを全て返す。
+	 */
+	preloadScriptAssetIds(): string[] {
+		return Object.entries(this.configuration)
+			.filter(([, conf]) => conf.type === "script" && conf.global && conf.preload)
+			.map(([assetId]) => assetId);
+	}
+
+	/**
 	 * パターンまたはフィルタに合致するパスを持つアセットIDを全て返す。
 	 *
 	 * 戻り値は読み込み済みでないアセットのIDを含むことに注意。

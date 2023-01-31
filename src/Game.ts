@@ -1856,6 +1856,14 @@ export class Game {
 		}
 		this.operationPlugins = this.operationPluginManager.plugins;
 
+		const preloadAssetIds = this._assetManager.preloadScriptAssetIds();
+		for (const preloadAssetId of preloadAssetIds) {
+			const fun = this._moduleManager._require(preloadAssetId);
+			if (!fun || typeof fun !== "function")
+				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: ${preloadAssetId} has no-exported function.`);
+			fun();
+		}
+
 		if (this._mainFunc) {
 			this._mainFunc(this._runtimeValueBase, this._mainParameter || {});
 		} else if (this._main) {
