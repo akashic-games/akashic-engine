@@ -1,7 +1,7 @@
 import { Xorshift } from "..";
 import { customMatchers } from "./helpers";
-/* eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires */
-const RefXorshift = require("xorshift").constructor; // require と変数名でエラーとなるが、型定義がないのでコメントで無効とする。
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
+const RefXorshift = require("xorshift").constructor;
 
 expect.extend(customMatchers);
 
