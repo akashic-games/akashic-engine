@@ -2,6 +2,10 @@
 
 ## unreleased changes
 * @akashic/game-configuration@1.9.0 に追従
+* xorshift のリファレンス実装を更新
+
+### ゲーム開発者への影響
+* xorshift のリファレンス実装の更新により、既存の playlog の再現性が失われる可能性があります。
 
 ## 3.9.3
 機能追加
