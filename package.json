@@ -1,6 +1,6 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.9.3",
+  "version": "3.10.0",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
@@ -33,7 +33,7 @@
     "ts-jest": "^29.0.0",
     "typedoc": "^0.23.0",
     "typescript": "^4.7.4",
-    "xorshift": "0.2.0"
+    "xorshift": "1.2.0"
   },
   "scripts": {
     "prepare": "npm run build && npm run doc",
