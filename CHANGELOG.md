@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.10.0
 * @akashic/game-configuration@1.9.0 に追従
 * xorshift のリファレンス実装を更新
 
