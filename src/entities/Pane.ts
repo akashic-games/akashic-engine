@@ -276,7 +276,7 @@ export class Pane extends CacheableE {
 		if (typeof p === "number") {
 			r = { top: p, bottom: p, left: p, right: p };
 		} else {
-			r = this._padding as CommonRect;
+			r = p;
 		}
 		this._childrenArea = {
 			x: r.left,

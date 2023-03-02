@@ -98,7 +98,7 @@ export class PartialImageAsset implements ImageAsset {
 	 */
 	_load(loader: AssetLoadHandler): void {
 		this._loadHandler = loader;
-		this._src._load(this as AssetLoadHandler);
+		this._src._load(this);
 	}
 
 	/**

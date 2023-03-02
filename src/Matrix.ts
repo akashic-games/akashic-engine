@@ -179,6 +179,7 @@ export class PlainMatrix {
 			this._matrix = [1, 0, 0, 1, 0, 0];
 		} else if (typeof widthOrSrc === "number") {
 			this._modified = false;
+			// TODO: [0, 0, 0, 0, 0, 0]と速度比較
 			this._matrix = new Array<number>(6) as [number, number, number, number, number, number];
 			// @ts-ignore
 			this.update(widthOrSrc, height, scaleX, scaleY, angle, 0, 0, anchorX, anchorY);

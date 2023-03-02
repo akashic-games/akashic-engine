@@ -130,6 +130,7 @@ export class ModuleManager {
 					requireFunc: (path: string, mod?: Module) => this._require(path, mod),
 					resolveFunc: (path: string, mod?: Module) => this._resolvePath(path, mod)
 				});
+				// typeが"script"であることは確認済みなのでキャストしても問題ない
 				const script = new ScriptAssetContext(targetScriptAsset as ScriptAsset, module);
 				// @ts-ignore
 				this._scriptCaches[resolvedPath] = script;
@@ -140,6 +141,7 @@ export class ModuleManager {
 					// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
 					// @ts-ignore
 					const cache = (this._scriptCaches[resolvedPath] = new RequireCachedValue(
+						// typeが"text"であることは確認済みなのでキャストしても問題ない
 						JSON.parse((targetScriptAsset as TextAsset).data)
 					));
 					return cache._cachedValue();
@@ -251,6 +253,7 @@ export class ModuleManager {
 		let path: string;
 		path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
+			// typeが"text"であることは確認済みなのでキャストしても問題ない
 			const pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 			if (pkg && typeof pkg.main === "string") {
 				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
@@ -291,6 +294,7 @@ export class ModuleManager {
 	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
 		let path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
+			// typeが"text"であることは確認済みなのでキャストしても問題ない
 			const pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);

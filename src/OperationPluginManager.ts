@@ -24,10 +24,9 @@ class OperationHandler {
 	onOperation(op: OperationPluginOperation | (number | string)[]): void {
 		let iop: InternalOperationPluginOperation;
 		if (op instanceof Array) {
-			iop = { _code: this._code, data: <(number | string)[]>op };
+			iop = { _code: this._code, data: op };
 		} else {
-			iop = <InternalOperationPluginOperation>op;
-			iop._code = this._code;
+			iop = { _code: this._code, ...op };
 		}
 		this._handler.call(this._handlerOwner, iop);
 	}

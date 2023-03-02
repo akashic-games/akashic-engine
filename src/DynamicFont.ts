@@ -286,9 +286,10 @@ export class DynamicFont extends Font {
 	 * @param code 文字コード
 	 */
 	glyphForCharacter(code: number): Glyph | null {
-		let glyph = this._glyphs[code];
+		let glyph: Glyph = this._glyphs[code];
 
 		if (!(glyph && glyph.isSurfaceValid)) {
+			// g.Glyphはpdi-typesのGlyphを継承しているので不整合は発生しない
 			glyph = this._glyphFactory.create(code) as Glyph;
 
 			if (glyph.surface) {

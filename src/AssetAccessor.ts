@@ -31,7 +31,7 @@ export class AssetAccessor {
 	 * @param path 取得する画像アセットのパス
 	 */
 	getImage(path: string): ImageAsset {
-		return this._assetManager.peekLiveAssetByAccessorPath(path, "image") as ImageAsset;
+		return this._assetManager.peekLiveAssetByAccessorPath<ImageAsset>(path, "image");
 	}
 
 	/**
@@ -45,7 +45,7 @@ export class AssetAccessor {
 	 * @param path 取得するオーディオアセットのパス
 	 */
 	getAudio(path: string): AudioAsset {
-		return this._assetManager.peekLiveAssetByAccessorPath(path, "audio") as AudioAsset;
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "audio");
 	}
 
 	/**
@@ -57,7 +57,7 @@ export class AssetAccessor {
 	 * @param path 取得するスクリプトアセットのパス
 	 */
 	getScript(path: string): ScriptAsset {
-		return this._assetManager.peekLiveAssetByAccessorPath(path, "script") as ScriptAsset;
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "script");
 	}
 
 	/**
@@ -69,7 +69,7 @@ export class AssetAccessor {
 	 * @param path 取得するテキストアセットのパス
 	 */
 	getText(path: string): TextAsset {
-		return this._assetManager.peekLiveAssetByAccessorPath(path, "text") as TextAsset;
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "text");
 	}
 
 	/**
@@ -105,7 +105,7 @@ export class AssetAccessor {
 	 * @param path 取得する画像アセットのパス
 	 */
 	getVectorImage(path: string): VectorImageAsset {
-		return this._assetManager.peekLiveAssetByAccessorPath(path, "vector-image") as VectorImageAsset;
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "vector-image");
 	}
 
 	/**
@@ -123,7 +123,7 @@ export class AssetAccessor {
 	 * @param patternOrFilter 取得する画像アセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
 	 */
 	getAllImages(patternOrFilter?: string | ((path: string) => boolean)): ImageAsset[] {
-		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "image") as ImageAsset[];
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "image");
 	}
 
 	/**
@@ -134,7 +134,7 @@ export class AssetAccessor {
 	 * @param patternOrFilter 取得するオーディオアセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
 	 */
 	getAllAudios(patternOrFilter?: string | ((path: string) => boolean)): AudioAsset[] {
-		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "audio") as AudioAsset[];
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "audio");
 	}
 
 	/**
@@ -144,7 +144,7 @@ export class AssetAccessor {
 	 * @param patternOrFilter 取得するスクリプトアセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
 	 */
 	getAllScripts(patternOrFilter?: string | ((path: string) => boolean)): ScriptAsset[] {
-		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "script") as ScriptAsset[];
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "script");
 	}
 
 	/**
@@ -154,7 +154,7 @@ export class AssetAccessor {
 	 * @param patternOrFilter 取得するテキストアセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
 	 */
 	getAllTexts(patternOrFilter?: string | ((path: string) => boolean)): TextAsset[] {
-		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "text") as TextAsset[];
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "text");
 	}
 
 	/**
@@ -164,7 +164,7 @@ export class AssetAccessor {
 	 * @param patternOrFilter 取得するベクタ画像アセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
 	 */
 	getAllVectorImages(patternOrFilter?: string | ((path: string) => boolean)): VectorImageAsset[] {
-		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "vector-image") as VectorImageAsset[];
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "vector-image");
 	}
 
 	/**
@@ -174,7 +174,7 @@ export class AssetAccessor {
 	 * @param assetId 取得する画像アセットのID
 	 */
 	getImageById(assetId: string): ImageAsset {
-		return this._assetManager.peekLiveAssetById(assetId, "image") as ImageAsset;
+		return this._assetManager.peekLiveAssetById(assetId, "image");
 	}
 
 	/**
@@ -184,7 +184,7 @@ export class AssetAccessor {
 	 * @param assetId 取得するオーディオアセットのID
 	 */
 	getAudioById(assetId: string): AudioAsset {
-		return this._assetManager.peekLiveAssetById(assetId, "audio") as AudioAsset;
+		return this._assetManager.peekLiveAssetById(assetId, "audio");
 	}
 
 	/**
@@ -194,7 +194,7 @@ export class AssetAccessor {
 	 * @param assetId 取得するスクリプトアセットのID
 	 */
 	getScriptById(assetId: string): ScriptAsset {
-		return this._assetManager.peekLiveAssetById(assetId, "script") as ScriptAsset;
+		return this._assetManager.peekLiveAssetById(assetId, "script");
 	}
 
 	/**
@@ -204,7 +204,7 @@ export class AssetAccessor {
 	 * @param assetId 取得するテキストアセットのID
 	 */
 	getTextById(assetId: string): TextAsset {
-		return this._assetManager.peekLiveAssetById(assetId, "text") as TextAsset;
+		return this._assetManager.peekLiveAssetById(assetId, "text");
 	}
 
 	/**
@@ -234,6 +234,6 @@ export class AssetAccessor {
 	 * @param assetId 取得するベクタ画像アセットのID
 	 */
 	getVectorImageById(assetId: string): VectorImageAsset {
-		return this._assetManager.peekLiveAssetById(assetId, "vector-image") as VectorImageAsset;
+		return this._assetManager.peekLiveAssetById(assetId, "vector-image");
 	}
 }

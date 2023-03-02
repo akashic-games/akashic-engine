@@ -15,11 +15,9 @@ import type {
 import type {
 	Asset,
 	AssetLoadHandler,
-	AudioAssetHint,
 	AudioAsset,
 	AssetLoadError,
 	CommonArea,
-	ImageAssetHint,
 	ImageAsset,
 	ResourceFactory,
 	ScriptAsset,
@@ -482,7 +480,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param accessorPath 取得するアセットのアクセッサパス
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
-	peekLiveAssetByAccessorPath<T extends OneOfAsset>(accessorPath: string, type: string): T {
+	peekLiveAssetByAccessorPath<T extends OneOfAsset>(accessorPath: string, type: T["type"]): T {
 		accessorPath = this._replaceModulePathToAbsolute(accessorPath);
 		if (accessorPath[0] !== "/")
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
@@ -490,7 +488,7 @@ export class AssetManager implements AssetLoadHandler {
 		const asset = this._liveAssetVirtualPathTable[vpath];
 		if (!asset || type !== asset.type)
 			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
-		return asset as T;
+		return asset as T; // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
 	}
 
 	/**
@@ -499,11 +497,11 @@ export class AssetManager implements AssetLoadHandler {
 	 * @param assetId 取得するアセットのID
 	 * @param type 取得するアセットのタイプ。対象のアセットと合致しない場合、エラー
 	 */
-	peekLiveAssetById<T extends OneOfAsset>(assetId: string, type: string): T {
+	peekLiveAssetById<T extends OneOfAsset>(assetId: string, type: T["type"]): T {
 		const asset = this._assets[assetId];
 		if (!asset || type !== asset.type)
 			throw ExceptionFactory.createAssertionError(`SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
-		return asset as T;
+		return asset as T; // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
 	}
 
 	/**
@@ -517,7 +515,7 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	peekAllLiveAssetsByPattern<T extends OneOfAsset>(
 		patternOrFilter: string | ((accessorPath: string) => boolean),
-		type: string | null
+		type: T["type"] | null
 	): T[] {
 		const vpaths = Object.keys(this._liveAssetVirtualPathTable);
 		const filter =
@@ -528,7 +526,7 @@ export class AssetManager implements AssetLoadHandler {
 			const asset = this._liveAssetVirtualPathTable[vpath];
 			if (type && asset.type !== type) continue;
 			const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
-			if (filter(accessorPath)) ret.push(asset as T);
+			if (filter(accessorPath)) ret.push(asset as T); // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
 		}
 		return ret;
 	}
@@ -630,26 +628,19 @@ export class AssetManager implements AssetLoadHandler {
 		}
 		const resourceFactory = this._resourceFactory;
 		if (!conf) throw ExceptionFactory.createAssertionError("AssetManager#_createAssetFor: unknown asset ID: " + id);
-		switch (conf.type) {
+		const type = conf.type;
+		switch (type) {
 			case "image":
 				const asset = conf.slice
-					? new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, conf.slice as CommonArea) // _normalize() で CommonArea になっている
+					? new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, normalizeCommonArea(conf.slice))
 					: resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
-				asset.initialize(<ImageAssetHint>conf.hint);
+				asset.initialize(conf.hint);
 				return asset;
 			case "audio":
 				const system = conf.systemId
 					? this._audioSystemManager[conf.systemId]
 					: this._audioSystemManager[this._defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(
-					id,
-					uri,
-					conf.duration,
-					system,
-					!!conf.loop,
-					<AudioAssetHint>conf.hint,
-					conf.offset
-				);
+				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, !!conf.loop, conf.hint ?? {}, conf.offset);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":
@@ -666,7 +657,7 @@ export class AssetManager implements AssetLoadHandler {
 				return resourceFactory.createVectorImageAsset(id, uri, conf.width, conf.height, conf.hint);
 			default:
 				throw ExceptionFactory.createAssertionError(
-					"AssertionError#_createAssetFor: unknown asset type " + (conf as Asset).type + " for asset ID: " + id
+					"AssertionError#_createAssetFor: unknown asset type " + type + " for asset ID: " + id
 				);
 		}
 	}

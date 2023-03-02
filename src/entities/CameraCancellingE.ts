@@ -1,6 +1,6 @@
 import type { Renderer } from "@akashic/pdi-types";
 import type { Camera } from "../Camera";
-import type { Camera2D } from "../Camera2D";
+import { Camera2D } from "../Camera2D";
 import { Object2D } from "../Object2D";
 import type { EParameterObject } from "./E";
 import { E } from "./E";
@@ -20,8 +20,8 @@ export class CameraCancellingE extends E {
 	renderSelf(renderer: Renderer, camera?: Camera): boolean {
 		if (!this.children) return false;
 
-		if (camera) {
-			const c = camera as Camera2D;
+		if (camera && camera instanceof Camera2D) {
+			const c = camera;
 			const canceller = this._canceller;
 			if (
 				c.x !== canceller.x ||

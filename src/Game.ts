@@ -913,7 +913,7 @@ export class Game {
 		this._configuration = gameConfiguration;
 		this._assetManager = new AssetManager(
 			this,
-			gameConfiguration.assets as AssetConfigurationMap,
+			gameConfiguration.assets as AssetConfigurationMap, // TODO: AssetConfiguration[]のサポートを行う必要がある。
 			gameConfiguration.audio,
 			gameConfiguration.moduleMainScripts
 		);
