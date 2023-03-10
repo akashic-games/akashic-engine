@@ -486,9 +486,8 @@ export class AssetManager implements AssetLoadHandler {
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
 		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
 		const asset = this._liveAssetVirtualPathTable[vpath];
-		if (!asset || type !== asset.type)
-			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
-		return asset as T; // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
+		this._assertAssetType(asset, type, `AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
+		return asset;
 	}
 
 	/**
@@ -499,9 +498,8 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	peekLiveAssetById<T extends OneOfAsset>(assetId: string, type: T["type"]): T {
 		const asset = this._assets[assetId];
-		if (!asset || type !== asset.type)
-			throw ExceptionFactory.createAssertionError(`SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
-		return asset as T; // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
+		this._assertAssetType(asset, type, `SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
+		return asset;
 	}
 
 	/**
@@ -526,9 +524,20 @@ export class AssetManager implements AssetLoadHandler {
 			const asset = this._liveAssetVirtualPathTable[vpath];
 			if (type && asset.type !== type) continue;
 			const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
-			if (filter(accessorPath)) ret.push(asset as T); // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
+			// typeがT["type"]であればasset.typeを直前で確認しているので確実にTになるが、typeがnullの時にassetがTではない可能性がある
+			// TODO: typeがnullの時も直前にassetがTであることの検証をする必要がある
+			if (filter(accessorPath)) ret.push(asset as T);
 		}
 		return ret;
+	}
+
+	/**
+	 * @private
+	 */
+	_assertAssetType<T extends OneOfAsset>(asset: OneOfAsset, type: T["type"], errorMessage?: string): asserts asset is T {
+		if (!asset || type !== asset.type) {
+			throw ExceptionFactory.createAssertionError(errorMessage ?? `asset.type(${asset?.type}) is not ${type}.`);
+		}
 	}
 
 	/**

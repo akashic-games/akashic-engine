@@ -1,5 +1,5 @@
-import type { Asset, ScriptAsset, ScriptAssetRuntimeValueBase, TextAsset } from "@akashic/pdi-types";
-import type { AssetManager } from "./AssetManager";
+import type { Asset, ScriptAssetRuntimeValueBase, TextAsset } from "@akashic/pdi-types";
+import type { AssetManager, OneOfAsset } from "./AssetManager";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
 import { PathUtil } from "./PathUtil";
@@ -55,7 +55,7 @@ export class ModuleManager {
 	_require(path: string, currentModule?: Module): any {
 		// Node.js の require の挙動については http://nodejs.jp/nodejs.org_ja/api/modules.html も参照。
 
-		let targetScriptAsset: Asset | undefined;
+		let targetScriptAsset: OneOfAsset | undefined;
 		let resolvedPath: string | undefined;
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
@@ -130,8 +130,7 @@ export class ModuleManager {
 					requireFunc: (path: string, mod?: Module) => this._require(path, mod),
 					resolveFunc: (path: string, mod?: Module) => this._resolvePath(path, mod)
 				});
-				// typeが"script"であることは確認済みなのでキャストしても問題ない
-				const script = new ScriptAssetContext(targetScriptAsset as ScriptAsset, module);
+				const script = new ScriptAssetContext(targetScriptAsset, module);
 				// @ts-ignore
 				this._scriptCaches[resolvedPath] = script;
 				return script._executeScript(currentModule);
@@ -140,10 +139,7 @@ export class ModuleManager {
 				if (targetScriptAsset && PathUtil.resolveExtname(path) === ".json") {
 					// Note: node.jsではここでBOMの排除をしているが、いったんakashicでは排除しないで実装
 					// @ts-ignore
-					const cache = (this._scriptCaches[resolvedPath] = new RequireCachedValue(
-						// typeが"text"であることは確認済みなのでキャストしても問題ない
-						JSON.parse((targetScriptAsset as TextAsset).data)
-					));
+					const cache = (this._scriptCaches[resolvedPath] = new RequireCachedValue(JSON.parse(targetScriptAsset.data)));
 					return cache._cachedValue();
 				}
 			}
@@ -232,7 +228,7 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
+	_findAssetByPathAsFile(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): OneOfAsset | undefined {
 		if (liveAssetPathTable.hasOwnProperty(resolvedPath)) return liveAssetPathTable[resolvedPath];
 		if (liveAssetPathTable.hasOwnProperty(resolvedPath + ".js")) return liveAssetPathTable[resolvedPath + ".js"];
 		return undefined;
@@ -249,7 +245,7 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): Asset | undefined {
+	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): OneOfAsset | undefined {
 		let path: string;
 		path = resolvedPath + "/package.json";
 		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {

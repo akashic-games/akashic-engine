@@ -31,7 +31,7 @@ export class AssetAccessor {
 	 * @param path 取得する画像アセットのパス
 	 */
 	getImage(path: string): ImageAsset {
-		return this._assetManager.peekLiveAssetByAccessorPath<ImageAsset>(path, "image");
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "image");
 	}
 
 	/**
