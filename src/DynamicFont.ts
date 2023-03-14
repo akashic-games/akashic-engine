@@ -289,7 +289,8 @@ export class DynamicFont extends Font {
 		let glyph: Glyph = this._glyphs[code];
 
 		if (!(glyph && glyph.isSurfaceValid)) {
-			// g.Glyphはpdi-typesのGlyphを継承しているので不整合は発生しない
+			// g.Glyph にダウンキャストすることによって不整合が発生しうるので修正が必要
+			// TODO: g.Glyph を返す create() メソッドを持つ g.GlyphFactory を定義すべき
 			glyph = this._glyphFactory.create(code) as Glyph;
 
 			if (glyph.surface) {
