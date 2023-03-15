@@ -1,4 +1,4 @@
-import type { Asset, ScriptAssetRuntimeValueBase, TextAsset } from "@akashic/pdi-types";
+import type { Asset, ScriptAssetRuntimeValueBase } from "@akashic/pdi-types";
 import type { AssetManager, OneOfAsset } from "./AssetManager";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
@@ -248,9 +248,9 @@ export class ModuleManager {
 	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): OneOfAsset | undefined {
 		let path: string;
 		path = resolvedPath + "/package.json";
-		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
-			// typeが"text"であることは確認済みなのでキャストしても問題ない
-			const pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
+		const asset = liveAssetPathTable[path];
+		if (liveAssetPathTable.hasOwnProperty(path) && asset.type === "text") {
+			const pkg = JSON.parse(asset.data);
 			if (pkg && typeof pkg.main === "string") {
 				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (asset) return asset;
@@ -287,11 +287,11 @@ export class ModuleManager {
 	 * @param resolvedPath パス文字列
 	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
 	 */
-	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: Asset }): string | null {
+	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): string | null {
 		let path = resolvedPath + "/package.json";
-		if (liveAssetPathTable.hasOwnProperty(path) && liveAssetPathTable[path].type === "text") {
-			// typeが"text"であることは確認済みなのでキャストしても問題ない
-			const pkg = JSON.parse((liveAssetPathTable[path] as TextAsset).data);
+		const asset = liveAssetPathTable[path];
+		if (liveAssetPathTable.hasOwnProperty(path) && asset.type === "text") {
+			const pkg = JSON.parse(asset.data);
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (targetPath) {
