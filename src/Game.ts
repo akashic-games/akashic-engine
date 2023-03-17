@@ -913,7 +913,7 @@ export class Game {
 		this._configuration = gameConfiguration;
 		// TODO: AssetConfiguration[]のサポートができたらこの例外処理は削除する
 		if (Array.isArray(gameConfiguration.assets)) {
-			throw new Error("GameConfiguration#assets can not support AssetConfiguration[].");
+			throw new Error("Game#constructor: array type of configuration.assets is not yet supported");
 		}
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		this._moduleManager = undefined!;
