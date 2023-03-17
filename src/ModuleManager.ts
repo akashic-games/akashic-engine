@@ -249,11 +249,11 @@ export class ModuleManager {
 		let path: string;
 		path = resolvedPath + "/package.json";
 		const asset = liveAssetPathTable[path];
-		if (liveAssetPathTable.hasOwnProperty(path) && asset.type === "text") {
+		if (asset?.type === "text") {
 			const pkg = JSON.parse(asset.data);
 			if (pkg && typeof pkg.main === "string") {
-				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
-				if (asset) return asset;
+				const moduleMainAsset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
+				if (moduleMainAsset) return moduleMainAsset;
 			}
 		}
 		path = resolvedPath + "/index.js";
@@ -290,7 +290,7 @@ export class ModuleManager {
 	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): string | null {
 		let path = resolvedPath + "/package.json";
 		const asset = liveAssetPathTable[path];
-		if (liveAssetPathTable.hasOwnProperty(path) && asset.type === "text") {
+		if (asset?.type === "text") {
 			const pkg = JSON.parse(asset.data);
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
