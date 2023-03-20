@@ -641,7 +641,8 @@ export class AssetManager implements AssetLoadHandler {
 		switch (type) {
 			case "image":
 				const asset = conf.slice
-					? new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, normalizeCommonArea(conf.slice))
+					? // _normalize() で CommonArea になっている
+					  new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, conf.slice as CommonArea)
 					: resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 				asset.initialize(conf.hint);
 				return asset;

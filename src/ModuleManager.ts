@@ -248,12 +248,12 @@ export class ModuleManager {
 	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): OneOfAsset | undefined {
 		let path: string;
 		path = resolvedPath + "/package.json";
-		const asset = liveAssetPathTable[path];
-		if (asset?.type === "text") {
-			const pkg = JSON.parse(asset.data);
+		const pkgJsonAsset = liveAssetPathTable[path];
+		if (pkgJsonAsset?.type === "text") {
+			const pkg = JSON.parse(pkgJsonAsset.data);
 			if (pkg && typeof pkg.main === "string") {
-				const moduleMainAsset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
-				if (moduleMainAsset) return moduleMainAsset;
+				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
+				if (asset) return asset;
 			}
 		}
 		path = resolvedPath + "/index.js";
