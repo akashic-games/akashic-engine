@@ -249,7 +249,8 @@ export class ModuleManager {
 		let path: string;
 		path = resolvedPath + "/package.json";
 		const pkgJsonAsset = liveAssetPathTable[path];
-		if (pkgJsonAsset?.type === "text") {
+		// liveAssetPathTable[path] != null だけではpathと同名のprototypeプロパティがある場合trueになってしまうので hasOwnProperty() を利用
+		if (liveAssetPathTable.hasOwnProperty(path) && pkgJsonAsset.type === "text") {
 			const pkg = JSON.parse(pkgJsonAsset.data);
 			if (pkg && typeof pkg.main === "string") {
 				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
@@ -290,7 +291,8 @@ export class ModuleManager {
 	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): string | null {
 		let path = resolvedPath + "/package.json";
 		const asset = liveAssetPathTable[path];
-		if (asset?.type === "text") {
+		// liveAssetPathTable[path] != null だけではpathと同名のprototypeプロパティがある場合trueになってしまうので hasOwnProperty() を利用
+		if (liveAssetPathTable.hasOwnProperty(path) && asset.type === "text") {
 			const pkg = JSON.parse(asset.data);
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);

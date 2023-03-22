@@ -23,7 +23,10 @@ import type {
 	ScriptAsset,
 	TextAsset,
 	VideoAsset,
-	VectorImageAsset
+	VectorImageAsset,
+	AudioAssetHint,
+	ImageAssetHint,
+	VectorImageAssetHint
 } from "@akashic/pdi-types";
 import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
@@ -37,6 +40,44 @@ import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
 
 export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset | VectorImageAsset;
+
+type NormalizedAssetConfigurationMap = {
+	[key: string]: NormalizedAssetConfiguration;
+};
+
+type NormalizedAssetConfiguration =
+	| NormalizedAudioAssetConfigurationBase
+	| NormalizedImageAssetConfigurationBase
+	| NormalizedTextAssetConfigurationBase
+	| NormalizedScriptAssetConfigurationBase
+	| NormalizedVideoAssetConfigurationBase
+	| NormalizedVectorImageAssetConfigurationBase;
+
+interface NormalizedAudioAssetConfigurationBase extends AudioAssetConfigurationBase {
+	loop: boolean;
+	hint: AudioAssetHint;
+	offset: number;
+}
+
+interface NormalizedImageAssetConfigurationBase extends ImageAssetConfigurationBase {
+	hint: ImageAssetHint;
+	slice?: CommonArea;
+}
+
+interface NormalizedTextAssetConfigurationBase extends TextAssetConfigurationBase {}
+
+interface NormalizedScriptAssetConfigurationBase extends ScriptAssetConfigurationBase {
+	preload: boolean;
+}
+
+interface NormalizedVideoAssetConfigurationBase extends VideoAssetConfigurationBase {
+	loop: boolean;
+	useRealSize: boolean;
+}
+
+interface NormalizedVectorImageAssetConfigurationBase extends VectorImageAssetConfigurationBase {
+	hint: VectorImageAssetHint;
+}
 
 // TODO: 以下の internal types を game-configuration に切り出す
 type AssetConfigurationCore =
@@ -486,8 +527,9 @@ export class AssetManager implements AssetLoadHandler {
 			throw ExceptionFactory.createAssertionError("AssetManager#peekLiveAssetByAccessorPath(): accessorPath must start with '/'");
 		const vpath = accessorPath.slice(1); // accessorPath から "/" を削ると virtualPath という仕様
 		const asset = this._liveAssetVirtualPathTable[vpath];
-		this._assertAssetType(asset, type, `AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
-		return asset;
+		if (!asset || type !== asset.type)
+			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetByAccessorPath(): No ${type} asset for ${accessorPath}`);
+		return asset as T; // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
 	}
 
 	/**
@@ -498,8 +540,9 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	peekLiveAssetById<T extends OneOfAsset>(assetId: string, type: T["type"]): T {
 		const asset = this._assets[assetId];
-		this._assertAssetType(asset, type, `SceneAssetManager#_getById(): No ${type} asset for id ${assetId}`);
-		return asset;
+		if (!asset || type !== asset.type)
+			throw ExceptionFactory.createAssertionError(`AssetManager#peekLiveAssetById(): No ${type} asset for id ${assetId}`);
+		return asset as T; // asset.typeを直前で確認しているので確実にTになるが、型推論できないのでキャストする
 	}
 
 	/**
@@ -532,23 +575,14 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * @private
-	 */
-	_assertAssetType<T extends OneOfAsset>(asset: OneOfAsset, type: T["type"], errorMessage?: string): asserts asset is T {
-		if (!asset || type !== asset.type) {
-			throw ExceptionFactory.createAssertionError(errorMessage ?? `asset.type(${asset?.type}) is not ${type}.`);
-		}
-	}
-
-	/**
 	 * @ignore
 	 */
-	_normalize(configuration: AssetConfigurationMap): AssetConfigurationMap {
-		const ret: { [key: string]: AssetConfiguration } = {};
+	_normalize(configuration: AssetConfigurationMap): NormalizedAssetConfigurationMap {
+		const ret: NormalizedAssetConfigurationMap = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 		for (const p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
-			const conf = this._normalizeAssetBaseDeclaration<AssetConfiguration>(p, Object.create(configuration[p]));
+			const conf = this._normalizeAssetBaseDeclaration<NormalizedAssetConfiguration>(p, Object.create(configuration[p]));
 			if (!conf.path) {
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
 			}
