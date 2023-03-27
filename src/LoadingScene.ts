@@ -135,7 +135,7 @@ export class LoadingScene extends Scene {
 			throw ExceptionFactory.createAssertionError(msg);
 		}
 
-		this.game.popScene(true);
+		this.game._popSceneRaw(true);
 		this.game._pushPostTickTask(this._targetScene._fireLoaded, this._targetScene);
 		this._clearTargetScene();
 	}

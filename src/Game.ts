@@ -60,7 +60,13 @@ const enum PostTickTaskType {
 	/**
 	 * 任意の関数を呼び出す。
 	 */
-	Call
+	Call,
+
+	/**
+	 * シーンスタックから直近のシーンを、必ず一つだけ削除する。
+	 * PopScene はスタックトップのローディングシーンを除いてから削除する一方、こちらはスタックトップに関わらず一つだけ削除する。
+	 */
+	PopSceneRaw
 }
 
 /**
@@ -68,7 +74,12 @@ const enum PostTickTaskType {
  *
  * tick 消化タイミングに同期して行われるタスクを表す。
  */
-type PostTickTask = PostTickPopSceneTask | PostTickPushSceneTask | PostTickReplaceSceneTask | PostTickCallFunctionTask;
+type PostTickTask =
+	| PostTickPopSceneTask
+	| PostTickPushSceneTask
+	| PostTickReplaceSceneTask
+	| PostTickCallFunctionTask
+	| PostTickPopSceneRawTask;
 
 /**
  * @ignore
@@ -81,7 +92,6 @@ interface PostTickPushSceneTask {
 
 	/**
 	 * 遷移先になるシーン。
-	 * `type` が `Push` または `Replace` の時のみ存在。
 	 */
 	scene: Scene;
 }
@@ -97,13 +107,11 @@ interface PostTickReplaceSceneTask {
 
 	/**
 	 * 遷移先になるシーン。
-	 * `type` が `Push` または `Replace` の時のみ存在。
 	 */
 	scene: Scene;
 
 	/**
 	 * 現在のシーンを破棄するか否か。
-	 * `type` が `PopScene` または `Replace` の時のみ存在。
 	 */
 	preserveCurrent: boolean;
 }
@@ -119,7 +127,6 @@ interface PostTickPopSceneTask {
 
 	/**
 	 * 現在のシーンを破棄するか否か。
-	 * `type` が `PopScene` または `Replace` の時のみ存在。
 	 */
 	preserveCurrent: boolean;
 }
@@ -135,15 +142,28 @@ interface PostTickCallFunctionTask {
 
 	/**
 	 * 呼び出す関数。
-	 * `type` が `Call` の時のみ存在。
 	 */
 	fun: Function;
 
 	/**
 	 * `fun` の `this` として使う値。
-	 * `type` が `Call` の時のみ存在。
 	 */
 	owner: any;
+}
+
+/**
+ * @ignore
+ */
+interface PostTickPopSceneRawTask {
+	/**
+	 * 遷移の種類。
+	 */
+	type: PostTickTaskType.PopSceneRaw;
+
+	/**
+	 * 現在のシーンを破棄するか否か。
+	 */
+	preserveCurrent: boolean;
 }
 
 export interface GameResetParameterObject {
@@ -1364,6 +1384,13 @@ export class Game {
 	}
 
 	/**
+	 * @ignore
+	 */
+	_popSceneRaw(preserveCurrent: boolean): void {
+		this._postTickTasks.push({ type: PostTickTaskType.PopSceneRaw, preserveCurrent });
+	}
+
+	/**
 	 * @private
 	 */
 	_normalizeConfiguration(gameConfiguration: GameConfiguration): GameConfiguration {
@@ -1428,7 +1455,7 @@ export class Game {
 		this.operationPluginManager.onOperate.add(this._onOperationPluginOperated.fire, this._onOperationPluginOperated);
 		if (this.scene()) {
 			while (this.scene() !== this._initialScene) {
-				this.popScene();
+				this._popSceneRaw(false);
 				this._flushPostTickTasks();
 			}
 			if (!this.isLoaded) {
@@ -1766,18 +1793,21 @@ export class Game {
 						if (oldScene) {
 							oldScene._deactivate();
 						}
-						this._doPushScene(req.scene);
+						this._doPushScene(req.scene, false);
 						break;
 					case PostTickTaskType.ReplaceScene:
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
-						this._doPopScene(req.preserveCurrent, false);
-						this._doPushScene(req.scene);
+						this._doPopScene(req.preserveCurrent, false, false);
+						this._doPushScene(req.scene, false);
 						break;
 					case PostTickTaskType.PopScene:
-						this._doPopScene(req.preserveCurrent, true);
+						this._doPopScene(req.preserveCurrent, false, true);
 						break;
 					case PostTickTaskType.Call:
 						req.fun.call(req.owner);
+						break;
+					case PostTickTaskType.PopSceneRaw:
+						this._doPopScene(req.preserveCurrent, true, true);
 						break;
 					default:
 						throw ExceptionFactory.createAssertionError("Game#_flushPostTickTasks: unknown post-tick task type.");
@@ -1826,8 +1856,23 @@ export class Game {
 		this.joinedPlayerIds = this.joinedPlayerIds.filter(id => id !== event.player.id);
 	}
 
-	private _doPopScene(preserveCurrent: boolean, fireSceneChanged: boolean): void {
-		const scene = this.scenes.pop();
+	/**
+	 * シーンスタックからシーンを取り除く。
+	 *
+	 * @ignore
+	 * @param preserveCurrent 取り除いたシーンを破棄せずそのままにするか
+	 * @param raw 偽の場合、シーンスタックトップのローディングシーンも取り除く
+	 * @param fireSceneChanged onSceneChangeをfireして通知するか
+	 */
+	private _doPopScene(preserveCurrent: boolean, raw: boolean, fireSceneChanged: boolean): void {
+		const names = this.scenes.map(s => [s.name, s instanceof LoadingScene]);
+		let scene = this.scenes.pop();
+		if (!raw) {
+			while (scene && scene instanceof LoadingScene) {
+				scene = this.scenes.pop();
+			}
+		}
+
 		if (!scene) throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; scene stack underflow");
 		if (scene === this._initialScene)
 			throw ExceptionFactory.createAssertionError("Game#_doPopScene: invalid call; attempting to pop the initial scene");
@@ -1878,16 +1923,29 @@ export class Game {
 		this._onStart.fire();
 	}
 
-	private _doPushScene(scene: Scene, loadingScene?: LoadingScene): void {
+	/**
+	 * シーンをシーンスタックに積む。
+	 *
+	 * @ignore
+	 * @param scene 積むシーン
+	 * @param raw 偽の場合、スタックトップのローディングシーンを除いてから積む
+	 * @param loadingScene ロードが必要な場合に利用するローディングシーン
+	 */
+	private _doPushScene(scene: Scene, raw: boolean, loadingScene?: LoadingScene): void {
+		const { scenes } = this;
+		if (!raw) {
+			while (scenes.length > 0 && scenes[scenes.length - 1] instanceof LoadingScene) scenes.pop();
+		}
+
 		if (!loadingScene) loadingScene = this.loadingScene || this._defaultLoadingScene;
-		this.scenes.push(scene);
+		scenes.push(scene);
 
 		if (scene._needsLoading() && scene._loadingState !== "loaded-fired") {
 			if (this._defaultLoadingScene._needsLoading())
 				throw ExceptionFactory.createAssertionError(
 					"Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages."
 				);
-			this._doPushScene(loadingScene, this._defaultLoadingScene);
+			this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 			loadingScene.reset(scene);
 		} else {
 			this.onSceneChange.fire(scene);
