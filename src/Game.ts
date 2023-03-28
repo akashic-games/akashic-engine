@@ -1865,7 +1865,6 @@ export class Game {
 	 * @param fireSceneChanged onSceneChangeをfireして通知するか
 	 */
 	private _doPopScene(preserveCurrent: boolean, raw: boolean, fireSceneChanged: boolean): void {
-		const names = this.scenes.map(s => [s.name, s instanceof LoadingScene]);
 		let scene = this.scenes.pop();
 		if (!raw) {
 			while (scene && scene instanceof LoadingScene) {
