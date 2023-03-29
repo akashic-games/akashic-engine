@@ -1883,6 +1883,7 @@ export class Game {
 		}
 
 		if (!raw) {
+			// 取り除いた結果スタックトップがロード中のシーンになった場合はローディングシーンを積み直す
 			const nextScene = this.scene();
 			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
 				const loadingScene = this.loadingScene ?? this._defaultLoadingScene;
