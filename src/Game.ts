@@ -1861,13 +1861,14 @@ export class Game {
 	 *
 	 * @ignore
 	 * @param preserveCurrent 取り除いたシーンを破棄せずそのままにするか
-	 * @param raw 偽の場合、シーンスタックトップのローディングシーンも取り除く
+	 * @param raw (ローディングシーンを考慮せず)そのまま取り除くか。偽の場合、シーンスタックトップのローディングシーンを全て除いてから取り除く
 	 * @param fireSceneChanged onSceneChangeをfireして通知するか
 	 */
 	private _doPopScene(preserveCurrent: boolean, raw: boolean, fireSceneChanged: boolean): void {
 		let scene = this.scenes.pop();
 		if (!raw) {
 			while (scene && scene instanceof LoadingScene) {
+				scene._clearTargetScene();
 				scene = this.scenes.pop();
 			}
 		}
@@ -1880,6 +1881,16 @@ export class Game {
 				this._toBeDestroyedScenes.push(scene);
 			}
 		}
+
+		if (!raw) {
+			const nextScene = this.scene();
+			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
+				const loadingScene = this.loadingScene ?? this._defaultLoadingScene;
+				this._doPushScene(loadingScene, true, this._defaultLoadingScene);
+				loadingScene.reset(nextScene);
+			}
+		}
+
 		if (fireSceneChanged) {
 			const nextScene = this.scene();
 			this.onSceneChange.fire(nextScene);
@@ -1923,17 +1934,20 @@ export class Game {
 	}
 
 	/**
-	 * シーンをシーンスタックに積む。
+	 * シーンをシーンスタックに追加する。
 	 *
 	 * @ignore
-	 * @param scene 積むシーン
-	 * @param raw 偽の場合、スタックトップのローディングシーンを除いてから積む
+	 * @param scene 追加するシーン
+	 * @param raw (ローディングシーンを考慮せず)そのまま追加するか。偽の場合、スタックトップのローディングシーンを除いてから追加する
 	 * @param loadingScene ロードが必要な場合に利用するローディングシーン
 	 */
 	private _doPushScene(scene: Scene, raw: boolean, loadingScene?: LoadingScene): void {
 		const { scenes } = this;
 		if (!raw) {
-			while (scenes.length > 0 && scenes[scenes.length - 1] instanceof LoadingScene) scenes.pop();
+			while (scenes.length > 0 && scenes[scenes.length - 1] instanceof LoadingScene) {
+				const top = scenes.pop()! as LoadingScene;
+				top._clearTargetScene();
+			}
 		}
 
 		if (!loadingScene) loadingScene = this.loadingScene || this._defaultLoadingScene;
