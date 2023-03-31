@@ -280,8 +280,8 @@ describe("test Game", () => {
 
 		game._onLoad.add(() => {
 			// game.scenes テストのため _loaded を待つ必要がある
-			const scene1 = new Scene({ game, assetIds: ["foo"] });
-			const scene2 = new Scene({ game, assetIds: ["foo"] });
+			const scene1 = new Scene({ game, assetIds: ["foo"], name: "scene1" });
+			const scene2 = new Scene({ game, assetIds: ["foo"], name: "scene2" });
 			game.pushScene(scene1);
 
 			let scene1foo: Asset;
@@ -427,6 +427,87 @@ describe("test Game", () => {
 				// 同一IDのアセットを前のシーンで読み込んでいた場合はアセットの再読み込みが発生しない （= 同一インスタンスである） ことを確認
 				expect(scene1foo).toBe(scene2.assets.foo);
 				done();
+			});
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("pushScene - twice", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
+
+		game._onLoad.add(() => {
+			// game.scenes テストのため _loaded を待つ必要がある
+			const scene1 = new Scene({ game, assetIds: [], name: "scene1" });
+			game.pushScene(scene1);
+
+			scene1.onLoad.addOnce(() => {
+				const scene2 = new Scene({ game, assetIds: ["foo"], name: "scene2" });
+				game.pushScene(scene2);
+				const scene3 = new Scene({ game, assetIds: ["foo"], name: "scene3" });
+				game.pushScene(scene3);
+
+				const fail = (): void => done.fail();
+				scene2.onLoad.addOnce(fail);
+				scene3.onLoad.addOnce(() => {
+					// 先にスタックに積んだが、ロード完了前に scene3 を積んだので scene2 のロード完了はここまでに来ていない。
+					// popScene() するとロードが再開されて onLoad がくる。
+					scene2.onLoad.remove(fail);
+					scene2.onLoad.addOnce(() => {
+						done();
+					});
+					game.popScene();
+				});
+			});
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("replaceScene - twice", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
+
+		game._onLoad.add(() => {
+			// game.scenes テストのため _loaded を待つ必要がある
+			const scene1 = new Scene({ game, assetIds: [], name: "scene1" });
+			game.pushScene(scene1);
+
+			scene1.onLoad.addOnce(() => {
+				const scene2 = new Scene({ game, assetIds: ["foo"], name: "scene2" });
+				game.replaceScene(scene2);
+				const scene3 = new Scene({ game, assetIds: ["foo"], name: "scene3" });
+				game.replaceScene(scene3);
+
+				scene2.onLoad.addOnce(() => {
+					done.fail();
+				});
+				scene3.onLoad.addOnce(() => {
+					done();
+				});
 			});
 		});
 		game._startLoadingGlobalAssets();
