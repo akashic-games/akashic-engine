@@ -23,10 +23,7 @@ import type {
 	ScriptAsset,
 	TextAsset,
 	VideoAsset,
-	VectorImageAsset,
-	AudioAssetHint,
-	ImageAssetHint,
-	VectorImageAssetHint
+	VectorImageAsset
 } from "@akashic/pdi-types";
 import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
@@ -40,44 +37,6 @@ import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
 
 export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset | VectorImageAsset;
-
-type NormalizedAssetConfigurationMap = {
-	[key: string]: NormalizedAssetConfiguration;
-};
-
-type NormalizedAssetConfiguration =
-	| NormalizedAudioAssetConfigurationBase
-	| NormalizedImageAssetConfigurationBase
-	| NormalizedTextAssetConfigurationBase
-	| NormalizedScriptAssetConfigurationBase
-	| NormalizedVideoAssetConfigurationBase
-	| NormalizedVectorImageAssetConfigurationBase;
-
-interface NormalizedAudioAssetConfigurationBase extends AudioAssetConfigurationBase {
-	loop: boolean;
-	hint: AudioAssetHint;
-	offset: number;
-}
-
-interface NormalizedImageAssetConfigurationBase extends ImageAssetConfigurationBase {
-	hint: ImageAssetHint;
-	slice?: CommonArea;
-}
-
-interface NormalizedTextAssetConfigurationBase extends TextAssetConfigurationBase {}
-
-interface NormalizedScriptAssetConfigurationBase extends ScriptAssetConfigurationBase {
-	preload: boolean;
-}
-
-interface NormalizedVideoAssetConfigurationBase extends VideoAssetConfigurationBase {
-	loop: boolean;
-	useRealSize: boolean;
-}
-
-interface NormalizedVectorImageAssetConfigurationBase extends VectorImageAssetConfigurationBase {
-	hint: VectorImageAssetHint;
-}
 
 // TODO: 以下の internal types を game-configuration に切り出す
 type AssetConfigurationCore =
@@ -568,7 +527,6 @@ export class AssetManager implements AssetLoadHandler {
 			if (type && asset.type !== type) continue;
 			const accessorPath = "/" + vpath; // virtualPath に "/" を足すと accessorPath という仕様
 			// typeがT["type"]であればasset.typeを直前で確認しているので確実にTになるが、typeがnullの時にassetがTではない可能性がある
-			// TODO: typeがnullの時も直前にassetがTであることの検証をする必要がある
 			if (filter(accessorPath)) ret.push(asset as T);
 		}
 		return ret;
@@ -577,12 +535,12 @@ export class AssetManager implements AssetLoadHandler {
 	/**
 	 * @ignore
 	 */
-	_normalize(configuration: AssetConfigurationMap): NormalizedAssetConfigurationMap {
-		const ret: NormalizedAssetConfigurationMap = {};
+	_normalize(configuration: AssetConfigurationMap): AssetConfigurationMap {
+		const ret: AssetConfigurationMap = {};
 		if (!(configuration instanceof Object)) throw ExceptionFactory.createAssertionError("AssetManager#_normalize: invalid arguments.");
 		for (const p in configuration) {
 			if (!configuration.hasOwnProperty(p)) continue;
-			const conf = this._normalizeAssetBaseDeclaration<NormalizedAssetConfiguration>(p, Object.create(configuration[p]));
+			const conf = this._normalizeAssetBaseDeclaration<AssetConfiguration>(p, Object.create(configuration[p]));
 			if (!conf.path) {
 				throw ExceptionFactory.createAssertionError("AssetManager#_normalize: No path given for: " + p);
 			}
@@ -674,9 +632,12 @@ export class AssetManager implements AssetLoadHandler {
 		const type = conf.type;
 		switch (type) {
 			case "image":
+				// _normalize() で conf.slice を CommonArea | undefined にしているので本来は不要な分岐だが、型の担保のためにチェックを行う
+				if (Array.isArray(conf.slice)) {
+					throw new Error("AssetManager#_createAssetFor: array type of configuration.slice is not yet supported");
+				}
 				const asset = conf.slice
-					? // _normalize() で CommonArea になっている
-					  new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, conf.slice as CommonArea)
+					? new PartialImageAsset(resourceFactory, id, uri, conf.width, conf.height, conf.slice)
 					: resourceFactory.createImageAsset(id, uri, conf.width, conf.height);
 				asset.initialize(conf.hint);
 				return asset;
