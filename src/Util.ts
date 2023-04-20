@@ -68,6 +68,7 @@ export module Util {
 	 */
 	export function enumToSnakeCase<T extends number, U extends string>(enumDef: { [key: number]: string }, val: T): U {
 		const s = enumDef[val];
+		// 呼び出し元で型が正しいことの保証が必要
 		return (s[0].toLowerCase() + s.slice(1).replace(/[A-Z]/g, (c: string) => "-" + c.toLowerCase())) as U;
 	}
 

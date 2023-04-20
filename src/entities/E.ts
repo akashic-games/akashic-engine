@@ -815,10 +815,10 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_enableTouchPropagation(): void {
-		let p: E = this.parent as E;
+		let p = this.parent;
 		while (p instanceof E && !p._hasTouchableChildren) {
 			p._hasTouchableChildren = true;
-			p = p.parent as E;
+			p = p.parent;
 		}
 	}
 
@@ -826,11 +826,11 @@ export class E extends Object2D implements CommonArea {
 	 * @private
 	 */
 	_disableTouchPropagation(): void {
-		let p: E = this.parent as E;
+		let p = this.parent;
 		while (p instanceof E && p._hasTouchableChildren) {
 			if (this._findTouchableChildren(p)) break;
 			p._hasTouchableChildren = false;
-			p = p.parent as E;
+			p = p.parent;
 		}
 	}
 

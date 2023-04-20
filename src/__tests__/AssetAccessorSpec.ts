@@ -1,6 +1,5 @@
 import type { Asset, GameConfiguration } from "..";
 import { AssetAccessor } from "..";
-import type { ResourceFactory } from "./helpers";
 import { customMatchers, Game } from "./helpers";
 
 expect.extend(customMatchers);
@@ -111,7 +110,7 @@ describe("test AssetAccessor", () => {
 
 	function setupAssetAccessor(assetIds: string[], fail: (arg: any) => void, callback: (accessor: AssetAccessor) => void): void {
 		const game = new Game(gameConfiguration);
-		(game.resourceFactory as ResourceFactory).scriptContents["assets/stage01/map.json"] = sampleJSONFileContent;
+		game.resourceFactory.scriptContents["assets/stage01/map.json"] = sampleJSONFileContent;
 
 		const manager = game._assetManager;
 		const accessor = new AssetAccessor(manager);

@@ -286,9 +286,11 @@ export class DynamicFont extends Font {
 	 * @param code 文字コード
 	 */
 	glyphForCharacter(code: number): Glyph | null {
-		let glyph = this._glyphs[code];
+		let glyph: Glyph = this._glyphs[code];
 
 		if (!(glyph && glyph.isSurfaceValid)) {
+			// g.Glyph にダウンキャストすることによって不整合が発生しうるので修正が必要
+			// TODO: g.Glyph を返す create() メソッドを持つ g.GlyphFactory を定義すべき
 			glyph = this._glyphFactory.create(code) as Glyph;
 
 			if (glyph.surface) {

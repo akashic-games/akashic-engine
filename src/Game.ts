@@ -1,4 +1,4 @@
-import type { AssetConfigurationMap, GameConfiguration } from "@akashic/game-configuration";
+import type { GameConfiguration } from "@akashic/game-configuration";
 import type {
 	Asset,
 	CommonOffset,
@@ -931,12 +931,11 @@ export class Game {
 		this._mainFunc = param.mainFunc;
 		this._mainParameter = undefined;
 		this._configuration = gameConfiguration;
-		this._assetManager = new AssetManager(
-			this,
-			gameConfiguration.assets as AssetConfigurationMap,
-			gameConfiguration.audio,
-			gameConfiguration.moduleMainScripts
-		);
+		// TODO: AssetConfiguration[]のサポートができたらこの例外処理は削除する
+		if (Array.isArray(gameConfiguration.assets)) {
+			throw new Error("Game#constructor: array type of configuration.assets is not yet supported");
+		}
+		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		this._moduleManager = undefined!;
 
 		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null);
