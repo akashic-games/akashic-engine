@@ -7,7 +7,7 @@
     "@akashic/game-configuration": "~1.10.0",
     "@akashic/pdi-types": "~1.7.0",
     "@akashic/playlog": "~3.1.0",
-    "@akashic/trigger": "~1.0.1"
+    "@akashic/trigger": "~2.0.0"
   },
   "devDependencies": {
     "@akashic/eslint-config": "1.1.1",
