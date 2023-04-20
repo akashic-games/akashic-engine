@@ -135,7 +135,7 @@ export class LoadingScene extends Scene {
 			throw ExceptionFactory.createAssertionError(msg);
 		}
 
-		this.game.popScene(true);
+		this.game._popSceneRaw(true);
 		this.game._pushPostTickTask(this._targetScene._fireLoaded, this._targetScene);
 		this._clearTargetScene();
 	}
@@ -145,6 +145,7 @@ export class LoadingScene extends Scene {
 	 */
 	_clearTargetScene(): void {
 		if (!this._targetScene) return;
+		this.onLoad.removeAll({ owner: this, func: this._doReset });
 		this._targetScene._onReady.removeAll({ owner: this });
 		this._targetScene.onAssetLoad.removeAll({ owner: this });
 		this._targetScene = undefined!;
