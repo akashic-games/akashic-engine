@@ -5,13 +5,13 @@
   "main": "index.js",
   "dependencies": {
     "@akashic/game-configuration": "~1.10.0",
-    "@akashic/pdi-types": "~1.7.0",
+    "@akashic/pdi-types": "~1.8.0",
     "@akashic/playlog": "~3.1.0",
-    "@akashic/trigger": "~1.0.1"
+    "@akashic/trigger": "~2.0.0"
   },
   "devDependencies": {
     "@akashic/eslint-config": "1.1.1",
-    "@akashic/pdi-common-impl": "^1.2.0",
+    "@akashic/pdi-common-impl": "file:../pdi-common-impl/akashic-pdi-common-impl-1.3.0.tgz",
     "@types/jest": "^29.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "eslint": "^8.18.0",
