@@ -34,7 +34,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="../classes/Trigger.html" class="tsd-signature-type" data-tsd-kind="Class">Trigger</a></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:92</li></ul></aside>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:94</li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -64,13 +64,13 @@
 <div class="tsd-comment tsd-typography"><p>登録されているハンドラの数。</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:96</li></ul></aside></section></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:98</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="add" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add</span><a href="#add" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="add.add-1">add<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#add.add-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="add.add-1">add<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#add.add-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>このTriggerにハンドラを追加する。</p>
 </div>
@@ -82,12 +82,12 @@
 <div class="tsd-comment tsd-typography"><p>ハンドラの関数</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">any</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">unknown</span></h5>
 <div class="tsd-comment tsd-typography"><p>ハンドラのオーナー。 <code>func</code> を呼び出す時に <code>this</code> として用いられる値</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:102</li></ul></aside></li>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:104</li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="add.add-2">add<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="TriggerAddParameters.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerAddParameters</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#add.add-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>このTriggerにハンドラを追加する。</p>
@@ -101,11 +101,11 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:107</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:109</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="addOnce" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add<wbr/>Once</span><a href="#addOnce" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="addOnce.addOnce-1">add<wbr/>Once<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#addOnce.addOnce-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="addOnce.addOnce-1">add<wbr/>Once<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#addOnce.addOnce-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>このTriggerにハンドラを追加する。
 本メソッドにより追加されたハンドラは実行後に破棄される。</p>
@@ -118,12 +118,12 @@
 <div class="tsd-comment tsd-typography"><p>ハンドラの関数</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">any</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">unknown</span></h5>
 <div class="tsd-comment tsd-typography"><p>ハンドラのオーナー。 <code>func</code> を呼び出す時に <code>this</code> として用いられる値</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:114</li></ul></aside></li>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:116</li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="addOnce.addOnce-2">add<wbr/>Once<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="TriggerAddParameters.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerAddParameters</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#addOnce.addOnce-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>このTriggerにハンドラを追加する。
@@ -138,11 +138,11 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:120</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:122</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="contains" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains</span><a href="#contains" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="contains.contains-1">contains<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#contains.contains-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="contains.contains-1">contains<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#contains.contains-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>指定した条件に一致したハンドラが登録されているかを返す。
 指定されなかった条件は、条件として無視される(登録時の値に関わらず一致するとみなされる)。</p>
@@ -155,12 +155,12 @@
 <div class="tsd-comment tsd-typography"><p>条件として用いるハンドラの関数</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">any</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">unknown</span></h5>
 <div class="tsd-comment tsd-typography"><p>条件として用いるハンドラのオーナー</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:145</li></ul></aside></li>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:147</li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="contains.contains-2">contains<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="TriggerSearchConditions.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerSearchConditions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#contains.contains-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>指定した条件に一致したハンドラが登録されているかを返す。
@@ -175,7 +175,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:152</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:154</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="destroy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>destroy</span><a href="#destroy" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
@@ -185,7 +185,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:182</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:184</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="destroyed" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>destroyed</span><a href="#destroyed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
@@ -195,7 +195,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:186</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:188</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="fire" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>fire</span><a href="#fire" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
@@ -219,7 +219,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:137</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:139</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="handle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>handle</span><a href="#handle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
@@ -240,11 +240,11 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> name: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:125</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:127</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="remove.remove-1">remove<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="remove.remove-1">remove<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><a href="../types/HandlerFunction.html" class="tsd-signature-type" data-tsd-kind="Type alias">HandlerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, owner<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>関数が <code>func</code> であり、かつオーナーが <code>owner</code> であるハンドラを削除する。
 同じ組み合わせで複数登録されている場合、一つだけ削除する。</p>
@@ -257,12 +257,12 @@
 <div class="tsd-comment tsd-typography"><p>削除条件として用いるハンドラの関数</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">any</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> owner: <span class="tsd-signature-type">unknown</span></h5>
 <div class="tsd-comment tsd-typography"><p>削除条件として用いるハンドラのオーナー。省略した場合、 <code>undefined</code></p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:160</li></ul></aside></li>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:162</li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="remove.remove-2">remove<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="TriggerRemoveConditions.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerRemoveConditions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#remove.remove-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>指定した条件に完全一致するハンドラを削除する。
@@ -277,7 +277,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:167</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:169</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a id="removeAll" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>All</span><a href="#removeAll" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
@@ -298,7 +298,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:178</li></ul></aside></li></ul></section></section></div>
+<li>Defined in node_modules/@akashic/trigger/lib/TriggerLike.d.ts:180</li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
