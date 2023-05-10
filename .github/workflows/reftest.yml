@@ -28,7 +28,7 @@ jobs:
         id: akashic_engine
         run: |
           npm ci
-          echo "::set-output name=pack_name::$(npm pack)"
+          echo "pack_name=$(npm pack)" >> $GITHUB_OUTPUT
       - name: Run engine-files reftest
         working-directory: engine-files
         run: |
