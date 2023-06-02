@@ -5,8 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "@akashic/game-configuration": "~1.10.0",
-    "@akashic/pdi-types": "~1.8.0",
-    "@akashic/playlog": "~3.1.0",
+    "@akashic/pdi-types": "file:../pdi-types/akashic-pdi-types-1.8.0.tgz",
+    "@akashic/playlog": "file:../playlog/akashic-playlog-3.1.0.tgz",
     "@akashic/trigger": "~2.0.0"
   },
   "devDependencies": {
