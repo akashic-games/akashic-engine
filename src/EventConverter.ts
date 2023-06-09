@@ -217,7 +217,7 @@ export class EventConverter {
 					pointDown.point.x, //      4: X座標
 					pointDown.point.y, //      5: Y座標
 					targetId, //               6?: エンティティID
-					pointDown.button ?? 0, //  7?: ボタンの種類
+					pointDown.button, //       7?: ボタンの種類
 					!!pointDown.local //       8?: ローカルイベントかどうか
 				];
 			case "point-move":
@@ -236,8 +236,8 @@ export class EventConverter {
 					pointMove.prevDelta.x, //  8: 直前のポイントムーブイベントからのX座標の差
 					pointMove.prevDelta.y, //  9: 直前のポイントムーブイベントからのY座標の差
 					targetId, //               10?: エンティティID
-					pointMove.button ?? 0, //  11?: ボタンの種類
-					!!pointMove.local //       12?: 直前のポイントムーブイベントからのY座標の差
+					pointMove.button, //       11?: ボタンの種類
+					!!pointMove.local //       12?: ローカルイベントかどうか
 				];
 			case "point-up":
 				const pointUp = e as PointUpEvent;
@@ -255,8 +255,8 @@ export class EventConverter {
 					pointUp.prevDelta.x, //  8: 直前のポイントムーブイベントからのX座標の差
 					pointUp.prevDelta.y, //  9: 直前のポイントムーブイベントからのY座標の差
 					targetId, //             10?: エンティティID
-					pointUp.button ?? 0, //  11?: ボタンの種類
-					!!pointUp.local //       12?: 直前のポイントムーブイベントからのY座標の差
+					pointUp.button, //       11?: ボタンの種類
+					!!pointUp.local //       12?: ローカルイベントかどうか
 				];
 			case "message":
 				const message = e as MessageEvent;

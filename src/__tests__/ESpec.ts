@@ -452,7 +452,8 @@ describe("test E", () => {
 			const event = runtime.game._pointEventResolver.pointDown({
 				type: PlatformPointType.Down,
 				identifier: 1,
-				offset: { x: 0, y: 0 }
+				offset: { x: 0, y: 0 },
+				button: 0
 			});
 			expectToBeDefined(event);
 			runtime.game.tick(true, 0, [event]);
