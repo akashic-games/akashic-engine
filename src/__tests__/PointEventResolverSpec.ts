@@ -1,4 +1,4 @@
-import { PlatformPointType } from "@akashic/pdi-types";
+import { PlatformButtonType, PlatformPointType } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { FilledRect } from "../entities/FilledRect";
 import { EventPriority } from "../EventPriority";
@@ -49,7 +49,7 @@ describe("PointEventResolver", () => {
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 10, y: 20 },
-			button: 0
+			button: PlatformButtonType.Primary
 		});
 		expectToBeDefined(e);
 		expect(e.length).toBe(8);
@@ -67,7 +67,7 @@ describe("PointEventResolver", () => {
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 110, y: 110 },
-			button: 0
+			button: PlatformButtonType.Primary
 		});
 		expectToBeDefined(e);
 		expect(e.length).toBe(8);
@@ -85,7 +85,7 @@ describe("PointEventResolver", () => {
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 110, y: 110 },
-			button: 2
+			button: PlatformButtonType.Secondary
 		});
 		expectToBeDefined(e);
 		expect(e.length).toBe(8);
@@ -103,7 +103,7 @@ describe("PointEventResolver", () => {
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 150, y: 150 },
-			button: 0
+			button: PlatformButtonType.Primary
 		});
 		expectToBeDefined(e);
 		expect(e.length).toBe(9);
@@ -149,8 +149,13 @@ describe("PointEventResolver", () => {
 
 		let e: pl.PointDownEvent | pl.PointMoveEvent | pl.PointUpEvent;
 		// (10, 20) の位置 (何もない)
-		resolver.pointDown({ type: PlatformPointType.Down, identifier: 0, offset: { x: 10, y: 20 }, button: 0 });
-		e = resolver.pointMove({ type: PlatformPointType.Move, identifier: 0, offset: { x: 20, y: 25 }, button: 0 })!;
+		resolver.pointDown({ type: PlatformPointType.Down, identifier: 0, offset: { x: 10, y: 20 }, button: PlatformButtonType.Primary });
+		e = resolver.pointMove({
+			type: PlatformPointType.Move,
+			identifier: 0,
+			offset: { x: 20, y: 25 },
+			button: PlatformButtonType.Primary
+		})!;
 		expect(e.length).toBe(12);
 		expect(e[0]).toBe(pl.EventCode.PointMove); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
@@ -164,7 +169,7 @@ describe("PointEventResolver", () => {
 		expect(e[9]).toBe(5); //                      9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeUndefined(); //             10?: エンティティID
 		expect(e[11]).toBe(0); //                     11?: ボタンの種類
-		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 22, y: 23 }, button: 0 })!;
+		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 22, y: 23 }, button: PlatformButtonType.Primary })!;
 		expect(e.length).toBe(12);
 		expect(e[0]).toBe(pl.EventCode.PointUp); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
@@ -180,8 +185,18 @@ describe("PointEventResolver", () => {
 		expect(e[11]).toBe(0); //                   11?: ボタンの種類
 
 		// (110, 110) の位置 (50x50の赤いFilledRectが(100, 100)にある)
-		resolver.pointDown({ type: PlatformPointType.Down, identifier: 0, offset: { x: 110, y: 110 }, button: 2 });
-		e = resolver.pointMove({ type: PlatformPointType.Move, identifier: 0, offset: { x: 130, y: 115 }, button: 2 })!;
+		resolver.pointDown({
+			type: PlatformPointType.Down,
+			identifier: 0,
+			offset: { x: 110, y: 110 },
+			button: PlatformButtonType.Secondary
+		});
+		e = resolver.pointMove({
+			type: PlatformPointType.Move,
+			identifier: 0,
+			offset: { x: 130, y: 115 },
+			button: PlatformButtonType.Secondary
+		})!;
 		expect(e.length).toBe(12);
 		expect(e[0]).toBe(pl.EventCode.PointMove); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
@@ -195,7 +210,12 @@ describe("PointEventResolver", () => {
 		expect(e[9]).toBe(5); //                      9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeGreaterThan(0); //          10?: エンティティID
 		expect(e[11]).toBe(2); //                     11?: ボタンの種類
-		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 127, y: 100 }, button: 2 })!;
+		e = resolver.pointUp({
+			type: PlatformPointType.Up,
+			identifier: 0,
+			offset: { x: 127, y: 100 },
+			button: PlatformButtonType.Secondary
+		})!;
 		expect(e.length).toBe(12);
 		expect(e[0]).toBe(pl.EventCode.PointUp); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
@@ -221,7 +241,7 @@ describe("PointEventResolver", () => {
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 10, y: 20 },
-			button: 0
+			button: PlatformButtonType.Primary
 		});
 
 		expect(
@@ -229,7 +249,7 @@ describe("PointEventResolver", () => {
 				type: PlatformPointType.Move,
 				identifier: 1, // pointDown() の identifier と異なる値
 				offset: { x: 0, y: 0 },
-				button: 0
+				button: PlatformButtonType.Primary
 			})
 		).toBeNull();
 
@@ -238,7 +258,7 @@ describe("PointEventResolver", () => {
 				type: PlatformPointType.Up,
 				identifier: 1, // pointDown() の identifier と異なる値
 				offset: { x: 0, y: 0 },
-				button: 0
+				button: PlatformButtonType.Primary
 			})
 		).toBeNull();
 	});
@@ -253,13 +273,13 @@ describe("PointEventResolver", () => {
 			type: PlatformPointType.Down,
 			identifier: 0,
 			offset: { x: 10, y: 20 },
-			button: 0
+			button: PlatformButtonType.Primary
 		};
 		const anotherPointDownEvent = {
 			type: PlatformPointType.Down,
 			identifier: 1,
 			offset: { x: 20, y: 10 },
-			button: 0
+			button: PlatformButtonType.Primary
 		};
 
 		expect(resolver.pointDown(pointDownEvent)).not.toBeNull();
@@ -270,7 +290,7 @@ describe("PointEventResolver", () => {
 				type: PlatformPointType.Up,
 				identifier: 0, // pointDownEventと同じidentifier
 				offset: { x: 0, y: 0 },
-				button: 0
+				button: PlatformButtonType.Primary
 			})
 		).not.toBeNull();
 		// pointDownEvent解放後はanotherPointDownEventのタップが有効となる
