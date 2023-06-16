@@ -115,7 +115,7 @@ describe("PointEventResolver", () => {
 		expect(e[5]).toBe(20); //                     5: Y座標
 		expect(e[6]! < 0).toBe(true); //              6?: エンティティID
 		expect(e[7]).toBe(0); //                      7?: ボタンの種類
-		expect(e[8]).toBe(true); //                   7?: ローカル
+		expect(e[8]).toBe(true); //                   8?: ローカル
 	});
 
 	it("makes Point(Move|Up)Event for pointDown()/pointUp()", () => {
@@ -156,7 +156,7 @@ describe("PointEventResolver", () => {
 			offset: { x: 20, y: 25 },
 			button: PlatformButtonType.Primary
 		})!;
-		expect(e.length).toBe(12);
+		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointMove); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
 		expect(e[2]).toBe("dummyPlayerId"); //        2: プレイヤーID
@@ -168,9 +168,8 @@ describe("PointEventResolver", () => {
 		expect(e[8]).toBe(10); //                     8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(5); //                      9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeUndefined(); //             10?: エンティティID
-		expect(e[11]).toBe(0); //                     11?: ボタンの種類
 		e = resolver.pointUp({ type: PlatformPointType.Up, identifier: 0, offset: { x: 22, y: 23 }, button: PlatformButtonType.Primary })!;
-		expect(e.length).toBe(12);
+		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointUp); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
 		expect(e[2]).toBe("dummyPlayerId"); //      2: プレイヤーID
@@ -182,7 +181,6 @@ describe("PointEventResolver", () => {
 		expect(e[8]).toBe(2); //                    8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(-2); //                   9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeUndefined(); //           10?: エンティティID
-		expect(e[11]).toBe(0); //                   11?: ボタンの種類
 
 		// (110, 110) の位置 (50x50の赤いFilledRectが(100, 100)にある)
 		resolver.pointDown({
@@ -197,7 +195,7 @@ describe("PointEventResolver", () => {
 			offset: { x: 130, y: 115 },
 			button: PlatformButtonType.Secondary
 		})!;
-		expect(e.length).toBe(12);
+		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointMove); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); //   1: 優先度
 		expect(e[2]).toBe("dummyPlayerId"); //        2: プレイヤーID
@@ -209,14 +207,13 @@ describe("PointEventResolver", () => {
 		expect(e[8]).toBe(20); //                     8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(5); //                      9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeGreaterThan(0); //          10?: エンティティID
-		expect(e[11]).toBe(2); //                     11?: ボタンの種類
 		e = resolver.pointUp({
 			type: PlatformPointType.Up,
 			identifier: 0,
 			offset: { x: 127, y: 100 },
 			button: PlatformButtonType.Secondary
 		})!;
-		expect(e.length).toBe(12);
+		expect(e.length).toBe(11);
 		expect(e[0]).toBe(pl.EventCode.PointUp); // 0: イベントコード
 		expect(e[1]).toBe(EventPriority.Joined); // 1: 優先度
 		expect(e[2]).toBe("dummyPlayerId"); //      2: プレイヤーID
@@ -228,7 +225,6 @@ describe("PointEventResolver", () => {
 		expect(e[8]).toBe(-3); //                   8: 直前のポイントムーブイベントからのX座標の差
 		expect(e[9]).toBe(-15); //                  9: 直前のポイントムーブイベントからのY座標の差
 		expect(e[10]).toBeGreaterThan(0); //        10?: エンティティID
-		expect(e[11]).toBe(2); //                   11?: ボタンの種類
 	});
 
 	it("ignores 'move'/'up' not following to 'down'", () => {

@@ -93,8 +93,7 @@ export module EventIndex {
 		PrevDeltaX = 8,
 		PrevDeltaY = 9,
 		EntityId = 10,
-		Button = 11,
-		Local = 12
+		Local = 11
 	}
 
 	export const enum PointUp {
@@ -109,8 +108,7 @@ export module EventIndex {
 		PrevDeltaX = 8,
 		PrevDeltaY = 9,
 		EntityId = 10,
-		Button = 11,
-		Local = 12
+		Local = 11
 	}
 
 	export const enum Operation {
