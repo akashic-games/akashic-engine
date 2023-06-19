@@ -121,7 +121,7 @@ export class PointEventResolver {
 			start.y, //                7: ポイントダウンイベントからのY座標の差
 			prev.x, //                 8: 直前のポイントムーブイベントからのX座標の差
 			prev.y, //                 9: 直前のポイントムーブイベントからのY座標の差
-			holder.targetId //        10?: エンティティID
+			holder.targetId //         10?: エンティティID
 		];
 		if (holder.local) ret.push(holder.local); // 11?: ローカル
 		return ret;
@@ -146,7 +146,7 @@ export class PointEventResolver {
 			start.y, //              7: ポイントダウンイベントからのY座標の差
 			prev.x, //               8: 直前のポイントムーブイベントからのX座標の差
 			prev.y, //               9: 直前のポイントムーブイベントからのY座標の差
-			holder.targetId //      10?: エンティティID
+			holder.targetId //       10?: エンティティID
 		];
 		if (holder.local) ret.push(holder.local); // 11?: ローカル
 		return ret;
