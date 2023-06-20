@@ -80,7 +80,7 @@ describe("PointEventResolver", () => {
 		expect(e[6]).toBeGreaterThan(0); //           6?: エンティティID
 		expect(e[7]).toBe(0); //                      7?: ボタンの種類
 
-		// 上記と同じ位置を右クリック
+		// (110, 110) を PlatformButtonType.Secondary でタッチ
 		e = resolver.pointDown({
 			type: PlatformPointType.Down,
 			identifier: 0,

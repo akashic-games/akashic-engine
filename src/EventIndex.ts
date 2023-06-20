@@ -6,7 +6,7 @@
  * インデックスのハードコーディングを避けるため、ここで const enum で名前を与えることにする。
  *
  * 本当はこのファイルの内容は playlog に移管すべきだが、
- * playlog に存在しない `Local` や `Button` のフィールドを使うため akashic-engine 側で扱う。
+ * playlog に存在しない `Local` や一部の `Button` のフィールドを使うため akashic-engine 側で扱う。
  *
  */
 export module EventIndex {
