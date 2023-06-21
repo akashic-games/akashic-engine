@@ -1,7 +1,8 @@
 # ChangeLog
 
-## Unreleased changes
+## 3.13.0
 * どのボタンでマウスクリックが行われたか認識できるように
+* 内部モジュールの更新
 
 ## 3.12.0
 * @akashic/trigger@2.0.0 に更新
