@@ -88,8 +88,17 @@ export class PointEventBase<T extends PointTarget> implements Event {
 	pointerId: number;
 	point: CommonOffset;
 	target: T | undefined;
+	button: number;
 
-	constructor(pointerId: number, target: T | undefined, point: CommonOffset, player?: Player, local?: boolean, eventFlags?: number) {
+	constructor(
+		pointerId: number,
+		target: T | undefined,
+		point: CommonOffset,
+		player?: Player,
+		local?: boolean,
+		eventFlags?: number,
+		button?: number
+	) {
 		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
 		this.eventFlags = eventFlags;
 		this.local = !!local;
@@ -97,6 +106,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
 		this.pointerId = pointerId;
 		this.target = target;
 		this.point = point;
+		this.button = button ?? 0;
 	}
 }
 
@@ -128,9 +138,10 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
 		startDelta: CommonOffset,
 		player?: Player,
 		local?: boolean,
-		eventFlags?: number
+		eventFlags?: number,
+		button?: number
 	) {
-		super(pointerId, target, point, player, local, eventFlags);
+		super(pointerId, target, point, player, local, eventFlags, button);
 		this.prevDelta = prevDelta;
 		this.startDelta = startDelta;
 	}
@@ -160,9 +171,10 @@ export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T>
 		startDelta: CommonOffset,
 		player?: Player,
 		local?: boolean,
-		eventFlags?: number
+		eventFlags?: number,
+		button?: number
 	) {
-		super(pointerId, target, point, player, local, eventFlags);
+		super(pointerId, target, point, player, local, eventFlags, button);
 		this.prevDelta = prevDelta;
 		this.startDelta = startDelta;
 	}

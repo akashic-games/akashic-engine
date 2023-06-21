@@ -1,6 +1,6 @@
 import type * as pl from "@akashic/playlog";
 import type { Asset, AssetConfiguration, GameConfiguration, LoadingSceneParameterObject, LocalTickModeString } from "..";
-import { Camera2D, E, LoadingScene, MessageEvent, PlatformPointType, Scene, XorshiftRandomGenerator } from "..";
+import { Camera2D, E, LoadingScene, MessageEvent, PlatformPointType, Scene, XorshiftRandomGenerator, PlatformButtonType } from "..";
 import { customMatchers, EntityStateFlags, Game, Renderer, ImageAsset, ScriptAsset, FilledRect } from "./helpers";
 
 expect.extend(customMatchers);
@@ -1110,7 +1110,8 @@ describe("test Game", () => {
 			game._pointEventResolver.pointDown({
 				type: PlatformPointType.Down,
 				identifier: 0,
-				offset: { x: 0, y: 0 }
+				offset: { x: 0, y: 0 },
+				button: PlatformButtonType.Primary
 			});
 			const moduleManager = game._moduleManager;
 			game._reset({
@@ -1129,7 +1130,8 @@ describe("test Game", () => {
 				game._pointEventResolver.pointUp({
 					type: PlatformPointType.Up,
 					identifier: 0,
-					offset: { x: 0, y: 0 }
+					offset: { x: 0, y: 0 },
+					button: PlatformButtonType.Primary
 				})
 			).toBeNull();
 			// reset で Game#onSceneChange は removeAll() されるが、Game#_onSceneChange は removeAll() されないことを確認

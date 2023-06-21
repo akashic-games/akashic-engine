@@ -34,11 +34,13 @@ export class EventConverter {
 	_game: EventConverterParameterObjectGameLike;
 	_playerId: string | null;
 	_playerTable: { [key: string]: Player };
+	_pointDownButtonTable: { [key: number]: number };
 
 	constructor(param: EventConverterParameterObject) {
 		this._game = param.game;
 		this._playerId = param.playerId ?? null;
 		this._playerTable = {};
+		this._pointDownButtonTable = {};
 	}
 
 	/**
@@ -53,6 +55,7 @@ export class EventConverter {
 		let prevDelta: CommonOffset;
 		let local: boolean;
 		let timestamp: number;
+		let button: number;
 
 		const eventCode = pev[EventIndex.General.Code];
 		const prio = pev[EventIndex.General.EventFlags];
@@ -118,7 +121,9 @@ export class EventConverter {
 					x: pev[EventIndex.PointDown.X],
 					y: pev[EventIndex.PointDown.Y]
 				};
-				return new PointDownEvent(pointerId, target, point, player, local, prio);
+				button = pev[EventIndex.PointDown.Button];
+				this._pointDownButtonTable[pointerId] = button;
+				return new PointDownEvent(pointerId, target, point, player, local, prio, button);
 
 			case pl.EventCode.PointMove:
 				local = pev[EventIndex.PointMove.Local];
@@ -137,7 +142,8 @@ export class EventConverter {
 					x: pev[EventIndex.PointMove.PrevDeltaX],
 					y: pev[EventIndex.PointMove.PrevDeltaY]
 				};
-				return new PointMoveEvent(pointerId, target, point, prevDelta, startDelta, player, local, prio);
+				button = this._pointDownButtonTable[pointerId];
+				return new PointMoveEvent(pointerId, target, point, prevDelta, startDelta, player, local, prio, button);
 
 			case pl.EventCode.PointUp:
 				local = pev[EventIndex.PointUp.Local];
@@ -156,7 +162,9 @@ export class EventConverter {
 					x: pev[EventIndex.PointUp.PrevDeltaX],
 					y: pev[EventIndex.PointUp.PrevDeltaY]
 				};
-				return new PointUpEvent(pointerId, target, point, prevDelta, startDelta, player, local, prio);
+				button = this._pointDownButtonTable[pointerId];
+				delete this._pointDownButtonTable[pointerId];
+				return new PointUpEvent(pointerId, target, point, prevDelta, startDelta, player, local, prio, button);
 
 			case pl.EventCode.Operation:
 				local = pev[EventIndex.Operation.Local];
@@ -213,7 +221,8 @@ export class EventConverter {
 					pointDown.point.x, //      4: X座標
 					pointDown.point.y, //      5: Y座標
 					targetId, //               6?: エンティティID
-					!!pointDown.local //       7?: 直前のポイントムーブイベントからのY座標の差
+					pointDown.button, //       7?: ボタンの種類
+					!!pointDown.local //       8?: ローカルイベントかどうか
 				];
 			case "point-move":
 				const pointMove = e as PointMoveEvent;
@@ -231,7 +240,7 @@ export class EventConverter {
 					pointMove.prevDelta.x, //  8: 直前のポイントムーブイベントからのX座標の差
 					pointMove.prevDelta.y, //  9: 直前のポイントムーブイベントからのY座標の差
 					targetId, //               10?: エンティティID
-					!!pointMove.local //       11?: 直前のポイントムーブイベントからのY座標の差
+					!!pointMove.local //       11?: ローカルイベントかどうか
 				];
 			case "point-up":
 				const pointUp = e as PointUpEvent;
@@ -249,7 +258,7 @@ export class EventConverter {
 					pointUp.prevDelta.x, //  8: 直前のポイントムーブイベントからのX座標の差
 					pointUp.prevDelta.y, //  9: 直前のポイントムーブイベントからのY座標の差
 					targetId, //             10?: エンティティID
-					!!pointUp.local //       11?: 直前のポイントムーブイベントからのY座標の差
+					!!pointUp.local //       11?: ローカルイベントかどうか
 				];
 			case "message":
 				const message = e as MessageEvent;

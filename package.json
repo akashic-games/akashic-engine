@@ -1,12 +1,12 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.12.0",
+  "version": "3.13.0",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
     "@akashic/game-configuration": "~1.10.0",
-    "@akashic/pdi-types": "~1.8.0",
-    "@akashic/playlog": "~3.1.0",
+    "@akashic/pdi-types": "~1.11.1",
+    "@akashic/playlog": "~3.2.0",
     "@akashic/trigger": "~2.0.0"
   },
   "devDependencies": {
