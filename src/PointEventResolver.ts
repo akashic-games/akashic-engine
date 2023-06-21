@@ -85,7 +85,7 @@ export class PointEventResolver {
 			point,
 			start: { x: e.offset.x, y: e.offset.y },
 			prev: { x: e.offset.x, y: e.offset.y },
-			button: e.button
+			button: e.button ?? 0
 		};
 		this._currentPoints++;
 
