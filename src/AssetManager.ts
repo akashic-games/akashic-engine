@@ -10,7 +10,8 @@ import type {
 	TextAssetConfigurationBase,
 	AudioAssetConfigurationBase,
 	VideoAssetConfigurationBase,
-	VectorImageAssetConfigurationBase
+	VectorImageAssetConfigurationBase,
+	BinaryAssetConfigurationBase
 } from "@akashic/game-configuration";
 import type {
 	Asset,
@@ -23,12 +24,14 @@ import type {
 	ScriptAsset,
 	TextAsset,
 	VideoAsset,
-	VectorImageAsset
+	VectorImageAsset,
+	BinaryAsset
 } from "@akashic/pdi-types";
 import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
+import { EmptyBinaryAsset } from "./auxiliary/EmptyBinaryAsset";
 import { EmptyGeneratedVectorImageAsset } from "./auxiliary/EmptyGeneratedVectorImageAsset";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
 import { PartialImageAsset } from "./auxiliary/PartialImageAsset";
@@ -36,7 +39,7 @@ import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { VideoSystem } from "./VideoSystem";
 
-export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset | VectorImageAsset;
+export type OneOfAsset = AudioAsset | ImageAsset | ScriptAsset | TextAsset | VideoAsset | VectorImageAsset | BinaryAsset;
 
 // TODO: 以下の internal types を game-configuration に切り出す
 type AssetConfigurationCore =
@@ -45,7 +48,8 @@ type AssetConfigurationCore =
 	| VideoAssetConfiguration
 	| AudioAssetConfiguration
 	| TextAssetConfiguration
-	| ScriptAssetConfiguration;
+	| ScriptAssetConfiguration
+	| BinaryAssetConfiguration;
 
 type UnneededKeysForAsset = "path" | "virtualPath" | "global";
 
@@ -67,6 +71,9 @@ interface TextAssetConfiguration
 interface ScriptAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
 		Omit<ScriptAssetConfigurationBase, UnneededKeysForAsset> {}
+interface BinaryAssetConfiguration
+	extends Omit<BinaryAssetConfigurationBase, "type">,
+		Omit<BinaryAssetConfigurationBase, UnneededKeysForAsset> {}
 
 type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGenerationConfiguration;
 
@@ -649,7 +656,7 @@ export class AssetManager implements AssetLoadHandler {
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":
-				return resourceFactory.createScriptAsset(id, uri);
+				return resourceFactory.createScriptAsset(id, uri, conf.exports);
 			case "video":
 				// VideoSystemはまだ中身が定義されていなが、将来のためにVideoAssetにVideoSystemを渡すという体裁だけが整えられている。
 				// 以上を踏まえ、ここでは簡単のために都度新たなVideoSystemインスタンスを生成している。
@@ -660,6 +667,11 @@ export class AssetManager implements AssetLoadHandler {
 					return new EmptyVectorImageAsset(id, uri, conf.width, conf.height, conf.hint);
 				}
 				return resourceFactory.createVectorImageAsset(id, uri, conf.width, conf.height, conf.hint);
+			case "binary":
+				if (!resourceFactory.createBinaryAsset) {
+					return new EmptyBinaryAsset(id, uri);
+				}
+				return resourceFactory.createBinaryAsset(id, uri);
 			default:
 				throw ExceptionFactory.createAssertionError(
 					"AssertionError#_createAssetFor: unknown asset type " + type + " for asset ID: " + id

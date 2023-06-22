@@ -461,6 +461,26 @@ export class GeneratedVectorImageAsset extends pci.VectorImageAsset {
 	}
 }
 
+export class BinaryAsset extends pci.BinaryAsset {
+	game: g.Game;
+
+	constructor(game: g.Game, id: string, assetPath: string) {
+		super(id, assetPath);
+		this.game = game;
+	}
+
+	_load(loader: AssetLoadHandler): void {
+		setTimeout(() => {
+			if ((this.game.resourceFactory as ResourceFactory).binaryContents.hasOwnProperty(this.path)) {
+				this.data = (this.game.resourceFactory as ResourceFactory).binaryContents[this.path];
+			} else {
+				this.data = new ArrayBuffer(0);
+			}
+			if (!this.destroyed()) loader._onAssetLoad(this);
+		}, 0);
+	}
+}
+
 export class AudioPlayer extends pci.AudioPlayer {
 	canHandleStoppedValue: boolean;
 
@@ -495,6 +515,7 @@ export class GlyphFactory extends pci.GlyphFactory {
 export class ResourceFactory extends pci.ResourceFactory {
 	_game: g.Game;
 	scriptContents: { [path: string]: string };
+	binaryContents: { [path: string]: ArrayBuffer };
 
 	// 真である限り createXXAsset() が DelayedAsset を生成する(現在は createImageAsset() のみ)。
 	// DelayedAsset は、flushDelayedAssets() 呼び出しまで読み込み完了(またはエラー)通知を遅延するアセットである。
@@ -507,6 +528,7 @@ export class ResourceFactory extends pci.ResourceFactory {
 	constructor() {
 		super();
 		this.scriptContents = {};
+		this.binaryContents = {};
 		this._game = undefined!;
 		this.createsDelayedAsset = false;
 		this._necessaryRetryCount = 0;
@@ -571,6 +593,10 @@ export class ResourceFactory extends pci.ResourceFactory {
 
 	createScriptAsset(id: string, assetPath: string): ScriptAsset {
 		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
+	}
+
+	createBinaryAsset(id: string, assetPath: string): BinaryAsset {
+		return new BinaryAsset(this._game, id, assetPath);
 	}
 
 	createSurface(width: number, height: number): pci.Surface {

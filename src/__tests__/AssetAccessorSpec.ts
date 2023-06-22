@@ -57,6 +57,11 @@ describe("test AssetAccessor", () => {
 				width: 64,
 				height: 64
 			},
+			"id-assets/bin/lib01.wasm": {
+				type: "binary",
+				path: "assets/bin/lib01.wasm",
+				virtualPath: "assets/bin/lib01.wasm"
+			},
 			"node_modules/@akashic-extension/some-library/lib/index.js": {
 				type: "script",
 				path: "node_modules/@akashic-extension/some-library/lib/index.js",
@@ -94,6 +99,8 @@ describe("test AssetAccessor", () => {
 		testValue: true
 	});
 
+	const sampleArrayBufferContent = new ArrayBuffer(8);
+
 	const assetIds = [
 		"id-script/main.js",
 		"id-assets/stage01/bgm01",
@@ -102,6 +109,7 @@ describe("test AssetAccessor", () => {
 		"id-assets/stage01/map.json",
 		"id-assets/chara01/image.png",
 		"id-assets/icon/icon01.svg",
+		"id-assets/bin/lib01.wasm",
 		"node_modules/@akashic-extension/some-library/lib/index.js",
 		"node_modules/@akashic-extension/some-library/assets/image.png",
 		"node_modules/@akashic-extension/some-library/assets/boss.png",
@@ -111,6 +119,7 @@ describe("test AssetAccessor", () => {
 	function setupAssetAccessor(assetIds: string[], fail: (arg: any) => void, callback: (accessor: AssetAccessor) => void): void {
 		const game = new Game(gameConfiguration);
 		game.resourceFactory.scriptContents["assets/stage01/map.json"] = sampleJSONFileContent;
+		game.resourceFactory.binaryContents["assets/bin/lib01.wasm"] = sampleArrayBufferContent;
 
 		const manager = game._assetManager;
 		const accessor = new AssetAccessor(manager);
@@ -165,8 +174,16 @@ describe("test AssetAccessor", () => {
 					path: "assets/icon/icon01.svg"
 				});
 
+				expect(extractAssetProps(accessor.getBinary("/assets/bin/lib01.wasm"))).toEqual({
+					id: "id-assets/bin/lib01.wasm",
+					type: "binary",
+					path: "assets/bin/lib01.wasm"
+				});
+
 				expect(accessor.getTextContent("/assets/stage01/map.json")).toBe(sampleJSONFileContent);
 				expect(accessor.getJSONContent("/assets/stage01/map.json")).toEqual(JSON.parse(sampleJSONFileContent));
+				expect(accessor.getBinaryData("/assets/bin/lib01.wasm")).toBe(sampleArrayBufferContent);
+
 				done();
 			}
 		);
@@ -268,6 +285,14 @@ describe("test AssetAccessor", () => {
 					}
 				]);
 
+				expect(accessor.getAllBinaries().map(extractAssetProps)).toEqual([
+					{
+						id: "id-assets/bin/lib01.wasm",
+						type: "binary",
+						path: "assets/bin/lib01.wasm"
+					}
+				]);
+
 				done();
 			}
 		);
@@ -308,8 +333,15 @@ describe("test AssetAccessor", () => {
 					path: "assets/icon/icon01.svg"
 				});
 
+				expect(extractAssetProps(accessor.getBinaryById("id-assets/bin/lib01.wasm"))).toEqual({
+					id: "id-assets/bin/lib01.wasm",
+					type: "binary",
+					path: "assets/bin/lib01.wasm"
+				});
+
 				expect(accessor.getTextContentById("id-assets/stage01/map.json")).toBe(sampleJSONFileContent);
 				expect(accessor.getJSONContentById("id-assets/stage01/map.json")).toEqual(JSON.parse(sampleJSONFileContent));
+				expect(accessor.getBinaryDataById("id-assets/bin/lib01.wasm")).toEqual(sampleArrayBufferContent);
 				done();
 			}
 		);
