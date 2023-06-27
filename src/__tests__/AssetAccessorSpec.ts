@@ -341,7 +341,7 @@ describe("test AssetAccessor", () => {
 
 				expect(accessor.getTextContentById("id-assets/stage01/map.json")).toBe(sampleJSONFileContent);
 				expect(accessor.getJSONContentById("id-assets/stage01/map.json")).toEqual(JSON.parse(sampleJSONFileContent));
-				expect(accessor.getBinaryDataById("id-assets/bin/lib01.wasm")).toEqual(sampleArrayBufferContent);
+				expect(accessor.getBinaryDataById("id-assets/bin/lib01.wasm")).toBe(sampleArrayBufferContent);
 				done();
 			}
 		);
