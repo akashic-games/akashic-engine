@@ -383,8 +383,8 @@ export class ScriptAsset extends pci.ScriptAsset {
 	game: g.Game;
 	_failureController: LoadFailureController;
 
-	constructor(game: g.Game, necessaryRetryCount: number, id: string, assetPath: string) {
-		super(id, assetPath);
+	constructor(game: g.Game, necessaryRetryCount: number, id: string, assetPath: string, exports?: string[]) {
+		super(id, assetPath, exports);
 		this.game = game;
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
@@ -591,8 +591,8 @@ export class ResourceFactory extends pci.ResourceFactory {
 		return new TextAsset(this._game, this._necessaryRetryCount, id, assetPath);
 	}
 
-	createScriptAsset(id: string, assetPath: string): ScriptAsset {
-		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath);
+	createScriptAsset(id: string, assetPath: string, exports?: string[]): ScriptAsset {
+		return new ScriptAsset(this._game, this._necessaryRetryCount, id, assetPath, exports);
 	}
 
 	createBinaryAsset(id: string, assetPath: string): BinaryAsset {
