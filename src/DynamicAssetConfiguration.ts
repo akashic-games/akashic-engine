@@ -1,6 +1,7 @@
 import type {
 	AssetConfigurationCommonBase,
 	AudioAssetConfigurationBase,
+	BinaryAssetConfigurationBase,
 	ImageAssetConfigurationBase,
 	ScriptAssetConfigurationBase,
 	TextAssetConfigurationBase,
@@ -14,7 +15,8 @@ export type DynamicAssetConfiguration =
 	| DynamicVectorImageAssetConfigurationBase
 	| DynamicTextAssetConfigurationBase
 	| DynamicScriptAssetConfigurationBase
-	| DynamicVideoAssetConfigurationBase;
+	| DynamicVideoAssetConfigurationBase
+	| DynamicBinaryAssetConfigurationBase;
 
 /**
  * (実行時に定義される)Assetの設定を表すインターフェース。
@@ -74,6 +76,13 @@ export interface DynamicTextAssetConfigurationBase
 export interface DynamicScriptAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
 		Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+
+/**
+ * BinaryAssetの設定。
+ */
+export interface DynamicBinaryAssetConfigurationBase
+	extends Omit<DynamicAssetConfigurationBase, "type">,
+		Omit<BinaryAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 // interface メンバは多重継承できないため、 DynamicAssetConfigurationBase の type メンバ を Omit する
 type UnneededKeysForDynamicAsset = "path" | "virtualPath" | "global";
