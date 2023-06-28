@@ -1,4 +1,4 @@
-import type { AudioAsset, ImageAsset, ScriptAsset, TextAsset, VectorImageAsset } from "@akashic/pdi-types";
+import type { AudioAsset, BinaryAsset, ImageAsset, ScriptAsset, TextAsset, VectorImageAsset } from "@akashic/pdi-types";
 import type { AssetManager } from "./AssetManager";
 
 /**
@@ -109,6 +109,30 @@ export class AssetAccessor {
 	}
 
 	/**
+	 * パスから読み込み済みのバイナリアセット（現在のシーンで読み込んだ、またはグローバルなアセット）を取得する。
+	 *
+	 * パスはgame.jsonのあるディレクトリをルート (`/`) とする、 `/` 区切りの絶対パスでなければならない。
+	 * 当該のバイナリアセットが読み込まれていない場合、エラー。
+	 *
+	 * @param path 取得するバイナリアセットのパス
+	 */
+	getBinary(path: string): BinaryAsset {
+		return this._assetManager.peekLiveAssetByAccessorPath(path, "binary");
+	}
+
+	/**
+	 * パスから読み込み済みのバイナリアセット（現在のシーンで読み込んだ、またはグローバルなアセット）を取得し、その内容のバイト配列を返す。
+	 *
+	 * パスはgame.jsonのあるディレクトリをルート (`/`) とする、 `/` 区切りの絶対パスでなければならない。
+	 * 当該のバイナリアセットが読み込まれていない場合、エラー。
+	 *
+	 * @param path 内容のバイト配列を取得するバイナリアセットのパス
+	 */
+	getBinaryData(path: string): ArrayBuffer {
+		return this.getBinary(path).data;
+	}
+
+	/**
 	 * 与えられたパターンまたはフィルタにマッチするパスを持つ、読み込み済みの全画像アセット（現在のシーンで読み込んだ、またはグローバルなアセット）を取得する。
 	 *
 	 * ここでパスはgame.jsonのあるディレクトリをルート (`/`) とする、 `/` 区切りの絶対パスである。
@@ -165,6 +189,16 @@ export class AssetAccessor {
 	 */
 	getAllVectorImages(patternOrFilter?: string | ((path: string) => boolean)): VectorImageAsset[] {
 		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "vector-image");
+	}
+
+	/**
+	 * 与えられたパターンまたはフィルタにマッチするパスを持つ、読み込み済みのバイナリアセット（現在のシーンで読み込んだ、またはグローバルなアセット）を取得する。
+	 * 引数の仕様については `AssetAccessor#getAllImages()` の仕様を参照のこと。
+	 *
+	 * @param patternOrFilter 取得するベクタ画像アセットのパスパターンまたはフィルタ。省略した場合、読み込み済みの全て
+	 */
+	getAllBinaries(patternOrFilter?: string | ((path: string) => boolean)): BinaryAsset[] {
+		return this._assetManager.peekAllLiveAssetsByPattern(patternOrFilter ?? "**/*", "binary");
 	}
 
 	/**
@@ -235,5 +269,25 @@ export class AssetAccessor {
 	 */
 	getVectorImageById(assetId: string): VectorImageAsset {
 		return this._assetManager.peekLiveAssetById(assetId, "vector-image");
+	}
+
+	/**
+	 * アセットIDから読み込み済みのバイナリアセット（現在のシーンで読み込んだ、またはグローバルなアセット）を取得する。
+	 * 当該のバイナリアセットが読み込まれていない場合、エラー。
+	 *
+	 * @param assetId 取得するバイナリアセットのID
+	 */
+	getBinaryById(assetId: string): BinaryAsset {
+		return this._assetManager.peekLiveAssetById(assetId, "binary");
+	}
+
+	/**
+	 * アセットIDから読み込み済みのバイナリアセット（現在のシーンで読み込んだ、またはグローバルなアセット）を取得し、その内容のバイト配列を返す。
+	 * 当該のバイナリアセットが読み込まれていない場合、エラー。
+	 *
+	 * @param assetId 取得するバイナリアセットのID
+	 */
+	getBinaryDataById(assetId: string): ArrayBuffer {
+		return this.getBinaryById(assetId).data;
 	}
 }

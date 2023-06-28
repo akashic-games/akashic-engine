@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.14.0
+* @akashic/pdi-types@1.10.0 に追従
+  * `"binary"` アセットに対応
+  * `ScriptAsset#exports` に対応
+
 ## 3.13.0
 * どのボタンでマウスクリックが行われたか認識できるように
 * 内部モジュールの更新
