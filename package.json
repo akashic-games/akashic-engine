@@ -13,7 +13,7 @@
     "@akashic/eslint-config": "1.1.1",
     "@akashic/pdi-common-impl": "^1.4.0",
     "@types/jest": "^29.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
