@@ -1,5 +1,8 @@
 # ChangeLog
 
+## Unreleased changes
+* 前のシーンを現在のシーンの後ろ側に描画できるように
+
 ## 3.14.1
 * `g.Scene#vars` を追加
 * `g.Scene` のアセット読み込み後に任意の非同期処理を行うための `prepare` をサポート

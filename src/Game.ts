@@ -1161,8 +1161,12 @@ export class Game {
 				camera._applyTransformToRenderer(renderer);
 			}
 
-			const children = scene.children;
-			for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
+			if (scene === skippingScene) {
+				const children = scene.children;
+				for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
+			} else {
+				this._renderChildrens(this.scenes.length - 1, renderer, camera);
+			}
 
 			if (camera) {
 				renderer.restore();
@@ -2074,5 +2078,20 @@ export class Game {
 	private _cleanDB(): void {
 		this.db.clean();
 		this._localDb.clean();
+	}
+
+	/**
+	 * 子エンティティを描画する。
+	 * 前Sceneの描画も許可している場合は、先に前Sceneの子エンティティを描画する。
+	 */
+	private _renderChildrens(index: number, renderer: Renderer, camera?: Camera): void {
+		if (index < 0 || index >= this.scenes.length) {
+			return;
+		}
+		if (this.scenes[index].showBeforeScene) {
+			this._renderChildrens(index - 1, renderer, camera);
+		}
+		const children = this.scenes[index].children;
+		for (let i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 	}
 }
