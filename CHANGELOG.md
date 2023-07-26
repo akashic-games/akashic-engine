@@ -1,5 +1,8 @@
 # ChangeLog
 
+# unreleased changes
+* `g.Scene#vars` を追加
+
 ## 3.14.0
 * @akashic/pdi-types@1.10.0 に追従
   * `"binary"` アセットに対応

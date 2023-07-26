@@ -361,6 +361,13 @@ export class Scene implements StorageLoaderHandler {
 	operation: Trigger<OperationEvent>;
 
 	/**
+	 * ゲーム開発者向けのコンテナ。
+	 *
+	 * この値はゲームエンジンのロジックからは使用されず、ゲーム開発者は任意の目的に使用してよい。
+	 */
+	vars: any;
+
+	/**
 	 * @private
 	 */
 	_storageLoader: StorageLoader | undefined;
@@ -464,6 +471,7 @@ export class Scene implements StorageLoaderHandler {
 		this._ready = this._onReady;
 		this.assets = {};
 		this.asset = new AssetAccessor(game._assetManager);
+		this.vars = {};
 
 		this._loaded = false;
 		this._prefetchRequested = false;
@@ -558,6 +566,7 @@ export class Scene implements StorageLoaderHandler {
 		this.onAssetLoadFailure.destroy();
 		this.onAssetLoadComplete.destroy();
 		this.assets = {};
+		this.vars = {};
 
 		// アセットを参照しているEより先に解放しないよう最後に解放する
 		for (let i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();

@@ -49,6 +49,7 @@ describe("test Scene", () => {
 		expect(scene.local).toBe("interpolate-local");
 		expect(scene.tickGenerationMode).toBe("manual");
 		expect(scene.name).toEqual("myScene");
+		expect(scene.vars).toEqual({});
 
 		expect(scene.onUpdate instanceof Trigger).toBe(true);
 		expect(scene.onLoad instanceof Trigger).toBe(true);
