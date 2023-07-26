@@ -94,6 +94,11 @@ interface PostTickPushSceneTask {
 	 * 遷移先になるシーン。
 	 */
 	scene: Scene;
+
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 */
+	prepare?: (done: () => void) => void;
 }
 
 /**
@@ -114,6 +119,11 @@ interface PostTickReplaceSceneTask {
 	 * 現在のシーンを破棄するか否か。
 	 */
 	preserveCurrent: boolean;
+
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 */
+	prepare?: (done: () => void) => void;
 }
 
 /**
@@ -204,6 +214,21 @@ export interface EventTriggerMap {
 	"point-move": Trigger<PointMoveEvent>;
 	"point-up": Trigger<PointUpEvent>;
 	operation: Trigger<OperationEvent>;
+}
+
+/**
+ * Game#pushScene() のオプション
+ */
+export interface PushSceneOption {
+	prepare?: (done: () => void) => void;
+}
+
+/**
+ * Game#replaceScene() のオプション
+ */
+export interface ReplaceSceneOption {
+	preserveCurrent?: boolean;
+	prepare?: (done: () => void) => void;
 }
 
 export type GameMainFunction = (g: any, args: GameMainParameterObject) => void;
@@ -969,11 +994,13 @@ export class Game {
 	 * このメソッドの呼び出しにより、現在のシーンの `stateChanged` が引数 `"deactive"` でfireされる。
 	 * その後 `scene.stateChanged` が引数 `"active"` でfireされる。
 	 * @param scene 遷移後のシーン
+	 * @param option 遷移時のオプション
 	 */
-	pushScene(scene: Scene): void {
+	pushScene(scene: Scene, option?: PushSceneOption): void {
 		this._postTickTasks.push({
 			type: PostTickTaskType.PushScene,
-			scene: scene
+			scene,
+			prepare: option?.prepare
 		});
 	}
 
@@ -990,11 +1017,28 @@ export class Game {
 	 * @param scene 遷移後のシーン
 	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
 	 */
-	replaceScene(scene: Scene, preserveCurrent?: boolean): void {
+	replaceScene(scene: Scene, preserveCurrent?: boolean): void;
+	/**
+	 * 現在のシーンの置き換えを要求する。
+	 *
+	 * @param scene 遷移後のシーン
+	 * @param option 遷移時のオプション
+	 */
+	replaceScene(scene: Scene, option?: ReplaceSceneOption): void;
+	replaceScene(scene: Scene, preserveCurrentOrOption?: boolean | ReplaceSceneOption): void {
+		let preserveCurrent: boolean;
+		let prepare: ((done: () => void) => void) | undefined;
+		if (typeof preserveCurrentOrOption === "object") {
+			preserveCurrent = !!preserveCurrentOrOption.preserveCurrent;
+			prepare = preserveCurrentOrOption.prepare;
+		} else {
+			preserveCurrent = !!preserveCurrentOrOption;
+		}
 		this._postTickTasks.push({
 			type: PostTickTaskType.ReplaceScene,
 			scene: scene,
-			preserveCurrent: !!preserveCurrent
+			preserveCurrent,
+			prepare
 		});
 	}
 
@@ -1792,11 +1836,17 @@ export class Game {
 						if (oldScene) {
 							oldScene._deactivate();
 						}
+						if (req.prepare) {
+							this._interruptSceneLoading(req.prepare);
+						}
 						this._doPushScene(req.scene, false);
 						break;
 					case PostTickTaskType.ReplaceScene:
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false, false);
+						if (req.prepare) {
+							this._interruptSceneLoading(req.prepare);
+						}
 						this._doPushScene(req.scene, false);
 						break;
 					case PostTickTaskType.PopScene:
@@ -1970,6 +2020,21 @@ export class Game {
 			}
 		}
 		this._modified = true;
+	}
+
+	private _interruptSceneLoading(prepare: (done: () => void) => void): void {
+		const origLoadingScene = this.loadingScene;
+		const loadingScene = new LoadingScene({
+			game: this,
+			explicitEnd: true
+		});
+		// 元のローディングシーンを保持するためクロージャを許容
+		loadingScene.onTargetReady.addOnce(() => {
+			this.loadingScene = origLoadingScene;
+			const done = loadingScene.end.bind(loadingScene);
+			prepare(done);
+		});
+		this.loadingScene = loadingScene;
 	}
 
 	private _cleanDB(): void {
