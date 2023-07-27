@@ -220,6 +220,9 @@ export interface EventTriggerMap {
  * Game#pushScene() のオプション
  */
 export interface PushSceneOption {
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 */
 	prepare?: (done: () => void) => void;
 }
 
@@ -227,7 +230,13 @@ export interface PushSceneOption {
  * Game#replaceScene() のオプション
  */
 export interface ReplaceSceneOption {
+	/**
+	 * 現在のシーンを破棄するか否か。
+	 */
 	preserveCurrent?: boolean;
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 */
 	prepare?: (done: () => void) => void;
 }
 
