@@ -548,7 +548,7 @@ describe("test Game", () => {
 							sequence.push("scene1 prepared");
 							done();
 						},
-						100 // この値にとくに根據は無い
+						100 // この値にとくに根拠は無い
 					);
 				}
 			});
@@ -561,7 +561,7 @@ describe("test Game", () => {
 								sequence.push("scene2 prepared");
 								done();
 							},
-							100 // この値にとくに根據は無い
+							100 // この値にとくに根拠は無い
 						);
 					}
 				});
@@ -615,7 +615,7 @@ describe("test Game", () => {
 								sequence.push("scene1 prepared");
 								done();
 							},
-							100 // この値にとくに根據は無い
+							100 // この値にとくに根拠は無い
 						);
 					}
 				});
@@ -628,7 +628,7 @@ describe("test Game", () => {
 									sequence.push("scene2 prepared");
 									done();
 								},
-								100 // この値にとくに根據は無い
+								100 // この値にとくに根拠は無い
 							);
 						}
 					});
