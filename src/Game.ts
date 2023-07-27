@@ -1836,18 +1836,12 @@ export class Game {
 						if (oldScene) {
 							oldScene._deactivate();
 						}
-						if (req.prepare) {
-							this._interruptSceneLoading(req.prepare);
-						}
-						this._doPushScene(req.scene, false);
+						this._doPushScene(req.scene, false, req.prepare ? this._createPreparingLoadingScene(req.prepare) : undefined);
 						break;
 					case PostTickTaskType.ReplaceScene:
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false, false);
-						if (req.prepare) {
-							this._interruptSceneLoading(req.prepare);
-						}
-						this._doPushScene(req.scene, false);
+						this._doPushScene(req.scene, false, req.prepare ? this._createPreparingLoadingScene(req.prepare) : undefined);
 						break;
 					case PostTickTaskType.PopScene:
 						this._doPopScene(req.preserveCurrent, false, true);
@@ -2022,19 +2016,20 @@ export class Game {
 		this._modified = true;
 	}
 
-	private _interruptSceneLoading(prepare: (done: () => void) => void): void {
-		const origLoadingScene = this.loadingScene;
+	/**
+	 * 引数に指定したハンドラが完了するまで待機する空のローディングシーンを作成する。
+	 */
+	private _createPreparingLoadingScene(prepare: (done: () => void) => void): LoadingScene {
 		const loadingScene = new LoadingScene({
 			game: this,
 			explicitEnd: true
 		});
-		// 元のローディングシーンを保持するためクロージャを許容
+		// ローディングシーンを保持するためクロージャを許容
 		loadingScene.onTargetReady.addOnce(() => {
-			this.loadingScene = origLoadingScene;
 			const done = loadingScene.end.bind(loadingScene);
 			prepare(done);
 		});
-		this.loadingScene = loadingScene;
+		return loadingScene;
 	}
 
 	private _cleanDB(): void {
