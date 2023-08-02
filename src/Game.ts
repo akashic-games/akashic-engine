@@ -1845,12 +1845,22 @@ export class Game {
 						if (oldScene) {
 							oldScene._deactivate();
 						}
-						this._doPushScene(req.scene, false, req.prepare ? this._createPreparingLoadingScene(req.prepare) : undefined);
+						req.scene._currentPrepare = req.prepare;
+						this._doPushScene(
+							req.scene,
+							false,
+							req.prepare ? this._createPreparingLoadingScene(req.prepare, `akashic:preparing-${req.scene.name}`) : undefined
+						);
 						break;
 					case PostTickTaskType.ReplaceScene:
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false, false);
-						this._doPushScene(req.scene, false, req.prepare ? this._createPreparingLoadingScene(req.prepare) : undefined);
+						req.scene._currentPrepare = req.prepare;
+						this._doPushScene(
+							req.scene,
+							false,
+							req.prepare ? this._createPreparingLoadingScene(req.prepare, `akashic:preparing-${req.scene.name}`) : undefined
+						);
 						break;
 					case PostTickTaskType.PopScene:
 						this._doPopScene(req.preserveCurrent, false, true);
@@ -1938,7 +1948,9 @@ export class Game {
 			// 取り除いた結果スタックトップがロード中のシーンになった場合はローディングシーンを積み直す
 			const nextScene = this.scene();
 			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
-				const loadingScene = this.loadingScene ?? this._defaultLoadingScene;
+				const loadingScene = nextScene._currentPrepare
+					? this._createPreparingLoadingScene(nextScene._currentPrepare, `akashic:preparing-${nextScene.name}`)
+					: this.loadingScene ?? this._defaultLoadingScene;
 				this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 				loadingScene.reset(nextScene);
 			}
@@ -2028,10 +2040,11 @@ export class Game {
 	/**
 	 * 引数に指定したハンドラが完了するまで待機する空のローディングシーンを作成する。
 	 */
-	private _createPreparingLoadingScene(prepare: (done: () => void) => void): LoadingScene {
+	private _createPreparingLoadingScene(prepare: (done: () => void) => void, name?: string): LoadingScene {
 		const loadingScene = new LoadingScene({
 			game: this,
-			explicitEnd: true
+			explicitEnd: true,
+			name
 		});
 		// ローディングシーンを保持するためクロージャを許容
 		loadingScene.onTargetReady.addOnce(() => {

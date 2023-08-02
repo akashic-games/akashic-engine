@@ -437,6 +437,11 @@ export class Scene implements StorageLoaderHandler {
 	_assetHolders: AssetHolder<SceneRequestAssetHandler>[];
 
 	/**
+	 * @private
+	 */
+	_currentPrepare: ((done: () => void) => void) | undefined;
+
+	/**
 	 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
 	 * @param param 初期化に用いるパラメータのオブジェクト
 	 */
@@ -974,5 +979,6 @@ export class Scene implements StorageLoaderHandler {
 		if (this._loadingState === "loaded-fired") return;
 		this.onLoad.fire(this);
 		this._loadingState = "loaded-fired";
+		this._currentPrepare = undefined; // TODO: 本来は _currentPrepare に値を代入する側 (e.g. g.Game) でクリアすべき
 	}
 }
