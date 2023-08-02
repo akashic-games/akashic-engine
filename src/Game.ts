@@ -96,7 +96,7 @@ interface PostTickPushSceneTask {
 	scene: Scene;
 
 	/**
-	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -121,7 +121,7 @@ interface PostTickReplaceSceneTask {
 	preserveCurrent: boolean;
 
 	/**
-	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -221,7 +221,7 @@ export interface EventTriggerMap {
  */
 export interface PushSceneOption {
 	/**
-	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -235,7 +235,7 @@ export interface ReplaceSceneOption {
 	 */
 	preserveCurrent?: boolean;
 	/**
-	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのコールバック。
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
 	 */
 	prepare?: (done: () => void) => void;
 }
