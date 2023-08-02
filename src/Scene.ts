@@ -867,7 +867,11 @@ export class Scene implements StorageLoaderHandler {
 	 * @private
 	 */
 	_needsLoading(): boolean {
-		return this._sceneAssetHolder.waitingAssetsCount > 0 || (!!this._storageLoader && !this._storageLoader._loaded);
+		return (
+			this._sceneAssetHolder.waitingAssetsCount > 0 ||
+			(!!this._storageLoader && !this._storageLoader._loaded) ||
+			!!this._currentPrepare
+		);
 	}
 
 	/**

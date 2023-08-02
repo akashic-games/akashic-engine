@@ -532,7 +532,7 @@ describe("test Game", () => {
 		// game.scenes テストのため _loaded を待つ必要がある
 		game._onLoad.add(() => {
 			const sequence: string[] = [];
-			const scene1 = new Scene({ game, assetIds: ["foo"], name: "scene1" });
+			const scene1 = new Scene({ game, name: "scene1" });
 			const scene2 = new Scene({ game, assetIds: ["foo"], name: "scene2" });
 			scene1.onLoad.addOnce(() => {
 				sequence.push("scene1 loaded");
