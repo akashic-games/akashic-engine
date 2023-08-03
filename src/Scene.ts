@@ -580,6 +580,7 @@ export class Scene implements StorageLoaderHandler {
 		this._storageLoader = undefined;
 
 		this.game = undefined!;
+		this._currentPrepare = undefined;
 
 		this.state = "destroyed";
 		this.onStateChange.fire(this.state);
