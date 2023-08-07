@@ -2048,7 +2048,10 @@ export class Game {
 		});
 		// ローディングシーンを保持するためクロージャを許容
 		loadingScene.onTargetReady.addOnce(() => {
-			const done = loadingScene.end.bind(loadingScene);
+			const done = (): void => {
+				if (this._isTerminated) return;
+				loadingScene.end();
+			};
 			prepare(done);
 		});
 		return loadingScene;
