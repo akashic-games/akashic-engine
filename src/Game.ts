@@ -1954,8 +1954,8 @@ export class Game {
 			// 取り除いた結果スタックトップがロード中のシーンになった場合はローディングシーンを積み直す
 			const nextScene = this.scene();
 			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
-				const loadingScene = nextScene._currentPrepare
-					? this._createPreparingLoadingScene(nextScene, nextScene._currentPrepare, `akashic:preparing-${nextScene.name}`)
+				const loadingScene = nextScene._waitingPrepare
+					? this._createPreparingLoadingScene(nextScene, nextScene._waitingPrepare, `akashic:preparing-${nextScene.name}`)
 					: this.loadingScene ?? this._defaultLoadingScene;
 				this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 				loadingScene.reset(nextScene);
@@ -2047,7 +2047,7 @@ export class Game {
 	 * 引数に指定したハンドラが完了するまで待機する空のローディングシーンを作成する。
 	 */
 	private _createPreparingLoadingScene(scene: Scene, prepare: (done: () => void) => void, name?: string): LoadingScene {
-		scene._currentPrepare = prepare;
+		scene._waitingPrepare = prepare;
 		const loadingScene = new LoadingScene({
 			game: this,
 			explicitEnd: true,
@@ -2059,8 +2059,8 @@ export class Game {
 				if (this._isTerminated) return;
 				loadingScene.end();
 			};
-			const prepare = scene._currentPrepare;
-			scene._currentPrepare = undefined;
+			const prepare = scene._waitingPrepare;
+			scene._waitingPrepare = undefined;
 			if (prepare) {
 				prepare(done);
 			} else {

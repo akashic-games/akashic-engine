@@ -439,7 +439,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * @private
 	 */
-	_currentPrepare: ((done: () => void) => void) | undefined;
+	_waitingPrepare: ((done: () => void) => void) | undefined;
 
 	/**
 	 * 各種パラメータを指定して `Scene` のインスタンスを生成する。
@@ -580,7 +580,7 @@ export class Scene implements StorageLoaderHandler {
 		this._storageLoader = undefined;
 
 		this.game = undefined!;
-		this._currentPrepare = undefined;
+		this._waitingPrepare = undefined;
 
 		this.state = "destroyed";
 		this.onStateChange.fire(this.state);
@@ -876,7 +876,7 @@ export class Scene implements StorageLoaderHandler {
 		return (
 			this._sceneAssetHolder.waitingAssetsCount > 0 ||
 			(!!this._storageLoader && !this._storageLoader._loaded) ||
-			!!this._currentPrepare
+			!!this._waitingPrepare
 		);
 	}
 
