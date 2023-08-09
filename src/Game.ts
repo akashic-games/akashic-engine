@@ -97,6 +97,7 @@ interface PostTickPushSceneTask {
 
 	/**
 	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -122,6 +123,7 @@ interface PostTickReplaceSceneTask {
 
 	/**
 	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -222,6 +224,7 @@ export interface EventTriggerMap {
 export interface PushSceneOption {
 	/**
 	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -236,6 +239,7 @@ export interface ReplaceSceneOption {
 	preserveCurrent?: boolean;
 	/**
 	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
 	 */
 	prepare?: (done: () => void) => void;
 }
@@ -1845,21 +1849,23 @@ export class Game {
 						if (oldScene) {
 							oldScene._deactivate();
 						}
-						req.scene._currentPrepare = req.prepare;
 						this._doPushScene(
 							req.scene,
 							false,
-							req.prepare ? this._createPreparingLoadingScene(req.prepare, `akashic:preparing-${req.scene.name}`) : undefined
+							req.prepare
+								? this._createPreparingLoadingScene(req.scene, req.prepare, `akashic:preparing-${req.scene.name}`)
+								: undefined
 						);
 						break;
 					case PostTickTaskType.ReplaceScene:
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false, false);
-						req.scene._currentPrepare = req.prepare;
 						this._doPushScene(
 							req.scene,
 							false,
-							req.prepare ? this._createPreparingLoadingScene(req.prepare, `akashic:preparing-${req.scene.name}`) : undefined
+							req.prepare
+								? this._createPreparingLoadingScene(req.scene, req.prepare, `akashic:preparing-${req.scene.name}`)
+								: undefined
 						);
 						break;
 					case PostTickTaskType.PopScene:
@@ -1949,7 +1955,7 @@ export class Game {
 			const nextScene = this.scene();
 			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
 				const loadingScene = nextScene._currentPrepare
-					? this._createPreparingLoadingScene(nextScene._currentPrepare, `akashic:preparing-${nextScene.name}`)
+					? this._createPreparingLoadingScene(nextScene, nextScene._currentPrepare, `akashic:preparing-${nextScene.name}`)
 					: this.loadingScene ?? this._defaultLoadingScene;
 				this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 				loadingScene.reset(nextScene);
@@ -2040,7 +2046,8 @@ export class Game {
 	/**
 	 * 引数に指定したハンドラが完了するまで待機する空のローディングシーンを作成する。
 	 */
-	private _createPreparingLoadingScene(prepare: (done: () => void) => void, name?: string): LoadingScene {
+	private _createPreparingLoadingScene(scene: Scene, prepare: (done: () => void) => void, name?: string): LoadingScene {
+		scene._currentPrepare = prepare;
 		const loadingScene = new LoadingScene({
 			game: this,
 			explicitEnd: true,
@@ -2052,7 +2059,18 @@ export class Game {
 				if (this._isTerminated) return;
 				loadingScene.end();
 			};
-			prepare(done);
+			const prepare = scene._currentPrepare;
+			scene._currentPrepare = undefined;
+			if (prepare) {
+				prepare(done);
+			} else {
+				// NOTE: 異常系ではあるが prepare が存在しない場合は loadingScene.end() を直接呼ぶ
+				this._postTickTasks.unshift({
+					type: PostTickTaskType.Call,
+					fun: loadingScene.end,
+					owner: loadingScene
+				});
+			}
 		});
 		return loadingScene;
 	}
