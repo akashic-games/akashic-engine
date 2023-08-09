@@ -2053,7 +2053,7 @@ export class Game {
 			explicitEnd: true,
 			name
 		});
-		// ローディングシーンを保持するためクロージャを許容
+		// prepare 対象シーンを保持するためクロージャを許容
 		loadingScene.onTargetReady.addOnce(() => {
 			const done = (): void => {
 				if (this._isTerminated) return;
