@@ -2065,11 +2065,7 @@ export class Game {
 				prepare(done);
 			} else {
 				// NOTE: 異常系ではあるが prepare が存在しない場合は loadingScene.end() を直接呼ぶ
-				this._postTickTasks.unshift({
-					type: PostTickTaskType.Call,
-					fun: loadingScene.end,
-					owner: loadingScene
-				});
+				this._pushPostTickTask(loadingScene.end, loadingScene);
 			}
 		});
 		return loadingScene;
