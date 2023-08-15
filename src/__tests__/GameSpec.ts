@@ -394,6 +394,100 @@ describe("test Game", () => {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("popScene - waiting prepare", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				img1: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				},
+				img2: {
+					type: "image",
+					path: "/path2.png",
+					virtualPath: "path2.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
+
+		game._onLoad.add(() => {
+			// game.scenes テストのため _loaded を待つ必要がある
+			const scene1 = new Scene({ game: game, name: "SCENE1", assetIds: ["img1"] });
+			const scene2 = new Scene({ game: game, name: "SCENE2" });
+			const scene3 = new Scene({ game: game, name: "SCENE3", assetIds: ["img2"] });
+			const sequence: string[] = [];
+
+			game.pushScene(scene1, {
+				prepare: done => {
+					setTimeout(
+						() => {
+							sequence.push("scene1 prepared");
+							done();
+						},
+						100 // この値にとくに根拠は無い
+					);
+				}
+			});
+			game.pushScene(scene2, {
+				prepare: done => {
+					setTimeout(
+						() => {
+							sequence.push("scene2 prepared");
+							done();
+						},
+						100 // この値にとくに根拠は無い
+					);
+				}
+			});
+			game.pushScene(scene3, {
+				prepare: done => {
+					setTimeout(
+						() => {
+							sequence.push("scene3 prepared");
+							done();
+						},
+						100 // この値にとくに根拠は無い
+					);
+				}
+			});
+
+			scene1.onLoad.addOnce(() => {
+				sequence.push("scene1 loaded");
+			});
+			scene2.onLoad.addOnce(() => {
+				sequence.push("scene2 loaded");
+				game.popScene();
+				game._flushPostTickTasks();
+			});
+			scene3.onLoad.addOnce(() => {
+				sequence.push("scene3 loaded");
+				game.popScene();
+				game._flushPostTickTasks();
+			});
+
+			scene1.onLoad.addOnce(() => {
+				expect(sequence).toEqual([
+					"scene3 prepared",
+					"scene3 loaded",
+					"scene2 prepared",
+					"scene2 loaded",
+					"scene1 prepared",
+					"scene1 loaded"
+				]);
+				done();
+			});
+			game._flushPostTickTasks();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("replaceScene", done => {
 		const game = new Game({
 			width: 320,
@@ -506,6 +600,136 @@ describe("test Game", () => {
 					done.fail();
 				});
 				scene3.onLoad.addOnce(() => {
+					done();
+				});
+			});
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("pushScene - prepare", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
+
+		// game.scenes テストのため _loaded を待つ必要がある
+		game._onLoad.add(() => {
+			const sequence: string[] = [];
+			const scene1 = new Scene({ game, name: "scene1" });
+			const scene2 = new Scene({ game, assetIds: ["foo"], name: "scene2" });
+			scene1.onLoad.addOnce(() => {
+				sequence.push("scene1 loaded");
+			});
+			scene2.onLoad.addOnce(() => {
+				sequence.push("scene2 loaded");
+			});
+
+			game.pushScene(scene1, {
+				prepare: done => {
+					setTimeout(
+						() => {
+							sequence.push("scene1 prepared");
+							done();
+						},
+						100 // この値にとくに根拠は無い
+					);
+				}
+			});
+
+			scene1.onLoad.addOnce(() => {
+				game.pushScene(scene2, {
+					prepare: done => {
+						setTimeout(
+							() => {
+								sequence.push("scene2 prepared");
+								done();
+							},
+							100 // この値にとくに根拠は無い
+						);
+					}
+				});
+			});
+			scene2.onLoad.addOnce(() => {
+				// Scene#onLoad の前に prepare が完了していることを確認
+				expect(sequence).toEqual(["scene1 prepared", "scene1 loaded", "scene2 prepared", "scene2 loaded"]);
+				done();
+			});
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("replaceScene - prepare", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {
+				foo: {
+					type: "image",
+					path: "/path1.png",
+					virtualPath: "path1.png",
+					width: 1,
+					height: 1
+				}
+			}
+		});
+
+		// game.scenes テストのため _loaded を待つ必要がある
+		game._onLoad.add(() => {
+			// 初期シーンを replace することはできたいため一旦ダミーのシーンを push しておく
+			const scene = new Scene({ game });
+			game.pushScene(scene);
+			scene.onLoad.addOnce(() => {
+				const sequence: string[] = [];
+				const scene1 = new Scene({ game, assetIds: ["foo"], name: "scene1" });
+				const scene2 = new Scene({ game, assetIds: ["foo"], name: "scene2" });
+
+				scene1.onLoad.addOnce(() => {
+					sequence.push("scene1 loaded");
+				});
+				scene2.onLoad.addOnce(() => {
+					sequence.push("scene2 loaded");
+				});
+
+				game.replaceScene(scene1, {
+					prepare: done => {
+						setTimeout(
+							() => {
+								sequence.push("scene1 prepared");
+								done();
+							},
+							100 // この値にとくに根拠は無い
+						);
+					}
+				});
+
+				scene1.onLoad.addOnce(() => {
+					game.replaceScene(scene2, {
+						prepare: done => {
+							setTimeout(
+								() => {
+									sequence.push("scene2 prepared");
+									done();
+								},
+								100 // この値にとくに根拠は無い
+							);
+						}
+					});
+				});
+				scene2.onLoad.addOnce(() => {
+					// Scene#onLoad の前に prepare が完了していることを確認
+					expect(sequence).toEqual(["scene1 prepared", "scene1 loaded", "scene2 prepared", "scene2 loaded"]);
 					done();
 				});
 			});

@@ -1,5 +1,11 @@
 # ChangeLog
 
+# 3.14.1
+* `g.Scene#vars` を追加
+* `g.Scene` のアセット読み込み後に任意の非同期処理を行うための `prepare` をサポート
+   * `g.Game#pushScene()` に第2引数 `PushSceneOption` を追加
+   * `g.Game#replaceScene()` の第2引数を `boolean | ReplaceSceneOption` に変更
+
 ## 3.14.0
 * @akashic/pdi-types@1.10.0 に追従
   * `"binary"` アセットに対応

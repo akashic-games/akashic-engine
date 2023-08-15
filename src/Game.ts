@@ -94,6 +94,12 @@ interface PostTickPushSceneTask {
 	 * 遷移先になるシーン。
 	 */
 	scene: Scene;
+
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
+	 */
+	prepare?: (done: () => void) => void;
 }
 
 /**
@@ -114,6 +120,12 @@ interface PostTickReplaceSceneTask {
 	 * 現在のシーンを破棄するか否か。
 	 */
 	preserveCurrent: boolean;
+
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
+	 */
+	prepare?: (done: () => void) => void;
 }
 
 /**
@@ -204,6 +216,32 @@ export interface EventTriggerMap {
 	"point-move": Trigger<PointMoveEvent>;
 	"point-up": Trigger<PointUpEvent>;
 	operation: Trigger<OperationEvent>;
+}
+
+/**
+ * Game#pushScene() のオプション
+ */
+export interface PushSceneOption {
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
+	 */
+	prepare?: (done: () => void) => void;
+}
+
+/**
+ * Game#replaceScene() のオプション
+ */
+export interface ReplaceSceneOption {
+	/**
+	 * 現在のシーンを破棄するか否か。
+	 */
+	preserveCurrent?: boolean;
+	/**
+	 * 現在のシーンのアセット読み込み後、任意の非同期処理を行うためのハンドラ。
+	 * prepare 中にシーンスタックを操作してはいけない点に注意。
+	 */
+	prepare?: (done: () => void) => void;
 }
 
 export type GameMainFunction = (g: any, args: GameMainParameterObject) => void;
@@ -969,11 +1007,13 @@ export class Game {
 	 * このメソッドの呼び出しにより、現在のシーンの `stateChanged` が引数 `"deactive"` でfireされる。
 	 * その後 `scene.stateChanged` が引数 `"active"` でfireされる。
 	 * @param scene 遷移後のシーン
+	 * @param option 遷移時のオプション
 	 */
-	pushScene(scene: Scene): void {
+	pushScene(scene: Scene, option?: PushSceneOption): void {
 		this._postTickTasks.push({
 			type: PostTickTaskType.PushScene,
-			scene: scene
+			scene,
+			prepare: option?.prepare
 		});
 	}
 
@@ -990,11 +1030,28 @@ export class Game {
 	 * @param scene 遷移後のシーン
 	 * @param preserveCurrent 真の場合、現在のシーンを破棄しない(ゲーム開発者が明示的に破棄せねばならない)。省略された場合、偽
 	 */
-	replaceScene(scene: Scene, preserveCurrent?: boolean): void {
+	replaceScene(scene: Scene, preserveCurrent?: boolean): void;
+	/**
+	 * 現在のシーンの置き換えを要求する。
+	 *
+	 * @param scene 遷移後のシーン
+	 * @param option 遷移時のオプション
+	 */
+	replaceScene(scene: Scene, option?: ReplaceSceneOption): void;
+	replaceScene(scene: Scene, preserveCurrentOrOption?: boolean | ReplaceSceneOption): void {
+		let preserveCurrent: boolean;
+		let prepare: ((done: () => void) => void) | undefined;
+		if (typeof preserveCurrentOrOption === "object") {
+			preserveCurrent = !!preserveCurrentOrOption.preserveCurrent;
+			prepare = preserveCurrentOrOption.prepare;
+		} else {
+			preserveCurrent = !!preserveCurrentOrOption;
+		}
 		this._postTickTasks.push({
 			type: PostTickTaskType.ReplaceScene,
 			scene: scene,
-			preserveCurrent: !!preserveCurrent
+			preserveCurrent,
+			prepare
 		});
 	}
 
@@ -1792,12 +1849,24 @@ export class Game {
 						if (oldScene) {
 							oldScene._deactivate();
 						}
-						this._doPushScene(req.scene, false);
+						this._doPushScene(
+							req.scene,
+							false,
+							req.prepare
+								? this._createPreparingLoadingScene(req.scene, req.prepare, `akashic:preparing-${req.scene.name}`)
+								: undefined
+						);
 						break;
 					case PostTickTaskType.ReplaceScene:
 						// NOTE: replaceSceneの場合、pop時点では_sceneChangedをfireしない。_doPushScene() で一度だけfireする。
 						this._doPopScene(req.preserveCurrent, false, false);
-						this._doPushScene(req.scene, false);
+						this._doPushScene(
+							req.scene,
+							false,
+							req.prepare
+								? this._createPreparingLoadingScene(req.scene, req.prepare, `akashic:preparing-${req.scene.name}`)
+								: undefined
+						);
 						break;
 					case PostTickTaskType.PopScene:
 						this._doPopScene(req.preserveCurrent, false, true);
@@ -1885,7 +1954,9 @@ export class Game {
 			// 取り除いた結果スタックトップがロード中のシーンになった場合はローディングシーンを積み直す
 			const nextScene = this.scene();
 			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
-				const loadingScene = this.loadingScene ?? this._defaultLoadingScene;
+				const loadingScene = nextScene._waitingPrepare
+					? this._createPreparingLoadingScene(nextScene, nextScene._waitingPrepare, `akashic:preparing-${nextScene.name}`)
+					: this.loadingScene ?? this._defaultLoadingScene;
 				this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 				loadingScene.reset(nextScene);
 			}
@@ -1970,6 +2041,34 @@ export class Game {
 			}
 		}
 		this._modified = true;
+	}
+
+	/**
+	 * 引数に指定したハンドラが完了するまで待機する空のローディングシーンを作成する。
+	 */
+	private _createPreparingLoadingScene(scene: Scene, prepare: (done: () => void) => void, name?: string): LoadingScene {
+		scene._waitingPrepare = prepare;
+		const loadingScene = new LoadingScene({
+			game: this,
+			explicitEnd: true,
+			name
+		});
+		// prepare 対象シーンを保持するためクロージャを許容
+		loadingScene.onTargetReady.addOnce(() => {
+			const done = (): void => {
+				if (this._isTerminated) return;
+				loadingScene.end();
+			};
+			const prepare = scene._waitingPrepare;
+			scene._waitingPrepare = undefined;
+			if (prepare) {
+				prepare(done);
+			} else {
+				// NOTE: 異常系ではあるが prepare が存在しない場合は loadingScene.end() を直接呼ぶ
+				this._pushPostTickTask(loadingScene.end, loadingScene);
+			}
+		});
+		return loadingScene;
 	}
 
 	private _cleanDB(): void {
