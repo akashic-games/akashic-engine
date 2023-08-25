@@ -1655,7 +1655,7 @@ describe("test Game", () => {
 			game.pushScene(beforeScene);
 			game._flushPostTickTasks();
 
-			const currentScene = new Scene({ game, showBeforeScene: true });
+			const currentScene = new Scene({ game, showPastScene: true });
 			const red = new FilledRect({
 				scene: currentScene,
 				cssColor: "red",
@@ -1666,7 +1666,7 @@ describe("test Game", () => {
 			game.pushScene(currentScene);
 			game._flushPostTickTasks();
 
-			// 現在のSceneのshowBeforeSceneがtrueの場合、1つ前のSceneから描画される
+			// 現在のSceneのshowPastSceneがtrueの場合、1つ前のSceneから描画される
 			game.render();
 			expect(r.methodCallParamsHistory("fillRect").length).toBe(2);
 			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("gray");

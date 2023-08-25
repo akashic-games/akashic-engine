@@ -112,7 +112,7 @@ export interface SceneParameterObject {
 	 * 前のシーンを後ろに描画するかどうか
 	 * default: false
 	 */
-	showBeforeScene?: boolean;
+	showPastScene?: boolean;
 }
 
 /**
@@ -199,7 +199,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * 前のシーンを後ろに描画するかどうか
 	 */
-	showBeforeScene: boolean;
+	showPastScene: boolean;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
@@ -532,7 +532,7 @@ export class Scene implements StorageLoaderHandler {
 			},
 			userData: null
 		});
-		this.showBeforeScene = param.showBeforeScene != null ? param.showBeforeScene : false;
+		this.showPastScene = param.showPastScene != null ? param.showPastScene : false;
 	}
 
 	/**

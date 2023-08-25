@@ -1150,6 +1150,11 @@ export class Game {
 		const camera = this.focusingCamera;
 		const renderers = this.renderers; // unsafe
 
+		// 描画するべき一番底のシーンを先に探しておく
+		let index = this.scenes.length - 1;
+		while (index >= 0 && this.scenes[index].showPastScene) --index;
+		const renderBottomIndex = index;
+
 		for (let i = 0; i < renderers.length; ++i) {
 			const renderer = renderers[i];
 
@@ -1162,10 +1167,12 @@ export class Game {
 			}
 
 			if (scene === skippingScene) {
-				const children = scene.children;
-				for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
+				for (let k = 0; k < scene.children.length; ++k) scene.children[k].render(renderer, camera);
 			} else {
-				this._renderChildrens(this.scenes.length - 1, renderer, camera);
+				for (let j = renderBottomIndex; j < this.scenes.length; ++j) {
+					const children = this.scenes[j].children;
+					for (let k = 0; k < children.length; ++k) children[k].render(renderer, camera);
+				}
 			}
 
 			if (camera) {
@@ -2078,20 +2085,5 @@ export class Game {
 	private _cleanDB(): void {
 		this.db.clean();
 		this._localDb.clean();
-	}
-
-	/**
-	 * 子エンティティを描画する。
-	 * 前Sceneの描画も許可している場合は、先に前Sceneの子エンティティを描画する。
-	 */
-	private _renderChildrens(index: number, renderer: Renderer, camera?: Camera): void {
-		if (index < 0 || index >= this.scenes.length) {
-			return;
-		}
-		if (this.scenes[index].showBeforeScene) {
-			this._renderChildrens(index - 1, renderer, camera);
-		}
-		const children = this.scenes[index].children;
-		for (let i = 0; i < children.length; ++i) children[i].render(renderer, camera);
 	}
 }
