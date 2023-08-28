@@ -112,7 +112,7 @@ export interface SceneParameterObject {
 	 * 前のシーンを後ろに描画するかどうか
 	 * default: false
 	 */
-	showPastScene?: boolean;
+	seeThrough?: boolean;
 }
 
 /**
@@ -199,7 +199,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * 前のシーンを後ろに描画するかどうか
 	 */
-	showPastScene: boolean;
+	seeThrough: boolean;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
@@ -532,7 +532,7 @@ export class Scene implements StorageLoaderHandler {
 			},
 			userData: null
 		});
-		this.showPastScene = param.showPastScene != null ? param.showPastScene : false;
+		this.seeThrough = param.seeThrough != null ? param.seeThrough : false;
 	}
 
 	/**

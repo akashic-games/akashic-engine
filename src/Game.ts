@@ -1152,7 +1152,7 @@ export class Game {
 
 		// 描画するべき一番底のシーンを先に探しておく
 		let index = this.scenes.length - 1;
-		while (index >= 0 && this.scenes[index].showPastScene) --index;
+		while (index >= 0 && this.scenes[index].seeThrough) --index;
 		const renderBottomIndex = index;
 
 		for (let i = 0; i < renderers.length; ++i) {
