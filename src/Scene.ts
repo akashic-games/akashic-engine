@@ -109,10 +109,11 @@ export interface SceneParameterObject {
 	tickGenerationMode?: TickGenerationModeString;
 
 	/**
-	 * 前のシーンを後ろに描画するかどうか
+	 * 描画時に、シーンスタックの一つ下のシーンを描画するかどうか
+	 * このシーン以外の onUpdate は実行されないため、下のシーンの描画内容は更新されない。ただしこの挙動は実験的なものであり、将来的に変更されうる。
 	 * default: false
 	 */
-	seeThrough?: boolean;
+	seethrough?: boolean;
 }
 
 /**
@@ -199,7 +200,7 @@ export class Scene implements StorageLoaderHandler {
 	/**
 	 * 前のシーンを後ろに描画するかどうか
 	 */
-	seeThrough: boolean;
+	seethrough: boolean;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
@@ -532,7 +533,7 @@ export class Scene implements StorageLoaderHandler {
 			},
 			userData: null
 		});
-		this.seeThrough = param.seeThrough != null ? param.seeThrough : false;
+		this.seethrough = param.seethrough != null ? param.seethrough : false;
 	}
 
 	/**

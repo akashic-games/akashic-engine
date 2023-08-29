@@ -1,7 +1,7 @@
 # ChangeLog
 
 ## Unreleased changes
-* 前のシーンを現在のシーンの後ろ側に描画できるように
+* `g.Scene#seethrough` を追加
 
 ## 3.14.1
 * `g.Scene#vars` を追加
