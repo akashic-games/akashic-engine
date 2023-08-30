@@ -61,7 +61,7 @@ export class BitmapFont extends Font {
 	defaultGlyphHeight: number;
 	map: { [key: string]: GlyphArea };
 	missingGlyph: GlyphArea | undefined;
-	size: number;
+	override size: number;
 
 	/**
 	 * 各種パラメータを指定して `BitmapFont` のインスタンスを生成する。
