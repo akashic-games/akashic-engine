@@ -814,7 +814,7 @@ describe("test Game", () => {
 			game.loadingScene = loadingScene;
 
 			class MockScene1 extends Scene {
-				_load(): void {
+				override _load(): void {
 					logs.push("SceneLoad");
 					super._load();
 				}
@@ -840,7 +840,7 @@ describe("test Game", () => {
 				logs = [];
 
 				class MockScene2 extends Scene {
-					_load(): void {
+					override _load(): void {
 						logs.push("Scene2Load");
 						super._load();
 					}
@@ -916,7 +916,7 @@ describe("test Game", () => {
 			game.loadingScene = loadingScene;
 
 			class MockScene1 extends Scene {
-				_load(): void {
+				override _load(): void {
 					logs.push("SceneLoad");
 					super._load();
 				}
@@ -940,7 +940,7 @@ describe("test Game", () => {
 				logs = [];
 
 				class MockScene2 extends Scene {
-					_load(): void {
+					override _load(): void {
 						logs.push("Scene2Load");
 						super._load();
 					}

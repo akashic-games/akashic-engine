@@ -290,7 +290,7 @@ export class DelayedImageAsset extends ImageAsset implements DelayedAsset {
 		this._flushDelayed();
 	}
 
-	_load(loader: AssetLoadHandler): void {
+	override _load(loader: AssetLoadHandler): void {
 		if (this._delaying) {
 			// 遅延が要求されている状態で _load() が呼ばれた: loaderを自分に差し替えて _onAssetLoad, _onAssetError の通知を遅延する
 			this._lastGivenLoader = loader;
@@ -342,7 +342,7 @@ export class AudioAsset extends pci.AudioAsset {
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
-	inUse(): boolean {
+	override inUse(): boolean {
 		return this._inUse;
 	}
 
@@ -489,7 +489,7 @@ export class AudioPlayer extends pci.AudioPlayer {
 		this.canHandleStoppedValue = true;
 	}
 
-	canHandleStopped(): boolean {
+	override canHandleStopped(): boolean {
 		return this.canHandleStoppedValue;
 	}
 }
@@ -677,8 +677,8 @@ export class GameHandlerSet implements g.GameHandlerSet {
 export class Game extends g.Game {
 	terminatedGame: boolean;
 	autoTickForInternalEvents: boolean;
-	resourceFactory!: ResourceFactory; // NOTE: 継承元クラスで代入
-	handlerSet!: GameHandlerSet; // NOTE: 継承元クラスで代入
+	override resourceFactory!: ResourceFactory; // NOTE: 継承元クラスで代入
+	override handlerSet!: GameHandlerSet; // NOTE: 継承元クラスで代入
 
 	constructor(
 		configuration: g.GameConfiguration,
@@ -702,7 +702,7 @@ export class Game extends g.Game {
 		return this.tick(!!advance);
 	}
 
-	_pushPostTickTask(fun: () => void, owner: any): void {
+	override _pushPostTickTask(fun: () => void, owner: any): void {
 		super._pushPostTickTask(fun, owner);
 		if (this.autoTickForInternalEvents) {
 			setTimeout(() => {
@@ -711,7 +711,7 @@ export class Game extends g.Game {
 		}
 	}
 
-	_terminateGame(): void {
+	override _terminateGame(): void {
 		this.terminatedGame = true;
 	}
 }
