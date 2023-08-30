@@ -109,9 +109,10 @@ export interface SceneParameterObject {
 	tickGenerationMode?: TickGenerationModeString;
 
 	/**
-	 * 描画時に、シーンスタックの一つ下のシーンを描画するかどうか
-	 * このシーン以外の onUpdate は実行されないため、下のシーンの描画内容は更新されない。ただしこの挙動は実験的なものであり、将来的に変更されうる。
-	 * default: false
+	 * このシーンが g.Game のシーンスタックのトップに積まれているなどで描画対象となっている場合に、このシーンの直下のシーンも同時に描画するかどうか。
+	 * このシーン自体は `seethrough` の値に関わらず常に描画されることに注意。
+	 * ただし `seethrough` が true の時でもこのシーン以外の onUpdate は実行されない。そのため下のシーンの描画内容も更新されない。この挙動は実験的なものであり、将来的に変更されうる。
+	 * @default false
 	 */
 	seethrough?: boolean;
 }
@@ -198,7 +199,9 @@ export class Scene implements StorageLoaderHandler {
 	name: string | undefined;
 
 	/**
-	 * 前のシーンを後ろに描画するかどうか
+	 * このシーンが g.Game のシーンスタックのトップに積まれているなどで描画対象となっている場合に、このシーンの直下のシーンも同時に描画するかどうか。
+	 * このシーン自体は `seethrough` の値に関わらず常に描画されることに注意。
+	 * ただし `seethrough` が true の時でもこのシーン以外の onUpdate は実行されない。そのため下のシーンの描画内容も更新されない。この挙動は実験的なものであり、将来的に変更されうる。
 	 */
 	seethrough: boolean;
 
