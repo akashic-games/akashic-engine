@@ -1156,6 +1156,11 @@ export class Game {
 		const camera = this.focusingCamera;
 		const renderers = this.renderers; // unsafe
 
+		// 描画するべき一番底のシーンを先に探しておく
+		let index = this.scenes.length - 1;
+		while (index >= 0 && this.scenes[index].seethrough) --index;
+		const renderBottomIndex = index;
+
 		for (let i = 0; i < renderers.length; ++i) {
 			const renderer = renderers[i];
 
@@ -1167,8 +1172,14 @@ export class Game {
 				camera._applyTransformToRenderer(renderer);
 			}
 
-			const children = scene.children;
-			for (let j = 0; j < children.length; ++j) children[j].render(renderer, camera);
+			if (scene === skippingScene) {
+				for (let k = 0; k < scene.children.length; ++k) scene.children[k].render(renderer, camera);
+			} else {
+				for (let j = renderBottomIndex; j < this.scenes.length; ++j) {
+					const children = this.scenes[j].children;
+					for (let k = 0; k < children.length; ++k) children[k].render(renderer, camera);
+				}
+			}
 
 			if (camera) {
 				renderer.restore();

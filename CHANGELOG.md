@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.14.2
+* `g.Scene#seethrough` を追加
+
 ## 3.14.1
 * `g.Scene#vars` を追加
 * `g.Scene` のアセット読み込み後に任意の非同期処理を行うための `prepare` をサポート
