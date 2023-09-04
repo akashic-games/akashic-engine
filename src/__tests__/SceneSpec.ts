@@ -1,6 +1,6 @@
 import { Trigger } from "@akashic/trigger";
 import type { AssetConfiguration, SceneStateString } from "..";
-import { AssetManager, E, Scene, StorageRegion } from "..";
+import { AssetManager, E, Scene } from "..";
 import { customMatchers, Game, skeletonRuntime, ImageAsset, AudioAsset } from "./helpers";
 
 expect.extend(customMatchers);
@@ -64,20 +64,6 @@ describe("test Scene", () => {
 		expect(scene.onOperation instanceof Trigger).toBe(true);
 	});
 
-	it("初期化 - Storage", () => {
-		let scene = new Scene({ game: game });
-		expect(scene._storageLoader).toBeUndefined();
-		const key = {
-			region: StorageRegion.Values,
-			regionKey: "foo.bar",
-			gameId: "123",
-			userId: "456"
-		};
-		scene = new Scene({ game: game, storageKeys: [key] });
-		expect(scene._storageLoader).toBeDefined();
-		expect(scene.storageValues).toBeDefined();
-	});
-
 	it("append", () => {
 		const scene1 = new Scene({ game: game });
 		const scene2 = new Scene({ game: game });
@@ -132,122 +118,6 @@ describe("test Scene", () => {
 			expect(scene.assets.baa).not.toBeUndefined();
 			expect(scene.asset.getImageById("foo").path).toBe("/path1.png");
 			expect(() => scene.asset.getImage("/unexistent.png")).toThrowError("AssertionError");
-			done();
-		});
-		scene._load();
-	});
-
-	it("loads storage", done => {
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const values = [[{ data: "apple" }]];
-		const scene = new Scene({
-			game: game,
-			storageKeys: keys,
-			name: "SceneLoadsStorage"
-		});
-
-		game.storage._registerLoad((_keys, loader) => {
-			loader._onLoaded(values);
-		});
-		scene._onReady.add(() => {
-			expect(scene._storageLoader!._loaded).toBe(true);
-			expect(scene.storageValues!.get(0)).toBe(values[0]);
-			done();
-		});
-		scene._load();
-	});
-
-	it("serializedValues", done => {
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const values = [[{ data: "apple" }]];
-
-		const scene = new Scene({ game: game, storageKeys: keys });
-
-		game.storage._registerLoad((_keys, loader) => {
-			loader._onLoaded(values);
-		});
-		scene._onReady.add(() => {
-			expect(scene._storageLoader!._loaded).toBe(true);
-			expect(scene.serializeStorageValues()).toBeUndefined();
-			done();
-		});
-		scene._load();
-	});
-
-	it("loads storage - with serialization", done => {
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const values = [[{ data: "apple" }]];
-		const serializedValues = [[{ data: "orange" }]];
-
-		const scene = new Scene({
-			game: game,
-			storageKeys: keys,
-			storageValuesSerialization: "myserialization1"
-		});
-
-		game.storage._registerLoad((_keys, loader) => {
-			if (!loader._valueStoreSerialization) {
-				loader._onLoaded(values);
-			} else {
-				expect(loader._valueStoreSerialization).toBe("myserialization1");
-				loader._onLoaded(serializedValues);
-			}
-		});
-		scene._onReady.add(() => {
-			expect(scene._storageLoader!._loaded).toBe(true);
-			expect(scene.serializeStorageValues()).toBe("myserialization1");
-			expect(scene.storageValues!.get(0)).toBe(serializedValues[0]);
-			done();
-		});
-		scene._load();
-	});
-
-	it("loads assets and storage", done => {
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const values = [[{ data: "apple" }]];
-		const scene = new Scene({
-			game: game,
-			storageKeys: keys,
-			assetIds: ["foo", "baa"]
-		});
-
-		game.storage._registerLoad((_k, l) => {
-			l._onLoaded(values);
-		});
-
-		scene._onReady.add(() => {
-			expect(scene._storageLoader).toBeDefined();
-			expect(scene.storageValues!.get(0)).toBe(values[0]);
-			expect(scene.assets.foo).toBeDefined();
-			expect(scene.assets.baa).toBeDefined();
 			done();
 		});
 		scene._load();
@@ -333,32 +203,25 @@ describe("test Scene", () => {
 	// prefetch()テストメモ
 	//
 	// prefetch()が絡んでも、loadedのfireタイミングがおかしくならないことを確認したい。
-	// loadedのタイミングに関係するのは、アセット読み込み(prefetch(), _load()が引き起こす)と
-	// ストレージ読み込み(_load()が引き起こす)である。関連する事象を以下のように置く:
+	// loadedのタイミングに関係するのは、現バージョンにおいてはアセット読み込み(prefetch(), _load()が引き起こす)のみである。
+	// 関連する事象を以下のように置く:
 	//   a) prefetch() 呼び出し
 	//   b) _load() 呼び出し
 	//   c) アセット読み込み完了
-	//   d) ストレージ読み込み完了
-	//   e) loaded 発火
-	// d は存在しない場合がある。実装から、明らかに次のことが言える。
-	//     b -> d        -- (1)
+	//   d) loaded 発火
+
 	// ただしここで X -> Y は「YはXの後に生じる」ことを表す。同じく実装から、明らかに_load()後のprefetch()は
 	// 単に無視される。したがって (b -> a) のパスを改めて確認する必要はない。テストすべきケースは常に
 	//     a -> b        -- (2)
-	// (1), (2) から
-	//     a -> b -> d   -- (3)
 	// また AssetManager#requestAssets() の呼び出し箇所から、c は a または b の後にのみ生じる。よって (2) から
-	//     a -> c        -- (4)
-	// さてここで我々が確認すべきことは「e は常に b, c, d すべての後に生じる」である。
-	// d が存在しないケースを踏まえると、(3), (4) から、確認すべきケースは次の五つである:
-	//     a -> c -> b         -- (5a)
-	//     a -> b -> c         -- (5b)
-	//     a -> c -> b -> d    -- (5c)
-	//     a -> b -> c -> d    -- (5d)
-	//     a -> b -> d -> c    -- (5e)
-	// このいずれのケースでも、すべての後に e が生じることをテストすればよい。
+	//     a -> c        -- (3)
+	// さてここで我々が確認すべきことは「d は常に b, c の後に生じる」である。
+	// 以上を踏まえると、確認すべきケースは次の二つである:
+	//     a -> c -> b         -- (4a)
+	//     a -> b -> c         -- (4b)
+	// このいずれのケースでも、すべての後に d が生じることをテストすればよい。
 
-	// 上記コメント (5a) のケース
+	// 上記コメント (4a) のケース
 	it("prefetch - prefetch-(asset loaded)-_load-loaded", done => {
 		const game = new Game({
 			width: 320,
@@ -393,7 +256,7 @@ describe("test Scene", () => {
 		}, 0);
 	});
 
-	// 上記コメント (5b) のケース
+	// 上記コメント (4b) のケース
 	it("prefetch - prefetch-_loaded-(asset loaded)-loaded", done => {
 		const game = new Game({
 			width: 320,
@@ -425,169 +288,6 @@ describe("test Scene", () => {
 		expect(scene._loaded).toBe(true);
 		expect(scene._prefetchRequested).toBe(true);
 		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2); // _load() / prefetch() されていても flushDelayedAssets() してないので読み込みが終わっていない
-		ready = true;
-		game.resourceFactory.flushDelayedAssets(); // (c)
-	});
-
-	// 上記コメント (5c) のケース
-	it("prefetch - prefetch-(asset loaded)-_load-(storage loaded)-loaded", done => {
-		const game = new Game({
-			width: 320,
-			height: 320,
-			main: "",
-			assets: assetsConfiguration
-		});
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const scene = new Scene({
-			game: game,
-			storageKeys: keys,
-			assetIds: ["foo", "baa"]
-		});
-		game.resourceFactory.createsDelayedAsset = true;
-
-		let notifyStorageLoaded = (_value: any): void => {
-			fail("storage load not started");
-		};
-		game.storage._registerLoad((_k, l) => {
-			notifyStorageLoaded = l._onLoaded.bind(l);
-		});
-
-		let ready = false;
-		scene._onReady.add(() => {
-			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-			done();
-		});
-
-		scene.prefetch(); // (a)
-		expect(scene._loaded).toBe(false);
-		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
-		game.resourceFactory.flushDelayedAssets(); // (c)
-
-		setTimeout(() => {
-			scene._load(); // (b)
-			expect(scene._loaded).toBe(true);
-			expect(scene._prefetchRequested).toBe(true);
-
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-			ready = true;
-			notifyStorageLoaded(["dummy"]); // (d)
-		}, 0);
-	});
-
-	// 上記コメント (5d) のケース
-	it("prefetch - prefetch-_load-(asset loaded)-(storage loaded)-loaded", done => {
-		const game = new Game({
-			width: 320,
-			height: 320,
-			main: "",
-			assets: assetsConfiguration
-		});
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const scene = new Scene({
-			game: game,
-			storageKeys: keys,
-			assetIds: ["foo", "baa"]
-		});
-		game.resourceFactory.createsDelayedAsset = true;
-
-		let notifyStorageLoaded = (_values: any[]): void => {
-			fail("storage load not started");
-		};
-		game.storage._registerLoad((_k, l) => {
-			notifyStorageLoaded = l._onLoaded.bind(l);
-		});
-		let ready = false;
-
-		scene._onReady.add(() => {
-			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-			done();
-		});
-
-		scene.prefetch(); // (a)
-		expect(scene._loaded).toBe(false);
-		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
-
-		scene._load(); // (b)
-		expect(scene._loaded).toBe(true);
-		expect(scene._prefetchRequested).toBe(true);
-
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
-		game.resourceFactory.flushDelayedAssets(); // (c)
-
-		setTimeout(() => {
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-			ready = true;
-			notifyStorageLoaded(["dummy"]); // (d)
-		}, 0);
-	});
-
-	// 上記コメント (5e) のケース
-	it("prefetch - prefetch-_load-(storage loaded)-(asset loaded)-loaded", done => {
-		const game = new Game({
-			width: 320,
-			height: 320,
-			main: "",
-			assets: assetsConfiguration
-		});
-		const keys = [
-			{
-				region: StorageRegion.Values,
-				regionKey: "a001.b001",
-				gameId: "123",
-				userId: "456"
-			}
-		];
-		const scene = new Scene({
-			game: game,
-			storageKeys: keys,
-			assetIds: ["foo", "baa"]
-		});
-		game.resourceFactory.createsDelayedAsset = true;
-
-		let notifyStorageLoaded = (_values: any): void => {
-			fail("storage load not started");
-		};
-		game.storage._registerLoad((_k, l) => {
-			notifyStorageLoaded = l._onLoaded.bind(l);
-		});
-
-		let ready = false;
-		scene._onReady.add(() => {
-			expect(ready).toBe(true);
-			expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(0);
-			done();
-		});
-
-		scene.prefetch(); // (a)
-		expect(scene._loaded).toBe(false);
-		expect(scene._prefetchRequested).toBe(true);
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
-
-		scene._load(); // (b)
-		expect(scene._loaded).toBe(true);
-		expect(scene._prefetchRequested).toBe(true);
-
-		notifyStorageLoaded(["dummy"]); // (d)
-
-		expect(scene._sceneAssetHolder.waitingAssetsCount).toBe(2);
 		ready = true;
 		game.resourceFactory.flushDelayedAssets(); // (c)
 	});

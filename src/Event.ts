@@ -1,7 +1,6 @@
 import type { CommonOffset } from "@akashic/pdi-types";
 import type { Player } from "./Player";
 import type { RandomGenerator } from "./RandomGenerator";
-import type { StorageValueStore } from "./Storage";
 
 /**
  * イベントの種別。
@@ -230,13 +229,14 @@ export class JoinEvent implements Event {
 	type: "join" = "join";
 	eventFlags: number;
 	player: Player;
-	storageValues: StorageValueStore | undefined;
 
-	constructor(player: Player, storageValues?: StorageValueStore, eventFlags?: number) {
+	// NOTE: 型の後方互換のために念のためプロパティのみ残しておく
+	storageValues: unknown;
+
+	constructor(player: Player, eventFlags?: number) {
 		// @ts-ignore TODO: eventFlags のデフォルト値の扱い
 		this.eventFlags = eventFlags;
 		this.player = player;
-		this.storageValues = storageValues;
 	}
 }
 
