@@ -1,6 +1,6 @@
 # ChangeLog
 
-## Unreleased changes
+## 3.14.2
 * `g.Scene#seethrough` を追加
 
 ## 3.14.1
