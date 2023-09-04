@@ -192,7 +192,7 @@ export class Label extends CacheableE {
 	 * このエンティティの描画キャッシュ無効化をエンジンに通知する。
 	 * このメソッドを呼び出し後、描画キャッシュの再構築が行われ、各 `Renderer` に描画内容の変更が反映される。
 	 */
-	invalidate(): void {
+	override invalidate(): void {
 		this._invalidateSelf();
 		super.invalidate();
 	}
@@ -200,7 +200,7 @@ export class Label extends CacheableE {
 	/**
 	 * Label自身の描画を行う。
 	 */
-	renderSelfFromCache(renderer: Renderer): void {
+	override renderSelfFromCache(renderer: Renderer): void {
 		// glyphのはみ出し量に応じて、描画先のX座標を調整する。
 		let destOffsetX;
 		switch (this._realTextAlign) {
@@ -291,7 +291,7 @@ export class Label extends CacheableE {
 	 * このエンティティを破棄する。
 	 * 利用している `BitmapFont` の破棄は行わないため、 `BitmapFont` の破棄はコンテンツ製作者が明示的に行う必要がある。
 	 */
-	destroy(): void {
+	override destroy(): void {
 		super.destroy();
 	}
 

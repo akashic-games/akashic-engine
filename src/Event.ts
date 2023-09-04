@@ -114,7 +114,7 @@ export class PointEventBase<T extends PointTarget> implements Event {
  * ポインティング操作の開始を表すイベントの基底クラス。
  */
 export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: "point-down" = "point-down";
+	override type: "point-down" = "point-down";
 }
 
 /**
@@ -126,7 +126,7 @@ export class PointDownEventBase<T extends PointTarget> extends PointEventBase<T>
  * PointUpEvent#pointにはPointDownEvent#pointと同じ値が格納される。
  */
 export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: "point-up" = "point-up";
+	override type: "point-up" = "point-up";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
@@ -159,7 +159,7 @@ export class PointUpEventBase<T extends PointTarget> extends PointEventBase<T> {
  * カメラの移動等視覚的にポイントが変化している場合にも発生する。
  */
 export class PointMoveEventBase<T extends PointTarget> extends PointEventBase<T> {
-	type: "point-move" = "point-move";
+	override type: "point-move" = "point-move";
 	startDelta: CommonOffset;
 	prevDelta: CommonOffset;
 
