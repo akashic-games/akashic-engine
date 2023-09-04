@@ -161,12 +161,12 @@ export class Pane extends CacheableE {
 	 * このメソッドは描画キャッシュの無効化を保証しない。描画キャッシュの無効化も必要な場合、 `invalidate()`を呼び出さなければならない。
 	 * 詳細は `E#modified()` のドキュメントを参照。
 	 */
-	modified(isBubbling?: boolean): void {
+	override modified(isBubbling?: boolean): void {
 		if (isBubbling) this.state &= ~EntityStateFlags.Cached;
 		super.modified();
 	}
 
-	shouldFindChildrenByPoint(point: CommonOffset): boolean {
+	override shouldFindChildrenByPoint(point: CommonOffset): boolean {
 		const p = this._normalizedPadding;
 		if (p.left < point.x && this.width - p.right > point.x && p.top < point.y && this.height - p.bottom > point.y) {
 			return true;
@@ -202,7 +202,7 @@ export class Pane extends CacheableE {
 	 * ただし、 `backgroundImage` に利用している `Surface` の破棄は行わない。
 	 * @param destroySurface trueを指定した場合、 `backgroundImage` に利用している `Surface` も合わせて破棄する。
 	 */
-	destroy(destroySurface?: boolean): void {
+	override destroy(destroySurface?: boolean): void {
 		if (destroySurface && this._backgroundImageSurface && !this._backgroundImageSurface.destroyed()) {
 			this._backgroundImageSurface.destroy();
 		}
@@ -298,7 +298,7 @@ export class Pane extends CacheableE {
 	 * Eを継承する他のクラスと異なり、Paneは子要素の位置を包括矩形に含まない。
 	 * @private
 	 */
-	_calculateBoundingRect(m?: Matrix): CommonRect | undefined {
+	override _calculateBoundingRect(m?: Matrix): CommonRect | undefined {
 		let matrix = this.getMatrix();
 		if (m) {
 			matrix = m.multiplyNew(matrix);

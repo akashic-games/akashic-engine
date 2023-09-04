@@ -177,7 +177,7 @@ export class FrameSprite extends Sprite {
 	 * デフォルトでは利用している `Surface` の破棄は行わない点に注意。
 	 * @param destroySurface trueを指定した場合、このエンティティが抱える `Surface` も合わせて破棄する
 	 */
-	destroy(destroySurface?: boolean): void {
+	override destroy(destroySurface?: boolean): void {
 		this.stop();
 		super.destroy(destroySurface);
 	}
@@ -192,7 +192,7 @@ export class FrameSprite extends Sprite {
 	/**
 	 * このエンティティに対する変更をエンジンに通知する。詳細は `E#modified()` のドキュメントを参照。
 	 */
-	modified(isBubbling?: boolean): void {
+	override modified(isBubbling?: boolean): void {
 		this._modifiedSelf(isBubbling);
 		super.modified(isBubbling);
 	}

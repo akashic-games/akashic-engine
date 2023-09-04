@@ -81,7 +81,7 @@ export abstract class CacheableE extends E {
 	 * このエンティティ自身の描画を行う。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	renderSelf(renderer: Renderer, camera?: Camera): boolean {
+	override renderSelf(renderer: Renderer, camera?: Camera): boolean {
 		const padding = CacheableE.PADDING;
 		if (this._renderedCamera !== camera) {
 			this.state &= ~EntityStateFlags.Cached;
@@ -148,7 +148,7 @@ export abstract class CacheableE extends E {
 	/**
 	 * 利用している `Surface` を破棄した上で、このエンティティを破棄する。
 	 */
-	destroy(): void {
+	override destroy(): void {
 		if (this._cache && !this._cache.destroyed()) {
 			this._cache.destroy();
 		}

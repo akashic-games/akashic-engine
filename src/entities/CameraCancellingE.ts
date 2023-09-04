@@ -17,7 +17,7 @@ export class CameraCancellingE extends E {
 		this._canceller = new Object2D();
 	}
 
-	renderSelf(renderer: Renderer, camera?: Camera): boolean {
+	override renderSelf(renderer: Renderer, camera?: Camera): boolean {
 		if (!this.children) return false;
 
 		if (camera && camera instanceof Camera2D) {

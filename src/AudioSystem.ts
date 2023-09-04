@@ -296,7 +296,7 @@ export class MusicAudioSystem extends AudioSystem {
 		return this.player;
 	}
 
-	stopAll(): void {
+	override stopAll(): void {
 		super.stopAll();
 		if (!this._player) return;
 		this._player.stop();
@@ -305,7 +305,7 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_reset(): void {
+	override _reset(): void {
 		super._reset();
 		if (this._player) {
 			this._player.onPlay.remove(this._handlePlay, this);
@@ -386,7 +386,7 @@ export class SoundAudioSystem extends AudioSystem {
 		return ret;
 	}
 
-	stopAll(): void {
+	override stopAll(): void {
 		super.stopAll();
 		const players = this.players.concat();
 		for (let i = 0; i < players.length; ++i) {
@@ -397,7 +397,7 @@ export class SoundAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_reset(): void {
+	override _reset(): void {
 		super._reset();
 		for (let i = 0; i < this.players.length; ++i) {
 			const player = this.players[i];

@@ -34,7 +34,7 @@ class TestOperationPlugin {
 }
 
 class TestOperationPluginUnsupported extends TestOperationPlugin {
-	static isSupported(): boolean {
+	static override isSupported(): boolean {
 		return false;
 	}
 }

@@ -117,7 +117,7 @@ export class DynamicFont extends Font {
 	 *
 	 * このプロパティは参照のためにのみ公開されている。ゲーム開発者はこの値を変更すべきではない。
 	 */
-	size: number;
+	override size: number;
 
 	/**
 	 * ヒント。
