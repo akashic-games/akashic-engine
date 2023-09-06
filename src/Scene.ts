@@ -90,6 +90,14 @@ export interface SceneParameterObject {
 	 * またこのシーンへの遷移直後、一度だけこの値に関わらずティックが生成される。
 	 */
 	tickGenerationMode?: TickGenerationModeString;
+
+	/**
+	 * シーンスタック上のこのシーンが描画される時、それに先んじてこのシーンの直下のシーンを描画するかどうか。
+	 * このシーン自体は `seethrough` の値に関わらず常に描画されることに注意。
+	 * ただし `seethrough` が true の時でもこのシーン以外の onUpdate は実行されない。そのため下のシーンの描画内容も更新されない。この挙動は実験的なものであり、将来的に変更されうる。
+	 * @default false
+	 */
+	seethrough?: boolean;
 }
 
 /**
@@ -172,6 +180,13 @@ export class Scene {
 	 * シーンの識別用の名前。
 	 */
 	name: string | undefined;
+
+	/**
+	 * シーンスタック上のこのシーンが描画される時、それに先んじてこのシーンの直下のシーンを描画するかどうか。
+	 * このシーン自体は `seethrough` の値に関わらず常に描画されることに注意。
+	 * ただし `seethrough` が true の時でもこのシーン以外の onUpdate は実行されない。そのため下のシーンの描画内容も更新されない。この挙動は実験的なものであり、将来的に変更されうる。
+	 */
+	seethrough: boolean;
 
 	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
@@ -486,6 +501,7 @@ export class Scene {
 			},
 			userData: null
 		});
+		this.seethrough = param.seethrough != null ? param.seethrough : false;
 	}
 
 	/**

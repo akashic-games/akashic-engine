@@ -91,7 +91,7 @@ export class LoadingScene extends Scene {
 		this._targetScene = undefined!;
 	}
 
-	destroy(): void {
+	override destroy(): void {
 		this._clearTargetScene();
 		super.destroy();
 	}
@@ -128,7 +128,7 @@ export class LoadingScene extends Scene {
 	 * `Scene#end()` と異なり、このメソッドの呼び出しはこのシーンを破棄しない。(ローディングシーンは再利用される。)
 	 * このメソッドが呼び出される時、 `targetReady` がfireされた後でなければならない。
 	 */
-	end(): void {
+	override end(): void {
 		if (!this._targetScene || this._targetScene._loadingState === "initial") {
 			const state = this._targetScene ? this._targetScene._loadingState : "(no scene)";
 			const msg = "LoadingScene#end(): the target scene is in invalid state: " + state;

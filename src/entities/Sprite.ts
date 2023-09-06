@@ -160,7 +160,7 @@ export class Sprite extends E {
 	 * このエンティティ自身の描画を行う。
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
-	renderSelf(renderer: Renderer, _camera?: Camera): boolean {
+	override renderSelf(renderer: Renderer, _camera?: Camera): boolean {
 		if (this.srcWidth <= 0 || this.srcHeight <= 0) {
 			return true;
 		}
@@ -190,7 +190,7 @@ export class Sprite extends E {
 	 * デフォルトでは利用している `Surface` の破棄は行わない点に注意。
 	 * @param destroySurface trueを指定した場合、このエンティティが抱える `Surface` も合わせて破棄する
 	 */
-	destroy(destroySurface?: boolean): void {
+	override destroy(destroySurface?: boolean): void {
 		if (this._surface && !this._surface.destroyed() && destroySurface) {
 			this._surface.destroy();
 		}

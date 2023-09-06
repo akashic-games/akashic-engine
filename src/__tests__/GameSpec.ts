@@ -814,7 +814,7 @@ describe("test Game", () => {
 			game.loadingScene = loadingScene;
 
 			class MockScene1 extends Scene {
-				_load(): void {
+				override _load(): void {
 					logs.push("SceneLoad");
 					super._load();
 				}
@@ -840,7 +840,7 @@ describe("test Game", () => {
 				logs = [];
 
 				class MockScene2 extends Scene {
-					_load(): void {
+					override _load(): void {
 						logs.push("Scene2Load");
 						super._load();
 					}
@@ -916,7 +916,7 @@ describe("test Game", () => {
 			game.loadingScene = loadingScene;
 
 			class MockScene1 extends Scene {
-				_load(): void {
+				override _load(): void {
 					logs.push("SceneLoad");
 					super._load();
 				}
@@ -940,7 +940,7 @@ describe("test Game", () => {
 				logs = [];
 
 				class MockScene2 extends Scene {
-					_load(): void {
+					override _load(): void {
 						logs.push("Scene2Load");
 						super._load();
 					}
@@ -1638,6 +1638,56 @@ describe("test Game", () => {
 			game.skippingScene = skippingScene;
 
 			game.onSkipChange.fire(true);
+		});
+
+		it("render before scene as well as current scene if current scene allow to show before scene", () => {
+			const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+			const r = new Renderer();
+			game.renderers.push(r);
+			const beforeScene = new Scene({ game });
+			const gray = new FilledRect({
+				scene: beforeScene,
+				cssColor: "gray",
+				width: 32,
+				height: 32
+			});
+			beforeScene.append(gray);
+			game.pushScene(beforeScene);
+			game._flushPostTickTasks();
+
+			const currentScene = new Scene({ game, seethrough: true });
+			const red = new FilledRect({
+				scene: currentScene,
+				cssColor: "red",
+				width: 32,
+				height: 32
+			});
+			currentScene.append(red);
+			game.pushScene(currentScene);
+			game._flushPostTickTasks();
+
+			// 現在のSceneのseethroughがtrueの場合、1つ前のSceneから描画される
+			game.render();
+			expect(r.methodCallParamsHistory("fillRect").length).toBe(2);
+			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("gray");
+			expect(r.methodCallParamsHistory("fillRect")[1].cssColor).toBe("red");
+
+			r.clearMethodCallHistory();
+			const skippingScene = new Scene({ game, local: "full-local" });
+			const black = new FilledRect({
+				scene: skippingScene,
+				cssColor: "black",
+				width: 32,
+				height: 32
+			});
+			skippingScene.append(black);
+			game.skippingScene = skippingScene;
+			game.onSkipChange.fire(true);
+
+			// 現在のSceneがskippingSceneであれば、そのSceneしか描画されない
+			game.render();
+			expect(r.methodCallParamsHistory("fillRect").length).toBe(1);
+			expect(r.methodCallParamsHistory("fillRect")[0].cssColor).toBe("black");
 		});
 	});
 

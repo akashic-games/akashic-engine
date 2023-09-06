@@ -126,7 +126,7 @@ export class Camera2D extends Object2D implements Camera {
 	/**
 	 * @private
 	 */
-	_updateMatrix(): void {
+	override _updateMatrix(): void {
 		if (!this._matrix) return;
 		// カメラの angle, x, y はエンティティと逆方向に作用することに注意。
 		if (this.angle || this.scaleX !== 1 || this.scaleY !== 1 || this.anchorX !== 0 || this.anchorY !== 0) {
