@@ -1,8 +1,8 @@
+import { PathUtil } from "@akashic/game-configuration/lib/utils/PathUtil";
 import type { Asset, ScriptAssetRuntimeValueBase } from "@akashic/pdi-types";
 import type { AssetManager, OneOfAsset } from "./AssetManager";
 import { ExceptionFactory } from "./ExceptionFactory";
 import { Module } from "./Module";
-import { PathUtil } from "./PathUtil";
 import type { RequireCacheable } from "./RequireCacheable";
 import { RequireCachedValue } from "./RequireCachedValue";
 import { ScriptAssetContext } from "./ScriptAssetContext";
