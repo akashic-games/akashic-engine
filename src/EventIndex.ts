@@ -13,7 +13,7 @@ export module EventIndex {
 	export const enum Tick {
 		Age = 0,
 		Events = 1,
-		StorageData = 2
+		StorageData = 2 // TODO: 削除
 	}
 
 	export const enum TickList {
@@ -33,7 +33,7 @@ export module EventIndex {
 		EventFlags = 1,
 		PlayerId = 2,
 		PlayerName = 3,
-		StorageData = 4,
+		StorageData = 4, // TODO: 削除
 		Local = 5
 	}
 

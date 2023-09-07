@@ -5,7 +5,6 @@ import { JoinEvent, MessageEvent, OperationEvent, TimestampEvent, LeaveEvent, Pl
 import { EventConverter } from "../EventConverter";
 import { EventPriority } from "../EventPriority";
 import type { Player } from "../Player";
-import { StorageRegion, StorageValueStore } from "../Storage";
 import { Game, skeletonRuntime } from "./helpers";
 
 describe("EventConverter", () => {
@@ -30,9 +29,8 @@ describe("EventConverter", () => {
 		const player: Player = { id: "dummyPlayerId", name: "dummyName" };
 		const self = new EventConverter({ game, playerId: player.id });
 
-		const sds = [{ readKey: { region: StorageRegion.Slots, regionKey: "reg-key" }, values: [{ data: 100 }] }];
-		const pjoin: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id!, player.name!, sds];
-		const join = new JoinEvent(player, new StorageValueStore([sds[0].readKey], [sds[0].values]), EventPriority.System);
+		const pjoin: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id!, player.name!];
+		const join = new JoinEvent(player, EventPriority.System);
 		const join2 = self.toGameEvent(pjoin);
 		expect(join).toEqual(join2);
 		expect(() => {
@@ -136,7 +134,7 @@ describe("EventConverter", () => {
 		expect(pointDown.player!.userData).toEqual({ userDataProp: "dummy" });
 
 		// JoinEvent 送信後にユーザデータが上書きされていないことを確認
-		const pjoin2: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id!, player.name!, sds];
+		const pjoin2: pl.JoinEvent = [pl.EventCode.Join, EventPriority.System, player.id!, player.name!, undefined];
 		self.toGameEvent(pjoin2);
 		const pdown2: pl.PointDownEvent = [pl.EventCode.PointDown, EventPriority.System, "dummyPlayerId", 0, 110, 120];
 		const pointDown2 = self.toGameEvent(pdown2) as PointDownEvent;

@@ -1,4 +1,4 @@
-import type { Asset, CommonOffset, StorageLoadError } from "@akashic/pdi-types";
+import type { Asset, CommonOffset } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
 import { AssetAccessor } from "./AssetAccessor";
 import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
@@ -12,7 +12,6 @@ import type { MessageEvent, OperationEvent } from "./Event";
 import { ExceptionFactory } from "./ExceptionFactory";
 import type { Game } from "./Game";
 import type { LocalTickModeString } from "./LocalTickModeString";
-import type { StorageLoader, StorageLoaderHandler, StorageReadKey, StorageValueStore, StorageValueStoreSerialization } from "./Storage";
 import type { TickGenerationModeString } from "./TickGenerationModeString";
 import type { Timer } from "./Timer";
 import type { TimerIdentifier } from "./TimerManager";
@@ -56,12 +55,6 @@ export interface SceneParameterObject {
 	assetPaths?: string[];
 
 	/**
-	 * このシーンで用いるストレージのキーを表す `StorageReadKey` の配列。
-	 * @default undefined
-	 */
-	storageKeys?: StorageReadKey[];
-
-	/**
 	 * このシーンのローカルティック消化ポリシー。
 	 *
 	 * * `"full-local"` が与えられた場合、このシーンはローカルシーンと呼ばれる。
@@ -87,16 +80,6 @@ export interface SceneParameterObject {
 	 * @default undefined
 	 */
 	name?: string;
-
-	/**
-	 * このシーンで復元するストレージデータ。
-	 *
-	 * falsyでない場合、 `Scene#serializeStorageValues()` の戻り値でなければならない。
-	 * この値を指定した場合、 `storageValues` の値は `serializeStorageValues()` を呼び出したシーン(元シーン)の持っていた値を再現したものになる。
-	 * この時、 `storageKeys` の値は元シーンと同じでなければならない。
-	 * @default undefined
-	 */
-	storageValuesSerialization?: StorageValueStoreSerialization;
 
 	/**
 	 * 時間経過の契機(ティック)をどのように生成するか。
@@ -133,7 +116,7 @@ export type SceneLoadStateString = "initial" | "ready" | "ready-fired" | "loaded
 /**
  * シーンを表すクラス。
  */
-export class Scene implements StorageLoaderHandler {
+export class Scene {
 	/**
 	 * このシーンの子エンティティ。
 	 *
@@ -289,11 +272,6 @@ export class Scene implements StorageLoaderHandler {
 	onOperation: Trigger<OperationEvent>;
 
 	/**
-	 * シーン内で利用可能なストレージの値を保持する `StorageValueStore`。
-	 */
-	storageValues: StorageValueStore | undefined;
-
-	/**
 	 * 時間経過イベント。本イベントの一度のfireにつき、常に1フレーム分の時間経過が起こる。
 	 * @deprecated 非推奨である。将来的に削除される。代わりに `onUpdate` を利用すること。
 	 */
@@ -383,11 +361,6 @@ export class Scene implements StorageLoaderHandler {
 	vars: any;
 
 	/**
-	 * @private
-	 */
-	_storageLoader: StorageLoader | undefined;
-
-	/**
 	 * アセットとストレージの読み込みが終わったことを通知するTrigger。
 	 * @private
 	 */
@@ -471,14 +444,6 @@ export class Scene implements StorageLoaderHandler {
 				? "full-local"
 				: param.local;
 		const tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
-
-		if (!param.storageKeys) {
-			this._storageLoader = undefined;
-			this.storageValues = undefined;
-		} else {
-			this._storageLoader = game.storage._createLoader(param.storageKeys, param.storageValuesSerialization);
-			this.storageValues = this._storageLoader._valueStore;
-		}
 
 		this.name = param.name;
 		this.game = game;
@@ -592,8 +557,6 @@ export class Scene implements StorageLoaderHandler {
 		// アセットを参照しているEより先に解放しないよう最後に解放する
 		for (let i = 0; i < this._assetHolders.length; ++i) this._assetHolders[i].destroy();
 		this._sceneAssetHolder.destroy();
-
-		this._storageLoader = undefined;
 
 		this.game = undefined!;
 		this._waitingPrepare = undefined;
@@ -817,9 +780,6 @@ export class Scene implements StorageLoaderHandler {
 	 * `Scene` に必要なアセットは、通常、`Game#pushScene()` などによるシーン遷移にともなって暗黙に読み込みが開始される。
 	 * ゲーム開発者はこのメソッドを呼び出すことで、シーン遷移前にアセット読み込みを開始する(先読みする)ことができる。
 	 * 先読み開始後、シーン遷移時までに読み込みが完了していない場合、通常の読み込み処理同様にローディングシーンが表示される。
-	 *
-	 * このメソッドは `StorageLoader` についての先読み処理を行わない点に注意。
-	 * ストレージの場合、書き込みが行われる可能性があるため、順序を無視して先読みすることはできない。
 	 */
 	prefetch(): void {
 		if (this._loaded) {
@@ -829,16 +789,6 @@ export class Scene implements StorageLoaderHandler {
 		if (this._prefetchRequested) return;
 		this._prefetchRequested = true;
 		this._sceneAssetHolder.request();
-	}
-
-	/**
-	 * シーンが読み込んだストレージの値をシリアライズする。
-	 *
-	 * `Scene#storageValues` の内容をシリアライズする。
-	 */
-	serializeStorageValues(): StorageValueStoreSerialization {
-		if (!this._storageLoader) return undefined;
-		return this._storageLoader._valueStoreSerialization;
 	}
 
 	requestAssets(
@@ -889,11 +839,7 @@ export class Scene implements StorageLoaderHandler {
 	 * @private
 	 */
 	_needsLoading(): boolean {
-		return (
-			this._sceneAssetHolder.waitingAssetsCount > 0 ||
-			(!!this._storageLoader && !this._storageLoader._loaded) ||
-			!!this._waitingPrepare
-		);
+		return this._sceneAssetHolder.waitingAssetsCount > 0 || !!this._waitingPrepare;
 	}
 
 	/**
@@ -903,12 +849,9 @@ export class Scene implements StorageLoaderHandler {
 		if (this._loaded) return;
 		this._loaded = true;
 
-		let needsWait = this._sceneAssetHolder.request();
-		if (this._storageLoader) {
-			this._storageLoader._load(this);
-			needsWait = true;
+		if (!this._sceneAssetHolder.request()) {
+			this._notifySceneReady();
 		}
-		if (!needsWait) this._notifySceneReady();
 	}
 
 	/**
@@ -948,26 +891,7 @@ export class Scene implements StorageLoaderHandler {
 			// _notifySceneReady() は _load() 呼び出し後まで遅延する。
 			return;
 		}
-		if (this._storageLoader && !this._storageLoader._loaded) {
-			// アセット読み込みを完了したが、ストレージの読み込みが終わっていない。
-			// _notifySceneReady() は  _onStorageLoaded() 呼び出し後まで遅延する。
-			return;
-		}
 		this._notifySceneReady();
-	}
-
-	/**
-	 * @private
-	 */
-	_onStorageLoadError(_error: StorageLoadError): void {
-		this.game.terminateGame();
-	}
-
-	/**
-	 * @private
-	 */
-	_onStorageLoaded(): void {
-		if (this._sceneAssetHolder.waitingAssetsCount === 0) this._notifySceneReady();
 	}
 
 	/**

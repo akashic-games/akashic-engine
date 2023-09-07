@@ -70,7 +70,6 @@ export * from "./ScriptAssetContext";
 export * from "./ShaderProgram";
 export * from "./SnapshotSaveRequest";
 export * from "./SpriteFactory";
-export * from "./Storage";
 export * from "./SurfaceAtlas";
 export * from "./SurfaceAtlasSet";
 export * from "./SurfaceAtlasSlot";
