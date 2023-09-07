@@ -3,6 +3,7 @@
 ## 3.15.0
 * `g.Storage` とその周辺のコードを削除
   * ゲーム開発者に影響はありません。
+* `g.PathUtil` を @akashic/game-configuration から参照するように
 
 ### エンジン開発者への影響
 * `g.Game#storage` が削除されます。
