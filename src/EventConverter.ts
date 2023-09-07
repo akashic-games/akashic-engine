@@ -8,7 +8,6 @@ import { EventIndex } from "./EventIndex";
 import { ExceptionFactory } from "./ExceptionFactory";
 import type { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import type { Player } from "./Player";
-import { StorageValueStore } from "./Storage";
 import type { WeakRefKVS } from "./WeakRefKVS";
 
 /**
@@ -76,17 +75,7 @@ export class EventConverter {
 				// @ts-ignore
 				this._playerTable[playerId] = player;
 
-				let store: StorageValueStore | undefined = undefined;
-				if (pev[EventIndex.Join.StorageData]) {
-					const keys: pl.StorageReadKey[] = [];
-					const values: pl.StorageValue[][] = [];
-					pev[EventIndex.Join.StorageData].map((data: pl.StorageData) => {
-						keys.push(data.readKey);
-						values.push(data.values);
-					});
-					store = new StorageValueStore(keys, values);
-				}
-				return new JoinEvent(player, store, prio);
+				return new JoinEvent(player, prio);
 
 			case pl.EventCode.Leave:
 				delete this._playerTable[player.id];
