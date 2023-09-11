@@ -70,7 +70,7 @@ describe("test Event", () => {
 
 	it("初期化 - Join", () => {
 		const player = { id: "3", name: "p" };
-		const joinEvent = new JoinEvent(player, undefined, 1);
+		const joinEvent = new JoinEvent(player, 1);
 		expect(joinEvent.type).toBe("join");
 		expect(joinEvent.eventFlags).toBe(1);
 	});

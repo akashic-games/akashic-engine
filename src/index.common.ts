@@ -12,6 +12,9 @@ export { Module } from "./Module";
 export { ShaderProgram } from "./ShaderProgram";
 export { VideoSystem } from "./VideoSystem";
 
+// 後方互換性のため PathUtil のみ reexport する。
+export { PathUtil } from "@akashic/game-configuration/lib/utils/PathUtil";
+
 export * from "./entities/CacheableE";
 export * from "./entities/E";
 export * from "./entities/FilledRect";
@@ -59,7 +62,6 @@ export * from "./OperationPlugin";
 export * from "./OperationPluginManager";
 export * from "./OperationPluginOperation";
 export * from "./OperationPluginStatic";
-export * from "./PathUtil";
 export * from "./Player";
 export * from "./PointEventResolver";
 export * from "./RandomGenerator";
@@ -70,7 +72,6 @@ export * from "./ScriptAssetContext";
 export * from "./ShaderProgram";
 export * from "./SnapshotSaveRequest";
 export * from "./SpriteFactory";
-export * from "./Storage";
 export * from "./SurfaceAtlas";
 export * from "./SurfaceAtlasSet";
 export * from "./SurfaceAtlasSlot";

@@ -1,5 +1,5 @@
+import { PathUtil } from "@akashic/game-configuration/lib/utils/PathUtil";
 import type { Module as PdiModule, ScriptAssetRuntimeValue, ScriptAssetRuntimeValueBase } from "@akashic/pdi-types";
-import { PathUtil } from "./PathUtil";
 import type { Require } from "./Require";
 
 export interface ModuleParameterObject {

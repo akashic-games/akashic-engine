@@ -34,7 +34,6 @@ import { PointEventResolver } from "./PointEventResolver";
 import type { RandomGenerator } from "./RandomGenerator";
 import { Scene } from "./Scene";
 import type { SnapshotSaveRequest } from "./SnapshotSaveRequest";
-import { Storage } from "./Storage";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import type { TickGenerationModeString } from "./TickGenerationModeString";
 import { WeakRefKVS } from "./WeakRefKVS";
@@ -458,11 +457,6 @@ export class Game {
 	handlerSet: GameHandlerSet;
 
 	/**
-	 * ストレージ。
-	 */
-	storage: Storage;
-
-	/**
 	 * ゲーム開発者向けのコンテナ。
 	 *
 	 * この値はゲームエンジンのロジックからは使用されず、ゲーム開発者は任意の目的に使用してよい。
@@ -870,7 +864,7 @@ export class Game {
 				throw ExceptionFactory.createAssertionError("Game#skippingScene: only 'full-local' scene is supported.");
 			}
 			if (scene._needsLoading()) {
-				throw ExceptionFactory.createAssertionError("Game#skippingScene: must not depend on any assets/storages.");
+				throw ExceptionFactory.createAssertionError("Game#skippingScene: must not depend on any assets.");
 			}
 		}
 		this._skippingScene = scene;
@@ -916,7 +910,6 @@ export class Game {
 		this.audio = new AudioSystemManager(this.resourceFactory);
 
 		this.defaultAudioSystemId = "sound";
-		this.storage = new Storage();
 		this.assets = {};
 		this.surfaceAtlasSet = new SurfaceAtlasSet({ resourceFactory: this.resourceFactory });
 
@@ -1712,7 +1705,6 @@ export class Game {
 
 		// TODO より能動的にdestroy処理を入れるべきかもしれない
 		this.resourceFactory = undefined!;
-		this.storage = undefined!;
 
 		this.playId = undefined;
 		this.operationPlugins = undefined!; // this._operationPluginManager.pluginsのエイリアスなので、特に破棄処理はしない。
@@ -2043,9 +2035,7 @@ export class Game {
 
 		if (scene._needsLoading() && scene._loadingState !== "loaded-fired") {
 			if (this._defaultLoadingScene._needsLoading())
-				throw ExceptionFactory.createAssertionError(
-					"Game#_doPushScene: _defaultLoadingScene must not depend on any assets/storages."
-				);
+				throw ExceptionFactory.createAssertionError("Game#_doPushScene: _defaultLoadingScene must not depend on any assets.");
 			this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 			loadingScene.reset(scene);
 		} else {

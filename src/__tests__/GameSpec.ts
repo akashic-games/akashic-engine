@@ -1520,7 +1520,7 @@ describe("test Game", () => {
 
 			expect(() => {
 				game.skippingScene = new Scene({ game, local: "full-local", assetIds: ["foo"] });
-			}).toThrow("Game#skippingScene: must not depend on any assets/storages.");
+			}).toThrow("Game#skippingScene: must not depend on any assets.");
 		});
 
 		it("do not render anything in skipping if the configuration of the 'defaultSkippingScene' field is set to 'none'", () => {
