@@ -6,7 +6,7 @@
  * インデックスのハードコーディングを避けるため、ここで const enum で名前を与えることにする。
  *
  * 本当はこのファイルの内容は playlog に移管すべきだが、
- * playlog に存在しない `Local` や一部の `Button` のフィールドを使うため akashic-engine 側で扱う。
+ * playlog に存在しない `Local` フィールドを使うため akashic-engine 側で扱う。
  *
  */
 export module EventIndex {
@@ -93,7 +93,8 @@ export module EventIndex {
 		PrevDeltaX = 8,
 		PrevDeltaY = 9,
 		EntityId = 10,
-		Local = 11
+		Button = 11,
+		Local = 12
 	}
 
 	export const enum PointUp {
@@ -108,7 +109,8 @@ export module EventIndex {
 		PrevDeltaX = 8,
 		PrevDeltaY = 9,
 		EntityId = 10,
-		Local = 11
+		Button = 11,
+		Local = 12
 	}
 
 	export const enum Operation {

@@ -13,7 +13,6 @@ interface PointEventHolder {
 	point: CommonOffset;
 	start: CommonOffset;
 	prev: CommonOffset;
-	button: number;
 	// TODO: タイムスタンプのようなものを入れて一定時間後にクリアする仕組みが必要かもしれない。
 	//       pointUpをトリガに解放するので、pointUpを取り逃すとリークする(mapに溜まったままになってしまう)
 }
@@ -84,8 +83,7 @@ export class PointEventResolver {
 			local,
 			point,
 			start: { x: e.offset.x, y: e.offset.y },
-			prev: { x: e.offset.x, y: e.offset.y },
-			button: e.button ?? 0
+			prev: { x: e.offset.x, y: e.offset.y }
 		};
 		this._currentPoints++;
 
@@ -121,7 +119,8 @@ export class PointEventResolver {
 			start.y, //                7: ポイントダウンイベントからのY座標の差
 			prev.x, //                 8: 直前のポイントムーブイベントからのX座標の差
 			prev.y, //                 9: 直前のポイントムーブイベントからのY座標の差
-			holder.targetId //         10?: エンティティID
+			holder.targetId, //        10?: エンティティID
+			e.button //                11?: ボタンの種類
 		];
 		if (holder.local) ret.push(holder.local); // 11?: ローカル
 		return ret;
@@ -146,7 +145,8 @@ export class PointEventResolver {
 			start.y, //              7: ポイントダウンイベントからのY座標の差
 			prev.x, //               8: 直前のポイントムーブイベントからのX座標の差
 			prev.y, //               9: 直前のポイントムーブイベントからのY座標の差
-			holder.targetId //       10?: エンティティID
+			holder.targetId, //      10?: エンティティID
+			e.button //              11?: ボタンの種類
 		];
 		if (holder.local) ret.push(holder.local); // 11?: ローカル
 		return ret;
