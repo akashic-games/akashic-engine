@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.16.0
 * @akashic/pdi-types@1.12.0 に追従
   * `g.PointMoveEvent#button` の値が変更されます。
 
