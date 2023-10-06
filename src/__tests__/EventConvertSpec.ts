@@ -1,3 +1,4 @@
+import { PlatformButtonType } from "@akashic/pdi-types";
 import * as pl from "@akashic/playlog";
 import { PointDownEvent, PointMoveEvent, PointUpEvent } from "../entities/E";
 import { FilledRect } from "../entities/FilledRect";
@@ -56,10 +57,32 @@ describe("EventConverter", () => {
 		const pd = new PointDownEvent(1, source.target, source.point!, player, false, EventPriority.Joined);
 		const pd2 = self.toGameEvent(self.toPlaylogEvent(pd));
 		expect(pd).toEqual(pd2);
-		const pm = new PointMoveEvent(1, source.target, source.point!, { x: 2, y: 3 }, { x: 2, y: 3 }, player, false, EventPriority.Lowest);
+
+		const pm = new PointMoveEvent(
+			1,
+			source.target,
+			source.point!,
+			{ x: 2, y: 3 },
+			{ x: 2, y: 3 },
+			player,
+			false,
+			PlatformButtonType.Unchanged,
+			EventPriority.Lowest
+		);
 		const pm2 = self.toGameEvent(self.toPlaylogEvent(pm));
 		expect(pm).toEqual(pm2);
-		const pu = new PointUpEvent(1, source.target, source.point!, { x: 4, y: 1 }, { x: 6, y: 4 }, player, false, EventPriority.Joined);
+
+		const pu = new PointUpEvent(
+			1,
+			source.target,
+			source.point!,
+			{ x: 4, y: 1 },
+			{ x: 6, y: 4 },
+			player,
+			false,
+			PlatformButtonType.Secondary,
+			EventPriority.Joined
+		);
 		const pu2 = self.toGameEvent(self.toPlaylogEvent(pu));
 		expect(pu).toEqual(pu2);
 
@@ -141,25 +164,5 @@ describe("EventConverter", () => {
 		expect(pointDown2.player!.id).toBe("dummyPlayerId");
 		expect(pointDown2.player!.name).toBe("dummyName");
 		expect(pointDown2.player!.userData).toEqual({ userDataProp: "dummy" });
-
-		// PointMoveEvent と PointUpEvent の button の値が PointerId が同一の PointDownEvent の button と同値であること
-		const pdown3: pl.PointDownEvent = [pl.EventCode.PointDown, EventPriority.System, "dummyPlayerId", 1, 10, 20, 0, 2];
-		const pointDown3 = self.toGameEvent(pdown3) as PointDownEvent;
-		expect(pointDown3.type).toBe("point-down");
-		expect(pointDown3.pointerId).toBe(1);
-		expect(pointDown3.button).toBe(2);
-		const pmove: pl.PointMoveEvent = [pl.EventCode.PointMove, EventPriority.System, "dummyPlayerId", 1, 12, 25, 2, 5, 0, 1, 0];
-		const pointMove = self.toGameEvent(pmove) as PointMoveEvent;
-		expect(pointMove.type).toBe("point-move");
-		expect(pointMove.pointerId).toBe(pointDown3.pointerId);
-		expect(pointMove.button).toBe(pointDown3.button);
-		const pup: pl.PointUpEvent = [pl.EventCode.PointUp, EventPriority.System, "dummyPlayerId", 1, 15, 25, 5, 5, 1, 0, 0];
-		const pointUp = self.toGameEvent(pup) as PointUpEvent;
-		expect(pointUp.type).toBe("point-up");
-		expect(pointUp.pointerId).toBe(pointDown3.pointerId);
-		expect(pointUp.button).toBe(pointDown3.button);
-		// 一度PointUpEventが発生すると、PointerId が同一でも PointDownEvent の button と異なる値になる(厳密にはデフォルト値の0になる)
-		const pointUp2 = self.toGameEvent(pup) as PointUpEvent;
-		expect(pointUp2.button).toBe(0);
 	});
 });

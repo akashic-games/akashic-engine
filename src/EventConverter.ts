@@ -33,13 +33,11 @@ export class EventConverter {
 	_game: EventConverterParameterObjectGameLike;
 	_playerId: string | null;
 	_playerTable: { [key: string]: Player };
-	_pointDownButtonTable: { [key: number]: number };
 
 	constructor(param: EventConverterParameterObject) {
 		this._game = param.game;
 		this._playerId = param.playerId ?? null;
 		this._playerTable = {};
-		this._pointDownButtonTable = {};
 	}
 
 	/**
@@ -111,7 +109,6 @@ export class EventConverter {
 					y: pev[EventIndex.PointDown.Y]
 				};
 				button = pev[EventIndex.PointDown.Button];
-				this._pointDownButtonTable[pointerId] = button;
 				return new PointDownEvent(pointerId, target, point, player, local, prio, button);
 
 			case pl.EventCode.PointMove:
@@ -131,7 +128,7 @@ export class EventConverter {
 					x: pev[EventIndex.PointMove.PrevDeltaX],
 					y: pev[EventIndex.PointMove.PrevDeltaY]
 				};
-				button = this._pointDownButtonTable[pointerId];
+				button = pev[EventIndex.PointMove.Button];
 				return new PointMoveEvent(pointerId, target, point, prevDelta, startDelta, player, local, prio, button);
 
 			case pl.EventCode.PointUp:
@@ -151,8 +148,7 @@ export class EventConverter {
 					x: pev[EventIndex.PointUp.PrevDeltaX],
 					y: pev[EventIndex.PointUp.PrevDeltaY]
 				};
-				button = this._pointDownButtonTable[pointerId];
-				delete this._pointDownButtonTable[pointerId];
+				button = pev[EventIndex.PointUp.Button];
 				return new PointUpEvent(pointerId, target, point, prevDelta, startDelta, player, local, prio, button);
 
 			case pl.EventCode.Operation:
@@ -229,7 +225,8 @@ export class EventConverter {
 					pointMove.prevDelta.x, //  8: 直前のポイントムーブイベントからのX座標の差
 					pointMove.prevDelta.y, //  9: 直前のポイントムーブイベントからのY座標の差
 					targetId, //               10?: エンティティID
-					!!pointMove.local //       11?: ローカルイベントかどうか
+					pointMove.button, //       11?:
+					!!pointMove.local //       12?: ローカルイベントかどうか
 				];
 			case "point-up":
 				const pointUp = e as PointUpEvent;
@@ -247,7 +244,8 @@ export class EventConverter {
 					pointUp.prevDelta.x, //  8: 直前のポイントムーブイベントからのX座標の差
 					pointUp.prevDelta.y, //  9: 直前のポイントムーブイベントからのY座標の差
 					targetId, //             10?: エンティティID
-					!!pointUp.local //       11?: ローカルイベントかどうか
+					pointUp.button, //       11?:
+					!!pointUp.local //       12?: ローカルイベントかどうか
 				];
 			case "message":
 				const message = e as MessageEvent;

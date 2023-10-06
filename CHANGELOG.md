@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.16.0
+* @akashic/pdi-types@1.12.0 に追従
+  * `g.PointMoveEvent#button` の値が変更されます。
+
 ## 3.15.0
 * `g.Storage` とその周辺のコードを削除
   * ゲーム開発者に影響はありません。

@@ -10,7 +10,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: '16'
+  NODE_VERSION: '18'
   PUBLIC_DIR: public
   V3_REF: main
   V2_REF: v2-main
