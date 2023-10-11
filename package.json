@@ -22,7 +22,7 @@
     "jest": "^29.0.0",
     "prettier": "^3.0.3",
     "rimraf": "^4.0.0",
-    "rollup": "^3.2.5",
+    "rollup": "^4.0.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minification": "^0.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
