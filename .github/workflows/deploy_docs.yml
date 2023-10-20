@@ -28,17 +28,17 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Checkout (v3)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.V3_REF }}
           path: ${{ env.V3_DIR }}
       - name: Checkout (v2)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.V2_REF }}
           path: ${{ env.V2_DIR }}
       - name: Checkout (v1)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.V1_REF }}
           path: ${{ env.V1_DIR }}
