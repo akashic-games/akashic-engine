@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.16.1
+不具合修正
+ * スナップショットからの復元時、 `g.game._idx` が復元できないことがある問題を修正
+
 ## 3.16.0
 * @akashic/pdi-types@1.12.0 に追従
   * `g.PointMoveEvent#button` の値が変更されます。
