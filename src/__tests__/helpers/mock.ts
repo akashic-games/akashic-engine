@@ -336,9 +336,10 @@ export class AudioAsset extends pci.AudioAsset {
 		system: PdiAudioSystem,
 		loop: boolean,
 		hint: AudioAssetHint,
-		offset: number | undefined
+		offset: number | undefined,
+		loopOffset: number | undefined
 	) {
-		super(id, assetPath, duration, system, loop, hint, offset);
+		super(id, assetPath, duration, system, loop, hint, offset, loopOffset);
 		this._failureController = new LoadFailureController(necessaryRetryCount);
 	}
 
@@ -582,9 +583,10 @@ export class ResourceFactory extends pci.ResourceFactory {
 		system: PdiAudioSystem,
 		loop: boolean,
 		hint: AudioAssetHint,
-		offset?: number
+		offset?: number,
+		loopOffset?: number
 	): AudioAsset {
-		return new AudioAsset(this._necessaryRetryCount, id, assetPath, duration, system, loop, hint, offset);
+		return new AudioAsset(this._necessaryRetryCount, id, assetPath, duration, system, loop, hint, offset, loopOffset);
 	}
 
 	createTextAsset(id: string, assetPath: string): TextAsset {
