@@ -1535,7 +1535,6 @@ export class Game {
 
 		if (param) {
 			if (param.age !== undefined) this.age = param.age;
-			if (param.nextEntityId !== undefined) this._idx = param.nextEntityId;
 			if (param.randGenSer !== undefined) {
 				this.random = XorshiftRandomGenerator.deserialize(param.randGenSer);
 			} else if (param.randSeed !== undefined) {
@@ -1561,7 +1560,7 @@ export class Game {
 		this.onJoin.add(this._handleJoinEvent, this);
 		this.onLeave.add(this._handleLeaveEvent, this);
 
-		this._idx = 0;
+		this._idx = param?.nextEntityId ?? 0;
 		this._localIdx = 0;
 		this._cameraIdx = 0;
 		this.db = new WeakRefKVS();

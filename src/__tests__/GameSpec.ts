@@ -1421,6 +1421,40 @@ describe("test Game", () => {
 		testDone = true;
 	});
 
+	it("_reset - restore by param", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "./script/mainScene.js",
+			assets: {
+				mainScene: {
+					type: "script",
+					global: true,
+					path: "./script/mainScene.js",
+					virtualPath: "script/mainScene.js"
+				}
+			}
+		});
+		game.resourceFactory.scriptContents["./script/mainScene.js"] =
+			"module.exports = () => { const s = new g.Scene({game: g.game}); g.game.pushScene(s); };";
+
+		const randGen = new XorshiftRandomGenerator(100);
+
+		let testDone = false;
+		game._onLoad.add(() => {
+			expect(game.age).toBe(10);
+			expect(game._idx).toBe(42);
+			expect(game.random.serialize()).toEqual(randGen.serialize());
+			expect(testDone).toBe(true);
+			done();
+		});
+
+		game._loadAndStart();
+		game._reset({ age: 10, nextEntityId: 42, randGenSer: randGen.serialize() });
+		game._loadAndStart();
+		testDone = true;
+	});
+
 	it("controls audio volume", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 
