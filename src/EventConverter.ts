@@ -10,11 +10,8 @@ import type { InternalOperationPluginOperation } from "./OperationPluginOperatio
 import type { Player } from "./Player";
 import type { WeakRefKVS } from "./WeakRefKVS";
 
-/**
- * @ignore
- */
 // TODO: Game を意識しないインターフェース を検討する
-interface EventConverterParameterObjectGameLike {
+export interface EventConverterParameterObjectGameLike {
 	db: WeakRefKVS<E>;
 	_localDb: WeakRefKVS<E>;
 	_decodeOperationPluginOperation: (code: number, op: (number | string)[]) => any;
