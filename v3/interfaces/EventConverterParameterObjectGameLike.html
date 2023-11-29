@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ShaderProgramParameterObject | Akashic Engine</title><meta name="description" content="Documentation for Akashic Engine"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>EventConverterParameterObjectGameLike | Akashic Engine</title><meta name="description" content="Documentation for Akashic Engine"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -13,19 +13,14 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">Akashic Engine</a></li>
-<li><a href="ShaderProgramParameterObject.html">ShaderProgramParameterObject</a></li></ul>
-<h1>Interface ShaderProgramParameterObject</h1></div>
-<section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p><code>ShaderProgram</code> のコンストラクタに渡すことができるパラメータ。
-各メンバの詳細は <code>ShaderProgram</code> の同名メンバの説明を参照すること。</p>
-</div>
-<div class="tsd-comment tsd-typography"></div></section>
+<li><a href="EventConverterParameterObjectGameLike.html">EventConverterParameterObjectGameLike</a></li></ul>
+<h1>Interface EventConverterParameterObjectGameLike</h1></div>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><span class="target">ShaderProgramParameterObject</span></li></ul></section><aside class="tsd-sources">
+<li><span class="target">EventConverterParameterObjectGameLike</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/ShaderProgram.ts#L7">src/ShaderProgram.ts:7</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/EventConverter.ts#L14">src/EventConverter.ts:14</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -33,55 +28,42 @@
 <div class="tsd-accordion-details">
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="ShaderProgramParameterObject.html#fragmentShader" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>fragment<wbr/>Shader?</span></a>
-<a href="ShaderProgramParameterObject.html#uniforms" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>uniforms?</span></a>
+<div class="tsd-index-list"><a href="EventConverterParameterObjectGameLike.html#_decodeOperationPluginOperation" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_decode<wbr/>Operation<wbr/>Plugin<wbr/>Operation</span></a>
+<a href="EventConverterParameterObjectGameLike.html#_localDb" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_local<wbr/>Db</span></a>
+<a href="EventConverterParameterObjectGameLike.html#db" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>db</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
-<section class="tsd-panel tsd-member"><a id="fragmentShader" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>fragment<wbr/>Shader</span><a href="#fragmentShader" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">fragment<wbr/>Shader</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
-<div class="tsd-comment tsd-typography"><p>フラグメントシェーダの文字列。</p>
-<p>フラグメントシェーダは GLSL 1.0 に準拠した記述でなければならない。
-またフラグメントシェーダには以下の varying, uniform 値がエンジンによって与えられる。</p>
-<ul>
-<li>uniform float uAlpha<ul>
-<li>描画時の透過度</li>
-</ul>
-</li>
-<li>uniform sampler2D uSampler<ul>
-<li>描画元テクスチャ番号</li>
-</ul>
-</li>
-<li>varying vec2 vTexCoord<ul>
-<li>描画元テクスチャの座標</li>
-<li>gl_FragColor = texture2D(uSampler, vTexCoord); のような形で描画元テクスチャのピクセルを参照できる</li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="tsd-comment tsd-typography">
-<h4>Default</h4><pre><code class="language-ts"><span class="hl-3">undefined</span>
-</code><button>Copy</button></pre>
-</div><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/ShaderProgram.ts#L23">src/ShaderProgram.ts:23</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member"><a id="uniforms" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>uniforms</span><a href="#uniforms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">uniforms</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{ </span><br/><span>    </span>[<span class="tsd-kind-index-signature">key</span>: <span class="tsd-signature-type">string</span>]<span class="tsd-signature-symbol">: </span><a href="ShaderUniform.html" class="tsd-signature-type tsd-kind-interface">ShaderUniform</a><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></div>
-<div class="tsd-comment tsd-typography"><p>フラグメントシェーダに指定可能なuniform値のマップ。</p>
-</div>
+<section class="tsd-panel tsd-member"><a id="_decodeOperationPluginOperation" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>_decode<wbr/>Operation<wbr/>Plugin<wbr/>Operation</span><a href="#_decodeOperationPluginOperation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">_decode<wbr/>Operation<wbr/>Plugin<wbr/>Operation</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">code</span>, <span class="tsd-kind-parameter">op</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span></div>
 <div class="tsd-type-declaration">
 <h4>Type declaration</h4>
 <ul class="tsd-parameters">
-<li class="tsd-parameter-index-signature">
-<h5><span class="tsd-signature-symbol">[</span><span class="tsd-kind-parameter">key</span>: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="ShaderUniform.html" class="tsd-signature-type tsd-kind-interface">ShaderUniform</a></h5></li></ul></div>
-<div class="tsd-comment tsd-typography">
-<h4>Default</h4><pre><code class="language-ts"><span class="hl-3">undefined</span>
-</code><button>Copy</button></pre>
-</div><aside class="tsd-sources">
+<li class="tsd-parameter-signature">
+<ul class="tsd-signatures">
+<li class="tsd-signature" id="_decodeOperationPluginOperation.__type.__type-1"><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">code</span>, <span class="tsd-kind-parameter">op</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">code</span>: <span class="tsd-signature-type">number</span></h5></li>
+<li>
+<h5><span class="tsd-kind-parameter">op</span>: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/ShaderProgram.ts#L29">src/ShaderProgram.ts:29</a></li></ul></aside></section></section></div>
+<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/EventConverter.ts#L17">src/EventConverter.ts:17</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member"><a id="_localDb" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>_local<wbr/>Db</span><a href="#_localDb" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">_local<wbr/>Db</span><span class="tsd-signature-symbol">:</span> <a href="../classes/WeakRefKVS.html" class="tsd-signature-type tsd-kind-class">WeakRefKVS</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/E.html" class="tsd-signature-type tsd-kind-class">E</a><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/EventConverter.ts#L16">src/EventConverter.ts:16</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member"><a id="db" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>db</span><a href="#db" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">db</span><span class="tsd-signature-symbol">:</span> <a href="../classes/WeakRefKVS.html" class="tsd-signature-type tsd-kind-class">WeakRefKVS</a><span class="tsd-signature-symbol">&lt;</span><a href="../classes/E.html" class="tsd-signature-type tsd-kind-class">E</a><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/akashic-games/akashic-engine/blob/59164b0/src/EventConverter.ts#L15">src/EventConverter.ts:15</a></li></ul></aside></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -101,8 +83,9 @@
 <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>On This Page</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li><a href="#fragmentShader" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>fragment<wbr/>Shader</span></a></li>
-<li><a href="#uniforms" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>uniforms</span></a></li></ul></div></details></div>
+<li><a href="#_decodeOperationPluginOperation" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_decode<wbr/>Operation<wbr/>Plugin<wbr/>Operation</span></a></li>
+<li><a href="#_localDb" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_local<wbr/>Db</span></a></li>
+<li><a href="#db" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>db</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1"></use></svg><span>Akashic Engine</span></a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base="..">
