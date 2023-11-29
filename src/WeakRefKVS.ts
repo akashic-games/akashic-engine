@@ -22,7 +22,15 @@ class PseudoWeakRef<T extends object> {
  * 通常、ゲーム開発者はこのクラスを利用する必要はない。
  */
 export class WeakRefKVS<T extends object> {
+
+	/**
+	 * @ignore
+	 */
 	_weakRefClass: any = typeof WeakRef !== "undefined" ? WeakRef<T> : PseudoWeakRef<T>;
+
+	/**
+	 * @ignore
+	 */
 	_refMap: { [key: string]: WeakRefLike<T> } = Object.create(null);
 
 	set(key: string | number, value: T): void {

@@ -75,7 +75,7 @@ interface BinaryAssetConfiguration
 	extends Omit<BinaryAssetConfigurationBase, "type">,
 		Omit<BinaryAssetConfigurationBase, UnneededKeysForAsset> {}
 
-type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGenerationConfiguration;
+export type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGenerationConfiguration;
 
 export interface AssetManagerParameterGameLike {
 	resourceFactory: ResourceFactory;
@@ -240,6 +240,7 @@ export class AssetManager implements AssetLoadHandler {
 
 	/**
 	 * 読み込み中のアセットの情報。
+	 * @ignore
 	 */
 	private _loadings: { [key: string]: AssetLoadingInfo };
 
@@ -562,6 +563,7 @@ export class AssetManager implements AssetLoadHandler {
 
 	/**
 	 * @private
+	 * @ignore
 	 */
 	_normalizeAssetBaseDeclaration<T extends AssetConfigurationCore>(assetId: string, conf: T): T {
 		if (!conf.type) {

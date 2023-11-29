@@ -710,12 +710,14 @@ export class Game {
 	/**
 	 * イベントコンバータ。
 	 * @private
+	 * @ignore
 	 */
 	_eventConverter: EventConverter;
 
 	/**
 	 * ポイントイベントの解決モジュール。
 	 * @private
+	 * @ignore
 	 */
 	_pointEventResolver: PointEventResolver;
 
@@ -818,6 +820,7 @@ export class Game {
 
 	/**
 	 * 実行待ちの post-tick タスク。
+	 * @ignore
 	 */
 	private _postTickTasks: PostTickTask[];
 
