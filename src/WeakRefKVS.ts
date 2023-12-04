@@ -22,7 +22,6 @@ class PseudoWeakRef<T extends object> {
  * 通常、ゲーム開発者はこのクラスを利用する必要はない。
  */
 export class WeakRefKVS<T extends object> {
-
 	/**
 	 * @ignore
 	 */
