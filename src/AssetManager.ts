@@ -654,7 +654,16 @@ export class AssetManager implements AssetLoadHandler {
 				const system = conf.systemId
 					? this._audioSystemManager[conf.systemId]
 					: this._audioSystemManager[this._defaultAudioSystemId];
-				return resourceFactory.createAudioAsset(id, uri, conf.duration, system, !!conf.loop, conf.hint ?? {}, conf.offset);
+				return resourceFactory.createAudioAsset(
+					id,
+					uri,
+					conf.duration,
+					system,
+					!!conf.loop,
+					conf.hint ?? {},
+					conf.offset,
+					conf.loopOffset
+				);
 			case "text":
 				return resourceFactory.createTextAsset(id, uri);
 			case "script":

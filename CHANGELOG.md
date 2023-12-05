@@ -1,5 +1,12 @@
 # ChangeLog
 
+## 3.17.0-beta.0
+* @akashic/pdi-types@1.13.0-beta.0 に追従
+* @akashic/game-configuration@2.1.0-beta.1 に追従
+
+機能追加
+* game.json でオーディオアセットに再生開始位置 `"loopOffset"` を指定できるように
+
 ## 3.16.1
 不具合修正
  * スナップショットからの復元時、 `g.game._idx` が復元できないことがある問題を修正

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat-loopoffset
 
 env:
   NODE_VERSION: 18
