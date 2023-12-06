@@ -602,6 +602,9 @@ export class Game {
 
 	/**
 	 * ティック消化後にfireされるTrigger。
+	 *
+	 * このTriggerは現在のシーンの `onUpdate` が呼ばれた後にfireされる。
+	 * 現在のシーンの `onUpdate` 内で `Game#onUpdate` のハンドラを登録する際、明示的に次のティックまで遅らせたい場合は `Scene#setTimeout()` を利用すること。
 	 */
 	onUpdate: Trigger<void>;
 
