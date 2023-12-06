@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Unreleased Changes
+不具合修正
+ * `ModuleManager#_scriptCaches` に登録するキーが `require("./foo")`と`require("./foo/index")`で別になる問題を修正 
+
 ## 3.16.1
 不具合修正
  * スナップショットからの復元時、 `g.game._idx` が復元できないことがある問題を修正
