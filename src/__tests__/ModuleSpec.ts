@@ -655,6 +655,16 @@ describe("test Module", () => {
 			expect(libraryA.thisModule.loaded).toBe(true);
 
 			expect(moduleUsesALibraryA).not.toBe(libraryA);
+
+			const keys = Object.keys(manager._scriptCaches);
+			// require("./foo") は require("./foo/index.js") で登録されること
+			expect(keys.includes("script/useA.js")).toBeTruthy();
+			expect(keys.includes("node_modules/moduleUsesA/index.js")).toBeTruthy();
+			expect(keys.includes("node_modules/moduleUsesA/node_modules/libraryA/index.js")).toBeTruthy();
+			expect(keys.includes("node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js")).toBeTruthy();
+			expect(keys.includes("node_modules/libraryA/index.js")).toBeTruthy();
+			expect(keys.includes("node_modules/libraryA")).toBeFalsy();
+
 			done();
 		});
 		game._startLoadingGlobalAssets();
