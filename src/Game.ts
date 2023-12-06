@@ -366,6 +366,10 @@ export class Game {
 	 */
 	age: number;
 	/**
+	 * このコンテンツのローカルでの累計経過時間。
+	 */
+	localAge: number;
+	/**
 	 * フレーム辺りの時間経過間隔。初期値は30である。
 	 */
 	fps: number;
@@ -886,6 +890,7 @@ export class Game {
 		this.renderers = [];
 		this.scenes = [];
 		this.age = 0;
+		this.localAge = 0;
 		this.assetBase = param.assetBase || "";
 		this.resourceFactory = param.resourceFactory;
 		this.handlerSet = param.handlerSet;
@@ -1120,11 +1125,14 @@ export class Game {
 
 		this.onUpdate.fire();
 
+		let sceneChanged = false;
 		if (this._postTickTasks.length) {
 			this._flushPostTickTasks();
-			return scene !== this.scenes[this.scenes.length - 1];
+			sceneChanged = scene !== this.scenes[this.scenes.length - 1];
 		}
-		return false;
+		++this.localAge; // NOTE: this.age とインクリメントのタイミングが異なる点に注意
+
+		return sceneChanged;
 	}
 
 	/**
@@ -1566,6 +1574,7 @@ export class Game {
 		this._idx = param?.nextEntityId ?? 0;
 		this._localIdx = 0;
 		this._cameraIdx = 0;
+		this.localAge = 0;
 		this.db = new WeakRefKVS();
 		this._localDb = new WeakRefKVS();
 		this._modified = true;
@@ -1657,6 +1666,7 @@ export class Game {
 		this.random = undefined!;
 		this._modified = false;
 		this.age = 0;
+		this.localAge = 0;
 		this.assets = undefined!; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
 		this.isLoaded = false;
 		this.loadingScene = undefined!;
