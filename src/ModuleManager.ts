@@ -130,6 +130,7 @@ export class ModuleManager {
 				}
 			}
 		}
+
 		if (targetScriptAsset) {
 			// @ts-ignore
 			if (this._scriptCaches.hasOwnProperty(resolvedPath)) return this._scriptCaches[resolvedPath]._cachedValue();
