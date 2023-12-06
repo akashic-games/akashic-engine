@@ -87,12 +87,20 @@ export class ModuleManager {
 				return this._scriptCaches[resolvedPath]._cachedValue();
 			} else if (this._scriptCaches.hasOwnProperty(resolvedPath + ".js")) {
 				return this._scriptCaches[resolvedPath + ".js"]._cachedValue();
+			} else if (this._scriptCaches.hasOwnProperty(resolvedPath + "/index.js")) {
+				return this._scriptCaches[resolvedPath + "/index.js"]._cachedValue();
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
-			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+			if (!targetScriptAsset) {
+				targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+				if (targetScriptAsset && liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + ".js")) resolvedPath += ".js";
+			}
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
-			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+			if (!targetScriptAsset) {
+				targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+				if (targetScriptAsset && liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + "/index.js")) resolvedPath += "/index.js";
+			}
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 			// `path` は node module の名前であると仮定して探す
@@ -110,13 +118,18 @@ export class ModuleManager {
 					const dir = dirs[i];
 					resolvedPath = PathUtil.resolvePath(dir, path);
 					targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) break;
+					if (targetScriptAsset) {
+						if (liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + ".js")) resolvedPath += ".js";
+						break;
+					}
 					targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) break;
+					if (targetScriptAsset) {
+						if (liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + "/index.js")) resolvedPath += "/index.js";
+						break;
+					}
 				}
 			}
 		}
-
 		if (targetScriptAsset) {
 			// @ts-ignore
 			if (this._scriptCaches.hasOwnProperty(resolvedPath)) return this._scriptCaches[resolvedPath]._cachedValue();
