@@ -68,6 +68,11 @@ export class ModuleManager {
 			}
 		}
 
+		if (!resolvedPath) {
+			resolvedPath = this._resolvePath(path, currentModule);
+			if (/^\//.test(resolvedPath)) resolvedPath = resolvedPath.slice(1);
+		}
+
 		// 1. If X is a core module,
 		// (何もしない。コアモジュールには対応していない。ゲーム開発者は自分でコアモジュールへの依存を解決する必要がある)
 
@@ -77,29 +82,23 @@ export class ModuleManager {
 			if (currentModule) {
 				if (!currentModule._virtualDirname)
 					throw ExceptionFactory.createAssertionError("g._require: require from modules without virtualPath is not supported");
-				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
 				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
-				resolvedPath = path.substring(2);
 			}
 
 			if (this._scriptCaches.hasOwnProperty(resolvedPath)) {
 				return this._scriptCaches[resolvedPath]._cachedValue();
 			} else if (this._scriptCaches.hasOwnProperty(resolvedPath + ".js")) {
 				return this._scriptCaches[resolvedPath + ".js"]._cachedValue();
-			} else if (this._scriptCaches.hasOwnProperty(resolvedPath + "/index.js")) {
-				return this._scriptCaches[resolvedPath + "/index.js"]._cachedValue();
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
 			if (!targetScriptAsset) {
 				targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-				if (targetScriptAsset && liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + ".js")) resolvedPath += ".js";
 			}
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
 			if (!targetScriptAsset) {
 				targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-				if (targetScriptAsset && liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + "/index.js")) resolvedPath += "/index.js";
 			}
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
@@ -107,7 +106,6 @@ export class ModuleManager {
 
 			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
 			if (moduleMainScripts[path]) {
-				resolvedPath = moduleMainScripts[path];
 				targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 			}
 
@@ -115,18 +113,11 @@ export class ModuleManager {
 				const dirs = currentModule ? currentModule.paths : [];
 				dirs.push("node_modules");
 				for (let i = 0; i < dirs.length; ++i) {
-					const dir = dirs[i];
-					resolvedPath = PathUtil.resolvePath(dir, path);
 					targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) {
-						if (liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + ".js")) resolvedPath += ".js";
-						break;
-					}
+					if (targetScriptAsset) break;
+
 					targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) {
-						if (liveAssetVirtualPathTable.hasOwnProperty(resolvedPath + "/index.js")) resolvedPath += "/index.js";
-						break;
-					}
+					if (targetScriptAsset) break;
 				}
 			}
 		}
@@ -311,7 +302,7 @@ export class ModuleManager {
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (targetPath) {
-					return "/" + targetPath;
+					return /^\//.test(targetPath) ? targetPath : "/" + targetPath;
 				}
 			}
 		}
