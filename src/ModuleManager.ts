@@ -175,7 +175,10 @@ export class ModuleManager {
 				}
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
-				throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle without currentModule");
+				if (!/^\.\//.test(path)) {
+					throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle without currentModule");
+				}
+				resolvedPath = path.substring(2);
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
