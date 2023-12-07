@@ -93,13 +93,9 @@ export class ModuleManager {
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
-			if (!targetScriptAsset) {
-				targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-			}
+			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 			// 2.b. LOAD_AS_DIRECTORY(Y + X)
-			if (!targetScriptAsset) {
-				targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-			}
+			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 			// `path` は node module の名前であると仮定して探す
@@ -115,7 +111,6 @@ export class ModuleManager {
 				for (let i = 0; i < dirs.length; ++i) {
 					targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 					if (targetScriptAsset) break;
-
 					targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
 					if (targetScriptAsset) break;
 				}
@@ -302,7 +297,7 @@ export class ModuleManager {
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (targetPath) {
-					return /^\//.test(targetPath) ? targetPath : "/" + targetPath;
+					return targetPath;
 				}
 			}
 		}
