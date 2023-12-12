@@ -1450,6 +1450,7 @@ describe("test Game", () => {
 		let testDone = false;
 		game._onLoad.add(() => {
 			expect(game.age).toBe(10);
+			expect(game.localAge).toBeGreaterThanOrEqual(game.age);
 			expect(game._idx).toBe(42);
 			expect(game.random.serialize()).toEqual(randGen.serialize());
 			expect(testDone).toBe(true);
