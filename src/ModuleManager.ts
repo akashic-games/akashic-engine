@@ -69,6 +69,7 @@ export class ModuleManager {
 		}
 
 		if (!resolvedPath) {
+			// _scriptCaches のキーが "foo", と "foo/index" が別扱いされないようにするため、絶対パスでキーを確定する
 			resolvedPath = this._resolvePath(path, currentModule);
 			if (/^\//.test(resolvedPath)) resolvedPath = resolvedPath.slice(1);
 		}
@@ -176,6 +177,7 @@ export class ModuleManager {
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
 				if (!/^\.\//.test(path)) {
+					// エントリーポイント以外
 					throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle without currentModule");
 				}
 				resolvedPath = path.substring(2);
