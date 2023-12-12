@@ -28,14 +28,14 @@ describe("test EntityUpdateChainTrigger", () => {
 		expect(func).toBeCalledTimes(9);
 	});
 
-	it("can delay the call of the handler until the next tick if 'waitingNextTick' is true, ", () => {
+	it("can delay the call of the handler until the next tick if 'waitsNextTick' is true, ", () => {
 		const { game } = skeletonRuntime();
 		const chain = new Trigger<void>();
 		const trigger = new EntityUpdateChainTrigger(game, chain);
 
 		const func = jest.fn();
 
-		trigger.waitingNextTick = true;
+		trigger.waitsNextTick = true;
 		trigger.add(func);
 
 		trigger.fire();
@@ -63,7 +63,7 @@ describe("test EntityUpdateChainTrigger", () => {
 			.mockImplementationOnce(() => false)
 			.mockImplementation(() => true);
 
-		trigger.waitingNextTick = true;
+		trigger.waitsNextTick = true;
 		trigger.add({
 			func,
 			filter

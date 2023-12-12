@@ -13,13 +13,13 @@ interface EntityUpdateTriggerHandler<T> extends TriggerHandler<T> {
 /**
  * E#onUpdate 用のチェイントリガ。
  *
- * `this.waitingNextTick` が真の間に登録されたハンドラの発火を次のティック (`Game#tick()`) の呼び出しまで遅延する。
+ * `this.waitsNextTick` が真の間に登録されたハンドラの発火を次のティック (`Game#tick()`) の呼び出しまで遅延する。
  */
 export class EntityUpdateChainTrigger<T> extends ChainTrigger<T> {
 	/**
 	 * ハンドラの発火を次のティックまで遅延するかどうか。
 	 */
-	waitingNextTick: boolean;
+	waitsNextTick: boolean;
 
 	/**
 	 * @ignore
@@ -41,13 +41,13 @@ export class EntityUpdateChainTrigger<T> extends ChainTrigger<T> {
 	constructor(game: Game, chain: TriggerLike<T>, filter?: ChainTriggerFilterFunction<T>, filterOwner?: unknown) {
 		super(chain, filter, filterOwner);
 		this.game = game;
-		this.waitingNextTick = false;
+		this.waitsNextTick = false;
 		this._localAgeWeakMap = new WeakMap();
 		this._originalFilterWeakMap = new WeakMap();
 	}
 
 	override _addHandler(params: EntityUpdateTriggerHandler<T>, index?: number | undefined): void {
-		if (this.waitingNextTick) {
+		if (this.waitsNextTick) {
 			this._localAgeWeakMap.set(params.func, this.game.localAge);
 			this._originalFilterWeakMap.set(params.func, params.filter as HandlerFilterFunction<T>);
 			params.filter = this._filter.bind(this) as HandlerFilterFunction<T>;
