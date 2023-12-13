@@ -52,8 +52,7 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
-<div class="tsd-index-list"><a href="Trigger.html#_addHandler" class="tsd-index-link tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>_add<wbr/>Handler</span></a>
-<a href="Trigger.html#_comparePartial" class="tsd-index-link tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>_compare<wbr/>Partial</span></a>
+<div class="tsd-index-list"><a href="Trigger.html#_comparePartial" class="tsd-index-link tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>_compare<wbr/>Partial</span></a>
 <a href="Trigger.html#add" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add</span></a>
 <a href="Trigger.html#addOnce" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Once</span></a>
 <a href="Trigger.html#contains" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains</span></a>
@@ -100,22 +99,6 @@
 <li>Defined in node_modules/@akashic/trigger/lib/Trigger.d.ts:9</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
-<section class="tsd-panel tsd-member tsd-is-private tsd-is-external"><a id="_addHandler" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_add<wbr/>Handler</span><a href="#_addHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-private tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="_addHandler._addHandler-1"><span class="tsd-kind-call-signature">_add<wbr/>Handler</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">params</span>, <span class="tsd-kind-parameter">index</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#_addHandler._addHandler-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description"><code class="tsd-tag ts-flagPrivate">Private</code> 
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">params</span>: <a href="../interfaces/TriggerHandler.html" class="tsd-signature-type tsd-kind-interface">TriggerHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">index</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
-<ul>
-<li>Defined in node_modules/@akashic/trigger/lib/Trigger.d.ts:109</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private tsd-is-external"><a id="_comparePartial" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>_compare<wbr/>Partial</span><a href="#_comparePartial" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private tsd-is-external">
@@ -131,7 +114,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/trigger/lib/Trigger.d.ts:113</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@akashic/trigger/lib/Trigger.d.ts:109</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-external"><a id="add" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add</span><a href="#add" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-external">
@@ -331,7 +314,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">name</span>: <span class="tsd-signature-type">string</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography">
-<h4>Deprecated</h4><p>互換性のために残されている。代わりに <code>add()</code> を利用すべきである。</p>
+<h4>Deprecated</h4><p>互換性のために残されている。代わりに <code>add()</code> を利用すべきである。実装の変化のため、 <code>func</code> が <code>boolean</code> を返した時の動作はサポートされていない。</p>
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/TriggerLike.html">TriggerLike</a>.<a href="../interfaces/TriggerLike.html#handle">handle</a></p>
 <ul>
@@ -342,7 +325,7 @@
 <li class="tsd-signature tsd-anchor-link" id="remove.remove-1"><span class="tsd-kind-call-signature">remove</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">func</span>, <span class="tsd-kind-parameter">owner</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>関数が <code>func</code> であり、かつオーナーが <code>owner</code> であるハンドラを削除する。
-同じ組み合わせで複数登録されている場合、index が最も小さいハンドラのみ削除する。</p>
+同じ組み合わせで複数登録されている場合、一つだけ削除する。</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -365,7 +348,7 @@
 <li class="tsd-signature tsd-anchor-link" id="remove.remove-2"><span class="tsd-kind-call-signature">remove</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">params</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#remove.remove-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>指定した条件に完全一致するハンドラを削除する。
-同じ組み合わせで複数登録されている場合、index が最も小さいハンドラのみ削除する。</p>
+同じ組み合わせで複数登録されている場合、一つだけ削除する。</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -426,7 +409,6 @@
 <li><a href="#constructor" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-512"></use></svg><span>constructor</span></a></li>
 <li><a href="#_handlers" class="tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>_handlers</span></a></li>
 <li><a href="#length" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>length</span></a></li>
-<li><a href="#_addHandler" class="tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>_add<wbr/>Handler</span></a></li>
 <li><a href="#_comparePartial" class="tsd-is-private tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>_compare<wbr/>Partial</span></a></li>
 <li><a href="#add" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add</span></a></li>
 <li><a href="#addOnce" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>add<wbr/>Once</span></a></li>
