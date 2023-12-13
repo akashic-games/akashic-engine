@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.16.3
+* 3.16.2 の不具合回避のため 3.16.1 と同じ内容にリバート
+
 ## 3.16.2
 * `g.Game#localAge` を追加
 * 次のティックまでハンドラの実行を遅延させる `EntityUpdateChainTrigger` を導入
