@@ -366,6 +366,10 @@ export class Game {
 	 */
 	age: number;
 	/**
+	 * このコンテンツのローカルでの累計経過時間。
+	 */
+	localAge: number;
+	/**
 	 * フレーム辺りの時間経過間隔。初期値は30である。
 	 */
 	fps: number;
@@ -598,6 +602,9 @@ export class Game {
 
 	/**
 	 * ティック消化後にfireされるTrigger。
+	 *
+	 * このTriggerは現在のシーンの `onUpdate` が呼ばれた後にfireされる。
+	 * 現在のシーンの `onUpdate` 内で `Game#onUpdate` のハンドラを登録する際、明示的に次のティックまで遅らせたい場合は `Scene#setTimeout()` を利用すること。
 	 */
 	onUpdate: Trigger<void>;
 
@@ -886,6 +893,7 @@ export class Game {
 		this.renderers = [];
 		this.scenes = [];
 		this.age = 0;
+		this.localAge = 0;
 		this.assetBase = param.assetBase || "";
 		this.resourceFactory = param.resourceFactory;
 		this.handlerSet = param.handlerSet;
@@ -1120,11 +1128,14 @@ export class Game {
 
 		this.onUpdate.fire();
 
+		let sceneChanged = false;
 		if (this._postTickTasks.length) {
 			this._flushPostTickTasks();
-			return scene !== this.scenes[this.scenes.length - 1];
+			sceneChanged = scene !== this.scenes[this.scenes.length - 1];
 		}
-		return false;
+		++this.localAge; // NOTE: this.age とインクリメントのタイミングが異なる点に注意
+
+		return sceneChanged;
 	}
 
 	/**
@@ -1537,7 +1548,10 @@ export class Game {
 		}
 
 		if (param) {
-			if (param.age !== undefined) this.age = param.age;
+			if (param.age !== undefined) {
+				this.age = param.age;
+				this.localAge = param.age;
+			}
 			if (param.randGenSer !== undefined) {
 				this.random = XorshiftRandomGenerator.deserialize(param.randGenSer);
 			} else if (param.randSeed !== undefined) {
@@ -1657,6 +1671,7 @@ export class Game {
 		this.random = undefined!;
 		this._modified = false;
 		this.age = 0;
+		this.localAge = 0;
 		this.assets = undefined!; // this._initialScene.assets のエイリアスなので、特に破棄処理はしない。
 		this.isLoaded = false;
 		this.loadingScene = undefined!;

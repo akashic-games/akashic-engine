@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.16.2
+* `g.Game#localAge` を追加
+* 次のティックまでハンドラの実行を遅延させる `EntityUpdateChainTrigger` を導入
+
 ## 3.16.1
 不具合修正
  * スナップショットからの復元時、 `g.game._idx` が復元できないことがある問題を修正

@@ -1,6 +1,7 @@
 import type { CommonArea, CommonOffset, CommonRect, Renderer } from "@akashic/pdi-types";
 import type { Trigger } from "@akashic/trigger";
 import { ChainTrigger } from "@akashic/trigger";
+import { EntityUpdateChainTrigger } from "../auxiliary/EntityUpdateChainTrigger";
 import type { Camera } from "../Camera";
 import { EntityStateFlags } from "../EntityStateFlags";
 import type { MessageEvent, PointSourceBase } from "../Event";
@@ -178,7 +179,7 @@ export class E extends Object2D implements CommonArea {
 
 	/**
 	 * このエンティティの描画時に利用されるシェーダプログラム。
-	 * `isSupportedShaderProgram()` が偽を返す `g.Rendere` で描画される時、 `g.Renderer#setShaderProgram()` は呼ばれないことに注意。
+	 * `isSupportedShaderProgram()` が偽を返す `g.Renderer` で描画される時、 `g.Renderer#setShaderProgram()` は呼ばれないことに注意。
 	 *
 	 * また `g.FilledRect` やその親エンティティに本値を指定した場合、対象の `g.FilledRect` の描画結果は不定である。
 	 * これは実装上の制限に基づく現バージョンの仕様である。
@@ -208,7 +209,9 @@ export class E extends Object2D implements CommonArea {
 	 */
 	// Eの生成コスト低減を考慮し、参照された時のみ生成出来るようアクセサを使う
 	get onUpdate(): Trigger<void> {
-		if (!this._onUpdate) this._onUpdate = new ChainTrigger<void>(this.scene.onUpdate);
+		if (!this._onUpdate) {
+			this._onUpdate = new EntityUpdateChainTrigger<void>(this.game(), this.scene.onUpdate);
+		}
 		return this._onUpdate;
 	}
 	// onUpdateは代入する必要がないのでsetterを定義しない
