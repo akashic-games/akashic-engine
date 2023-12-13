@@ -17,7 +17,6 @@ describe("test Game", () => {
 		expect(game._modified).toBe(true);
 		expect(game.external).toEqual({});
 		expect(game.age).toBe(0);
-		expect(game.localAge).toBe(0);
 		expect(game.fps).toBe(30);
 		expect(game.width).toBe(320);
 		expect(game.height).toBe(270);
@@ -755,25 +754,19 @@ describe("test Game", () => {
 			const mockOnUpdate = jest.fn();
 			game.onUpdate.add(mockOnUpdate);
 			expect(game.age).toBe(0);
-			const localAge = game.localAge; // NOTE: onLoad の発火からの相対値のみをテストする
-			expect(game.localAge).toBe(localAge + 0);
 			expect(game.classicTick()).toBe(true);
 			expect(game.scene()!.local).toBe("non-local");
 			expect(mockOnUpdate).toBeCalledTimes(1);
-			expect(game.localAge).toBe(localAge + 1);
 			expect(game.classicTick()).toBe(false);
 			expect(game.age).toBe(1);
-			expect(game.localAge).toBe(localAge + 2);
 			expect(mockOnUpdate).toBeCalledTimes(2);
 			expect(game.tick(false, 3)).toBe(false);
 			expect(game.age).toBe(1);
-			expect(game.localAge).toBe(localAge + 3);
 			expect(game.isLastTickLocal).toBe(true);
 			expect(game.lastOmittedLocalTickCount).toBe(3);
 			expect(mockOnUpdate).toBeCalledTimes(3);
 			expect(game.tick(true)).toBe(false);
 			expect(game.age).toBe(2);
-			expect(game.localAge).toBe(localAge + 4);
 			expect(game.isLastTickLocal).toBe(false);
 			expect(game.lastOmittedLocalTickCount).toBe(0);
 			expect(mockOnUpdate).toBeCalledTimes(4);
@@ -1450,7 +1443,6 @@ describe("test Game", () => {
 		let testDone = false;
 		game._onLoad.add(() => {
 			expect(game.age).toBe(10);
-			expect(game.localAge).toBeGreaterThanOrEqual(game.age);
 			expect(game._idx).toBe(42);
 			expect(game.random.serialize()).toEqual(randGen.serialize());
 			expect(testDone).toBe(true);
