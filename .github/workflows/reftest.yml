@@ -38,7 +38,7 @@ jobs:
           npm test
       - name: Archive artifact
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: engine_files_reftest_result
           path: |
