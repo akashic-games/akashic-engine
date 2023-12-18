@@ -69,52 +69,28 @@ export class ModuleManager {
 		}
 
 		if (!resolvedPath) {
-			// _scriptCaches のキーが "foo", と "foo/index" が別扱いされないようにするため、絶対パスでキーを確定する
+			// _scriptCaches のキーが "foo", と "foo/index" が別扱いされないようにするため絶対パスでキーを確定する
 			resolvedPath = this._resolvePath(path, currentModule);
 			if (/^\//.test(resolvedPath)) resolvedPath = resolvedPath.slice(1);
 		}
 
-		// 1. If X is a core module,
-		// (何もしない。コアモジュールには対応していない。ゲーム開発者は自分でコアモジュールへの依存を解決する必要がある)
+		if (this._scriptCaches.hasOwnProperty(resolvedPath)) {
+			return this._scriptCaches[resolvedPath]._cachedValue();
+		}
 
-		if (/^\.\/|^\.\.\/|^\//.test(path)) {
-			// 2. If X begins with './' or '/' or '../'
-
-			if (currentModule) {
-				if (!currentModule._virtualDirname)
-					throw ExceptionFactory.createAssertionError("g._require: require from modules without virtualPath is not supported");
-			} else {
-				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
-			}
-
-			if (this._scriptCaches.hasOwnProperty(resolvedPath)) {
-				return this._scriptCaches[resolvedPath]._cachedValue();
-			} else if (this._scriptCaches.hasOwnProperty(resolvedPath + ".js")) {
-				return this._scriptCaches[resolvedPath + ".js"]._cachedValue();
-			}
-
-			// 2.a. LOAD_AS_FILE(Y + X)
-			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-			// 2.b. LOAD_AS_DIRECTORY(Y + X)
-			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+		// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
+		if (moduleMainScripts[path]) {
+			targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 		} else {
-			// 3. LOAD_NODE_MODULES(X, dirname(Y))
-			// `path` は node module の名前であると仮定して探す
+			targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+		}
 
-			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
-			if (moduleMainScripts[path]) {
-				targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
-			}
-
-			if (!targetScriptAsset) {
-				const dirs = currentModule ? currentModule.paths : [];
-				dirs.push("node_modules");
-				for (let i = 0; i < dirs.length; ++i) {
-					targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) break;
-					targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) break;
-				}
+		if (!targetScriptAsset) {
+			const dirs = currentModule ? currentModule.paths : [];
+			dirs.push("node_modules");
+			for (let i = 0; i < dirs.length; ++i) {
+				targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
+				if (targetScriptAsset) break;
 			}
 		}
 
@@ -176,10 +152,7 @@ export class ModuleManager {
 				}
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
-				if (!/^\.\//.test(path)) {
-					// エントリーポイント以外
-					throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle without currentModule");
-				}
+				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
 				resolvedPath = path.substring(2);
 			}
 
