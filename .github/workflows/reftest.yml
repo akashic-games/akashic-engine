@@ -40,7 +40,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: engine_files_reftest_result
+          name: engine_files_reftest_result_${{ matrix.os }}_${{ matrix.node }}
           path: |
             ./engine-files/tests/fixtures/**/expected/
             ./engine-files/tests/fixtures/**/actual/
