@@ -69,8 +69,8 @@ export class ModuleManager {
 		}
 
 		if (!resolvedPath) {
-			// _scriptCaches のキーが "foo", と "foo/index" が別扱いされないようにするため絶対パスでキーを確定する
 			resolvedPath = this._resolvePath(path, currentModule);
+			// 戻り値は先頭に "/" が付くので削除している。( moduleMainScripts を参照して返される値には先頭に "/" は付かない)
 			if (/^\//.test(resolvedPath)) resolvedPath = resolvedPath.slice(1);
 		}
 
@@ -83,15 +83,6 @@ export class ModuleManager {
 			targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 		} else {
 			targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-		}
-
-		if (!targetScriptAsset) {
-			const dirs = currentModule ? currentModule.paths : [];
-			dirs.push("node_modules");
-			for (let i = 0; i < dirs.length; ++i) {
-				targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-				if (targetScriptAsset) break;
-			}
 		}
 
 		if (targetScriptAsset) {
