@@ -946,4 +946,35 @@ describe("test Module", () => {
 			}
 		});
 	});
+
+	it("_resolveAbsolutePathAsDirectory", done => {
+		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
+		const pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
+		const liveAssetPathTable = {
+			"foo/root.js": game.resourceFactory.createScriptAsset("root", "/foo/root.js"),
+			"foo/package.json": pkgJsonAsset,
+			"bar/index.js": game.resourceFactory.createScriptAsset("barindex", "/bar/index.js"),
+			"zoo/roo/notMain.js": game.resourceFactory.createScriptAsset("zooRooNotMain", "/zoo/roo/notMain.js")
+		};
+		const manager = game._moduleManager;
+		game.resourceFactory.scriptContents = {
+			"foo/package.json": '{ "main": "root.js" }'
+		};
+
+		pkgJsonAsset._load({
+			_onAssetError: e => {
+				throw e;
+			},
+			_onAssetLoad: () => {
+				try {
+					expect(manager._resolveAbsolutePathAsDirectory("foo", liveAssetPathTable)).toBe("/foo/root.js");
+					expect(manager._resolveAbsolutePathAsDirectory("bar", liveAssetPathTable)).toBe("/bar/index.js");
+					expect(manager._resolveAbsolutePathAsDirectory("zoo/roo", liveAssetPathTable)).toBeNull();
+					expect(manager._resolveAbsolutePathAsDirectory("hoge", liveAssetPathTable)).toBeNull();
+				} finally {
+					done();
+				}
+			}
+		});
+	});
 });
