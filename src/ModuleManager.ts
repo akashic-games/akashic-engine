@@ -143,7 +143,9 @@ export class ModuleManager {
 				}
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
-				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
+				if (!/^\.\//.test(path)) {
+					throw ExceptionFactory.createAssertionError("g._require.resolve: entry point path must start with './'");
+				}
 				resolvedPath = path.substring(2);
 			}
 

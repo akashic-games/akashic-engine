@@ -657,12 +657,12 @@ describe("test Module", () => {
 			expect(moduleUsesALibraryA).not.toBe(libraryA);
 
 			const keys = Object.keys(manager._scriptCaches);
-			// require("./foo") は require("./foo/index.js") で登録されること
 			expect(keys.includes("script/useA.js")).toBeTruthy();
 			expect(keys.includes("node_modules/moduleUsesA/index.js")).toBeTruthy();
 			expect(keys.includes("node_modules/moduleUsesA/node_modules/libraryA/index.js")).toBeTruthy();
 			expect(keys.includes("node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js")).toBeTruthy();
 			expect(keys.includes("node_modules/libraryA/index.js")).toBeTruthy();
+			// node_modules/libraryA が node_modules/libraryA/index.js として登録されていることを確認
 			expect(keys.includes("node_modules/libraryA")).toBeFalsy();
 
 			done();
