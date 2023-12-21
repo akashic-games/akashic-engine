@@ -1,8 +1,8 @@
 # ChangeLog
 
-## Unreleased Changes
+## 3.16.4
 不具合修正
- * `ModuleManager#_scriptCaches` に登録するキーが同一のものを指すが別キーとして登録される問題を修正
+ * `ModuleManager#_scriptCaches` に登録するキーが `require("./foo")` と `require("./foo/index")` のように同一のものを指すが別キーとして登録される問題を修正
 
 ## 3.16.3
 * 3.16.2 の不具合回避のため 3.16.1 と同じ内容にリバート
