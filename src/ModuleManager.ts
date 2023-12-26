@@ -206,34 +206,6 @@ export class ModuleManager {
 	}
 
 	/**
-	 * 与えられたパス文字列がディレクトリパスであると仮定して、対応するアセットを探す。
-	 * 見つかった場合そのアセットを、そうでない場合 `undefined` を返す。
-	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
-	 * ディレクトリ内に package.json が存在する場合、package.json 自体もアセットとして
-	 * `liveAssetPathTable` から参照可能でなければならないことに注意。
-	 *
-	 * @ignore
-	 * @param resolvedPath パス文字列
-	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
-	 */
-	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): OneOfAsset | undefined {
-		let path: string;
-		path = resolvedPath + "/package.json";
-		const pkgJsonAsset = liveAssetPathTable[path];
-		// liveAssetPathTable[path] != null だけではpathと同名のprototypeプロパティがある場合trueになってしまうので hasOwnProperty() を利用
-		if (liveAssetPathTable.hasOwnProperty(path) && pkgJsonAsset.type === "text") {
-			const pkg = JSON.parse(pkgJsonAsset.data);
-			if (pkg && typeof pkg.main === "string") {
-				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
-				if (asset) return asset;
-			}
-		}
-		path = resolvedPath + "/index.js";
-		if (liveAssetPathTable.hasOwnProperty(path)) return liveAssetPathTable[path];
-		return undefined;
-	}
-
-	/**
 	 * 与えられたパス文字列がファイルパスであると仮定して、対応するアセットの絶対パスを解決する。
 	 * アセットが存在した場合はそのパスを、そうでない場合 `null` を返す。
 	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。

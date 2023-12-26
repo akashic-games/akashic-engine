@@ -916,37 +916,6 @@ describe("test Module", () => {
 		expect(manager._findAssetByPathAsFile("zoo/roo.js", liveAssetPathTable)).toBe(undefined);
 	});
 
-	it("_findAssetByPathDirectory", done => {
-		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
-		const pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
-		const liveAssetPathTable = {
-			"foo/root.js": game.resourceFactory.createScriptAsset("root", "/foo/root.js"),
-			"foo/package.json": pkgJsonAsset,
-			"foo/index.js": game.resourceFactory.createScriptAsset("fooindex", "/foo/index.js"),
-			"bar/index.js": game.resourceFactory.createScriptAsset("barindex", "/bar/index.js"),
-			"zoo/roo/notMain.js": game.resourceFactory.createScriptAsset("zooRooNotMain", "/zoo/roo/notMain.js")
-		};
-		const manager = game._moduleManager;
-		game.resourceFactory.scriptContents = {
-			"foo/package.json": '{ "main": "root.js" }'
-		};
-		pkgJsonAsset._load({
-			_onAssetError: e => {
-				throw e;
-			},
-			_onAssetLoad: () => {
-				try {
-					expect(manager._findAssetByPathAsDirectory("foo", liveAssetPathTable)).toBe(liveAssetPathTable["foo/root.js"]);
-					expect(manager._findAssetByPathAsDirectory("bar", liveAssetPathTable)).toBe(liveAssetPathTable["bar/index.js"]);
-					expect(manager._findAssetByPathAsDirectory("zoo/roo", liveAssetPathTable)).toBe(undefined);
-					expect(manager._findAssetByPathAsDirectory("tee", liveAssetPathTable)).toBe(undefined);
-				} finally {
-					done();
-				}
-			}
-		});
-	});
-
 	it("_resolveAbsolutePathAsDirectory", done => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
