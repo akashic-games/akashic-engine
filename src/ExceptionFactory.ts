@@ -1,4 +1,5 @@
 import type { AssertionError, AssetLoadError, TypeMismatchError } from "@akashic/pdi-types";
+import type { RequestAssetDetail, RequestAssetLoadError } from "./errors";
 
 /**
  * 例外生成ファクトリ。
@@ -47,6 +48,14 @@ export module ExceptionFactory {
 		e.name = "AssetLoadError";
 		e.cause = cause;
 		e.retriable = retriable;
+		return e;
+	}
+
+	export function createRequestAssetLoadError(message: string, detail: RequestAssetDetail, cause?: any): RequestAssetLoadError {
+		const e = new Error(message) as RequestAssetLoadError;
+		e.name = "RequestAssetLoadError";
+		e.detail = detail;
+		e.cause = cause;
 		return e;
 	}
 }
