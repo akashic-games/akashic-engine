@@ -68,53 +68,21 @@ export class ModuleManager {
 			}
 		}
 
-		// 1. If X is a core module,
-		// (何もしない。コアモジュールには対応していない。ゲーム開発者は自分でコアモジュールへの依存を解決する必要がある)
+		if (!resolvedPath) {
+			resolvedPath = this._resolvePath(path, currentModule);
+			// 戻り値は先頭に "/" が付くので削除している。( moduleMainScripts を参照して返される値には先頭に "/" は付かない)
+			if (/^\//.test(resolvedPath)) resolvedPath = resolvedPath.slice(1);
+		}
 
-		if (/^\.\/|^\.\.\/|^\//.test(path)) {
-			// 2. If X begins with './' or '/' or '../'
+		if (this._scriptCaches.hasOwnProperty(resolvedPath)) {
+			return this._scriptCaches[resolvedPath]._cachedValue();
+		}
 
-			if (currentModule) {
-				if (!currentModule._virtualDirname)
-					throw ExceptionFactory.createAssertionError("g._require: require from modules without virtualPath is not supported");
-				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
-			} else {
-				if (!/^\.\//.test(path)) throw ExceptionFactory.createAssertionError("g._require: entry point path must start with './'");
-				resolvedPath = path.substring(2);
-			}
-
-			if (this._scriptCaches.hasOwnProperty(resolvedPath)) {
-				return this._scriptCaches[resolvedPath]._cachedValue();
-			} else if (this._scriptCaches.hasOwnProperty(resolvedPath + ".js")) {
-				return this._scriptCaches[resolvedPath + ".js"]._cachedValue();
-			}
-
-			// 2.a. LOAD_AS_FILE(Y + X)
-			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-			// 2.b. LOAD_AS_DIRECTORY(Y + X)
-			if (!targetScriptAsset) targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
+		// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
+		if (moduleMainScripts[path]) {
+			targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 		} else {
-			// 3. LOAD_NODE_MODULES(X, dirname(Y))
-			// `path` は node module の名前であると仮定して探す
-
-			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
-			if (moduleMainScripts[path]) {
-				resolvedPath = moduleMainScripts[path];
-				targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
-			}
-
-			if (!targetScriptAsset) {
-				const dirs = currentModule ? currentModule.paths : [];
-				dirs.push("node_modules");
-				for (let i = 0; i < dirs.length; ++i) {
-					const dir = dirs[i];
-					resolvedPath = PathUtil.resolvePath(dir, path);
-					targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) break;
-					targetScriptAsset = this._findAssetByPathAsDirectory(resolvedPath, liveAssetVirtualPathTable);
-					if (targetScriptAsset) break;
-				}
-			}
+			targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
 		}
 
 		if (targetScriptAsset) {
@@ -175,7 +143,10 @@ export class ModuleManager {
 				}
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
-				throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle without currentModule");
+				if (!/^\.\//.test(path)) {
+					throw ExceptionFactory.createAssertionError("g._require.resolve: entry point path must start with './'");
+				}
+				resolvedPath = path.substring(2);
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)
@@ -235,34 +206,6 @@ export class ModuleManager {
 	}
 
 	/**
-	 * 与えられたパス文字列がディレクトリパスであると仮定して、対応するアセットを探す。
-	 * 見つかった場合そのアセットを、そうでない場合 `undefined` を返す。
-	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
-	 * ディレクトリ内に package.json が存在する場合、package.json 自体もアセットとして
-	 * `liveAssetPathTable` から参照可能でなければならないことに注意。
-	 *
-	 * @ignore
-	 * @param resolvedPath パス文字列
-	 * @param liveAssetPathTable パス文字列のプロパティに対応するアセットを格納したオブジェクト
-	 */
-	_findAssetByPathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): OneOfAsset | undefined {
-		let path: string;
-		path = resolvedPath + "/package.json";
-		const pkgJsonAsset = liveAssetPathTable[path];
-		// liveAssetPathTable[path] != null だけではpathと同名のprototypeプロパティがある場合trueになってしまうので hasOwnProperty() を利用
-		if (liveAssetPathTable.hasOwnProperty(path) && pkgJsonAsset.type === "text") {
-			const pkg = JSON.parse(pkgJsonAsset.data);
-			if (pkg && typeof pkg.main === "string") {
-				const asset = this._findAssetByPathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
-				if (asset) return asset;
-			}
-		}
-		path = resolvedPath + "/index.js";
-		if (liveAssetPathTable.hasOwnProperty(path)) return liveAssetPathTable[path];
-		return undefined;
-	}
-
-	/**
 	 * 与えられたパス文字列がファイルパスであると仮定して、対応するアセットの絶対パスを解決する。
 	 * アセットが存在した場合はそのパスを、そうでない場合 `null` を返す。
 	 * 通常、ゲーム開発者がファイルパスを扱うことはなく、このメソッドを呼び出す必要はない。
@@ -297,7 +240,7 @@ export class ModuleManager {
 			if (pkg && typeof pkg.main === "string") {
 				const targetPath = this._resolveAbsolutePathAsFile(PathUtil.resolvePath(resolvedPath, pkg.main), liveAssetPathTable);
 				if (targetPath) {
-					return "/" + targetPath;
+					return targetPath;
 				}
 			}
 		}
