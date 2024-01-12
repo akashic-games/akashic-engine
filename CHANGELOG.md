@@ -1,5 +1,8 @@
 # ChangeLog
 
+## unreleased changes
+* `g.Scene#requestAssets()` で対象のアセットのロード失敗時に `callback` 経由でエラーを通知するインタフェースを追加
+
 ## 3.16.2
 * `g.Game#localAge` を追加
 * 次のティックまでハンドラの実行を遅延させる `EntityUpdateChainTrigger` を導入
