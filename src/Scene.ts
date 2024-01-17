@@ -840,6 +840,7 @@ export class Scene {
 				if (!this.destroyed()) {
 					const failureAssetIds = holder._getFailureAssetIds();
 					if (failureAssetIds.length) {
+						// このパスに入るのは AssetHolder の alwaysNotifyFinish フラグを真にした時のみであることに注意
 						const error = ExceptionFactory.createRequestAssetLoadError(
 							`Scene#requestAssets(): failed to load the asset. refer to the 'detail' property for more information.`,
 							{ failureAssetIds }
