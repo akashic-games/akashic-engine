@@ -816,19 +816,19 @@ export class Scene {
 		}
 
 		let assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
-		let notifyErrorOnAssetLoadFinish: boolean;
+		let alwaysNotifyFinish: boolean;
 		if (Array.isArray(assetIdsOrConf)) {
 			assetIds = assetIdsOrConf;
-			notifyErrorOnAssetLoadFinish = false;
+			alwaysNotifyFinish = false;
 		} else {
 			assetIds = assetIdsOrConf.assetIds;
-			notifyErrorOnAssetLoadFinish = !!assetIdsOrConf.notifyErrorOnCallback;
+			alwaysNotifyFinish = !!assetIdsOrConf.notifyErrorOnCallback;
 		}
 
 		const holder = new AssetHolder<SceneRequestAssetHandler>({
 			assetManager: this.game._assetManager,
 			assetIds,
-			notifyErrorOnAssetLoadFinish,
+			alwaysNotifyFinish,
 			handlerSet: {
 				owner: this,
 				handleLoad: this._handleSceneAssetLoad,

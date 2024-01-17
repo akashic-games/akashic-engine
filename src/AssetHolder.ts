@@ -68,7 +68,7 @@ export interface AssetHolderParameterObject<UserData> {
 	/**
 	 * エラーが発生したか否かに関わらず常に `handlerSet.handleFinish` を実行するか。
 	 */
-	notifyErrorOnAssetLoadFinish?: boolean;
+	alwaysNotifyFinish?: boolean;
 }
 
 /**
@@ -116,7 +116,7 @@ export class AssetHolder<UserData> {
 	/**
 	 * @private
 	 */
-	_notifyErrorOnAssetLoadFinish: boolean;
+	_alwaysNotifyFinish: boolean;
 
 	/**
 	 * @private
@@ -135,7 +135,7 @@ export class AssetHolder<UserData> {
 		this._assets = [];
 		this._handlerSet = param.handlerSet;
 		this._requested = false;
-		this._notifyErrorOnAssetLoadFinish = !!param.notifyErrorOnAssetLoadFinish;
+		this._alwaysNotifyFinish = !!param.alwaysNotifyFinish;
 		this._failureAssetIds = [];
 	}
 
@@ -183,7 +183,7 @@ export class AssetHolder<UserData> {
 			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
 			if (this._assetManager.configuration[asset.id]) {
 				hs.handleFinish.call(hs.owner, this, false);
-			} else if (this._notifyErrorOnAssetLoadFinish) {
+			} else if (this._alwaysNotifyFinish) {
 				const assetConf = this._peekAssetConfFromAssetId(asset.id);
 				this._failureAssetIds.push(assetConf);
 				this._decrementWaitingAssetCount();
