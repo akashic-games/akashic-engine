@@ -655,6 +655,16 @@ describe("test Module", () => {
 			expect(libraryA.thisModule.loaded).toBe(true);
 
 			expect(moduleUsesALibraryA).not.toBe(libraryA);
+
+			const keys = Object.keys(manager._scriptCaches);
+			expect(keys.includes("script/useA.js")).toBeTruthy();
+			expect(keys.includes("node_modules/moduleUsesA/index.js")).toBeTruthy();
+			expect(keys.includes("node_modules/moduleUsesA/node_modules/libraryA/index.js")).toBeTruthy();
+			expect(keys.includes("node_modules/moduleUsesA/node_modules/libraryA/lib/foo/foo.js")).toBeTruthy();
+			expect(keys.includes("node_modules/libraryA/index.js")).toBeTruthy();
+			// node_modules/libraryA が node_modules/libraryA/index.js として登録されていることを確認
+			expect(keys.includes("node_modules/libraryA")).toBeFalsy();
+
 			done();
 		});
 		game._startLoadingGlobalAssets();
@@ -906,13 +916,12 @@ describe("test Module", () => {
 		expect(manager._findAssetByPathAsFile("zoo/roo.js", liveAssetPathTable)).toBe(undefined);
 	});
 
-	it("_findAssetByPathDirectory", done => {
+	it("_resolveAbsolutePathAsDirectory", done => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const pkgJsonAsset = game.resourceFactory.createTextAsset("foopackagejson", "foo/package.json");
 		const liveAssetPathTable = {
 			"foo/root.js": game.resourceFactory.createScriptAsset("root", "/foo/root.js"),
 			"foo/package.json": pkgJsonAsset,
-			"foo/index.js": game.resourceFactory.createScriptAsset("fooindex", "/foo/index.js"),
 			"bar/index.js": game.resourceFactory.createScriptAsset("barindex", "/bar/index.js"),
 			"zoo/roo/notMain.js": game.resourceFactory.createScriptAsset("zooRooNotMain", "/zoo/roo/notMain.js")
 		};
@@ -920,16 +929,17 @@ describe("test Module", () => {
 		game.resourceFactory.scriptContents = {
 			"foo/package.json": '{ "main": "root.js" }'
 		};
+
 		pkgJsonAsset._load({
 			_onAssetError: e => {
 				throw e;
 			},
 			_onAssetLoad: () => {
 				try {
-					expect(manager._findAssetByPathAsDirectory("foo", liveAssetPathTable)).toBe(liveAssetPathTable["foo/root.js"]);
-					expect(manager._findAssetByPathAsDirectory("bar", liveAssetPathTable)).toBe(liveAssetPathTable["bar/index.js"]);
-					expect(manager._findAssetByPathAsDirectory("zoo/roo", liveAssetPathTable)).toBe(undefined);
-					expect(manager._findAssetByPathAsDirectory("tee", liveAssetPathTable)).toBe(undefined);
+					expect(manager._resolveAbsolutePathAsDirectory("foo", liveAssetPathTable)).toBe("/foo/root.js");
+					expect(manager._resolveAbsolutePathAsDirectory("bar", liveAssetPathTable)).toBe("/bar/index.js");
+					expect(manager._resolveAbsolutePathAsDirectory("zoo/roo", liveAssetPathTable)).toBeNull();
+					expect(manager._resolveAbsolutePathAsDirectory("hoge", liveAssetPathTable)).toBeNull();
 				} finally {
 					done();
 				}

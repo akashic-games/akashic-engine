@@ -1,6 +1,6 @@
 {
   "name": "@akashic/akashic-engine",
-  "version": "3.16.2",
+  "version": "3.16.4",
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
@@ -28,7 +28,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "textlint": "^13.0.0",
     "textlint-rule-max-ten": "^5.0.0",
-    "textlint-rule-no-mix-dearu-desumasu": "^5.0.0",
+    "textlint-rule-no-mix-dearu-desumasu": "^6.0.0",
     "textlint-rule-prh": "^5.3.0",
     "ts-jest": "^29.0.0",
     "typedoc": "^0.25.0",
@@ -42,8 +42,7 @@
     "clean": "rimraf dist && rimraf lib",
     "test": "npm run test:jest && npm run lint",
     "test:jest": "jest --config jest.config.js",
-    "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:textlint",
-    "lint:prettier": "prettier --check \"src/**/*.ts\" --config prettier.config.json",
+    "lint": "npm run lint:eslint && npm run lint:textlint",
     "lint:eslint": "eslint -c .eslintrc \"src/**/*.ts\"",
     "lint:textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
     "format": "npm run format:prettier && npm run format:eslint",

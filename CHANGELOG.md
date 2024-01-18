@@ -3,6 +3,13 @@
 ## unreleased changes
 * `g.Scene#requestAssets()` で対象のアセットのロード失敗時に `callback` 経由でエラーを通知するインタフェースを追加
 
+## 3.16.4
+不具合修正
+ * `require()` で末尾の "index" や "index.js" を省略する表記としない表記を混在させた時、スクリプトが複数回評価される問題を修正
+
+## 3.16.3
+* 3.16.2 の不具合回避のため 3.16.1 と同じ内容にリバート
+
 ## 3.16.2
 * `g.Game#localAge` を追加
 * 次のティックまでハンドラの実行を遅延させる `EntityUpdateChainTrigger` を導入
