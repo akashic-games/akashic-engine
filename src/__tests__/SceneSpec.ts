@@ -1,5 +1,5 @@
 import { Trigger } from "@akashic/trigger";
-import type { AssetConfiguration, SceneStateString } from "..";
+import type { AssetConfiguration, DynamicAssetConfiguration, SceneStateString } from "..";
 import { AssetManager, E, Scene } from "..";
 import { customMatchers, Game, skeletonRuntime, ImageAsset, AudioAsset } from "./helpers";
 
@@ -367,6 +367,70 @@ describe("test Scene", () => {
 					setTimeout(flushUntilLoaded, 10);
 				}
 				flushUntilLoaded();
+			});
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("loads assets dynamically - notifying error through the callback", done => {
+		const game = new Game({
+			width: 320,
+			height: 320,
+			main: "",
+			assets: {}
+		});
+
+		game._onLoad.add(() => {
+			const scene = new Scene({
+				game: game
+			});
+			scene.onLoad.add(() => {
+				let loaded = false;
+
+				const assetIds: DynamicAssetConfiguration[] = [
+					{
+						id: "unregistered-asset-1",
+						type: "audio",
+						duration: 450,
+						systemId: "sound",
+						uri: "http://example.com/assets/audio/foo"
+					},
+					{
+						id: "unregistered-asset-2",
+						type: "audio",
+						duration: 120,
+						systemId: "sound",
+						uri: "http://example.com/assets/audio/baz"
+					}
+				];
+
+				game.resourceFactory.withNecessaryRetryCount(-1, () => {
+					scene.requestAssets(
+						{
+							assetIds,
+							notifyErrorOnCallback: true
+						},
+						error => {
+							loaded = true;
+							expect(error!.name).toBe("RequestAssetLoadError");
+							expect(error!.detail).toEqual({
+								failureAssetIds: assetIds
+							});
+							done();
+						}
+					);
+
+					// Scene#requestAssets() のハンドラ呼び出しは Game#tick() に同期しており、実ロードの完了後に tick() が来るまで遅延される。
+					// テスト上は tick() を呼び出さないので、 _flushPostTickTasks() を呼び続けることで模擬する。
+					function flushUntilLoaded(): void {
+						if (loaded) return;
+						game._flushPostTickTasks();
+						setTimeout(flushUntilLoaded, 10);
+					}
+					flushUntilLoaded();
+				});
 			});
 			game.pushScene(scene);
 			game._flushPostTickTasks();

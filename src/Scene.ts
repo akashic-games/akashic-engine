@@ -8,6 +8,7 @@ import type { Camera } from "./Camera";
 import { Camera2D } from "./Camera2D";
 import type { DynamicAssetConfiguration } from "./DynamicAssetConfiguration";
 import type { E, PointDownEvent, PointMoveEvent, PointSource, PointUpEvent } from "./entities/E";
+import type { RequestAssetLoadError } from "./errors";
 import type { MessageEvent, OperationEvent } from "./Event";
 import { ExceptionFactory } from "./ExceptionFactory";
 import type { Game } from "./Game";
@@ -17,7 +18,20 @@ import type { Timer } from "./Timer";
 import type { TimerIdentifier } from "./TimerManager";
 import { TimerManager } from "./TimerManager";
 
-export type SceneRequestAssetHandler = () => void;
+export type SceneRequestAssetHandler = (error?: RequestAssetLoadError) => void;
+
+/**
+ * `Scene#requestAsset` の引数に渡すことができるパラメータ。
+ */
+export interface SceneRequestAssetsParameterObject {
+	assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
+
+	/**
+	 * アセットの読込みに失敗した際にコールバックを実行するかどうか。
+	 * @default false
+	 */
+	notifyErrorOnCallback?: boolean;
+}
 
 /**
  * `Scene` のコンストラクタに渡すことができるパラメータ。
@@ -792,7 +806,7 @@ export class Scene {
 	}
 
 	requestAssets(
-		assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[],
+		assetIdsOrConf: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[] | SceneRequestAssetsParameterObject,
 		handler: SceneRequestAssetHandler
 	): void {
 		if (this._loadingState !== "ready-fired" && this._loadingState !== "loaded-fired") {
@@ -801,9 +815,20 @@ export class Scene {
 			throw ExceptionFactory.createAssertionError("Scene#requestAssets(): can be called after loaded.");
 		}
 
+		let assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
+		let alwaysNotifyFinish: boolean;
+		if (Array.isArray(assetIdsOrConf)) {
+			assetIds = assetIdsOrConf;
+			alwaysNotifyFinish = false;
+		} else {
+			assetIds = assetIdsOrConf.assetIds;
+			alwaysNotifyFinish = !!assetIdsOrConf.notifyErrorOnCallback;
+		}
+
 		const holder = new AssetHolder<SceneRequestAssetHandler>({
 			assetManager: this.game._assetManager,
-			assetIds: assetIds,
+			assetIds,
+			alwaysNotifyFinish,
 			handlerSet: {
 				owner: this,
 				handleLoad: this._handleSceneAssetLoad,
@@ -812,7 +837,19 @@ export class Scene {
 			},
 			userData: () => {
 				// 不要なクロージャは避けたいが生存チェックのため不可避
-				if (!this.destroyed()) handler();
+				if (!this.destroyed()) {
+					const failureAssetIds = holder._getFailureAssetIds();
+					if (failureAssetIds.length) {
+						// このパスに入るのは AssetHolder の alwaysNotifyFinish フラグを真にした時のみであることに注意
+						const error = ExceptionFactory.createRequestAssetLoadError(
+							`Scene#requestAssets(): failed to load the asset. refer to the 'detail' property for more information.`,
+							{ failureAssetIds }
+						);
+						handler(error);
+					} else {
+						handler();
+					}
+				}
 			}
 		});
 		this._assetHolders.push(holder);

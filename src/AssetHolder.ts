@@ -64,6 +64,11 @@ export interface AssetHolderParameterObject<UserData> {
 	 * このインスタンスに紐づけるユーザ定義データ。
 	 */
 	userData: UserData | null;
+
+	/**
+	 * エラーが発生したか否かに関わらず常に `handlerSet.handleFinish` を実行するか。
+	 */
+	alwaysNotifyFinish?: boolean;
 }
 
 /**
@@ -108,6 +113,16 @@ export class AssetHolder<UserData> {
 	 */
 	_requested: boolean;
 
+	/**
+	 * @private
+	 */
+	_alwaysNotifyFinish: boolean;
+
+	/**
+	 * @private
+	 */
+	_failureAssetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
+
 	constructor(param: AssetHolderParameterObject<UserData>) {
 		const assetManager = param.assetManager;
 		const assetIds = param.assetIds ? param.assetIds.concat() : [];
@@ -120,6 +135,8 @@ export class AssetHolder<UserData> {
 		this._assets = [];
 		this._handlerSet = param.handlerSet;
 		this._requested = false;
+		this._alwaysNotifyFinish = !!param.alwaysNotifyFinish;
+		this._failureAssetIds = [];
 	}
 
 	request(): boolean {
@@ -138,6 +155,7 @@ export class AssetHolder<UserData> {
 		this.userData = undefined!;
 		this._handlerSet = undefined!;
 		this._assetIds = undefined!;
+		this._failureAssetIds = undefined!;
 		this._requested = false;
 	}
 
@@ -165,6 +183,10 @@ export class AssetHolder<UserData> {
 			// game.json に定義されていればゲームを止める。それ以外 (DynamicAsset) では続行。
 			if (this._assetManager.configuration[asset.id]) {
 				hs.handleFinish.call(hs.owner, this, false);
+			} else if (this._alwaysNotifyFinish) {
+				const assetConf = this._peekAssetConfFromAssetId(asset.id);
+				this._failureAssetIds.push(assetConf);
+				this._decrementWaitingAssetCount();
 			}
 		}
 	}
@@ -179,10 +201,38 @@ export class AssetHolder<UserData> {
 		hs.handleLoad.call(hs.owner, asset);
 		this._assets.push(asset);
 
+		this._decrementWaitingAssetCount();
+	}
+
+	/**
+	 * @private
+	 */
+	_decrementWaitingAssetCount(): void {
 		--this.waitingAssetsCount;
 		if (this.waitingAssetsCount > 0) return;
 		if (this.waitingAssetsCount < 0) throw ExceptionFactory.createAssertionError("AssetHolder#_onAssetLoad: broken waitingAssetsCount");
 
+		const hs = this._handlerSet;
 		hs.handleFinish.call(hs.owner, this, true);
+	}
+
+	/**
+	 * @private
+	 */
+	_getFailureAssetIds(): (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[] {
+		return this._failureAssetIds;
+	}
+
+	/**
+	 * @private
+	 */
+	_peekAssetConfFromAssetId(id: string): string | DynamicAssetConfiguration | AssetGenerationConfiguration {
+		for (const assetConf of this._assetIds) {
+			const assetId = typeof assetConf === "string" ? assetConf : assetConf.id;
+			if (id === assetId) {
+				return assetConf;
+			}
+		}
+		throw ExceptionFactory.createAssertionError(`AssetHolder#_peekAssetConfFromAssetId: could not peek the asset: ${id}`);
 	}
 }
