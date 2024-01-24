@@ -38,6 +38,22 @@ export class ModuleManager {
 	}
 
 	/**
+	 * エンジン内部で利用する _require() を wrap した関数
+	 *
+	 * 引数の仕様については `_require()` の仕様を参照のこと。
+	 * _require() の戻り値で __esModule が真の場合に戻り値の .default を返す。
+	 * 現状 Akashic Engine では ESM を扱えていない。そのため、対象の __esModule を参照し .default を返すことで、
+	 * TypeScript/Babel 向けの簡易対応とし exports.default を扱えるようにしている。
+	 * 通常、ゲーム開発者がこのメソッドを利用する必要はない。
+	 *
+	 * @ignore
+	 */
+	_internalRequire(path: string, currentModule?: Module): any {
+		const module = this._require(path, currentModule);
+		return module.__esModule ? module.default : module;
+	}
+
+	/**
 	 * node.js の require() ライクな読み込み処理を行い、その結果を返す。
 	 *
 	 * node.jsのrequireに限りなく近いモデルでrequireする。

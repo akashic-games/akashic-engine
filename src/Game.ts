@@ -1985,7 +1985,7 @@ export class Game {
 		// `game.json` の `operationPlugins` フィールドの登録は `game._onLoad` のfire後でなければならない。
 		for (const pluginInfo of operationPluginsField) {
 			if (!pluginInfo.script) continue;
-			const pluginClass = this._moduleManager._require(pluginInfo.script);
+			const pluginClass = this._moduleManager._internalRequire(pluginInfo.script);
 			const plugin = this.operationPluginManager.register(pluginClass, pluginInfo.code, pluginInfo.option);
 			if (!pluginInfo.manualStart && plugin) {
 				plugin.start();
@@ -1995,7 +1995,7 @@ export class Game {
 
 		const preloadAssetIds = this._assetManager.preloadScriptAssetIds();
 		for (const preloadAssetId of preloadAssetIds) {
-			const fun = this._moduleManager._require(preloadAssetId);
+			const fun = this._moduleManager._internalRequire(preloadAssetId);
 			if (!fun || typeof fun !== "function")
 				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: ${preloadAssetId} has no-exported function.`);
 			fun();
@@ -2004,7 +2004,7 @@ export class Game {
 		if (this._mainFunc) {
 			this._mainFunc(this._runtimeValueBase, this._mainParameter || {});
 		} else if (this._main) {
-			const mainFun = this._moduleManager._require(this._main);
+			const mainFun = this._moduleManager._internalRequire(this._main);
 			if (!mainFun || typeof mainFun !== "function")
 				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: Entry point ${this._main} not found.`);
 			mainFun(this._mainParameter);
