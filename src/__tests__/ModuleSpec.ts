@@ -44,6 +44,12 @@ describe("test Module", () => {
 				path: "/script/bar.js",
 				virtualPath: "script/bar.js"
 			},
+			aGlobalAssetExportDefault: {
+				type: "script",
+				global: true,
+				path: "/script/exportDefault.js",
+				virtualPath: "script/exportDefault.js"
+			},
 			// dummy modules
 			dummymod: {
 				type: "script",
@@ -224,6 +230,8 @@ describe("test Module", () => {
 		"/script/foo.js": "module.exports = { me: 'script-foo', thisModule: module }",
 		"/script/bar.js": "module.exports = { me: 'script-bar', thisModule: module }",
 		"/script/dummypath.js": "module.exports = { me: 'script-dummymod', thisModule: module }",
+		"/script/exportDefault.js":
+			"Object.defineProperty(exports, '__esModule', { value: true });function exportDefault() { return 'exportDefault'; } exports.default = exportDefault;",
 		"/cascaded/script.js": "module.exports = { me: 'script-cascaded', thisModule: module }",
 		"/node_modules/noPackageJson/index.js": "module.exports = { me: 'noPackageJson-index', thisModule: module };",
 		"/node_modules/noDefaultIndex/root.js": "exports.me = 'noDefaultIndex-root'; exports.thisModule = module; ",
@@ -353,6 +361,18 @@ describe("test Module", () => {
 			expect(mod.me).toBe("noPackageJson-index");
 			expect(mod.thisModule instanceof Module).toBe(true);
 			expect(mod.thisModule.filename).toBe("/node_modules/noPackageJson/index.js");
+			done();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
+	it("internalRequire - export default", done => {
+		const game = new Game(gameConfiguration, "./");
+		const manager = game._moduleManager;
+		game.resourceFactory.scriptContents = scriptContents;
+		game._onLoad.add(() => {
+			const mod = manager._internalRequire("./script/exportDefault.js");
+			expect(mod()).toBe("exportDefault");
 			done();
 		});
 		game._startLoadingGlobalAssets();
