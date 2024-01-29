@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.16.6
+* exports.default をサポートする `g.ModuleManager#_internalRequire` を追加
+
 ## 3.16.5
 * `g.Scene#requestAssets()` で対象のアセットのロード失敗時に `callback` 経由でエラーを通知するインタフェースを追加
 
