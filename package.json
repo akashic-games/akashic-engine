@@ -29,7 +29,7 @@
     "textlint": "^13.0.0",
     "textlint-rule-max-ten": "^5.0.0",
     "textlint-rule-no-mix-dearu-desumasu": "^6.0.0",
-    "textlint-rule-prh": "^5.3.0",
+    "textlint-rule-prh": "^6.0.0",
     "ts-jest": "^29.0.0",
     "typedoc": "^0.25.0",
     "typescript": "^5.0.0",
