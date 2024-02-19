@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@akashic/game-configuration": "~2.1.0",
-    "@akashic/pdi-types": "~1.12.0",
+    "@akashic/pdi-types": "file:../pdi-types/akashic-pdi-types-1.12.0.tgz",
     "@akashic/playlog": "~3.3.0",
     "@akashic/trigger": "~2.1.0"
   },
@@ -36,7 +36,7 @@
     "xorshift": "1.2.0"
   },
   "scripts": {
-    "prepare": "npm run build && npm run doc",
+    "prepare": "npm run build",
     "build": "npm run clean && tsc -p ./ && npm run bundle && npm run format",
     "bundle": "rollup -c rollup.config.js --bundleConfigAsCjs",
     "clean": "rimraf dist && rimraf lib",
