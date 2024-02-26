@@ -15,7 +15,7 @@
 <li><a href="../modules.html">Akashic Engine</a></li>
 <li><a href="CompositeOperationString.html">CompositeOperationString</a></li></ul>
 <h1>Type alias CompositeOperationString</h1></div>
-<div class="tsd-signature"><span class="tsd-kind-type-alias">Composite<wbr/>Operation<wbr/>String</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;source-over&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;source-atop&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;lighter&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;copy&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-source-in&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-source-out&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-destination-atop&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-destination-in&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;destination-out&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;destination-over&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;xor&quot;</span></div>
+<div class="tsd-signature"><span class="tsd-kind-type-alias">Composite<wbr/>Operation<wbr/>String</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;source-over&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;source-atop&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;lighter&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;copy&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-source-in&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-source-out&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-destination-atop&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;experimental-destination-in&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;destination-out&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;destination-over&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;xor&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;difference&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;saturation&quot;</span></div>
 <div class="tsd-comment tsd-typography"><p>描画時の合成方法。</p>
 <ul>
 <li><code>&quot;source-over&quot;</code>: 先に描画された領域の上に描画する。</li>
@@ -29,6 +29,8 @@
 <li><code>&quot;destination-out&quot;</code>: 描画する領域を透明にする。</li>
 <li><code>&quot;destination-over&quot;</code>: 先に描画された領域の下に描画する。</li>
 <li><code>&quot;xor&quot;</code>: 先に描画された領域と重なった部分のみ透明にする。</li>
+<li><code>&quot;difference&quot;</code>: 先に描画された色とこれから描画する色との差分の絶対値を描画する。</li>
+<li><code>&quot;saturation&quot;</code>: 先に描画された領域の明度と色相を維持し、重なっている部分の彩度を採用する。</li>
 </ul>
 <p><code>experimental-</code> がつくものは、環境によって描画結果が大きく異なることがある。
 動作については HTML5 Canvas の globalCompositeOperation も参照のこと。
@@ -36,7 +38,7 @@
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/pdi-types/lib/surface/CompositeOperationString.d.ts:20</li></ul></aside></div>
+<li>Defined in node_modules/@akashic/pdi-types/lib/surface/CompositeOperationString.d.ts:22</li></ul></aside></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
