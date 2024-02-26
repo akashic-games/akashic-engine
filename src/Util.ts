@@ -98,6 +98,8 @@ export module Util {
 		[CompOp.ExperimentalDestinationIn]: "experimental-destination-in",
 		[CompOp.DestinationOut]: "destination-out",
 		[CompOp.DestinationOver]: "destination-over",
-		[CompOp.Xor]: "xor"
+		[CompOp.Xor]: "xor",
+		[CompOp.Difference]: "difference",
+		[CompOp.Saturation]: "saturation"
 	};
 }
