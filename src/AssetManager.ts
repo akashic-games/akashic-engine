@@ -11,7 +11,8 @@ import type {
 	AudioAssetConfigurationBase,
 	VideoAssetConfigurationBase,
 	VectorImageAssetConfigurationBase,
-	BinaryAssetConfigurationBase
+	BinaryAssetConfigurationBase,
+	ModuleMainPathsMap
 } from "@akashic/game-configuration";
 import type {
 	Asset,
@@ -216,6 +217,12 @@ export class AssetManager implements AssetLoadHandler {
 	_moduleMainScripts: ModuleMainScriptsMap;
 
 	/**
+	 * package.json のパスをキーに、その main フィールドの内容を値に持つテーブル
+	 * @private
+	 */
+	_moduleMainPaths: ModuleMainPathsMap;
+
+	/**
 	 * 各アセットに対する参照の数。
 	 * 参照は requestAssets() で増え、unrefAssets() で減る。
 	 * なおロード中であっても参照に数える。つまり (this._refCounts[id] > 1) であるなら !!(this._assets[id] || this._loadings[id])
@@ -266,7 +273,8 @@ export class AssetManager implements AssetLoadHandler {
 		gameParams: AssetManagerParameterGameLike,
 		conf?: AssetConfigurationMap,
 		audioSystemConfMap?: AudioSystemConfigurationMap,
-		moduleMainScripts?: ModuleMainScriptsMap
+		moduleMainScripts?: ModuleMainScriptsMap,
+		moduleMainPaths?: ModuleMainPathsMap
 	) {
 		this._resourceFactory = gameParams.resourceFactory;
 		this._audioSystemManager = gameParams.audio;
@@ -278,6 +286,7 @@ export class AssetManager implements AssetLoadHandler {
 		this._liveAssetVirtualPathTable = {};
 		this._liveAssetPathTable = {};
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
+		this._moduleMainPaths = moduleMainPaths ?? {};
 		this._refCounts = {};
 		this._loadings = {};
 		this._generatedAssetCount = 0;
