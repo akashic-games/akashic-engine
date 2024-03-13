@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.18.0
+* @akashic/game-configuration@2.2.0 に追従
+  * `moduleMainPaths` をサポート
+
 ## 3.17.0
 * @akashic/pdi-types@1.13.0 に追従
   * サポートする `CompisiteOperation` に `"difference"` と `"saturation"` を追加

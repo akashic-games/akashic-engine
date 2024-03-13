@@ -975,7 +975,13 @@ export class Game {
 		if (Array.isArray(gameConfiguration.assets)) {
 			throw new Error("Game#constructor: array type of configuration.assets is not yet supported");
 		}
-		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
+		this._assetManager = new AssetManager(
+			this,
+			gameConfiguration.assets,
+			gameConfiguration.audio,
+			gameConfiguration.moduleMainScripts,
+			gameConfiguration.moduleMainPaths
+		);
 		this._moduleManager = undefined!;
 
 		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null);

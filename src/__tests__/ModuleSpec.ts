@@ -887,6 +887,111 @@ describe("test Module", () => {
 		game._startLoadingGlobalAssets();
 	});
 
+	it("require - use moduleMainPaths", done => {
+		const moduleMainScripts = gameConfiguration.moduleMainScripts;
+		delete gameConfiguration.moduleMainScripts;
+		gameConfiguration.moduleMainPaths = {
+			"node_modules/noPackageJsonModule/package.json": "node_modules/noPackageJsonModule/hoge.js",
+			"node_modules/externalResolvedModule/package.json": "node_modules/externalResolvedModule/index.js"
+		};
+
+		const game = new Game(gameConfiguration, "./");
+		const manager = game._moduleManager;
+		const path = "/script/dummypath.js";
+		game.resourceFactory.scriptContents = scriptContents;
+		game._onLoad.add(() => {
+			const module = new Module({
+				id: "dummymod",
+				path,
+				virtualPath: game._assetManager._liveAssetPathTable[path],
+				runtimeValueBase: game._runtimeValueBase,
+				requireFunc: (path: string, currentModule?: Module) => manager._require(path, currentModule),
+				resolveFunc: (path: string, currentModule?: Module) => manager._resolvePath(path, currentModule)
+			});
+
+			let mod = module.require("./foo");
+			expect(mod.me).toBe("script-foo");
+			expect(mod.thisModule instanceof Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/script/foo.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			mod = module.require("noPackageJson");
+			expect(mod.me).toBe("noPackageJson-index");
+			expect(mod.thisModule instanceof Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/node_modules/noPackageJson/index.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			mod = module.require("noDefaultIndex");
+			expect(mod.me).toBe("noDefaultIndex-root");
+			expect(mod.thisModule instanceof Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/node_modules/noDefaultIndex/root.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			mod = module.require("wrongPackageJsonMain");
+			expect(mod.me).toBe("wrongPackageJsonMain-index");
+			expect(mod.thisModule instanceof Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/node_modules/wrongPackageJsonMain/index.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			mod = module.require("aGlobalAssetFoo");
+			expect(mod.me).toBe("script-foo");
+			expect(mod.thisModule instanceof Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/script/foo.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			mod = module.require("noPackageJsonModule");
+			expect(mod.me).toBe("noPackageJsonModule");
+			expect(mod.thisModule instanceof Module).toBe(true);
+			expect(mod.thisModule.filename).toBe("/node_modules/noPackageJsonModule/real_hoge.js");
+			expect(mod.thisModule.parent).toBe(module);
+			expect(mod.thisModule.children).toEqual([]);
+			expect(mod.thisModule.loaded).toBe(true);
+
+			expect(() => {
+				module.require("aNonGlobalAssetBar");
+			}).toThrowError("AssertionError");
+			const scene = new Scene({
+				game: game,
+				assetIds: ["aNonGlobalAssetBar"]
+			});
+			scene.onLoad.add(() => {
+				let mod = module.require("aNonGlobalAssetBar");
+				expect(mod.me).toBe("script-bar");
+				expect(mod.thisModule instanceof Module).toBe(true);
+				expect(mod.thisModule.filename).toBe("/script/bar.js");
+				expect(mod.thisModule.parent).toBe(module);
+				expect(mod.thisModule.children).toEqual([]);
+				expect(mod.thisModule.loaded).toBe(true);
+
+				mod = module.require("./bar");
+				expect(mod.me).toBe("script-bar");
+
+				game.popScene();
+				game._flushPostTickTasks();
+				expect(() => {
+					module.require("aNonGlobalAssetBar");
+				}).toThrowError("AssertionError");
+
+				gameConfiguration.moduleMainScripts = moduleMainScripts;
+				delete gameConfiguration.moduleMainPaths;
+				done();
+			});
+			game.pushScene(scene);
+			game._flushPostTickTasks();
+		});
+		game._startLoadingGlobalAssets();
+	});
+
 	it("_resolvePath", done => {
 		const game = new Game(gameConfiguration, "/");
 		const manager = game._moduleManager;
