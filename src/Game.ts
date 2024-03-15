@@ -12,6 +12,7 @@ import type {
 import { PlatformPointType } from "@akashic/pdi-types";
 import type * as pl from "@akashic/playlog";
 import { Trigger } from "@akashic/trigger";
+import { AssetAccessor } from "./AssetAccessor";
 import { AssetManager } from "./AssetManager";
 import { AudioSystemManager } from "./AudioSystemManager";
 import type { Camera } from "./Camera";
@@ -377,6 +378,16 @@ export class Game {
 	 * ゲーム画面の高さ。
 	 */
 	height: number;
+
+	/**
+	 * グローバルアセットへのアクセッサ。
+	 *
+	 * 歴史的経緯による `assets` との違いに注意。
+	 * `assets` はグローバルアセットをアセットIDをキーにしてアクセスするテーブルである。
+	 * 他方この `asset` は `getImageById()`, `getAllTexts()` などのメソッドを持つオブジェクトである。
+	 * アセットIDだけでなくパスでのアクセスや、複数アセットの一括取得ができる点で異なる。
+	 */
+	asset: AssetAccessor;
 
 	/**
 	 * グローバルアセットのマップ。this._initialScene.assets のエイリアス。
@@ -977,6 +988,7 @@ export class Game {
 		}
 		this._assetManager = new AssetManager(this, gameConfiguration.assets, gameConfiguration.audio, gameConfiguration.moduleMainScripts);
 		this._moduleManager = undefined!;
+		this.asset = new AssetAccessor(this._assetManager);
 
 		this.operationPluginManager = new OperationPluginManager(this, param.operationPluginViewInfo || null);
 		this._onOperationPluginOperated = new Trigger<InternalOperationPluginOperation>();

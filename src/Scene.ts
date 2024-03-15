@@ -1,6 +1,6 @@
 import type { Asset, CommonOffset } from "@akashic/pdi-types";
 import { Trigger } from "@akashic/trigger";
-import { AssetAccessor } from "./AssetAccessor";
+import type { AssetAccessor } from "./AssetAccessor";
 import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguration";
 import { AssetHolder } from "./AssetHolder";
 import type { AssetLoadFailureInfo } from "./AssetLoadFailureInfo";
@@ -469,7 +469,7 @@ export class Scene {
 		this._onReady = new Trigger<Scene>();
 		this._ready = this._onReady;
 		this.assets = {};
-		this.asset = new AssetAccessor(game._assetManager);
+		this.asset = game.asset;
 		this.vars = {};
 
 		this._loaded = false;
