@@ -781,6 +781,36 @@ describe("test AssetManager", () => {
 		expect(manager.preloadScriptAssetIds()).toEqual(["asset3", "asset5"]);
 	});
 
+	it("can get virtualPath from assetId", () => {
+		const conf: GameConfiguration = {
+			width: 320,
+			height: 320,
+			fps: 30,
+			main: "",
+			assets: {
+				asset1: {
+					type: "script",
+					path: "/path/to/real/asset1",
+					virtualPath: "path/to/virtual/asset1",
+					global: true
+				},
+				asset2: {
+					type: "script",
+					path: "/path/to/real/asset2",
+					virtualPath: "path/to/virtual/asset2",
+					global: true,
+					preload: false
+				}
+			}
+		};
+		const game = new Game(conf);
+		const manager = game._assetManager;
+
+		expect(manager.resolveVirtualPath("asset1")).toBe("path/to/virtual/asset1");
+		expect(manager.resolveVirtualPath("asset2")).toBe("path/to/virtual/asset2");
+		expect(manager.resolveVirtualPath("unknown")).toBeNull();
+	});
+
 	describe("accessorPath", () => {
 		// AssetManager のメソッドは配列の順序は保証しないので、このテストは全体的に実装依存になっていることに注意。
 		const gameConfiguration: GameConfiguration = {

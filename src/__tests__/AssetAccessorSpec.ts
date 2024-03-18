@@ -381,4 +381,17 @@ describe("test AssetAccessor", () => {
 			}
 		);
 	});
+
+	it("can get virtualPath from assetId", done => {
+		setupAssetAccessor(
+			assetIds,
+			s => done.fail(s),
+			accessor => {
+				expect(accessor.resolveVirtualPath("id-assets/stage01/bgm01")).toBe("assets/stage01/bgm01");
+				expect(accessor.resolveVirtualPath("id-assets/icon/icon01.svg")).toBe("assets/icon/icon01.svg");
+				expect(accessor.resolveVirtualPath("unknown")).toBeNull();
+				done();
+			}
+		);
+	});
 });

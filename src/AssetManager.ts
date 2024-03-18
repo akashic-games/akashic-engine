@@ -541,6 +541,19 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
+	 * アセットIDから読み込み済みのアセットの仮想パス返す。
+	 * 当該のアセットが読み込まれていない場合、 null を返す。
+	 *
+	 * @param assetId 取得するアセットのID
+	 */
+	resolveVirtualPath(assetId: string): string | null {
+		for (const [virtualPath, id] of Object.entries(this._virtualPathToIdTable)) {
+			if (assetId === id) return virtualPath;
+		}
+		return null;
+	}
+
+	/**
 	 * @ignore
 	 */
 	_normalize(configuration: AssetConfigurationMap): AssetConfigurationMap {
