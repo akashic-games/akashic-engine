@@ -29,6 +29,7 @@ describe("test Game", () => {
 		expect(game.onUpdate).toBeDefined();
 		expect(game).toHaveProperty("_assetManager");
 		expect(game).toHaveProperty("_initialScene");
+		expect(game.asset).toBeDefined();
 		expect(game._moduleManager).toBeDefined();
 	});
 
@@ -48,6 +49,7 @@ describe("test Game", () => {
 		expect(game.onSceneChange).toBeUndefined();
 		expect(game._onSceneChange).toBeUndefined();
 		expect(game.onUpdate).toBeUndefined();
+		expect(game.asset).toBeUndefined();
 		expect(game._moduleManager).toBeUndefined();
 	});
 

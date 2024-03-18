@@ -1730,6 +1730,7 @@ export class Game {
 		this._mainParameter = undefined;
 		this._assetManager.destroy();
 		this._assetManager = undefined!;
+		this.asset = undefined!;
 		this._eventConverter = undefined!;
 		this._pointEventResolver = undefined!;
 		this.operationPluginManager = undefined!;
