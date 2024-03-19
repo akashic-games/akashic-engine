@@ -2,7 +2,7 @@
 
 ## unreleased changes
 * `g.Game#asset: AssetAccessor` を追加
-* アセットIDから `virtualPath` を逆引きするメソッド `AssetAccessor#resolveVirtualPath()` を追加
+* アセットIDからアクセッサパスを逆引きするメソッド `AssetAccessor#pathOf()` を追加
 
 ## 3.17.0
 * @akashic/pdi-types@1.13.0 に追従
