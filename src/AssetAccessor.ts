@@ -298,6 +298,6 @@ export class AssetAccessor {
 	 * @param assetId 取得するアセットのID
 	 */
 	resolveVirtualPath(assetId: string): string | null {
-		return this._assetManager.resolveVirtualPath(assetId);
+		return this._assetManager.resolveAccessorPath(assetId);
 	}
 }
