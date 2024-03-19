@@ -382,7 +382,7 @@ describe("test AssetAccessor", () => {
 		);
 	});
 
-	it("can get virtualPath from assetId", done => {
+	it("can get accessorPath from assetId", done => {
 		setupAssetAccessor(
 			assetIds,
 			s => done.fail(s),
