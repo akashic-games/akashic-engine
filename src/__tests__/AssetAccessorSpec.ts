@@ -387,9 +387,9 @@ describe("test AssetAccessor", () => {
 			assetIds,
 			s => done.fail(s),
 			accessor => {
-				expect(accessor.resolveVirtualPath("id-assets/stage01/bgm01")).toBe("assets/stage01/bgm01");
-				expect(accessor.resolveVirtualPath("id-assets/icon/icon01.svg")).toBe("assets/icon/icon01.svg");
-				expect(accessor.resolveVirtualPath("unknown")).toBeNull();
+				expect(accessor.pathOf("id-assets/stage01/bgm01")).toBe("/assets/stage01/bgm01");
+				expect(accessor.pathOf("id-assets/icon/icon01.svg")).toBe("/assets/icon/icon01.svg");
+				expect(accessor.pathOf("unknown")).toBeNull();
 				done();
 			}
 		);
