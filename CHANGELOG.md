@@ -6,7 +6,7 @@
 
 ## 3.17.0
 * @akashic/pdi-types@1.13.0 に追従
-  * サポートする `CompisiteOperation` に `"difference"` と `"saturation"` を追加
+  * サポートする `CompositeOperation` に `"difference"` と `"saturation"` を追加
 
 ## 3.16.6
 * exports.default をサポートする `g.ModuleManager#_internalRequire` を追加
