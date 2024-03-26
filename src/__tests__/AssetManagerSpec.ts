@@ -781,6 +781,45 @@ describe("test AssetManager", () => {
 		expect(manager.preloadScriptAssetIds()).toEqual(["asset3", "asset5"]);
 	});
 
+	it("can get accessorPath from assetId", async () => {
+		const conf: GameConfiguration = {
+			width: 320,
+			height: 320,
+			fps: 30,
+			main: "",
+			assets: {
+				asset1: {
+					type: "script",
+					path: "/path/to/real/asset1",
+					virtualPath: "path/to/virtual/asset1",
+					global: true
+				},
+				asset2: {
+					type: "script",
+					path: "/path/to/real/asset2",
+					virtualPath: "path/to/virtual/asset2",
+					global: true,
+					preload: false
+				}
+			}
+		};
+		const game = new Game(conf);
+		const manager = game._assetManager;
+
+		function requestAsset(conf: string): Promise<AudioAsset> {
+			return new Promise((resolve, reject) => {
+				manager.requestAsset(conf, { _onAssetError: e => reject(e), _onAssetLoad: (a: AudioAsset) => resolve(a) });
+			});
+		}
+
+		await requestAsset("asset1");
+		await requestAsset("asset2");
+
+		expect(manager.resolveAccessorPath("asset1")).toBe("/path/to/virtual/asset1");
+		expect(manager.resolveAccessorPath("asset2")).toBe("/path/to/virtual/asset2");
+		expect(manager.resolveAccessorPath("unknown")).toBeNull();
+	});
+
 	describe("accessorPath", () => {
 		// AssetManager のメソッドは配列の順序は保証しないので、このテストは全体的に実装依存になっていることに注意。
 		const gameConfiguration: GameConfiguration = {

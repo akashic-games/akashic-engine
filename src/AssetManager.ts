@@ -541,6 +541,20 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
+	 * アセットIDから読み込み済みのアクセッサパス返す。
+	 * 当該のアセットが読み込まれていない場合、 null を返す。
+	 *
+	 * @param assetId 取得するアセットのID
+	 */
+	resolveAccessorPath(assetId: string): string | null {
+		const asset = this._assets[assetId];
+		if (!asset) return null;
+		const virtualPath = this._liveAssetPathTable[asset.path];
+		if (!virtualPath) return null;
+		return "/" + virtualPath;
+	}
+
+	/**
 	 * @ignore
 	 */
 	_normalize(configuration: AssetConfigurationMap): AssetConfigurationMap {
