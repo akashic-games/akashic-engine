@@ -29,7 +29,7 @@ jobs:
         run: |
           npm ci
           npm pack
-          fileName=$(ls -1 *.tgz)
+          fileName=$(ls -1 akashic-akashic-engine-*.tgz)
           echo "pack_name=$fileName" >> $GITHUB_OUTPUT
       - name: Run engine-files reftest
         working-directory: engine-files
