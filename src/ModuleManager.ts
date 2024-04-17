@@ -179,7 +179,7 @@ export class ModuleManager {
 		} else {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 
-			// akashic-engine独自仕様: 対象の `path` が `moduleMainPaths`, `moduleMainScripts` に指定されていたらそちらを返す
+			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを返す
 			if (moduleMainScripts[path]) {
 				return moduleMainScripts[path];
 			}
