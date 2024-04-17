@@ -290,4 +290,14 @@ export class AssetAccessor {
 	getBinaryDataById(assetId: string): ArrayBuffer {
 		return this.getBinaryById(assetId).data;
 	}
+
+	/**
+	 * アセットIDからアセットのパスを返す。
+	 * 当該のアセットが読み込まれていない場合、 null を返す。
+	 *
+	 * @param assetId 取得するアセットのID
+	 */
+	pathOf(assetId: string): string | null {
+		return this._assetManager.resolveAccessorPath(assetId);
+	}
 }

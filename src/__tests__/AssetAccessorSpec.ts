@@ -381,4 +381,17 @@ describe("test AssetAccessor", () => {
 			}
 		);
 	});
+
+	it("can get accessorPath from assetId", done => {
+		setupAssetAccessor(
+			assetIds,
+			s => done.fail(s),
+			accessor => {
+				expect(accessor.pathOf("id-assets/stage01/bgm01")).toBe("/assets/stage01/bgm01");
+				expect(accessor.pathOf("id-assets/icon/icon01.svg")).toBe("/assets/icon/icon01.svg");
+				expect(accessor.pathOf("unknown")).toBeNull();
+				done();
+			}
+		);
+	});
 });
