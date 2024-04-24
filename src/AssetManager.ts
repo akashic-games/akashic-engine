@@ -220,7 +220,7 @@ export class AssetManager implements AssetLoadHandler {
 	 * package.json のパスをキーに、その main フィールドの内容を値に持つテーブル
 	 * @private
 	 */
-	_moduleMainPaths: ModuleMainPathsMap;
+	_moduleMainPaths: ModuleMainPathsMap | null;
 
 	/**
 	 * 各アセットに対する参照の数。
@@ -286,7 +286,7 @@ export class AssetManager implements AssetLoadHandler {
 		this._liveAssetVirtualPathTable = {};
 		this._liveAssetPathTable = {};
 		this._moduleMainScripts = moduleMainScripts ? moduleMainScripts : {};
-		this._moduleMainPaths = moduleMainPaths ?? {};
+		this._moduleMainPaths = moduleMainPaths ?? null;
 		this._refCounts = {};
 		this._loadings = {};
 		this._generatedAssetCount = 0;

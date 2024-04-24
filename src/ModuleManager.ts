@@ -97,7 +97,7 @@ export class ModuleManager {
 
 		// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
 		// moduleMainScripts は将来的に非推奨となるため、moduleMainPaths が存在しない場合だけ参照する
-		if (Object.keys(moduleMainPaths).length === 0 && moduleMainScripts[path]) {
+		if (!moduleMainPaths && moduleMainScripts[path]) {
 			targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 		} else {
 			targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
@@ -184,7 +184,7 @@ export class ModuleManager {
 
 			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを返す
 			// moduleMainScripts は将来的に非推奨となるため、moduleMainPaths が存在しない場合だけ参照する
-			if (Object.keys(moduleMainPaths).length === 0 && moduleMainScripts[path]) {
+			if (!moduleMainPaths && moduleMainScripts[path]) {
 				return moduleMainScripts[path];
 			}
 
@@ -255,7 +255,7 @@ export class ModuleManager {
 		let path = resolvedPath + "/package.json";
 		const asset = liveAssetPathTable[path];
 		const moduleMainPaths = this._assetManager._moduleMainPaths;
-		if (moduleMainPaths[path]) {
+		if (moduleMainPaths && moduleMainPaths[path]) {
 			return moduleMainPaths[path];
 		}
 		// liveAssetPathTable[path] != null だけではpathと同名のprototypeプロパティがある場合trueになってしまうので hasOwnProperty() を利用
