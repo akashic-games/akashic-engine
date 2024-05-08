@@ -75,6 +75,7 @@ export class ModuleManager {
 		let resolvedPath: string | undefined;
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
+		const moduleMainPaths = this._assetManager._moduleMainPaths;
 
 		// 0. アセットIDらしい場合はまず当該アセットを探す
 		if (path.indexOf("/") === -1) {
@@ -95,7 +96,8 @@ export class ModuleManager {
 		}
 
 		// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを参照する
-		if (moduleMainScripts[path]) {
+		// moduleMainScripts は将来的に非推奨となるため、moduleMainPaths が存在しない場合だけ参照する
+		if (!moduleMainPaths && moduleMainScripts[path]) {
 			targetScriptAsset = liveAssetVirtualPathTable[resolvedPath];
 		} else {
 			targetScriptAsset = this._findAssetByPathAsFile(resolvedPath, liveAssetVirtualPathTable);
@@ -145,6 +147,7 @@ export class ModuleManager {
 		let resolvedPath: string | null = null;
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
+		const moduleMainPaths = this._assetManager._moduleMainPaths;
 
 		// require(X) from module at path Y
 		// 1. If X is a core module,
@@ -180,7 +183,8 @@ export class ModuleManager {
 			// 3. LOAD_NODE_MODULES(X, dirname(Y))
 
 			// akashic-engine独自仕様: 対象の `path` が `moduleMainScripts` に指定されていたらそちらを返す
-			if (moduleMainScripts[path]) {
+			// moduleMainScripts は将来的に非推奨となるため、moduleMainPaths が存在しない場合だけ参照する
+			if (!moduleMainPaths && moduleMainScripts[path]) {
 				return moduleMainScripts[path];
 			}
 
@@ -250,6 +254,10 @@ export class ModuleManager {
 	_resolveAbsolutePathAsDirectory(resolvedPath: string, liveAssetPathTable: { [key: string]: OneOfAsset }): string | null {
 		let path = resolvedPath + "/package.json";
 		const asset = liveAssetPathTable[path];
+		const moduleMainPaths = this._assetManager._moduleMainPaths;
+		if (moduleMainPaths && moduleMainPaths[path]) {
+			return moduleMainPaths[path];
+		}
 		// liveAssetPathTable[path] != null だけではpathと同名のprototypeプロパティがある場合trueになってしまうので hasOwnProperty() を利用
 		if (liveAssetPathTable.hasOwnProperty(path) && asset.type === "text") {
 			const pkg = JSON.parse(asset.data);

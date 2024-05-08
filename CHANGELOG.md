@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.18.0
+* @akashic/game-configuration@2.2.0 に追従
+  * `moduleMainPaths` をサポート
+
 ## 3.17.1
 * `g.Game#asset: AssetAccessor` を追加
 * アセットIDからアクセッサパスを逆引きするメソッド `AssetAccessor#pathOf()` を追加
