@@ -45,6 +45,7 @@ game.jsonによって定義される。</p>
 <a href="GameConfiguration.html#height" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>height</span></a>
 <a href="GameConfiguration.html#main" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>main</span></a>
 <a href="GameConfiguration.html#maxPoints" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>max<wbr/>Points?</span></a>
+<a href="GameConfiguration.html#moduleMainPaths" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>module<wbr/>Main<wbr/>Paths?</span></a>
 <a href="GameConfiguration.html#moduleMainScripts" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>module<wbr/>Main<wbr/>Scripts?</span></a>
 <a href="GameConfiguration.html#operationPlugins" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>operation<wbr/>Plugins?</span></a>
 <a href="GameConfiguration.html#width" class="tsd-index-link tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>width</span></a>
@@ -81,7 +82,7 @@ game.jsonによって定義される。</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:59</li></ul></aside></section>
+<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:66</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-external"><a id="defaultSkippingScene" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>default<wbr/>Skipping<wbr/>Scene</span><a href="#defaultSkippingScene" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">default<wbr/>Skipping<wbr/>Scene</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">&quot;none&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;fast-forward&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;indicator&quot;</span></div>
@@ -92,12 +93,12 @@ game.jsonによって定義される。</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:66</li></ul></aside></section>
+<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:73</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-external"><a id="environment" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>environment</span><a href="#environment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">environment</span><span class="tsd-signature-symbol">?:</span> <a href="Environment.html" class="tsd-signature-type tsd-kind-interface">Environment</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:72</li></ul></aside></section>
+<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:79</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-external"><a id="fps" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>fps</span><a href="#fps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fps</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -142,16 +143,26 @@ game.jsonによって定義される。</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:71</li></ul></aside></section>
+<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:78</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-external"><a id="moduleMainPaths" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>module<wbr/>Main<wbr/>Paths</span><a href="#moduleMainPaths" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">module<wbr/>Main<wbr/>Paths</span><span class="tsd-signature-symbol">?:</span> <a href="../types/ModuleMainPathsMap.html" class="tsd-signature-type tsd-kind-type-alias">ModuleMainPathsMap</a></div>
+<div class="tsd-comment tsd-typography"><p>require()解決用のエントリポイントを格納したテーブル。</p>
+<p>package.json のパスをキーに、その main フィールドの内容を値に持つテーブル</p>
+</div>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
+<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:57</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-external"><a id="moduleMainScripts" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>module<wbr/>Main<wbr/>Scripts</span><a href="#moduleMainScripts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">module<wbr/>Main<wbr/>Scripts</span><span class="tsd-signature-symbol">?:</span> <a href="../types/ModuleMainScriptsMap.html" class="tsd-signature-type tsd-kind-type-alias">ModuleMainScriptsMap</a></div>
 <div class="tsd-comment tsd-typography"><p>require()解決用ののエントリポイントを格納したテーブル。</p>
-<p>require()の第一引数をキーとした値が本テーブルに存在した場合、require()時にその値をパスとしたスクリプトアセットを評価する。</p>
+<p>require()の第一引数をキーとした値が本テーブルに存在した場合、require()時にその値をパスとしたスクリプトアセットを評価する。
+現状、moduleMainPaths と同じ役割となるが、将来的には moduleMainScripts を deprecated としていく。</p>
 </div>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:50</li></ul></aside></section>
+<li>Defined in node_modules/@akashic/game-configuration/lib/GameConfiguration.d.ts:51</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-external"><a id="operationPlugins" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>operation<wbr/>Plugins</span><a href="#operationPlugins" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">operation<wbr/>Plugins</span><span class="tsd-signature-symbol">?:</span> <a href="OperationPluginInfo.html" class="tsd-signature-type tsd-kind-interface">OperationPluginInfo</a><span class="tsd-signature-symbol">[]</span></div>
@@ -197,6 +208,7 @@ game.jsonによって定義される。</p>
 <li><a href="#height" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>height</span></a></li>
 <li><a href="#main" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>main</span></a></li>
 <li><a href="#maxPoints" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>max<wbr/>Points</span></a></li>
+<li><a href="#moduleMainPaths" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>module<wbr/>Main<wbr/>Paths</span></a></li>
 <li><a href="#moduleMainScripts" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>module<wbr/>Main<wbr/>Scripts</span></a></li>
 <li><a href="#operationPlugins" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>operation<wbr/>Plugins</span></a></li>
 <li><a href="#width" class="tsd-is-external"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-1024"></use></svg><span>width</span></a></li></ul></div></details></div>
