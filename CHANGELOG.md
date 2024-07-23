@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.18.1
+* `moduleMainPaths` の挙動を `moduleMainScripts` が存在しない場合に参照するように修正
+
 ## 3.18.0
 * @akashic/game-configuration@2.2.0 に追従
   * `moduleMainPaths` をサポート
