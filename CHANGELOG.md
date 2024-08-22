@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.18.2
+* `OperationHandler#onOperaiton()` で `instanceof` での判定をやめ `Array.isArray()` を利用するように修正
+
 ## 3.18.1
 * `moduleMainPaths` の挙動を `moduleMainScripts` が存在しない場合に利用するように修正
 
