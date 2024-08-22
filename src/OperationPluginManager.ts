@@ -23,7 +23,7 @@ class OperationHandler {
 
 	onOperation(op: OperationPluginOperation | (number | string)[]): void {
 		let iop: InternalOperationPluginOperation;
-		if (op instanceof Array) {
+		if (Array.isArray(op)) {
 			iop = { _code: this._code, data: op };
 		} else {
 			iop = { _code: this._code, ...op };
