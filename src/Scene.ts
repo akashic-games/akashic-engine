@@ -18,10 +18,15 @@ import type { Timer } from "./Timer";
 import type { TimerIdentifier } from "./TimerManager";
 import { TimerManager } from "./TimerManager";
 
+/**
+ * `Scene#requestAssets()` 完了時の通知を受け取るハンドラ。
+ *
+ * @param error アセット読み込みエラー (発生した場合) 。エラーがない場合、 `undefined` 。
+ */
 export type SceneRequestAssetHandler = (error?: RequestAssetLoadError) => void;
 
 /**
- * `Scene#requestAsset` の引数に渡すことができるパラメータ。
+ * `Scene#requestAssets()` の引数に渡すことができるパラメータ。
  */
 export interface SceneRequestAssetsParameterObject {
 	assetIds: (string | DynamicAssetConfiguration | AssetGenerationConfiguration)[];
@@ -523,7 +528,7 @@ export class Scene {
 	 *
 	 * このメソッドは、このシーンに紐づいている `E` の `modified()` を呼び出すことで暗黙に呼び出される。
 	 * 通常、ゲーム開発者がこのメソッドを呼び出す必要はない。
-	 * @param isBubbling この関数をこのシーンの子の `modified()` から呼び出す場合、真を渡さなくてはならない。省略された場合、偽。
+	 * @param _isBubbling この関数をこのシーンの子の `modified()` から呼び出す場合、真を渡さなくてはならない。省略された場合、偽。
 	 */
 	modified(_isBubbling?: boolean): void {
 		this.game.modified();

@@ -427,8 +427,8 @@ export class E extends Object2D implements CommonArea {
 	 * 戻り値は、このエンティティの子孫の描画をスキップすべきであれば偽、でなければ真である。
 	 * (この値は、子孫の描画方法をカスタマイズする一部のサブクラスにおいて、通常の描画パスをスキップするために用いられる)
 	 *
-	 * @param renderer 描画先に対するRenderer
-	 * @param camera 対象のカメラ
+	 * @param _renderer 描画先に対するRenderer
+	 * @param _camera 対象のカメラ
 	 */
 	renderSelf(_renderer: Renderer, _camera?: Camera): boolean {
 		// nothing to do
@@ -567,7 +567,7 @@ export class E extends Object2D implements CommonArea {
 	 * 本メソッドは、このオブジェクトの `Object2D` 由来のプロパティ (`x`, `y`, `angle` など) を変更した場合にも呼びだす必要がある。
 	 * 本メソッドは、描画キャッシュの無効化処理を含まない。描画キャッシュを持つエンティティは、このメソッドとは別に `invalidate()` を提供している。
 	 * 描画キャッシュの無効化も必要な場合は、このメソッドではなくそちらを呼び出す必要がある。
-	 * @param isBubbling 通常ゲーム開発者が指定する必要はない。この変更通知が、(このエンティティ自身のみならず)子孫の変更の通知を含む場合、真を渡さなければならない。省略された場合、偽。
+	 * @param _isBubbling 通常ゲーム開発者が指定する必要はない。この変更通知が、(このエンティティ自身のみならず)子孫の変更の通知を含む場合、真を渡さなければならない。省略された場合、偽。
 	 */
 	modified(_isBubbling?: boolean): void {
 		// _matrixの用途は描画に限らない(e.g. E#findPointSourceByPoint)ので、Modifiedフラグと無関係にクリアする必要がある
@@ -601,7 +601,7 @@ export class E extends Object2D implements CommonArea {
 	 *
 	 * 戻り値は、子孫の探索をスキップすべきであれば偽、でなければ真である。
 	 *
-	 * @param point このエンティティ（`this`）の位置を基準とした相対座標
+	 * @param _point このエンティティ（`this`）の位置を基準とした相対座標
 	 */
 	shouldFindChildrenByPoint(_point: CommonOffset): boolean {
 		// nothing to do

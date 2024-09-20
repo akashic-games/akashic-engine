@@ -312,7 +312,7 @@ export class DynamicFont extends Font {
 	 * 実装上の制限から、このメソッドを呼び出す場合、maxAtlasNum が 1 または undefined/null(1として扱われる) である必要がある。
 	 * そうでない場合、失敗する可能性がある。
 	 *
-	 * @param missingGlyph `BitmapFont#map` に存在しないコードポイントの代わりに表示するべき文字。最初の一文字が用いられる。
+	 * @param missingGlyphChar `BitmapFont#map` に存在しないコードポイントの代わりに表示するべき文字。最初の一文字が用いられる。
 	 */
 	asBitmapFont(missingGlyphChar?: string): BitmapFont | null {
 		if (this._atlasSet.getAtlasNum() !== 1) {

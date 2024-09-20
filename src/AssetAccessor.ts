@@ -16,7 +16,7 @@ export class AssetAccessor {
 	/**
 	 * `AssetAccessor` のインスタンスを生成する。
 	 *
-	 * @param ラップする `AssetManager`
+	 * @param assetManager ラップする `AssetManager`
 	 */
 	constructor(assetManager: AssetManager) {
 		this._assetManager = assetManager;
