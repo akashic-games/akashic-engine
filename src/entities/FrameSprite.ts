@@ -129,7 +129,7 @@ export class FrameSprite extends Sprite {
 	 * `Sprite` から `FrameSprite` を作成する。
 	 * @param sprite 画像として使う`Sprite`
 	 * @param width 作成されるエンティティの高さ。省略された場合、 `sprite.width`
-	 * @param hegith 作成されるエンティティの高さ。省略された場合、 `sprite.height`
+	 * @param height 作成されるエンティティの高さ。省略された場合、 `sprite.height`
 	 */
 	static createBySprite(sprite: Sprite, width?: number, height?: number): FrameSprite {
 		const frameSprite = new FrameSprite({

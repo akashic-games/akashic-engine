@@ -22,6 +22,7 @@ export * from "./entities/FrameSprite";
 export * from "./entities/Label";
 export * from "./entities/Pane";
 export * from "./entities/Sprite";
+export * from "./errors";
 export * from "./AssetAccessor";
 export * from "./AssetGenerationConfiguration";
 export * from "./AssetHolder";

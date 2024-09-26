@@ -55,7 +55,7 @@ export module SurfaceUtil {
 	 * これはエンジンが利用するものであり、ゲーム開発者が呼び出す必要はない。
 	 *
 	 * @param animatingHandler アニメーティングハンドラ
-	 * @param beforeSurface ハンドラ登録を解除するサーフェス
+	 * @param _beforeSurface ハンドラ登録を解除するサーフェス
 	 * @param afterSurface ハンドラを登録するサーフェス
 	 */
 	export function migrateAnimatingHandler(animatingHandler: AnimatingHandler, _beforeSurface: Surface, afterSurface: Surface): void {

@@ -49,7 +49,7 @@ export interface Matrix {
 	/**
 	 * 2D object利用の一般的な値を基に変換行列の値を再計算する。
 	 * @param width 対象の横幅
-	 * @param heigth 対象の縦幅
+	 * @param height 対象の縦幅
 	 * @param scaleX 対象の横方向への拡大率
 	 * @param scaleY 対象の縦方向への拡大率
 	 * @param angle 角度。単位は `degree` であり `radian` ではない
@@ -73,7 +73,7 @@ export interface Matrix {
 	/**
 	 * `update()` によって得られる行列の逆変換になるよう変換行列の値を再計算する。
 	 * @param width 対象の横幅
-	 * @param heigth 対象の縦幅
+	 * @param height 対象の縦幅
 	 * @param scaleX 対象の横方向への拡大率
 	 * @param scaleY 対象の縦方向への拡大率
 	 * @param angle 角度。単位は `degree` であり `radian` ではない
