@@ -363,6 +363,7 @@ describe("test E", () => {
 	it("destroy - check for multiple executions", () => {
 		const e2 = new E({ scene: runtime.scene });
 		const spy = jest.spyOn(e2.scene, "unregister");
+
 		e2.destroy();
 		expect(e2.destroyed()).toBeTruthy();
 		expect(spy.mock.calls.length).toBe(1);
