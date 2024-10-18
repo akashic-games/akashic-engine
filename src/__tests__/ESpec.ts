@@ -360,6 +360,19 @@ describe("test E", () => {
 		expect((e as any)._onPointUp).toBeUndefined();
 	});
 
+	it("destroy - check for multiple executions", () => {
+		const e2 = new E({ scene: runtime.scene });
+		const spy = jest.spyOn(e2.scene, "unregister");
+
+		e2.destroy();
+		expect(e2.destroyed()).toBeTruthy();
+		expect(spy.mock.calls.length).toBe(1);
+
+		e2.destroy();
+		expect(spy.mock.calls.length).toBe(1); // 破棄済みの場合、 destory() を実行しても呼ばれないのでカウントは増えない。
+		spy.mockClear();
+	});
+
 	it("modified", () => {
 		resetUpdated(runtime);
 		expect(runtime.game._modified).toBe(false);
