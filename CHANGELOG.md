@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.18.3
+* `g.E#destroy()` で破棄済みチェックを行うように修正
+
 ## 3.18.2
 * `OperationHandler#onOperaiton()` で `instanceof` での判定をやめ `Array.isArray()` を利用するように修正
 

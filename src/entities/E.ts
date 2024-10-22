@@ -513,6 +513,8 @@ export class E extends Object2D implements CommonArea {
 	 * 子孫を持っている場合、子孫も破棄される。
 	 */
 	destroy(): void {
+		if (this.destroyed()) return;
+
 		if (this.parent) this.remove();
 
 		if (this.children) {
