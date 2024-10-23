@@ -10,7 +10,7 @@
     "@akashic/trigger": "~2.1.0"
   },
   "devDependencies": {
-    "@akashic/eslint-config": "2.1.0",
+    "@akashic/eslint-config": "3.0.0",
     "@akashic/pdi-common-impl": "^1.4.0",
     "@types/jest": "^29.0.0",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
