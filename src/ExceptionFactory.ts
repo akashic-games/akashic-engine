@@ -25,7 +25,7 @@ export module ExceptionFactory {
 					actualString = typeof actual;
 				}
 				message += ", actual type is " + (actualString.length > 40 ? actualString.substr(0, 40) : actualString);
-			} catch (ex) {
+			} catch (_ex) {
 				// メッセージ取得時に例外が発生したらactualの型情報出力はあきらめる
 			}
 		}
