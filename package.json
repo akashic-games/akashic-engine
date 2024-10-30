@@ -10,14 +10,10 @@
     "@akashic/trigger": "~2.1.0"
   },
   "devDependencies": {
-    "@akashic/eslint-config": "2.1.0",
+    "@akashic/eslint-config": "3.0.0",
     "@akashic/pdi-common-impl": "^1.4.0",
     "@types/jest": "^29.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-jest": "^27.4.2",
     "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.0.0",
     "prettier": "^3.0.3",
@@ -43,11 +39,11 @@
     "test": "npm run test:jest && npm run lint",
     "test:jest": "jest --config jest.config.js",
     "lint": "npm run lint:eslint && npm run lint:textlint",
-    "lint:eslint": "eslint -c .eslintrc \"src/**/*.ts\"",
+    "lint:eslint": "eslint \"src/**/*.ts\"",
     "lint:textlint": "textlint -f pretty-error doc/ && textlint -f pretty-error unreleased-changes/",
     "format": "npm run format:prettier && npm run format:eslint",
     "format:prettier": "prettier --write \"src/**/*.ts\" --config prettier.config.json",
-    "format:eslint": "eslint -c .eslintrc \"src/**/*.ts\" --fix",
+    "format:eslint": "eslint \"src/**/*.ts\" --fix",
     "doc": "typedoc --out doc/html/ --name \"Akashic Engine\" src/index.ts"
   },
   "files": [
