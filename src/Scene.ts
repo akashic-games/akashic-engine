@@ -458,10 +458,10 @@ export class Scene {
 			param.local === undefined
 				? "non-local"
 				: param.local === false
-				? "non-local"
-				: param.local === true
-				? "full-local"
-				: param.local;
+					? "non-local"
+					: param.local === true
+						? "full-local"
+						: param.local;
 		const tickGenerationMode = param.tickGenerationMode !== undefined ? param.tickGenerationMode : "by-clock";
 
 		this.name = param.name;
@@ -847,7 +847,7 @@ export class Scene {
 					if (failureAssetIds.length) {
 						// このパスに入るのは AssetHolder の alwaysNotifyFinish フラグを真にした時のみであることに注意
 						const error = ExceptionFactory.createRequestAssetLoadError(
-							`Scene#requestAssets(): failed to load the asset. refer to the 'detail' property for more information.`,
+							"Scene#requestAssets(): failed to load the asset. refer to the 'detail' property for more information.",
 							{ failureAssetIds }
 						);
 						handler(error);

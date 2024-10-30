@@ -174,7 +174,7 @@ export class EventConverter {
 				throw ExceptionFactory.createAssertionError("EventConverter#toPlaylogEvent: Invalid type: " + e.type);
 			case "timestamp":
 				const ts = e as TimestampEvent;
-				playerId = preservePlayer ? ts.player.id ?? null : this._playerId;
+				playerId = preservePlayer ? (ts.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.Timestamp, // 0: イベントコード
 					ts.eventFlags, //          1: イベントフラグ値
@@ -183,7 +183,7 @@ export class EventConverter {
 				];
 			case "player-info":
 				const playerInfo = e as PlayerInfoEvent;
-				playerId = preservePlayer ? playerInfo.player.id ?? null : this._playerId;
+				playerId = preservePlayer ? (playerInfo.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.PlayerInfo, //   0: イベントコード
 					playerInfo.eventFlags, //     1: イベントフラグ値
@@ -194,7 +194,7 @@ export class EventConverter {
 			case "point-down":
 				const pointDown = e as PointDownEvent;
 				targetId = pointDown.target ? pointDown.target.id : null;
-				playerId = preservePlayer && pointDown.player ? pointDown.player.id ?? null : this._playerId;
+				playerId = preservePlayer && pointDown.player ? (pointDown.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.PointDown, // 0: イベントコード
 					pointDown.eventFlags, //   1: イベントフラグ値
@@ -209,7 +209,7 @@ export class EventConverter {
 			case "point-move":
 				const pointMove = e as PointMoveEvent;
 				targetId = pointMove.target ? pointMove.target.id : null;
-				playerId = preservePlayer && pointMove.player ? pointMove.player.id ?? null : this._playerId;
+				playerId = preservePlayer && pointMove.player ? (pointMove.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.PointMove, // 0: イベントコード
 					pointMove.eventFlags, //   1: イベントフラグ値
@@ -228,7 +228,7 @@ export class EventConverter {
 			case "point-up":
 				const pointUp = e as PointUpEvent;
 				targetId = pointUp.target ? pointUp.target.id : null;
-				playerId = preservePlayer && pointUp.player ? pointUp.player.id ?? null : this._playerId;
+				playerId = preservePlayer && pointUp.player ? (pointUp.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.PointUp, // 0: イベントコード
 					pointUp.eventFlags, //   1: イベントフラグ値
@@ -246,7 +246,7 @@ export class EventConverter {
 				];
 			case "message":
 				const message = e as MessageEvent;
-				playerId = preservePlayer && message.player ? message.player.id ?? null : this._playerId;
+				playerId = preservePlayer && message.player ? (message.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.Message, // 0: イベントコード
 					message.eventFlags, //   1: イベントフラグ値
@@ -256,7 +256,7 @@ export class EventConverter {
 				];
 			case "operation":
 				const op = e as OperationEvent;
-				playerId = preservePlayer && op.player ? op.player.id ?? null : this._playerId;
+				playerId = preservePlayer && op.player ? (op.player.id ?? null) : this._playerId;
 				return [
 					pl.EventCode.Operation, // 0: イベントコード
 					op.eventFlags, //          1: イベントフラグ値
