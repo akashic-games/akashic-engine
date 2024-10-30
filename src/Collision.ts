@@ -124,7 +124,6 @@ export module Collision {
 		const p = sub(p2, p1);
 		const q = sub(q2, q1);
 		return (
-			// eslint-disable-next-line max-len
 			absCross(sub(q1, p1), p) * absCross(sub(q2, p1), p) <= 0 && absCross(sub(p1, q1), q) * absCross(sub(p2, q1), q) <= 0 // 符号が違うことを積の符号で判定している
 		);
 	}

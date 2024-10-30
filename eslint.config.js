@@ -1,12 +1,10 @@
 const eslintConfig = require("@akashic/eslint-config");
-const prettier = require("eslint-plugin-prettier");
+const eslintConfigPrettier = require("eslint-config-prettier");
 
 module.exports = [
     ...eslintConfig,
+    eslintConfigPrettier,
     {
-        plugins: {
-            prettier,
-        }, 
         files: ["src/**/*.ts"],
         languageOptions: {
             sourceType: "module",

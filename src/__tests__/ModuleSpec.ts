@@ -231,7 +231,7 @@ describe("test Module", () => {
 		"/script/bar.js": "module.exports = { me: 'script-bar', thisModule: module }",
 		"/script/dummypath.js": "module.exports = { me: 'script-dummymod', thisModule: module }",
 		"/script/exportDefault.js":
-			"Object.defineProperty(exports, '__esModule', { value: true });function exportDefault() { return 'exportDefault'; } exports.default = exportDefault;", // eslint-disable-line max-len
+			"Object.defineProperty(exports, '__esModule', { value: true });function exportDefault() { return 'exportDefault'; } exports.default = exportDefault;",
 		"/cascaded/script.js": "module.exports = { me: 'script-cascaded', thisModule: module }",
 		"/node_modules/noPackageJson/index.js": "module.exports = { me: 'noPackageJson-index', thisModule: module };",
 		"/node_modules/noDefaultIndex/root.js": "exports.me = 'noDefaultIndex-root'; exports.thisModule = module; ",
