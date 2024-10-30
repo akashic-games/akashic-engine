@@ -1,6 +1,5 @@
 const eslintConfig = require("@akashic/eslint-config");
 const prettier = require("eslint-plugin-prettier");
-const globals = require("globals");
 
 module.exports = [
     ...eslintConfig,
