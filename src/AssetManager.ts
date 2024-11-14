@@ -372,9 +372,23 @@ export class AssetManager implements AssetLoadHandler {
 	 * プリロードすべきスクリプトアセットのIDを全て返す。
 	 */
 	preloadScriptAssetIds(): string[] {
-		return Object.entries(this.configuration)
-			.filter(([, conf]) => conf.type === "script" && conf.global && conf.preload)
-			.map(([assetId]) => assetId);
+		const assetIds: string[] = [];
+
+		if (this._assetBundle) {
+			assetIds.push(
+				...Object.entries(this._assetBundle.assets)
+					.filter(([, conf]) => conf.type === "script" && conf.preload)
+					.map(([assetId]) => assetId)
+			);
+		}
+
+		assetIds.push(
+			...Object.entries(this.configuration)
+				.filter(([, conf]) => conf.type === "script" && conf.global && conf.preload)
+				.map(([assetId]) => assetId)
+		);
+
+		return assetIds;
 	}
 
 	/**

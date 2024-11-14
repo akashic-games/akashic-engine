@@ -76,12 +76,10 @@ export class ModuleManager {
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
 
-		// 0. アセットIDらしい場合はまず当該アセットを探す
-		if (path.indexOf("/") === -1) {
-			if (this._assetManager._assets.hasOwnProperty(path)) {
-				targetScriptAsset = this._assetManager._assets[path];
-				resolvedPath = this._assetManager._liveAssetPathTable[targetScriptAsset.path];
-			}
+		// 0. アセットIDと一致した場合は当該アセットを返す
+		if (this._assetManager._assets.hasOwnProperty(path)) {
+			targetScriptAsset = this._assetManager._assets[path];
+			resolvedPath = this._assetManager._liveAssetPathTable[targetScriptAsset.path];
 		}
 
 		if (!resolvedPath) {
