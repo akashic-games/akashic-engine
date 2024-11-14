@@ -24,6 +24,21 @@ describe("test InitialScene", () => {
 	};
 	const assetBundle = `{
 		assets: {
+			"/script/preload.js": {
+				type: "script",
+				path: "script/preload.js",
+				preload: true,
+				execute: (runtimeValue) => {
+					const { module } = runtimeValue;
+					const exports = module.exports;
+
+					module.exports = () => {
+						g.game.vars.preloaded = true;
+					}
+
+					return module.exports;
+				}
+			},
 			"/script/module.js": {
 				type: "script",
 				path: "script/module.js",
@@ -37,7 +52,7 @@ describe("test InitialScene", () => {
 
 					return module.exports;
 				}
-			}
+			},
 		},
 	}`;
 
@@ -46,6 +61,8 @@ describe("test InitialScene", () => {
 		game.resourceFactory.scriptContents["./main.js"] = "module.exports = () => g.game.__entry_point__();";
 		game.resourceFactory.scriptContents["./asset.bundle.js"] = `module.exports = ${assetBundle}`;
 		(game as any).__entry_point__ = () => {
+			expect(game.vars.preloaded).toBe(true); // エントリポイントに先行して /script/preload.js が実行されていることを確認
+
 			const assetBundle = game._moduleManager._internalRequire(configuration.assetBundle!);
 			expect(assetBundle.assets["/script/module.js"]).toBeDefined();
 			expect(assetBundle.assets["/script/module.js"].type).toBe("script");
