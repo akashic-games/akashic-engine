@@ -587,7 +587,12 @@ export class AssetManager implements AssetLoadHandler {
 		return "/" + virtualPath;
 	}
 
-	setAssetBundle(assetBundle: AssetBundleConfiguration): void {
+	/**
+	 * アセットバンドルを設定する。
+	 *
+	 * @param assetBundle アセットバンドル
+	 */
+	setAssetBundle(assetBundle: AssetBundleConfiguration | null): void {
 		this._assetBundle = assetBundle;
 	}
 
