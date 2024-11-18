@@ -76,10 +76,12 @@ export class ModuleManager {
 		const liveAssetVirtualPathTable = this._assetManager._liveAssetVirtualPathTable;
 		const moduleMainScripts = this._assetManager._moduleMainScripts;
 
-		// 0. アセットIDと一致した場合は当該アセットを返す
-		if (this._assetManager._assets.hasOwnProperty(path)) {
-			targetScriptAsset = this._assetManager._assets[path];
-			resolvedPath = this._assetManager._liveAssetPathTable[targetScriptAsset.path];
+		// 0. アセットIDらしい場合はまず当該アセットを探す
+		if (path.indexOf("/") === -1) {
+			if (this._assetManager._assets.hasOwnProperty(path)) {
+				targetScriptAsset = this._assetManager._assets[path];
+				resolvedPath = this._assetManager._liveAssetPathTable[targetScriptAsset.path];
+			}
 		}
 
 		if (!resolvedPath) {
@@ -154,14 +156,17 @@ export class ModuleManager {
 
 			if (currentModule) {
 				if (!currentModule._virtualDirname) {
-					throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the moudle path without virtualPath");
+					throw ExceptionFactory.createAssertionError("g._require.resolve: couldn't resolve the module path without virtualPath");
 				}
 				resolvedPath = PathUtil.resolvePath(currentModule._virtualDirname, path);
 			} else {
-				if (!/^\.\//.test(path)) {
+				if (/^\.\//.test(path)) {
+					resolvedPath = path.substring(2);
+				} else if (/^\//.test(path)) {
+					resolvedPath = path.substring(1);
+				} else {
 					throw ExceptionFactory.createAssertionError("g._require.resolve: entry point path must start with './'");
 				}
-				resolvedPath = path.substring(2);
 			}
 
 			// 2.a. LOAD_AS_FILE(Y + X)

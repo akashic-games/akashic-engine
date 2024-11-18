@@ -369,26 +369,28 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * プリロードすべきスクリプトアセットのIDを全て返す。
+	 * プリロードすべきスクリプトアセットの path を全て返す。
 	 */
-	preloadScriptAssetIds(): string[] {
-		const assetIds: string[] = [];
+	preloadScriptAssetPaths(): string[] {
+		let assetPaths: string[] = [];
 
 		if (this._assetBundle) {
-			assetIds.push(
+			assetPaths.push(
 				...Object.entries(this._assetBundle.assets)
 					.filter(([, conf]) => conf.type === "script" && conf.preload)
-					.map(([assetId]) => assetId)
+					.map(([, conf]) => conf.path)
 			);
 		}
 
-		assetIds.push(
+		assetPaths.push(
 			...Object.entries(this.configuration)
 				.filter(([, conf]) => conf.type === "script" && conf.global && conf.preload)
-				.map(([assetId]) => assetId)
+				.map(([, conf]) => conf.virtualPath!) // この箇所ではすでに virtualPath が補完されていることが前提
 		);
 
-		return assetIds;
+		assetPaths = assetPaths.map(path => (path.startsWith("./") ? path : `./${path}`));
+
+		return assetPaths;
 	}
 
 	/**

@@ -739,35 +739,35 @@ describe("test AssetManager", () => {
 			assets: {
 				asset1: {
 					type: "script",
-					path: "/path/to/real/file",
-					virtualPath: "path/to/virtual/file",
+					path: "/path/to/real/file1",
+					virtualPath: "path/to/virtual/file1",
 					global: true
 				},
 				asset2: {
 					type: "script",
-					path: "/path/to/real/file",
-					virtualPath: "path/to/virtual/file",
+					path: "/path/to/real/file2",
+					virtualPath: "path/to/virtual/file2",
 					global: true,
 					preload: false
 				},
 				asset3: {
 					type: "script",
-					path: "/path/to/real/file",
-					virtualPath: "path/to/virtual/file",
+					path: "/path/to/real/file3",
+					virtualPath: "path/to/virtual/file3",
 					global: true,
 					preload: true
 				},
 				asset4: {
 					type: "script",
-					path: "/path/to/real/file",
-					virtualPath: "path/to/virtual/file",
+					path: "/path/to/real/file4",
+					virtualPath: "path/to/virtual/file4",
 					global: true,
 					preload: 0 as any
 				},
 				asset5: {
 					type: "script",
-					path: "/path/to/real/file",
-					virtualPath: "path/to/virtual/file",
+					path: "/path/to/real/file5",
+					virtualPath: "path/to/virtual/file5",
 					global: true,
 					preload: true
 				}
@@ -778,7 +778,7 @@ describe("test AssetManager", () => {
 		const manager = game._assetManager;
 
 		// NOTE: 配列の順序は実装依存であることに注意
-		expect(manager.preloadScriptAssetIds()).toEqual(["asset3", "asset5"]);
+		expect(manager.preloadScriptAssetPaths()).toEqual(["./path/to/virtual/file3", "./path/to/virtual/file5"]);
 	});
 
 	it("can get accessorPath from assetId", async () => {

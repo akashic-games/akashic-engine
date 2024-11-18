@@ -2014,11 +2014,11 @@ export class Game {
 		}
 		this.operationPlugins = this.operationPluginManager.plugins;
 
-		const preloadAssetIds = this._assetManager.preloadScriptAssetIds();
-		for (const preloadAssetId of preloadAssetIds) {
-			const fun = this._moduleManager._internalRequire(preloadAssetId);
+		const preloadAssetPaths = this._assetManager.preloadScriptAssetPaths();
+		for (const preloadAssetPath of preloadAssetPaths) {
+			const fun = this._moduleManager._internalRequire(preloadAssetPath);
 			if (!fun || typeof fun !== "function")
-				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: ${preloadAssetId} has no-exported function.`);
+				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: ${preloadAssetPath} has no-exported function.`);
 			fun();
 		}
 
