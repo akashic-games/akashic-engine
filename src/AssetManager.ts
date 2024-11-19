@@ -376,16 +376,16 @@ export class AssetManager implements AssetLoadHandler {
 
 		if (this._assetBundle) {
 			assetPaths.push(
-				...Object.entries(this._assetBundle.assets)
-					.filter(([, conf]) => conf.type === "script" && conf.preload)
-					.map(([, conf]) => conf.path)
+				...Object.values(this._assetBundle.assets)
+					.filter(conf => conf.type === "script" && conf.preload)
+					.map(conf => conf.path)
 			);
 		}
 
 		assetPaths.push(
-			...Object.entries(this.configuration)
-				.filter(([, conf]) => conf.type === "script" && conf.global && conf.preload)
-				.map(([, conf]) => conf.virtualPath!) // この箇所ではすでに virtualPath が補完されていることが前提
+			...Object.values(this.configuration)
+				.filter(conf => conf.type === "script" && conf.global && conf.preload)
+				.map(conf => conf.virtualPath!) // この箇所ではすでに virtualPath が補完されていることが前提
 		);
 
 		assetPaths = assetPaths.map(path => (path.startsWith("./") ? path : `./${path}`));
