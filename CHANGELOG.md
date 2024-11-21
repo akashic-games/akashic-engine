@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.19.0
 * @akashic/game-configuration@2.4.0 に追従
   * `assetBundle` に対応
   * `BundledScriptAsset` を追加
