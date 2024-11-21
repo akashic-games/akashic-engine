@@ -25,6 +25,7 @@ import type { EventFilter } from "./EventFilter";
 import { ExceptionFactory } from "./ExceptionFactory";
 import type { GameHandlerSet } from "./GameHandlerSet";
 import type { GameMainParameterObject } from "./GameMainParameterObject";
+import { InitialScene } from "./InitialScene";
 import { LoadingScene } from "./LoadingScene";
 import type { LocalTickModeString } from "./LocalTickModeString";
 import { ModuleManager } from "./ModuleManager";
@@ -33,7 +34,7 @@ import { OperationPluginManager } from "./OperationPluginManager";
 import type { InternalOperationPluginOperation } from "./OperationPluginOperation";
 import { PointEventResolver } from "./PointEventResolver";
 import type { RandomGenerator } from "./RandomGenerator";
-import { Scene } from "./Scene";
+import type { Scene } from "./Scene";
 import type { SnapshotSaveRequest } from "./SnapshotSaveRequest";
 import { SurfaceAtlasSet } from "./SurfaceAtlasSet";
 import type { TickGenerationModeString } from "./TickGenerationModeString";
@@ -640,7 +641,7 @@ export class Game {
 	 * グローバルアセットを読み込むための初期シーン。必ずシーンスタックの一番下に存在する。これをpopScene()することはできない。
 	 * @private
 	 */
-	_initialScene: Scene;
+	_initialScene: InitialScene;
 
 	/**
 	 * デフォルトローディングシーン。
@@ -1009,13 +1010,13 @@ export class Game {
 
 		this.onUpdate = new Trigger<void>();
 
-		this._initialScene = new Scene({
+		this._initialScene = new InitialScene({
 			game: this,
 			assetIds: this._assetManager.globalAssetIds(),
 			local: true,
 			name: "akashic:initial-scene"
 		});
-		this._initialScene.onLoad.add(this._handleInitialSceneLoad, this);
+		this._initialScene.onAllAssetsLoad.add(this._handleInitialSceneLoad, this);
 
 		this._reset({ age: 0 });
 	}
@@ -2013,11 +2014,11 @@ export class Game {
 		}
 		this.operationPlugins = this.operationPluginManager.plugins;
 
-		const preloadAssetIds = this._assetManager.preloadScriptAssetIds();
-		for (const preloadAssetId of preloadAssetIds) {
-			const fun = this._moduleManager._internalRequire(preloadAssetId);
+		const preloadAssetPaths = this._assetManager.preloadScriptAssetPaths();
+		for (const preloadAssetPath of preloadAssetPaths) {
+			const fun = this._moduleManager._internalRequire(preloadAssetPath);
 			if (!fun || typeof fun !== "function")
-				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: ${preloadAssetId} has no-exported function.`);
+				throw ExceptionFactory.createAssertionError(`Game#_handleLoad: ${preloadAssetPath} has no-exported function.`);
 			fun();
 		}
 

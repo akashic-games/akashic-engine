@@ -12,7 +12,9 @@ import type {
 	VideoAssetConfigurationBase,
 	VectorImageAssetConfigurationBase,
 	BinaryAssetConfigurationBase,
-	ModuleMainPathsMap
+	ModuleMainPathsMap,
+	AssetBundleConfiguration,
+	BundledAssetConfiguration
 } from "@akashic/game-configuration";
 import type {
 	Asset,
@@ -32,6 +34,7 @@ import type { AssetGenerationConfiguration } from "./AssetGenerationConfiguratio
 import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
+import { BundledScriptAsset } from "./auxiliary/BundledScriptAsset";
 import { EmptyBinaryAsset } from "./auxiliary/EmptyBinaryAsset";
 import { EmptyGeneratedVectorImageAsset } from "./auxiliary/EmptyGeneratedVectorImageAsset";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
@@ -262,6 +265,11 @@ export class AssetManager implements AssetLoadHandler {
 	private _generatedAssetCount: number;
 
 	/**
+	 * アセットバンドル。
+	 */
+	private _assetBundle: AssetBundleConfiguration | null;
+
+	/**
 	 * `AssetManager` のインスタンスを生成する。
 	 *
 	 * @param gameParams このインスタンスが属するゲーム。
@@ -290,6 +298,7 @@ export class AssetManager implements AssetLoadHandler {
 		this._refCounts = {};
 		this._loadings = {};
 		this._generatedAssetCount = 0;
+		this._assetBundle = null;
 
 		const assetIds = Object.keys(this.configuration);
 		for (let i = 0; i < assetIds.length; ++i) {
@@ -313,6 +322,7 @@ export class AssetManager implements AssetLoadHandler {
 		this._liveAssetPathTable = undefined!;
 		this._refCounts = undefined!;
 		this._loadings = undefined!;
+		this._assetBundle = undefined!;
 	}
 
 	/**
@@ -359,12 +369,28 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
-	 * プリロードすべきスクリプトアセットのIDを全て返す。
+	 * プリロードすべきスクリプトアセットの path を全て返す。
 	 */
-	preloadScriptAssetIds(): string[] {
-		return Object.entries(this.configuration)
-			.filter(([, conf]) => conf.type === "script" && conf.global && conf.preload)
-			.map(([assetId]) => assetId);
+	preloadScriptAssetPaths(): string[] {
+		let assetPaths: string[] = [];
+
+		if (this._assetBundle) {
+			assetPaths.push(
+				...Object.values(this._assetBundle.assets)
+					.filter(conf => conf.type === "script" && conf.preload)
+					.map(conf => conf.path)
+			);
+		}
+
+		assetPaths.push(
+			...Object.values(this.configuration)
+				.filter(conf => conf.type === "script" && conf.global && conf.preload)
+				.map(conf => conf.virtualPath!) // この箇所ではすでに virtualPath が補完されていることが前提
+		);
+
+		assetPaths = assetPaths.map(path => (path.startsWith("./") ? path : `./${path}`));
+
+		return assetPaths;
 	}
 
 	/**
@@ -564,6 +590,15 @@ export class AssetManager implements AssetLoadHandler {
 	}
 
 	/**
+	 * アセットバンドルを設定する。
+	 *
+	 * @param assetBundle アセットバンドル
+	 */
+	setAssetBundle(assetBundle: AssetBundleConfiguration | null): void {
+		this._assetBundle = assetBundle;
+	}
+
+	/**
 	 * @ignore
 	 */
 	_normalize(configuration: AssetConfigurationMap): AssetConfigurationMap {
@@ -648,7 +683,23 @@ export class AssetManager implements AssetLoadHandler {
 		let id: string;
 		let uri: string;
 		let conf: AssetConfiguration | DynamicAssetConfiguration;
-		if (typeof idOrConf === "string") {
+		if (this._assetBundle && typeof idOrConf === "string") {
+			const id = idOrConf;
+			const conf = this._assetBundle.assets[id] as BundledAssetConfiguration;
+			const type = conf.type;
+			switch (type) {
+				case "script":
+					const asset = new BundledScriptAsset({
+						id,
+						...conf
+					});
+					return asset;
+				default:
+					throw ExceptionFactory.createAssertionError(
+						`AssertionError#_createAssetFor: unknown asset type ${type} for asset ID: ${id}`
+					);
+			}
+		} else if (typeof idOrConf === "string") {
 			id = idOrConf;
 			conf = this.configuration[id];
 			uri = this.configuration[id].path;
@@ -849,17 +900,23 @@ export class AssetManager implements AssetLoadHandler {
 	 */
 	_addAssetToTables(asset: OneOfAsset): void {
 		this._assets[asset.id] = asset;
+		let path: string | undefined;
 
 		// DynamicAsset の場合は configuration に書かれていないので以下の判定が偽になる
 		if (this.configuration[asset.id]) {
-			const virtualPath = this.configuration[asset.id].virtualPath!; // virtualPath の存在は _normalize() で確認済みのため 非 null アサーションとする
-			if (!this._liveAssetVirtualPathTable.hasOwnProperty(virtualPath)) {
-				this._liveAssetVirtualPathTable[virtualPath] = asset;
-			} else {
-				if (this._liveAssetVirtualPathTable[virtualPath].path !== asset.path)
-					throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
-			}
-			if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = virtualPath;
+			path = this.configuration[asset.id].virtualPath!; // virtualPath の存在は _normalize() で確認済みのため 非 null アサーションとする
+		} else if (this._assetBundle && this._assetBundle.assets[asset.id]) {
+			path = this._assetBundle.assets[asset.id].path;
 		}
+
+		if (!path) return;
+
+		if (!this._liveAssetVirtualPathTable.hasOwnProperty(path)) {
+			this._liveAssetVirtualPathTable[path] = asset;
+		} else {
+			if (this._liveAssetVirtualPathTable[path].path !== asset.path)
+				throw ExceptionFactory.createAssertionError("AssetManager#_onAssetLoad(): duplicated asset path");
+		}
+		if (!this._liveAssetPathTable.hasOwnProperty(asset.path)) this._liveAssetPathTable[asset.path] = path;
 	}
 }

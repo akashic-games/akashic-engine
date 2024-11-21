@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 3.19.0
+* @akashic/game-configuration@2.4.0 に追従
+  * `assetBundle` に対応
+  * `BundledScriptAsset` を追加
+
 ## 3.18.3
 * `g.E#destroy()` で破棄済みチェックを行うように修正
 

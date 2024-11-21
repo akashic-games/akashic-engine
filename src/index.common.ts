@@ -51,6 +51,7 @@ export * from "./EventPriority";
 export * from "./ExceptionFactory";
 export * from "./Font";
 export * from "./GameMainParameterObject";
+export * from "./InitialScene";
 export * from "./InternalOperationPluginInfo";
 export * from "./LoadingScene";
 export * from "./LocalTickModeString";
