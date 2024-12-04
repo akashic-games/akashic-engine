@@ -686,7 +686,7 @@ export class AssetManager implements AssetLoadHandler {
 		if (this._assetBundle && typeof idOrConf === "string") {
 			const id = idOrConf;
 			const conf = this._assetBundle.assets[id] as BundledAssetConfiguration;
-			const type = conf.type;
+			const type = conf?.type;
 			switch (type) {
 				case "script":
 					const asset = new BundledScriptAsset({
@@ -694,12 +694,9 @@ export class AssetManager implements AssetLoadHandler {
 						...conf
 					});
 					return asset;
-				default:
-					throw ExceptionFactory.createAssertionError(
-						`AssertionError#_createAssetFor: unknown asset type ${type} for asset ID: ${id}`
-					);
 			}
-		} else if (typeof idOrConf === "string") {
+		}
+		if (typeof idOrConf === "string") {
 			id = idOrConf;
 			conf = this.configuration[id];
 			uri = this.configuration[id].path;

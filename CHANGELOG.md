@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.19.1
+* assetBundle が存在する状況においてスクリプトアセット以外を利用するとエラーとなる問題を修正
+
 ## 3.19.0
 * @akashic/game-configuration@2.4.0 に追従
   * `assetBundle` に対応
