@@ -4,7 +4,7 @@
   "description": "The core library of Akashic Engine",
   "main": "index.js",
   "dependencies": {
-    "@akashic/game-configuration": "~2.4.0",
+    "@akashic/game-configuration": "~2.5.0",
     "@akashic/pdi-types": "^1.13.0",
     "@akashic/playlog": "~3.3.0",
     "@akashic/trigger": "~2.1.0"
