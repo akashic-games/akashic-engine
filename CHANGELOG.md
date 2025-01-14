@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.20.0
+* @akashic/game-configuration@2.5.0 に追従
+  * `BundledTextAsset` を追加
+
 ## 3.19.1
 * assetBundle が存在する状況においてスクリプトアセット以外を利用するとエラーとなる問題を修正
 

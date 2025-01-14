@@ -35,6 +35,7 @@ import type { AssetManagerLoadHandler } from "./AssetManagerLoadHandler";
 import type { AudioSystem } from "./AudioSystem";
 import type { AudioSystemManager } from "./AudioSystemManager";
 import { BundledScriptAsset } from "./auxiliary/BundledScriptAsset";
+import { BundledTextAsset } from "./auxiliary/BundledTextAsset";
 import { EmptyBinaryAsset } from "./auxiliary/EmptyBinaryAsset";
 import { EmptyGeneratedVectorImageAsset } from "./auxiliary/EmptyGeneratedVectorImageAsset";
 import { EmptyVectorImageAsset } from "./auxiliary/EmptyVectorImageAsset";
@@ -689,11 +690,15 @@ export class AssetManager implements AssetLoadHandler {
 			const type = conf?.type;
 			switch (type) {
 				case "script":
-					const asset = new BundledScriptAsset({
+					return new BundledScriptAsset({
 						id,
 						...conf
 					});
-					return asset;
+				case "text":
+					return new BundledTextAsset({
+						id,
+						...conf
+					});
 			}
 		}
 		if (typeof idOrConf === "string") {
