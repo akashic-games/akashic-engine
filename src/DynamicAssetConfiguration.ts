@@ -40,49 +40,49 @@ export interface DynamicAssetConfigurationBase extends AssetConfigurationCommonB
  */
 export interface DynamicImageAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<ImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<ImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * VectorImageAssetの設定。
  */
 export interface DynamicVectorImageAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<VectorImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<VectorImageAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * VideoAssetの設定。
  */
 export interface DynamicVideoAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<VideoAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<VideoAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * AudioAssetの設定。
  */
 export interface DynamicAudioAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<AudioAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<AudioAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * TextAssetの設定。
  */
 export interface DynamicTextAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<TextAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<TextAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * ScriptAssetの設定。
  */
 export interface DynamicScriptAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<ScriptAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 /**
  * BinaryAssetの設定。
  */
 export interface DynamicBinaryAssetConfigurationBase
 	extends Omit<DynamicAssetConfigurationBase, "type">,
-	Omit<BinaryAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
+		Omit<BinaryAssetConfigurationBase, UnneededKeysForDynamicAsset> {}
 
 // interface メンバは多重継承できないため、 DynamicAssetConfigurationBase の type メンバ を Omit する
 type UnneededKeysForDynamicAsset = "path" | "virtualPath" | "global";

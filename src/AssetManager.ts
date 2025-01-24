@@ -56,25 +56,25 @@ type UnneededKeysForAsset = "path" | "virtualPath" | "global";
 
 interface ImageAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
-	Omit<ImageAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<ImageAssetConfigurationBase, UnneededKeysForAsset> {}
 interface VectorImageAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
-	Omit<VectorImageAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<VectorImageAssetConfigurationBase, UnneededKeysForAsset> {}
 interface VideoAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
-	Omit<VideoAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<VideoAssetConfigurationBase, UnneededKeysForAsset> {}
 interface AudioAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
-	Omit<AudioAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<AudioAssetConfigurationBase, UnneededKeysForAsset> {}
 interface TextAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
-	Omit<TextAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<TextAssetConfigurationBase, UnneededKeysForAsset> {}
 interface ScriptAssetConfiguration
 	extends Omit<AssetConfigurationCommonBase, "type">,
-	Omit<ScriptAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<ScriptAssetConfigurationBase, UnneededKeysForAsset> {}
 interface BinaryAssetConfiguration
 	extends Omit<BinaryAssetConfigurationBase, "type">,
-	Omit<BinaryAssetConfigurationBase, UnneededKeysForAsset> {}
+		Omit<BinaryAssetConfigurationBase, UnneededKeysForAsset> {}
 
 export type AssetIdOrConf = string | DynamicAssetConfiguration | AssetGenerationConfiguration;
 

@@ -235,8 +235,8 @@ describe("test Module", () => {
 		"/cascaded/script.js": "module.exports = { me: 'script-cascaded', thisModule: module }",
 		"/node_modules/noPackageJson/index.js": "module.exports = { me: 'noPackageJson-index', thisModule: module };",
 		"/node_modules/noDefaultIndex/root.js": "exports.me = 'noDefaultIndex-root'; exports.thisModule = module; ",
-		"/node_modules/noDefaultIndex/package.json": "{ \"main\": \"root.js\" }",
-		"/node_modules/wrongPackageJsonMain/package.json": "{ \"main\": \"__not_exists__.js\" }",
+		"/node_modules/noDefaultIndex/package.json": '{ "main": "root.js" }',
+		"/node_modules/wrongPackageJsonMain/package.json": '{ "main": "__not_exists__.js" }',
 		"/node_modules/wrongPackageJsonMain/index.js": "module.exports = { me: 'wrongPackageJsonMain-index', thisModule: module };",
 		"/node_modules/wrongPackageJsonMain/aJsonFile.json": "{ 'aJsonFile': 'aValue' }",
 		"/node_modules/noPackageJsonModule/real_hoge.js": "module.exports = { me: 'noPackageJsonModule', thisModule: module }",
@@ -1052,7 +1052,7 @@ describe("test Module", () => {
 		};
 		const manager = game._moduleManager;
 		game.resourceFactory.scriptContents = {
-			"foo/package.json": "{ \"main\": \"root.js\" }"
+			"foo/package.json": '{ "main": "root.js" }'
 		};
 
 		pkgJsonAsset._load({
