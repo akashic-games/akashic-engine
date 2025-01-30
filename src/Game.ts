@@ -1988,7 +1988,7 @@ export class Game {
 			if (nextScene && nextScene._needsLoading() && nextScene._loadingState !== "loaded-fired") {
 				const loadingScene = nextScene._waitingPrepare
 					? this._createPreparingLoadingScene(nextScene, nextScene._waitingPrepare, `akashic:preparing-${nextScene.name}`)
-					: this.loadingScene ?? this._defaultLoadingScene;
+					: (this.loadingScene ?? this._defaultLoadingScene);
 				this._doPushScene(loadingScene, true, this._defaultLoadingScene);
 				loadingScene.reset(nextScene);
 			}
