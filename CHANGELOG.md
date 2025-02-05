@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.20.1
+* 内部モジュールの更新
+
 ## 3.20.0
 * @akashic/game-configuration@2.5.0 に追従
   * `BundledTextAsset` を追加
