@@ -165,13 +165,13 @@ export class TimerManager {
 		if (!timer.canDelete()) return;
 
 		const index = this._timers.indexOf(timer);
-		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: can not find timer");
+		if (index < 0) return;
 
 		this._timers.splice(index, 1);
 		timer.destroy();
 
 		if (!this._timers.length) {
-			if (!this._registered) throw ExceptionFactory.createAssertionError("TimerManager#deleteTimer: handler is not handled");
+			if (!this._registered) return;
 			this._trigger.remove(this._tick, this);
 			this._registered = false;
 		}
@@ -213,7 +213,7 @@ export class TimerManager {
 	 */
 	_onTimeoutFired(identifier: TimerIdentifier): void {
 		const index = this._identifiers.indexOf(identifier);
-		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#_onTimeoutFired: can not find identifier");
+		if (index < 0) return;
 
 		this._identifiers.splice(index, 1);
 
@@ -227,9 +227,9 @@ export class TimerManager {
 	 */
 	_clear(identifier: TimerIdentifier): void {
 		const index = this._identifiers.indexOf(identifier);
-		if (index < 0) throw ExceptionFactory.createAssertionError("TimerManager#_clear: can not find identifier");
+		if (index < 0) return;
 
-		if (identifier.destroyed()) throw ExceptionFactory.createAssertionError("TimerManager#_clear: invalid identifier");
+		if (identifier.destroyed()) return;
 
 		this._identifiers.splice(index, 1);
 

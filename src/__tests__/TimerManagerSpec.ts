@@ -106,22 +106,22 @@ describe("test TimerManager", () => {
 		expect(m._trigger.contains(m._tick, m)).toBe(false);
 	});
 
-	it("deleteTimer - error (invalid context)", () => {
+	it("deleteTimer - (invalid context)", () => {
 		const m = new TimerManager(trigger, 30);
 		const t = new Timer(100, undefined!);
 		expect(() => {
 			m.deleteTimer(t);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
-	it("deleteTimer - error (invalid status)", () => {
+	it("deleteTimer - (invalid status)", () => {
 		const m = new TimerManager(trigger, 30);
 
 		const t = m.createTimer(100);
 		m._registered = false;
 		expect(() => {
 			m.deleteTimer(t);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
 	it("setTimeout", () => {
@@ -180,7 +180,7 @@ describe("test TimerManager", () => {
 		m._identifiers.length = 0;
 		expect(() => {
 			loopFire(30);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
 	it("setTimeout - serial two timers(same interval)", () => {
@@ -307,7 +307,7 @@ describe("test TimerManager", () => {
 		expect(count).toBe(0);
 	});
 
-	it("clearTimeout - error(not found)", () => {
+	it("clearTimeout - (not found)", () => {
 		const m = new TimerManager(trigger, 10);
 
 		const timeout = m.setTimeout(() => {
@@ -317,10 +317,10 @@ describe("test TimerManager", () => {
 		m.clearTimeout(timeout);
 		expect(() => {
 			m.clearTimeout(timeout);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
-	it("clearTimeout - error(invalid identifier)", () => {
+	it("clearTimeout - (invalid identifier)", () => {
 		const m = new TimerManager(trigger, 10);
 
 		const timeout = m.setTimeout(() => {
@@ -330,7 +330,7 @@ describe("test TimerManager", () => {
 		timeout.destroy();
 		expect(() => {
 			m.clearTimeout(timeout);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
 	it("clearTimeout - parallel two timers", () => {
@@ -472,7 +472,7 @@ describe("test TimerManager", () => {
 		expect(count).toBe(4);
 	});
 
-	it("clearInterval - error(not found)", () => {
+	it("clearInterval - (not found)", () => {
 		const m = new TimerManager(trigger, 10);
 
 		const interval = m.setInterval(() => {
@@ -482,10 +482,10 @@ describe("test TimerManager", () => {
 		m.clearInterval(interval);
 		expect(() => {
 			m.clearInterval(interval);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
-	it("clearInterval - error(invalid identifier)", () => {
+	it("clearInterval - (invalid identifier)", () => {
 		const m = new TimerManager(trigger, 10);
 
 		const interval = m.setInterval(() => {
@@ -495,7 +495,7 @@ describe("test TimerManager", () => {
 		interval.destroy();
 		expect(() => {
 			m.clearInterval(interval);
-		}).toThrowError("AssertionError");
+		}).not.toThrow();
 	});
 
 	it("clearInterval - two timers", () => {
