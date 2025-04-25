@@ -214,7 +214,6 @@ describe("test AudioSystem", () => {
 
 		const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
 		const ctx1 = system.create(asset);
-		ctx1.changeVolume(0.3);
 		// systemのvolumeが変更されても、playerの音量は変わらない
 		player.changeVolume(0.2);
 		system.volume = 0.7;
@@ -229,7 +228,6 @@ describe("test AudioSystem", () => {
 		const player = system.createPlayer() as AudioPlayer;
 		const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
 		const ctx1 = system.create(asset);
-		ctx1.changeVolume(0.3);
 		// systemのvolumeが変更されても、playerの音量は変わらない
 		player.changeVolume(0.3);
 		system.volume = 0.7;
