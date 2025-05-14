@@ -245,7 +245,12 @@ export abstract class AudioSystem implements PdiAudioSystem {
 	/**
 	 * @private
 	 */
-	abstract _onVolumeChanged(): void;
+	_onVolumeChanged(): void {
+		for (const key of this._contextMap.keys()) {
+			const ctx = this._contextMap.get(key);
+			ctx?.changeVolume(this.volume);
+		}
+	}
 
 	/**
 	 * @private
@@ -317,7 +322,8 @@ export class MusicAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onVolumeChanged(): void {
+	override _onVolumeChanged(): void {
+		super._onVolumeChanged();
 		this.player._notifyVolumeChanged();
 	}
 
@@ -454,7 +460,8 @@ export class SoundAudioSystem extends AudioSystem {
 	/**
 	 * @private
 	 */
-	_onVolumeChanged(): void {
+	override _onVolumeChanged(): void {
+		super._onVolumeChanged();
 		for (let i = 0; i < this.players.length; ++i) {
 			this.players[i]._notifyVolumeChanged();
 		}

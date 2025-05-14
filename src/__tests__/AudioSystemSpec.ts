@@ -211,22 +211,29 @@ describe("test AudioSystem", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const system = game.audio.music;
 		const player = system.createPlayer() as AudioPlayer;
+
+		const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+		const ctx1 = system.create(asset);
 		// systemのvolumeが変更されても、playerの音量は変わらない
 		player.changeVolume(0.2);
 		system.volume = 0.7;
 		expect(player.volume).toBe(0.2);
 		expect(system.volume).toBe(0.7);
+		expect(ctx1.volume).toBe(0.7);
 	});
 
 	it("SoundAudioSystem#_onVolumeChanged", () => {
 		const game = new Game({ width: 320, height: 320, main: "", assets: {} });
 		const system = game.audio.sound;
 		const player = system.createPlayer() as AudioPlayer;
+		const asset = game.resourceFactory.createAudioAsset("a1", "./", 2000, system, false, {});
+		const ctx1 = system.create(asset);
 		// systemのvolumeが変更されても、playerの音量は変わらない
 		player.changeVolume(0.3);
 		system.volume = 0.7;
 		expect(player.volume).toBe(0.3);
 		expect(system.volume).toBe(0.7);
+		expect(ctx1.volume).toBe(0.7);
 	});
 
 	describe("AudioPlayContext operations", () => {

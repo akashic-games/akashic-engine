@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.20.3
+* `g.game.audio.music|sound.volume` の変更が再生中の `AudioPlayContext` に反映されない問題を修正
+
 ## 3.20.2
 * すでに削除済みのタイマーに対して clear しても例外としないように修正
 
