@@ -67,6 +67,24 @@ export interface GameHandlerSet {
 	saveSnapshot(frame: number, snapshot: any, randGenSer: any, nextEntityId: number, timestamp?: number): void;
 
 	/**
+	 * ローカルティック生成を中断する。
+	 * `isActiveInstance()` が真のインスタンスでは何もしない。
+	 *
+	 * 中断されたローカルティック生成は、次の契機で再開される。
+	 *  * 明示的に `resumeLocalTick()` を呼び出した場合
+	 *  * 非ローカルティックを受信した場合
+	 *  * ローカルイベントを受信した場合
+	 *  * `pushScene()` などのシーン遷移やシーンのロード完了通知など、ティックの終了時に行うべき処理が発生した場合
+	 */
+	suspendLocalTick(): void;
+
+	/**
+	 * ローカルティック生成を再開する。
+	 * 中断されていない場合は何もしない。
+	 */
+	resumeLocalTick(): void;
+
+	/**
 	 * このインスタンスの種別を取得する
 	 */
 	getInstanceType(): "active" | "passive";

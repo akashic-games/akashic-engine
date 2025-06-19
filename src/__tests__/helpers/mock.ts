@@ -666,6 +666,12 @@ export class GameHandlerSet implements g.GameHandlerSet {
 	saveSnapshot(_frame: number, _snapshot: any, _randGenSer: any, _timestamp?: number): void {
 		// do nothing
 	}
+	suspendLocalTick(): void {
+		// do nothing
+	}
+	resumeLocalTick(): void {
+		// do nothing
+	}
 	getInstanceType(): "active" | "passive" {
 		return "passive";
 	}
@@ -677,8 +683,8 @@ export class GameHandlerSet implements g.GameHandlerSet {
 export class Game extends g.Game {
 	terminatedGame: boolean;
 	autoTickForInternalEvents: boolean;
-	override resourceFactory!: ResourceFactory; // NOTE: 継承元クラスで代入
-	override handlerSet!: GameHandlerSet; // NOTE: 継承元クラスで代入
+	declare resourceFactory: ResourceFactory; // NOTE: 継承元クラスで代入
+	declare handlerSet: GameHandlerSet; // NOTE: 継承元クラスで代入
 
 	constructor(
 		configuration: g.GameConfiguration,

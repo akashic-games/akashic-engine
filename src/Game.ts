@@ -1442,6 +1442,28 @@ export class Game {
 	}
 
 	/**
+	 * ローカルティック生成を中断する。
+	 * `isActiveInstance()` が真のインスタンスでは何もしない。
+	 *
+	 * 中断されたローカルティック生成は、次の契機で再開される。
+	 *  * 明示的に `resumeLocalTick()` を呼び出した場合
+	 *  * 非ローカルティックを受信した場合
+	 *  * ローカルイベントを受信した場合
+	 *  * `pushScene()` などのシーン遷移やシーンのロード完了通知など、ティックの終了時に行うべき処理が発生した場合
+	 */
+	suspendLocalTick(): void {
+		this.handlerSet.suspendLocalTick();
+	}
+
+	/**
+	 * ローカルティック生成を再開する。
+	 * 中断されていない場合は何もしない。
+	 */
+	resumeLocalTick(): void {
+		this.handlerSet.resumeLocalTick();
+	}
+
+	/**
 	 * 現在時刻を取得する。
 	 *
 	 * 値は1970-01-01T00:00:00Zからのミリ秒での経過時刻である。
