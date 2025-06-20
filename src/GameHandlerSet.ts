@@ -76,7 +76,7 @@ export interface GameHandlerSet {
 	 *  * ローカルイベントを受信した場合
 	 *
 	 * 制限事項: 現実装では、次のいずれかの場合、このメソッドでローカルティックを中断させてはならない。
-	 *  * シーン遷移時 (`g.game.pushScene()`, `popScene() などの呼び出し時から、遷移先シーンの最初の onUpdate 通知まで)
+	 *  * シーン遷移時 (`g.game.pushScene()`, `popScene()` などの呼び出し時から、遷移先シーンの最初の onUpdate 通知まで)
 	 *  * ローディングシーン中
 	 *  * `g.Scene#requestAssets()` 呼び出し後、コールバックが呼ばれるまでの間
 	 * この制限は将来的に緩和される。
