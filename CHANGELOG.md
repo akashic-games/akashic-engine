@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.21.0
+* `g.Game#suspendLocalTick()`, `g.Game#resumeLocalTick()` を追加
+* `g.GameHandlerSet#suspendLocalTick()`, `g.GameHandlerSet#resumeLocalTick()` を追加
+
 ## 3.20.3
 * `g.game.audio.music|sound.volume` の変更が再生中の `AudioPlayContext` に反映されない問題を修正
 
