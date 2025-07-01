@@ -1,6 +1,6 @@
 import { Xorshift } from "..";
 import { customMatchers } from "./helpers";
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-require-imports
 const RefXorshift = require("xorshift").constructor;
 
 expect.extend(customMatchers);
