@@ -20,7 +20,7 @@ export abstract class CacheableE extends E {
 	 *
 	 * @private
 	 */
-	static PADDING: number = 1;
+	static PADDING: number = 0;
 
 	/**
 	 * エンジンが子孫を描画すべきであれば`true`、でなければ`false`を本クラスを継承したクラスがセットする。
