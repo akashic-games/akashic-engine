@@ -19,6 +19,9 @@ env:
   V2_DIR: v2
   V1_DIR: v1
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -32,16 +35,19 @@ jobs:
         with:
           ref: ${{ env.V3_REF }}
           path: ${{ env.V3_DIR }}
+          persist-credentials: false
       - name: Checkout (v2)
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           ref: ${{ env.V2_REF }}
           path: ${{ env.V2_DIR }}
+          persist-credentials: false
       - name: Checkout (v1)
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           ref: ${{ env.V1_REF }}
           path: ${{ env.V1_DIR }}
+          persist-credentials: false
       - name: Install and Build (v3)
         working-directory: ${{ env.V3_DIR }}
         run: |
