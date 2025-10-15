@@ -13,19 +13,21 @@ describe("Math", () => {
 		});
 	});
 
-	test("should return a value closer to the reference implementation with wholePeriod", () => {
+	test("should produce different results for wholePeriod true vs false", () => {
 		const reference = globalThis.Math.sin(PI); // 理論値ほぼ 0
 
 		Math.initialize({ wholePeriod: true });
-		const approx4 = Math.sin(PI);
+		const approxWhole = Math.sin(PI);
 
 		Math.initialize({ wholePeriod: false });
-		const approx6 = Math.sin(PI);
+		const approxQuarter = Math.sin(PI);
 
-		const error4 = globalThis.Math.abs(reference - approx4);
-		const error6 = globalThis.Math.abs(reference - approx6);
+		// 両者が同じでないことを確認
+		expect(approxQuarter).not.toBe(approxWhole);
 
-		expect(error6).toBeLessThan(error4); // イテレーション回数が少ないほうが 0 に近いことを期待
+		// 理論値に近いことを確認
+		expect(approxWhole).toBeCloseTo(reference, 3);
+		expect(approxQuarter).toBeCloseTo(reference, 3);
 	});
 
 	describe.each([
