@@ -40,9 +40,11 @@ jobs:
         working-directory: engine-files
         run: |
           npm ci
-          npm i ../akashic-engine/${{steps.akashic_engine.outputs.pack_name}} --no-save
+          npm i ../akashic-engine/${AKASHIC_ENGINE_PACK_NAME} --no-save
           npm run build
           npm test
+        env:
+          AKASHIC_ENGINE_PACK_NAME: ${{ steps.akashic_engine.outputs.pack_name }}
       - name: Archive artifact
         if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

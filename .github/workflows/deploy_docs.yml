@@ -65,16 +65,16 @@ jobs:
           npm run doc
       - name: Copy API docs
         run: |
-          mkdir -p ${{ env.PUBLIC_DIR }}
-          cp -r ${{ env.V3_DIR }}/doc/html/ ${{ env.PUBLIC_DIR }}/${{ env.V3_DIR }}/
-          cp -r ${{ env.V2_DIR }}/doc/html/ ${{ env.PUBLIC_DIR }}/${{ env.V2_DIR }}/
-          cp -r ${{ env.V1_DIR }}/doc/html/ ${{ env.PUBLIC_DIR }}/${{ env.V1_DIR }}/
+          mkdir -p ${PUBLIC_DIR}
+          cp -r ${V3_DIR}/doc/html/ ${PUBLIC_DIR}/${V3_DIR}/
+          cp -r ${V2_DIR}/doc/html/ ${PUBLIC_DIR}/${V2_DIR}/
+          cp -r ${V1_DIR}/doc/html/ ${PUBLIC_DIR}/${V1_DIR}/
       - name: Check API docs
         run: |
-          for dir in ${{ env.V1_DIR }} ${{ env.V2_DIR }} ${{ env.V3_DIR }}
+          for dir in ${V1_DIR} ${V2_DIR} ${V3_DIR}
           do
-            if [ ! -e ${{ env.PUBLIC_DIR }}/${dir}/index.html ]; then
-              echo "'${{ env.PUBLIC_DIR }}/${dir}/index.html' not found."
+            if [ ! -e ${PUBLIC_DIR}/${dir}/index.html ]; then
+              echo "'${PUBLIC_DIR}/${dir}/index.html' not found."
               exit 1;
             fi
           done
