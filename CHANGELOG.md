@@ -1,6 +1,6 @@
 # ChangeLog
 
-## unreleased changes
+## 3.21.1
 * `g.Math` を追加
 
 ## 3.21.0
