@@ -2,6 +2,7 @@
 
 ## 3.21.1
 * `g.Math` を追加
+* `g.CacheableE.PADDING` を削除
 
 ## 3.21.0
 * `g.Game#suspendLocalTick()`, `g.Game#resumeLocalTick()` を追加
