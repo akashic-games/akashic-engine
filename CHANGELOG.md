@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.21.1
+* `g.Math` を追加
+
 ## 3.21.0
 * `g.Game#suspendLocalTick()`, `g.Game#resumeLocalTick()` を追加
 * `g.GameHandlerSet#suspendLocalTick()`, `g.GameHandlerSet#resumeLocalTick()` を追加
