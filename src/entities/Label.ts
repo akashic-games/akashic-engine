@@ -215,15 +215,7 @@ export class Label extends CacheableE {
 				break;
 		}
 
-		renderer.drawImage(
-			this._cache!,
-			0,
-			0,
-			this._cacheSize.width + CacheableE.PADDING,
-			this._cacheSize.height + CacheableE.PADDING,
-			destOffsetX,
-			0
-		);
+		renderer.drawImage(this._cache!, 0, 0, this._cacheSize.width, this._cacheSize.height, destOffsetX, 0);
 	}
 
 	renderCache(renderer: Renderer): void {

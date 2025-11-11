@@ -16,13 +16,6 @@ export interface CacheableEParameterObject extends EParameterObject {
  */
 export abstract class CacheableE extends E {
 	/**
-	 * _cache のパディングサイズ。
-	 *
-	 * @private
-	 */
-	static PADDING: number = 1;
-
-	/**
 	 * エンジンが子孫を描画すべきであれば`true`、でなければ`false`を本クラスを継承したクラスがセットする。
 	 * デフォルト値は`true`となる。
 	 * @private
@@ -82,15 +75,14 @@ export abstract class CacheableE extends E {
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
 	override renderSelf(renderer: Renderer, camera?: Camera): boolean {
-		const padding = CacheableE.PADDING;
 		if (this._renderedCamera !== camera) {
 			this.state &= ~EntityStateFlags.Cached;
 			this._renderedCamera = camera;
 		}
 		if (!(this.state & EntityStateFlags.Cached)) {
 			this._cacheSize = this.calculateCacheSize();
-			const w = Math.ceil(this._cacheSize.width) + padding * 2;
-			const h = Math.ceil(this._cacheSize.height) + padding * 2;
+			const w = Math.ceil(this._cacheSize.width);
+			const h = Math.ceil(this._cacheSize.height);
 			const isNew = !this._cache || this._cache.width < w || this._cache.height < h;
 			if (isNew) {
 				if (this._cache && !this._cache.destroyed()) {
@@ -107,7 +99,6 @@ export abstract class CacheableE extends E {
 			}
 
 			cacheRenderer.save();
-			cacheRenderer.translate(padding, padding);
 			this.renderCache(cacheRenderer, camera);
 			cacheRenderer.restore();
 
@@ -115,9 +106,7 @@ export abstract class CacheableE extends E {
 			cacheRenderer.end();
 		}
 		if (this._cache && this._cacheSize.width > 0 && this._cacheSize.height > 0) {
-			renderer.translate(-padding, -padding);
 			this.renderSelfFromCache(renderer);
-			renderer.translate(padding, padding);
 		}
 		return this._shouldRenderChildren;
 	}
@@ -127,15 +116,7 @@ export abstract class CacheableE extends E {
 	 * このメソッドはエンジンから暗黙に呼び出され、ゲーム開発者が呼び出す必要はない。
 	 */
 	renderSelfFromCache(renderer: Renderer): void {
-		renderer.drawImage(
-			this._cache!,
-			0,
-			0,
-			this._cacheSize.width + CacheableE.PADDING,
-			this._cacheSize.height + CacheableE.PADDING,
-			0,
-			0
-		);
+		renderer.drawImage(this._cache!, 0, 0, this._cacheSize.width, this._cacheSize.height, 0, 0);
 	}
 
 	/**

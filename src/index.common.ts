@@ -55,6 +55,7 @@ export * from "./InitialScene";
 export * from "./InternalOperationPluginInfo";
 export * from "./LoadingScene";
 export * from "./LocalTickModeString";
+export * from "./Math";
 export * from "./Matrix";
 export * from "./Module";
 export * from "./ModuleManager";
