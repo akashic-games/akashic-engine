@@ -1,5 +1,8 @@
 # ChangeLog
 
+## 3.21.2
+* `g.Math.tan()` を追加
+
 ## 3.21.1
 * `g.Math` を追加
 * `g.CacheableE.PADDING` を削除
