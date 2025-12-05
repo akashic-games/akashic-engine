@@ -19,11 +19,10 @@ env:
   V2_DIR: v2
   V1_DIR: v1
 
-permissions:
-  contents: write
-
 jobs:
-  deploy:
+  build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node ${{ env.NODE_VERSION }}
@@ -78,10 +77,21 @@ jobs:
               exit 1;
             fi
           done
-      - name: Deploy on gh-pages branch
-        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ env.PUBLIC_DIR }}
-          user_name: 'github-actions'
-          user_email: '41898282+github-actions[bot]@users.noreply.github.com'
+          path: ${{ env.PUBLIC_DIR }}
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
