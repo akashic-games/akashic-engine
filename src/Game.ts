@@ -28,6 +28,7 @@ import type { GameMainParameterObject } from "./GameMainParameterObject";
 import { InitialScene } from "./InitialScene";
 import { LoadingScene } from "./LoadingScene";
 import type { LocalTickModeString } from "./LocalTickModeString";
+import { Math as InternalMath } from "./Math";
 import { ModuleManager } from "./ModuleManager";
 import type { OperationPlugin } from "./OperationPlugin";
 import { OperationPluginManager } from "./OperationPluginManager";
@@ -1009,6 +1010,7 @@ export class Game {
 		this._sceneChanged = this._onSceneChange;
 
 		this.onUpdate = new Trigger<void>();
+		InternalMath.initialize();
 
 		this._initialScene = new InitialScene({
 			game: this,
