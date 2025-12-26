@@ -30,19 +30,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Checkout (v3)
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           ref: ${{ env.V3_REF }}
           path: ${{ env.V3_DIR }}
           persist-credentials: false
       - name: Checkout (v2)
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           ref: ${{ env.V2_REF }}
           path: ${{ env.V2_DIR }}
           persist-credentials: false
       - name: Checkout (v1)
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           ref: ${{ env.V1_REF }}
           path: ${{ env.V1_DIR }}
