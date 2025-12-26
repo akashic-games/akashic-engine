@@ -3,6 +3,7 @@ import { CameraCancellingE } from "./entities/CameraCancellingE";
 import { FilledRect } from "./entities/FilledRect";
 import type { Game } from "./Game";
 import { LoadingScene } from "./LoadingScene";
+import { Math as InternalMath } from "./Math";
 import type { Scene } from "./Scene";
 
 /**
@@ -116,7 +117,7 @@ export class DefaultLoadingScene extends LoadingScene {
 
 		// 白を上限に sin 波で明滅させる (updateしていることの確認)
 		const c = Math.round(
-			255 - BLINK_RANGE + Math.sin((this._gaugeUpdateCount / this.game.fps) * BLINK_PER_SEC * (2 * Math.PI)) * BLINK_RANGE
+			255 - BLINK_RANGE + InternalMath.sin((this._gaugeUpdateCount / this.game.fps) * BLINK_PER_SEC * (2 * Math.PI)) * BLINK_RANGE
 		);
 		this._gauge.cssColor = "rgb(" + c + "," + c + "," + c + ")";
 		this._gauge.modified();

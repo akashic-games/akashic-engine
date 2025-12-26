@@ -20,7 +20,10 @@ import type {
 import type * as pl from "@akashic/playlog";
 import * as g from "../..";
 
-(global as any).g = g;
+(globalThis as any).g = g;
+
+// NOTE: 本来は globalSetup などで行ったほうが良さそうだが、上記の global.g の代入と役割が近いため同じ箇所で initialize() を実行する
+g.Math.initialize();
 
 export class Renderer extends pci.Renderer {
 	methodCallHistoryWithParams: {
