@@ -1,5 +1,4 @@
 import type { CommonOffset } from "@akashic/pdi-types";
-import { Math as InternalMath } from "./Math";
 
 /**
  * 変換行列を表すインターフェース。
@@ -228,8 +227,8 @@ export class PlainMatrix {
 		// (ただし theta = angle * PI / 180)、w = anchorX * width, h = anchorY * height である。
 		// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
 		const r = (angle * Math.PI) / 180;
-		const _cos = InternalMath.cos(r);
-		const _sin = InternalMath.sin(r);
+		const _cos = Math.cos(r);
+		const _sin = Math.sin(r);
 		const a = _cos * scaleX;
 		const b = _sin * scaleX;
 		const c = _sin * scaleY;
@@ -265,8 +264,8 @@ export class PlainMatrix {
 		// (ただし theta = angle * PI / 180)、w = (width / 2), h = (height / 2) である。
 		// 以下の実装は、M の各要素をそれぞれ計算して直接求めている。
 		const r = (angle * Math.PI) / 180;
-		const _cos = InternalMath.cos(r);
-		const _sin = InternalMath.sin(r);
+		const _cos = Math.cos(r);
+		const _sin = Math.sin(r);
 		const a = _cos * scaleX;
 		const b = _sin * scaleX;
 		const c = _sin * scaleY;
@@ -307,8 +306,8 @@ export class PlainMatrix {
 		// ここで各変数は update() のコメントのものと同様である。
 		// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
 		const r = (angle * Math.PI) / 180;
-		const _cos = InternalMath.cos(r);
-		const _sin = InternalMath.sin(r);
+		const _cos = Math.cos(r);
+		const _sin = Math.sin(r);
 		const a = _cos / scaleX;
 		const b = _sin / scaleY;
 		const c = _sin / scaleX;
@@ -347,8 +346,8 @@ export class PlainMatrix {
 		// ここで各変数は update() のコメントのものと同様である。
 		// 以下の実装は、M^-1 の各要素をそれぞれ計算して直接求めている。
 		const r = (angle * Math.PI) / 180;
-		const _cos = InternalMath.cos(r);
-		const _sin = InternalMath.sin(r);
+		const _cos = Math.cos(r);
+		const _sin = Math.sin(r);
 		const a = _cos / scaleX;
 		const b = _sin / scaleY;
 		const c = _sin / scaleX;
