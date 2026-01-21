@@ -1,5 +1,9 @@
 # ChangeLog
 
+## 3.21.3
+* `g.Math.reset()` を追加
+* 初期化時に `g.Math.initialize()` を実行するように
+
 ## 3.21.2
 * `g.Math.tan()` を追加
 
