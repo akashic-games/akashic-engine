@@ -25,6 +25,7 @@ export module Math {
 	const PI = globalThis.Math.PI;
 	const PI2 = PI * 2;
 	const COS_EPSILON = 1e-7;
+	const ANGLE_EPSILON = 1e-10;
 	const TAN_MAX = 1e7;
 
 	const arrayType = typeof Float32Array !== "undefined" ? Float32Array : Array;
@@ -51,6 +52,13 @@ export module Math {
 			const factor = sinFactor;
 			th %= PI2;
 			if (th < 0) th += PI2;
+
+			// 座標軸上の角度に十分近ければ固定値を返す
+			const axisAngle = getAxisAngleSin(th);
+			if (axisAngle != null) {
+				return axisAngle;
+			}
+
 			if (wholePeriod) {
 				return sinTable[(th * factor) | 0];
 			} else {
@@ -75,6 +83,13 @@ export module Math {
 			const factor = tanFactor;
 			th %= PI;
 			if (th < 0) th += PI;
+
+			// 座標軸上の角度に十分近ければ固定値を返す
+			const axisAngle = getAxisAngleTan(th);
+			if (axisAngle != null) {
+				return axisAngle;
+			}
+
 			if (wholePeriod) {
 				return tanTable[(th * factor) | 0];
 			} else {
@@ -91,6 +106,11 @@ export module Math {
 			}
 		};
 	}
+
+	/**
+	 * 指定したテーブルサイズおよび近似計算の反復回数に基づき、ルックアップテーブルを再設定する。
+	 */
+	export const reset = initialize;
 
 	/**
 	 * ルックアップテーブルを使用した高速な正弦関数。
@@ -165,5 +185,34 @@ export module Math {
 		}
 		s = x * s;
 		return s;
+	}
+
+	function getAxisAngleSin(th: number): number | null {
+		// 0, 2π (x軸正方向, 0度)
+		if (globalThis.Math.abs(th) < ANGLE_EPSILON || globalThis.Math.abs(th - PI2) < ANGLE_EPSILON) {
+			return 0;
+		}
+		// π/2 (y軸正方向, 90度)
+		if (globalThis.Math.abs(th - PI / 2) < ANGLE_EPSILON) {
+			return 1;
+		}
+		// π (x軸負方向, 180度)
+		if (globalThis.Math.abs(th - PI) < ANGLE_EPSILON) {
+			return 0;
+		}
+		// 3π/2 (y軸負方向, 270度)
+		if (globalThis.Math.abs(th - (3 * PI) / 2) < ANGLE_EPSILON) {
+			return -1;
+		}
+		return null;
+	}
+
+	function getAxisAngleTan(th: number): number | null {
+		// 0, π (x軸, 0度)
+		if (globalThis.Math.abs(th) < ANGLE_EPSILON || globalThis.Math.abs(th - PI) < ANGLE_EPSILON) {
+			return 0;
+		}
+		// π/2 (y軸, 90度) は発散するためここでは値を返さない
+		return null;
 	}
 }

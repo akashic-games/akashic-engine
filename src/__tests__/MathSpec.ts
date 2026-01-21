@@ -4,6 +4,10 @@ import type { MathInitializeOption } from "..";
 const PI = globalThis.Math.PI;
 
 describe("Math", () => {
+	afterAll(() => {
+		Math.reset();
+	});
+
 	describe("when initialize() is not called", () => {
 		test("calling sin() throws an uninitialized error", () => {
 			expect(() => Math.sin(0)).toThrow("Math.sin: module not initialized. Call g.Math.initialize() before calling this function.");
@@ -18,13 +22,15 @@ describe("Math", () => {
 
 	describe("sin, cos", () => {
 		test("should produce different results for wholePeriod true vs false", () => {
-			const reference = globalThis.Math.sin(PI); // 理論値ほぼ 0
+			// 座標軸上の角度ではない角度を使用して、LUT実装の違いを確認
+			const testAngle = PI / 3; // 60度
+			const reference = globalThis.Math.sin(testAngle);
 
-			Math.initialize({ wholePeriod: true });
-			const approxWhole = Math.sin(PI);
+			Math.reset({ wholePeriod: true });
+			const approxWhole = Math.sin(testAngle);
 
-			Math.initialize({ wholePeriod: false });
-			const approxQuarter = Math.sin(PI);
+			Math.reset({ wholePeriod: false });
+			const approxQuarter = Math.sin(testAngle);
 
 			// 両者が同じでないことを確認
 			expect(approxQuarter).not.toBe(approxWhole);
@@ -39,7 +45,7 @@ describe("Math", () => {
 			["high table size", { tableSize: 8192 * 16 }, { precision: 4 }]
 		] satisfies [string, MathInitializeOption | undefined, { precision: number }][])("%o", (_, option, { precision }) => {
 			beforeEach(() => {
-				Math.initialize(option);
+				Math.reset(option);
 			});
 
 			test("sin(0) ≒ 0", () => {
@@ -94,7 +100,7 @@ describe("Math", () => {
 
 	describe("tan", () => {
 		test("default", () => {
-			Math.initialize();
+			Math.reset();
 
 			// 絶対値が 1 よりも小さいあたり
 			expectTanCloseToReference(-35, 35, 3);
@@ -126,7 +132,7 @@ describe("Math", () => {
 		});
 
 		test("high precision", () => {
-			Math.initialize({ tableSize: 8192 * 32, iterationNum: 20 });
+			Math.reset({ tableSize: 8192 * 32, iterationNum: 20 });
 			const precision = 4;
 			for (let i = 0; i <= 35; ++i) {
 				const rad = degree2radian(i);
@@ -142,10 +148,10 @@ describe("Math", () => {
 			for (const angle of angles) {
 				const referenceTan = globalThis.Math.tan(degree2radian(angle));
 
-				Math.initialize({ wholePeriod: true });
+				Math.reset({ wholePeriod: true });
 				const tanWithWholePeriod = Math.tan(degree2radian(angle));
 
-				Math.initialize({ wholePeriod: false });
+				Math.reset({ wholePeriod: false });
 				const tanWithoutWholePeriod = Math.tan(degree2radian(angle));
 
 				const distWith = globalThis.Math.abs(tanWithWholePeriod - referenceTan);
