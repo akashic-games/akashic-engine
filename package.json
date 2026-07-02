@@ -52,5 +52,12 @@
   },
   "typings": "lib/main.node.d.ts",
   "author": "DWANGO Co., Ltd.",
-  "license": "MIT"
+  "license": "MIT",
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": ">=11.11.0",
+      "onFail": "error"
+    }
+  }
 }
