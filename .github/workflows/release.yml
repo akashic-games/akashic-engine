@@ -6,7 +6,11 @@ on:
       - v1-main
 
 env:
-  NODE_VERSION: 16
+  NODE_VERSION: 24
+
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
   release:
@@ -14,9 +18,9 @@ jobs:
     name: Publish and Release
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -26,7 +30,6 @@ jobs:
           npm run build
           npm test
       - name: Publish and Release
-        uses: akashic-games/action-release@v2
+        uses: akashic-games/action-release@a81329f4a70100c4729df80dba17ec8d5da52511 # v3.1.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          npm_token: ${{ secrets.NPM_TOKEN }}
