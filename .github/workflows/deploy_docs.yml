@@ -26,23 +26,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Checkout (v3)
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ env.V3_REF }}
           path: ${{ env.V3_DIR }}
           persist-credentials: false
       - name: Checkout (v2)
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ env.V2_REF }}
           path: ${{ env.V2_DIR }}
           persist-credentials: false
       - name: Checkout (v1)
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ env.V1_REF }}
           path: ${{ env.V1_DIR }}
