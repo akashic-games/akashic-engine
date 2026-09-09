@@ -12,7 +12,7 @@
   "devDependencies": {
     "@akashic/eslint-config": "3.0.2",
     "@akashic/pdi-common-impl": "^1.4.0",
-    "@types/jest": "^29.0.0",
+    "@types/jest": "^30.0.0",
     "eslint-config-prettier": "^10.0.0",
     "jest": "^29.0.0",
     "prettier": "^3.0.3",
