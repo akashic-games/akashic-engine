@@ -14,7 +14,6 @@
   ],
   "vulnerabilityAlerts": {
     "enabled": true,
-    "minimumReleaseAge": null,
-    "prPriority": 10
+    "minimumReleaseAge": null
   }
 }
