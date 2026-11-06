@@ -6,8 +6,14 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["xorshift"],
+      "matchPackageNames": [
+        "xorshift"
+      ],
       "enabled": false
     }
-  ]
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "minimumReleaseAge": null
+  }
 }
